@@ -1,0 +1,297 @@
+# Master registry of MLB owners tracked by this project.
+# This file is the single source of truth for who is in scope.
+#
+# Statuses:
+#   pilot   — currently being built out and validated (Phase 1 / 1.5)
+#   queued  — in scope for Phase 2; YAML not yet populated
+#   active  — fully populated, validated, in steady-state ingestion
+#   paused  — temporarily not ingesting (ownership transition, etc.)
+#
+# Adding a new owner:
+#   1. Add an entry here with status: queued
+#   2. Create owners/<slug>.yaml from _template.yaml
+#   3. Populate verifying_signals from at least two independent Tier 2 sources (SOURCES.md)
+#   4. Promote to status: pilot or active once validated
+#
+# Last updated: 2026-05-22
+
+owners:
+  # ─── PILOT (Phase 1 / 1.5) ─────────────────────────────────────────────────
+  - slug: cohen-steven
+    name: Steven A. Cohen
+    team: New York Mets
+    role: Principal owner
+    tenure_start_date: 2020-11-06
+    status: pilot
+    notes: >
+      Phase 1 pilot. Highest-profile, well-documented. Multiple unique-employer
+      strong signals available (Point72, Cohen Private Ventures). Spouse Alexandra
+      Cohen is a major donor in her own right — tracked as related entity, never
+      auto-merged.
+
+  - slug: crane-jim
+    name: James R. Crane
+    team: Houston Astros
+    role: Principal owner
+    tenure_start_date: 2011-11-17    # MLB approval date, not the 2011-05-16 sale-agreement date
+    status: pilot
+    notes: >
+      Phase 1.5 pilot. YAML created 2026-05-22 from Tier 2 sources. Cities=[houston],
+      states=[TX], strong_signal=[Crane Capital Group].
+
+  - slug: henry-john
+    name: John W. Henry
+    team: Boston Red Sox
+    role: Principal owner
+    tenure_start_date: 2002-02-27
+    status: pilot
+    notes: >
+      Phase 1.5 pilot. YAML created 2026-05-22. Multi-state (boca raton FL primary,
+      brookline MA secondary). Strong_signal=[JWH]. Anticipate noisier PROBABLE
+      bucket than Cohen (common name + 2 states + multi-entity surface).
+
+  - slug: castellini-bob
+    name: Robert H. Castellini
+    team: Cincinnati Reds
+    role: Principal owner
+    tenure_start_date: 2006-01-20
+    tenure_end_date: 2026-02-12    # MLB approved control transfer to son Phil
+    status: pilot
+    notes: >
+      Phase 1.5 pilot. YAML created 2026-05-22. tenure_end_date 2026-02-12 —
+      Phil Castellini took team control. Bob's full federal giving history
+      still tracked. Cities=[cincinnati, indian hill], strong_signals=[Castellini
+      Group, Castellini Company]. Doppelgänger watch: separate Bob Castellini
+      at Wells Fargo Advisors in Cincinnati.
+
+  - slug: steinbrenner-hal
+    name: Harold Z. Steinbrenner
+    team: New York Yankees
+    role: Principal owner / Managing general partner
+    tenure_start_date: 2008-11-20
+    status: pilot
+    notes: >
+      Phase 1.5 pilot. YAML created 2026-05-22. Cities=[tampa], states=[FL] only
+      at creation; NY/NYC withheld for calibration evidence. strong_signals empty
+      by design. Family-collision risk: name_variants explicitly exclude
+      "Steinbrenner" alone and "H. Steinbrenner" to keep sibling/parent records out.
+
+  # ─── QUEUED (Phase 2) ──────────────────────────────────────────────────────
+  # The remaining 25 principal owners. Listed by team for organization.
+  # Verifying signals will be populated during Phase 2.
+
+  - slug: angelos-john-p
+    name: John P. Angelos
+    team: Baltimore Orioles
+    role: Chairman and CEO (FORMER)
+    tenure_start_date: 2020-11-03
+    tenure_end_date: 2024-08-01
+    status: pilot
+    notes: >
+      Phase 2 batch 1 (2026-05-22). FORMER control person of the Orioles. Family
+      sold to David Rubenstein in 2024 (initial closing 2024-03-27; final 60%
+      transfer 2024-08-01). Still tracked for historical donations. Father Peter
+      Angelos (deceased 2024-03-23) was prolific Democratic donor — SEPARATE
+      slug if added. negative_signals.employers block at creation listing the
+      family law firm to keep Peter/Louis records out.
+
+  - slug: rubenstein-david
+    name: David M. Rubenstein
+    team: Baltimore Orioles
+    role: Principal owner
+    tenure_start_date: 2024-03-27
+    status: pilot
+    notes: >
+      Phase 2 batch 1 (2026-05-22). NEW principal owner of the Orioles
+      (acquired April 2024 from the Angelos family for $1.725B + remaining 60%
+      closed Aug 2024). Co-founder of The Carlyle Group; resides Bethesda MD;
+      also Nantucket compound. Strong-signals: Declaration Capital, Declaration
+      Partners, Inner Harbor Sports.
+
+  - slug: moreno-arte
+    name: Arturo R. Moreno
+    team: Los Angeles Angels
+    role: Principal owner
+    tenure_start_date: 2003-05-15
+    status: pilot
+    notes: >
+      Phase 2 batch 1 (2026-05-22). Bought Angels from Disney in 2003 ($184M).
+      Pulled sale exploration Jan 2023 — still owner as of 2026. Phoenix
+      Biltmore Estates residence (NOT Paradise Valley). Strong_signals: SRB
+      Management, Angels Baseball LP.
+
+  - slug: attanasio-mark
+    name: Mark L. Attanasio
+    team: Milwaukee Brewers
+    role: Principal owner
+    tenure_start_date: 2005-01-14
+    status: pilot
+    notes: >
+      Phase 2 batch 1 (2026-05-22). Bought Brewers from Bud Selig & family
+      Jan 2005 ($223M). Resides Brentwood (LA) primary + Malibu beach home +
+      Milwaukee penthouse. Strong_signals: MLA Sports / MLA Sports LLC (his
+      personal sports-holding entity). Crescent Capital Group deliberately
+      verifying-not-strong (firm has many employees).
+
+  - slug: kendrick-ken
+    name: Earl G. Kendrick Jr.
+    team: Arizona Diamondbacks
+    role: Managing general partner / Principal owner
+    tenure_start_date: 2004-01-01
+    status: pilot
+    notes: >
+      Phase 2 batch 1 (2026-05-22). Managing GP since 2004; founding owner since
+      1995. Paradise Valley AZ residence. Rob Walton acquired 10% minority
+      stake at $2B valuation in 2024 (disclosed 2026); Kendrick remains
+      controlling owner. Spouse Randy Kendrick is independent major Republican
+      donor — same-household disambiguation needed; flagged for future
+      kendrick-randy.yaml.
+
+  - slug: liberty-media-group
+    name: Liberty Media / John Malone
+    team: Atlanta Braves
+    role: Corporate parent owner
+    status: queued
+    notes: Corporate-owned team. Track Liberty Media PAC and Malone personally.
+
+  - slug: ricketts-tom
+    name: Thomas S. Ricketts
+    team: Chicago Cubs
+    role: Executive Chairman / Principal owner
+    tenure_start_date: 2009-10-27
+    status: pilot
+    notes: >
+      Phase 2 batch 1 (2026-05-22). HARDEST sibling-collision case in MLB —
+      father Joe (TD Ameritrade founder, GOP donor), mother Marlene (GOP),
+      brother Pete (NE U.S. Senator R, MASSIVE GOP donor), sister Laura
+      (Cubs co-owner, Wilmette resident, Democratic donor), brother Todd
+      (Cubs co-owner, former RNC Finance Chair). name_variants strictly
+      exclude bare "Ricketts" and all first-initial-only forms. strong_signals
+      empty until calibration. Each sibling/parent gets its OWN slug if added.
+
+  - slug: reinsdorf-jerry
+    name: Jerry Reinsdorf
+    team: Chicago White Sox
+    role: Principal owner / Chairman
+    status: queued
+
+  - slug: dolan-paul
+    name: Paul Dolan
+    team: Cleveland Guardians
+    role: Chairman / Principal owner
+    status: queued
+
+  - slug: monfort-dick
+    name: Dick Monfort
+    team: Colorado Rockies
+    role: Owner / Chairman / CEO
+    status: queued
+
+  - slug: ilitch-chris
+    name: Christopher Ilitch
+    team: Detroit Tigers
+    role: President / CEO (Ilitch Holdings)
+    status: queued
+    notes: Already processed in TP opp research. Family ownership via Ilitch Holdings.
+
+  - slug: sherman-john
+    name: John Sherman
+    team: Kansas City Royals
+    role: Principal owner
+    status: queued
+
+  - slug: walter-mark
+    name: Mark Walter
+    team: Los Angeles Dodgers
+    role: Chairman / Controlling owner
+    status: queued
+    notes: Guggenheim Partners CEO; control group includes Magic Johnson, Stan Kasten, etc.
+
+  - slug: sherman-bruce
+    name: Bruce Sherman
+    team: Miami Marlins
+    role: Principal owner / Chairman
+    status: queued
+
+  - slug: pohlad-joe
+    name: Joe Pohlad
+    team: Minnesota Twins
+    role: Executive chair
+    status: queued
+    notes: Family ownership; Pohlad Companies is the umbrella. Family is reportedly exploring sale as of 2024 — track for ownership change.
+
+  - slug: lerner-mark
+    name: Mark Lerner
+    team: Washington Nationals
+    role: Managing principal owner
+    status: queued
+    notes: Family ownership. Reports of potential sale have come and gone.
+
+  - slug: fisher-john
+    name: John Fisher
+    team: Athletics
+    role: Principal owner
+    status: queued
+    notes: TP's recurring antagonist. Gap-family fortune. Track signals carefully — common first name.
+
+  - slug: middleton-john
+    name: John S. Middleton
+    team: Philadelphia Phillies
+    role: Principal owner / Managing partner
+    status: queued
+
+  - slug: nutting-bob
+    name: Robert Nutting
+    team: Pittsburgh Pirates
+    role: Principal owner / Chairman
+    status: queued
+
+  - slug: dewitt-bill
+    name: William DeWitt Jr.
+    team: St. Louis Cardinals
+    role: Chairman / Principal owner
+    status: queued
+
+  - slug: seidler-family
+    name: Seidler family (managed by Eric Kutsenda / Peter Seidler estate)
+    team: San Diego Padres
+    role: Family ownership / Controlling interest
+    status: queued
+    notes: Peter Seidler died 2023; ownership transition in progress.
+
+  - slug: johnson-greg
+    name: Greg Johnson
+    team: San Francisco Giants
+    role: Principal owner / Chairman
+    status: queued
+
+  - slug: stanton-john
+    name: John Stanton
+    team: Seattle Mariners
+    role: Chairman / Managing partner
+    status: queued
+
+  - slug: sternberg-stuart
+    name: Stuart Sternberg
+    team: Tampa Bay Rays
+    role: Principal owner
+    status: queued
+    notes: TP-relevant for stadium-deal political donations in FL. As of 2026, sale talks ongoing — monitor.
+
+  - slug: simpson-ray
+    name: Ray Davis / Bob R. Simpson
+    team: Texas Rangers
+    role: Co-chairmen / Co-owners
+    status: queued
+    notes: Co-ownership structure; track both Davis and Simpson as separate entities if both file.
+
+  - slug: rogers-communications
+    name: Rogers Communications
+    team: Toronto Blue Jays
+    role: Corporate parent owner
+    status: queued
+    notes: Canadian corporate parent. FEC scope limited — Rogers is not a US filer, but US executives and any US-side affiliates may show up. Document scope carefully.
+
+# Operational metadata
+last_updated: 2026-05-22
+last_updated_by: alex

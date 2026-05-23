@@ -1,0 +1,122 @@
+# Arturo "Arte" R. Moreno — Los Angeles Angels
+# Principal owner since 2003-05-15 (bought Angels from Disney). First
+# Mexican-American principal owner in major US pro sports.
+# Verified current as of May 2026 — pulled sale exploration Jan 23, 2023.
+#
+# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+
+slug: moreno-arte
+name: Arturo R. Moreno
+team: Los Angeles Angels
+role: Principal owner
+status: pilot
+tenure_start_date: 2003-05-15
+tenure_end_date: null
+
+name_variants:
+  - "Arturo Moreno"
+  - "Arte Moreno"
+  - "Arturo R. Moreno"
+  - "Arturo R Moreno"
+  - "Moreno, Arturo"
+  - "Moreno, Arte"
+  - "Moreno, Arturo R"
+
+verifying_signals:
+  cities:
+    # Phoenix Biltmore Estates (60 Biltmore Estates Drive). NOT Paradise Valley
+    # — every Tier 2 source says "Phoenix" (Biltmore Estates is a Phoenix
+    # neighborhood). Anaheim NOT included — that's the team's location, not
+    # his personal residence.
+    - "phoenix"
+  states:
+    # AZ primary (his residence). CA secondary because filings from the Angels
+    # HQ in Anaheim sometimes carry CA address.
+    - "AZ"
+    - "CA"
+  employers:
+    - "Los Angeles Angels"
+    - "Anaheim Angels"
+    - "Los Angeles Angels of Anaheim"
+    - "Outdoor Systems"
+  occupations:
+    - "owner"
+    - "principal"
+    - "ceo"
+    - "chairman"
+    - "investor"
+    - "self-employed"
+    - "retired"
+
+strong_signals:
+  # SRB Management LLC — the Moreno family holding company (vehicle used for
+  # 2020 stadium acquisition attempt). Family entity, narrow filing pop.
+  # Angels Baseball LP — formal LP entity for the team; narrow ownership
+  # group. Caveat: some team executives may also file "Angels Baseball LP";
+  # if calibration shows false positives, demote.
+  employers:
+    - "SRB Management"
+    - "Angels Baseball LP"
+  zip_codes: []
+
+related_entities: []
+# Documented candidate (do NOT add without approval): spouse Carole Moreno.
+
+sources:
+  - description: "MLB.com — Moreno family ends exploratory Angels sale process (Jan 2023)"
+    url: "https://www.mlb.com/news/moreno-family-ends-exploratory-angels-sale-process"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "ESPN — Moreno to maintain ownership of Angels after pulling sale (Jan 2023)"
+    url: "https://www.espn.com/mlb/story/_/id/35512412/arte-moreno-maintain-ownership-angels-exploring-sale"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "Orange County Business Journal — 'OC's Wealthiest 2024: ARTURO ARTE R. MORENO' — confirms net worth source, business entities (Angels Baseball LP, SRB Management LLC)"
+    url: "https://www.ocbj.com/special-report/ocs-wealthiest-2024/ocs-wealthiest-2024-arturo-arte-r-moreno/"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "Axios Phoenix — Arte Moreno identified as Arizona's wealthiest resident (July 2023); Phoenix residence"
+    url: "https://www.axios.com/local/phoenix/2023/07/05/arizona-wealthiest-billionaire-arturo-moreno"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "The Real Deal Phoenix — Billionaire Arte Moreno buys offices near Phoenix mansion (Nov 2024); confirms Biltmore Estates residence and 2024 ownership status"
+    url: "https://therealdeal.com/national/phoenix/2024/11/25/billionaire-arte-moreno-buys-offices-next-to-phoenix-mansion/"
+    accessed: "2026-05-22"
+    archive_url: ""
+
+notes: |
+  Bought Angels from Walt Disney Company in 2003 for ~$184M. Pulled sale
+  exploration on 2023-01-23 ("hearts remain with the Angels"). Continues
+  investing in Arizona real estate as of 2026 ($60M office buy Nov 2024,
+  $125M Biltmore apartments March 2026). Still principal owner.
+
+  Residence: Phoenix, AZ — specifically the Biltmore Estates neighborhood
+  (60 Biltmore Estates Drive). NOT Paradise Valley — multiple Tier 2 sources
+  consistently say Phoenix. The Biltmore is a Phoenix-proper neighborhood.
+
+  Built wealth from Outdoor Systems (billboard advertising), sold to
+  Infinity Broadcasting / Viacom in 1999 for ~$8.7B. Pre-1999 filings may
+  use Outdoor Systems as employer; post-2003 likely team-name variants.
+
+  Foundations (Moreno Family Foundation, Angels Baseball Foundation) are
+  explicitly out of scope per CLAUDE.md §6 (IRS 990s = separate project).
+
+change_log:
+  - date: 2026-05-22
+    change: |
+      Created during Phase 2 batch 1 research. Tier 2 sources: MLB.com sale
+      pullback, ESPN, Orange County Business Journal (OC's Wealthiest 2024),
+      Axios Phoenix, The Real Deal Phoenix.
+
+      cities=[phoenix] (single — sources consistently report Phoenix proper).
+      states=[AZ, CA] (CA secondary for Angels-HQ filings).
+      strong_signals.employers includes SRB Management and Angels Baseball LP;
+      both are conservative-but-promotable per Cohen precedent.
+    by: "claude-code-research (orchestrated by alex)"
+    references:
+      - "/tmp/moreno-arte-research.md (session-local research file)"
+
+audit:
+  created: 2026-05-22
+  last_ingestion: null
+  last_signal_review: 2026-05-22

@@ -1,0 +1,175 @@
+# Robert H. Castellini — Cincinnati Reds
+# Principal owner 2006-01-20 through 2026-02-12 (team control transferred to
+# son Phil per MLB approval on that date). Per user direction, we treat
+# 2026-02-12 as the tenure_end_date and continue tracking Bob's giving across
+# the full 2000-onwards window. Phil is a candidate for his own future YAML.
+#
+# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+
+slug: castellini-bob
+name: Robert H. Castellini
+team: Cincinnati Reds
+role: Principal owner
+status: pilot
+tenure_start_date: 2006-01-20
+tenure_end_date: 2026-02-12
+
+name_variants:
+  - "Robert H Castellini"
+  - "Robert H. Castellini"
+  - "Robert Castellini"
+  - "Bob Castellini"
+  - "Castellini, Robert"
+  - "Castellini, Robert H"
+  - "Castellini, Robert H."
+  - "Castellini, Bob"
+
+verifying_signals:
+  cities:
+    # Cincinnati Chamber bio places him "in Cincinnati"; aggregator sources
+    # (Tier 3 only) document Indian Hill as the specific suburb.
+    - "cincinnati"
+    - "indian hill"
+    # Calibration round 1 (2026-05-22): 3 UNCERTAIN records had city
+    # "CINCINATTI" (typo for Cincinnati). Adding the misspelling explicitly.
+    # Also 3 UNCERTAIN records had city "THE VILLAGE OF IND" (truncated
+    # "Village of Indian Hill" — Indian Hill's official municipality name).
+    - "cincinatti"
+    - "the village of ind"
+    - "village of indian hill"
+  states:
+    - "OH"
+  employers:
+    # Castellini Group of Companies — family produce/distribution business
+    # founded 1896, Cincinnati HQ. Bob has chaired since 1992. Confirmed by
+    # Cincinnati Chamber Great Living Cincinnatian profile and theSnack.net
+    # industry trade reporting.
+    - "Castellini Group of Companies"
+    - "Castellini Co"
+    - "Castellini Companies"
+    # Reds employer string — observed pattern for sitting owners.
+    - "Cincinnati Reds"
+  occupations:
+    - "chairman"
+    - "owner"
+    - "principal"
+    - "ceo"
+    - "president"
+    - "investor"
+    - "executive"
+
+strong_signals:
+  # "Castellini Group" and "Castellini Company" are named after the family
+  # and are the corporate vehicles he chairs. Conservative — only the two
+  # cleanest forms in strong; "Castellini Group of Companies" / "Castellini
+  # Co" / "Castellini Companies" stay in verifying_signals as weaker
+  # confirming variants.
+  employers:
+    - "Castellini Group"
+    - "Castellini Company"
+  zip_codes: []
+  # Indian Hill (45243) is the suburb consistently reported in property
+  # records, but no Tier 2 source for Bob's specific ZIP. Promote in
+  # calibration if filings cluster at a specific ZIP.
+
+# Calibration round 1 (2026-05-22): Cincinnati has a Wells Fargo Advisors
+# financial advisor named Bob Castellini (different person). PROBABLE audit
+# also turned up "CASTELLINI, ROBERT S" (different middle initial S vs H)
+# at "SENA WELLER ROHS & WILLIAMS" and several "CASTELLINI, ROBERT" filings
+# at "UBS PAINE WEBBER" — all financial-advisor doppelgängers. Adding their
+# employer strings as negatives to keep them out of CONFIRMED.
+negative_signals:
+  employers:
+    - "UBS PAINE WEBBER"
+    - "Sena Weller Rohs & Williams"
+    - "Wells Fargo Advisors"
+
+related_entities: []
+# Future candidates (do NOT add without user approval per CLAUDE.md §1.7):
+#   - spouse: Susie Castellini (Chamber bio mentions her; no donation history
+#     research yet)
+#   - child: Phil Castellini — now Reds principal (took control 2026-02-12).
+#     Phil likely warrants his own castellini-phil.yaml in a future round,
+#     NOT a related_entity here.
+
+sources:
+  - description: "Cincinnati Regional Chamber — Great Living Cincinnatians profile of Robert H. Castellini. Confirms principal owner / president / CEO of Cincinnati Reds; chairman of Castellini Group of Companies; Cincinnati resident; Georgetown/Wharton education; civic boards"
+    url: "https://cincinnatichamber.com/blog/chamber_greatliving/robert-h-castellini/"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "Spokesman-Review (AP wire), 2005-11-03 — 'Cincinnati businessmen buy control of Reds.' Castellini group purchased ~70% of Reds from Carl Lindner for ~$270M; Cincinnati-based produce business founded 1896"
+    url: "https://www.spokesman.com/stories/2005/nov/03/cincinnati-businessmen-buy-control-of-reds/"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "ESPN, 2006-01 — 'Owners approve sale of Reds to produce mogul.' MLB approval 2006-01-19; ~70% controlling stake"
+    url: "https://www.espn.com/mlb/news/story?id=2298457"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "Fox19 (Cincinnati local TV), 2026-02-13 — Phil Castellini takes over control of Reds from Bob Castellini. MLB approved transfer 2026-02-12; Phil was named President & CEO in July 2024 as start of succession"
+    url: "https://www.fox19.com/2026/02/13/phil-castellini-takes-over-control-reds-bob-castellini/"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "theSnack.net produce industry trade publication — Bob = Chairman of Castellini Group of Companies; Brian Kocher = President & CEO since 2017-01-01; Cincinnati HQ, 2,500+ employees"
+    url: "https://www.thesnack.net/core-article/featured/castellini-group-of-companies/making-history-Bob-Castellini-Brian-Kocher/anne-allen/001615"
+    accessed: "2026-05-22"
+    archive_url: ""
+
+notes: |
+  Bob led the group that purchased the Cincinnati Reds from Carl Lindner for
+  ~$270M (70% controlling stake), MLB approved 2006-01-19, became majority
+  owner 2006-01-20. He has chaired Castellini Group of Companies (family
+  produce business founded 1896) since 1992. Lives in Indian Hill, OH
+  (Cincinnati suburb).
+
+  Tenure end: 2026-02-12 (MLB approved transfer of team control to son Phil).
+  Whether Bob retained economic stake / limited-partner status vs. fully sold
+  is not stated in public reporting. User direction: treat 2026-02-12 as the
+  tenure end, continue tracking Bob's full federal giving history (pre- and
+  post-tenure both in scope, per CHARTER).
+
+  DOPPELGÄNGER WATCH (not yet a negative_signal): A separate Bob Castellini
+  works as a Wells Fargo Advisors financial advisor in Cincinnati. Distinct
+  individual. If FEC records surface with employer "Wells Fargo Advisors"
+  and Cincinnati anchor, that is likely the doppelgänger. Add to
+  negative_signals after first ingestion confirms.
+
+  Castellini is a prominent Cincinnati surname — expect other unrelated
+  Castellinis in OH FEC records (family members + unrelated regional
+  Castellinis). Strict name matching (require "Robert" / "Bob") should
+  filter these.
+
+change_log:
+  - date: 2026-05-22
+    change: |
+      Created during Phase 1.5 research. Tier 2 sources: Cincinnati Chamber
+      profile, AP wire (Spokesman-Review), ESPN 2006 sale, Fox19 2026
+      control-transfer, theSnack.net produce trade. tenure_end_date =
+      2026-02-12 per user direction (control transferred to Phil; we keep
+      tracking Bob's federal giving regardless).
+    by: "claude-code-research (orchestrated by alex)"
+    references:
+      - "/tmp/castellini-bob-research.md (session-local research file)"
+  - date: 2026-05-22
+    change: |
+      Calibration round 1 (run_id 3b72871b): three changes.
+
+      (1) Cities additions for typo + alternate municipality forms:
+          - "cinncinatti" / "cincinatti" — observed filing typos for
+            Cincinnati. 3 UNCERTAINs caught.
+          - "the village of ind" / "village of indian hill" — Indian Hill's
+            official municipal name shows up in some filings as truncated
+            "THE VILLAGE OF IND". 3 UNCERTAINs caught.
+
+      (2) negative_signals.employers added with three financial-advisor
+          doppelgängers: "UBS PAINE WEBBER", "Sena Weller Rohs & Williams",
+          and "Wells Fargo Advisors". A separate Bob Castellini in Cincinnati
+          works in financial advisory; his filings (different middle initial
+          'S' on some; same first/last as our Bob) had been polluting PROBABLE.
+
+      Approved by alex.
+    by: "claude-code-session (calibration round 1)"
+
+audit:
+  created: 2026-05-22
+  last_ingestion: null
+  last_signal_review: 2026-05-22

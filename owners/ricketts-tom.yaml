@@ -1,0 +1,184 @@
+# Thomas S. Ricketts — Chicago Cubs
+# Executive Chairman of the Cubs since the Ricketts family purchased from
+# Tribune Co in October 2009. Co-founder/Chairman of Incapital LLC (1999) →
+# now InspereX (merged 2021).
+#
+# CRITICAL — HARDEST SIBLING-COLLISION CASE IN MLB. Six family-collision
+# sources (father Joe, mother Marlene, siblings Pete, Laura, Todd) — all of
+# whom are also prolific federal donors with conflicting political alignments:
+#   - Joe Ricketts (father, TD Ameritrade founder) — major Republican donor
+#   - Marlene Ricketts (mother) — major Republican donor
+#   - Pete Ricketts (brother, former NE Governor, current U.S. Senator R-NE)
+#     — massive Republican donor + own campaign committees
+#   - Laura Ricketts (sister, Cubs co-owner) — Democratic donor, LGBT activist
+#   - Todd Ricketts (brother, Cubs co-owner) — Republican donor, former
+#     RNC Finance Chair
+#
+# None of those siblings/parents are tracked under THIS slug. If/when added,
+# each gets its own owner slug.
+#
+# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+
+slug: ricketts-tom
+name: Thomas S. Ricketts
+team: Chicago Cubs
+role: Executive Chairman / Principal owner
+status: pilot
+tenure_start_date: 2009-10-27    # Sale closed (ABI bankruptcy record + Crain's)
+tenure_end_date: null
+
+# Name variants — every entry requires full unambiguous first name. Excludes
+# bare "Ricketts" and every first-initial-only form (T./P./L./J./M.) which
+# would collide with siblings/parents.
+name_variants:
+  - "Tom Ricketts"
+  - "Thomas Ricketts"
+  - "Thomas S Ricketts"
+  - "Thomas S. Ricketts"
+  - "Thomas Stuart Ricketts"
+  - "Ricketts, Tom"
+  - "Ricketts, Thomas"
+  - "Ricketts, Thomas S"
+  - "Ricketts, Thomas S."
+
+verifying_signals:
+  cities:
+    # Tom lives in Wilmette IL since 1997 (Crain's). Cubs offices in Chicago.
+    # CAUTION: sister Laura also lives in Wilmette ("less than a mile north"
+    # per Crain's) — Wilmette alone collides with Laura. Strict name
+    # disambiguation (first name "Tom" or "Thomas") is the firewall.
+    - "wilmette"
+    - "chicago"
+  states:
+    # IL only. NOT NE — despite the family's Nebraska origins. Joe and Pete
+    # file from Nebraska; including NE here would invite their records in.
+    - "IL"
+  employers:
+    # Tom's documented employer history. NOT including "TD Ameritrade" /
+    # "Ameritrade" — those are Joe's firm and the family wealth source, but
+    # Tom never worked there. Including them would catastrophically pull
+    # in Joe/Pete records.
+    - "Chicago Cubs"
+    - "Cubs"
+    - "Incapital LLC"
+    - "Incapital"
+    - "InspereX"
+  occupations:
+    - "chairman"
+    - "executive chairman"
+    - "co-founder"
+    - "founder"
+    - "ceo"
+    - "businessman"
+    - "owner"
+    - "principal"
+    - "investment banker"
+
+strong_signals:
+  # Intentionally EMPTY at creation. Incapital LLC and InspereX are
+  # promotion candidates — Tier 2 sources uniquely associate them with Tom
+  # — but we have not yet observed FEC filings. Calibration may reveal a
+  # sibling, spouse, or advisor who filed Incapital/InspereX as employer,
+  # and a strong-signal promotion would auto-CONFIRM that.
+  #
+  # Promotion plan (post-calibration, if zero false positives): "Incapital"
+  # and "InspereX" → strong_signals.employers.
+  employers: []
+  zip_codes: []
+  # Wilmette ZIP 60091 is shared with Laura — DO NOT promote ZIP alone.
+
+related_entities: []
+# Each Ricketts is its OWN slug if/when tracked — not a related_entity here.
+# Documented family (per Tier 2 — Wikipedia, Crain's, Cubs press):
+#   - Joe Ricketts (father, b. 1941, TD Ameritrade founder) — separate slug
+#     if tracked; major Republican donor
+#   - Marlene Ricketts (mother) — separate slug if tracked; Republican donor
+#   - Pete Ricketts (brother, b. 1964, U.S. Senator R-NE since 2023, former
+#     NE Governor 2015-2023) — out of scope entirely; sitting federal
+#     officeholder with own campaign committees
+#   - Laura Ricketts (sister, b. 1966, Cubs co-owner) — separate slug if
+#     project expands to all co-owners; Democratic donor
+#   - Todd Ricketts (brother, b. 1969, Cubs co-owner) — separate slug if
+#     tracked; Republican donor, former RNC Finance Chair (2017–Nov 2021)
+#   - Spouse Cecelia "Cece" Ricketts — no Tier 2 federal-donor activity
+#     documented; flag for future research
+
+sources:
+  - description: "MLB.com Chicago Cubs front office — Tom Ricketts (Executive Chairman)"
+    url: "https://www.mlb.com/cubs/team/front-office"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "InspereX Executive Team page — Tom Ricketts as Co-Founder, Chairman of InspereX and Executive Chairman of the Chicago Cubs"
+    url: "https://www.insperex.com/about/executive-team/"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "Crain's Chicago Business — 'Cubs chairman Tom Ricketts building home on Wilmette lakefront' (Feb 2016)"
+    url: "https://www.chicagobusiness.com/article/20160223/CRED03/160229954/cubs-chairman-tom-ricketts-building-home-on-wilmette-lakefront"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "Crain's Chicago Business 'Who's Who 2024' — Tom S. Ricketts listing (current Cubs chairman)"
+    url: "https://www.chicagobusiness.com/whos-who-2024/thomas-s-ricketts"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "Sportico — Tribune's 5% retention and Ricketts family 2019 buy-back"
+    url: "https://www.sportico.com/business/team-sales/2024/tribune-chicago-cubs-tax-case-ricketts-1234770000/"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "Chicagoland Chamber of Commerce — Tom Ricketts as Daniel H. Burnham Award recipient (2024)"
+    url: "https://chicagolandchamber.org/burnham-award-2024-tom-ricketts/"
+    accessed: "2026-05-22"
+    archive_url: ""
+
+notes: |
+  Tom Ricketts is the operating Executive Chairman of the Cubs since the
+  Ricketts family's October 2009 purchase from the Tribune Company. Co-founded
+  Incapital LLC in 1999; Incapital merged with 280 CapMarkets in July 2021 to
+  form InspereX, where Tom remains Founder/Chairman.
+
+  Residence: Wilmette IL since 1997. His sister Laura also lives in Wilmette
+  ("less than a mile north" per Crain's). Wilmette + Chicago Cubs alone is a
+  2-signal CONFIRMED that could include Laura's records — name variants
+  exclude bare "Ricketts" and first-initial-only forms (L./T./P./J./M.) as
+  the primary disambiguator.
+
+  Father Joe Ricketts founded TD Ameritrade — that is the family wealth source
+  but Tom never worked there. TD Ameritrade is deliberately excluded from
+  employers to keep Joe/Pete records out.
+
+  Pete Ricketts (brother, U.S. Senator R-NE) is a federal officeholder with
+  his own campaign committees. He is the highest-leakage-risk sibling.
+  Laura Ricketts (sister, Cubs co-owner, Wilmette resident) is the second-
+  highest-leakage-risk sibling because she shares city + plausibly employer
+  ("Chicago Cubs"). Strict first-name name_variants are the firewall.
+
+  Expected calibration-round-1 questions:
+    - Are any CONFIRMED records dated before 1999 (pre-Incapital)? What's
+      the employer field?
+    - Are any CONFIRMED records dated before 2009 (pre-Cubs)? Should be
+      Incapital-era.
+    - Are any records leaking from siblings due to name-normalization bugs?
+    - Should "Incapital" and "InspereX" be promoted to strong_signals after
+      a clean audit?
+
+change_log:
+  - date: 2026-05-22
+    change: |
+      Created during Phase 2 batch 1 research. Tier 2 sources: MLB.com Cubs
+      (406, cross-confirmed), InspereX executive team page, Crain's Chicago
+      Business (Wilmette residence + Who's Who 2024), Sportico (2019 Tribune
+      buyback), Chicagoland Chamber (Burnham Award 2024).
+
+      tenure_start_date 2009-10-27 (ABI bankruptcy record + Crain's; user
+      brief had 10-28 but multiple Tier 2 sources document 10-27).
+
+      Most disciplined name_variants set in the registry — no bare
+      "Ricketts", no first-initial-only forms — to keep 4 siblings + 2
+      parents out. strong_signals empty pending calibration audit.
+    by: "claude-code-research (orchestrated by alex)"
+    references:
+      - "/tmp/ricketts-tom-research.md (session-local research file)"
+
+audit:
+  created: 2026-05-22
+  last_ingestion: null
+  last_signal_review: 2026-05-22

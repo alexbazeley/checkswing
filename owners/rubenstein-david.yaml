@@ -1,0 +1,169 @@
+# David M. Rubenstein — Baltimore Orioles (NEW PRINCIPAL)
+# Took over from the Angelos family in 2024. Co-founder of The Carlyle Group;
+# host of "Bloomberg Wealth"; chairman of Smithsonian, Kennedy Center.
+#
+# Acquisition vehicle: Inner Harbor Sports LLC (Delaware, formed 2024-01-11).
+# Initial closing 2024-03-27 (~40% stake + sole general partner interest at
+# $1.725B). Final closing 2024-08-01 (remaining 60% from Angelos family).
+#
+# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+
+slug: rubenstein-david
+name: David M. Rubenstein
+team: Baltimore Orioles
+role: Principal owner
+status: pilot
+tenure_start_date: 2024-03-27   # MLB unanimous approval / control-stake closing
+tenure_end_date: null
+
+name_variants:
+  - "David Rubenstein"
+  - "David M. Rubenstein"
+  - "David M Rubenstein"
+  - "Rubenstein, David"
+  - "Rubenstein, David M"
+  - "Rubenstein, David M."
+
+verifying_signals:
+  cities:
+    # Bethesda, MD — primary residence since 1985 (Washingtonian, Baltimore Banner).
+    # Washington, DC — Carlyle HQ (1001 Pennsylvania Ave NW); some filings list
+    #   employer city rather than home address.
+    # Nantucket, MA — large compound (purchased 1998); seasonal home.
+    # Baltimore, MD — birthplace and team city; filings expected post-2024.
+    - "bethesda"
+    - "washington"
+    - "nantucket"
+    - "baltimore"
+  states:
+    - "MD"
+    - "DC"
+    - "MA"
+  employers:
+    # Declaration Capital, Declaration Partners, Inner Harbor Sports are in
+    # strong_signals below — not duplicated here (OWNER_SCHEMA.md rule 6).
+    - "The Carlyle Group"
+    - "Carlyle Group"
+    - "Carlyle"
+    - "Baltimore Orioles"
+    - "Orioles"
+  occupations:
+    - "co-founder"
+    - "cofounder"
+    - "co-chairman"
+    - "cochairman"
+    - "chairman"
+    - "founder"
+    - "investor"
+    - "philanthropist"
+    - "owner"
+    - "principal"
+    - "ceo"
+
+strong_signals:
+  # Declaration Capital / Declaration Partners: his family office and
+  # affiliate; very small headcount, named after his Declaration of
+  # Independence / Magna Carta interests — virtually unique to him.
+  # Inner Harbor Sports: the Delaware LLC formed Jan 2024 to acquire the
+  # Orioles; he is co-president with Michael Arougheti. No other federal
+  # filer would use this.
+  # The Carlyle Group is NOT a strong signal — ~1,800 employees, many file
+  # Carlyle as employer — stays in verifying_signals.
+  employers:
+    - "Declaration Capital"
+    - "Declaration Partners"
+    - "Inner Harbor Sports"
+  zip_codes: []
+
+related_entities: []
+# Documented candidates (do NOT add without explicit approval per CLAUDE.md §1.7):
+#   - Alice Rogoff (ex-spouse, divorced 2017) — independent figure but unclear
+#     status as "related entity" post-divorce
+#   - Ellie / Gabrielle Rubenstein (adult daughter)
+#   - Carlyle Group Employee PAC — explicitly NOT a related_entity per CLAUDE.md
+#     §3 (partner of 1,800-employee firm isn't a controlling owner of the
+#     employee PAC)
+
+sources:
+  - description: "MLB.com — Sale of Orioles to David Rubenstein approved by MLB owners (2024-03-27)"
+    url: "https://www.mlb.com/news/david-rubenstein-orioles-ownership-approved"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "MLB.com — Rubenstein group closes on remaining Orioles shares (2024-08-01)"
+    url: "https://www.mlb.com/news/orioles-ownership-deal-closes"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "ESPN — Rubenstein unanimously approved as new Orioles owner (2024-03-27)"
+    url: "https://www.espn.com/mlb/story/_/id/39820434/david-rubenstein-unanimously-approved-new-orioles-owner"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "Washington Post — MLB owners approve sale to David Rubenstein (2024-03-27)"
+    url: "https://www.washingtonpost.com/sports/2024/03/27/orioles-david-rubenstein-owner/"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "Baltimore Sun — Rubenstein group closes on rest of Orioles (2024-08-01)"
+    url: "https://www.baltimoresun.com/2024/08/01/david-rubenstein-group-closes-on-deal-for-rest-of-orioles/"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "Baltimore Sun — Maryland Stadium Authority approves transfer to Inner Harbor Sports LLC (2024-03-20)"
+    url: "https://www.baltimoresun.com/2024/03/20/msa-orioles-owner-david-rubenstein/"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "The Carlyle Group official leadership bio — David M. Rubenstein, Co-Founder & Co-Chairman"
+    url: "https://www.carlyle.com/about-carlyle/team/david-m-rubenstein"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "Bloomberg — Carlyle's Rubenstein Builds Family Office (Declaration Capital, 2018)"
+    url: "https://www.bloomberg.com/news/articles/2018-05-24/carlyle-s-rubenstein-builds-family-office-with-outside-ambitions"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "Baltimore Banner — Rubenstein long ago moved on from Baltimore (Bethesda residency)"
+    url: "https://www.thebaltimorebanner.com/politics-power/david-rubenstein-orioles-baltimore-W3VE6LRGK5EL3NWIAY2FPDKG5Y/"
+    accessed: "2026-05-22"
+    archive_url: ""
+
+notes: |
+  Rubenstein is a Baltimore native (born 1949) but has lived in Bethesda, MD
+  since 1985. He also owns a Nantucket, MA compound. Carlyle is headquartered
+  in Washington, DC — filings may list DC as employer city even though
+  Rubenstein resides in Maryland.
+
+  Tenure_start_date 2024-03-27 reflects MLB owners' unanimous approval and
+  transfer of the control stake ($1.725B for sole general partner interest +
+  37% of LP interests). The Rubenstein group closed on the remaining 60%
+  Angelos shares on 2024-08-01.
+
+  Acquisition vehicle: Inner Harbor Sports LLC (Delaware, formed 2024-01-11).
+  Rubenstein and Ares Management co-founder Michael Arougheti listed as
+  co-presidents.
+
+  Declaration Capital (2017) is his family office. Declaration Partners is
+  the affiliated external investment firm. Both are strong-signal employers
+  — small headcount, name uniquely tied to him.
+
+  Identity disambiguation: confirmed distinct from Howard Rubenstein (NYC PR
+  exec, d. 2020) and from NYC Rubenstein Properties real-estate families.
+
+  Pre-Orioles giving (pre-2024-03-27) should be ingested — Rubenstein is a
+  long-time federal donor independent of baseball. Default per project rules
+  is full available history; reports can filter to post-tenure if needed.
+
+change_log:
+  - date: 2026-05-22
+    change: |
+      Created during Phase 2 batch 1 research. Tier 2 sources: MLB.com (sale
+      approvals), ESPN, Washington Post, Baltimore Sun (both March + August
+      2024 closings), Carlyle Group official bio, Bloomberg (Declaration
+      Capital), Baltimore Banner (Bethesda residency).
+
+      strong_signals.employers initialized with Declaration Capital,
+      Declaration Partners, Inner Harbor Sports — all virtually unique to
+      him. Carlyle deliberately NOT in strong_signals.
+    by: "claude-code-research (orchestrated by alex)"
+    references:
+      - "/tmp/rubenstein-david-research.md (session-local research file)"
+
+audit:
+  created: 2026-05-22
+  last_ingestion: null
+  last_signal_review: 2026-05-22

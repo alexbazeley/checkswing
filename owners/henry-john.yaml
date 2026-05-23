@@ -1,0 +1,195 @@
+# John W. Henry — Boston Red Sox
+# Phase 1.5 pilot. Multi-state (FL primary / MA secondary) + multi-entity setup
+# (Fenway Sports Group, John W. Henry & Company, Boston Globe, Liverpool FC).
+# Expect a noisier PROBABLE bucket than Cohen — see notes.
+#
+# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+
+slug: henry-john
+name: John W. Henry
+team: Boston Red Sox
+role: Principal owner
+status: pilot
+tenure_start_date: 2002-02-27   # Sale completed (MLB-approved Jan 16, 2002)
+tenure_end_date: null
+
+name_variants:
+  - "John W. Henry"
+  - "John W Henry"
+  - "John William Henry"
+  - "John William Henry II"
+  - "John Henry"
+  - "Henry, John W"
+  - "Henry, John W."
+  - "Henry, John"
+
+verifying_signals:
+  cities:
+    # Primary: Boca Raton FL (CommonWealth Beacon — FL driver's license, FL
+    # voter reg, FL homestead exemption — dispositive of legal residence).
+    # Secondary: Brookline MA (Cottage St mansion purchased from Frank McCourt
+    # in 2007; Brookline is its own municipality).
+    # "boston" added in calibration round 1 — audit found real Henry filings
+    # at city=BOSTON with JWH employer + Boca Raton signal context (he files
+    # from his Globe office sometimes).
+    - "boca raton"
+    - "brookline"
+    - "boston"
+  states:
+    - "FL"
+    - "MA"
+  employers:
+    # John W. Henry & Company variants — his original commodities trading
+    # firm, founded 1981 in Boca Raton.
+    # NOTE: With the calibration round 1 classifier fix (period stripping in
+    # _norm), strings here will match record employers regardless of period
+    # placement. "John W. Henry and Company" now matches "JOHN W HENRY AND
+    # COMPANY INC".
+    - "John W. Henry & Company"
+    - "John W. Henry & Co"
+    - "John W. Henry and Company"
+    - "John W. Henry and Co"           # added 2026-05-22 — caught
+    - "John W. Henry Company"          # added 2026-05-22 — variant without "and"/&
+    - "J.W. Henry & Co"
+    # Fenway Sports Group — current sports/media holding co.
+    - "Fenway Sports Group"
+    - "New England Sports Ventures"
+    # Team / property names.
+    - "Boston Red Sox"
+    - "Boston Globe"
+    - "Liverpool Football Club"
+  occupations:
+    - "principal"
+    - "principal owner"
+    - "owner"
+    - "chairman"
+    - "founder"
+    - "investor"
+    - "investment manager"
+    - "publisher"
+    - "self-employed"
+
+strong_signals:
+  # "John W. Henry & Company" and its short forms are literally named after
+  # him — high confidence. "JWH" is the firm's industry-standard abbreviation
+  # (per FIA Futures Hall of Fame); promote because it would only appear from
+  # him or a JWH employee, and the typical JWH employee count was tiny.
+  # Fenway Sports Group is NOT a strong signal — too many FSG employees could
+  # file it. Same with Red Sox / Globe / Liverpool. Per Cohen precedent.
+  employers:
+    - "JWH"
+  zip_codes: []
+  # No specific residence ZIP confirmed at creation. Brookline is 02445/02446;
+  # Boca Raton Le Lac gated community is ~33496. Leave empty until calibration
+  # audit identifies actual filed ZIPs (cf. Cohen 10001 promotion).
+
+related_entities: []
+# Linda Pizzuti Henry (spouse, CEO Boston Globe Media; chair John W. Henry
+# Family Foundation; married 2009) is a documented future related_entity
+# candidate. NOT added per user instruction (principals only this round).
+# Source for future use: bostonglobemedia.com/people/linda-henry/.
+
+sources:
+  - description: "MLB.com Red Sox front office page for John W. Henry (current title: Principal Owner)"
+    url: "https://www.mlb.com/redsox/team/front-office/john-w-henry"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "Fenway Sports Group leadership page — confirms John W. Henry as Principal Owner & founder of FSG (2001), Chairman of John W. Henry & Company (1981)"
+    url: "https://fenwaysportsgroup.com/leadership/"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "MIT Sloan Sports Analytics Conference speaker bio — Principal Owner of FSG, Chairman of John W. Henry & Company (founded 1981, Boca Raton FL), Publisher of Boston Globe (since Jan 2014), MLB Business Board member"
+    url: "https://www.sloansportsconference.com/people/john-henry"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "ESPN — Henry's group completes Red Sox purchase (Feb 27, 2002) for $660M from Jean R. Yawkey Trust; NESV purchasing entity, Tom Werner and Larry Lucchino as partners"
+    url: "http://www.espn.com/mlb/news/2002/0227/1341320.html"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "FIA Futures Hall of Fame profile — John W. Henry & Company founder (1981), futures industry pioneer"
+    url: "https://www.fia.org/hall-fame/articles/john-w-henry"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "CommonWealth Beacon — establishes primary residence Boca Raton FL (FL driver's license, voter reg, homestead exemption); secondary Brookline MA mansion"
+    url: "https://commonwealthbeacon.org/politics/006-is-john-henry-a-local/"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "Boston.com profile (Aug 2013) — biographical detail, Brookline mansion purchase from Frank McCourt (2007), Florida Marlins (1999-2002), Yankees LP (1991-2003), Liverpool FC (2010)"
+    url: "https://www.boston.com/uncategorized/noprimarytagmatch/2013/08/03/john-w-henry-soft-spoken-businessman-with-an-appetite-for-risk/"
+    accessed: "2026-05-22"
+    archive_url: ""
+
+notes: |
+  Henry's primary residence is Boca Raton, FL (FL driver's license, FL voter
+  registration, FL homestead exemption — CommonWealth Beacon dispositive).
+  Secondary residence is a 35,000+ sq ft mansion off Cottage St in Brookline,
+  MA, purchased from Frank McCourt in 2007 and rebuilt. Expect FEC filings
+  from BOTH states.
+
+  Pre-2011 filings: employer most likely "John W. Henry & Company" or "JWH"
+  (Boca Raton HQ). Post-2011: New England Sports Ventures was renamed Fenway
+  Sports Group in March 2011 — treat both "NESV" and "FSG" as expected
+  variants. Boston Globe acquired Oct 2013; expect Globe employer string
+  post-2013.
+
+  KNOWN CROSS-REFERENCE (not primary source — for sanity-check only): per
+  CommonWealth Beacon citing OpenSecrets, Henry's reported federal donations
+  totaled ~$885K between 1997–2004, ~96% to Democratic umbrella groups, with
+  little reported activity since. This is an OpenSecrets aggregate (Tier 3);
+  the FEC primary records are the ground truth. Order-of-magnitude check only.
+
+  "John Henry" is one of the commonest American names (folklore figure plus
+  multiple historical and contemporary politicians). Expect doppelgänger
+  noise. No specific same-name donor identified at creation; defer
+  negative_signals population to post-first-ingestion calibration audit.
+
+change_log:
+  - date: 2026-05-22
+    change: |
+      Created during Phase 1.5 research. Tier 2 sources: MLB.com front office,
+      Fenway Sports Group leadership page, MIT Sloan Sports Analytics speaker
+      bio, ESPN 2002 purchase article, FIA Futures Hall of Fame, CommonWealth
+      Beacon residence article, Boston.com 2013 profile.
+
+      Architectural notes for calibration:
+        - cities = [boca raton, brookline] (NOT "boston"). Calibration may add.
+        - strong_signals = [JWH only]. The longer forms ("John W. Henry & Company"
+          etc.) stay in verifying_signals because Henry's firm did employ analysts
+          who might file the full firm name. JWH is the industry abbreviation
+          almost exclusively used in the small set of people closely associated
+          with the firm.
+        - Anticipate noisy PROBABLE bucket (common name, two states, multi-entity).
+    by: "claude-code-research (orchestrated by alex)"
+    references:
+      - "/tmp/henry-john-research.md (session-local research file)"
+  - date: 2026-05-22
+    change: |
+      Calibration round 1 (run_id dbcd04e1): the first ingestion produced
+      only 4 CONFIRMED — far below the expected ~$885K of historical giving.
+      Audit traced the gap to two issues:
+
+      (1) Classifier _norm() didn't strip periods, so signal "John W. Henry
+          and Company" did NOT substring-match record "JOHN W HENRY AND COMPANY
+          INC". This was fixed globally in scripts/resolve_entities.py (see
+          PROVENANCE_LOG SCHEMA_MIGRATION entry).
+
+      (2) Two employer-string variants were missing from this YAML:
+          "John W. Henry and Co" (catches "JOHN W HENRY AND CO" filings,
+          common in early 2000s) and "John W. Henry Company" (catches
+          "JOHN W HENRY COMPANY" without "and"/&, also observed). Added.
+
+      (3) "boston" added to cities. Audit identified real Henry filings with
+          city=BOSTON (e.g., $50K to Boston Host Committee 2004 with JWH
+          employer). Adding "boston" lets these promote to CONFIRMED. Risk:
+          Boston is a populous city; other "John Henry"s there might
+          previously-UNCERTAIN now become PROBABLE. Mitigated because the
+          JWH strong_signal still requires that for CONFIRMED, and stand-alone
+          city_state will only get them to PROBABLE.
+
+      Approved by alex.
+    by: "claude-code-session (calibration round 1)"
+
+audit:
+  created: 2026-05-22
+  last_ingestion: null
+  last_signal_review: 2026-05-22

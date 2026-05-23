@@ -1,0 +1,163 @@
+# Earl G. "Ken" Kendrick Jr. — Arizona Diamondbacks
+# Managing General Partner since 2004 (founding ownership stake since 1995).
+# Wealth from Datatel Inc. (higher-ed software company he founded 1968).
+#
+# In 2024, Rob Walton (Broncos owner) acquired a 10% minority stake at $2B
+# valuation (publicly disclosed March 2026). Kendrick remains managing
+# general partner and controlling owner.
+#
+# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+
+slug: kendrick-ken
+name: Earl G. Kendrick Jr.
+team: Arizona Diamondbacks
+role: Managing general partner / Principal owner
+status: pilot
+tenure_start_date: 2004-01-01    # approximate; exact MGP-transition date not pinned in Tier 2 sources
+tenure_end_date: null
+
+# Notes on name design:
+#   - "Ken" is his nickname (unrelated to given names — middle name is Gentry)
+#   - He is "Jr." — his father Earl G. Kendrick Sr. existed but is pre-modern
+#     FEC era (West Virginia gas station owner) and not a documented federal
+#     donor. Variants without "Jr." still included since FEC filings often
+#     drop it; calibration will catch any father-era collisions.
+name_variants:
+  - "Ken Kendrick"
+  - "Earl G. Kendrick"
+  - "Earl G Kendrick"
+  - "Earl G. Kendrick Jr."
+  - "Earl G. Kendrick, Jr."
+  - "Earl Kendrick"
+  - "E. G. Kendrick"
+  - "E.G. Kendrick"
+  - "E G Kendrick"
+  - "Earl Gentry Kendrick"
+  - "Kendrick, Ken"
+  - "Kendrick, Earl G"
+  - "Kendrick, Earl G."
+  - "Kendrick, Earl G., Jr."
+
+verifying_signals:
+  cities:
+    - "paradise valley"
+    - "phoenix"
+  states:
+    - "AZ"
+  employers:
+    # Current primary
+    - "Arizona Diamondbacks"
+    - "Diamondbacks"
+    - "AZ Diamondbacks"
+    # Historical: Datatel (correctly spelled — NOT "Datatec")
+    - "Datatel"
+    - "Datatel, Inc."
+    # Banking-investor era (1989+)
+    - "Woodforest National Bank"
+    # Placeholders for owners without corp employer
+    - "Self-Employed"
+    - "Self Employed"
+  occupations:
+    - "owner"
+    - "managing general partner"
+    - "principal"
+    - "investor"
+    - "businessman"
+    - "chairman"
+    - "retired"
+    - "self-employed"
+
+strong_signals:
+  # Intentionally empty at creation. Kendrick Group, Inc. (SEC firm #114602)
+  # is a potential strong-signal candidate but SEC IAPD page didn't render
+  # via WebFetch; orchestrator should manually confirm before promoting.
+  # Datatel and Diamondbacks both have many employees — not unique-to-him.
+  employers: []
+  zip_codes: []
+  # Paradise Valley 85253 is widely shared with other wealthy AZ residents;
+  # do not promote without specific Kendrick ZIP+4 confirmation.
+
+related_entities: []
+# CRITICAL future candidate flagged: spouse Randy Kendrick is an independent
+# major Republican / Koch-network donor at the same Paradise Valley address.
+# Same-household disambiguation pattern as Cohen/Alexandra. When/if added,
+# she gets her own slug (kendrick-randy.yaml). Records under "R. Kendrick"
+# or "Randy Kendrick" of Paradise Valley AZ must NOT be silently attributed
+# to Ken in the meantime — they'll fall to UNCERTAIN under current name
+# matching, which is correct.
+#
+# Also documented future-candidates (do NOT add without approval):
+#   - Kendrick Group, Inc. (SEC firm #114602) — verify it is his personal
+#     investment adviser firm before adding
+#   - Datatel Scholars Foundation, Arizona Diamondbacks Foundation —
+#     out of scope (CLAUDE.md §6, IRS 990s = separate project)
+#   - Rob Walton's 10% minority stake — Walton is his own MLB-relevant
+#     principal (Broncos NFL owner) and not a Kendrick related_entity
+
+sources:
+  - description: "MLB.com Arizona Diamondbacks front office — Ken Kendrick (managing general partner)"
+    url: "https://www.mlb.com/dbacks/team/front-office/ken-kendrick"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "WVU John Chambers College of Business — Earl G. Kendrick (Business Hall of Fame inductee)"
+    url: "https://business.wvu.edu/alumni/business-hall-of-fame/inductees/earl-g-kendrick"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "WVU Roll of Distinguished Alumni — Ken Kendrick"
+    url: "https://business.wvu.edu/alumni/roll-of-distinguished-alumni/previous-inductees/ken-kendrick"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "Sportico — Rob Walton 10% minority stake in Arizona Diamondbacks at $2B valuation (publicly disclosed March 2026)"
+    url: "https://www.sportico.com/business/team-sales/2026/rob-walton-arizona-diamondbacks-stake-sale-1234886015/"
+    accessed: "2026-05-22"
+    archive_url: ""
+
+notes: |
+  Primary residence Paradise Valley, AZ. Managing general partner of the
+  Diamondbacks since 2004; founding ownership stake since 1995.
+
+  In 2024 (publicly disclosed March 2026), Rob Walton acquired a 10%
+  minority stake at $2B valuation. Kendrick remains managing general
+  partner and controlling owner. Walton is a separate MLB-relevant principal
+  (Denver Broncos NFL owner) and is NOT a related_entity of Kendrick.
+
+  Kendrick is "Jr." His father Earl G. Kendrick Sr. (Princeton WV gas-station
+  owner) was pre-modern FEC era and not believed to be a federal donor.
+  Records labeled "Earl G. Kendrick" without Jr. cross-checked for AZ
+  city/state — pre-1990s WV records should not attribute.
+
+  Spouse Randy Kendrick is an independent major Republican / Koch-network
+  donor resident in the same household (Paradise Valley AZ). Her donations
+  must be classified against her own signals — see flagged item to create
+  kendrick-randy.yaml in a future round. Records under "R. Kendrick" or
+  "Randy Kendrick" must NOT be attributed to Ken in the absence of her own
+  slug; route to UNCERTAIN until the related_entity is added per CLAUDE.md §1.7.
+
+  Datatel Inc. (his founded firm, 1968, higher-ed software) was sold in
+  2005 and 2009. Filings pre-1990 may report Datatel as employer; later
+  filings unlikely. (User's prompt said "Datatec" — that is incorrect;
+  the company is Datatel.)
+
+change_log:
+  - date: 2026-05-22
+    change: |
+      Created during Phase 2 batch 1 research. Tier 2 sources: MLB.com (406,
+      cross-confirmed), WVU Hall of Fame, WVU Roll of Distinguished Alumni,
+      Sportico (Walton minority-stake disclosure).
+
+      tenure_start_date 2004-01-01 (approximate MGP-transition date; exact
+      day not in Tier 2 sources). Mirroring Cohen YAML pattern of using
+      principal-owner-status date.
+
+      strong_signals empty at creation per conservative launch. Kendrick
+      Group, Inc. flagged for future promotion pending SEC ADV verification.
+      Randy Kendrick flagged for future related_entity creation as her own
+      slug (independent donor, same household — Cohen/Alexandra parallel).
+    by: "claude-code-research (orchestrated by alex)"
+    references:
+      - "/tmp/kendrick-ken-research.md (session-local research file)"
+
+audit:
+  created: 2026-05-22
+  last_ingestion: null
+  last_signal_review: 2026-05-22

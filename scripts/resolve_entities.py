@@ -1,0 +1,455 @@
+"""Classifier — the spec is VERIFICATION.md, this is the implementation.
+
+Inputs: a raw FEC record + an owner YAML (parsed dict).
+Outputs: a Classification with status, reason, signals_matched, attribution slug.
+
+The classifier never modifies the owner YAML. It only reads.
+"""
+from __future__ import annotations
+
+import json
+import re
+from dataclasses import dataclass, field
+from typing import Iterable, Sequence
+
+
+CONFIRMED = "CONFIRMED"
+PROBABLE = "PROBABLE"
+UNCERTAIN = "UNCERTAIN"
+
+SUFFIXES = {"jr", "sr", "ii", "iii", "iv", "v"}
+HONORIFICS = {"mr", "mrs", "ms", "miss", "dr", "prof", "rev", "hon"}
+
+
+@dataclass
+class Classification:
+    status: str
+    status_reason: str
+    signals_matched: list[str]
+    entity_slug: str
+    entity_kind: str  # "owner" | "spouse" | "child" | "parent" | "sibling" | "pac" | "business_entity"
+    parent_owner_slug: str | None = None
+    name_matched_variant: str | None = None
+
+
+# ─── Name normalization ─────────────────────────────────────────────────────
+
+
+def _strip_diacritics_simple(s: str) -> str:
+    # The FEC data is ASCII in practice; we keep this simple.
+    return s
+
+
+def normalize_name(raw: str) -> tuple[set[str], str | None]:
+    """Return (canonical_forms, suffix).
+
+    Sequence:
+      - Detect "Last, First" form (comma present) and rewrite to "First Last".
+      - Lowercase, strip `.` and `,`, collapse whitespace.
+      - Strip honorifics (mr/mrs/ms/miss/dr/prof/rev/hon) from any token position.
+      - Identify trailing suffix (jr/sr/ii/iii/iv/v) and return separately.
+      - Drop middle-initial tokens (single-char tokens between first and last)
+        so "Steven A Cohen" and "Steven Cohen" share a canonical form.
+      - For hyphenated last names, generate both orderings.
+
+    Returns a SET of canonical forms (to handle hyphenated swaps) and the
+    suffix (or None).
+    """
+    if not raw:
+        return (set(), None)
+    name = raw.strip()
+    had_comma = "," in name
+    if had_comma:
+        left, _, right = name.partition(",")
+        name = f"{right.strip()} {left.strip()}"
+    name = name.lower()
+    name = name.replace(".", " ").replace(",", " ")
+    name = re.sub(r"\s+", " ", name).strip()
+    if not name:
+        return (set(), None)
+    tokens = name.split()
+
+    # Strip honorifics from any position. People file "Mr." inconsistently
+    # (sometimes leading, sometimes after the last name in Last-First form).
+    tokens = [t for t in tokens if t not in HONORIFICS]
+    if not tokens:
+        return (set(), None)
+
+    suffix: str | None = None
+    if tokens and tokens[-1] in SUFFIXES:
+        suffix = tokens[-1]
+        tokens = tokens[:-1]
+    if not tokens:
+        return (set(), suffix)
+
+    # Drop single-char middle tokens (initials), preserve first and last.
+    if len(tokens) > 2:
+        first = tokens[0]
+        last = tokens[-1]
+        middle = [t for t in tokens[1:-1] if len(t) > 1]
+        tokens = [first] + middle + [last]
+
+    forms = {" ".join(tokens)}
+
+    # Hyphenated last-name swap variants.
+    last = tokens[-1]
+    if "-" in last:
+        parts = [p for p in last.split("-") if p]
+        if len(parts) >= 2:
+            forms.add(" ".join(tokens[:-1] + ["-".join(reversed(parts))]))
+            forms.add(" ".join(tokens[:-1] + parts))
+            forms.add(" ".join(tokens[:-1] + list(reversed(parts))))
+
+    return (forms, suffix)
+
+
+def names_match(record_name: str, variants: Sequence[str]) -> tuple[bool, bool, str | None]:
+    """Match record_name against any of the variants.
+
+    Returns (canonical_match, suffix_match, matched_variant).
+      canonical_match: True if any variant shares a canonical form (suffix-agnostic)
+      suffix_match:    True if at least one matching variant ALSO shares the suffix
+      matched_variant: the first variant whose canonical form matched (None if no match)
+
+    The two-flag return lets callers distinguish "no match → skip" from "name
+    canonically matches but suffix differs → UNCERTAIN per VERIFICATION.md".
+    """
+    rec_forms, rec_suffix = normalize_name(record_name)
+    if not rec_forms:
+        return (False, False, None)
+
+    canonical_hit: str | None = None
+    suffix_hit = False
+    for v in variants:
+        v_forms, v_suffix = normalize_name(v)
+        if rec_forms & v_forms:
+            if canonical_hit is None:
+                canonical_hit = v
+            if rec_suffix == v_suffix:
+                suffix_hit = True
+                # Prefer the variant that fully matches.
+                canonical_hit = v
+                break
+    return (canonical_hit is not None, suffix_hit, canonical_hit)
+
+
+def names_match_with_fallback(
+    record_name: str,
+    synthetic_name: str,
+    variants: Sequence[str],
+) -> tuple[bool, bool, str | None]:
+    """Try the literal contributor_name; if no canonical match, fall back to
+    a synthetic "First Middle Last" built from FEC's structured fields.
+
+    Handles the FEC pattern where `contributor_name` is ambiguously ordered
+    (e.g., "HENRY JOHN W." with no comma) but the structured first/middle/last
+    fields are present and unambiguous.
+    """
+    canon, suf, v = names_match(record_name, variants)
+    if canon:
+        return canon, suf, v
+    if synthetic_name:
+        return names_match(synthetic_name, variants)
+    return False, False, None
+
+
+# ─── Signal matchers ────────────────────────────────────────────────────────
+
+
+def _norm(s) -> str:
+    """Normalize a string for case-insensitive substring matching.
+
+    Steps: lowercase → replace `.` and `,` with spaces → collapse whitespace.
+    Periods and commas are stripped (replaced with space, then collapsed)
+    because they are typographic, not semantic — "John W. Henry and Company"
+    and "JOHN W HENRY AND COMPANY INC" should match. This is symmetric with
+    name normalization, which has done the same since the classifier shipped.
+
+    Does NOT do stemming, word removal, or `&` ↔ "and" substitution — the spec
+    (VERIFICATION.md) forbids those, and they would create lossy matches
+    (e.g., "Point72" matching "Point Park University" because both contain "Point").
+    """
+    if not isinstance(s, str):
+        return ""
+    s = s.lower().replace(".", " ").replace(",", " ")
+    return re.sub(r"\s+", " ", s).strip()
+
+
+def employer_match(record_employer: str | None, signal_list: Sequence[str]) -> list[str]:
+    """Return signal strings that matched (case-insensitive substring).
+
+    Match rule per VERIFICATION.md: signal_string must be a substring of
+    record_employer. No stemming, no word removal.
+    """
+    if not record_employer:
+        return []
+    hay = _norm(record_employer)
+    hits = []
+    for sig in signal_list or []:
+        needle = _norm(sig)
+        if needle and needle in hay:
+            hits.append(sig)
+    return hits
+
+
+def occupation_match(record_occupation: str | None, signal_list: Sequence[str]) -> list[str]:
+    return employer_match(record_occupation, signal_list)
+
+
+def city_state_match(
+    record_city: str | None,
+    record_state: str | None,
+    signal_cities: Sequence[str],
+    signal_states: Sequence[str],
+) -> str | None:
+    """City+state is a single confirming signal — BOTH must match."""
+    if not record_city or not record_state:
+        return None
+    city_lc = _norm(record_city)
+    state = (record_state or "").strip().upper()
+    cities_lc = {_norm(c) for c in (signal_cities or [])}
+    states = {(s or "").strip().upper() for s in (signal_states or [])}
+    if city_lc in cities_lc and state in states:
+        return f"{city_lc}/{state}"
+    return None
+
+
+def zip_match(record_zip: str | None, signal_zips: Sequence[str]) -> str | None:
+    if not record_zip:
+        return None
+    rec = str(record_zip).strip()[:5]  # ZIP+4 → ZIP5 for comparison
+    for z in signal_zips or []:
+        if rec == str(z).strip()[:5]:
+            return rec
+    return None
+
+
+def address_contradicts(
+    record_city: str | None,
+    signal_cities: Sequence[str],
+) -> bool:
+    """True iff the record has a non-empty city that is NOT in our city signal list.
+
+    Per VERIFICATION.md: this catches family-name collisions where the employer
+    might still match but the donor is a relative in a different town. We don't
+    have a `secondary_residence` field — the YAML's `verifying_signals.cities`
+    IS the documented residence set. If we want to widen it, we widen the
+    signals deliberately (with a change_log entry), not silently here.
+    """
+    if not record_city:
+        return False  # No city to contradict.
+    city_lc = _norm(record_city)
+    cities_lc = {_norm(c) for c in (signal_cities or [])}
+    return city_lc not in cities_lc
+
+
+# ─── Classification ─────────────────────────────────────────────────────────
+
+
+def _get_record_fields(record: dict) -> dict:
+    # FEC schedule_a sometimes records the name in an ambiguous order in
+    # `contributor_name` (e.g., "HENRY JOHN W." with no comma — Last First
+    # MiddleInitial). For those cases, FEC's structured fields
+    # contributor_first_name / contributor_middle_name / contributor_last_name
+    # disambiguate. We build a "First Middle Last" synthetic alongside the
+    # raw name and let names_match try both.
+    fn = (record.get("contributor_first_name") or "").strip()
+    mn = (record.get("contributor_middle_name") or "").strip()
+    ln = (record.get("contributor_last_name") or "").strip()
+    synthetic = " ".join(p for p in (fn, mn, ln) if p)
+    return {
+        "name": record.get("contributor_name") or "",
+        "name_synthetic": synthetic,
+        "employer": record.get("contributor_employer") or "",
+        "occupation": record.get("contributor_occupation") or "",
+        "city": record.get("contributor_city") or "",
+        "state": record.get("contributor_state") or "",
+        "zip": record.get("contributor_zip") or "",
+    }
+
+
+def _classify_against_entity_signals(
+    rf: dict,
+    verifying_signals: dict,
+    strong_signals: dict,
+    negative_signals: dict | None = None,
+) -> tuple[str, str, list[str]]:
+    vs_cities = verifying_signals.get("cities") or []
+    vs_states = verifying_signals.get("states") or []
+    vs_employers = verifying_signals.get("employers") or []
+    vs_occupations = verifying_signals.get("occupations") or []
+    ss_employers = strong_signals.get("employers") or []
+    ss_zips = strong_signals.get("zip_codes") or []
+    ns_employers = (negative_signals or {}).get("employers") or []
+
+    # Negative employer signal (anti-pattern). Per VERIFICATION.md, a match
+    # against negative_signals.employers demotes to UNCERTAIN regardless of
+    # any other signals. This catches same-name doppelgängers that the
+    # operator has manually identified via review.
+    negative_hits = employer_match(rf["employer"], ns_employers)
+    if negative_hits:
+        return (
+            UNCERTAIN,
+            f"matches negative employer signal: {', '.join(negative_hits)}",
+            [f"negative_employer:{h}" for h in negative_hits],
+        )
+
+    strong_emp_hits = employer_match(rf["employer"], ss_employers)
+    strong_zip_hit = zip_match(rf["zip"], ss_zips)
+    strong_signals_matched = [f"strong_employer:{h}" for h in strong_emp_hits]
+    if strong_zip_hit:
+        strong_signals_matched.append(f"strong_zip:{strong_zip_hit}")
+
+    confirming_signals_matched: list[str] = []
+    emp_hits = employer_match(rf["employer"], vs_employers)
+    confirming_signals_matched.extend(f"employer:{h}" for h in emp_hits)
+    occ_hits = occupation_match(rf["occupation"], vs_occupations)
+    confirming_signals_matched.extend(f"occupation:{h}" for h in occ_hits)
+    cs_hit = city_state_match(rf["city"], rf["state"], vs_cities, vs_states)
+    if cs_hit:
+        confirming_signals_matched.append(f"city_state:{cs_hit}")
+
+    # Address contradiction: city is filled but not in our documented list.
+    # Demotes to UNCERTAIN regardless of other signals (VERIFICATION.md
+    # negative-signal rule). This catches family-name collisions.
+    if address_contradicts(rf["city"], vs_cities):
+        all_signals = strong_signals_matched + confirming_signals_matched
+        return (
+            UNCERTAIN,
+            f"city/state outside documented residences (city={rf['city']!r}, state={rf['state']!r})",
+            all_signals,
+        )
+
+    all_signals = strong_signals_matched + confirming_signals_matched
+
+    if strong_signals_matched:
+        return (
+            CONFIRMED,
+            f"strong signal: {', '.join(strong_signals_matched)}",
+            all_signals,
+        )
+    if len(confirming_signals_matched) >= 2:
+        return (
+            CONFIRMED,
+            f"two confirming signals: {', '.join(confirming_signals_matched)}",
+            all_signals,
+        )
+    if len(confirming_signals_matched) == 1:
+        return (
+            PROBABLE,
+            f"one confirming signal: {confirming_signals_matched[0]}",
+            all_signals,
+        )
+    return (UNCERTAIN, "name match only — no confirming signals", all_signals)
+
+
+def classify(
+    record: dict,
+    owner: dict,
+    *,
+    process_related_entities: bool = False,
+) -> Classification | None:
+    """Classify one FEC record against one owner YAML.
+
+    Returns:
+      - None if the record's name does not match the owner's name_variants
+        AT ALL (canonical-form check). The record is filtered out — never
+        enters the DB or the review queue.
+      - Classification(status=UNCERTAIN) if the name canonically matches but
+        the suffix mismatches, OR if address contradicts, OR if name matches
+        but no confirming signal hits.
+      - Classification(status=PROBABLE) for exactly one confirming signal.
+      - Classification(status=CONFIRMED) for ≥2 confirming signals or any
+        strong signal.
+
+    Related-entity routing:
+      - If the record's name canonically matches a related_entity, and
+        process_related_entities=True, classify against that entity instead.
+      - If process_related_entities=False and the record matches a related
+        entity (not the owner), return None — out of scope this run.
+      - If a record name-matches BOTH the owner and a related entity (e.g.,
+        joint filing with overlapping names), route to the related entity
+        per VERIFICATION.md "spouse-name collision" rule.
+    """
+    rf = _get_record_fields(record)
+    if not rf["name"]:
+        return None
+
+    # ── Related-entity name check first (spouse-collision rule) ────────────
+    related = owner.get("related_entities") or []
+    for ent in related:
+        if not isinstance(ent, dict):
+            continue
+        ent_variants = ent.get("name_variants") or []
+        if ent_variants:
+            canon, suffix_ok, matched_v = names_match_with_fallback(rf["name"], rf.get("name_synthetic", ""), ent_variants)
+            if canon:
+                # Name canonically matches a related entity.
+                if not process_related_entities:
+                    # Principals-only mode — the record is out of scope for
+                    # this run, even if it also matches the owner. The spec
+                    # says spouse-name collision routes to spouse, not owner;
+                    # since we're not tracking spouse, we skip.
+                    return None
+                # Full mode: classify against this entity's signals.
+                if not suffix_ok:
+                    return Classification(
+                        status=UNCERTAIN,
+                        status_reason=f"suffix mismatch on related entity {ent.get('slug')!r}",
+                        signals_matched=[],
+                        entity_slug=ent.get("slug") or "",
+                        entity_kind=ent.get("kind") or "spouse",
+                        parent_owner_slug=owner.get("slug"),
+                        name_matched_variant=matched_v,
+                    )
+                status, reason, sigs = _classify_against_entity_signals(
+                    rf,
+                    ent.get("verifying_signals") or {},
+                    ent.get("strong_signals") or {},
+                    ent.get("negative_signals") or {},
+                )
+                return Classification(
+                    status=status,
+                    status_reason=reason,
+                    signals_matched=sigs,
+                    entity_slug=ent.get("slug") or "",
+                    entity_kind=ent.get("kind") or "spouse",
+                    parent_owner_slug=owner.get("slug"),
+                    name_matched_variant=matched_v,
+                )
+
+    # ── Owner name match ───────────────────────────────────────────────────
+    owner_variants = owner.get("name_variants") or []
+    canon, suffix_ok, matched_variant = names_match_with_fallback(
+        rf["name"], rf.get("name_synthetic", ""), owner_variants
+    )
+    if not canon:
+        return None
+
+    if not suffix_ok:
+        # Suffix mismatch ⇒ UNCERTAIN regardless of other signals.
+        return Classification(
+            status=UNCERTAIN,
+            status_reason="suffix mismatch (name canonically matches but suffix differs from variants)",
+            signals_matched=[],
+            entity_slug=owner.get("slug") or "",
+            entity_kind="owner",
+            parent_owner_slug=None,
+            name_matched_variant=matched_variant,
+        )
+
+    status, reason, sigs = _classify_against_entity_signals(
+        rf,
+        owner.get("verifying_signals") or {},
+        owner.get("strong_signals") or {},
+        owner.get("negative_signals") or {},
+    )
+    return Classification(
+        status=status,
+        status_reason=reason,
+        signals_matched=sigs,
+        entity_slug=owner.get("slug") or "",
+        entity_kind="owner",
+        parent_owner_slug=None,
+        name_matched_variant=matched_variant,
+    )

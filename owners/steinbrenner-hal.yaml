@@ -1,0 +1,165 @@
+# Harold Z. Steinbrenner — New York Yankees
+# Phase 1.5 pilot. Managing General Partner / Chairperson of Yankee Global
+# Enterprises, LLC. Took day-to-day control 2008-11-20 (MLB approval); board
+# chair of YGE since 2007.
+#
+# SCOPE: Hal only. His siblings (Jennifer Steinbrenner Swindal, Jessica
+# Steinbrenner, late brother Hank) and parents (the late George and Joan
+# Steinbrenner) file their own donations separately and are NOT tracked under
+# this slug — see notes for the anticipated family-collision audit work.
+#
+# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+
+slug: steinbrenner-hal
+name: Harold Z. Steinbrenner
+team: New York Yankees
+role: Principal owner
+status: pilot
+tenure_start_date: 2008-11-20
+tenure_end_date: null
+
+# Conservative name variants. Critically:
+#   - "Steinbrenner" alone is NEVER a variant — it matches every family member.
+#   - "H. Steinbrenner" is excluded — ambiguous with brother Hank.
+#   - Middle initial "Z" included to maximize disambiguation when filed in full.
+#   - Both "first last" and "last, first" forms included; FEC contributor-name
+#     field flips between the two depending on filer.
+name_variants:
+  - "Harold Z Steinbrenner"
+  - "Harold Z. Steinbrenner"
+  - "Harold Steinbrenner"
+  - "Hal Steinbrenner"
+  - "Steinbrenner, Harold"
+  - "Steinbrenner, Harold Z"
+  - "Steinbrenner, Harold Z."
+  - "Steinbrenner, Hal"
+
+verifying_signals:
+  cities:
+    # Tampa is Hal's documented home base — Davis Islands (114 Martinique Ave,
+    # sold 2017–2020), Sunset Park, Yankees Tampa offices, Boys & Girls Club
+    # of Tampa Bay board. No Tier-2 source affirmatively documents a current
+    # NYC residence; if calibration finds clearly-Hal NYC filings, add NYC /
+    # NY with a change_log entry.
+    - "tampa"
+  states:
+    - "FL"
+  employers:
+    # Hal's documented affiliations (Tier 2):
+    # - Yankee Global Enterprises (YGE) — the LLC that owns the Yankees, of
+    #   which he is chairman & managing GP.
+    # - New York Yankees — likely how the team is reported on filings.
+    # - Steinbrenner Hotel Properties — Hal is chairman & CEO (SOWF board bio).
+    # These strings are NOT unique to Hal (other Yankees executives may file
+    # "New York Yankees" as employer) — they live here in verifying_signals,
+    # requiring a SECOND confirming signal for CONFIRMED.
+    - "Yankee Global Enterprises"
+    - "Yankee Global"
+    - "New York Yankees"
+    - "NY Yankees"
+    - "Yankees"
+    - "Steinbrenner Hotel Properties"
+  occupations:
+    - "managing general partner"
+    - "general partner"
+    - "managing partner"
+    - "partner"
+    - "owner"
+    - "principal owner"
+    - "chairman"
+    - "chairperson"
+    - "co-chairperson"
+    - "ceo"
+    - "businessman"
+
+strong_signals:
+  # Intentionally empty at creation. "Yankee Global Enterprises" and
+  # "Steinbrenner Hotel Properties" are tempting (both Hal-led) but other
+  # employees may file these as employer too. "Martinique Holdings, Inc."
+  # is Hal's personal ownership-stake holding company per the official
+  # Yankees front-office page (named after his former Davis Islands address),
+  # but it's unlikely he files his personal donations reporting it as employer.
+  # Promote to strong_signals only when calibration shows zero false positives.
+  employers: []
+  zip_codes: []
+
+# No negative_signals at creation. The family-name collisions are addressed
+# by strict name normalization — Hal's variants don't include George, Hank,
+# Jennifer, or Jessica. Audit will catch any leakage and tighten.
+
+related_entities: []
+# Per Phase 1.5 registry hint and user direction:
+# - Siblings (Jennifer, Jessica) have independent donation histories. Each
+#   gets its own slug with its own YAML if/when added — NOT a related_entity
+#   under Hal.
+# - Spouse Christina Steinbrenner is not added — no Tier 2 source on her
+#   FEC activity researched yet.
+# - George (deceased 2010) and Joan (deceased 2018) Steinbrenner gave heavily
+#   pre-2010 but are out of scope (deceased, no longer a tracked principal).
+
+sources:
+  - description: "MLB.com / New York Yankees official Front Office Staff Directory — Hal as 'Managing General Partner / Chairperson'; identifies his personal ownership-stake holding entity as 'Martinique Holdings, Inc.' Sibling holding entities listed separately (Marsh Harbor for Jennifer; JJS NYY for Jessica)"
+    url: "https://www.mlb.com/yankees/team/front-office"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "Special Operations Warrior Foundation Board page (owner's own listed board bio) — Hal's titles: Managing General Partner/Co-Chairperson of the Yankees, Chairman & CEO of Steinbrenner Hotel Properties, board of Legends Hospitality, LLC, board of Boys & Girls Club of Tampa Bay. Tampa civic ties"
+    url: "https://specialops.org/who-we-are/board-and-staff/harold-steinbrenner/"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "ESPN long-form profile (March 2016) — full legal name 'Harold Zieg Steinbrenner', Davis Islands (Tampa) residence as of 2016, preference for 'managing general partner' title, Hank as older brother"
+    url: "https://www.espn.com/mlb/story/_/page/springtraining_halsteinbrenner/who-exactly-new-york-yankees-owner-hal-steinbrenner"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "Premier Sotheby's International Realty blog — documents Hal Steinbrenner's former Davis Islands residence at 114 Martinique Avenue, Tampa, FL (the property after which his Yankees-ownership holding company, Martinique Holdings Inc., is named). Sold July 2020 for $9.1M"
+    url: "https://www.premiersothebysrealty.com/blog/the-former-davis-island-home-of-new-york-yankees-owner-hal-steinbrenner-sells-for--9-1-million"
+    accessed: "2026-05-22"
+    archive_url: ""
+
+notes: |
+  CRITICAL — family-name collision risk. Hal is one of four Steinbrenner
+  siblings (Hank, Jessica, Jennifer Swindal). None of those siblings are
+  tracked under this slug. Strict name normalization (no "Steinbrenner" alone
+  variant; no "H. Steinbrenner" variant; explicit "Harold/Hal" requirement)
+  is the primary disambiguator.
+
+  Hal's father George M. Steinbrenner III was a prolific federal donor
+  through 2010. Pre-2010 records named "George Steinbrenner" / "George M.
+  Steinbrenner" must NOT match Hal's variants. Strict matching should handle
+  this naturally; if any leak, that is a name-normalization bug.
+
+  Hal's residence is documented as Tampa, FL. He sold 114 Martinique Avenue
+  around 2017–2020 and the Sunset Park home as well. Current-residence ZIP
+  is unknown; let the data tell us. NYC residence not affirmatively documented
+  in Tier 2 sources — if calibration finds clearly-Hal NYC filings (employer
+  = Yankee Global Enterprises with NYC ZIPs), add NYC / NY then with a
+  change_log entry.
+
+  Hal's personal ownership-stake holding company is "Martinique Holdings,
+  Inc." (named after the former Davis Islands street). If "Martinique
+  Holdings" appears as an FEC employer string on a Hal-name-matched record,
+  it is strongly indicative — consider promoting to strong_signals after
+  calibration audit.
+
+  Expected calibration-round-1 questions:
+    - Are NYC filings appearing? If so, add NY/NYC.
+    - Is "Martinique Holdings" appearing as employer? If so, promote to
+      strong_signals.
+    - Is the doppelgänger landscape clean, or are sibling records leaking?
+
+change_log:
+  - date: 2026-05-22
+    change: |
+      Created during Phase 1.5 research. Tier 2 sources: MLB.com Yankees
+      Front Office page, Special Operations Warrior Foundation board bio,
+      ESPN long-form profile, Premier Sotheby's blog re Davis Islands
+      residence. Tampa-only / FL-only at creation. strong_signals empty
+      pending calibration. Name variants explicitly exclude "Steinbrenner"
+      alone and "H. Steinbrenner" to keep sibling/parent records out.
+    by: "claude-code-research (orchestrated by alex)"
+    references:
+      - "/tmp/steinbrenner-hal-research.md (session-local research file)"
+
+audit:
+  created: 2026-05-22
+  last_ingestion: null
+  last_signal_review: 2026-05-22

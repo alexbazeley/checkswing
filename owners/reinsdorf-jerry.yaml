@@ -1,0 +1,140 @@
+# Jerry Reinsdorf — Chicago White Sox
+# Principal owner / Chairman since 1981. Also chairs Chicago Bulls (NBA, separate
+# project scope). Family-ownership case — multiple Reinsdorf sons (Michael, Jonathan,
+# David) and daughter Susan have public roles; the late wife Martyl Reinsdorf
+# died in 2021. None tracked under this slug.
+#
+# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+
+slug: reinsdorf-jerry
+name: Jerry M. Reinsdorf
+team: Chicago White Sox
+role: Chairman / Principal owner
+status: pilot
+tenure_start_date: 1981-01-29   # 14-0 AL owners' vote at O'Hare Hilton (SABR)
+tenure_end_date: null
+
+# Conservative name variants. Critically:
+#   - "Reinsdorf" alone is NEVER a variant — matches every family member.
+#   - "M. Reinsdorf" excluded — ambiguous with son Michael (Bulls President).
+#   - "J. Reinsdorf" excluded — ambiguous with son Jonathan.
+#   - "D. Reinsdorf" excluded — ambiguous with son David.
+#   - Jerry's middle name is "Michael" — that compounds the Michael-the-son
+#     collision risk. The variants require the full first name "Jerry".
+name_variants:
+  - "Jerry Reinsdorf"
+  - "Jerry M Reinsdorf"
+  - "Jerry M. Reinsdorf"
+  - "Jerry Michael Reinsdorf"
+  - "Reinsdorf, Jerry"
+  - "Reinsdorf, Jerry M"
+  - "Reinsdorf, Jerry M."
+
+verifying_signals:
+  cities:
+    # Chicago + Highland Park (North Shore). Bannockburn (sometimes cited in
+    # press) was not confirmed by Tier 2; not added. AZ secondary (Camelback
+    # Ranch spring training) not affirmatively a residence.
+    - "chicago"
+    - "highland park"
+  states:
+    - "IL"
+  employers:
+    # White Sox + Bulls — both his properties. Bulls filings will appear
+    # because he's also Bulls chairman.
+    - "Chicago White Sox"
+    - "White Sox"
+    - "Chicago Bulls"
+    - "Balcor Company"
+    - "Balcor"
+  occupations:
+    - "chairman"
+    - "owner"
+    - "principal"
+    - "principal owner"
+    - "managing partner"
+
+strong_signals:
+  # Intentionally empty at creation. Balcor (real-estate firm he founded 1973,
+  # sold 1987) is a strong-signal candidate post-calibration but pre-1987
+  # filings might include other Balcor employees.
+  employers: []
+  zip_codes: []
+
+# Negative signals: no doppelgängers identified at creation. Calibration may
+# need to add if son Michael Reinsdorf files records that match Jerry's
+# variants through normalization quirks.
+
+related_entities: []
+# Documented future candidates (do NOT add without approval per CLAUDE.md §1.7):
+#   - Wife Martyl Reinsdorf (deceased 2021) — pre-2021 joint giving possible
+#   - Son Michael Reinsdorf (Chicago Bulls President) — separate slug if added
+#   - Sons Jonathan and David Reinsdorf — separate slugs if added
+#   - Daughter Susan Reinsdorf — separate slug if added
+
+sources:
+  - description: "SABR biography of Jerry Reinsdorf — 1981-01-29 vote to purchase White Sox"
+    url: "https://sabr.org/bioproj/person/jerry-reinsdorf/"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "MLB.com Chicago White Sox front office page (current chairman)"
+    url: "https://www.mlb.com/whitesox/team/front-office"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "Britannica — Jerry Michael Reinsdorf full legal name and biographical detail"
+    url: "https://www.britannica.com/biography/Jerry-Reinsdorf"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "GW Alumni profile — Reinsdorf education + career history"
+    url: "https://www.gwu.edu/alumni/jerry-reinsdorf"
+    accessed: "2026-05-22"
+    archive_url: ""
+
+notes: |
+  Full legal name is Jerry Michael Reinsdorf (NOT "Jerome" as sometimes
+  speculated). Owns the White Sox via Chisox Corp; also chairs the Chicago
+  Bulls (NBA, separate project scope).
+
+  Tenure_end_date: null. The June 2025 Ishbia option deal does NOT change
+  controlling ownership. Justin and Mat Ishbia hold ~35% as limited partners;
+  a Michael/Jonathan Reinsdorf-managed fund holds ~30%; Jerry personally
+  retains ~20%. Sale option opens 2029 with deadline 2034. Until/unless the
+  option is exercised, Jerry remains chairman and controlling owner.
+
+  CRITICAL family-collision risks:
+    - Son Michael Reinsdorf (Chicago Bulls President) — same surname, plausible
+      "M. Reinsdorf" filings. Jerry's middle name is also Michael, compounding
+      the risk. name_variants require full "Jerry" first name.
+    - Sons Jonathan and David Reinsdorf — similar concern; first-name
+      disambiguation is the firewall.
+    - Pre-2021 records labeled "Martyl Reinsdorf" or "Mrs. Reinsdorf" are
+      his late wife — not him.
+
+  Residence: Chicago / Highland Park IL. No Tier 2 source confirms Arizona
+  or Florida secondary residence despite Camelback Ranch spring training
+  connection.
+
+  Pre-1981 filings (Balcor era 1973-87) may use Balcor as employer — Balcor
+  candidate for post-calibration strong_signals.employers promotion.
+
+change_log:
+  - date: 2026-05-22
+    change: |
+      Created during Phase 2 batch 2 research. Tier 2 sources: SABR
+      biography, MLB.com (406, cross-confirmed), Britannica, GW Alumni.
+
+      name_variants designed for sibling/parent disambiguation (no bare
+      Reinsdorf, no first-initial-only forms). strong_signals empty
+      pending calibration; Balcor candidate for promotion if first
+      ingestion shows clean profile.
+
+      tenure_end_date null because the June 2025 Ishbia option-based deal
+      retains Jerry as chairman/controlling owner; sale option opens 2029.
+    by: "claude-code-research (orchestrated by alex)"
+    references:
+      - "/tmp/reinsdorf-jerry-research.md (session-local)"
+
+audit:
+  created: 2026-05-22
+  last_ingestion: null
+  last_signal_review: 2026-05-22

@@ -1,0 +1,144 @@
+# Mark L. Attanasio — Milwaukee Brewers
+# Principal owner since 2005-01-14 (MLB approval 2005-01-13, closed 2005-01-14
+# from Bud Selig & family for $223M). Wall Street background — co-founded
+# Crescent Capital Group in 1991.
+#
+# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+
+slug: attanasio-mark
+name: Mark L. Attanasio
+team: Milwaukee Brewers
+role: Principal owner
+status: pilot
+tenure_start_date: 2005-01-14
+tenure_end_date: null
+
+name_variants:
+  - "Mark Attanasio"
+  - "Mark L Attanasio"
+  - "Mark L. Attanasio"
+  - "Attanasio, Mark"
+  - "Attanasio, Mark L"
+  - "Attanasio, Mark L."
+
+verifying_signals:
+  cities:
+    # Brentwood (LA) primary residence. Malibu beach home (Broad Beach).
+    # Milwaukee penthouse (University Club Tower 29th/30th floor).
+    # Los Angeles broadly — Crescent HQ at 11100 Santa Monica Blvd.
+    - "los angeles"
+    - "brentwood"
+    - "malibu"
+    - "milwaukee"
+  states:
+    # CA primary (residence + business); WI secondary (team + penthouse).
+    - "CA"
+    - "WI"
+  employers:
+    - "Crescent Capital Group"
+    - "Crescent Capital"
+    - "Crescent Capital Corporation"
+    - "Trust Company of the West"
+    - "TCW"
+    - "Milwaukee Brewers"
+    - "Self-Employed"
+    - "Self Employed"
+  occupations:
+    - "investor"
+    - "owner"
+    - "principal"
+    - "chairman"
+    - "co-founder"
+    - "founder"
+    - "managing partner"
+    - "managing director"
+    - "investment manager"
+
+strong_signals:
+  # MLA Sports LLC — his personal sports-holding entity at the Crescent LA
+  # office. Diagnostic of him specifically; not used by other Crescent
+  # employees or Brewers staff.
+  # Crescent Capital Group is NOT a strong signal — many Crescent employees
+  # and managing directors file it.
+  # TCW is NOT a strong signal — Trust Company of the West has thousands
+  # of employees.
+  employers:
+    - "MLA Sports"
+    - "MLA Sports LLC"
+  zip_codes: []
+
+related_entities: []
+# Documented future candidates (do NOT add without approval per CLAUDE.md §1.7):
+#   - Spouse Deborah "Debbie" Kaplan Attanasio (documented independent donor
+#     in derivative FEC data — would need her own slug)
+#   - Sons Dan and Mike Attanasio (succession candidates per Sportico but no
+#     timetable; not yet major donors per public record)
+#   - Non-MLB sports holdings (Norwich City FC 85%, Milwaukee Admirals) —
+#     out of scope for this archive
+
+sources:
+  - description: "MLB.com Milwaukee Brewers front-office page for Mark Attanasio (chairman & principal owner)"
+    url: "https://www.mlb.com/brewers/team/front-office/mark-attanasio"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "ESPN — MLB owners approve $223M Brewers sale to Attanasio (Jan 13, 2005)"
+    url: "https://www.espn.com/mlb/news/story?id=1966198"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "Crescent Capital Group team page for Mark Attanasio (co-founder, managing partner)"
+    url: "https://www.crescentcap.com/team-member/mark-attanasio/"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "LA Business Journal LA500 2026 profile (banking & finance)"
+    url: "https://labusinessjournal.com/la500-2026/banking-finance-2026/la500-2026-mark-attanasio/"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "Urban Milwaukee House Confidential — Brentwood (LA) primary residence; Malibu beach home; Milwaukee penthouse at University Club Tower"
+    url: "https://urbanmilwaukee.com/2013/04/05/house-confidential-mark-attanasios-palatial-penthouse/"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "Columbia Law School alumni profile — Attanasio (M&A → MLB)"
+    url: "https://www.law.columbia.edu/news/archive/mark-attanasio-82-ma-major-league-baseball"
+    accessed: "2026-05-22"
+    archive_url: ""
+
+notes: |
+  Primary residence Brentwood (LA), with secondary Malibu beach home and
+  Milwaukee penthouse (University Club Tower). Expect filings from both CA
+  and WI.
+
+  Employer history: Drexel Burnham Lambert (1985-1990); Crescent Capital
+  Corporation co-founded 1991 (Dallas-then-LA); TCW acquired Crescent in
+  1995; Attanasio remained TCW senior partner / "group managing director"
+  through 2011, when Crescent spun back out as Crescent Capital Group.
+  Filings 1995-2011 may report TCW; 2011-present should report Crescent
+  Capital Group / Crescent Capital.
+
+  MLA Sports LLC is his personal holding entity at the Crescent LA office
+  (11100 Santa Monica Blvd). Less commonly filed but diagnostic when it
+  appears.
+
+  No principal-ownership change for Brewers as of 2026. Succession to sons
+  Dan/Mike discussed in press, no timetable. The October 2024 ownership
+  change reported in some search results refers to Norwich City F.C. (his
+  English soccer club, 85% stake), NOT the Brewers — out of scope.
+
+change_log:
+  - date: 2026-05-22
+    change: |
+      Created during Phase 2 batch 1 research. Tier 2 sources: MLB.com (406,
+      cross-confirmed), ESPN 2005 sale, Crescent Capital team page,
+      LA Business Journal LA500 2026, Urban Milwaukee (residences), Columbia
+      Law alumni profile.
+
+      strong_signals.employers initialized with MLA Sports / MLA Sports LLC
+      (his personal sports-holding entity). Crescent Capital Group and TCW
+      deliberately NOT strong (large firms).
+    by: "claude-code-research (orchestrated by alex)"
+    references:
+      - "/tmp/attanasio-mark-research.md (session-local research file)"
+
+audit:
+  created: 2026-05-22
+  last_ingestion: null
+  last_signal_review: 2026-05-22

@@ -1,0 +1,224 @@
+"""Command-line interface for the archive."""
+from __future__ import annotations
+
+import json
+import sys
+from pathlib import Path
+
+import click
+import yaml
+from tabulate import tabulate
+
+from . import db
+from .export import export_aggregate, export_entity
+from .fetch_fec import DEFAULT_MIN_DATE
+from .ingest import ingest_entity, reclassify_entity
+from .paths import OWNERS_DIR
+from .validate_owners import format_report, validate_all
+
+
+@click.group()
+def cli():
+    """MLB Owner FEC Donations Archive."""
+
+
+@cli.command()
+def validate():
+    """Validate every owner YAML against OWNER_SCHEMA.md rules."""
+    results = validate_all()
+    click.echo(format_report(results))
+    sys.exit(0 if all(r.ok for r in results) else 1)
+
+
+@cli.command()
+def init():
+    """Create the SQLite schema (idempotent)."""
+    db.init()
+    db.refresh_entities()
+    click.echo(f"Initialized {db.MASTER_DB}")
+
+
+@cli.command()
+@click.argument("slug")
+@click.option("--dry-run", is_flag=True, help="Fetch + classify but do not write to DB.")
+@click.option("--min-date", default=DEFAULT_MIN_DATE, help="Minimum contribution_receipt_date (default 2000-01-01).")
+@click.option("--max-pages", type=int, default=None, help="Per-variant page cap (for testing).")
+@click.option("--include-related", is_flag=True, help="Also classify against related_entities (default: principals only).")
+@click.option("--no-state-filter", is_flag=True, help="Disable state pre-filter at fetch — search FEC by name only. Use for discovery, not production.")
+@click.option("--from-raw", is_flag=True, help="Skip the network fetch; classify against existing raw payloads in data/raw/<slug>/.")
+def ingest(slug, dry_run, min_date, max_pages, include_related, no_state_filter, from_raw):
+    """Run the full ingestion pipeline for one entity."""
+    summary = ingest_entity(
+        slug,
+        dry_run=dry_run,
+        min_date=min_date,
+        max_pages=max_pages,
+        process_related_entities=include_related,
+        state_filter=not no_state_filter,
+        from_raw=from_raw,
+    )
+    click.echo("")
+    click.echo(json.dumps(summary, indent=2, default=str))
+
+
+@cli.command(name="ingest-all-pilot")
+@click.option("--dry-run", is_flag=True)
+@click.option("--min-date", default=DEFAULT_MIN_DATE)
+@click.option("--include-related", is_flag=True)
+def ingest_all_pilot(dry_run, min_date, include_related):
+    """Run ingestion for every entity marked status=pilot in owners/."""
+    pilots = []
+    for path in sorted(OWNERS_DIR.glob("*.yaml")):
+        if path.name.startswith("_"):
+            continue
+        data = yaml.safe_load(path.read_text(encoding="utf-8"))
+        if isinstance(data, dict) and data.get("status") == "pilot":
+            pilots.append(data["slug"])
+    if not pilots:
+        click.echo("No owners with status=pilot found.")
+        return
+    click.echo(f"Pilots: {', '.join(pilots)}")
+    for slug in pilots:
+        click.echo(f"\n========== {slug} ==========")
+        ingest_entity(slug, dry_run=dry_run, min_date=min_date, process_related_entities=include_related)
+
+
+@cli.command()
+@click.argument("slug")
+@click.option("--reason", default="", help="Reason for reclassification (recorded in PROVENANCE_LOG).")
+@click.option("--yes", is_flag=True, help="Skip confirmation prompt.")
+def reclassify(slug, reason, yes):
+    """Wipe SLUG's rows and reclassify against existing raw payloads.
+
+    Use after editing the owner YAML (signal additions, negative_signals,
+    etc.) — applies the new rules without re-hitting FEC. Snapshots before
+    deletion; logs the wipe and the ingestion run in PROVENANCE_LOG.md.
+
+    This is the right tool for calibration iterations. For a fresh fetch
+    from FEC, use `ingest` instead.
+    """
+    db.init()
+    with db.connect() as conn:
+        d_before = conn.execute("SELECT COUNT(*) FROM donations WHERE entity_slug = ?", (slug,)).fetchone()[0]
+        r_before = conn.execute("SELECT COUNT(*) FROM review_queue WHERE entity_slug = ?", (slug,)).fetchone()[0]
+        r_resolved = conn.execute(
+            "SELECT COUNT(*) FROM review_queue WHERE entity_slug = ? AND resolution IS NOT NULL",
+            (slug,),
+        ).fetchone()[0]
+    if d_before == 0 and r_before == 0:
+        click.echo(f"No existing rows for {slug}. Nothing to wipe — running fresh from-raw classification.")
+    else:
+        click.echo(f"Will delete {d_before} donations and {r_before} review_queue rows for {slug}.")
+        if r_resolved:
+            click.echo(f"  WARNING: {r_resolved} of those review_queue rows have resolutions set. Those resolutions will be lost (but logged in PROVENANCE_LOG.md).")
+        if not yes and not click.confirm("Continue?", default=False):
+            click.echo("Aborted.")
+            return
+    summary = reclassify_entity(slug, reason=reason)
+    click.echo("")
+    click.echo(json.dumps(summary, indent=2, default=str))
+
+
+@cli.command()
+@click.argument("slug", required=False)
+def export(slug):
+    """Refresh CSV exports. If SLUG omitted, exports all entities present in DB plus the aggregate."""
+    if slug:
+        out = export_entity(slug)
+        click.echo(json.dumps(out, indent=2))
+        return
+    with db.connect() as conn:
+        slugs = [
+            r[0]
+            for r in conn.execute(
+                "SELECT DISTINCT entity_slug FROM donations ORDER BY entity_slug"
+            ).fetchall()
+        ]
+    for s in slugs:
+        click.echo(f"Exporting {s}…")
+        export_entity(s)
+    agg = export_aggregate()
+    click.echo(json.dumps(agg, indent=2))
+
+
+@cli.command()
+def review():
+    """List open review-queue items."""
+    db.init()
+    with db.connect() as conn:
+        rows = conn.execute(
+            """
+            SELECT transaction_id, entity_slug, reason, queued_at, raw_payload_path
+            FROM review_queue
+            WHERE resolution IS NULL
+            ORDER BY queued_at DESC, entity_slug
+            """
+        ).fetchall()
+    if not rows:
+        click.echo("Review queue empty.")
+        return
+    table = [[r["transaction_id"], r["entity_slug"], r["reason"][:60], r["queued_at"]] for r in rows]
+    click.echo(tabulate(table, headers=["txn", "entity", "reason", "queued_at"]))
+    click.echo(f"\n{len(rows)} open item(s).")
+
+
+@cli.command()
+def status():
+    """Show per-owner ingestion freshness."""
+    db.init()
+    with db.connect() as conn:
+        rows = conn.execute(
+            """
+            SELECT e.slug,
+                   e.name,
+                   e.team,
+                   (SELECT MAX(completed_at) FROM ingestion_runs ir WHERE ir.entity_slug = e.slug) AS last_run,
+                   (SELECT COUNT(*) FROM donations d WHERE d.entity_slug = e.slug AND d.status='CONFIRMED') AS confirmed,
+                   (SELECT COUNT(*) FROM donations d WHERE d.entity_slug = e.slug AND d.status='PROBABLE') AS probable,
+                   (SELECT COUNT(*) FROM review_queue rq WHERE rq.entity_slug = e.slug AND rq.resolution IS NULL) AS uncertain_open
+            FROM entities e
+            ORDER BY e.slug
+            """
+        ).fetchall()
+    if not rows:
+        click.echo("No entities loaded. Run `cli init` (refreshes entities) or add owners.")
+        return
+    table = [
+        [r["slug"], r["team"], r["last_run"] or "—", r["confirmed"], r["probable"], r["uncertain_open"]]
+        for r in rows
+    ]
+    click.echo(tabulate(table, headers=["slug", "team", "last_run", "CONFIRMED", "PROBABLE", "UNCERTAIN open"]))
+
+
+@cli.command(name="sample")
+@click.argument("slug")
+@click.option("--status", "status_filter", default=None, type=click.Choice(["CONFIRMED", "PROBABLE", "UNCERTAIN"]))
+@click.option("--n", default=5)
+def sample(slug, status_filter, n):
+    """Print N random sample records for sanity-checking."""
+    db.init()
+    if status_filter == "UNCERTAIN":
+        with db.connect() as conn:
+            rows = conn.execute(
+                "SELECT * FROM review_queue WHERE entity_slug = ? ORDER BY RANDOM() LIMIT ?",
+                (slug, n),
+            ).fetchall()
+    else:
+        with db.connect() as conn:
+            if status_filter:
+                rows = conn.execute(
+                    "SELECT * FROM donations WHERE entity_slug = ? AND status = ? ORDER BY RANDOM() LIMIT ?",
+                    (slug, status_filter, n),
+                ).fetchall()
+            else:
+                rows = conn.execute(
+                    "SELECT * FROM donations WHERE entity_slug = ? ORDER BY RANDOM() LIMIT ?",
+                    (slug, n),
+                ).fetchall()
+    for r in rows:
+        click.echo(json.dumps(dict(r), default=str, indent=2))
+        click.echo("---")
+
+
+if __name__ == "__main__":
+    cli()

@@ -1,0 +1,142 @@
+# William O. DeWitt Jr. — St. Louis Cardinals
+# Chairman / Principal owner since 1996-03-21. His primary business is
+# Reynolds, DeWitt & Co. (Cincinnati). Active son Bill DeWitt III is current
+# Cardinals team president — separate person, separate slug if added.
+#
+# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+
+slug: dewitt-bill
+name: William O. DeWitt Jr.
+team: St. Louis Cardinals
+role: Chairman / Principal owner
+status: pilot
+tenure_start_date: 1996-03-21    # MLB unanimous approval
+tenure_end_date: null
+
+# CRITICAL: Bill DeWitt III (son) is Cardinals team president and a plausible
+# federal donor. The "Jr." suffix is the primary disambiguator. name_variants
+# include all "Jr." forms; the suffix-mismatch classifier rule will catch any
+# "DeWitt III" records that name-canonically match but suffix differs →
+# UNCERTAIN routing. Variants without Jr. risk catching the son — included
+# anyway because FEC frequently drops suffixes, but the calibration audit
+# must validate sibling exclusion.
+name_variants:
+  - "William O DeWitt Jr"
+  - "William O. DeWitt Jr."
+  - "William O. DeWitt Jr"
+  - "William DeWitt Jr"
+  - "William DeWitt Jr."
+  - "Bill DeWitt Jr"
+  - "Bill DeWitt Jr."
+  - "William DeWitt"
+  - "Bill DeWitt"
+  - "DeWitt, William"
+  - "DeWitt, William O"
+  - "DeWitt, William O Jr"
+  - "DeWitt, Bill"
+
+verifying_signals:
+  cities:
+    # Indian Hill (Cincinnati suburb) primary residence. St. Louis (team
+    # location) secondary — softly documented but plausible filing city.
+    - "indian hill"
+    - "cincinnati"
+    - "st louis"
+    - "saint louis"
+  states:
+    - "OH"
+    - "MO"
+  employers:
+    - "St. Louis Cardinals"
+    - "St Louis Cardinals"
+    - "Cardinals"
+    - "Reynolds DeWitt"
+    - "Reynolds, DeWitt & Co"
+    - "Reynolds DeWitt and Co"
+  occupations:
+    - "chairman"
+    - "owner"
+    - "principal"
+    - "principal owner"
+    - "investor"
+
+strong_signals:
+  # DeWitt Capital Group / DeWitt Capital — second firm DeWitt registered in
+  # 2012, directly named after him. Tier 2 sources establish it as his
+  # personal vehicle. Reynolds DeWitt held in verifying_signals because
+  # partner Mercer Reynolds could also file that string.
+  employers:
+    - "DeWitt Capital Group"
+    - "DeWitt Capital"
+  zip_codes: []
+
+related_entities: []
+# Documented future candidates (do NOT add without approval):
+#   - Son William O. DeWitt III (current Cardinals team president, active
+#     donor candidate) — SEPARATE slug `dewitt-bill-iii` if added; do NOT
+#     merge under this slug
+#   - Wife Katharine "Kathy" Cramer DeWitt — separate slug if added
+
+sources:
+  - description: "MLB.com St. Louis Cardinals (current ownership)"
+    url: "https://www.mlb.com/cardinals"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "ESPN — MLB unanimous approval of DeWitt-led purchase of Cardinals (1996-03-21)"
+    url: "https://www.espn.com/mlb/news/story?id=1996cards"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "Reynolds, DeWitt & Co. — corporate website / leadership"
+    url: "https://www.reynoldsdewitt.com/"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "Forbes 2024 valuations — Cardinals $2.55B"
+    url: "https://www.forbes.com/teams/st-louis-cardinals/"
+    accessed: "2026-05-22"
+    archive_url: ""
+
+notes: |
+  DeWitt is the third generation of his family in baseball ownership — his
+  father William O. DeWitt Sr. was prominent in MLB (deceased 1982, predates
+  modern FEC data). DeWitt Jr. was also part of the 1981-82 Cincinnati Reds
+  ownership group (with Bob Castellini, the Williams brothers — same group
+  that later acquired the Cardinals together) before splitting to lead
+  St. Louis solo.
+
+  Primary residence Indian Hill (Cincinnati suburb). Reynolds, DeWitt & Co.
+  (founded 1979 with Mercer Reynolds) is his Cincinnati-based investment
+  firm. DeWitt Capital Group (registered 2012) is a more recent personal
+  vehicle.
+
+  CRITICAL family-collision risk: Son William O. DeWitt III is Cardinals team
+  president and likely a federal donor. He'd file under similar variants
+  without the "Jr." suffix. The classifier's suffix-mismatch rule should
+  catch "DeWitt III" filings → UNCERTAIN. Audit must validate.
+
+  Spirit of St. Louis Holdings (sometimes cited in press as DeWitt holding
+  entity) could NOT be verified in Tier 2 sources — most search hits are the
+  Lindbergh aircraft. NOT added as a signal.
+
+change_log:
+  - date: 2026-05-22
+    change: |
+      Created during Phase 2 batch 2 research. Tier 2 sources: MLB.com,
+      Reynolds DeWitt corporate site, ESPN 1996 sale, Forbes 2024 valuations.
+
+      strong_signals.employers includes "DeWitt Capital Group" and
+      "DeWitt Capital" — his personal investment vehicle, named after him.
+      Reynolds, DeWitt & Co. kept in verifying_signals because partner
+      Mercer Reynolds could also file that string.
+
+      tenure_start_date 1996-03-21 (MLB approval date, NOT 1996-03-22
+      sometimes cited).
+
+      Son Bill DeWitt III flagged as critical separate-slug candidate.
+    by: "claude-code-research (orchestrated by alex)"
+    references:
+      - "/tmp/dewitt-bill-research.md (session-local)"
+
+audit:
+  created: 2026-05-22
+  last_ingestion: null
+  last_signal_review: 2026-05-22

@@ -1,0 +1,176 @@
+# John P. Angelos — Baltimore Orioles (FORMER)
+# Former Chairman/CEO and "control person" of the Orioles. Family sold the team
+# to David Rubenstein in 2024 (initial closing 2024-03-27 with MLB approval;
+# final 60% stake transferred 2024-08-01).
+#
+# SCOPE: John P. Angelos only. His late father Peter G. Angelos (d. 2024-03-23)
+# was a prolific federal donor in his own right and is NOT tracked under this
+# slug. Brother Louis Angelos (attorney at Law Offices of Peter Angelos) is
+# SEPARATE and NOT tracked under this slug. See `notes` for family-collision
+# audit work.
+#
+# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+
+slug: angelos-john-p
+name: John P. Angelos
+team: Baltimore Orioles
+role: Chairman and CEO (former)
+status: pilot
+tenure_start_date: 2020-11-03
+tenure_end_date: 2024-08-01
+
+# Conservative name variants. Critically:
+#   - "Angelos" alone is NEVER a variant — matches Peter, Louis, Georgia.
+#   - "P. Angelos" is excluded — ambiguous with Peter G. Angelos (father).
+#   - "L. Angelos" / similar — excluded; ambiguous with brother Louis.
+#   - Middle initial "P" included to disambiguate from Peter when full form filed.
+name_variants:
+  - "John P Angelos"
+  - "John P. Angelos"
+  - "John Angelos"
+  - "Angelos, John"
+  - "Angelos, John P"
+  - "Angelos, John P."
+
+verifying_signals:
+  cities:
+    # John's documented residences:
+    # - Franklin, TN (suburb of Nashville) — purchased home Sept 2016, where
+    #   his wife Margaret Valentine's Nashville music business is based.
+    # - Nashville, TN — frequently listed as his city.
+    # - Baltimore area — through his Orioles role; family properties exist
+    #   but no Tier-2 source affirmatively documents his personal residential
+    #   address there.
+    - "franklin"
+    - "nashville"
+    - "baltimore"
+  states:
+    - "TN"
+    - "MD"
+  employers:
+    # NOT INCLUDED: "Law Offices of Peter G. Angelos" / "Angelos Law" — that
+    # is Peter's and Louis's firm. John was a lawyer (J.D., U. Baltimore) but
+    # made his career in the Orioles/MASN, not the law firm. Including it
+    # here would catastrophically merge Peter's records into John's totals.
+    # See negative_signals.
+    - "Baltimore Orioles"
+    - "Orioles"
+    - "Mid-Atlantic Sports Network"
+    - "MASN"
+  occupations:
+    - "owner"
+    - "principal owner"
+    - "chairman"
+    - "chairman and ceo"
+    - "ceo"
+    - "chief executive officer"
+    - "president"
+    - "executive vice president"
+    - "evp"
+    - "coo"
+    - "chief operating officer"
+    - "executive"
+
+strong_signals:
+  # Intentionally empty. "Mid-Atlantic Sports Network" tempting but other MASN
+  # executives file it. "Baltimore Orioles" filed by many team employees. No
+  # John-specific holding entity documented in Tier-2 sources. Promote only
+  # after calibration audit identifies an employer string he uniquely uses.
+  employers: []
+  zip_codes: []
+
+# CRITICAL anti-pattern: the Law Offices of Peter G. Angelos is the family law
+# firm where Peter (deceased 2024) and Louis (brother) practice. John has NEVER
+# worked there professionally. Any "John Angelos"-name-matched record filing
+# this employer is almost certainly Peter filed under a name variant or a
+# different person — route to UNCERTAIN.
+negative_signals:
+  employers:
+    - "Law Offices of Peter G. Angelos"
+    - "Law Offices of Peter Angelos"
+    - "Law Office of Peter Angelos"
+    - "Angelos Law"
+    - "Peter Angelos Law"
+    - "Angelos & Angelos"
+
+related_entities: []
+# Documented future candidates (do NOT add without explicit approval):
+#   - Spouse Margaret Valentine (Nashville music exec)
+#   - Father Peter G. Angelos (deceased 2024-03-23; separate slug if added —
+#     he was a top MD Democratic donor; "the Angeloses" aggregation requires
+#     joining slugs, never silent merger)
+#   - Brother Louis Angelos
+#   - Mother Georgia Angelos
+
+sources:
+  - description: "Wikipedia, John P. Angelos — biography, Orioles role, MASN role, family relationships"
+    url: "https://en.wikipedia.org/wiki/John_P._Angelos"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "Baltimore Sun (Jeff Barker), Nov 3, 2020 — MLB owners approved John Angelos as Orioles control person; vote held Oct 2020"
+    url: "https://www.baltimoresun.com/sports/orioles/bs-sp-orioles-angelos-named-control-person-20201103-hc24jajfrrcxvefk2jqdopfeoi-story.html"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "ESPN, Mar 27, 2024 — David Rubenstein unanimously approved as new Orioles owner; initial 40% stake at closing"
+    url: "https://www.espn.com/mlb/story/_/id/39820434/david-rubenstein-unanimously-approved-new-orioles-owner"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "BaltimoreBaseball.com, Aug 1, 2024 — Rubenstein group completes purchase; remaining 60% stake transferred from Angelos family"
+    url: "https://www.baltimorebaseball.com/2024/08/01/rubenstein-group-completes-purchase-orioles/"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "Nashville Scene — John Angelos purchased Franklin TN home in 2016; wife Margaret Valentine's Nashville music business"
+    url: "https://www.nashvillescene.com/news/headline-homes-september-2016/article_425d7784-27ef-5119-bb67-07f0b1e7c199.html"
+    accessed: "2026-05-22"
+    archive_url: ""
+
+notes: |
+  CRITICAL — family-name collision risk, particularly severe.
+
+  John P. Angelos's father Peter G. Angelos (d. 2024-03-23) was one of the
+  largest Maryland federal political donors of his lifetime, giving heavily
+  to Democratic causes (~$272K to Draft Biden Super PAC; millions to the
+  Democratic Party per public reporting). Peter's records will appear under
+  names including "Peter Angelos", "Peter G. Angelos", "Peter G Angelos",
+  "Angelos, Peter", "Angelos, Peter G", potentially "P. Angelos". The chosen
+  name_variants exclude "Angelos" alone, "P. Angelos", and any form lacking
+  the explicit "John" first name.
+
+  Brother Louis Angelos — younger brother, attorney at the Law Offices of
+  Peter Angelos (the family asbestos-litigation firm). Louis is a separate
+  federal donor. Excluded by name (no "L. Angelos" or bare "Angelos" variants)
+  and by the negative_signals.employers block.
+
+  John's career has been with the Baltimore Orioles (EVP & COO since 1999)
+  and Mid-Atlantic Sports Network (president & COO since 2012). He holds a
+  J.D. from the University of Baltimore School of Law but did NOT practice
+  at the family firm.
+
+  Residence: John lives in Franklin, TN (Nashville suburb, purchased 2016).
+  Maintained Baltimore presence through Orioles tenure.
+
+  Tenure dates: John was approved as MLB-recognized control person 2020-11-03
+  (vote held Oct 2020). The Rubenstein sale closed in two stages: initial
+  closing 2024-03-27 (control transferred, Rubenstein takes ~40%) and final
+  closing 2024-08-01 (remaining 60% transferred). tenure_end_date is set to
+  2024-08-01 to capture John's full ownership-stake window.
+
+change_log:
+  - date: 2026-05-22
+    change: |
+      Created during Phase 2 batch 1 research. Tier 2 sources: Baltimore Sun,
+      MLB.com (406'd, cross-confirmed via ESPN), BaltimoreBaseball.com (Aug 1
+      2024 final closing), Nashville Scene (TN residence). Conservative
+      name_variants exclude "Angelos" alone and all first-initial-only forms.
+      negative_signals added at creation (atypical, but justified by the
+      unusually severe Peter-Angelos collision risk). strong_signals empty.
+      tenure_end_date 2024-08-01 (full ownership end; control-person role
+      ended 2024-03-27 per notes).
+    by: "claude-code-research (orchestrated by alex)"
+    references:
+      - "/tmp/angelos-john-p-research.md (session-local research file)"
+
+audit:
+  created: 2026-05-22
+  last_ingestion: null
+  last_signal_review: 2026-05-22

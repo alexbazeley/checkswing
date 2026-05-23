@@ -1,0 +1,205 @@
+# Steven A. Cohen — New York Mets
+# Phase 1 pilot owner. The worked example for verifying_signals construction.
+#
+# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+
+slug: cohen-steven
+name: Steven A. Cohen
+team: New York Mets
+role: Principal owner
+status: pilot
+tenure_start_date: 2020-11-06
+tenure_end_date: null
+
+name_variants:
+  - "Steven A Cohen"
+  - "Steven A. Cohen"
+  - "Steven Cohen"
+  - "Steve Cohen"
+  - "Cohen, Steven"
+  - "Cohen, Steven A"
+  - "Cohen, Steven A."
+
+verifying_signals:
+  cities:
+    # "new york" removed 2026-05-22 after calibration found 910 PROBABLE false
+    # positives — random NYC Steven Cohens passed the city_state confirming
+    # signal. Real Cohen NYC records are caught instead via strong_signals.zip_codes
+    # (10001, his Chelsea/NoMad address ZIP).
+    - "greenwich"
+    - "stamford"
+  states:
+    - "CT"
+    - "NY"
+  employers:
+    - "Point72"
+    - "POINT 72"               # added 2026-05-22 — observed filing variant (with space)
+    - "S.A.C. Capital"
+    - "SAC Capital"
+    - "SAC Capital Advisors"
+    - "New York Mets"
+    - "Sterling Mets"
+  occupations:
+    - "investor"
+    - "owner"
+    - "principal"
+    - "ceo"
+    - "founder"
+    - "chairman"
+    - "self-employed"
+
+# Unique-enough employer strings that a single match promotes to CONFIRMED.
+# Cohen Private Ventures is named after him and only files him.
+# Point72 Asset Management is his firm; while many employees work there, the
+# strong_signal rule still requires a name match — so this just escalates
+# when name + employer both hit.
+strong_signals:
+  employers:
+    - "Cohen Private Ventures"
+    - "Point72 Asset Management"
+  zip_codes:
+    # 10001 — Cohen's NYC residence (Chelsea/NoMad, West 26th Street townhouse).
+    # Identified by audit: 4 CONFIRMED records at zip 100012163 with employer
+    # POINT72. Promoting to strong_signal lets us catch Cohen's NYC donations
+    # while keeping random NYC same-name donors out (since "new york" no longer
+    # in verifying_signals.cities — they hit address contradiction → UNCERTAIN).
+    - "10001"
+
+# Anti-pattern: a DIFFERENT Steven Cohen works at Elliott Management
+# (Paul Singer's hedge fund) and lives at overlapping Greenwich ZIPs
+# (068312665, 068313102). Calibration audit identified 6 PROBABLE records at
+# these ZIPs filing donations to Republican causes (Nikki Haley, Stand For
+# America PAC). Without this anti-pattern, they'd PROBABLE-classify on
+# city_state and clog the review queue. Adding the negative employer signal
+# routes them to UNCERTAIN with explicit reason.
+negative_signals:
+  employers:
+    - "Elliott Management"
+    - "Elliott Mgmt"
+
+related_entities:
+  # Alexandra Cohen — spouse and major donor in her own right.
+  # CRITICAL: never silently merge her donations into Steve's totals.
+  # Reports that aggregate "the Cohens" must explicitly join the two slugs.
+  - kind: spouse
+    slug: cohen-alexandra
+    name: Alexandra M. Cohen
+    name_variants:
+      - "Alexandra Cohen"
+      - "Alexandra M Cohen"
+      - "Alexandra M. Cohen"
+      - "Alex Cohen"
+      - "Cohen, Alexandra"
+      - "Cohen, Alexandra M"
+    relationship_source:
+      description: "Multiple major-press profiles establish Alexandra as Steven Cohen's spouse and an independent philanthropist."
+      url: ""    # TODO: populate during Phase 1 with a specific WSJ or NYT profile URL
+      accessed: ""
+      archive_url: ""
+    verifying_signals:
+      cities:
+        - "greenwich"
+        - "new york"
+      states:
+        - "CT"
+        - "NY"
+      employers:
+        - "Alexandra and Steven A. Cohen Foundation"
+        - "Cohen Foundation"
+        - "Steven and Alexandra Cohen Foundation"
+        - "Not employed"
+        - "Homemaker"
+      occupations:
+        - "philanthropist"
+        - "homemaker"
+        - "not employed"
+        - "co-founder"
+    strong_signals:
+      employers:
+        - "Steven and Alexandra Cohen Foundation"
+        - "Alexandra and Steven A. Cohen Foundation"
+      zip_codes: []
+
+  # PAC affiliations to research and confirm in Phase 1. Placeholder structure:
+  # - kind: pac
+  #   slug: ...
+  #   name: ...
+  #   committee_id: ""
+  #   ownership_link_documented:
+  #     description: ""
+  #     url: ""
+  #     accessed: ""
+
+sources:
+  - description: "MLB Mets ownership announcement (Nov 2020)"
+    url: ""    # TODO: populate during Phase 1
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "Point72 firm leadership page"
+    url: "https://www.point72.com"
+    accessed: "2026-05-22"
+    archive_url: ""
+
+notes: |
+  Cohen has primary residence in Greenwich, CT and a secondary in NYC.
+  Filings from 2014–2016 sometimes report employer as "S.A.C. Capital" (the
+  predecessor firm wound down following the 2013 insider-trading settlement).
+  Post-2014 filings shift to "Point72" or "Point72 Asset Management"; expect both.
+
+  Post-2020 (Mets purchase), some filings may report employer as "New York Mets"
+  or "Sterling Mets." Treat as expected.
+
+  The Alexandra Cohen related-entity needs separate primary-source URL population
+  in the first Phase 1 ingestion review.
+
+change_log:
+  - date: 2026-05-22
+    change: "Created as Phase 1 pilot owner. Initial signal set based on public profile of Cohen's firms and residences. Source URLs marked TODO — to be populated during first ingestion review."
+    by: "alex (via scoping session)"
+  - date: 2026-05-22
+    change: "Schema-compliance fix per OWNER_SCHEMA.md rule 6: removed 'Cohen Private Ventures' and 'Point72 Asset Management' from verifying_signals.employers (they remain in strong_signals.employers). No semantic change — strong-signal matches still classify as CONFIRMED; the duplication was forbidden by the schema."
+    by: "claude-code-session (phase-1 build)"
+  - date: 2026-05-22
+    change: |
+      Calibration round 1 — four signal changes based on audit of first
+      ingestion (run_id 3ea399e7, 2,961 records, 98 CONFIRMED / 936 PROBABLE).
+      Approved by alex on the four findings:
+
+      1. Added 'POINT 72' (with space) to verifying_signals.employers.
+         Audit found 10 PROBABLE Greenwich records at zip 06831 with this
+         employer string filed by Cohen (occupation FINANCE, 2016-2017). The
+         existing 'Point72' substring did not match 'POINT 72' because of
+         the space. Conservative addition — observed in real FEC filings.
+
+      2. Removed 'new york' from verifying_signals.cities. The city_state
+         confirming signal was hitting 910 random NYC Steven Cohens (Court
+         Reporter, Retired, etc.) and creating PROBABLE-bucket noise. Real
+         Cohen NYC donations are caught via strong_signals.zip_codes instead.
+         Records at NYC zips outside Cohen's residence now hit address
+         contradiction → UNCERTAIN (the spec-correct treatment of unknown
+         same-name donors).
+
+      3. Added '10001' to strong_signals.zip_codes. This is Cohen's NYC
+         residence ZIP (Chelsea/NoMad, identified from 4 CONFIRMED records at
+         zip 100012163 with employer POINT72). With NYC removed from cities,
+         we need this strong signal to still catch Cohen's actual NYC giving.
+
+      4. Added negative_signals.employers block with 'Elliott Management' and
+         'Elliott Mgmt'. A different Steven Cohen works at Elliott Mgmt
+         (Paul Singer's fund) and lives at Greenwich zips 068312665 and
+         068313102. Audit found 6 PROBABLE records (Nikki Haley, Stand For
+         America PAC) filed by this doppelgänger. The negative_signals
+         classifier rule was added in this round; see VERIFICATION.md update.
+
+      Schema-extension note: OWNER_SCHEMA.md and VERIFICATION.md were
+      extended to document the new negative_signals block. Classifier
+      updated with 4 new tests (36 passing total).
+    by: "claude-code-session (calibration round 1, approved by alex)"
+    references:
+      - "data/raw/cohen-steven/ — 77 payloads from run 3ea399e7"
+      - "data/snapshots/2026-05-22T20-51-24Z__3ea399e7.db"
+
+audit:
+  created: 2026-05-22
+  last_ingestion: 2026-05-22
+  last_signal_review: 2026-05-22

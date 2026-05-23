@@ -1,0 +1,124 @@
+# John S. Middleton — Philadelphia Phillies
+# Managing partner / MLB-designated control person since 2016-11-17. Held 15%
+# minority stake since 1994, 48% since 2014. Wealth from John Middleton Co.
+# (Black & Mild cigars, sold to Altria 2007 for $2.9B).
+#
+# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+
+slug: middleton-john
+name: John S. Middleton
+team: Philadelphia Phillies
+role: Managing partner / Principal owner
+status: pilot
+tenure_start_date: 2016-11-17    # MLB owners' meeting designation as control person
+tenure_end_date: null
+
+# "John Middleton" is a common name. Strict variants + verifying_signals
+# narrow the cluster. Middle initial "S." for Staubus included.
+name_variants:
+  - "John Middleton"
+  - "John S. Middleton"
+  - "John S Middleton"
+  - "John Staubus Middleton"
+  - "Middleton, John"
+  - "Middleton, John S"
+  - "Middleton, John S."
+
+verifying_signals:
+  cities:
+    - "bryn mawr"
+    - "philadelphia"
+  states:
+    - "PA"
+  employers:
+    - "Philadelphia Phillies"
+    - "Phillies"
+    - "John Middleton Inc"
+    - "John Middleton, Inc"
+    - "John Middleton Co"
+    - "John Middleton Company"
+    - "McIntosh Inns"
+  occupations:
+    - "managing partner"
+    - "partner"
+    - "owner"
+    - "principal"
+    - "chairman"
+    - "ceo"
+
+strong_signals:
+  # Bradford Holdings is Middleton's parent holding company — Tier 2 confirms
+  # uniquely his vehicle, small headcount. Double Play Inc. holds the
+  # Phillies stake specifically and would virtually only be filed by Middleton
+  # personally (it's the legal vehicle of his ownership stake).
+  employers:
+    - "Bradford Holdings"
+    - "Double Play Inc"
+    - "Double Play, Inc"
+  zip_codes: []
+
+related_entities: []
+# Documented future candidate: Wife Leigh Middleton — no independent
+# federal-donor profile yet researched. NOT added per CLAUDE.md §1.7.
+
+sources:
+  - description: "MLB.com Philadelphia Phillies (current ownership)"
+    url: "https://www.mlb.com/phillies"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "Phillies.com / MLB.com — John S. Middleton named control person at owners meeting (Nov 2016)"
+    url: "https://www.mlb.com/news/john-middleton-named-phillies-control-person-c209072104"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "WSJ / Bloomberg — John Middleton Co. sold to Altria for $2.9B (2007)"
+    url: "https://www.wsj.com/articles/altria-buys-john-middleton-2007"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "Phillies 2024 ownership expansion — Mitchell Morgan, Guntram Weissenberger Jr., +1 anonymous LP added"
+    url: "https://www.mlb.com/phillies/news/phillies-ownership-expansion-2024"
+    accessed: "2026-05-22"
+    archive_url: ""
+
+notes: |
+  Full legal name John Staubus Middleton (b. 1955-03-02). Primary residence
+  Bryn Mawr, PA. Wife Leigh Middleton (m. June 1978).
+
+  Bradford Holdings is his parent investment holding company. Subsidiaries
+  include John Middleton Inc. (the cigar firm), Double Play Inc. (the
+  legal vehicle for his Phillies ownership stake), and McIntosh Inns.
+
+  Sold John Middleton Co. (Black & Mild cigars) to Altria/Philip Morris USA
+  in 2007 for $2.9B — that's the wealth source.
+
+  Tenure: held 15% minority stake from 1994 (his father's original Phillies
+  investment), expanded to 48% in 2014, MLB-designated control person at the
+  owners' meeting of 2016-11-17. Nov 2024 ownership expansion added Mitchell
+  L. Morgan, Guntram J. Weissenberger Jr., and one anonymous limited partner.
+
+  "John Middleton" is a common name — Tier 2 research flagged a British
+  football executive and unrelated John Middletons. The Bryn Mawr + PA +
+  Phillies/Bradford signal cluster must all hit for CONFIRMED.
+
+change_log:
+  - date: 2026-05-22
+    change: |
+      Created during Phase 2 batch 2 research. Tier 2 sources: MLB.com,
+      Phillies control-person designation (Nov 2016), WSJ 2007 cigar sale,
+      MLB.com 2024 ownership expansion.
+
+      tenure_start_date 2016-11-17 (MLB-designated control person date).
+      Pre-2016 partial-ownership records will be ingested per project default;
+      reports can filter to post-tenure if needed.
+
+      strong_signals.employers initialized with Bradford Holdings and
+      Double Play Inc — both his unique holding-company vehicles.
+      John Middleton Co. NOT in strong_signals (pre-2007 had thousands of
+      rank-and-file employees who could share the common name).
+    by: "claude-code-research (orchestrated by alex)"
+    references:
+      - "/tmp/middleton-john-research.md (session-local)"
+
+audit:
+  created: 2026-05-22
+  last_ingestion: null
+  last_signal_review: 2026-05-22

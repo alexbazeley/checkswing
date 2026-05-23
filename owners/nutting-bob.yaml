@@ -1,0 +1,136 @@
+# Robert "Bob" Nutting — Pittsburgh Pirates
+# Principal owner / Chairman since 2007-01-12. CEO of Ogden Newspapers
+# (Wheeling, WV — family newspaper chain). Also owns Seven Springs Mountain
+# Resort (PA ski resort, sold 2021 — verify in calibration).
+#
+# Family-ownership case: father G. Ogden Nutting (deceased 2023) was Pirates
+# majority owner pre-2007; brother William "Bill" Nutting is VP at Ogden
+# Newspapers; niece Cameron Nutting Williams is Ogden Newspapers CRO. Same
+# employer collision risk — name_variants strictly exclude bare "Nutting"
+# and first-initial-only forms.
+#
+# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+
+slug: nutting-bob
+name: Robert Nutting
+team: Pittsburgh Pirates
+role: Chairman / Principal owner
+status: pilot
+tenure_start_date: 2007-01-12    # Officially announced as principal owner
+tenure_end_date: null
+
+# Conservative variants. EXCLUDE bare "Nutting", "R. Nutting", "W. Nutting"
+# (brother William), "C. Nutting" (niece Cameron), "Ogden Nutting" (father).
+name_variants:
+  - "Robert Nutting"
+  - "Bob Nutting"
+  - "Nutting, Robert"
+  - "Nutting, Bob"
+
+verifying_signals:
+  cities:
+    # Wheeling, WV (birthplace + Ogden Newspapers HQ + primary residence per
+    # Tier 2). PA secondary state because of Pirates/Seven Springs ties — no
+    # specific PA city confirmed for Bob personally.
+    - "wheeling"
+  states:
+    - "WV"
+    - "PA"
+  employers:
+    - "Pittsburgh Pirates"
+    - "Pirates"
+    - "Ogden Newspapers"
+    - "Seven Springs Mountain Resort"
+    - "Seven Springs"
+  occupations:
+    - "chairman"
+    - "owner"
+    - "principal"
+    - "principal owner"
+    - "ceo"
+    - "president"
+    - "publisher"
+
+strong_signals:
+  # Intentionally empty at creation. Ogden Newspapers, Pirates, and Seven
+  # Springs all have other employees (brother Bill, niece Cameron, etc).
+  # None is uniquely personal like Cohen's "Cohen Private Ventures."
+  # Calibration may reveal a Bob-specific holding entity worth promoting.
+  employers: []
+  zip_codes: []
+
+related_entities: []
+# Documented future candidates (do NOT add without approval per CLAUDE.md §1.7):
+#   - Father G. Ogden Nutting (deceased 2023-08-25) — was Pirates majority
+#     owner pre-2007; separate slug if pre-tenure backfill desired
+#   - Brother William "Bill" Nutting (VP Ogden Newspapers) — separate slug
+#   - Niece Cameron Nutting Williams (CRO Ogden Newspapers) — separate slug
+#   - Spouse Leslie — insufficient Tier 2 detail to scope yet
+
+sources:
+  - description: "MLB.com Pittsburgh Pirates (current ownership)"
+    url: "https://www.mlb.com/pirates"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "Pittsburgh Post-Gazette — Bob Nutting officially principal owner (Jan 2007)"
+    url: "https://www.post-gazette.com/sports/pirates/2007/01/12/nutting-named-principal-owner"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "Pittsburgh Post-Gazette — April 2026 Bob Nutting interview confirming current chairmanship"
+    url: "https://www.post-gazette.com/sports/pirates/2026/04/nutting-interview"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "Ogden Newspapers corporate site — Bob Nutting President/CEO"
+    url: "https://www.ogdennews.com/about/leadership"
+    accessed: "2026-05-22"
+    archive_url: ""
+
+notes: |
+  Robert "Bob" Nutting, b. Wheeling, WV, March 29, 1962. Primary residence
+  Wheeling, WV. President/CEO of Ogden Newspapers (Wheeling-based family
+  chain, ~50+ daily newspapers across multiple states) AND Chairman of
+  Pittsburgh Pirates.
+
+  Family was Pirates board member from 1996, took controlling interest from
+  Kevin McClatchy in 2007. Bob officially announced as principal owner
+  2007-01-12 (was board chairman 2003-2007).
+
+  CRITICAL family-collision risks at Ogden Newspapers (which several Nuttings
+  file as employer):
+    - Father G. Ogden Nutting (d. 2023-08-25) — was Pirates majority owner
+      pre-2007. Pre-2007 records labeled "Ogden Nutting" / "G. Ogden Nutting"
+      are him, NOT Bob.
+    - Brother William "Bill" Nutting — VP at Ogden Newspapers. "W. Nutting"
+      or "William Nutting" records are him.
+    - Niece Cameron Nutting Williams — CRO at Ogden Newspapers. Different
+      first name, less collision risk.
+
+  name_variants strictly require "Robert" or "Bob" — no first-initial-only
+  forms.
+
+  Seven Springs Mountain Resort: family-owned ski resort in PA. Reportedly
+  sold in 2021 (verify); pre-2021 filings may use it as employer.
+
+change_log:
+  - date: 2026-05-22
+    change: |
+      Created during Phase 2 batch 2 research. Tier 2 sources: MLB.com,
+      Pittsburgh Post-Gazette (Jan 2007 + Apr 2026), Ogden Newspapers
+      corporate page.
+
+      cities=[wheeling] only; states=[WV, PA]. strong_signals empty per
+      conservative launch — Ogden Newspapers has too many family members
+      filing under the firm name to qualify as strong.
+
+      Family collision: name_variants strict (no bare "Nutting", no
+      first-initial-only forms) to keep father Ogden, brother Bill,
+      niece Cameron out. Pre-2007 records of "Ogden Nutting" → father,
+      separate slug if added.
+    by: "claude-code-research (orchestrated by alex)"
+    references:
+      - "/tmp/nutting-bob-research.md (session-local)"
+
+audit:
+  created: 2026-05-22
+  last_ingestion: null
+  last_signal_review: 2026-05-22

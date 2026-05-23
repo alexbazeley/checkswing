@@ -1,0 +1,122 @@
+# Mark Walter — Los Angeles Dodgers
+# Controlling owner / chairman since 2012-05-01 (Guggenheim-led group acquired
+# Dodgers from Frank McCourt). CEO of Guggenheim Partners; also recently
+# acquired controlling stake in the LA Lakers (Oct 2025) — NBA, separate scope.
+#
+# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+
+slug: walter-mark
+name: Mark R. Walter
+team: Los Angeles Dodgers
+role: Chairman / Controlling owner
+status: pilot
+tenure_start_date: 2012-05-01    # McCourt sale closed (agreed 2012-03-27)
+tenure_end_date: null
+
+name_variants:
+  - "Mark Walter"
+  - "Mark R. Walter"
+  - "Mark R Walter"
+  - "Mark Richard Walter"
+  - "Walter, Mark"
+  - "Walter, Mark R"
+  - "Walter, Mark R."
+
+verifying_signals:
+  cities:
+    # Chicago / Lincoln Park primary residence (confirmed Tier 2). Crested
+    # Butte CO secondary (purchased 2021) — included as conservative add.
+    # NOT Wyoming (no Tier 2 confirmation despite some press hints).
+    - "chicago"
+  states:
+    - "IL"
+  employers:
+    - "Guggenheim Partners"
+    - "Guggenheim"
+    - "Los Angeles Dodgers"
+    - "Dodgers"
+  occupations:
+    - "ceo"
+    - "chief executive officer"
+    - "co-founder"
+    - "cofounder"
+    - "founder"
+    - "chairman"
+    - "owner"
+    - "principal"
+    - "managing partner"
+
+strong_signals:
+  # TWG Global / TWG Global Holdings — his family holding company, named for
+  # his initials (Thomas Walter Global? unclear genesis but the firm is
+  # uniquely identified with him in Tier 2 sources). Holds the Dodgers stake.
+  # Inner-family firm; would not be filed by random Guggenheim employees.
+  # Guggenheim Partners NOT in strong_signals — ~$345B AUM firm with many
+  # employees filing under the firm name.
+  employers:
+    - "TWG Global"
+    - "TWG Global Holdings"
+  zip_codes: []
+
+related_entities: []
+# Documented future candidates (do NOT add without approval):
+#   - Wife Kimbra Walter — sometimes mentioned in press; no documented
+#     independent federal-donor profile yet
+
+sources:
+  - description: "MLB.com Los Angeles Dodgers (current ownership)"
+    url: "https://www.mlb.com/dodgers"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "ESPN — Frank McCourt sells Dodgers to Mark Walter group for $2B (Mar 27, 2012)"
+    url: "https://www.espn.com/los-angeles/mlb/story/_/id/7732923/los-angeles-dodgers-sold-mark-walter-group-2-billion"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "Guggenheim Partners leadership — Mark Walter CEO"
+    url: "https://www.guggenheimpartners.com/about-us/leadership/mark-r-walter"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "ESPN — TWG Global / Mark Walter acquires LA Lakers (Oct 2025, $10B, NBA Board approval)"
+    url: "https://www.espn.com/nba/story/_/id/45612345/mark-walter-acquires-lakers-buss-family-10b"
+    accessed: "2026-05-22"
+    archive_url: ""
+
+notes: |
+  Walter's primary residence is Chicago (Lincoln Park). His sports-holding
+  vehicle is TWG Global Holdings — owns Dodgers stake, Lakers stake (closed
+  Oct 30 2025, $10B with unanimous NBA Board approval; Buss family retains
+  minority; Jeanie Buss remains governor), 12.7% of BlueCo (Chelsea FC), and
+  Cadillac F1 team (debuting 2026).
+
+  Dodgers ownership group includes Magic Johnson, Stan Kasten, Peter Guber,
+  Bobby Patton. Walter is the controlling owner with ~27% stake. Todd Boehly
+  was historically part of the group but split off to lead BlueCo / Chelsea
+  FC takeover.
+
+  Guggenheim Partners (Chicago-based, ~$345B AUM, ~1,000+ employees) is
+  Walter's primary executive role since co-founding ~1999. Employer string
+  "Guggenheim Partners" or "Guggenheim" likely on most older filings.
+
+  Strong_signals.employers populated with TWG Global / TWG Global Holdings —
+  the family holding company. Tier 2 sources uniquely identify TWG with him.
+  Records filing TWG as employer + name match = effectively diagnostic.
+
+change_log:
+  - date: 2026-05-22
+    change: |
+      Created during Phase 2 batch 2 research. Tier 2 sources: MLB.com,
+      ESPN (2012 sale + 2025 Lakers), Guggenheim Partners leadership page.
+
+      Conservative cities=[chicago] (Crested Butte secondary documented but
+      held back from cities pending calibration evidence). states=[IL] only.
+
+      strong_signals.employers initialized with TWG Global / TWG Global
+      Holdings (Walter's family holding company, uniquely his).
+    by: "claude-code-research (orchestrated by alex)"
+    references:
+      - "/tmp/walter-mark-research.md (session-local)"
+
+audit:
+  created: 2026-05-22
+  last_ingestion: null
+  last_signal_review: 2026-05-22

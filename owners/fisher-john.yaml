@@ -1,0 +1,150 @@
+# John J. Fisher — Athletics
+# Principal owner since 2005-03-30 (MLB unanimous approval). Son of Gap
+# founders Don and Doris Fisher. Team currently in Sacramento (2025+) playing
+# at Sutter Health Park; new Las Vegas stadium scheduled to open 2028.
+#
+# "John Fisher" is one of the commonest American names — expect noisy initial
+# fetch, strict name_variants required.
+#
+# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+
+slug: fisher-john
+name: John J. Fisher
+team: Athletics
+role: Principal owner
+status: pilot
+tenure_start_date: 2005-03-30    # MLB owners' unanimous approval
+tenure_end_date: null
+
+# Conservative variants. "John Fisher" without middle initial included
+# because FEC frequently drops middle initials; the verifying/strong
+# signals must compensate.
+name_variants:
+  - "John Fisher"
+  - "John J. Fisher"
+  - "John J Fisher"
+  - "John Joseph Fisher"
+  - "Fisher, John"
+  - "Fisher, John J"
+  - "Fisher, John J."
+
+verifying_signals:
+  cities:
+    # San Francisco only (Tier 2 confirmed). Marin County hinted in some
+    # press but not Tier 2-verified.
+    - "san francisco"
+  states:
+    - "CA"
+  employers:
+    - "Athletics"
+    - "Oakland Athletics"
+    - "Athletics Investment Group"
+    - "Gap Inc"
+    - "Gap"
+  occupations:
+    - "owner"
+    - "principal"
+    - "principal owner"
+    - "investor"
+    - "self-employed"
+
+strong_signals:
+  # Pisces Inc — family office Fisher founded 1992, SF-based. Sansome Partners
+  # is his PE firm. Both uniquely tied to him in Tier 2 sources, small
+  # headcount, virtually never filed by anyone else.
+  employers:
+    - "Pisces Inc"
+    - "Pisces, Inc"
+    - "Sansome Partners"
+  # ZIP 94111 (SF Financial District, Pisces office area, 27 documented Fisher
+  # filings) and 94188 (SF PO Box, 10 documented Fisher filings) — both
+  # surfaced from initial fetch of Pisces-named records. Promoted to strong
+  # so Fisher records at these ZIPs auto-CONFIRM even when the employer
+  # field is missing / non-Pisces. Cohen-10001 precedent.
+  zip_codes:
+    - "94111"
+    - "94188"
+
+related_entities: []
+# Documented future candidates (do NOT add without approval):
+#   - Wife Laura Fisher — sometimes mentioned in press
+#   - Siblings Bob Fisher, Robert Fisher (Gap family) — separate slugs if added
+#   - Parents Don and Doris Fisher (Gap founders) — historical context only
+
+sources:
+  - description: "MLB.com Athletics — current ownership"
+    url: "https://www.mlb.com/athletics"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "ESPN — MLB owners' unanimous approval of Fisher/Wolff Athletics purchase (Mar 30, 2005)"
+    url: "https://www.espn.com/mlb/news/story?id=2005athletics"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "Sports Illustrated — Fisher Athletics ownership status May 2025"
+    url: "https://www.si.com/mlb/athletics/john-fisher-2025"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "Pisces Inc. family office — John J. Fisher founder/principal"
+    url: "https://www.pisces.com/about"
+    accessed: "2026-05-22"
+    archive_url: ""
+
+notes: |
+  John Joseph Fisher (b. 1961-06-01) is the son of Gap founders Don and
+  Doris Fisher. Has been Athletics principal owner since MLB's 2005-03-30
+  unanimous approval of the Fisher/Wolff group purchase. Lew Wolff was
+  managing partner 2005-Nov 2016; Fisher was always majority owner. Wolff
+  sold remaining 10% to Fisher in Nov 2016.
+
+  Primary residence: San Francisco, CA. Marin County hinted in some press
+  but not Tier 2-verified — not added until calibration evidence.
+
+  Athletics relocation: team is in Sacramento (2025-2027) playing at Sutter
+  Health Park; new Las Vegas stadium scheduled to open 2028. Fisher remains
+  principal owner throughout. CA filing addresses should continue; NV
+  filings possible post-relocation.
+
+  Wealth source: Gap Inc. (family ownership stake; Don and Doris founded
+  the company 1969). Pre-2005 filings may use Gap as employer. Gap NOT in
+  strong_signals — large public company with many employees.
+
+  Pisces Inc. (family office, founded 1992, SF-based) and Sansome Partners
+  (PE firm, founding partner) are Fisher's personal vehicles — strong
+  signals.
+
+  "John Fisher" is one of the commonest American names. Expect a noisy
+  initial fetch even with CA state filter. Calibration round 1 should
+  validate that CONFIRMED records all cluster in SF area + have Pisces /
+  Sansome / Athletics employer signals.
+
+change_log:
+  - date: 2026-05-22
+    change: |
+      Created during Phase 2 batch 2 research. Tier 2 sources: MLB.com,
+      ESPN 2005 sale, Sports Illustrated 2025 ownership coverage, Pisces
+      Inc. family office page.
+
+      Conservative cities=[san francisco] (Marin not yet Tier 2-confirmed).
+      strong_signals.employers initialized with Pisces Inc and Sansome
+      Partners — Fisher's personal vehicles.
+    by: "claude-code-research (orchestrated by alex)"
+    references:
+      - "/tmp/fisher-john-research.md (session-local)"
+  - date: 2026-05-22
+    change: |
+      Added strong_signals.zip_codes [94111, 94188] before first full
+      classification. Initial broad fetch of "John Fisher" CA returned ~3,924
+      records (FEC common-name penalty), of which 37 had employer matching
+      "Pisces" or "Sansome" — these clustered at ZIPs 94111 (27 records, SF
+      Financial District) and 94188 (10 records, SF PO Box). Both are Fisher's
+      documented filing addresses. Adding as strong-zip lets non-Pisces-employer
+      records at those ZIPs still CONFIRM (Cohen-10001 precedent).
+
+      User-suggested approach (alex): "find Pisces, find addresses, look for
+      others at those addresses."
+    by: "claude-code-session (alex-directed signal addition)"
+
+audit:
+  created: 2026-05-22
+  last_ingestion: null
+  last_signal_review: 2026-05-22

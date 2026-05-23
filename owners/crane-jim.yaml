@@ -1,0 +1,157 @@
+# James R. Crane — Houston Astros
+# Phase 1.5 pilot. Tier 2 sources: craneww.com leadership pages, Nabors SEC bio,
+# ESPN sale announcement, Sportico long-form. See /tmp/crane-jim-research.md for
+# full source trail (kept as session-local note, not version-controlled).
+#
+# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+
+slug: crane-jim
+name: James R. Crane
+team: Houston Astros
+role: Principal owner
+status: pilot
+tenure_start_date: 2011-11-17    # MLB unanimous approval date (not 2011-05-16 sale announcement)
+tenure_end_date: null
+
+name_variants:
+  - "James R Crane"
+  - "James R. Crane"
+  - "James Crane"
+  - "Jim Crane"
+  - "Crane, James"
+  - "Crane, James R"
+  - "Crane, James R."
+
+verifying_signals:
+  cities:
+    - "houston"
+  states:
+    - "TX"
+  employers:
+    # Observed in 2016/2020 FEC cycles via campaignmoney.com derivative —
+    # employer strings filed by him include the bare "Crane Capital" and the
+    # full "Crane Capital Group" (the latter is in strong_signals below).
+    - "Crane Capital"
+    # "Houston Astros" observed as 2019/2020 cycle employer string with
+    # occupation "Chairman".
+    - "Houston Astros"
+    # Operating subsidiaries — many employees may file these, so they stay
+    # as verifying-not-strong.
+    - "Crane Worldwide Logistics"
+    - "Crane Worldwide"
+    # Calibration round 1 (2026-05-22): Crane filed many large Democratic
+    # donations (Obama Victory Fund 2012, Harris for President 2024, DNC) with
+    # employer literally "Self-Employed" / "SELF EMPLOYED" — placeholder text
+    # FEC uses when no corporate employer. Adding both spacings + canonical
+    # promotes ~11 PROBABLEs to CONFIRMED. The Houston+TX+self-employed combo
+    # is sufficiently anchored that this won't catch the wrong James Crane
+    # (other Cranes in TX were in different cities → address contradiction).
+    - "Self-Employed"
+    - "Self Employed"
+  occupations:
+    - "chairman"
+    - "ceo"
+    - "chief executive officer"
+    - "owner"
+    - "investor"
+    - "principal"
+
+strong_signals:
+  # "Crane Capital Group" is named after him; he is the named principal in
+  # Nabors SEC-grade director bio. Promoted to strong because virtually no
+  # one else files this exact string. (Watch: there's an unrelated "Crane
+  # Capital" real-estate firm in Hong Kong / Singapore — if a non-Texas
+  # FEC filing carries that employer, flag for calibration.)
+  employers:
+    - "Crane Capital Group"
+  zip_codes: []
+  # ZIP 77006 was observed in 2016/2020 cycles. Held back from strong_signals
+  # — Crane's River Oaks residence (2124 River Oaks Blvd) is in 77019, so
+  # 77006 may be a business mailing address. Promote in calibration if
+  # filings consistently anchor there.
+
+related_entities: []
+# Documented future candidates (do NOT add without user approval per
+# CLAUDE.md §1.7):
+#   - spouse: Whitney Wheeler Crane (m. 2017) — PaperCity Magazine wedding coverage
+#   - child: Jared Crane — CEO of Crane Worldwide Logistics, VP Crane Family
+#     Foundation (craneww.com leadership + ProPublica nonprofits)
+#   - child: Krystal Crane Thompson — VP Crane Family Foundation (ProPublica)
+#   - Crane Family Foundation (EIN 47-3980494) — OUT OF SCOPE for FEC archive
+#     (IRS 990 territory per CLAUDE.md §6).
+
+sources:
+  - description: "Crane Worldwide Logistics — Jim Crane executive profile (corporate site)"
+    url: "https://www.craneww.com/about-us/leadership/executive-team/jim-crane/"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "Crane Worldwide Logistics — leadership team page (lists Jim Crane as Chairman, Jared Crane as CEO)"
+    url: "https://www.craneww.com/about-us/leadership/"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "Nabors Industries board page — James R. Crane SEC-filing-grade bio listing Crane Capital Group (Chairman/CEO), Crane Worldwide, Crane Freight & Cartage, and Houston Astros investor group"
+    url: "https://www.nabors.com/team/james-r-crane/"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "ESPN — Crane group buys Astros for $680M (16 May 2011); MLB approval pending at that date"
+    url: "https://www.espn.com/mlb/news/story?id=6556241"
+    accessed: "2026-05-22"
+    archive_url: ""
+  - description: "Sportico — Jim Crane Astros World Series ownership profile (2022)"
+    url: "https://www.sportico.com/leagues/baseball/2022/houston-astros-owner-jim-crane-world-series-1234692882/"
+    accessed: "2026-05-22"
+    archive_url: ""
+
+notes: |
+  Tenure start is 2011-11-17 (unanimous MLB owners' approval), not the
+  2011-05-16 sale announcement.
+
+  Crane's principal companies, in order of usefulness as FEC signals:
+    1. Crane Capital Group — his investment holding company (founded 2006),
+       strong_signal because named after him and Nabors lists him as sole
+       principal.
+    2. Houston Astros — observed FEC employer string with occupation Chairman.
+    3. Crane Worldwide Logistics — operating subsidiary; many employees file
+       this so it stays as a verifying signal (not strong).
+    4. Crane Freight & Cartage — smaller subsidiary; not added in initial
+       pass; promote during calibration if observed in real filings.
+
+  Same-name caveat (parked for audit, not yet a negative_signal): there is a
+  separate Hong Kong / Singapore real-estate firm also called Crane Capital
+  (cranecapital.com). Unlikely to appear in US FEC data, but if a non-Texas
+  filing carries "Crane Capital" as employer it may be that firm.
+
+  Per derivative-FEC data (campaignmoney.com): other James Crane donors are
+  in TN/GA/MS/FL/PA, all retired or not employed. None have Texas anchors.
+
+  Pre-purchase giving (before 2011-11-17): Crane gave heavily before becoming
+  Astros owner (RNC 2000, Cornyn, Hutchison, Obama 2007–2008, DNC, DCCC).
+  Per CHARTER decision-points, pre-tenure giving is in scope — `tenure_start_date`
+  is a report-time filter, not an ingestion gate.
+
+change_log:
+  - date: 2026-05-22
+    change: |
+      Created during Phase 1.5 research. Tier 2 sources: craneww.com corporate
+      profile + leadership page, Nabors SEC-grade director bio, ESPN 2011 sale
+      announcement, Sportico 2022 long-form. Initial signal set is conservative;
+      first ingestion + calibration will validate (esp. whether ZIP 77006 is
+      consistently Crane's filing ZIP and warrants promotion to strong_signals).
+    by: "claude-code-research (orchestrated by alex)"
+    references:
+      - "/tmp/crane-jim-research.md (session-local research file)"
+  - date: 2026-05-22
+    change: |
+      Calibration round 1 (run_id 1f5cbf21): added 'Self-Employed' and
+      'Self Employed' to verifying_signals.employers. Audit found 11 PROBABLE
+      records in Houston TX with employer literally 'SELF-EMPLOYED' (placeholder
+      for no corporate employer) going to Obama Victory Fund / Harris for
+      President / DNC — these were almost certainly real Crane filings stuck at
+      PROBABLE on city_state alone. The addition promotes them to CONFIRMED.
+      Approved by alex.
+    by: "claude-code-session (calibration round 1)"
+
+audit:
+  created: 2026-05-22
+  last_ingestion: null
+  last_signal_review: 2026-05-22

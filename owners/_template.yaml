@@ -1,0 +1,86 @@
+# OWNER YAML TEMPLATE
+# Copy to owners/<slug>.yaml and fill in.
+# Read OWNER_SCHEMA.md before editing.
+# Every field marked REQUIRED must be populated. Conservative defaults beat plausible guesses.
+
+slug: lastname-firstname               # REQUIRED. Filename-safe, lowercase, hyphenated. Must match filename.
+name: Full Legal Name                  # REQUIRED. As most commonly filed.
+team: Team Name                        # REQUIRED. Full team name.
+role: Principal owner                  # REQUIRED. Principal owner | Co-owner | Managing general partner | etc.
+status: queued                         # REQUIRED. queued | pilot | active | paused
+tenure_start_date: YYYY-MM-DD          # REQUIRED. Use partial date if exact unknown.
+tenure_end_date: null                  # null while current; YYYY-MM-DD when sold/transitioned
+
+# REQUIRED: ≥2 name variants. Include only variations actually observed or trivially derivable.
+# Do NOT include misspellings unless observed in real FEC data.
+name_variants:
+  - "Firstname M Lastname"
+  - "Firstname Lastname"
+  - "Lastname, Firstname"
+  - "Lastname, Firstname M"
+
+# REQUIRED: signal set for confirming matches. See VERIFICATION.md for matching rules.
+# Cities must be lowercase, no punctuation. States are USPS 2-letter codes.
+verifying_signals:
+  cities: []                           # REQUIRED: ≥1
+  states: []                           # REQUIRED: ≥1
+  employers: []                        # REQUIRED: ≥1. Case-insensitive substring match.
+  occupations: []                      # OPTIONAL but encouraged
+
+# REQUIRED block, may have empty arrays. Strings here promote a single-signal match to CONFIRMED.
+# Be very conservative — these escalate. Only put strings that are virtually never filed by anyone else.
+strong_signals:
+  employers: []
+  zip_codes: []
+
+# OPTIONAL but encouraged. People or organizations tracked under this owner.
+# Each related entity gets classified against its OWN signals — never silently merged into owner totals.
+related_entities: []
+# Example structure:
+#   - kind: spouse                       # spouse | child | parent | sibling | pac | business_entity
+#     slug: lastname-firstname           # required, must be unique
+#     name: Full Name
+#     name_variants: ["Lastname, Firstname"]
+#     relationship_source:
+#       description: "Source establishing the relationship"
+#       url: ""
+#       accessed: "YYYY-MM-DD"
+#     verifying_signals:
+#       cities: []
+#       states: []
+#       employers: []
+#       occupations: []
+#     strong_signals:
+#       employers: []
+#       zip_codes: []
+#
+#   - kind: pac
+#     slug: pac-slug
+#     name: PAC name
+#     committee_id: "C00XXXXXXX"         # FEC committee ID
+#     ownership_link_documented:
+#       description: "Source establishing the owner's control over this PAC"
+#       url: ""
+#       accessed: "YYYY-MM-DD"
+
+# REQUIRED: ≥1 source. Tier 2 (identity) sources only — never for donation facts.
+sources:
+  - description: ""
+    url: ""
+    accessed: "YYYY-MM-DD"
+    archive_url: ""
+
+# OPTIONAL. Factual notes, no interpretation. Multi-line OK with | block scalar.
+notes: ""
+
+# REQUIRED: append-only log of changes that affect classification.
+change_log:
+  - date: YYYY-MM-DD
+    change: "Created."
+    by: ""
+
+# REQUIRED.
+audit:
+  created: YYYY-MM-DD
+  last_ingestion: null
+  last_signal_review: YYYY-MM-DD

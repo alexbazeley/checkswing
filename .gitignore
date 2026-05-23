@@ -1,0 +1,30 @@
+# Secrets
+.env
+
+# Database and raw payloads (rebuildable from raw + YAMLs; raw is the ground truth
+# but is large enough we don't want it in git — back it up separately)
+data/master.db
+data/master.db-journal
+data/master.db-wal
+data/master.db-shm
+data/snapshots/
+data/raw/
+
+# CSV exports are derivative — regenerable
+data/donations/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.venv/
+venv/
+.python-version
+*.egg-info/
+
+# Editor
+.vscode/
+.idea/
+*.swp
+.DS_Store
