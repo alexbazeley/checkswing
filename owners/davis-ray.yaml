@@ -1,0 +1,141 @@
+# Ray C. Davis — Texas Rangers
+# Managing Partner / Majority Owner / Chairman of the Board / MLB-designated
+# Control Person. Acquired part of the Rangers via Rangers Baseball Express,
+# LLC in August 2010 (out of Chapter 11 bankruptcy auction); became formal
+# MLB control person on 2013-11-14 (after Nolan Ryan's resignation Oct 2013).
+# Co-chairman with Bob R. Simpson (separate slug `simpson-bob`).
+#
+# Replaces the existing misnamed `simpson-ray` registry slug (which combined
+# two distinct billionaires under one entry). Davis and Simpson have
+# completely different signal stacks and must be tracked separately.
+#
+# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+
+slug: davis-ray
+name: Ray C. Davis
+team: Texas Rangers
+role: Managing Partner / Majority Owner / Chairman
+status: pilot
+tenure_start_date: 2010-08-12    # Rangers Baseball Express closing (approximate; press universally "August 2010")
+tenure_end_date: null
+
+name_variants:
+  - "Ray C Davis"
+  - "Ray C. Davis"
+  - "Ray Davis"
+  - "Davis, Ray"
+  - "Davis, Ray C"
+  - "Davis, Ray C."
+
+verifying_signals:
+  cities:
+    - "dallas"           # Avatar Investments LP is Dallas-based (Sherry Lane offices per D Magazine)
+  states:
+    - "TX"
+  employers:
+    - "Energy Transfer Partners"
+    - "Energy Transfer Equity"
+    - "Energy Transfer"
+    - "Energy Transfer LP"
+    - "ETP"
+    - "ETE"
+    - "Texas Rangers"
+    - "Rangers Baseball Express"
+  occupations:
+    - "chairman"
+    - "ceo"
+    - "executive"
+    - "investor"
+    - "businessman"
+    - "managing partner"
+    - "oil and gas"
+    - "pipeline"
+
+strong_signals:
+  employers:
+    - "Avatar Investments"        # uniquely-named Dallas family investment firm
+    - "Avatar Investments LP"
+  zip_codes: []
+
+related_entities: []
+# Future candidates (do NOT add without user approval per CLAUDE.md §1.7):
+#   - spouse: Linda Davis. Not documented as politically active in Tier 2.
+#   - children: 3 children per Wikipedia; names not publicly disclosed.
+#   - co-owner: Bob R. Simpson — SEPARATE slug `simpson-bob` (not a related
+#     entity; co-chairman with own donor profile).
+
+sources:
+  - description: "ESPN — Bud Selig says Ray Davis to become Texas Rangers controlling owner (Oct 24, 2013 announcement; Nov 14 2013 MLB owners formal approval)"
+    url: "https://www.espn.com/dallas/mlb/story/_/id/9874933/bud-selig-says-ray-davis-become-texas-rangers-controlling-owner"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "MLB.com — Ray C. Davis front office page. Official team-published bio"
+    url: "https://www.mlb.com/rangers/team/front-office/ray-davis"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "D Magazine (Oct 2012) — 'Ray C. Davis: The Undercover Billionaire.' Dallas business profile; Avatar Investments LP and Dallas/Sherry Lane offices"
+    url: "https://www.dmagazine.com/publications/d-ceo/2012/october/ray-c-davis-the-undercover-billionaire/"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "Energy Transfer Investor Relations — Ray Davis Board Member. Confirms ETP board role and corporate biography"
+    url: "https://ir.energytransfer.com/board-member/ray-davis-0"
+    accessed: "2026-05-23"
+    archive_url: ""
+
+notes: |
+  Ray C. Davis (b. 1941-10-15) — Managing Partner, Majority Owner, Chairman
+  of the Board, MLB-designated Control Person of the Texas Rangers. Tenure
+  start 2010-08-12 (Rangers Baseball Express closing out of Chapter 11
+  bankruptcy auction; press universally "August 2010" — exact day needs
+  confirmation). MLB owners formally approved him as control person on
+  2013-11-14 in Orlando (after Nolan Ryan's resignation announced
+  2013-10-17).
+
+  Davis "avoids publicity" per D Magazine. Cofounded Energy Transfer
+  Partners (1996) with Kelcy Warren; retired from operational role at ETP
+  in 2007. Now Chairman/CEO of Avatar Investments LP, a Dallas-based
+  family investment firm focused on energy and real estate (Sherry Lane
+  offices).
+
+  Strong_signal: "Avatar Investments" / "Avatar Investments LP" — uniquely-
+  named private family vehicle. Should produce few false-positives on FEC
+  employer field. Energy Transfer-related strings stay in verifying because
+  the ETP/ETE companies have many employees who file their own donations.
+
+  Co-chairman: Bob R. Simpson (Fort Worth-based; XTO Energy / TXO Partners
+  background). DIFFERENT signal stack — tracked under separate slug
+  `simpson-bob`. The pair purchased the team out of bankruptcy together
+  in August 2010. Bob R. Simpson is co-chairman; Ray C. Davis is the
+  formal MLB control person.
+
+  Other group members (NOT tracked here): Neil Leibman (Board / Rangers
+  Ownership Committee Chairman; minority partner active in operations);
+  Chuck Greenberg (sold his stake 2011; no longer an owner); Nolan Ryan
+  (departed 2013).
+
+  DOPPELGANGER WATCH: "Ray Davis" is a common name (note: Ray Davies of
+  The Kinks is a different spelling but press typos may create confusion).
+  Different "Ray Davis" served as Pennzoil president historically — flag
+  in negative_signals if encountered. The "C." middle initial + Dallas TX
+  + Avatar Investments + Energy Transfer board form a robust signal stack.
+
+  NEEDS-CONFIRMATION: Davis's specific Dallas neighborhood / suburb
+  (Highland Park, Preston Hollow, Park Cities). Middle name behind "C."
+  not publicly disclosed.
+
+change_log:
+  - date: 2026-05-23
+    change: |
+      Created during Phase 2 batch 4. Replaces misnamed `simpson-ray`
+      registry slug (which combined Davis and Simpson). Tier 2 sources:
+      ESPN, MLB.com, D Magazine, Energy Transfer IR. tenure_start_date =
+      2010-08-12 (Rangers Baseball Express closing; exact day approximate).
+      Strong_signal = "Avatar Investments" / "Avatar Investments LP".
+    by: "claude-code-research (orchestrated by alex)"
+    references:
+      - "/tmp/rangers-ownership-research.md (session-local research file)"
+
+audit:
+  created: 2026-05-23
+  last_ingestion: null
+  last_signal_review: 2026-05-23

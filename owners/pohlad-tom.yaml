@@ -1,0 +1,140 @@
+# Thomas Pohlad — Minnesota Twins
+# Current MLB-approved controlling owner / executive chair of the Twins since
+# 2025-12-17 (Target Field press conference; MLB formally confirmed his
+# control-person designation in early 2026). Replaced younger brother Joe
+# Pohlad after the Pohlad family called off a 14-month sale exploration
+# (Oct 2024 announcement) and instead brought in three minority investor
+# groups (Glick Family Investments, George Hicks group, Craig Leipold).
+#
+# Joe Pohlad tracked separately under `pohlad-joe` (FORMER; tenure_end_date
+# 2025-12-17 per Castellini precedent).
+#
+# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+# HIGH family-collision risk: multiple Pohlad relatives are business-active
+# at the same employer ("Pohlad Companies") in the same Twin Cities metro.
+# Name_variants strictly require "Tom" or "Thomas" — bare "T. Pohlad" or
+# initial-only forms NOT included (would collide with Joe, Chris, Bob, Jim,
+# Bill, Carl, etc.).
+
+slug: pohlad-tom
+name: Thomas Pohlad
+team: Minnesota Twins
+role: Principal owner / Executive Chair
+status: pilot
+tenure_start_date: 2025-12-17    # Target Field press conference; MLB approval shortly after
+tenure_end_date: null
+
+name_variants:
+  - "Thomas Pohlad"
+  - "Tom Pohlad"
+  - "Pohlad, Thomas"
+  - "Pohlad, Tom"
+
+verifying_signals:
+  cities:
+    - "wayzata"          # primary residence per Camp Dudley + Minnesota Monthly
+    - "minneapolis"
+    - "shoreview"         # PaR Systems HQ; possible employer-address filings
+  states:
+    - "MN"
+  employers:
+    - "Minnesota Twins"
+    - "Twins"
+    - "Pohlad Companies"      # Executive Chairman until Dec 2025; SHARED with family — verifying only
+  occupations:
+    - "executive chair"
+    - "executive chairman"
+    - "ceo"
+    - "executive"
+    - "businessman"
+    - "owner"
+    - "gm"                   # Carousel Motor Group GM 2010-
+    - "coo"                   # Carousel Motor Group COO 2010-2019
+
+strong_signals:
+  employers:
+    - "PaR Systems"           # CEO Feb 4, 2019 to Dec 6, 2022; small private (Shoreview MN robotics/automation)
+    - "Carousel Motor Group"  # GM/COO 2010-2019; small private Twin Cities auto-retail
+    - "Carousel Motors"        # alternate brand form
+  zip_codes: []
+
+related_entities: []
+# Future candidates (do NOT add without user approval per CLAUDE.md §1.7):
+#   - spouse: Lindsay Pohlad. Three minor sons: Jack, Luke, Alex.
+#   - sibling: Joe Pohlad — FORMER Twins exec chair (tracked under
+#     pohlad-joe; Castellini-precedent historical with full giving captured).
+#   - sibling: Chris Pohlad — VP Asset Management Pohlad Cos.
+#   - parent: Robert "Bob" Pohlad (b. 1954; PepsiAmericas former CEO).
+#   - uncles: James "Jim" Pohlad (Twins control person 2009-2022); William
+#     "Bill" Pohlad (River Road Entertainment).
+
+sources:
+  - description: "ESPN (Dec 2025) — Twins finalize sales, name Tom Pohlad new controlling owner. Confirms 2025-12-17 transition; MLB approval pending at announcement but confirmed in 2026"
+    url: "https://www.espn.com/mlb/story/_/id/47336092/twins-finalize-sales-name-tom-pohlad-new-controlling-owner"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "Twin Cities Business — 'The Twins Reset' (Tom Pohlad replaces brother Joe in leading team)"
+    url: "https://tcbmag.com/the-twins-tom-pohlad-to-replace-brother-joe-in-leading-team-organization/"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "Sports Illustrated / Onsi — 'We've lost trust: Tom Pohlad on replacing brother Joe atop the Twins'. Includes Tom's statements"
+    url: "https://www.si.com/mlb/twins/onsi/minnesota-twins-news/we-have-lost-trust-tom-pohlad-on-replacing-brother-joe-atop-the-twins"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "Star Tribune — 'Tom Pohlad to lead Twins business operations during 2026 season'"
+    url: "https://www.startribune.com/tom-pohlad-to-lead-twins-business-operations-throughout-2026-season/601660044"
+    accessed: "2026-05-23"
+    archive_url: ""
+
+notes: |
+  Thomas ("Tom") Pohlad (b. ~1980; age 45 at 2025-12-17 press conference) —
+  Current MLB-approved controlling owner / executive chair of the Minnesota
+  Twins since 2025-12-17. Bob Pohlad's oldest son; brother of Joe Pohlad
+  (FORMER Twins exec chair) and Chris Pohlad. Grandson of Carl Pohlad
+  (Twins founder-purchaser, d. 2009).
+
+  Career arc: Boston College 2002 → Carousel Motor Group (Twin Cities
+  auto-retail) GM 2010-, COO 2010-2019 → PaR Systems CEO Feb 4, 2019 to
+  Dec 6, 2022 → Pohlad Companies Executive Chairman until Dec 2025 → Twins
+  Executive Chair since 2025-12-17.
+
+  Strong_signals: "PaR Systems" (small private robotics/automation firm,
+  Shoreview MN; CEO 2019-2022) and "Carousel Motor Group" (small private
+  Twin Cities auto-retail; GM/COO 2010-2019). Both are tenure-specific
+  uniquely-identifying employers for Tom. "Pohlad Companies" stays in
+  verifying because it's shared across Bob/Jim/Bill/Chris/Joe Pohlad.
+
+  Residence: Wayzata, MN (Hennepin County) primary; confirmed via Camp
+  Dudley listing + Minnesota Monthly. Spouse: Lindsay Pohlad; three sons
+  Jack/Luke/Alex (minors). The Pohlads are documented as DFL (Democratic)-
+  leaning in regional press but specific donor activity is the orchestrator's
+  downstream call.
+
+  HIGH FAMILY-COLLISION RISK. Multiple Pohlad relatives are business-active
+  at the same employer ("Pohlad Companies") in the same Twin Cities metro.
+  Name_variants for Tom strictly require "Tom" or "Thomas" — bare "T.
+  Pohlad" or initial-only forms NOT included (would collide with Joe,
+  Chris, Bob, Jim, Bill, Carl, Eddie Pohlad, etc.).
+
+  NEEDS-CONFIRMATION: Full middle name (research-suggested "K" NOT confirmed
+  in Tier 2 sources — omitted from this YAML). Birth year (~1980 derived
+  from age 45 at Dec 2025 press conference).
+
+change_log:
+  - date: 2026-05-23
+    change: |
+      Created during Phase 2 owner-roster-completion (post-special-case
+      batch). Confirmed current MLB control person of Twins per ESPN /
+      Twin Cities Business / SI / Star Tribune coverage of the Dec 17 2025
+      family transition. tenure_start_date = 2025-12-17 (matches Joe
+      Pohlad's tenure_end_date). Strong_signals: PaR Systems + Carousel
+      Motor Group (both tenure-specific uniquely-identifying small private
+      employers). HIGH family-collision risk noted; strict name_variants.
+    by: "claude-code-research (orchestrated by alex)"
+    references:
+      - "/tmp/pohlad-tom-research.md (session-local research file)"
+
+audit:
+  created: 2026-05-23
+  last_ingestion: null
+  last_signal_review: 2026-05-23

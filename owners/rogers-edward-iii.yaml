@@ -1,0 +1,205 @@
+# Edward S. Rogers III — Toronto Blue Jays
+# Executive Chair of Rogers Communications Inc. (since 2024-08-14); Chair of
+# the Rogers Control Trust (which holds ~97.52% of Rogers Communications
+# Class A voting shares); Chairman of Rogers Blue Jays Baseball Partnership.
+# Rogers Communications wholly owns the Blue Jays.
+#
+# STATUS: paused — NOT INGESTED.
+#
+# Per user direction (special-case batch decision): this is a documented
+# placeholder slug for registry completeness. NOT a pilot.
+#
+# Rationale:
+#   - Edward Rogers III is a Canadian citizen, lives in Toronto, has no
+#     documented US residence or US dual citizenship.
+#   - 52 U.S.C. § 30121 bars federal political contributions by non-US-
+#     citizens (other than lawful permanent residents).
+#   - No Rogers Communications-affiliated FEC PAC exists (the two "Rogers"
+#     PACs in the FEC database are unrelated: Rogers Group Inc. is a
+#     Nashville, TN aggregates company; Team Rogers is the Mike Rogers MI
+#     Senate joint fundraising committee).
+#   - "Ed Rogers" / "Edward Rogers" is a high-confounder name in US
+#     politics (DC lobbyist Ed Rogers of BGR Group, etc.).
+#   - Expected true-positive FEC yield: near zero; expected false-positive
+#     rate: high.
+#
+# If circumstances change (e.g., Rogers III gets dual citizenship, a Rogers
+# Communications USA PAC is registered, or US-resident Rogers family
+# members surface), re-activate by changing status to pilot and running
+# ingestion.
+#
+# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+
+slug: rogers-edward-iii
+name: Edward S. Rogers III
+team: Toronto Blue Jays
+role: Executive Chair Rogers Communications / Chairman Rogers Blue Jays Baseball Partnership
+status: paused
+tenure_start_date: 2024-08-14    # Executive Chair appointment by unanimous board vote
+tenure_end_date: null
+
+name_variants:
+  - "Edward S Rogers III"
+  - "Edward S. Rogers III"
+  - "Edward Rogers III"
+  - "Edward Samuel Rogers III"
+  - "Edward Rogers"
+  - "Ed Rogers"            # ambiguous; DC lobbyist Ed Rogers of BGR is more common
+  - "Rogers, Edward"
+  - "Rogers, Edward S"
+  - "Rogers, Edward S."
+  - "Rogers, Edward III"
+
+verifying_signals:
+  cities:
+    - "toronto"             # Canadian; included for completeness
+  states:
+    - "ON"                  # Ontario (not a US state, but populated for schema)
+  employers:
+    - "Rogers Communications"
+    - "Rogers Communications Inc"
+    - "Rogers Communications Inc."
+    - "Rogers Sports & Media"
+    - "Rogers Blue Jays Baseball Partnership"
+    - "Rogers Control Trust"
+    - "Toronto Blue Jays"
+    - "Rogers Bank"
+  occupations:
+    - "executive chair"
+    - "chairman"
+    - "executive"
+    - "businessman"
+    - "investor"
+
+strong_signals:
+  employers: []
+  zip_codes: []
+  # Not populated since this slug is paused / not ingested. If re-activated,
+  # consider whether Rogers Communications + Toronto is a uniquely-
+  # identifying combination (likely yes — extremely rare to file with a
+  # Canadian employer string in FEC).
+
+negative_signals:
+  # Pre-emptive doppelganger block for the most prominent same-name
+  # individual in US politics. Edward Michael ("Ed") Rogers Jr. is the
+  # founding partner of BGR Group (Washington DC lobbying firm); Reagan /
+  # Bush 41 White House alum; Washington Post op-ed columnist 2011-2019;
+  # active US federal political donor (~$18K to candidates in 2024 cycle).
+  # Distinct person from Edward S. Rogers III (Rogers Communications,
+  # Toronto).
+  employers:
+    - "BGR Group"
+    - "BGR"
+    - "Barbour Griffith Rogers"   # historical BGR name
+    - "Barbour Griffith"
+
+related_entities: []
+# Future candidates (do NOT add without user approval per CLAUDE.md §1.7):
+#   - kind: business_entity — Rogers Communications Inc. (Canadian
+#     publicly-traded parent; no FEC PAC).
+#   - kind: business_entity — Rogers Control Trust (Canadian private trust;
+#     no FEC PAC).
+#   - siblings: Melinda Rogers-Hixon, Martha Rogers, Lisa Rogers (Canadian).
+#   - spouse: Suzanne Kolev Rogers (Canadian).
+
+sources:
+  - description: "Rogers Communications press release (Aug 14, 2024) — 'Edward Rogers appointed Executive Chair of Rogers Communications.' Primary source for August 2024 Executive Chair appointment"
+    url: "https://about.rogers.com/news-ideas/edward-rogers-appointed-executive-chair-of-rogers-communications/"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "The Globe and Mail (Aug 2024) — 'Edward Rogers becomes executive chair of Rogers Communications.' Major Canadian business press confirmation"
+    url: "https://www.theglobeandmail.com/business/article-edward-rogers-becomes-executive-chair-of-rogers-communications/"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "The Globe and Mail (Jan 17, 2024) — 'Melinda Rogers-Hixon, Martha Rogers stepping down from Rogers board as part of family settlement.' Primary documentation of family-feud private settlement"
+    url: "https://www.theglobeandmail.com/business/article-melinda-rogers-hixon-martha-rogers-retiring-from-rogers-board-as-part/"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "Sportico (2025) — Blue Jays / Rogers ownership; MLSE expansion to 75% with Kilmer Sports Ventures retaining 25%"
+    url: "https://www.sportico.com/leagues/baseball/2025/toronto-blue-jays-owner-rogers-world-series-1234875594/"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "Borden Ladner Gervais legal commentary (2021) — Rogers Control Trust holds ~97.52% of Class A Voting Shares of Rogers Communications"
+    url: "https://www.blg.com/en/insights/2021/11/dual-class-share-structure-issues-in-the-spotlight-in-rogers-battle"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "FEC.gov — Committee record for 'Rogers Group Inc. Political Action Committee' (C00277152). Confirms this PAC is sponsored by Nashville TN construction aggregates company; NOT Rogers Communications"
+    url: "https://www.fec.gov/data/committee/C00277152/"
+    accessed: "2026-05-23"
+    archive_url: ""
+
+notes: |
+  Edward Samuel Rogers III (b. 1969-06-22, Toronto). Eldest son of late
+  Ted Rogers (founder of Rogers Communications, d. 2008) and late Loretta
+  Robinson Rogers (d. 2022). Spouse: Suzanne Kolev Rogers. Three children:
+  Chloé, Edward, Jack.
+
+  Current titles (May 2026):
+   - Executive Chair, Rogers Communications Inc. (since 2024-08-14)
+   - Chair, Rogers Control Trust (holds ~97.52% of Class A Voting Shares of
+     Rogers Communications)
+   - Chair, Rogers Bank
+   - Chairman, Rogers Blue Jays Baseball Partnership
+   - Director, MLSE (post-2025 Rogers acquisition of additional 37.5%
+     bringing Rogers total to 75%)
+
+  Citizenship / residence: Canadian. Toronto-based. No documented US
+  residence or US dual citizenship in Tier 2 sources surveyed (absence of
+  evidence; needs-confirmation if a US-address record ever surfaces).
+  Limited US business history: worked at Comcast Corporation in
+  Philadelphia 1992-1994 (entry-level / operational roles, ~2.5 years).
+  No documented US federal political activity (no donations, no PAC
+  affiliations, no lobbying registration).
+
+  RATIONALE FOR PAUSED STATUS (not ingested):
+  Non-US-citizens are barred from federal political contributions by
+  52 U.S.C. § 30121. Edward Rogers III's expected FEC yield is near zero.
+  Doppelganger contamination risk is high (Ed Rogers of BGR Group in DC is
+  a major Republican-aligned donor — see negative_signals). Ingestion
+  under these conditions would produce false-positive UNCERTAIN pile
+  without meaningful CONFIRMED records, wasting calibration cycles. A
+  documented paused placeholder lets the registry honestly reflect the
+  Blue Jays' principal ownership while explaining the structural FEC
+  scope gap.
+
+  Charter-level note: MLB teams under non-US-citizen owner control have
+  intentionally limited or zero FEC coverage as a structural feature of
+  the federal-only scope. As of 2026, the Blue Jays are the only MLB team
+  in this category. Consider documenting this class in CHARTER.md or
+  catalog/SCOPE_NOTES.md in a future session.
+
+  Doppelganger watch:
+   - Edward M. ("Ed") Rogers Jr. — Founding Partner BGR Group, Washington
+     DC. Reagan / Bush 41 White House alum. ~$18K to candidates in 2024
+     cycle. By far the most common confounder. Pre-emptive negative_signals
+     for BGR Group / Barbour Griffith Rogers.
+   - Other "Edward Rogers" / "Ed Rogers" donors are common name matches.
+   - Edward S. Rogers Sr. (Edward III's grandfather, d. 1939) — pre-FEC.
+   - Edward S. Rogers Jr. (Edward III's father / Ted Rogers, d. 2008) —
+     Canadian, no documented US donations.
+
+  Note on tenure_start_date: 2024-08-14 captures his appointment as
+  Executive Chair of Rogers Communications (per unanimous board vote in
+  Calgary). His role as Chairman of Rogers Blue Jays Baseball Partnership
+  predates this; precise start date for that title not documented in
+  Tier 2 sources surveyed.
+
+change_log:
+  - date: 2026-05-23
+    change: |
+      Created during Phase 2 special-case batch as a PAUSED placeholder per
+      user direction (Option C). Not pilot; not ingested. Replaces the
+      original `rogers-communications` registry placeholder. Tier 2 sources:
+      Rogers Communications press release, Globe and Mail (multiple),
+      Sportico, BLG legal commentary, FEC.gov disambiguation lookups.
+      Pre-emptive negative_signals.employers for BGR Group / Barbour
+      Griffith Rogers (DC lobbyist Ed Rogers doppelganger). Full signal
+      block populated for future re-activation if circumstances change.
+    by: "claude-code-research (orchestrated by alex)"
+    references:
+      - "/tmp/bluejays-ownership-research.md (session-local research file)"
+
+audit:
+  created: 2026-05-23
+  last_ingestion: null
+  last_signal_review: 2026-05-23

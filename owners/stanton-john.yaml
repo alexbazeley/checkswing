@@ -1,0 +1,150 @@
+# John W. Stanton — Seattle Mariners
+# Chairman and Managing Partner since 2016-08-19 (MLB-approved closing of
+# Nintendo majority-stake transfer to First Avenue Entertainment LLLP).
+# Telecom entrepreneur: founded Western Wireless (1994, sold to Alltel 2005);
+# Chair of Trilogy Equity Partners and Trilogy International Partners. Also
+# Microsoft director (since July 2014) and Costco director (since Oct 2015).
+#
+# DOPPELGANGER PRE-EMPTIVE: John Stanton (journalist, formerly BuzzFeed
+# Washington Bureau Chief; DC/New Orleans-based) is a distinct person and is
+# blocked via negative_signals.employers.
+#
+# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+
+slug: stanton-john
+name: John W. Stanton
+team: Seattle Mariners
+role: Principal owner
+status: pilot
+tenure_start_date: 2016-08-19    # MLB-approved closing of ownership transition
+tenure_end_date: null
+
+name_variants:
+  - "John W Stanton"
+  - "John W. Stanton"
+  - "John Stanton"
+  - "Stanton, John"
+  - "Stanton, John W"
+  - "Stanton, John W."
+
+verifying_signals:
+  cities:
+    - "bellevue"
+    - "seattle"
+  states:
+    - "WA"
+  employers:
+    # NOTE: "First Avenue Entertainment", "First Avenue Entertainment LLLP",
+    # "Trilogy Equity Partners", "Trilogy International Partners",
+    # "Western Wireless", and "VoiceStream Wireless" are in strong_signals —
+    # not duplicated here per OWNER_SCHEMA.md rule 6.
+    - "Trilogy Partnership"
+    - "Trilogy Search Partners"
+    - "Seattle Mariners"
+    - "Mariners"
+    - "SG Enterprises"               # holds Trilogy International stake per Wikipedia
+  occupations:
+    - "chairman"
+    - "managing partner"
+    - "investor"
+    - "owner"
+    - "executive"
+    - "ceo"
+    - "founder"
+    - "businessman"
+
+strong_signals:
+  employers:
+    - "First Avenue Entertainment"        # Mariners-specific LLLP; small private partnership
+    - "First Avenue Entertainment LLLP"
+    - "Trilogy Equity Partners"            # founded by him; small PE firm
+    - "Trilogy International Partners"     # co-founded; small private; he owns via SG Enterprises
+    - "Western Wireless"                    # defunct 2005; he was founder/Chairman/CEO
+    - "VoiceStream Wireless"                # 1995-2001 chairman/CEO; defunct
+  zip_codes: []
+
+negative_signals:
+  # John Stanton (journalist, formerly BuzzFeed Washington Bureau Chief;
+  # DC/New Orleans-based). Same first/last name; distinct person. Pre-emptive
+  # block per CLAUDE.md §1.7 (well-known doppelganger).
+  employers:
+    - "BuzzFeed"
+    - "BuzzFeed News"
+    - "CongressDaily"
+
+related_entities: []
+# Future candidates (do NOT add without user approval per CLAUDE.md §1.7):
+#   - spouse: Theresa E. ("Terry") Gillespie — co-founder/managing director
+#     of Trilogy International Partners; former CFO/Vice Chairman of
+#     Western Wireless. Likely own donor profile.
+#   - kind: business_entity — Aven Foundation (philanthropic; IRS 990, not
+#     FEC — out of scope per CHARTER §6).
+
+sources:
+  - description: "MLB.com press release — Seattle Mariners ownership transition completed (Aug 19, 2016). Closing date; Nintendo retains 10% stake; Stanton as MLB control person"
+    url: "https://www.mlb.com/press-release/seattle-mariners-ownership-transition-completed-today-196485364"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "MLB.com — Seattle Mariners official owners page. First Avenue Entertainment LLLP ownership entity; Stanton chairman/managing partner"
+    url: "https://www.mlb.com/mariners/history/owners"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "Microsoft Newsroom — Board Member: John W. Stanton (since July 2014). Full name; Costco board; First Avenue Entertainment chair; Whitman + Harvard MBA"
+    url: "https://news.microsoft.com/source/exec/john-w-stanton/"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "Costco Investor Relations — Board Member John W. Stanton (since Oct 2015). Trilogy Equity Partners chair; First Avenue Entertainment chair; Western Wireless / T-Mobile USA history"
+    url: "https://investor.costco.com/governance/board-of-directors/person-details/default.aspx"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "Little League International (Aug 2025) — 'Seattle Mariners Chairman & Managing Partner John Stanton joins Hall of Excellence.' Most recent dated Tier 2 confirmation of current role"
+    url: "https://www.littleleague.org/world-series/2025/llbws/news/seattle-mariners-chairman-managing-partner-longtime-little-league-volunteer-and-advocate-john-stanton-joins-hall-of-excellence/"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "Trilogy Equity Partners official firm bio — John Stanton (Managing Director / Founding Partner). Spouse Terry Gillespie; two sons; education; board roles"
+    url: "https://trilogyequity.com/team/john-stanton/"
+    accessed: "2026-05-23"
+    archive_url: ""
+
+notes: |
+  John W. Stanton (b. 1955) — Chairman and Managing Partner of the Seattle
+  Mariners since 2016-08-19 (closing of Nintendo majority-stake transfer to
+  First Avenue Entertainment LLLP, which Stanton chairs). Stanton was a
+  minority owner in the partnership since ~2000; tenure as control person
+  starts Aug 2016. Nintendo of America retained a 10% stake and remains a
+  minority partner. Spouse: Theresa E. ("Terry") Gillespie.
+
+  Strong_signals: "First Avenue Entertainment" (Mariners-specific LLLP),
+  Trilogy entities (small private PE/telecom holding firms founded/owned by
+  Stanton), and the defunct Western Wireless / VoiceStream Wireless
+  employers (1990s-early 2000s telecom — extremely identifying for that
+  era).
+
+  Pre-emptive negative_signal: John Stanton (journalist, formerly BuzzFeed
+  Washington Bureau Chief; DC/New Orleans-based; X handle @dcbigjohn).
+  Different distinct individual. BuzzFeed / BuzzFeed News / CongressDaily
+  blocked. Academic doppelganger (John Stanton, St. Joseph's University
+  food marketing professor) left for calibration if PA-based filings appear.
+
+  Local-level political-spend density: Mariners-linked giving surfaced in
+  2025 Seattle mayor's race coverage (Post Alley). Federal donations remain
+  in scope; state/local are not (CHARTER, §6).
+
+change_log:
+  - date: 2026-05-23
+    change: |
+      Created during Phase 2 batch 3. Tier 2 sources: MLB.com press release +
+      owners page; Microsoft Newsroom; Costco Investor Relations; Little
+      League International (Aug 2025); Trilogy Equity Partners firm bio.
+      tenure_start_date = 2016-08-19. Strong_signals: First Avenue
+      Entertainment + Trilogy entities + Western Wireless + VoiceStream
+      Wireless. Pre-emptive negative_signals.employers = BuzzFeed / BuzzFeed
+      News / CongressDaily (journalist John Stanton, DC/New Orleans).
+    by: "claude-code-research (orchestrated by alex)"
+    references:
+      - "/tmp/stanton-john-research.md (session-local research file)"
+
+audit:
+  created: 2026-05-23
+  last_ingestion: null
+  last_signal_review: 2026-05-23

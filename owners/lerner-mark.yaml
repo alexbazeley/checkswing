@@ -1,0 +1,138 @@
+# Mark D. Lerner — Washington Nationals
+# Managing principal owner since 2018-06-14 (MLB ownership meeting transition
+# from father Ted Lerner, who died 2023-02-12). Family bought the Nationals
+# from MLB in 2006 ($450M). Family explored a sale Apr 2022 - Feb 2024 but
+# called it off; Mark remains managing principal owner as of May 2026.
+#
+# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+
+slug: lerner-mark
+name: Mark D. Lerner
+team: Washington Nationals
+role: Principal owner
+status: pilot
+tenure_start_date: 2018-06-14    # MLB ownership meeting transition from father Ted
+tenure_end_date: null
+
+name_variants:
+  - "Mark D Lerner"
+  - "Mark D. Lerner"
+  - "Mark Lerner"
+  - "Lerner, Mark"
+  - "Lerner, Mark D"
+  - "Lerner, Mark D."
+
+verifying_signals:
+  cities:
+    - "chevy chase"
+    - "bethesda"
+    - "rockville"            # Lerner Enterprises HQ area
+    - "north bethesda"
+  states:
+    - "MD"
+  employers:
+    # NOTE: "Lerner Enterprises" and "Lerner Corporation" are in
+    # strong_signals — not duplicated here per OWNER_SCHEMA.md rule 6.
+    - "Washington Nationals"
+    - "Nationals"
+    - "Lerner Family Foundation"
+  occupations:
+    - "principal"
+    - "managing principal"
+    - "owner"
+    - "businessman"
+    - "real estate"
+    - "developer"
+    - "executive"
+    - "chairman"
+
+strong_signals:
+  employers:
+    - "Lerner Enterprises"    # near-uniquely associated with this family in DC
+    - "Lerner Corporation"
+  zip_codes: []
+
+related_entities: []
+# Future candidates (do NOT add without user approval per CLAUDE.md §1.7):
+#   - spouse: Judy Lenkin Lerner — listed as Nationals principal owner; no
+#     documented donor profile in Tier 2.
+#   - parent: Annette M. Lerner (mother) — listed as Nationals principal.
+#   - parent: Ted Lerner (d. 2023-02-12) — separate slug `lerner-ted` if
+#     historical giving wanted.
+#   - sibling: Debra Lerner Cohen; husband Edward L. Cohen (Nationals Vice
+#     Chairman, separate prominent individual with likely donor profile).
+#   - sibling: Marla Lerner Tanenbaum; husband Robert K. Tanenbaum
+#     (Nationals Vice Chairman, separate individual with likely donor profile).
+
+sources:
+  - description: "Lerner Enterprises (corporate) — Mark D. Lerner Named Managing Principal Owner (June 14, 2018 MLB ownership meeting). Confirms full legal name and transition date"
+    url: "https://lerner.com/news/mark-d-lerner-named-managing-principal-owner/"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "MLB.com (Feb 19, 2024) — Lerner family no longer pursuing sale of Nationals. Sale process formally ended"
+    url: "https://www.mlb.com/news/lerner-family-not-selling-nationals-at-this-time"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "ESPN — 'Nationals no longer for sale, principal owner Mark Lerner says' (Feb 19, 2024). ~22 months on the market"
+    url: "https://www.espn.com/mlb/story/_/id/39558981/nationals-no-longer-sale-principal-owner-mark-lerner-says"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "ESPN (July 6, 2025) — Mark Lerner fires GM Mike Rizzo and manager Dave Martinez; statement under his name as Managing Principal Owner. Confirms operational control mid-2025"
+    url: "https://www.espn.com/mlb/story/_/id/45685308/washington-nationals-fire-dave-martinez-mike-rizzo"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "CNBC (March 13, 2026) — MLB valuations 2026 (Washington Nationals). Lerner family still ownership of record"
+    url: "https://www.cnbc.com/2026/03/13/mlb-valuations-2026-washington-nationals.html"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "GWU Alumni — Mark D. Lerner (BBA 1975). Full legal name and education"
+    url: "https://www.alumni.gwu.edu/mark-d-lerner"
+    accessed: "2026-05-23"
+    archive_url: ""
+
+notes: |
+  Mark D. Lerner — Managing Principal Owner of the Washington Nationals
+  since 2018-06-14 (MLB ownership meeting transition from his father Ted
+  Lerner). Family bought the Nationals from MLB in 2006 ($450M). Ted died
+  2023-02-12; no ownership-structure change. Family explored a sale via
+  Allen & Co. from April 2022 through Feb 19, 2024, when Mark publicly
+  ended the process. Mark fired GM Mike Rizzo and manager Dave Martinez on
+  July 6, 2025 under his own Managing Principal Owner letterhead, confirming
+  continued operational control. CNBC March 2026 valuations list Lerner
+  family ownership.
+
+  Strong signals: "Lerner Enterprises" and "Lerner Corporation" — near-
+  uniquely associated with this family in the DC-area FEC universe.
+
+  Tower Companies is a SEPARATE firm (Abramson family), despite past joint
+  ventures with Lerner Enterprises. Do NOT use "Tower Companies" as a
+  Lerner signal.
+
+  DOPPELGANGER: Dr. Mark D. Lerner — clinical/forensic psychologist in
+  Melville, NY (Long Island). Same first/middle initial. Distinguished by
+  state (NY vs MD) and occupation. Address-contradiction check in the
+  classifier should route most of these to UNCERTAIN; calibrate negative_
+  signals after first ingestion if needed.
+
+  Edward L. Cohen, Robert K. Tanenbaum, Annette Lerner, Judy Lenkin Lerner,
+  Marla Lerner Tanenbaum, Debra Lerner Cohen are each separate prominent
+  individuals — each warrants its own slug if added. Do NOT silently fold
+  their giving into Mark's totals (CLAUDE.md §1.7).
+
+change_log:
+  - date: 2026-05-23
+    change: |
+      Created during Phase 2 batch 3. Tier 2 sources: Lerner Enterprises
+      (corporate), MLB.com, ESPN (multiple), CNBC, GWU Alumni.
+      tenure_start_date = 2018-06-14. Strong_signals: "Lerner Enterprises"
+      + "Lerner Corporation". NY-based Dr. Mark D. Lerner (psychologist)
+      doppelganger flagged — relying on address contradiction check;
+      calibrate negative_signals after first ingestion if needed.
+    by: "claude-code-research (orchestrated by alex)"
+    references:
+      - "/tmp/lerner-mark-research.md (session-local research file)"
+
+audit:
+  created: 2026-05-23
+  last_ingestion: null
+  last_signal_review: 2026-05-23

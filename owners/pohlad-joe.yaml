@@ -1,0 +1,157 @@
+# Joseph C. ("Joe") Pohlad — Minnesota Twins (FORMER executive chair)
+# Former controlling owner / executive chair. Took over from uncle Jim
+# Pohlad on 2022-11-29; replaced by older brother Tom Pohlad on 2025-12-17
+# after the Pohlad family called off a 14-month sale exploration (Oct 2024
+# announcement) and instead brought in three minority investor groups.
+#
+# CASTELLINI PRECEDENT (per user direction 2026-05-23): tenure_end_date set;
+# continue tracking Joe's full federal giving history through the project
+# scope window. Tom Pohlad becomes a separate future slug (`pohlad-tom`).
+#
+# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+# HIGH family-collision risk: multiple Pohlad relatives are business-active
+# at the same employer ("Pohlad Companies") in the same Twin Cities metro.
+# Name_variants strictly require "Joe" or "Joseph" — bare "J. Pohlad" or
+# initial-only forms NOT included (would collide with uncle Jim).
+
+slug: pohlad-joe
+name: Joseph C. Pohlad
+team: Minnesota Twins
+role: Principal owner
+status: pilot
+tenure_start_date: 2022-11-29    # took over as executive chair from uncle Jim Pohlad
+tenure_end_date: 2025-12-17      # replaced by brother Tom Pohlad
+
+name_variants:
+  - "Joseph C Pohlad"
+  - "Joseph C. Pohlad"
+  - "Joseph Pohlad"
+  - "Joe Pohlad"
+  - "Pohlad, Joseph"
+  - "Pohlad, Joseph C"
+  - "Pohlad, Joseph C."
+  - "Pohlad, Joe"
+
+verifying_signals:
+  cities:
+    - "minneapolis"
+    - "edina"            # candidate suburb (needs-confirmation per Tier 2)
+    - "wayzata"
+    - "saint paul"
+  states:
+    - "MN"
+  employers:
+    - "Minnesota Twins"
+    - "Twins"
+    - "Pohlad Companies"       # SHARED with multiple relatives — verifying only
+    - "Go Media"                # CEO since 2015 (Minneapolis FM radio Go 96.3 / 95.3)
+    - "Go Radio"
+    - "Pohlad Family Foundation"
+  occupations:
+    - "executive chair"
+    - "executive chairman"
+    - "vice president"
+    - "ceo"
+    - "executive"
+    - "businessman"
+    - "owner"
+
+strong_signals:
+  employers: []
+  zip_codes: []
+  # Conservative at creation. "Minnesota Twins" + "executive chair" would
+  # work as a strong combo but brother Tom now holds that title; relying on
+  # city + occupation combo + name-variant strictness instead. "Go Media" /
+  # "Go Radio" + "ceo" could be promoted via calibration if filings observed.
+
+related_entities: []
+# Future candidates (do NOT add without user approval per CLAUDE.md §1.7):
+#   - sibling: Tom Pohlad — CURRENT Twins executive chair / controlling
+#     owner since 2025-12-17. Definite separate-slug `pohlad-tom`. Same Twin
+#     Cities metro + same employer set.
+#   - sibling: Chris Pohlad — VP Asset Management at Pohlad Cos.; involved
+#     in Four Seasons / RBC Gateway project. Separate slug if added.
+#   - parent: Robert "Bob" Pohlad (b. 1954; PepsiAmericas former CEO).
+#     Pohlad Companies principal. Separate slug if added.
+#   - uncle: James "Jim" Pohlad (b. 1953) — Twins control person 2009-2022.
+#   - uncle: William "Bill" Pohlad (b. 1956) — River Road Entertainment.
+#   - spouse: Sara Pohlad. Children: Sam, Noah, Isaac (likely minors/young
+#     adults as of 2026).
+
+sources:
+  - description: "ESPN (Dec 2025) — Twins finalize sales, name Tom Pohlad new controlling owner. Confirms Joe replaced by Tom as control person"
+    url: "https://www.espn.com/mlb/story/_/id/47336092/twins-finalize-sales-name-tom-pohlad-new-controlling-owner"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "ESPN (mid-2025) — Twins no longer for sale as Pohlad family eyes new investors. Sale process halted; minority partners added"
+    url: "https://www.espn.com/mlb/story/_/id/45965947/twins-no-longer-sale-pohlad-family-eyes-new-investors"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "Twin Cities Business — 'The Twins Reset' (Tom Pohlad replaces brother Joe in leading the team organization, Dec 2025)"
+    url: "https://tcbmag.com/the-twins-tom-pohlad-to-replace-brother-joe-in-leading-team-organization/"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "Twin Cities Business (April 2023) — 'TCB Q&A: The Twins' Joe Pohlad.' Wife Sara, sons Sam/Noah/Isaac; Stonehill 2004; age 41 at publication"
+    url: "https://tcbmag.com/tcb-qa-the-twins-joe-pohlad/"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "Sports Illustrated / Onsi — 'We've lost trust: Tom Pohlad on replacing brother Joe atop the Twins'"
+    url: "https://www.si.com/mlb/twins/onsi/minnesota-twins-news/we-have-lost-trust-tom-pohlad-on-replacing-brother-joe-atop-the-twins"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "Pohlad Foundation — Joe Pohlad team page (owner's own family-foundation profile)"
+    url: "https://pohladfoundation.org/joe-pohlad/"
+    accessed: "2026-05-23"
+    archive_url: ""
+
+notes: |
+  Joseph C. ("Joe") Pohlad — former Twins executive chair / controlling
+  owner. Took over from uncle Jim Pohlad on 2022-11-29; replaced by older
+  brother Tom Pohlad on 2025-12-17 after the family called off a 14-month
+  sale exploration (announced Oct 2024) and instead brought in three
+  minority investor groups (Glick Family Investments, George Hicks group,
+  Craig Leipold). The Pohlad family retains majority control.
+
+  Per user direction (Castellini precedent): tenure_end_date = 2025-12-17;
+  continue tracking Joe's full federal giving history through the project's
+  scope window. Tom Pohlad will get his own slug (`pohlad-tom`) — research
+  required before YAML.
+
+  HIGH FAMILY-COLLISION RISK. Multiple Pohlad relatives are business-active
+  at the same employer ("Pohlad Companies") in the same Twin Cities metro:
+   - Father Robert "Bob" Pohlad (b. 1954, formerly PepsiAmericas CEO).
+   - Uncle Jim Pohlad (b. 1953, Twins control person 2009-2022).
+   - Uncle Bill Pohlad (b. 1956, River Road Entertainment).
+   - Brother Tom Pohlad (CURRENT Twins control person from Dec 2025).
+   - Brother Chris Pohlad (VP Asset Management at Pohlad Cos.).
+  Name_variants for Joe deliberately strict — require "Joe" or "Joseph";
+  no bare "J. Pohlad" or "J Pohlad" forms (would catch Jim).
+
+  Joe became CEO of Go Media / Go Radio (Minneapolis FM Go 96.3 / 95.3) in
+  2015 — separate employer string in verifying_signals. Pre-2022 he was EVP
+  Brand Strategy & Growth at the Twins.
+
+  Middle initial "C" found via Pohlad Foundation officer directory; full
+  middle name not Tier 2-confirmed. Use middle initial. Specific Twin Cities
+  suburb of residence is NEEDS-CONFIRMATION; minneapolis, edina, wayzata,
+  saint paul listed conservatively in verifying_signals.cities.
+
+change_log:
+  - date: 2026-05-23
+    change: |
+      Created during Phase 2 batch 3. Castellini-precedent (per user
+      direction): Joe stepped down as control person 2025-12-17 (replaced by
+      brother Tom Pohlad after family called off sale and brought in minority
+      partners). NOT a sale closure — family retains control. tenure_end_date
+      set; continue tracking Joe's full historical giving. Tier 2 sources:
+      ESPN (multiple), Twin Cities Business (multiple), SI/Onsi, Pohlad
+      Foundation. HIGH family-collision risk noted; strict name_variants
+      exclude bare "J. Pohlad". Tom Pohlad flagged for separate future slug.
+    by: "claude-code-research (orchestrated by alex)"
+    references:
+      - "/tmp/pohlad-joe-research.md (session-local research file)"
+
+audit:
+  created: 2026-05-23
+  last_ingestion: null
+  last_signal_review: 2026-05-23

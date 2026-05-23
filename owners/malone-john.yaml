@@ -1,0 +1,178 @@
+# John C. Malone — Atlanta Braves (Co-principal shareholder)
+# Largest individual economic and voting shareholder of Atlanta Braves
+# Holdings, Inc. (NASDAQ: BATRA / BATRK). Per user direction (Davis-Simpson-
+# style co-principal model), tracked as a separate slug from
+# Terry McGuirk (the MLB Control Person + day-to-day Chairman/President/CEO).
+#
+# IMPORTANT EDITORIAL CAVEAT: Malone's federal political donor footprint is
+# vast (~$2M in 2024 cycle alone, primarily to Republican federal candidates
+# and conservative super PACs) and is overwhelmingly driven by his Liberty
+# Media / Liberty Broadband / Liberty Global identity, NOT his Braves
+# stake. Reports drawing inferences like "MLB owners donated $X to Y" using
+# Malone's totals should clearly tag those donations as being part of
+# Malone's broader Liberty-Media-mogul identity rather than implying
+# Braves-driven political activity.
+#
+# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+
+slug: malone-john
+name: John C. Malone
+team: Atlanta Braves
+role: Principal shareholder (largest economic + voting interest)
+status: pilot
+tenure_start_date: 2007-05-16    # Liberty Media completed Braves acquisition from Time Warner via swap
+tenure_end_date: null
+
+name_variants:
+  - "John C Malone"
+  - "John C. Malone"
+  - "John Malone"
+  - "John Carl Malone"
+  - "Malone, John"
+  - "Malone, John C"
+  - "Malone, John C."
+
+verifying_signals:
+  cities:
+    - "elizabeth"           # Elizabeth, CO (Elbert County) primary residence
+    - "englewood"           # Liberty Media office; some filings may use office address
+  states:
+    - "CO"
+  employers:
+    # Liberty Media is his dominant employer string but is shared with many
+    # Liberty employees; combination of Liberty + Elizabeth CO is the
+    # disambiguator.
+    - "Liberty Media"
+    - "Liberty Media Corporation"
+    - "Liberty Media Corp"
+    - "Liberty Broadband"
+    - "Liberty Broadband Corporation"
+    - "Liberty Global"
+    - "Liberty Global PLC"
+    - "Liberty Latin America"
+    - "Liberty TripAdvisor"
+    - "Atlanta Braves Holdings"
+    - "QVC Group"
+    - "Qurate Retail"
+    - "Charter Communications"     # director until July 2018; director emeritus
+    - "Discovery"
+    - "Warner Bros Discovery"
+    - "Tele-Communications Inc"     # TCI; historical (1973-1996)
+    - "TCI"                         # historical
+  occupations:
+    - "chairman"
+    - "chairman emeritus"
+    - "ceo"
+    - "executive"
+    - "investor"
+    - "businessman"
+    - "self-employed"
+    - "retired"
+
+strong_signals:
+  employers: []
+  zip_codes: []
+  # Conservative at creation. The uniquely-identifying combination is
+  # Elizabeth CO + Liberty employer string, but neither alone is strong.
+  # Calibrate via post-ingestion audit: if his specific ZIP (80107 area)
+  # surfaces consistently in confirmed records, add as strong_signal.
+
+related_entities: []
+# Future candidates (do NOT add without user approval per CLAUDE.md §1.7):
+#   - spouse: Leslie Malone — Elizabeth CO; no documented separate donor
+#     profile.
+#   - kind: pac — Liberty Media Corporation PAC (FEC C00508101) — TERMINATED;
+#     covers a pre-split-off period only; not a current related_entity.
+#   - kind: business_entity — Liberty Broadband, Liberty Global, Atlanta
+#     Braves Holdings (no FEC PAC each). Tracked here only via verifying_
+#     signals.employers strings.
+
+sources:
+  - description: "Atlanta Braves Holdings IR — Board of Directors. Confirms John Malone NOT on the ABH board as of May 2026 (board: McGuirk, Deevy, Lucas, Murphy)"
+    url: "https://www.bravesholdings.com/about/board-of-directors"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "Atlanta Braves Holdings SC 13D (2023 split-off) — Malone beneficial ownership"
+    url: "https://www.sec.gov/Archives/edgar/data/0001958140/000110465923082463/tm2321313d2_sc13d.htm"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "Liberty Media press release — John C. Malone to transition to Chairman Emeritus of Liberty Media (effective Jan 1, 2026; Robert R. 'Dob' Bennett assumes chairmanship)"
+    url: "https://www.libertymedia.com/news/detail/570/john-c-malone-to-transition-to-chairman-emeritus-of"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "Atlanta Journal-Constitution (Nov 7, 2024) — Malone grants McGuirk proxy to vote 887,079 Series B shares (~44% voting power) on routine matters"
+    url: "https://www.ajc.com/sports/atlanta-braves/john-malone-gives-terry-mcguirk-more-power-with-atlanta-braves/B3HXGRCMVZBGNLSY3LXBQCV6UM/"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "Bloomberg Billionaires Index — John C. Malone profile. Confirms Elizabeth CO residence; major holdings across Liberty entities"
+    url: "https://www.bloomberg.com/billionaires/profiles/john-c-malone/"
+    accessed: "2026-05-23"
+    archive_url: ""
+
+notes: |
+  John Carl Malone, Ph.D. (b. 1941-03-07). Cable / media mogul; longtime
+  chairman of Liberty Media (transitions to Chairman Emeritus effective
+  2026-01-01, with Robert R. "Dob" Bennett assuming the chairmanship).
+  Primary residence: Elizabeth, CO (Elbert County) — long-tenure address;
+  largest US individual landowner (~2.2M acres across Maine, Colorado, New
+  Mexico, Wyoming).
+
+  Braves connection: Largest individual economic and voting shareholder of
+  Atlanta Braves Holdings (NASDAQ: BATRA / BATRK) — holds 887,079 Series B
+  Common Stock representing ~44% of company voting power. On 2024-08-22,
+  granted a "sole and exclusive" proxy to Terry McGuirk to vote those
+  shares on director elections and other routine matters (preserves vote
+  on non-routine matters). Right of first refusal on Malone's share
+  transfers (20-business-day match window); appreciation right on share
+  sales above $50/share. Not currently on the ABH board.
+
+  tenure_start_date 2007-05-16: date Liberty Media completed acquisition
+  of the Braves from Time Warner via the Liberty/Time Warner stock swap.
+  Malone has been an ownership-group principal since that point. Pre-2007
+  donations are pre-tenure (per CHARTER, in scope but tagged via tenure
+  date); his pre-2007 corporate identity was TCI (Tele-Communications
+  Inc., 1973-1996) → AT&T Broadband (after the 1999 sale).
+
+  HIGH DOPPELGANGER RISK. "John Malone" is a very common name. The
+  uniquely identifying combination for our Malone is Elizabeth, CO city +
+  Liberty Media (or related Liberty) employer string. Other John Malones
+  in DC, NYC, Boston, etc. with non-Liberty employer signatures or non-CO
+  state should NOT match.
+
+  Editorial caveat: His ~$2M of 2024-cycle Republican federal giving
+  (including $1M to Congressional Leadership Fund + $41,300 to NRCC + many
+  $3,300 max-out hard-money checks to GOP House candidates) is
+  overwhelmingly driven by his Liberty Media / Republican-mega-donor
+  identity. Reports aggregating "MLB owner political giving" should tag
+  Malone's totals as overwhelmingly non-baseball-driven, even though we
+  attribute them to him here (per user's Davis-Simpson-style co-principal
+  framing).
+
+  Liberty Media Corporation PAC (FEC C00508101): TERMINATED. Not a current
+  related_entity. Historical-context only.
+
+  Charter Communications PAC (FEC C00426775): ACTIVE corporate PAC, but
+  Malone is not employed by Charter (director emeritus only since July
+  2018 retirement); Charter PAC donations are NOT to be attributed to
+  Malone the individual.
+
+change_log:
+  - date: 2026-05-23
+    change: |
+      Created during Phase 2 special-case batch. Per user direction (Davis-
+      Simpson-style separate slugs for Braves co-principals), tracking
+      Malone as the major-shareholder co-principal alongside Terry McGuirk
+      (mcguirk-terry.yaml). Tier 2 sources: ABH IR; ABH SC 13D 2023;
+      Liberty Media press release on Malone Chairman-Emeritus transition;
+      AJC Nov 2024; Bloomberg Billionaires Index. tenure_start_date =
+      2007-05-16 (Liberty Media completed Braves acquisition from Time
+      Warner). strong_signals empty at creation — calibrate via post-
+      ingestion audit (Elizabeth CO ZIP cluster expected).
+    by: "claude-code-research (orchestrated by alex)"
+    references:
+      - "/tmp/braves-ownership-research.md (session-local research file)"
+
+audit:
+  created: 2026-05-23
+  last_ingestion: null
+  last_signal_review: 2026-05-23

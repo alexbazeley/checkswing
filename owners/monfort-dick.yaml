@@ -1,0 +1,140 @@
+# Richard L. ("Dick") Monfort — Colorado Rockies
+# Owner / Managing General Partner / Chairman / CEO. Monfort family acquired
+# controlling stake from Jerry McMorris in 2005. Dick became Chairman/CEO
+# in 2011 (succeeded brother Charlie). April 2026: Penner Sports Group
+# (Greg/Carrie Walton Penner of the Denver Broncos) acquired 40% minority
+# stake at ~$1.68B valuation; Dick remains Chairman/CEO; Charlie remains GP;
+# Walker Monfort (Dick's son) is team president since Jan 2026.
+#
+# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+
+slug: monfort-dick
+name: Richard L. Monfort
+team: Colorado Rockies
+role: Principal owner
+status: pilot
+tenure_start_date: 2011-01-01    # Chairman/CEO; family control of franchise since 2005
+tenure_end_date: null
+
+name_variants:
+  - "Richard L Monfort"
+  - "Richard L. Monfort"
+  - "Richard Monfort"
+  - "Dick Monfort"
+  - "Monfort, Richard"
+  - "Monfort, Richard L"
+  - "Monfort, Richard L."
+  - "Monfort, Dick"
+
+verifying_signals:
+  cities:
+    - "denver"
+    - "greeley"              # family base; brother Charlie's primary residence
+  states:
+    - "CO"
+  employers:
+    - "Colorado Rockies"
+    - "Colorado Rockies Baseball"
+    - "Monfort"              # generic family substring (caught via substring match)
+    - "Montera Cattle"       # co-founded 1996 post-ConAgra retirement
+    - "ConAgra"              # 1991-1995 ConAgra Red Meats CEO (historical)
+    - "Monfort of Colorado"  # pre-1987 (acquired by ConAgra 1987)
+  occupations:
+    - "owner"
+    - "chairman"
+    - "ceo"
+    - "executive"
+    - "businessman"
+    - "rancher"
+    - "cattleman"
+
+strong_signals:
+  employers:
+    - "West Lot LLC"          # Westword + Denver Gazette name Dick as principal; McGregor Square dev
+  zip_codes: []
+  # "Colorado Rockies" stays in verifying — team employees would also report it.
+
+related_entities: []
+# Future candidates (do NOT add without user approval per CLAUDE.md §1.7):
+#   - sibling: Charles K. ("Charlie") Monfort — co-owner / GP / Vice Chairman.
+#     Born 1959. Primary residence Greeley CO. Definite separate-slug
+#     candidate (`monfort-charlie`).
+#   - child: Walker Monfort — Rockies team president since Jan 2026
+#     (previously EVP since June 2025; VP Corporate Partnerships since 2015).
+#     Separate slug candidate.
+#   - child: Sterling Monfort — Rockies scouting. Separate slug candidate.
+#   - child: Lyndsey (Monfort) Graber — daughter (MD); husband Aaron Graber.
+#   - spouse: Karen Monfort — political activity not documented in Tier 2.
+
+sources:
+  - description: "MLB.com — Executive Bio: Richard L. Monfort (Colorado Rockies front office). Title and tenure"
+    url: "https://www.mlb.com/rockies/team/front-office/executive-bio/richard-monfort"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "UCHealth — Richard L. Monfort committee member. Full title, education, business holdings (Hyatt Regency Indian Wells, Montera Cattle Co.), children's names"
+    url: "https://www.uchealth.org/leadership/richard-l-monfort/"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "Denver Westword — 'Every Property Connected to the Monfort Family in Denver.' Documents McGregor Square as West Lot LLC with Dick Monfort as principal; clarifies Dick vs nephew Kenny's holdings"
+    url: "https://www.westword.com/news/every-property-connected-to-the-monfort-family-in-denver-24843171/"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "Front Office Sports (April 2026) — 'Billionaire Broncos Owners Buy 40% of Rockies.' Penner Sports Group acquisition; Dick Monfort remains Chairman/CEO"
+    url: "https://frontofficesports.com/billionaire-broncos-owners-buy-40-of-rockies/"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "Denver Gazette / Mark Kiszla column (April 2026) — Monfort brothers / 40% stake to Penners. Confirms post-deal control structure"
+    url: "https://www.denvergazette.com/2026/04/11/mark-kiszla-monfort-brothers-confronted-a-break-up-before-selling-40-stake-to-broncos-owners/"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "ESPN (June 2025) — Walker Monfort promotion confirms Dick as owner/chairman/CEO and Walker as son"
+    url: "https://www.espn.com/mlb/story/_/id/45590696/rockies-promote-owner-son-walker-monfort-leadership-role"
+    accessed: "2026-05-23"
+    archive_url: ""
+
+notes: |
+  Richard L. ("Dick") Monfort (b. 1954) — Owner / Managing General Partner /
+  Chairman / CEO of the Colorado Rockies. Family acquired controlling stake
+  from Jerry McMorris in 2005. Dick became Chairman/CEO in 2011 (succeeded
+  brother Charlie). Primary residence: Denver, CO (McGregor Square
+  residences adjacent to Coors Field). Historical/family base: Greeley, CO
+  (where brother Charlie primarily resides and the family meatpacking
+  business was headquartered).
+
+  Family meatpacking background: Monfort of Colorado (founded by father
+  Kenneth Monfort) was acquired by ConAgra in 1987; Dick was president
+  1987–1991 and CEO of ConAgra Red Meats 1991–1995. Currently co-founded
+  Montera Cattle Co. (1996–). Indian Wells, CA — owns Hyatt Regency Indian
+  Wells Resort & Spa (business address, not residence per Tier 2).
+
+  Strong_signal "West Lot LLC" — Westword and Denver Gazette both name Dick
+  as principal of West Lot LLC (developer of McGregor Square). Sufficiently
+  unique that a single match promotes to CONFIRMED.
+
+  April 2026 transaction: Penner Sports Group (Greg Penner / Carrie Walton
+  Penner of Denver Broncos) acquired 40% minority stake at $1.68B valuation.
+  Dick remains Chairman/CEO; Charlie remains GP; Walker remains team
+  president. Penners have no day-to-day involvement.
+
+  Doppelganger note: cattle-industry trade press "Calf News" has an article
+  titled "The Other Dick Monfort" — unfetchable in research. Flag suggests
+  agriculture-circles doppelganger exists. If filings from Greeley with
+  cattle-industry employer surface that don't match Dick's documented
+  entities, route to UNCERTAIN and calibrate.
+
+change_log:
+  - date: 2026-05-23
+    change: |
+      Created during Phase 2 batch 3. Tier 2 sources: MLB.com bio, UCHealth
+      committee listing, Westword, Front Office Sports, Denver Gazette
+      (Kiszla), ESPN. tenure_start_date = 2011-01-01 (year-precision; specific
+      chairman/CEO transition day not documented). Strong_signal = "West Lot
+      LLC" (Westword + Denver Gazette both name Dick as principal).
+    by: "claude-code-research (orchestrated by alex)"
+    references:
+      - "/tmp/monfort-dick-research.md (session-local research file)"
+
+audit:
+  created: 2026-05-23
+  last_ingestion: null
+  last_signal_review: 2026-05-23

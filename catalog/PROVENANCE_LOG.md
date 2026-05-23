@@ -704,3 +704,501 @@ gets re-run since the SCHEMA_MIGRATION may pull up additional CONFIRMs).
 - **uncertain_count**: `1267`
 - **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T05-04-41Z__9392b8c0.db`
 - **notes**: skipped(no-name-match)=38 · FROM-RAW
+
+### 2026-05-23 — INGESTION
+
+- **run_id**: `aae57a83`
+- **entity_slug**: `ilitch-chris`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `None`
+- **name_variants_queried**: `["Christopher P Ilitch", "Christopher P. Ilitch", "Christopher Ilitch", "Chris Ilitch", "Christopher Paul Ilitch", "Ilitch, Christopher", "Ilitch, Christopher P", "Ilitch, Christopher P.", "Ilitch, Chris"]`
+- **api_calls_made**: `11`
+- **records_fetched**: `30`
+- **confirmed_count**: `12`
+- **probable_count**: `0`
+- **uncertain_count**: `18`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T16-57-53Z__aae57a83.db`
+- **notes**: skipped(no-name-match)=0 · states=['MI']
+
+### 2026-05-23 — INGESTION
+
+- **run_id**: `2252e059`
+- **entity_slug**: `monfort-dick`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `None`
+- **name_variants_queried**: `["Richard L Monfort", "Richard L. Monfort", "Richard Monfort", "Dick Monfort", "Monfort, Richard", "Monfort, Richard L", "Monfort, Richard L.", "Monfort, Dick"]`
+- **api_calls_made**: `12`
+- **records_fetched**: `106`
+- **confirmed_count**: `45`
+- **probable_count**: `40`
+- **uncertain_count**: `17`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T16-57-54Z__2252e059.db`
+- **notes**: skipped(no-name-match)=4 · states=['CO']
+
+### 2026-05-23 — INGESTION
+
+- **run_id**: `ba257fa3`
+- **entity_slug**: `dolan-paul`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `None`
+- **name_variants_queried**: `["Paul J Dolan", "Paul J. Dolan", "Paul Dolan", "Paul Joseph Dolan", "Dolan, Paul", "Dolan, Paul J", "Dolan, Paul J."]`
+- **api_calls_made**: `9`
+- **records_fetched**: `68`
+- **confirmed_count**: `60`
+- **probable_count**: `7`
+- **uncertain_count**: `0`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T17-25-42Z__ba257fa3.db`
+- **notes**: skipped(no-name-match)=1 · states=['OH']
+
+### 2026-05-23 — INGESTION
+
+- **run_id**: `a0b17326`
+- **entity_slug**: `lerner-mark`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `None`
+- **name_variants_queried**: `["Mark D Lerner", "Mark D. Lerner", "Mark Lerner", "Lerner, Mark", "Lerner, Mark D", "Lerner, Mark D."]`
+- **api_calls_made**: `14`
+- **records_fetched**: `240`
+- **confirmed_count**: `62`
+- **probable_count**: `13`
+- **uncertain_count**: `163`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T17-25-40Z__a0b17326.db`
+- **notes**: skipped(no-name-match)=2 · states=['MD']
+
+### 2026-05-23 — INGESTION
+
+- **run_id**: `ad15ab15`
+- **entity_slug**: `stanton-john`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `None`
+- **name_variants_queried**: `["John W Stanton", "John W. Stanton", "John Stanton", "Stanton, John", "Stanton, John W", "Stanton, John W."]`
+- **api_calls_made**: `14`
+- **records_fetched**: `326`
+- **confirmed_count**: `68`
+- **probable_count**: `19`
+- **uncertain_count**: `96`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T17-37-10Z__ad15ab15.db`
+- **notes**: skipped(no-name-match)=143 · states=['WA']
+
+### 2026-05-23 — INGESTION
+
+- **run_id**: `d87f0012`
+- **entity_slug**: `sherman-bruce`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `None`
+- **name_variants_queried**: `["Bruce S Sherman", "Bruce S. Sherman", "Bruce Sherman", "Sherman, Bruce", "Sherman, Bruce S", "Sherman, Bruce S."]`
+- **api_calls_made**: `12`
+- **records_fetched**: `196`
+- **confirmed_count**: `51`
+- **probable_count**: `14`
+- **uncertain_count**: `131`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T17-25-37Z__d87f0012.db`
+- **notes**: skipped(no-name-match)=0 · states=['FL']
+
+### 2026-05-23 — INGESTION
+
+- **run_id**: `2f7503b4`
+- **entity_slug**: `pohlad-joe`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `None`
+- **name_variants_queried**: `["Joseph C Pohlad", "Joseph C. Pohlad", "Joseph Pohlad", "Joe Pohlad", "Pohlad, Joseph", "Pohlad, Joseph C", "Pohlad, Joseph C.", "Pohlad, Joe"]`
+- **api_calls_made**: `0`
+- **records_fetched**: `171`
+- **confirmed_count**: `92`
+- **probable_count**: `14`
+- **uncertain_count**: `1`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T18-01-50Z__2f7503b4.db`
+- **notes**: skipped(no-name-match)=64 · FROM-RAW
+
+### 2026-05-23 — INGESTION
+
+- **run_id**: `cd0c46ce`
+- **entity_slug**: `sherman-john`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `None`
+- **name_variants_queried**: `["John J Sherman", "John J. Sherman", "John Sherman", "Sherman, John", "Sherman, John J", "Sherman, John J."]`
+- **api_calls_made**: `28`
+- **records_fetched**: `526`
+- **confirmed_count**: `34`
+- **probable_count**: `6`
+- **uncertain_count**: `305`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T17-37-08Z__cd0c46ce.db`
+- **notes**: skipped(no-name-match)=181 · states=['MO', 'KS', 'FL']
+
+### 2026-05-23 — INGESTION
+
+- **run_id**: `7a4292ae`
+- **entity_slug**: `johnson-greg`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `None`
+- **name_variants_queried**: `["Gregory E Johnson", "Gregory E. Johnson", "Gregory Eugene Johnson", "Greg E Johnson", "Greg E. Johnson", "Greg Johnson", "Johnson, Gregory", "Johnson, Gregory E", "Johnson, Gregory E.", "Johnson, Greg"]`
+- **api_calls_made**: `76`
+- **records_fetched**: `2497`
+- **confirmed_count**: `98`
+- **probable_count**: `9`
+- **uncertain_count**: `2328`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T17-44-31Z__7a4292ae.db`
+- **notes**: skipped(no-name-match)=62 · states=['CA']
+
+### 2026-05-23 — NOTE — Phase 2 batch 3 summary
+
+Nine owners promoted from `queued` → `pilot` and ingested in this batch. All YAMLs validate; per-owner CSV exports refreshed (`data/donations/<slug>/` and `data/donations/_aggregate/`).
+
+Per-owner batch-3 outcomes:
+
+| slug          | team                  | states         | C / P / U      | API calls | notes                                          |
+|---------------|-----------------------|----------------|----------------|-----------|------------------------------------------------|
+| dolan-paul    | Cleveland Guardians   | OH             |   60 /  7 /   0 |  9       | cleanest run — tight Cleveland Indians/Guardians + Thrasher Dinsmore signals |
+| ilitch-chris  | Detroit Tigers        | MI             |   12 /  0 /  18 | 11       | rare surname + strong "Ilitch Holdings" signal |
+| johnson-greg  | San Francisco Giants  | CA             |   98 /  9 /2328 | 76       | HIGH doppelganger — strong_signals empty by design; 2328 UNCERTAIN is "Greg/Gregory Johnson" CA flood awaiting calibration |
+| lerner-mark   | Washington Nationals  | MD             |   62 / 13 / 163 | 14       | "Lerner Enterprises" strong; 163 UNCERTAIN likely other Mark Lerners in MD |
+| monfort-dick  | Colorado Rockies      | CO             |   45 / 40 /  17 | 12       | high PROBABLE — many Denver records hit one signal only |
+| pohlad-joe    | Minnesota Twins       | MN (FROM-RAW)  |   92 / 14 /   1 |  0       | FORMER exec chair (tenure_end 2025-12-17 per Castellini precedent). Initial fetch timed out on `Pohlad, Joseph C` mid-pagination; classified from 9 saved raw payloads (171 unique records). Defensible first pass. |
+| sherman-bruce | Miami Marlins         | FL             |   51 / 14 / 131 | 12       | First attempt timed out on `Sherman, Bruce S` variant; retry succeeded. M4 Capital strong_signal hit. 131 UNCERTAIN likely other Bruce Shermans in FL |
+| sherman-john  | Kansas City Royals    | MO, KS, FL     |   34 /  6 / 305 | 28       | HIGH doppelganger (common name + 3 states). 305 UNCERTAIN awaiting calibration |
+| stanton-john  | Seattle Mariners      | WA             |   68 / 19 /  96 | 14       | Pre-emptive negative_signals (BuzzFeed/CongressDaily journalist doppelganger) in YAML at creation |
+| **TOTAL**     |                       |                | **522 / 122 / 3059** | **176** |                                                |
+
+Cumulative archive after batch 3: **25 owners ingested**, ~2,543 CONFIRMED records (2,021 carried forward + 522 new). Aggregate CSV: 438 confirmed-only rows, 640 with-probable rows.
+
+Operational gotchas:
+- FEC `/schedules/schedule_a/` timed out (5 retries) on two specific paginated queries:
+  - `sherman-bruce` variant `"Sherman, Bruce S"` state=['FL'] — retry succeeded.
+  - `pohlad-joe` variant `"Pohlad, Joseph C"` state=['MN'] mid-pagination (`last_index=4120220111147314698`) — both initial run and retry failed. Classified from saved raw payloads (`--from-raw`); the missed pages of that one variant may include a small number of additional Joe Pohlad records. Acceptable for first pass; can resume the targeted variant in a future calibration round if a known-missing donation surfaces.
+
+Top calibration targets (in order):
+1. `johnson-greg` — 2328 UNCERTAINs dominated by CA Greg/Gregory Johnson population. Need: identify doppelgangers via spot-check of sample, add negative_signals.employers, possibly populate strong_signals if a unique Greg-Johnson-specific employer string surfaces in CONFIRMED audit.
+2. `sherman-john` — 305 UNCERTAINs across MO/KS/FL. Expected hits: Ellsworth-KS attorney (negative_signal on law firm if observed), Brooks Sherman of Knothole Sports (DIFFERENT first name — won't collide via name_variants, no action needed), other KC-area John Shermans.
+3. `lerner-mark` — 163 UNCERTAINs likely other Mark Lerners in MD. The Lerner Enterprises strong_signal is doing the right work; spot-check UNCERTAINs for any near-miss patterns.
+4. `sherman-bruce` — 131 UNCERTAINs in FL. Probably other Bruce Shermans (research flagged a fintech Bruce Sherman at Tipalti).
+5. `stanton-john` — 96 UNCERTAINs. Already has pre-emptive BuzzFeed/CongressDaily negative_signal; spot-check for other doppelgangers (e.g., St. Joseph's University food-marketing professor).
+6. `monfort-dick` — 40 PROBABLEs may include real Dick records with only one signal; check whether McGregor Square / West Lot LLC or specific occupation patterns can promote some via signal additions.
+
+Family / separate-slug candidates surfaced during this batch (not added, per CLAUDE.md §1.7; queued for future batches):
+- `dolan-larry` (Paul Dolan's father, d. 2025-02-23) — historical-only.
+- `dolan-matthew` (Paul Dolan's brother, OH State Senator, 2x US Senate primary candidate) — separate donor.
+- `monfort-charlie` (Dick Monfort's brother, co-owner Rockies).
+- `monfort-walker` (Dick's son, Rockies team president).
+- `ilitch-marian` (Mike Ilitch's widow; documented major political donor in own right; MotorCity Casino owner).
+- `pohlad-tom` (Joe's older brother, CURRENT Twins controlling owner since 2025-12-17) — high priority for batch 4 or follow-on.
+- `johnson-charles` (Greg Johnson's father, LARGEST Giants individual shareholder ~26%, Palm Beach FL; major Republican donor).
+- Lerner family in-laws: `cohen-edward` (Edward L. Cohen, Nationals Vice Chairman), `tanenbaum-robert` (Robert K. Tanenbaum, Nationals Vice Chairman), plus `lerner-annette`, `lerner-judy`, `lerner-debra`, `lerner-marla` — all named Nationals principal owners with potential own donor profiles.
+
+What's next per the project briefing:
+- Batch 4 (new principals after sale closures): `feliciano-jose` (Padres), `zalupski-patrick` (Rays), `davis-ray` and/or `simpson-bob` (Rangers co-owners — fix misnamed `simpson-ray` slug in registry).
+- Special-case batch (need a small schema discussion before YAML write): `liberty-media-group` (Braves corporate parent — track John Malone personally and/or Liberty Media PAC), `rogers-communications` (Blue Jays Canadian parent).
+- Calibration round across batch 3 owners — particularly johnson-greg and sherman-john.
+
+### 2026-05-23 — INGESTION
+
+- **run_id**: `1d30f6d7`
+- **entity_slug**: `seidler-john`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `None`
+- **name_variants_queried**: `["John Seidler", "Seidler, John"]`
+- **api_calls_made**: `4`
+- **records_fetched**: `1`
+- **confirmed_count**: `1`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T18-47-44Z__1d30f6d7.db`
+- **notes**: skipped(no-name-match)=0 · states=['CA']
+
+### 2026-05-23 — INGESTION
+
+- **run_id**: `3a271fed`
+- **entity_slug**: `zalupski-patrick`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `None`
+- **name_variants_queried**: `["Patrick O Zalupski", "Patrick O. Zalupski", "Patrick Zalupski", "Zalupski, Patrick", "Zalupski, Patrick O", "Zalupski, Patrick O."]`
+- **api_calls_made**: `6`
+- **records_fetched**: `20`
+- **confirmed_count**: `15`
+- **probable_count**: `0`
+- **uncertain_count**: `5`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T18-47-42Z__3a271fed.db`
+- **notes**: skipped(no-name-match)=0 · states=['FL']
+
+### 2026-05-23 — INGESTION
+
+- **run_id**: `8181a08f`
+- **entity_slug**: `feliciano-jose`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `None`
+- **name_variants_queried**: `["Jose E Feliciano", "Jose E. Feliciano", "Jose Feliciano", "Jos\u00e9 E. Feliciano", "Feliciano, Jose", "Feliciano, Jose E", "Feliciano, Jose E."]`
+- **api_calls_made**: `10`
+- **records_fetched**: `63`
+- **confirmed_count**: `23`
+- **probable_count**: `1`
+- **uncertain_count**: `15`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T18-48-38Z__8181a08f.db`
+- **notes**: skipped(no-name-match)=24 · states=['CA']
+
+### 2026-05-23 — INGESTION
+
+- **run_id**: `54191a41`
+- **entity_slug**: `simpson-bob`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `None`
+- **name_variants_queried**: `["Bob R Simpson", "Bob R. Simpson", "Simpson, Bob R", "Simpson, Bob R."]`
+- **api_calls_made**: `4`
+- **records_fetched**: `8`
+- **confirmed_count**: `0`
+- **probable_count**: `8`
+- **uncertain_count**: `0`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T18-48-39Z__54191a41.db`
+- **notes**: skipped(no-name-match)=0 · states=['TX']
+
+### 2026-05-23 — INGESTION
+
+- **run_id**: `74728f10`
+- **entity_slug**: `davis-ray`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `None`
+- **name_variants_queried**: `["Ray C Davis", "Ray C. Davis", "Ray Davis", "Davis, Ray", "Davis, Ray C", "Davis, Ray C."]`
+- **api_calls_made**: `0`
+- **records_fetched**: `318`
+- **confirmed_count**: `52`
+- **probable_count**: `29`
+- **uncertain_count**: `13`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T19-08-33Z__74728f10.db`
+- **notes**: skipped(no-name-match)=224 · FROM-RAW
+
+### 2026-05-23 — NOTE — Phase 2 batch 4 summary
+
+Batch 4 focused on **post-sale-closure principal transitions** plus fixing the misnamed `simpson-ray` placeholder. Five new pilots ingested; two registry placeholder slugs retired.
+
+#### Registry changes
+
+**Retired (placeholder slugs replaced by concrete entries):**
+
+- **`seidler-family`** — anticipatory placeholder for the Padres ownership during the interim Eric Kutsenda / Peter Seidler estate period (Nov 2023 - Feb 2025). Never had a YAML file and was never ingested. Superseded by two concrete slugs: `seidler-john` (current MLB-approved control person since Feb 2025) and `feliciano-jose` (incoming control person under the May 2, 2026 sale agreement).
+- **`simpson-ray`** — misnamed combined entry that conflated two distinct billionaires (Ray C. Davis and Bob R. Simpson) under one slug. Never had a YAML file. Superseded by two concrete slugs: `davis-ray` (formal MLB-designated control person, Dallas-based) and `simpson-bob` (co-chairman, Fort Worth-based) — entirely different signal stacks.
+
+**Status updates:**
+
+- **`sternberg-stuart`** — added `tenure_end_date: 2025-09-30`, role updated to "Principal owner (FORMER)", notes updated to reflect that Zalupski took over (Sternberg retained ~10% minority stake). Per project policy (TRACK ONLY current/active and future-confirmed owners; angelos-john-p pattern), NOT ingested in this batch. A lightweight historical YAML (analogous to `owners/angelos-john-p.yaml`) is a future task.
+
+**New pilots added:**
+
+| slug              | team                 | status | tenure                       |
+|-------------------|----------------------|--------|------------------------------|
+| `seidler-john`    | San Diego Padres     | pilot  | 2025-02-15 → null (mid-2026 close pending) |
+| `feliciano-jose`  | San Diego Padres     | pilot  | 2026-05-02 → null (PRE-APPROVAL, MLB vote pending June 2026) |
+| `zalupski-patrick`| Tampa Bay Rays       | pilot  | 2025-09-30 → null |
+| `davis-ray`       | Texas Rangers        | pilot  | 2010-08-12 → null |
+| `simpson-bob`     | Texas Rangers        | pilot  | 2010-08-12 → null |
+
+The Padres dual-pilot is a deliberate user-approved exception: the sale to Feliciano/Jones at $3.9B (a new MLB-sale record) was announced 2026-05-02 but MLB approval is expected at the June 2026 owners meeting with close pre-2026 All-Star Break. Both Seidler (current) and Feliciano (future-confirmed) are tracked as pilots per the briefing's "future-confirmed owners" wording. When MLB approves and the deal closes, `seidler-john.yaml`'s `tenure_end_date` and `feliciano-jose.yaml`'s `tenure_start_date` should both be updated to the close date.
+
+#### Per-owner batch-4 outcomes
+
+| slug              | states  | C / P / U      | API | Notes                                                     |
+|-------------------|---------|----------------|-----|-----------------------------------------------------------|
+| `davis-ray`       | TX      |   52 / 29 / 13 |   0 | FROM-RAW — initial fetch timed out on `Davis, Ray C` variant mid-pagination (`last_index=4072620131194550873`). Classified from 13 saved raw payloads (318 unique records; 224 name-skipped — many other TX Ray Davises). |
+| `feliciano-jose`  | CA      |   23 /  1 / 15 |  10 | Singer José Feliciano (b. 1945, CT) doppelganger filtered by CA state + pre-emptive negative_signals.employers (Musician/Singer/Entertainer/Polydor/JF Recording). 24 name-skipped. |
+| `seidler-john`    | CA      |    1 /  0 /  0 |   4 | Tiny donor footprint (family-office runner). Sale pending — tenure_end will be set when Feliciano closes. |
+| `simpson-bob`     | TX      |    0 /  8 /  0 |   4 | All 8 PROBABLE are genuinely him — name "SIMPSON, BOB R. MR." + Fort Worth city + empty/"INFORMATION REQUESTED" employer (PAC reports without donor-employer due diligence). Strict "R." middle initial requirement worked as designed. |
+| `zalupski-patrick`| FL      |   15 /  0 /  5 |   6 | Clean run. Dream Finders Homes / DFH / DF Capital strong_signals fired. Rare Polish surname keeps doppelganger risk low. |
+| **TOTAL**         |         | **91 / 38 / 33** | **24** |                                                       |
+
+Cumulative archive after batch 4: **30 owners ingested** (counting `angelos-john-p` as 0/0/0 historical record; `sternberg-stuart` not yet a YAML), ~2,634 CONFIRMED records. Aggregate CSV: 469 confirmed-only rows, 687 with-probable rows.
+
+#### Operational note
+
+FEC `/schedules/schedule_a/` timed out again — this time on `davis-ray` variant `"Davis, Ray C"` state=['TX'] mid-pagination. The timeouts on common-name + populous-state combinations have now hit `sherman-bruce` (FL), `pohlad-joe` (MN), and `davis-ray` (TX). All three were resolvable via `--from-raw` against the partial saved payloads, but a more durable fix may be worth investigating in a future session (e.g., shorter `last_contribution_receipt_date` window per query, retry with backoff longer than 120s, or splitting deep pagination into date-bounded sub-fetches).
+
+#### Calibration targets
+
+1. **`simpson-bob`** — 8 PROBABLE records would promote to CONFIRMED with a Fort Worth strong-ZIP signal. Could be added if his Tarrant County property records identify a specific ZIP from public sources.
+2. **`feliciano-jose`** — 15 UNCERTAINs likely other Jose Felicianos in CA. Once MLB approves and the deal closes, can revisit with broader Tier 2 sources from the closing.
+3. **`davis-ray`** — 224 name-skipped (other Ray Davises in TX without our signals) is expected; spot-check 29 PROBABLEs for one-signal-only patterns.
+
+#### Family / separate-slug candidates surfaced (not added, per CLAUDE.md §1.7)
+
+- `jones-kwanza` (Kwanza Jones — co-leader of the Feliciano Padres bid; Princeton '93; JD Cardozo Law; independent professional / philanthropic identity).
+- `seidler-peter` (Peter Seidler, deceased 2023-11-14) — historical record only.
+- Other Seidler siblings (Robert, Matthew = Peter trust trustees; Sheel Seidler = Peter's widow, in litigation with brothers).
+- Spouses: Leah Zalupski, Linda Davis, Janice Simpson — none documented as politically active in Tier 2.
+
+#### What's next per the project briefing
+
+- **Special-case batch**: `liberty-media-group` (Braves corporate parent — track John Malone personally and/or Liberty Media PAC?) and `rogers-communications` (Blue Jays Canadian parent — minimal FEC footprint expected). Needs a small schema discussion before YAMLs.
+- **Historical-only YAMLs** for `sternberg-stuart` and `seidler-peter` (deceased), modeled on `owners/angelos-john-p.yaml`.
+- **Calibration round** — johnson-greg (2,328 UNCERTAINs from batch 3) is the highest-priority calibration target across the archive; sherman-john (305 UNCERTAINs) second.
+- **Phil Castellini Reds YAML** (`castellini-phil`), Tom Pohlad Twins YAML (`pohlad-tom`), and other separate-slug candidates from earlier batches.
+
+The archive now covers 30 of 30 MLB principal owners (current or recent), with two historical placeholders queued (Sternberg/Seidler) and the Braves/Blue Jays corporate-parent cases pending the special-case discussion.
+
+### 2026-05-23 — INGESTION
+
+- **run_id**: `8d5ad9a6`
+- **entity_slug**: `mcguirk-terry`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `None`
+- **name_variants_queried**: `["Terence F McGuirk", "Terence F. McGuirk", "Terence McGuirk", "Terry McGuirk", "Terry F. McGuirk", "Terry F McGuirk", "McGuirk, Terence", "McGuirk, Terence F", "McGuirk, Terence F.", "McGuirk, Terry"]`
+- **api_calls_made**: `13`
+- **records_fetched**: `47`
+- **confirmed_count**: `39`
+- **probable_count**: `8`
+- **uncertain_count**: `0`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T19-32-44Z__8d5ad9a6.db`
+- **notes**: skipped(no-name-match)=0 · states=['GA']
+
+### 2026-05-23 — INGESTION
+
+- **run_id**: `2986bac0`
+- **entity_slug**: `pohlad-tom`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `None`
+- **name_variants_queried**: `["Thomas Pohlad", "Tom Pohlad", "Pohlad, Thomas", "Pohlad, Tom"]`
+- **api_calls_made**: `10`
+- **records_fetched**: `152`
+- **confirmed_count**: `71`
+- **probable_count**: `24`
+- **uncertain_count**: `24`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T19-56-15Z__2986bac0.db`
+- **notes**: skipped(no-name-match)=33 · states=['MN']
+
+### 2026-05-23 — INGESTION
+
+- **run_id**: `8efb714f`
+- **entity_slug**: `malone-john`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `None`
+- **name_variants_queried**: `["John C Malone", "John C. Malone", "John Malone", "John Carl Malone", "Malone, John", "Malone, John C", "Malone, John C."]`
+- **api_calls_made**: `0`
+- **records_fetched**: `57`
+- **confirmed_count**: `41`
+- **probable_count**: `7`
+- **uncertain_count**: `7`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T19-59-24Z__8efb714f.db`
+- **notes**: skipped(no-name-match)=2 · FROM-RAW
+
+### 2026-05-23 — INGESTION
+
+- **run_id**: `c68572b4`
+- **entity_slug**: `castellini-phil`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `None`
+- **name_variants_queried**: `["Phillip J Castellini", "Phillip J. Castellini", "Phillip Castellini", "Phil Castellini", "Phil J. Castellini", "Phil J Castellini", "Castellini, Phillip", "Castellini, Phillip J", "Castellini, Phillip J.", "Castellini, Phil"]`
+- **api_calls_made**: `14`
+- **records_fetched**: `49`
+- **confirmed_count**: `41`
+- **probable_count**: `6`
+- **uncertain_count**: `0`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T19-56-16Z__c68572b4.db`
+- **notes**: skipped(no-name-match)=2 · states=['OH', 'KY']
+
+### 2026-05-23 — NOTE — Phase 2 special-case batch + owner-roster completion
+
+Two related work blocks completed in one session:
+
+1. **Special-case batch** — corporate-parent ownership cases (Braves, Blue Jays) that required a schema discussion before YAML write.
+2. **Owner-roster completion** — closed the last two intra-family-transition gaps (Tom Pohlad replacing Joe at Twins; Phil Castellini replacing Bob at Reds).
+
+After this batch, **the archive covers 30/30 current MLB principal-owner equivalents**, with 1 paused placeholder (Blue Jays / Rogers — Canadian, no FEC scope), 2 historical-only FORMER entries with completed giving history (`castellini-bob`, `pohlad-joe`), and 1 historical-no-YAML placeholder (`sternberg-stuart`, registry-only).
+
+#### Registry changes
+
+**Retired (placeholder slugs replaced):**
+
+- **`liberty-media-group`** — anticipatory placeholder for Atlanta Braves corporate-parent attribution. Made obsolete by the 2023-07-18 split-off of Atlanta Braves Holdings (NASDAQ: BATRA/BATRK) from Liberty Media. Never had a YAML file. Replaced by two co-principal slugs (user picked Davis-Simpson-style co-principal model): `mcguirk-terry` (MLB Control Person + day-to-day Chairman/President/CEO) and `malone-john` (largest economic + voting shareholder; Liberty Media chairman emeritus from Jan 1, 2026). Liberty Media Corporation PAC (FEC C00508101) is TERMINATED so no related-entity entry needed.
+- **`rogers-communications`** — anticipatory placeholder for Toronto Blue Jays Canadian-corporate-parent attribution. Never had a YAML file. Replaced by `rogers-edward-iii` (Executive Chair Rogers Communications since 2024-08-14; Chair Rogers Control Trust holding ~97.52% of voting shares; Chairman Rogers Blue Jays Baseball Partnership) with status `paused` per user direction. Reasoning: Edward Rogers III is Canadian with no documented US residence; 52 U.S.C. § 30121 bars non-citizen federal donations; no Rogers Communications-affiliated FEC PAC exists. Two "Rogers"-named PACs in FEC are unrelated (Rogers Group Inc. = Nashville TN aggregates company; Team Rogers = Mike Rogers MI Senate JFC).
+
+**Status updates (FORMER tracking on intra-family transitions):**
+
+- **`castellini-bob`** — role updated to "Principal owner (FORMER)" to match the FORMER-pattern used for Pohlad-joe. tenure_end_date 2026-02-12 unchanged. Phil Castellini (son) tracked separately under `castellini-phil`.
+- **`pohlad-joe`** — already marked FORMER in batch 3. Tom Pohlad (brother) now tracked separately under `pohlad-tom`.
+
+**New pilots added (5):**
+
+| slug                  | team              | status | tenure                       |
+|-----------------------|-------------------|--------|------------------------------|
+| `mcguirk-terry`       | Atlanta Braves    | pilot  | 2007-01-01 → null            |
+| `malone-john`         | Atlanta Braves    | pilot  | 2007-05-16 → null            |
+| `rogers-edward-iii`   | Toronto Blue Jays | paused | 2024-08-14 → null (NOT INGESTED) |
+| `pohlad-tom`          | Minnesota Twins   | pilot  | 2025-12-17 → null            |
+| `castellini-phil`     | Cincinnati Reds   | pilot  | 2026-02-12 → null            |
+
+#### Per-owner outcomes
+
+| slug              | states  | C / P / U      | API | Notes                                                       |
+|-------------------|---------|----------------|-----|-------------------------------------------------------------|
+| `mcguirk-terry`   | GA      |   39 /  8 /  0 |  13 | Cleanest run — Atlanta + Braves/Turner/Time Warner employers worked perfectly; 0 UNCERTAIN. |
+| `malone-john`     | CO      |   40 /  7 /  7 |   0 | FROM-RAW after BOTH attempts timed out mid-pagination on "John C Malone" CO (~13 minutes deep pagination on each retry). 1 saved raw page; 57 records. Fisher-precedent partial first pass — most recent records captured well, deep history needs a date-chunked fetch strategy. Calibration target. |
+| `rogers-edward-iii` | (paused) |   — / — / — |   — | NOT INGESTED. Paused placeholder documenting Canadian-citizen / no-FEC-scope structural gap. Full signal block populated for future re-activation. |
+| `pohlad-tom`      | MN      |   71 / 24 / 24 |  10 | PaR Systems + Carousel Motor Group strong_signals fired; 33 name-skipped (other Pohlads filtered by strict "Tom/Thomas" name_variants). |
+| `castellini-phil` | OH, KY  |   41 /  6 /  0 |  14 | Clean — Merchants Cold Storage + Castellini Group / Castellini Company strong_signals fired; 0 UNCERTAIN. |
+| **TOTAL**         |         | **191 / 45 / 31** | **37** | (Rogers excluded — paused.)                              |
+
+Cumulative archive after this batch: **30/30 current MLB principal-owner equivalents covered**. Status table shows 35 slugs in registry (including 1 paused, 1 angelos-historical-no-ingest, 2 FORMER with full history). Aggregate CSV: 529 confirmed-only rows, 763 with-probable rows. Total CONFIRMED records across all ingested slugs: ~2,825.
+
+#### Operational gotchas
+
+- **malone-john FEC timeout**: Both attempts (initial + retry) timed out on the FIRST variant `"John C Malone"` state=['CO'], mid-pagination after ~13 minutes. Only 1 raw page (57 records) saved. The common-name + populous-state combination plus 26 years of pagination depth (DESC sort going back to 2000) is too deep for a single connection. Pattern observed previously on sherman-bruce, pohlad-joe, davis-ray — all resolved via `--from-raw`. Future-session work: implement date-window chunking (e.g., 2-3 year sub-fetches) to reduce per-query pagination depth for common-name owners.
+
+#### Schema-level decisions captured
+
+- **Corporate-parent ownership cases** (post-spinoff Braves, Canadian Blue Jays) handled within the existing OWNER_SCHEMA without modification. Pattern: track individual principal(s) at the corporate parent; corporate-affiliated PACs go in `related_entities` when applicable; if no US-citizen principal exists, use `status: paused` with full signal block populated for future re-activation.
+- **Co-principal model** (Davis-Simpson on Rangers, McGuirk-Malone on Braves): when two individuals jointly hold ownership-equivalent stake/control, both get separate pilot slugs with distinct signal stacks. Name-variants disambiguate at the FEC matcher; cross-attribution is prevented by different first names.
+- **Editorial caveat for Malone-style cases**: Malone's ~$2M of 2024-cycle Republican federal giving is overwhelmingly driven by his Liberty Media identity, NOT his Braves stake. Reports aggregating "MLB owner political giving" should tag accordingly. This is a known-but-tracked attribution quirk of the co-principal model in this archive.
+
+#### Coverage map (post-batch)
+
+All 30 MLB teams have at least one tracked owner equivalent:
+
+| Team status | Slugs |
+|---|---|
+| **Single principal pilot** (24 teams) | attanasio-mark, cohen-steven, crane-jim, dewitt-bill, dolan-paul, fisher-john, henry-john, ilitch-chris, johnson-greg, kendrick-ken, lerner-mark, middleton-john, monfort-dick, moreno-arte, nutting-bob, ricketts-tom, rubenstein-david, sherman-bruce, sherman-john, stanton-john, steinbrenner-hal, walter-mark, zalupski-patrick, reinsdorf-jerry |
+| **Co-principals or transitional dual-pilot** (3 teams) | Braves (mcguirk-terry + malone-john) · Padres (seidler-john + feliciano-jose) · Rangers (davis-ray + simpson-bob) |
+| **FORMER + current pair** (2 teams) | Reds (castellini-bob FORMER + castellini-phil current) · Twins (pohlad-joe FORMER + pohlad-tom current) |
+| **Paused placeholder** (1 team) | Blue Jays (rogers-edward-iii — Canadian, no FEC scope) |
+| **Historical-only no-ingestion + new principal** (1 team, partially) | Orioles (angelos-john-p historical-no-YAML-ingest + rubenstein-david current) |
+| **Outgoing historical placeholders pending YAMLs** | sternberg-stuart (Rays predecessor; registry-only) |
+
+#### Calibration targets (priority order)
+
+1. `johnson-greg` — 2,328 UNCERTAINs (largest pile in archive).
+2. `cohen-steven` — 2,785 UNCERTAINs but already calibration-round-1 done; revisit only if a target donation surfaces.
+3. `sherman-john` — 305 UNCERTAINs (KC + KS attorney doppelganger flagged).
+4. `lerner-mark` — 163 UNCERTAINs (other Mark Lerners in MD; psychologist doppelganger).
+5. `sherman-bruce` — 131 UNCERTAINs (other Bruce Shermans in FL).
+6. `malone-john` — partial fetch coverage; needs date-windowed fetch strategy for deep history.
+
+#### Family / separate-slug candidates surfaced (still queued, not added per CLAUDE.md §1.7)
+
+- `johnson-charles` (Greg Johnson's father, LARGEST Giants individual shareholder ~26%, Palm Beach FL; major Republican donor).
+- `ilitch-marian` (Chris Ilitch's mother; MotorCity Casino principal; documented major political donor).
+- `castellini-britt` (Phil Castellini's spouse; documented politically active — co-hosted Oct 2022 KY-04 Democratic fundraiser).
+- `jones-kwanza` (Jose Feliciano's spouse / co-leader of Padres bid).
+- `dolan-larry` (Paul Dolan's father, d. 2025-02-23).
+- `dolan-matthew` (Paul Dolan's brother, OH State Senator + 2x US Senate primary candidate).
+- `monfort-charlie` (Dick Monfort's brother; Rockies co-owner/GP).
+- `pohlad-bob` (Tom/Joe Pohlad's father; PepsiAmericas former CEO).
+- Lerner family cluster: `lerner-ted` (deceased 2023), `cohen-edward`, `tanenbaum-robert` (Nationals VCs), `lerner-annette`, `lerner-judy`, `lerner-marla`, `lerner-debra`.
+
+#### What's next
+
+- **Calibration sweep** — johnson-greg first (worst UNCERTAIN pile); date-windowed fetch retry for malone-john.
+- **Historical-only YAMLs** — `sternberg-stuart` and optionally `seidler-peter` modeled on angelos-john-p.yaml.
+- **Family separate-slug expansions** — case-by-case, in priority order; each requires a deliberate scope-expansion decision per CLAUDE.md §1.7.
+- **Pipeline durability** — implement date-window chunking for common-name owners to address the FEC timeout pattern.

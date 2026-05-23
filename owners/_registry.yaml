@@ -13,7 +13,7 @@
 #   3. Populate verifying_signals from at least two independent Tier 2 sources (SOURCES.md)
 #   4. Promote to status: pilot or active once validated
 #
-# Last updated: 2026-05-22
+# Last updated: 2026-05-23
 
 owners:
   # ─── PILOT (Phase 1 / 1.5) ─────────────────────────────────────────────────
@@ -53,16 +53,38 @@ owners:
   - slug: castellini-bob
     name: Robert H. Castellini
     team: Cincinnati Reds
-    role: Principal owner
+    role: Principal owner (FORMER)
     tenure_start_date: 2006-01-20
     tenure_end_date: 2026-02-12    # MLB approved control transfer to son Phil
     status: pilot
     notes: >
       Phase 1.5 pilot. YAML created 2026-05-22. tenure_end_date 2026-02-12 —
-      Phil Castellini took team control. Bob's full federal giving history
-      still tracked. Cities=[cincinnati, indian hill], strong_signals=[Castellini
+      Phil Castellini took team control (tracked under castellini-phil).
+      Bob's full federal giving history still tracked per Castellini
+      precedent. Cities=[cincinnati, indian hill], strong_signals=[Castellini
       Group, Castellini Company]. Doppelgänger watch: separate Bob Castellini
       at Wells Fargo Advisors in Cincinnati.
+
+  - slug: castellini-phil
+    name: Phillip J. Castellini
+    team: Cincinnati Reds
+    role: Principal owner / President & CEO
+    tenure_start_date: 2026-02-12
+    status: pilot
+    notes: >
+      Phase 2 owner-roster-completion (2026-05-23). CURRENT MLB-approved
+      control person of the Reds since 2026-02-12 (Fox19). Son of Bob
+      Castellini (FORMER; tracked under castellini-bob). Promoted to
+      President & CEO July 2024 as start of formal succession; control-
+      person transfer Feb 2026. Concurrent role: President of Merchants
+      Cold Storage (Walton KY) since 1993 — strong_signal because it
+      predates the Reds purchase and is uniquely his. Strong_signals also
+      include Castellini Group + Castellini Company (shared with father
+      Bob in his own slug; name_variants disambiguate Phil vs Bob).
+      Pre-emptive negative_signals mirror Bob's financial-advisor
+      doppelganger blocks. SPOUSE FLAG: Britt Castellini documented as
+      politically active (co-hosted Oct 2022 KY-04 Democratic fundraiser);
+      separate-slug candidate `castellini-britt` for future scope decision.
 
   - slug: steinbrenner-hal
     name: Harold Z. Steinbrenner
@@ -147,12 +169,55 @@ owners:
       donor — same-household disambiguation needed; flagged for future
       kendrick-randy.yaml.
 
-  - slug: liberty-media-group
-    name: Liberty Media / John Malone
+  # NOTE: The original `liberty-media-group` placeholder entry was retired
+  # 2026-05-23 (logged in PROVENANCE_LOG). The 2023-07-18 split-off of Atlanta
+  # Braves Holdings from Liberty Media made the placeholder obsolete; the
+  # actual MLB Control Person is Terry McGuirk (operationally) with John
+  # Malone retaining the largest economic + voting stake. Replaced by two
+  # co-principal slugs per user direction (Davis-Simpson-style co-principal
+  # model): `mcguirk-terry` and `malone-john`. Liberty Media Corporation PAC
+  # (FEC C00508101) is TERMINATED so no related-entity entry is needed.
+
+  - slug: mcguirk-terry
+    name: Terence F. McGuirk
     team: Atlanta Braves
-    role: Corporate parent owner
-    status: queued
-    notes: Corporate-owned team. Track Liberty Media PAC and Malone personally.
+    role: Principal owner / Chairman, President & CEO Atlanta Braves Holdings / MLB Control Person
+    tenure_start_date: 2007-01-01
+    status: pilot
+    notes: >
+      Phase 2 special-case batch (2026-05-23). Chairman of Atlanta Braves
+      since 2007 (Liberty Media era); continued as Chairman after the
+      2023-07-18 split-off of Atlanta Braves Holdings into NASDAQ:
+      BATRA/BATRK; added President & CEO titles after Greg Maffei resigned
+      all ABH roles effective 2024-08-31. On 2024-08-22, granted a "sole
+      and exclusive" proxy to vote John Malone's 887,079 Series B Common
+      Stock (~44% of voting power) plus right of first refusal on Malone's
+      share transfers (AJC, Nov 2024). Long-tenure Turner Broadcasting /
+      Time Warner executive (joined 1972). Atlanta, GA residence. Co-
+      principal with `malone-john` (separate slug); McGuirk holds the MLB
+      Control Person designation + day-to-day operational control.
+
+  - slug: malone-john
+    name: John C. Malone
+    team: Atlanta Braves
+    role: Principal shareholder (largest economic + voting interest)
+    tenure_start_date: 2007-05-16
+    status: pilot
+    notes: >
+      Phase 2 special-case batch (2026-05-23). Largest individual economic
+      + voting shareholder of Atlanta Braves Holdings (NASDAQ: BATRA/BATRK)
+      via Liberty Media's 2007 acquisition + the 2023 split-off allocation.
+      Holds 887,079 Series B shares (~44% voting power); granted McGuirk a
+      proxy on routine matters Aug 2024. NOT on the ABH board. Transitions
+      to Chairman Emeritus of Liberty Media effective 2026-01-01 (Robert
+      "Dob" Bennett assumes Liberty Media chairmanship). Elizabeth, CO
+      (Elbert County) residence; long-tenure Liberty Media / Liberty
+      Broadband / Liberty Global / Charter Communications mogul. EDITORIAL
+      CAVEAT: His ~$2M of 2024-cycle Republican federal giving is
+      overwhelmingly driven by his Liberty-Media-mogul identity, NOT his
+      Braves stake. Reports should tag accordingly. HIGH doppelganger risk
+      ("John Malone" is common); Elizabeth CO + Liberty employer combo is
+      the disambiguator.
 
   - slug: ricketts-tom
     name: Thomas S. Ricketts
@@ -176,29 +241,66 @@ owners:
     status: queued
 
   - slug: dolan-paul
-    name: Paul Dolan
+    name: Paul J. Dolan
     team: Cleveland Guardians
     role: Chairman / Principal owner
-    status: queued
+    tenure_start_date: 2013-01-10
+    status: pilot
+    notes: >
+      Phase 2 batch 3 (2026-05-23). MLB-designated 'control person' since
+      2013-01-10; family bought team in 2000 (father Larry Dolan, d.
+      2025-02-23). HIGH same-family collision risk: brother Matt Dolan (OH
+      State Senator 2017-2024, 2x US Senate primary candidate) — DIFFERENT
+      first name protects Paul's name_variants. Pre-emptive negative_signal:
+      CA winemaker Paul E. Dolan (Fetzer Vineyards, d. 2023-07).
 
   - slug: monfort-dick
-    name: Dick Monfort
+    name: Richard L. Monfort
     team: Colorado Rockies
-    role: Owner / Chairman / CEO
-    status: queued
+    role: Owner / Chairman / CEO / Managing General Partner
+    tenure_start_date: 2011-01-01
+    status: pilot
+    notes: >
+      Phase 2 batch 3 (2026-05-23). Chairman/CEO since 2011; family acquired
+      controlling stake from Jerry McMorris in 2005. April 2026: Penner
+      Sports Group (Greg/Carrie Walton Penner of Denver Broncos) acquired
+      40% minority stake at $1.68B valuation; Dick remains Chairman/CEO,
+      Charlie remains GP, son Walker Monfort is team president since Jan
+      2026. Strong_signal = West Lot LLC (McGregor Square developer).
+      Brother Charles K. Monfort and sons Walker/Sterling are separate-slug
+      candidates.
 
   - slug: ilitch-chris
-    name: Christopher Ilitch
+    name: Christopher P. Ilitch
     team: Detroit Tigers
-    role: President / CEO (Ilitch Holdings)
-    status: queued
-    notes: Already processed in TP opp research. Family ownership via Ilitch Holdings.
+    role: Controlling owner / Chairman & CEO
+    tenure_start_date: 2017-05-18
+    status: pilot
+    notes: >
+      Phase 2 batch 3 (2026-05-23). MLB-approved controlling owner since
+      2017-05-18 (after father Mike Ilitch d. 2017-02-10). Also President &
+      CEO of Ilitch Holdings since 2004 and Governor/CEO of Detroit Red
+      Wings. Mother Marian Ilitch (b. 1933) remains Chairwoman of Ilitch
+      Holdings but has NO operational role in the Tigers — MLB gambling-rules
+      firewall driven by her ownership of MotorCity Casino. Marian is a
+      separate-slug candidate (`ilitch-marian`) — different first name = no
+      name-variant collision. Strong_signals = Ilitch Holdings, Ilitch
+      Sports + Entertainment.
 
   - slug: sherman-john
-    name: John Sherman
+    name: John J. Sherman
     team: Kansas City Royals
-    role: Principal owner
-    status: queued
+    role: Principal owner / Chairman & CEO
+    tenure_start_date: 2019-11-25
+    status: pilot
+    notes: >
+      Phase 2 batch 3 (2026-05-23). Closing 2019-11-25; MLB approval
+      2019-11-21. Energy entrepreneur: Ferrellgas → LPG Services → Inergy
+      (1996-2013) → Crestwood Equity Partners board (2013-2023). KC metro
+      primary residence; long-tenure secondary in Boca Grande FL. HIGH
+      doppelganger risk — DIFFERENT person from Bruce Sherman (Marlins).
+      Strong_signals = Inergy L.P. / Inergy Midstream / Sherman Family
+      Foundation.
 
   - slug: walter-mark
     name: Mark Walter
@@ -208,24 +310,72 @@ owners:
     notes: Guggenheim Partners CEO; control group includes Magic Johnson, Stan Kasten, etc.
 
   - slug: sherman-bruce
-    name: Bruce Sherman
+    name: Bruce S. Sherman
     team: Miami Marlins
     role: Principal owner / Chairman
-    status: queued
+    tenure_start_date: 2017-10-03
+    status: pilot
+    notes: >
+      Phase 2 batch 3 (2026-05-23). Closing 2017-10-03; MLB approval
+      2017-09-27 ($1.2B from Jeffrey Loria). Naples FL residence; family
+      office M4 Capital LLC (strong_signal — uniquely named). Co-founded
+      Private Capital Management in 1986 (sold to Legg Mason 2001; CEO until
+      2009). Derek Jeter was minority partner/CEO until departing Feb 2022;
+      Sherman has been principal owner throughout. DIFFERENT person from
+      John Sherman (KC).
 
   - slug: pohlad-joe
-    name: Joe Pohlad
+    name: Joseph C. Pohlad
     team: Minnesota Twins
-    role: Executive chair
-    status: queued
-    notes: Family ownership; Pohlad Companies is the umbrella. Family is reportedly exploring sale as of 2024 — track for ownership change.
+    role: Executive chair / Principal owner (FORMER)
+    tenure_start_date: 2022-11-29
+    tenure_end_date: 2025-12-17
+    status: pilot
+    notes: >
+      Phase 2 batch 3 (2026-05-23). FORMER executive chair / controlling
+      owner. Took over from uncle Jim Pohlad 2022-11-29; replaced by older
+      brother Tom Pohlad 2025-12-17 (tracked under pohlad-tom) after family
+      called off a 14-month sale exploration (Oct 2024 announcement) and
+      instead brought in three minority investor groups (Glick Family
+      Investments, George Hicks group, Craig Leipold). CASTELLINI PRECEDENT
+      per user direction: tenure_end_date set; continue tracking Joe's full
+      federal giving history. HIGH family-collision risk — name_variants
+      strictly require "Joe" or "Joseph".
+
+  - slug: pohlad-tom
+    name: Thomas Pohlad
+    team: Minnesota Twins
+    role: Principal owner / Executive Chair
+    tenure_start_date: 2025-12-17
+    status: pilot
+    notes: >
+      Phase 2 owner-roster-completion (2026-05-23). CURRENT MLB-approved
+      controlling owner / executive chair of the Twins since 2025-12-17
+      (Target Field press conference; MLB approval confirmed early 2026).
+      Replaced younger brother Joe Pohlad (tracked under pohlad-joe).
+      Bob Pohlad's oldest son. Career arc: Boston College 2002 → Carousel
+      Motor Group GM/COO 2010-2019 → PaR Systems CEO 2019-2022 → Pohlad
+      Companies Executive Chairman → Twins Exec Chair Dec 2025. Strong_
+      signals: "PaR Systems" + "Carousel Motor Group" (small private
+      tenure-specific employers). Residence: Wayzata, MN. HIGH family-
+      collision risk — name_variants strictly require "Tom" or "Thomas".
 
   - slug: lerner-mark
-    name: Mark Lerner
+    name: Mark D. Lerner
     team: Washington Nationals
     role: Managing principal owner
-    status: queued
-    notes: Family ownership. Reports of potential sale have come and gone.
+    tenure_start_date: 2018-06-14
+    status: pilot
+    notes: >
+      Phase 2 batch 3 (2026-05-23). Took over from father Ted Lerner
+      2018-06-14 (Ted d. 2023-02-12). Family bought the Nats from MLB in
+      2006 ($450M). Sale exploration April 2022 - Feb 19 2024; family decided
+      not to sell. Mark fired GM Rizzo and manager Martinez July 6 2025
+      under his own Managing Principal Owner letterhead — operational
+      control confirmed. CNBC March 2026 valuations still list Lerner family
+      ownership. Strong_signals = Lerner Enterprises + Lerner Corporation.
+      Chevy Chase / Bethesda MD residence. Doppelganger: Dr. Mark D. Lerner
+      (NY psychologist) — address-contradiction routes to UNCERTAIN.
 
   - slug: fisher-john
     name: John Fisher
@@ -252,46 +402,193 @@ owners:
     role: Chairman / Principal owner
     status: queued
 
-  - slug: seidler-family
-    name: Seidler family (managed by Eric Kutsenda / Peter Seidler estate)
+  # NOTE: The original `seidler-family` placeholder entry was retired
+  # 2026-05-23 (logged in PROVENANCE_LOG). It was an anticipatory slug for
+  # the interim Kutsenda-led trust period (Nov 2023 - Feb 2025) and never
+  # had a YAML file. Replaced by two concrete slugs below: `seidler-john`
+  # (current MLB-approved control person since Feb 2025) and `feliciano-jose`
+  # (incoming, sale agreement May 2026).
+
+  - slug: seidler-john
+    name: John Seidler
     team: San Diego Padres
-    role: Family ownership / Controlling interest
-    status: queued
-    notes: Peter Seidler died 2023; ownership transition in progress.
+    role: Principal owner / Chairman & CEO O'Malley Seidler Partners
+    tenure_start_date: 2025-02-15
+    status: pilot
+    notes: >
+      Phase 2 batch 4 (2026-05-23). MLB-approved control person since Feb
+      2025 (unanimous owner vote). Eldest of ten Seidler siblings; grandson
+      of Walter O'Malley (Dodgers owner). Took over after younger brother
+      Peter Seidler died 2023-11-14; Eric Kutsenda interim Nov 2023 - Feb
+      2025 (not tracked). Concurrent role: Chairman & CEO O'Malley Seidler
+      Partners (family office). ANTICIPATED TRANSITION: Padres sale
+      announced 2026-05-02 ($3.9B) to Feliciano/Jones group; MLB approval
+      expected June 2026 owners meetings; close pre-2026 All-Star Break.
+      tenure_end_date should be set when close happens.
+
+  - slug: feliciano-jose
+    name: José E. Feliciano
+    team: San Diego Padres
+    role: Principal owner (INCOMING — sale agreement May 2026, MLB approval pending)
+    tenure_start_date: 2026-05-02
+    status: pilot
+    notes: >
+      Phase 2 batch 4 (2026-05-23). PRE-APPROVAL PILOT STATUS per user
+      direction. Co-founder and Managing Partner of Clearlake Capital
+      Group ($90B+ AUM, Santa Monica CA). Sale agreement to acquire ~40%
+      of Padres at $3.9B (MLB-record) announced 2026-05-02 (with wife
+      Kwanza Jones). MLB approval expected June 2026 owners meetings;
+      close pre-2026 All-Star Break. tenure_start_date currently anchored
+      to sale-agreement date; update to actual close date when settled.
+      HIGH DOPPELGANGER RISK — famous blind singer José Feliciano (b.
+      1945, longtime Weston CT) shares the name with substantial
+      independent FEC footprint. Pre-emptive negative_signals.employers
+      block musician / entertainer context. Strong_signal = Clearlake
+      Capital.
 
   - slug: johnson-greg
-    name: Greg Johnson
+    name: Gregory E. Johnson
     team: San Francisco Giants
-    role: Principal owner / Chairman
-    status: queued
+    role: Chairman / Control person
+    tenure_start_date: 2019-11-21
+    status: pilot
+    notes: >
+      Phase 2 batch 3 (2026-05-23). MLB-approved control person since
+      2019-11-21. Also Executive Chairman of Franklin Resources (parent of
+      Franklin Templeton; he was CEO 2005-Feb 2020). HIGH-RISK doppelganger
+      — father Charles B. Johnson is the LARGEST individual Giants
+      shareholder (~26%) and a separately well-documented major Republican
+      donor (Palm Beach FL); sister Jennifer M. Johnson is Franklin CEO;
+      uncle Rupert H. Johnson Jr. is Franklin Vice Chair. DIFFERENT first
+      names protect Greg's name_variants. Charles is a separate future slug
+      (`johnson-charles`). Strong_signals empty at creation — calibrate
+      after first ingestion. Hillsborough CA residence (needs-confirmation).
 
   - slug: stanton-john
-    name: John Stanton
+    name: John W. Stanton
     team: Seattle Mariners
     role: Chairman / Managing partner
-    status: queued
+    tenure_start_date: 2016-08-19
+    status: pilot
+    notes: >
+      Phase 2 batch 3 (2026-05-23). Closing 2016-08-19 of Nintendo majority-
+      stake transfer to First Avenue Entertainment LLLP (Nintendo retained
+      10%). Telecom founder: Western Wireless (1994; sold to Alltel 2005);
+      VoiceStream Wireless (1995-2001; now T-Mobile USA). Currently chairs
+      Trilogy Equity Partners + Trilogy International Partners. Also Microsoft
+      (2014-) and Costco (2015-) director. Strong_signals = First Avenue
+      Entertainment + Trilogy entities + Western Wireless + VoiceStream.
+      Pre-emptive negative_signal: John Stanton (journalist, ex-BuzzFeed
+      Washington Bureau Chief).
 
   - slug: sternberg-stuart
     name: Stuart Sternberg
     team: Tampa Bay Rays
-    role: Principal owner
+    role: Principal owner (FORMER)
+    tenure_end_date: 2025-09-30
     status: queued
-    notes: TP-relevant for stadium-deal political donations in FL. As of 2026, sale talks ongoing — monitor.
+    notes: >
+      Phase 2 batch 4 (2026-05-23). FORMER principal owner. Sold the team
+      to a Patrick Zalupski-led group; MLB unanimously approved 2025-09-22;
+      closing 2025-09-30 at ~$1.7B. Sternberg retained ~10% minority stake
+      (no control role). Per project policy (TRACK ONLY current/active and
+      future-confirmed owners; angelos-john-p pattern), NOT ingested. A
+      lightweight historical YAML (analogous to angelos-john-p.yaml) is a
+      future task. Replaced by `zalupski-patrick` as the Rays principal.
 
-  - slug: simpson-ray
-    name: Ray Davis / Bob R. Simpson
+  - slug: zalupski-patrick
+    name: Patrick O. Zalupski
+    team: Tampa Bay Rays
+    role: Principal owner / MLB Control Person
+    tenure_start_date: 2025-09-30
+    status: pilot
+    notes: >
+      Phase 2 batch 4 (2026-05-23). MLB unanimously approved sale
+      2025-09-22; closing 2025-09-30 at ~$1.7B. Founder/CEO/Chairman of
+      Dream Finders Homes (NYSE: DFH), Jacksonville FL-based publicly
+      traded homebuilder. Strong_signals = Dream Finders Homes / DFH /
+      DF Capital. Co-Chair: Bill Cosgrove (Union Home Mortgage CEO).
+      Day-to-day CEO: Ken Babby (Jacksonville Jumbo Shrimp owner). Sternberg
+      retained ~10%. Current residence: Avondale neighborhood,
+      Jacksonville FL (since Jan 2024); former: Ponte Vedra Beach FL
+      (sold Dec 2025). Doppelganger risk LOW (rare Polish surname).
+
+  # NOTE: The original `simpson-ray` placeholder entry was retired
+  # 2026-05-23 (logged in PROVENANCE_LOG). It was a misnamed combined entry
+  # for two distinct Rangers co-chairmen with completely different signal
+  # stacks. Replaced by two concrete slugs below: `davis-ray` (MLB-designated
+  # control person; Dallas; Avatar Investments / Energy Transfer) and
+  # `simpson-bob` (co-chairman; Fort Worth; XTO Energy / TXO Partners /
+  # MorningStar Partners).
+
+  - slug: davis-ray
+    name: Ray C. Davis
     team: Texas Rangers
-    role: Co-chairmen / Co-owners
-    status: queued
-    notes: Co-ownership structure; track both Davis and Simpson as separate entities if both file.
+    role: Managing Partner / Majority Owner / Chairman / MLB Control Person
+    tenure_start_date: 2010-08-12
+    status: pilot
+    notes: >
+      Phase 2 batch 4 (2026-05-23). MLB-designated control person since
+      2013-11-14 (after Nolan Ryan's Oct 2013 resignation). Tenure as
+      Rangers co-owner began with Rangers Baseball Express acquisition
+      out of Chapter 11 bankruptcy August 2010. Co-chairman with Bob R.
+      Simpson (separate slug `simpson-bob`). Co-founder of Energy
+      Transfer Partners (1996, retired 2007); currently Chairman/CEO of
+      Avatar Investments LP (Dallas family investment firm). Strong_signal
+      = Avatar Investments LP (uniquely-named family vehicle). Replaces
+      the misnamed `simpson-ray` registry entry.
 
-  - slug: rogers-communications
-    name: Rogers Communications
+  - slug: simpson-bob
+    name: Bob R. Simpson
+    team: Texas Rangers
+    role: Co-Chairman / Principal Owner
+    tenure_start_date: 2010-08-12
+    status: pilot
+    notes: >
+      Phase 2 batch 4 (2026-05-23). Co-chairman of the Rangers since the
+      August 2010 Rangers Baseball Express acquisition out of Chapter 11
+      bankruptcy (jointly with Ray C. Davis). Founder of XTO Energy
+      (originally Cross Timbers Oil 1986; renamed XTO 2001; sold to
+      ExxonMobil June 2010 for $41B). Founded MorningStar Partners 2012
+      (renamed TXO Partners 2023; NYSE: TXO IPO Jan 2023); stepped down
+      as TXO CEO April 2025, retaining chairmanship. Strong_signals =
+      XTO Energy / TXO Partners / MorningStar Partners / Cross Timbers
+      Oil. name_variants STRICTLY require "R." middle initial to
+      disambiguate from generic Bob/Robert Simpsons. Replaces the
+      misnamed `simpson-ray` registry entry.
+
+  # NOTE: The original `rogers-communications` placeholder entry was retired
+  # 2026-05-23 (logged in PROVENANCE_LOG). Rogers Communications is a
+  # Canadian publicly-traded telecom/media conglomerate (TSX: RCI.A/RCI.B;
+  # NYSE: RCI) controlled by the Rogers family via the Rogers Control Trust.
+  # Replaced by `rogers-edward-iii` (Executive Chair Rogers Communications;
+  # Chairman Rogers Blue Jays Baseball Partnership). Status is PAUSED (not
+  # ingested) per user direction — Edward Rogers III is a Canadian citizen
+  # with no documented US residence or US dual citizenship, and 52 USC §
+  # 30121 bars non-citizen federal political contributions. No Rogers
+  # Communications-affiliated FEC PAC exists.
+
+  - slug: rogers-edward-iii
+    name: Edward S. Rogers III
     team: Toronto Blue Jays
-    role: Corporate parent owner
-    status: queued
-    notes: Canadian corporate parent. FEC scope limited — Rogers is not a US filer, but US executives and any US-side affiliates may show up. Document scope carefully.
+    role: Executive Chair Rogers Communications / Chairman Rogers Blue Jays Baseball Partnership
+    tenure_start_date: 2024-08-14
+    status: paused
+    notes: >
+      Phase 2 special-case batch (2026-05-23). PAUSED placeholder slug per
+      user direction (Option C). NOT INGESTED. Edward Samuel Rogers III
+      (b. 1969-06-22, Toronto) is the Canadian citizen heir who consolidated
+      control of Rogers Communications after the January 2024 family
+      settlement and was appointed Executive Chair by unanimous board vote
+      on 2024-08-14. He chairs the Rogers Control Trust (~97.52% of Class A
+      Voting Shares) and Rogers Blue Jays Baseball Partnership. Federal
+      election law (52 USC § 30121) bars non-US-citizens from federal
+      donations; expected FEC yield ~zero. Pre-emptive negative_signals.
+      employers for BGR Group (DC lobbyist Ed Rogers doppelganger). Full
+      signal block populated for future re-activation if circumstances
+      change (e.g., dual citizenship documented, Rogers Communications USA
+      PAC registered, US-resident Rogers family members surface).
 
 # Operational metadata
-last_updated: 2026-05-22
-last_updated_by: alex
+last_updated: 2026-05-23
+last_updated_by: claude-code-session (Phase 2 special-case + owner-roster-completion; orchestrated by alex)

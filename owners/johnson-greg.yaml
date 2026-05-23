@@ -1,0 +1,150 @@
+# Gregory E. Johnson — San Francisco Giants
+# Chairman and MLB-designated "control person" of the Giants since
+# 2019-11-21 (MLB ownership-meeting approval). Greg is also Executive
+# Chairman of Franklin Resources (parent of Franklin Templeton). Father
+# Charles B. Johnson remains the largest individual Giants shareholder
+# (~26%) and is a separately well-documented major Republican donor —
+# Charles is a SEPARATE future slug (`johnson-charles`), not folded here.
+#
+# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+# HIGH-RISK doppelganger case: "Greg Johnson" / "Gregory Johnson" is one of
+# the most common name combinations in the US. Father Charles B., sister
+# Jennifer M., and uncle Rupert H. Jr. all share the Franklin employer
+# string but have different first names (no name-variant collision via
+# Greg's variants). Bare "Greg Johnson" / "Gregory Johnson" require employer
+# + city signals to attribute.
+
+slug: johnson-greg
+name: Gregory E. Johnson
+team: San Francisco Giants
+role: Principal owner
+status: pilot
+tenure_start_date: 2019-11-21    # MLB ownership-meeting approval as control person
+tenure_end_date: null
+
+name_variants:
+  - "Gregory E Johnson"
+  - "Gregory E. Johnson"
+  - "Gregory Eugene Johnson"
+  - "Greg E Johnson"
+  - "Greg E. Johnson"
+  - "Greg Johnson"
+  - "Johnson, Gregory"
+  - "Johnson, Gregory E"
+  - "Johnson, Gregory E."
+  - "Johnson, Greg"
+
+verifying_signals:
+  cities:
+    - "hillsborough"   # primary residence per public-records aggregators (needs-confirmation)
+    - "san mateo"      # Franklin Resources HQ area
+  states:
+    - "CA"
+  employers:
+    - "Franklin Resources"
+    - "Franklin Resources Inc"
+    - "Franklin Templeton"
+    - "Franklin Templeton Investments"
+    - "San Francisco Giants"
+    - "San Francisco Baseball Associates"
+  occupations:
+    - "executive chairman"
+    - "chairman"
+    - "ceo"
+    - "executive"
+    - "businessman"
+    - "investor"
+
+strong_signals:
+  employers: []
+  zip_codes: []
+  # Conservative at creation. Franklin Resources is a publicly traded company
+  # with thousands of employees including Greg's sister (CEO) and uncle
+  # (Vice Chairman) — NOT strong-signal eligible. No documented private
+  # Greg-controlled entity surfaced in research. Populate after calibration
+  # if a unique pattern emerges.
+
+related_entities: []
+# Future candidates (do NOT add without user approval per CLAUDE.md §1.7):
+#   - parent: Charles B. Johnson (Charles Bartlett Johnson, b. 1933-01-06,
+#     Palm Beach FL). LARGEST individual Giants shareholder (~26%). Major
+#     Republican donor in his own right. DIFFERENT first name — no
+#     collision with Greg's name_variants. Separate slug `johnson-charles`.
+#   - sibling: Jennifer M. Johnson — President & CEO of Franklin Resources
+#     since Feb 2020. Different first name; separate slug if added.
+#   - uncle: Rupert H. Johnson Jr. (b. 1941) — Vice Chairman of Franklin
+#     Resources; ~21% shareholder. Different first name; separate slug if
+#     added.
+
+sources:
+  - description: "ESPN — 'Baseball owners approve Greg Johnson as Giants' control person' (Nov 21, 2019). MLB approval; Rob Dean as vice chairman/co-managing member"
+    url: "https://www.espn.com/mlb/story/_/id/28131684/baseball-owners-approve-greg-johnson-giants-control-person"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "Franklin Resources investor press release — Gregory E. Johnson named Executive Chairman; sister Jennifer M. Johnson named President & CEO (effective Feb 11, 2020)"
+    url: "https://investors.franklinresources.com/news-center/press-releases/"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "Wikipedia — List of San Francisco Giants owners and executives. Confirms Charles B. Johnson as largest stakeholder and Greg Johnson as chairman of the board"
+    url: "https://en.wikipedia.org/wiki/List_of_San_Francisco_Giants_owners_and_executives"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "SF Standard (Nov 1, 2025) — 'Giants chairman Greg Johnson details the team's financial outlook for 2026.' Continued chairman role"
+    url: "https://sfstandard.com/2025/11/01/greg-johnson-sf-giants-payroll-salary/"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "MLB Trade Rumors (Nov 2025) — 'Giants Chairman Greg Johnson Discusses Team Spending'"
+    url: "https://www.mlbtraderumors.com/2025/11/giants-chairman-greg-johnson-discusses-team-spending.html"
+    accessed: "2026-05-23"
+    archive_url: ""
+
+notes: |
+  Gregory Eugene Johnson (b. 1961/1962) — Chairman of the San Francisco
+  Giants since 2019-11-21 (MLB approval as designated "control person").
+  Vice Chairman / co-managing member is Rob Dean (son-in-law of late Giants
+  principals Harmon and Sue Burns). Greg is also Executive Chairman of
+  Franklin Resources (parent of Franklin Templeton); he was CEO of Franklin
+  Resources 2005-Feb 2020 (sister Jennifer M. Johnson then took over as
+  President & CEO).
+
+  HIGH-RISK DOPPELGANGER CASE. Father Charles B. Johnson is the LARGEST
+  individual Giants shareholder (~26%) and is a separately well-documented
+  major Republican donor; tracked under his own future slug `johnson-
+  charles`. DIFFERENT first name = no name-variant collision with Greg.
+
+  Sister Jennifer M. Johnson (Franklin CEO) and uncle Rupert H. Johnson Jr.
+  (Franklin Vice Chair) share the same Franklin employer string; different
+  first names protect Greg's variants.
+
+  Strong_signals empty at creation: Franklin Resources is a publicly traded
+  company with thousands of employees; cannot be strong. No documented
+  private Greg-controlled entity surfaced. Calibrate strong_signals after
+  first ingestion if a unique pattern emerges.
+
+  NEEDS-CONFIRMATION: Hillsborough, CA residence is per public-records
+  aggregators only; a second Tier 2 source would tighten it. Charles B.
+  Johnson owns Carolands Chateau in Hillsborough — a record with "Charles"
+  + Hillsborough could plausibly be father's secondary residence, not Greg.
+  Different first name = different name-variant scope.
+
+  Doppelganger rule: records with Palm Beach FL anchor are almost certainly
+  father Charles, not Greg — but different first name = won't match Greg's
+  variants anyway.
+
+change_log:
+  - date: 2026-05-23
+    change: |
+      Created during Phase 2 batch 3. Tier 2 sources: ESPN, Franklin
+      Resources press release, Wikipedia/Wiki-based cross-ref, SF Standard
+      (Nov 2025), MLB Trade Rumors. HIGH doppelganger risk noted; strong_
+      signals empty at creation. Father Charles B. Johnson, sister Jennifer
+      M. Johnson, uncle Rupert H. Johnson Jr. flagged as separate-slug
+      candidates with different first names.
+    by: "claude-code-research (orchestrated by alex)"
+    references:
+      - "/tmp/johnson-greg-research.md (session-local research file)"
+
+audit:
+  created: 2026-05-23
+  last_ingestion: null
+  last_signal_review: 2026-05-23

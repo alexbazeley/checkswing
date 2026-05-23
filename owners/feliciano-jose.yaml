@@ -1,0 +1,176 @@
+# José E. Feliciano — San Diego Padres (incoming)
+# Sale agreement to a Feliciano/Kwanza Jones-led investor group was publicly
+# announced 2026-05-02 at $3.9B (new MLB-sale record). MLB approval expected
+# at June 2026 owners meetings; targeted close pre-2026 All-Star break.
+#
+# PRE-APPROVAL PILOT STATUS (per user direction 2026-05-23): tenure_start_date
+# anchored to the public sale-agreement announcement (2026-05-02). Once MLB
+# formally approves and the deal closes, update tenure_start_date to the
+# actual close date and add a change_log entry. John Seidler's tenure_end_date
+# should be set to the same close date in seidler-john.yaml.
+#
+# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+# HIGH DOPPELGANGER RISK: the famous blind PR-born singer José Feliciano
+# (b. 1945, longtime Weston CT resident) is a separate person with a
+# substantial FEC footprint of his own. Pre-emptive negative_signals block
+# his musician/entertainer employer context.
+
+slug: feliciano-jose
+name: José E. Feliciano
+team: San Diego Padres
+role: Principal owner
+status: pilot
+tenure_start_date: 2026-05-02    # public sale-agreement; update to MLB-approval/close date when settled
+tenure_end_date: null
+
+name_variants:
+  - "Jose E Feliciano"
+  - "Jose E. Feliciano"
+  - "Jose Feliciano"
+  - "José E. Feliciano"            # with diacritic; FEC strips so unlikely in data
+  - "Feliciano, Jose"
+  - "Feliciano, Jose E"
+  - "Feliciano, Jose E."
+
+verifying_signals:
+  cities:
+    - "santa monica"             # Clearlake Capital HQ; Santa Monica retail building owned
+    - "pacific palisades"         # ~$50M mansion purchased ~2023
+    - "marina del rey"            # waterfront mansion + luxury condos owned
+    - "los angeles"
+  states:
+    - "CA"
+  employers:
+    # NOTE: "Clearlake Capital" and "Clearlake Capital Group" are in
+    # strong_signals — not duplicated here per OWNER_SCHEMA.md rule 6.
+    - "Clearlake"                # shorter form; distinct exact string from strong forms
+    - "Kwanza Jones and Jose E Feliciano Initiative"
+    - "Kwanza Jones & José E. Feliciano Initiative"
+    - "Jones Feliciano Initiative"
+  occupations:
+    - "managing partner"
+    - "co-founder"
+    - "investor"
+    - "private equity"
+    - "businessman"
+    - "philanthropist"
+
+strong_signals:
+  employers:
+    - "Clearlake Capital"           # he co-founded 2006; highly identifying for FEC
+    - "Clearlake Capital Group"
+  zip_codes: []
+
+negative_signals:
+  # Famous singer José Monserrate Feliciano García (b. 1945, "Feliz Navidad",
+  # 1968 World Series anthem). Longtime Weston, CT resident. Substantial
+  # independent FEC footprint. Pre-emptive negative_signal per CLAUDE.md §1.7
+  # (well-known doppelganger). Block musician/entertainment employer context.
+  employers:
+    - "Self-Employed Musician"
+    - "Musician"
+    - "Singer"
+    - "Entertainer"
+    - "JF Recording"             # singer-affiliated label-style names
+    - "Polydor"                   # historic singer-affiliated label
+
+related_entities: []
+# Future candidates (do NOT add without user approval per CLAUDE.md §1.7):
+#   - spouse: Kwanza Jones — Princeton '93; JD Cardozo Law; Master of
+#     Dispute Resolution Pepperdine. Co-CEO Jones/Feliciano Initiative.
+#     Separate independent donor capacity. SEPARATE slug `jones-kwanza`
+#     if added.
+#   - children: not documented in Tier 2.
+
+sources:
+  - description: "MLB.com — Padres announce agreement to sell team to Kwanza Jones, José E. Feliciano (May 2, 2026)"
+    url: "https://www.mlb.com/news/padres-agree-to-sell-team-to-kwanza-jones-jose-e-feliciano"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "ESPN — Padres reach agreement to sell to group led by Kwanza Jones and José E. Feliciano (May 2, 2026)"
+    url: "https://www.espn.com/mlb/story/_/id/48659063/padres-reach-agreement-sell-group-led-kwanza-jones-jose-e-feliciano"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "Sportico — San Diego Padres Sale: Feliciano, Jones to Pay MLB-Record $3.9 Billion (May 2026)"
+    url: "https://www.sportico.com/business/team-sales/2026/san-diego-padres-sale-feliciano-jones-mlb-1234890526/"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "CBS Sports — Padres finalize sale for MLB record $3.9 billion: José E. Feliciano buys franchise"
+    url: "https://www.cbssports.com/mlb/news/padres-sale-mlb-record-3-9-billion-jose-e-feliciano/"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "PR Newswire / RFK Human Rights — Clearlake Capital's José E. Feliciano Named RFK Human Rights 2021 Ripple of Hope Awards Laureate. Confirms Clearlake affiliation"
+    url: "https://www.prnewswire.com/news-releases/clearlake-capitals-jose-e-feliciano-named-robert-f-kennedy-human-rights-2021-ripple-of-hope-awards-laureate-301342232.html"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "The Real Deal LA (Sept 2020) — Billionaire José Feliciano and Kwanza Jones add $20M manse to LA portfolio. Real-estate trade press; LA residences"
+    url: "https://therealdeal.com/la/2020/09/28/billionaire-jose-feliciano-and-kwanza-jones-add-20m-manse-to-la-portfolio/"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "Inside Philanthropy — Billionaires José E. Feliciano and Kwanza Jones open up about their philanthropy"
+    url: "https://www.insidephilanthropy.com/home/supercharged-billionaires-jose-e-feliciano-and-kwanza-jones-open-up-about-their-philanthropy"
+    accessed: "2026-05-23"
+    archive_url: ""
+
+notes: |
+  José E. Feliciano — Co-founder and Managing Partner of Clearlake Capital
+  Group (founded 2006, Santa Monica CA, >$90B AUM). Bayamón, PR-born;
+  Princeton '94; Stanford GSB MBA. Sale agreement to acquire ~40% of the
+  San Diego Padres at $3.9B announced 2026-05-02 (with wife Kwanza Jones).
+  MLB approval expected at June 2026 owners meetings; deal targeted to
+  close pre-2026 All-Star Break.
+
+  PRE-APPROVAL PILOT STATUS: tenure_start_date 2026-05-02 anchors to the
+  public sale-agreement / designated-control-person announcement, NOT MLB
+  approval (which hasn't happened yet). When MLB approves and the deal
+  closes, update tenure_start_date to the actual close date and add a
+  change_log entry. seidler-john.yaml's tenure_end_date should also be
+  set at that point.
+
+  HIGH DOPPELGANGER RISK — pre-emptive negative_signal block:
+   - José Monserrate Feliciano García (the famous blind Puerto Rican singer,
+     b. Sept 10, 1945, in Lares, PR; long-tenure Weston, CT resident; known
+     for "Feliz Navidad" and 1968 World Series anthem). Substantial own
+     FEC footprint. Different middle name; different state of residence
+     (CT, not CA). Different employer context (musician/entertainer).
+   - Other generic "Jose Feliciano" individuals in Latino communities
+     nationwide.
+  Mitigation: require middle initial "E." OR strong Clearlake-tied employer
+  signal for CONFIRMED attribution. LA/Santa Monica/Pacific Palisades
+  city + investor occupation is the strong combination. CT-residence
+  records or musician-occupation records auto-route to UNCERTAIN (and
+  the negative_signals.employers block catches "Self-Employed Musician"
+  / "Musician" / "Singer" / "Entertainer" outright).
+
+  Other business / sports holdings (context only): Co-financed Chelsea FC
+  acquisition (2022) via Clearlake — principal of Chelsea ownership group.
+  Bid unsuccessfully for Denver Broncos (2022); negotiated LA Chargers
+  minority stake (2023, did not close).
+
+  Spouse Kwanza Jones — independent professional / philanthropic identity;
+  Co-CEO of the joint Kwanza Jones & José E. Feliciano Initiative.
+  SEPARATE-slug candidate (`jones-kwanza`); per CLAUDE.md §1.7, not added
+  to Feliciano's tracked-set automatically.
+
+  NEEDS-CONFIRMATION: Full middle name (only "E." documented). Date of
+  birth (year not in Tier 2). Named children (none documented).
+
+change_log:
+  - date: 2026-05-23
+    change: |
+      Created during Phase 2 batch 4 with PRE-APPROVAL PILOT status per
+      user direction (track both Seidler and Feliciano during transition).
+      Tier 2 sources: MLB.com, ESPN, Sportico, CBS Sports, RFK Human Rights
+      press release, The Real Deal LA, Inside Philanthropy. tenure_start_date
+      = 2026-05-02 (sale-agreement announcement); update to MLB-approval /
+      close date when settled. Strong_signal = "Clearlake Capital".
+      Pre-emptive negative_signals.employers for the famous singer José
+      Feliciano (musician / entertainer / Polydor / JF Recording).
+    by: "claude-code-research (orchestrated by alex)"
+    references:
+      - "/tmp/feliciano-jose-research.md (session-local research file)"
+
+audit:
+  created: 2026-05-23
+  last_ingestion: null
+  last_signal_review: 2026-05-23

@@ -1,0 +1,155 @@
+# Terence F. ("Terry") McGuirk — Atlanta Braves
+# Chairman, President & CEO of Atlanta Braves Holdings, Inc. (NASDAQ: BATRA /
+# BATRK) and the MLB-designated Control Person of the Braves. Co-principal
+# with John Malone (separate slug `malone-john`) per user direction.
+#
+# Tenure: McGuirk has been Chairman of the Atlanta Braves since 2007 (under
+# Liberty Media's ownership of the team). Atlanta Braves Holdings was
+# split-off as a standalone public company on 2023-07-18; McGuirk continued
+# as Chairman post-split-off and added President & CEO titles after Greg
+# Maffei resigned all ABH roles effective 2024-08-31. On 2024-08-22, an
+# Atlanta Braves Holdings corporate-governance update granted McGuirk a
+# "sole and exclusive" proxy to vote John Malone's 887,079 Series B Common
+# Stock (~44% of company voting power) on director elections and other
+# routine matters, plus a right of first refusal on Malone's share transfers.
+#
+# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+
+slug: mcguirk-terry
+name: Terence F. McGuirk
+team: Atlanta Braves
+role: Principal owner / Chairman, President & CEO Atlanta Braves Holdings / MLB Control Person
+status: pilot
+tenure_start_date: 2007-01-01    # Chairman of Atlanta Braves since 2007 (Liberty Media era); year-precision
+tenure_end_date: null
+
+name_variants:
+  - "Terence F McGuirk"
+  - "Terence F. McGuirk"
+  - "Terence McGuirk"
+  - "Terry McGuirk"
+  - "Terry F. McGuirk"
+  - "Terry F McGuirk"
+  - "McGuirk, Terence"
+  - "McGuirk, Terence F"
+  - "McGuirk, Terence F."
+  - "McGuirk, Terry"
+
+verifying_signals:
+  cities:
+    - "atlanta"
+  states:
+    - "GA"
+  employers:
+    - "Atlanta Braves"
+    - "Atlanta Braves Holdings"
+    - "Atlanta Braves Holdings Inc"
+    - "Atlanta Braves Holdings, Inc."
+    - "Braves Holdings"
+    - "Braves Holdings LLC"
+    - "Atlanta National League Baseball Club"   # historical legal name
+    - "Turner Broadcasting"                       # 1972-2001 historical
+    - "Turner Broadcasting System"
+    - "TBS"
+    - "Time Warner"                               # 1996- historical (post-Turner/TBS merger)
+    - "AOL Time Warner"                           # historical 2001-2003
+  occupations:
+    - "chairman"
+    - "ceo"
+    - "president"
+    - "executive"
+    - "businessman"
+
+strong_signals:
+  employers: []
+  zip_codes: []
+  # Conservative at creation. "Atlanta Braves Holdings" is the corporate
+  # name but is shared with the ABH board (Brian Deevy, Wonya Lucas, Diana
+  # Murphy) and ABH officers/staff. Calibrate after first ingestion if a
+  # uniquely-McGuirk pattern emerges.
+
+related_entities: []
+# Future candidates (do NOT add without user approval per CLAUDE.md §1.7):
+#   - spouse: Nancy McGuirk. Atlanta-based; no documented donor profile.
+#   - children: 4 children per profiles; names not publicly enumerated.
+
+sources:
+  - description: "MLB.com — Terry McGuirk front office page. Title (Chairman, President & CEO Atlanta Braves Holdings; Chairman and Control Person Atlanta Braves)"
+    url: "https://www.mlb.com/braves/team/front-office/terry-mcguirk"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "Atlanta Braves Holdings IR — Board of Directors / Officers. Confirms current titles; confirms John Malone is NOT on the ABH board"
+    url: "https://www.bravesholdings.com/about/board-of-directors"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "Atlanta Braves Holdings press release (Aug 23, 2024) — Corporate Governance Update. Granted McGuirk proxy over Malone's 44% Series B voting block; Maffei resigned"
+    url: "https://www.bravesholdings.com/news/press-releases/detail/198/atlanta-braves-holdings-provides-corporate-governance-update"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "Atlanta Journal-Constitution (Nov 7, 2024) — 'John Malone gives Terry McGuirk more power with Atlanta Braves.' Documents proxy, right of first refusal, appreciation right above $50/share"
+    url: "https://www.ajc.com/sports/atlanta-braves/john-malone-gives-terry-mcguirk-more-power-with-atlanta-braves/B3HXGRCMVZBGNLSY3LXBQCV6UM/"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "Syndeo Institute (Cable Hall of Fame, 2010 inductee) — Terence F. McGuirk bio. Career arc Turner Broadcasting 1972- through TBS / Time Warner"
+    url: "https://syndeoinstitute.org/honorees/past-honorees/2010-honorees/terence-f-mcguirk/"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "Atlanta Magazine — 'Atlanta's 55 Most Powerful' #27 Terry McGuirk. Confirms Atlanta residence (with wife Nancy), four children, civic role"
+    url: "https://www.atlantamagazine.com/news-culture-articles/27-terry-mcgurk/"
+    accessed: "2026-05-23"
+    archive_url: ""
+
+notes: |
+  Terence F. ("Terry") McGuirk — Chairman, President & CEO of Atlanta Braves
+  Holdings, Inc. (NASDAQ: BATRA / BATRK) and the MLB-designated Control
+  Person of the Atlanta Braves. Born ~1951; Middlebury College BA 1973;
+  Portsmouth Abbey School. Joined Turner Broadcasting 1972 as account
+  executive; ascended via TBS, Turner Sports, Turner Broadcasting CEO
+  (1996, succeeding Ted Turner post-TBS/Time Warner merger). Has been
+  Chairman of the Atlanta Braves since 2007 (Liberty Media's acquisition
+  era). Continued as Chairman after the July 18, 2023 split-off of Atlanta
+  Braves Holdings from Liberty Media. Added President & CEO titles after
+  Greg Maffei resigned all ABH roles effective 2024-08-31.
+
+  Co-principal with John Malone per user direction (Davis-Simpson-style
+  separate slugs). McGuirk has operational + day-to-day voting control;
+  Malone has economic + non-routine voting control. Malone's slug
+  (`malone-john`) tracks his individual federal political giving — which
+  predates and is independent of his Braves affiliation (he's Chairman
+  Emeritus of Liberty Media as of Jan 1, 2026, and the dominant
+  shareholder across Liberty Broadband / Liberty Global / Charter).
+
+  Pre-2007 (Turner Broadcasting / Time Warner era): McGuirk's documented
+  Time Warner-era corporate PAC contributions were to "AOL Time Warner Inc
+  Committee to Connect & Inform" — historical context only, not a current
+  related_entity.
+
+  Doppelganger watch: Common-ish name. Disambiguators: Atlanta, GA + Braves
+  / Turner / Time Warner employer + chairman/CEO/president occupation.
+  Other Terry McGuirks documented (JLL real-estate exec, Atlanta-area
+  realtor) have different employer profiles.
+
+  NEEDS-CONFIRMATION: McGuirk's specific Atlanta neighborhood/suburb
+  (Buckhead plausible per civic profile but not in Tier 2 sources). Use
+  "atlanta" generally; refine via calibration if filings cluster.
+
+change_log:
+  - date: 2026-05-23
+    change: |
+      Created during Phase 2 special-case batch. Per user direction (Davis-
+      Simpson-style separate slugs for Braves co-principals), tracking
+      McGuirk as the MLB Control Person + day-to-day chair, with Malone as
+      a separate slug for his individual donor footprint. Tier 2 sources:
+      MLB.com, Atlanta Braves Holdings IR, AJC, Cable Hall of Fame, Atlanta
+      Magazine. tenure_start_date = 2007-01-01 (year-precision; Chairman of
+      Braves under Liberty Media). strong_signals empty at creation —
+      calibrate after first ingestion. Replaces the original
+      `liberty-media-group` registry placeholder.
+    by: "claude-code-research (orchestrated by alex)"
+    references:
+      - "/tmp/braves-ownership-research.md (session-local research file)"
+
+audit:
+  created: 2026-05-23
+  last_ingestion: null
+  last_signal_review: 2026-05-23

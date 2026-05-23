@@ -1,0 +1,156 @@
+# Bob R. Simpson — Texas Rangers
+# Co-Chairman / Principal Owner. Acquired part of the Rangers via Rangers
+# Baseball Express, LLC in August 2010 (out of Chapter 11 bankruptcy
+# auction) jointly with Ray C. Davis. Founder of XTO Energy (sold to
+# ExxonMobil 2010 for $41B); later founder of MorningStar Partners
+# (renamed TXO Partners 2023; NYSE: TXO, IPO Jan 2023).
+#
+# Replaces (with `davis-ray`) the existing misnamed `simpson-ray` registry
+# slug, which combined two distinct billionaires. The "R." middle initial
+# is LOAD-BEARING for disambiguation from generic "Bob Simpson" / "Robert
+# Simpson" matches.
+#
+# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+
+slug: simpson-bob
+name: Bob R. Simpson
+team: Texas Rangers
+role: Co-Chairman / Principal Owner
+status: pilot
+tenure_start_date: 2010-08-12    # Rangers Baseball Express closing (approximate; press universally "August 2010")
+tenure_end_date: null
+
+name_variants:
+  - "Bob R Simpson"
+  - "Bob R. Simpson"
+  - "Simpson, Bob R"
+  - "Simpson, Bob R."
+  # NOTE: Deliberately NO bare "Bob Simpson" or "Robert Simpson" form —
+  # the "R." middle initial is required for disambiguation. Without it,
+  # the classifier would catch many unrelated Bob/Robert Simpsons.
+
+verifying_signals:
+  cities:
+    - "fort worth"
+  states:
+    - "TX"
+  employers:
+    - "Texas Rangers"
+    - "Rangers Baseball Express"
+    - "RayLynn Records"           # small record label co-founded with wife Janice 2012
+  occupations:
+    - "chairman"
+    - "ceo"
+    - "founder"
+    - "executive"
+    - "investor"
+    - "businessman"
+    - "oil and gas"
+    - "cpa"
+    - "certified public accountant"
+
+strong_signals:
+  employers:
+    - "XTO Energy"                 # founded 1986 (originally Cross Timbers); sold to ExxonMobil 2010
+    - "TXO Partners"               # founded 2012 as MorningStar; renamed TXO 2023; NYSE: TXO
+    - "TXO Energy Partners"
+    - "MorningStar Partners"        # 2012-2022 name for what became TXO
+    - "Cross Timbers Oil"           # pre-2001 name for XTO
+    - "Cross Timbers Oil Company"
+  zip_codes: []
+
+related_entities: []
+# Future candidates (do NOT add without user approval per CLAUDE.md §1.7):
+#   - spouse: Janice Simpson. Co-founded RayLynn Records 2012. Not
+#     documented as politically active in Tier 2.
+#   - children: names not publicly disclosed in Tier 2.
+#   - nephew: Gary D. Simpson — Co-CEO of TXO Partners (post-Bob step-down).
+#   - co-owner: Ray C. Davis — SEPARATE slug `davis-ray` (not a related
+#     entity; co-chairman with own donor profile).
+
+sources:
+  - description: "MLB.com — Bob R. Simpson front office page. Official team-published bio"
+    url: "https://www.mlb.com/rangers/team/front-office/bob-simpson"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "Fort Worth Report (March 20, 2025) — Bob Simpson to step down as CEO of Fort Worth's TXO, remain as chairman. Confirms Fort Worth residence and Rangers co-ownership"
+    url: "https://fortworthreport.org/2025/03/20/bob-simpson-to-step-down-as-ceo-of-fort-worths-txo-remain-as-chairman/"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "Fort Worth Magazine — Bob Simpson Retires as CEO of TXO Partners; Co-CEOs Brent W. Clum and Gary D. Simpson Appointed"
+    url: "https://fwtx.com/news/bob-simpson-steps-down-as-ceo-of-txo-partners/"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "Baylor University Alumni — Bob Simpson Distinguished Alumni Profile. BBA Accounting 1970, MBA 1971; CPA; XTO Energy founder"
+    url: "https://alumni.web.baylor.edu/person/2013/bob-simpson"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "TXO Partners L.P. — Board of Directors. Official corporate listing of Simpson as Chairman"
+    url: "https://www.txopartners.com/investors/corporate-governance/board-of-directors"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "SEC EDGAR — XTO Energy Form 8-K (2008) signed by Bob R. Simpson as Chairman. Corporate-regulatory primary documentation"
+    url: "https://www.sec.gov/Archives/edgar/data/0000868809/000086880908000051/form_8k.htm"
+    accessed: "2026-05-23"
+    archive_url: ""
+
+notes: |
+  Bob R. Simpson (b. ~1948; Baylor BBA Accounting 1970, MBA 1971; CPA) —
+  Co-Chairman and Principal Owner of the Texas Rangers since 2010-08-12
+  (Rangers Baseball Express closing out of Chapter 11 bankruptcy auction,
+  jointly with Ray C. Davis). Fort Worth, TX-based.
+
+  Career background: Founded Cross Timbers Oil Company in 1986 (renamed
+  XTO Energy in 2001); Chairman from 1996; sold XTO to ExxonMobil in
+  June 2010 for $41B. Founded MorningStar Partners 2012 (renamed TXO
+  Partners 2023; IPO January 2023 on NYSE under ticker TXO). Stepped
+  down as TXO CEO effective 2025-04-01 (announced 2025-03-20), retaining
+  Chairmanship. Co-CEOs since: Brent W. Clum and nephew Gary D. Simpson.
+
+  Strong_signals: "XTO Energy", "TXO Partners" / "TXO Energy Partners",
+  "MorningStar Partners", "Cross Timbers Oil" / "Cross Timbers Oil
+  Company" — these uniquely-named entities he founded or chaired.
+  After 2010 sale, an FEC filing with "XTO Energy" employer is still
+  strong because most former XTO employees moved to ExxonMobil.
+
+  CRITICAL — name_variants strictly require "R." middle initial. Bare
+  "Bob Simpson" / "Robert Simpson" forms are EXCLUDED to prevent
+  catching unrelated Bob/Robert Simpsons (a common name). FEC records
+  without the "R." middle initial would be name-only matches at best
+  and should be routed to UNCERTAIN unless a strong-signal employer
+  string matches.
+
+  Doppelganger watch: "Bob Simpson" / "Robert Simpson" is common.
+   - Bobby Simpson / Bob Simpson, Australian cricketer (international, low
+     US-FEC risk).
+   - Various "Robert Simpson" / "Bob Simpson" entries in FEC across the US.
+   - Other Bob Simpsons in unrelated Fort Worth-area businesses (Fort
+     Worth is a petroleum hub; the name is locally common).
+  All filtered out by strict middle-initial requirement.
+
+  Co-chairman: Ray C. Davis (Dallas-based; Avatar Investments / Energy
+  Transfer background). DIFFERENT signal stack — tracked under separate
+  slug `davis-ray`.
+
+  NEEDS-CONFIRMATION: Full first name (commonly "Robert" but not Tier 2-
+  documented). Middle name behind "R." not publicly disclosed.
+
+change_log:
+  - date: 2026-05-23
+    change: |
+      Created during Phase 2 batch 4. Replaces misnamed `simpson-ray`
+      registry slug (which combined Davis and Simpson). Tier 2 sources:
+      MLB.com, Fort Worth Report, Fort Worth Magazine, Baylor Alumni,
+      TXO Partners IR, SEC EDGAR. tenure_start_date = 2010-08-12 (Rangers
+      Baseball Express closing; exact day approximate). Strong_signals =
+      XTO Energy / TXO Partners / MorningStar Partners / Cross Timbers
+      Oil. name_variants DELIBERATELY EXCLUDE bare "Bob Simpson" / "Robert
+      Simpson" — "R." middle initial is load-bearing.
+    by: "claude-code-research (orchestrated by alex)"
+    references:
+      - "/tmp/rangers-ownership-research.md (session-local research file)"
+
+audit:
+  created: 2026-05-23
+  last_ingestion: null
+  last_signal_review: 2026-05-23

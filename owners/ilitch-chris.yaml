@@ -1,0 +1,146 @@
+# Christopher P. Ilitch — Detroit Tigers
+# Controlling owner since MLB unanimously approved him 2017-05-18 (succeeding
+# father Mike Ilitch, d. Feb 2017). Also President & CEO of Ilitch Holdings
+# (since 2004) and Governor/CEO of Detroit Red Wings. Mother Marian Ilitch
+# (b. 1933) remains Chairwoman of Ilitch Holdings but has NO operational
+# role in the Tigers — MLB gambling rules require a firewall between the
+# Tigers and Marian's MotorCity Casino Hotel.
+#
+# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+# Family-collision context: Ilitch is a rare surname concentrated in Metro
+# Detroit. Different first names protect Chris's name_variants from collision
+# with mother Marian, siblings (Denise, Mike Jr., Lisa, Atanas, Carole, late
+# Ron), and other relatives.
+
+slug: ilitch-chris
+name: Christopher P. Ilitch
+team: Detroit Tigers
+role: Principal owner
+status: pilot
+tenure_start_date: 2017-05-18    # MLB approval as controlling owner of Tigers
+tenure_end_date: null
+
+name_variants:
+  - "Christopher P Ilitch"
+  - "Christopher P. Ilitch"
+  - "Christopher Ilitch"
+  - "Chris Ilitch"
+  - "Christopher Paul Ilitch"
+  - "Ilitch, Christopher"
+  - "Ilitch, Christopher P"
+  - "Ilitch, Christopher P."
+  - "Ilitch, Chris"
+
+verifying_signals:
+  cities:
+    - "detroit"
+    - "bloomfield hills"   # Cranbrook School area; Ilitch family suburb
+    - "bingham farms"       # Mike & Marian's historical family home
+  states:
+    - "MI"
+  employers:
+    # NOTE: "Ilitch Holdings" and "Ilitch Sports + Entertainment" are in
+    # strong_signals — not duplicated here per OWNER_SCHEMA.md rule 6.
+    - "Detroit Tigers"
+    - "Detroit Red Wings"
+    - "Little Caesars"           # huge employee base; verifying only
+    - "Olympia Entertainment"
+    - "Olympia Development"
+    - "Ilitch Sports"            # shorter form; distinct exact string from strong "Ilitch Sports + Entertainment"
+  occupations:
+    - "president"
+    - "ceo"
+    - "chairman"
+    - "executive"
+    - "businessman"
+    - "governor"                  # NHL Governor title for Red Wings
+
+strong_signals:
+  employers:
+    - "Ilitch Holdings"            # rare surname + family parent co.
+    - "Ilitch Sports + Entertainment"
+  zip_codes: []
+
+related_entities: []
+# Future candidates (do NOT add without user approval per CLAUDE.md §1.7):
+#   - parent: Marian Ilitch (b. 1933, age 93 in 2026). Chairwoman of Ilitch
+#     Holdings; principal/sole proprietor of MotorCity Casino Hotel.
+#     Documented major political donor. SEPARATE slug `ilitch-marian` —
+#     different first name = no name-variant collision with Chris.
+#   - parent: Mike Ilitch (d. 2017-02-10) — historical only.
+#   - siblings: Denise Ilitch (attorney), Mike Ilitch Jr. (film producer),
+#     Lisa Ilitch Murray (former Red Wings EVP), Atanas Ilitch, Carole
+#     Ilitch Trepeck. All different first names; separate slugs if added.
+#   - spouse: Kelle Lites Ilitch — Aug 2024 divorce filing reported.
+
+sources:
+  - description: "ESPN — Chris Ilitch approved as Tigers' controlling owner (May 18, 2017). MLB approval date, controlling-owner status, succession-plan context"
+    url: "https://www.espn.com/mlb/story/_/id/19410859/chris-ilitch-approved-detroit-tigers-controlling-owner"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "Detroit News — Chris Ilitch approved as Tigers' controlling owner (May 18, 2017). Regional press corroboration"
+    url: "https://eu.detroitnews.com/story/sports/mlb/tigers/2017/05/18/chris-ilitch-approved-tigers-controlling-owner/101835784/"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "NHL.com — Chris Ilitch (Detroit Red Wings official team site). Titles (CEO Ilitch Holdings; Governor/CEO Red Wings; Chairman/CEO Tigers), Michigan residence, U-Michigan BBA"
+    url: "https://www.nhl.com/redwings/team/chris-ilitch"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "Crain's Detroit Business — Chris Ilitch named CEO; Denise out (July 26, 2004). Original press confirmation of his 2004 ascension to sole CEO of Ilitch Holdings"
+    url: "https://www.crainsdetroit.com/article/20040726/SUB/407260861/chris-ilitch-named-ceo-denise-out"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "Crain's Detroit Business — MLB / MotorCity Casino gambling-rules story. Documents Marian (MotorCity Casino) vs. Christopher (Tigers) firewall"
+    url: "https://www.crainsdetroit.com/sports/mlb-mulls-change-gambling-rules-accommodate-sports-betting-ilitch-owned-motorcity-casino"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "MLB Trade Rumors (March 2026) — Christopher Ilitch discusses Tigers spending after Valdez and Verlander signings. Continued active ownership"
+    url: "https://www.mlbtraderumors.com/2026/03/tigers-rumors-luxury-tax-2026-chris-ilitch.html"
+    accessed: "2026-05-23"
+    archive_url: ""
+
+notes: |
+  Christopher Paul Ilitch (b. 1965-06-02). Controlling owner of the Detroit
+  Tigers since MLB unanimously approved him 2017-05-18 (succeeding father
+  Mike Ilitch, d. 2017-02-10). Also President & CEO of Ilitch Holdings since
+  2004 (sister Denise resigned co-presidency that year). Governor/CEO of
+  Detroit Red Wings (NHL).
+
+  Strong_signals: "Ilitch Holdings" and "Ilitch Sports + Entertainment" —
+  the Ilitch surname is rare in the US and concentrated in Metro Detroit,
+  and these are the family-named corporate vehicles. "Detroit Tigers" and
+  "Detroit Red Wings" stay in verifying because many team employees would
+  also report them. "Little Caesars" is verifying-only (tens of thousands of
+  employees across franchisees and corporate).
+
+  CRITICAL — Marian Ilitch firewall: Mother Marian Ilitch (b. 1933) remains
+  Chairwoman of Ilitch Holdings but the Ilitch organization has publicly
+  stated since the 2010s that Marian has NO operational role in the Tigers,
+  a firewall driven by MLB's gambling rules and her ownership of MotorCity
+  Casino Hotel + Ocean Casino Resort. Marian is a separately-documented
+  major political donor — her records must NOT be folded into Christopher's
+  attribution. Different first name = no name-variant collision.
+
+  Aug 2024: Christopher filed for divorce from wife Kelle Lites Ilitch in
+  Oakland County, MI. No effect on team control.
+
+  Residence: Bloomfield Hills / Bingham Farms area (Oakland County, MI) is
+  the documented family base; specific suburb is NEEDS-CONFIRMATION. Both
+  are listed in verifying_signals.cities; refine via calibration.
+
+change_log:
+  - date: 2026-05-23
+    change: |
+      Created during Phase 2 batch 3. Tier 2 sources: ESPN, Detroit News,
+      NHL.com, Crain's Detroit Business (multiple), MLB Trade Rumors.
+      Strong_signals = "Ilitch Holdings" + "Ilitch Sports + Entertainment".
+      Marian Ilitch flagged as separate-slug candidate (different first
+      name, no variant collision).
+    by: "claude-code-research (orchestrated by alex)"
+    references:
+      - "/tmp/ilitch-chris-research.md (session-local research file)"
+
+audit:
+  created: 2026-05-23
+  last_ingestion: null
+  last_signal_review: 2026-05-23

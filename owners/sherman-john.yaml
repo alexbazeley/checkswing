@@ -1,0 +1,166 @@
+# John J. Sherman — Kansas City Royals
+# Principal owner / Chairman / CEO. Led investor group that purchased the
+# Royals from David Glass family. MLB approval 2019-11-21; closing 2019-11-25.
+# Built fortune in midstream energy (Ferrellgas → LPG Services → Inergy →
+# Crestwood). Kansas City metro primary; long-tenure secondary residence in
+# Boca Grande, FL (Gasparilla Island).
+#
+# DIFFERENT PERSON from Bruce Sherman (Miami Marlins owner). Kept as separate
+# slugs.
+#
+# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+# HIGH doppelganger risk: "John Sherman" is a common name; strict employer +
+# city signals required.
+
+slug: sherman-john
+name: John J. Sherman
+team: Kansas City Royals
+role: Principal owner
+status: pilot
+tenure_start_date: 2019-11-25    # closing date; MLB approval 2019-11-21
+tenure_end_date: null
+
+name_variants:
+  - "John J Sherman"
+  - "John J. Sherman"
+  - "John Sherman"
+  - "Sherman, John"
+  - "Sherman, John J"
+  - "Sherman, John J."
+
+verifying_signals:
+  cities:
+    - "kansas city"
+    - "boca grande"          # secondary residence; Gasparilla Island, FL
+    - "mission hills"         # plausible KC-side KS suburb (needs-confirmation)
+  states:
+    - "MO"                    # Kansas City, MO primary (per press)
+    - "KS"                    # KC metro spans the border; filings may show KS
+    - "FL"                    # secondary residence
+  employers:
+    # NOTE: "Inergy L.P." and "Inergy Midstream" are in strong_signals —
+    # not duplicated here per OWNER_SCHEMA.md rule 6.
+    - "Kansas City Royals"
+    - "Royals"
+    - "Inergy"                   # shorter form; distinct exact string from strong forms
+    - "Crestwood Equity Partners"   # 2013-2023 board director
+    - "Crestwood Midstream"
+    - "LPG Services"             # pre-1996 founder; sold to Dynegy
+    - "Ferrellgas"               # earlier executive role
+    - "MLP Holdings"             # CEO per Ingram's 2019 (needs-confirmation)
+  occupations:
+    - "chairman"
+    - "ceo"
+    - "owner"
+    - "executive"
+    - "businessman"
+    - "investor"
+    - "founder"
+    - "director"
+
+strong_signals:
+  employers:
+    # Inergy founder/CEO 1996-2013; defunct after Crestwood merger. Small
+    # private firm — uniquely identifying for the era.
+    - "Inergy L.P."
+    - "Inergy Midstream"
+    # Sherman Family Foundation (founded 2006 with wife Marny; education-
+    # focused philanthropy; small private foundation).
+    - "Sherman Family Foundation"
+  zip_codes: []
+  # "Inergy" alone NOT in strong_signals because it's a generic substring
+  # (could appear in unrelated firm names). The L.P. / Midstream forms are
+  # the specific Sherman ones. "Crestwood Equity Partners" stays in
+  # verifying — board had multiple directors. "Kansas City Royals" stays in
+  # verifying — team employees would also report it.
+
+related_entities: []
+# Future candidates (do NOT add without user approval per CLAUDE.md §1.7):
+#   - spouse: Marny Sherman — publicly active at Royals/political moments
+#     (April 2024 Jackson County stadium vote). Politically active in narrow
+#     sense; no FEC donation profile researched.
+#   - Brooks Sherman — Royals minority investor (Knothole Sports LLC).
+#     Shared surname + co-investor status raises possible family relation;
+#     NOT confirmed in Tier 2 — do not auto-attribute.
+
+sources:
+  - description: "MLB.com press release — John Sherman and co-investors finalize purchase of the Kansas City Royals (closing Nov 25, 2019)"
+    url: "https://www.mlb.com/press-release/john-sherman-and-co-investors-finalize-purchase-of-the-kansas-city-royals"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "ESPN — 'John Sherman officially takes over as controlling owner of Royals' (Nov 21, 2019). MLB approval at owners' meeting"
+    url: "https://www.espn.com/mlb/story/_/id/28170946/john-sherman-officially-takes-controlling-owner-royals"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "Royals Review (March 2024) — 'Who is John Sherman?' Backgrounder on career arc Ferrellgas → LPG Services → Inergy → Crestwood"
+    url: "https://www.royalsreview.com/2024/3/29/24111574/who-is-john-sherman"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "Ingram's (2019) — 'It's For Real: John Sherman Buying the Royals.' CEO of MLP Holdings, board of Crestwood Equity Partners, board of Evergy"
+    url: "https://ingrams.com/article/its-for-real-john-sherman-buying-the-royals/"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "Boca Beacon — 'In the Spotlight: John Sherman, on Boca Grande and the Kansas City Royals.' Secondary residence Boca Grande FL for ~15 years"
+    url: "https://bocabeacon.com/in-the-spotlight-john-sherman/"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "KSHB — 'Billionaire you can trust: John and Marny Sherman.' Sherman Family Foundation (founded 2006); philanthropy"
+    url: "https://www.kshb.com/sports/billionaire-you-can-trust-john-and-marny-sherman-build-legacy-through-education-philanthropy"
+    accessed: "2026-05-23"
+    archive_url: ""
+
+notes: |
+  John J. Sherman (b. 1955-04-12). Led the investor group that purchased the
+  Kansas City Royals from David Glass family. MLB approval 2019-11-21;
+  closing 2019-11-25 (using closing date as tenure_start_date). Built fortune
+  in midstream energy: Ferrellgas executive → founded LPG Services (sold to
+  Dynegy 1996) → founded Inergy L.P. (1996, merged into Crestwood 2013) →
+  Crestwood Equity Partners board director through 2023 sale to Energy
+  Transfer.
+
+  Residence: Kansas City metro primary (Mission Hills/Brookside/etc.
+  unconfirmed at street level; press describes as "Kansas City, Missouri-
+  based"). FEC filings may carry MO or KS given the metro spans the border.
+  Long-tenure secondary residence in Boca Grande, FL (Gasparilla Island),
+  per Boca Beacon profile (~15 years).
+
+  HIGH DOPPELGANGER RISK. Specific cases to watch:
+   - Bruce Sherman (Marlins owner, Naples FL) — DIFFERENT first name; won't
+     collide via Sherman's variants.
+   - John Sherman, Ellsworth KS attorney — same first/last + KS state. Need
+     to reject via employer (law firm) or occupation (attorney) signals.
+     Calibrate negative_signals.employers if observed.
+   - Brooks Sherman (Royals co-investor) — DIFFERENT first name; possible
+     family relation, NOT confirmed.
+   - U.S. Rep. Brad Sherman (D-CA) — different first name; no collision.
+   - "John Sherman, Jr." in VPAP (Virginia donor) — different suffix.
+  Negative_signals not pre-emptively populated; calibrate after first
+  ingestion.
+
+  Strong_signals: "Inergy L.P." / "Inergy Midstream" (1996-2013; small
+  private firm; uniquely identifying for that era) and "Sherman Family
+  Foundation" (small private foundation, founded 2006).
+
+  NEEDS-CONFIRMATION: Sherman previously held a ~30% minority stake in the
+  Cleveland Indians/Guardians (2016-). MLB cross-ownership rules typically
+  force divestiture; status post-Royals purchase is unclear. Cleveland
+  Indians/Guardians NOT added to employer signals here to avoid Dolan-
+  attribution overlap; revisit after first ingestion.
+
+change_log:
+  - date: 2026-05-23
+    change: |
+      Created during Phase 2 batch 3. Tier 2 sources: MLB.com press release,
+      ESPN, Royals Review, Ingram's, Boca Beacon, KSHB. tenure_start_date =
+      2019-11-25 (closing; per MLB press release). Strong_signals: "Inergy
+      L.P." / "Inergy Midstream" + "Sherman Family Foundation". HIGH
+      doppelganger risk; negative_signals to be calibrated after first
+      ingestion.
+    by: "claude-code-research (orchestrated by alex)"
+    references:
+      - "/tmp/sherman-john-research.md (session-local research file)"
+
+audit:
+  created: 2026-05-23
+  last_ingestion: null
+  last_signal_review: 2026-05-23

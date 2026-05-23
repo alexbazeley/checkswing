@@ -1,0 +1,123 @@
+# Bruce S. Sherman — Miami Marlins
+# Principal owner / Chairman since 2017-10-03 (closing of deal to acquire
+# from Jeffrey Loria; MLB approval Sept 27, 2017; $1.2B). Led investor group;
+# Derek Jeter was minority partner/CEO until departing Feb 28, 2022. Sherman
+# is and was always the principal owner.
+#
+# DIFFERENT PERSON from John Sherman (Kansas City Royals owner). Kept as
+# separate slugs.
+#
+# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+
+slug: sherman-bruce
+name: Bruce S. Sherman
+team: Miami Marlins
+role: Principal owner
+status: pilot
+tenure_start_date: 2017-10-03    # closing date; MLB approval 2017-09-27
+tenure_end_date: null
+
+name_variants:
+  - "Bruce S Sherman"
+  - "Bruce S. Sherman"
+  - "Bruce Sherman"
+  - "Sherman, Bruce"
+  - "Sherman, Bruce S"
+  - "Sherman, Bruce S."
+
+verifying_signals:
+  cities:
+    - "naples"
+  states:
+    - "FL"
+  employers:
+    # NOTE: "M4 Capital" and "M4 Capital LLC" are in strong_signals — not
+    # duplicated here per OWNER_SCHEMA.md rule 6.
+    - "Miami Marlins"
+    - "Marlins"
+    - "Private Capital Management"   # 1986-2009 founded; sold to Legg Mason 2001
+    - "Private Capital Mgmt"
+    - "PCM"
+  occupations:
+    - "chairman"
+    - "owner"
+    - "investor"
+    - "investment manager"
+    - "businessman"
+    - "ceo"
+    - "retired"
+
+strong_signals:
+  employers:
+    - "M4 Capital"           # his Naples FL family office; uniquely named
+    - "M4 Capital LLC"
+  zip_codes: []
+
+related_entities: []
+# Future candidates (do NOT add without user approval per CLAUDE.md §1.7):
+#   - spouse: Cynthia Sherman (née Kahn). Naples FL. No documented political
+#     activity in Tier 2 sources.
+#   - children from prior marriage to Marlene Bluestein: Lori Sherman and
+#     Randi Sherman (Sherman Prize co-founders, both with Crohn's disease).
+
+sources:
+  - description: "MLB.com press release — Bruce Sherman & Derek Jeter complete purchase of Miami Marlins (Oct 3, 2017)"
+    url: "https://www.mlb.com/press-release/bruce-sherman-derek-jeter-complete-purchase-of-miami-marlins-257250454"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "MLB.com news — MLB owners approve new Marlins ownership (Sept 27, 2017, unanimous approval)"
+    url: "https://www.mlb.com/news/mlb-owners-approve-new-marlins-ownership-c256373722"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "ESPN — Owners unanimously approve sale of Miami Marlins (Sept 27, 2017); $1.2B price"
+    url: "https://www.espn.com/mlb/story/_/id/20838186/owners-unanimously-approve-sale-miami-marlins"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "Horatio Alger Association — 2024 Award announcement (April 2024). Confirms title Chairman & Principal Owner Miami Marlins"
+    url: "https://www.prnewswire.com/news-releases/bruce-sherman-chairman-and-principal-owner-of-the-miami-marlins-to-receive-2024-horatio-alger-award-302055133.html"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "Gulfshore Life — 'Bruce Sherman: A Grand-Slam Career.' Naples FL residency, family (Cynthia, daughters Lori and Randi, ex-wife Marlene Bluestein), career chronology"
+    url: "https://gulfshorelife.com/archive/bruce-sherman-grand-slam-career/"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "MLB.com (Feb 2026 spring training) — 'Sherman on Marlins: We want to win.' Continued ownership; not for sale 'in my lifetime'"
+    url: "https://www.mlb.com/news/marlins-share-goals-at-first-2026-full-squad-workout"
+    accessed: "2026-05-23"
+    archive_url: ""
+
+notes: |
+  Bruce S. Sherman — Chairman and Principal Owner of the Miami Marlins
+  since closing on 2017-10-03 (MLB approval Sept 27, 2017; $1.2B from
+  Jeffrey Loria). DIFFERENT PERSON from John Sherman (Kansas City Royals
+  owner) — separate slugs.
+
+  Naples, FL is the unambiguous residence. Sherman co-founded Private
+  Capital Management (PCM) in 1986 in Naples; sold to Legg Mason in 2001 but
+  remained CEO until 2009. Post-2009 his family office is M4 Capital LLC
+  (Naples-registered; co-managing member Jay Baker). "M4 Capital" / "M4
+  Capital LLC" is the strong-signal employer — uniquely named.
+
+  Derek Jeter was minority partner / CEO 2017-2022 and departed
+  2022-02-28 (sold ~4% stake). Sherman has been principal owner throughout.
+  No 2024-2026 transition. Sherman has publicly committed to lifetime
+  ownership; reaffirmed Feb 2026 spring training.
+
+  Middle name "Stephen" appears in a single secondary-source aggregator;
+  middle initial "S." is well-established. Use the initial form.
+
+change_log:
+  - date: 2026-05-23
+    change: |
+      Created during Phase 2 batch 3. Tier 2 sources: MLB.com press release +
+      news; ESPN; Horatio Alger 2024 award; Gulfshore Life; MLB.com Feb 2026
+      spring training. Strong_signal = "M4 Capital" / "M4 Capital LLC"
+      (uniquely-named Naples FL family office).
+    by: "claude-code-research (orchestrated by alex)"
+    references:
+      - "/tmp/sherman-bruce-research.md (session-local research file)"
+
+audit:
+  created: 2026-05-23
+  last_ingestion: null
+  last_signal_review: 2026-05-23

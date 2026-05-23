@@ -1,0 +1,149 @@
+# Paul J. Dolan — Cleveland Guardians
+# Principal owner / Chairman / CEO. MLB-designated "control person" since
+# 2013-01-10. Family bought the team in 2000 (father Larry Dolan); Paul has
+# been the sole operational control person since 2013. Larry died 2025-02-23.
+#
+# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+# HIGH same-family collision risk: father Lawrence J. ("Larry") Dolan
+# (deceased 2025-02-23) and brother Matthew J. Dolan (OH State Senator
+# 2017-2024, 2x US Senate primary candidate) are both prolific FEC presences,
+# but DIFFERENT first names — Paul's name_variants do not collide with theirs.
+# Cousin James L. Dolan (NY MSG / Knicks / Rangers) is also a different first
+# name. Pre-emptive negative_signal: California winemaker Paul E. Dolan
+# (Fetzer Vineyards, d. 2023) shares the first name.
+
+slug: dolan-paul
+name: Paul J. Dolan
+team: Cleveland Guardians
+role: Principal owner
+status: pilot
+tenure_start_date: 2013-01-10
+tenure_end_date: null
+
+name_variants:
+  - "Paul J Dolan"
+  - "Paul J. Dolan"
+  - "Paul Dolan"
+  - "Paul Joseph Dolan"
+  - "Dolan, Paul"
+  - "Dolan, Paul J"
+  - "Dolan, Paul J."
+
+verifying_signals:
+  cities:
+    - "chagrin falls"
+    - "cleveland"
+    - "chardon"           # historical, pre-2000 era at Thrasher Dinsmore & Dolan
+  states:
+    - "OH"
+  employers:
+    - "Cleveland Guardians"
+    - "Cleveland Indians"          # team's name pre-2022 rebrand
+    - "Cleveland Indians Baseball"
+    - "Thrasher Dinsmore"          # family law firm (partner pre-2000)
+    - "Thrasher, Dinsmore & Dolan"
+    - "Dix & Eaton"                # board director since 2014
+  occupations:
+    - "chairman"
+    - "ceo"
+    - "owner"
+    - "president"
+    - "attorney"
+    - "executive"
+
+strong_signals:
+  employers: []
+  zip_codes: []
+  # Conservative at creation. "Cleveland Indians Baseball" would be uniquely
+  # identifying paired with chairman/CEO occupation, but stays in verifying
+  # because brother Matt and (deceased) father Larry are also tied to Indians
+  # ownership filings. Promote to strong via calibration if a uniquely-Paul
+  # employer string surfaces.
+
+negative_signals:
+  employers:
+    # Paul E. Dolan (CA winemaker, d. 2023-07) — Fetzer Vineyards / Bonterra
+    # Vineyards (Mendocino County). Same first name; pre-emptive negative
+    # per CLAUDE.md §1.7 (well-known doppelganger).
+    - "Fetzer Vineyards"
+    - "Bonterra Vineyards"
+
+related_entities: []
+# Future candidates (do NOT add without user approval per CLAUDE.md §1.7):
+#   - parent: Lawrence J. ("Larry") Dolan (d. 2025-02-23). Separate slug
+#     `dolan-larry` if added. Different first name; no name-variant collision.
+#   - sibling: Matthew J. Dolan — OH State Senator 2017-2024, 2x US Senate
+#     primary candidate. Different first name; no collision.
+#   - spouse: Karen Dolan (married 1990). No documented donor profile.
+#   - Cousin James L. Dolan (NY MSG/Knicks/Rangers) — different family
+#     branch, different first name.
+
+sources:
+  - description: "Akron Roundtable — Paul J. Dolan speaker bio. Confirms title (Owner/Chairman/CEO), education (St Lawrence 1980, Notre Dame Law 1983), Geauga County residence, wife Karen, two sons, board memberships"
+    url: "https://www.akronroundtable.org/speakers/paul-j-dolan/7381/"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "Cleveland State University — Paul J. Dolan appointed to CSU Board of Trustees (June 2022, by Governor of Ohio)"
+    url: "https://www.csuohio.edu/news/paul-j-dolan-appointed-cleveland-state-university-board-trustees"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "Sportico (Feb 2025) — Larry Dolan death and Paul Dolan's continued control. Paul has been MLB-designated 'control person' since 2013-01-10; Blitzer succession option not expected before ~2028"
+    url: "https://www.sportico.com/business/team-sales/2025/cleveland-guardians-owner-succession-plan-david-blitzer-1234831439/"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "Cleveland Clinic Magazine (Fall 2023) — Karen and Paul Dolan profile. 34-year marriage (married 1990), two adult sons, Cleveland-area residence"
+    url: "https://magazine.clevelandclinic.org/2023-fall/karen-and-paul-dolan"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "Crain's Cleveland Business — Greater Cleveland Partnership board chair appointment (2022)"
+    url: "https://www.crainscleveland.com/kim-palmer-blog/guardians-owner-paul-dolan-named-greater-cleveland-partnership-board-chair"
+    accessed: "2026-05-23"
+    archive_url: ""
+
+notes: |
+  Paul J. Dolan (b. 1958-07-07) — MLB-designated "control person" of the
+  Cleveland Guardians (then Indians) since 2013-01-10. Tenure track at the
+  team: VP/General Counsel 2000–2004; President 2004–2010; Chairman/CEO
+  2011–; formal control person 2013–. Father Larry Dolan led the original
+  2000 acquisition (~$323M from Richard Jacobs). Resides Chagrin Falls /
+  Geauga County, OH. Wife: Karen Dolan.
+
+  David Blitzer holds a ~25–35% minority stake from June 2022 with a
+  pre-priced option to acquire controlling interest ~2028. Paul remains
+  control person through May 2026.
+
+  HIGH same-family collision risk:
+   - Father Lawrence J. ("Larry") Dolan (d. 2025-02-23). Different first
+     name; no name-variant collision with Paul.
+   - Brother Matthew J. ("Matt") Dolan — Ohio State Senator 2017–2024, 2x US
+     Senate primary candidate (2022, 2024). Different first name. He himself
+     will appear in FEC under his own candidacy + as a donor; separate slug
+     `dolan-matthew` if added.
+   - Cousin James L. Dolan (NY MSG / Knicks / Rangers / Cablevision family).
+     Different first name and different family branch.
+
+  DOPPELGANGER (pre-emptive negative_signal): Paul E. Dolan, California
+  winemaker (Fetzer Vineyards; Bonterra Vineyards), d. 2023-07. Same first
+  name. Wine industry employer strings blocked via negative_signals.
+
+  Pre-2000 era: Paul practiced law at Thrasher, Dinsmore & Dolan (Chardon,
+  OH; family-named firm). Pre-2000 FEC records may carry that employer.
+
+change_log:
+  - date: 2026-05-23
+    change: |
+      Created during Phase 2 batch 3. Tier 2 sources: Akron Roundtable, CSU
+      appointment release, Sportico 2025 Larry-Dolan-death coverage, Cleveland
+      Clinic Magazine, Crain's Cleveland Business. tenure_start_date =
+      2013-01-10 (MLB control person approval). Negative_signals.employers =
+      Fetzer Vineyards / Bonterra Vineyards (Paul E. Dolan winemaker
+      doppelganger). strong_signals empty at creation; calibrate after first
+      ingestion.
+    by: "claude-code-research (orchestrated by alex)"
+    references:
+      - "/tmp/dolan-paul-research.md (session-local research file)"
+
+audit:
+  created: 2026-05-23
+  last_ingestion: null
+  last_signal_review: 2026-05-23

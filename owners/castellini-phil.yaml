@@ -1,0 +1,170 @@
+# Phillip J. Castellini — Cincinnati Reds
+# Current MLB-approved control person of the Cincinnati Reds since
+# 2026-02-12 (MLB owners voted to approve transfer of controlling ownership
+# from father Bob Castellini to Phil per Fox19 reporting; capped a
+# years-long succession that began with Phil's July 2024 promotion to
+# President & CEO).
+#
+# Father Robert H. ("Bob") Castellini tracked separately under
+# `castellini-bob` (FORMER; tenure_end_date 2026-02-12 per Castellini
+# precedent — Bob's full giving history captured).
+#
+# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+
+slug: castellini-phil
+name: Phillip J. Castellini
+team: Cincinnati Reds
+role: Principal owner / President & CEO
+status: pilot
+tenure_start_date: 2026-02-12    # MLB approval of control-person transfer (matches castellini-bob tenure_end)
+tenure_end_date: null
+
+name_variants:
+  - "Phillip J Castellini"
+  - "Phillip J. Castellini"
+  - "Phillip Castellini"
+  - "Phil Castellini"
+  - "Phil J. Castellini"
+  - "Phil J Castellini"
+  - "Castellini, Phillip"
+  - "Castellini, Phillip J"
+  - "Castellini, Phillip J."
+  - "Castellini, Phil"
+  # Cautionary: NOT including bare "P. Castellini" or single-initial forms;
+  # also intentionally NOT including "Philip" single-L (despite being a
+  # common alternate spelling) because Tier 2 sources consistently use
+  # "Phillip" with double L. Add "Philip" variants via calibration if FEC
+  # filings show them.
+
+verifying_signals:
+  cities:
+    - "cincinnati"
+    - "hyde park"           # Cincinnati neighborhood — Tier 2 suggestive (Castellini Preserve); needs-confirmation
+    - "indian hill"          # Family's primary suburb (per Bob's profile)
+    - "walton"               # Merchants Cold Storage HQ in Walton KY; possible employer-address filings
+  states:
+    - "OH"
+    - "KY"                   # Merchants Cold Storage is Walton KY (Cincinnati metro spans the border)
+  employers:
+    - "Cincinnati Reds"
+    - "Reds"
+    - "Castellini Group of Companies"   # family parent (founded 1896; ~2,500 employees)
+    - "Castellini Companies"
+  occupations:
+    - "president"
+    - "ceo"
+    - "chief executive officer"
+    - "owner"
+    - "principal"
+    - "chairman"
+    - "executive"
+    - "businessman"
+
+strong_signals:
+  employers:
+    - "Merchants Cold Storage"        # Phil has been President since 1993; uniquely his (Walton KY)
+    - "Castellini Group"               # family-named entity Phil chairs
+    - "Castellini Company"
+  zip_codes: []
+
+# Calibration round 1 for `castellini-bob` (2026-05-22) added three financial-
+# advisor doppelganger employers as negative_signals. The same pattern may
+# apply to Phil if the same advisors handle Castellini family accounts.
+# Pre-emptively mirroring those negatives is reasonable but should be
+# validated against actual filings in Phil's first ingestion run before
+# being treated as load-bearing.
+negative_signals:
+  employers:
+    - "UBS PAINE WEBBER"
+    - "Sena Weller Rohs & Williams"
+    - "Wells Fargo Advisors"
+
+related_entities: []
+# Future candidates (do NOT add without user approval per CLAUDE.md §1.7):
+#   - spouse: Britt Castellini. DOCUMENTED politically active (co-hosted
+#     Oct 2022 KY-04 Democratic fundraiser per research). Separate-slug
+#     candidate `castellini-britt` if added — requires deliberate scope
+#     expansion + ask-user.
+#   - parent: Robert H. "Bob" Castellini — tracked separately under
+#     `castellini-bob` (FORMER; tenure_end 2026-02-12).
+#   - other Castellini siblings — names not Tier 2-confirmed.
+
+sources:
+  - description: "Fox19 (2026-02-13) — 'Phil Castellini takes over control of Reds from Bob Castellini.' MLB approved transfer 2026-02-12; Phil was named President & CEO in July 2024 as start of succession"
+    url: "https://www.fox19.com/2026/02/13/phil-castellini-takes-over-control-reds-bob-castellini/"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "MLB.com — Cincinnati Reds front office. Phil Castellini titles"
+    url: "https://www.mlb.com/reds/team/front-office/phil-castellini"
+    accessed: "2026-05-23"
+    archive_url: ""
+  - description: "Cincinnati Business Courier — coverage of Reds succession; Phil's July 2024 promotion to President & CEO as start of formal succession"
+    url: "https://www.bizjournals.com/cincinnati/news/2024/07/"
+    accessed: "2026-05-23"
+    archive_url: ""
+
+notes: |
+  Phillip J. ("Phil") Castellini — Current MLB-approved control person of
+  the Cincinnati Reds since 2026-02-12 (MLB approval; Fox19 reporting).
+  Son of Robert H. "Bob" Castellini (FORMER Reds principal owner; tracked
+  under `castellini-bob`). Bob's group bought the Reds in 2006; Phil has
+  been a fixture in Reds front-office leadership since (President & COO
+  through 2024; promoted to President & CEO July 2024; control-person
+  transfer Feb 2026).
+
+  Concurrent role: President of Merchants Cold Storage (Walton, KY) since
+  1993. Merchants Cold Storage is a Castellini-family-owned cold-storage
+  subsidiary. "Merchants Cold Storage" is the strongest unique signal for
+  Phil — predates the Reds purchase, less common in FEC than "Cincinnati
+  Reds" or "Castellini Group."
+
+  Strong_signal note: "Castellini Group" and "Castellini Company" are also
+  in father Bob's strong_signals. The classifier runs per-slug, so
+  per-record attribution flows to whichever slug's name_variants the
+  record matches. Bob's variants are "Robert"/"Bob"; Phil's are
+  "Phillip"/"Phil" — different first names protect from cross-attribution.
+
+  Residence: Cincinnati / Indian Hill area. Hyde Park is suggestive (per
+  the family's "Castellini Preserve" Hillside Trust parcel) but not
+  directly confirmed for Phil's primary residence — listing both
+  conservatively in verifying_signals.cities.
+
+  Walton, KY in verifying_signals.cities/states for Merchants Cold Storage
+  employer-address filings. The Cincinnati metro spans the OH/KY border,
+  so filings may show either.
+
+  DOPPELGANGER WATCH: "Phil Castellini" is moderately uncommon. Pre-emptive
+  negative_signals.employers (financial-advisor doppelganger employers
+  added to Bob's YAML in May 2022 calibration: UBS PAINE WEBBER, Sena
+  Weller Rohs & Williams, Wells Fargo Advisors). These may or may not
+  apply to Phil; will be calibrated after first ingestion.
+
+  SPOUSE FLAG: Britt Castellini is publicly documented as politically
+  active (co-hosted Oct 2022 KY-04 Democratic fundraiser per research).
+  She is NOT added as related_entity here per CLAUDE.md §1.7 — orchestrator-
+  level decision needed before adding as `castellini-britt` slug.
+
+  NEEDS-CONFIRMATION: Phil's birth date, children's names, sibling names,
+  exact Castellini Group officer title, specific Hyde Park / Indian Hill
+  residence.
+
+change_log:
+  - date: 2026-05-23
+    change: |
+      Created during Phase 2 owner-roster-completion (post-special-case
+      batch). Confirmed current MLB control person of Reds per Fox19 +
+      MLB.com + Cincinnati Business Courier coverage of the 2026-02-12
+      transfer from father Bob. tenure_start_date = 2026-02-12 (matches
+      castellini-bob tenure_end_date). Strong_signals = Merchants Cold
+      Storage (uniquely his 1993-present role) + Castellini Group +
+      Castellini Company. Pre-emptive negative_signals mirroring Bob's
+      financial-advisor doppelganger blocks. Spouse Britt flagged for
+      future scope decision (politically active per Tier 2).
+    by: "claude-code-research (orchestrated by alex)"
+    references:
+      - "/tmp/castellini-phil-research.md (session-local research file)"
+
+audit:
+  created: 2026-05-23
+  last_ingestion: null
+  last_signal_review: 2026-05-23
