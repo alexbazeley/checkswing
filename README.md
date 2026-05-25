@@ -55,21 +55,27 @@ See `CHARTER.md` for phase definitions and exit criteria.
 
 ## Deployment
 
-The public dashboard ships as a static site on **Cloudflare Pages**.
+The public dashboard ships as a static site on **Cloudflare Pages**, using their direct Git integration.
 
-**One-time setup** (already done; documented for reference):
-1. Create a Cloudflare Pages project named `checkswing` in **Direct Upload** mode (no build on Cloudflare's side — GitHub Actions does the build).
-2. Add these to **GitHub Secrets**:
-   - `CLOUDFLARE_API_TOKEN` — account-scoped, **Pages:Edit** permission only.
-   - `CLOUDFLARE_ACCOUNT_ID` — visible on the Cloudflare dashboard overview.
-   - `FEC_API_KEY` — for the weekly refresh job. **Never** in Cloudflare env.
-3. Optional: configure a custom domain in Cloudflare Pages dashboard.
+**One-time Cloudflare setup:**
+1. Cloudflare dashboard → **Workers & Pages** → **Create** → **Pages** tab → **Connect to Git** → authorize the GitHub repo `alexbazeley/checkswing`.
+2. Configure the build:
+   - **Production branch:** `main`
+   - **Build command:** `python -m pip install -r requirements.txt && python mockup/build_data.py`
+   - **Build output directory:** `mockup`
+   - **Environment variables (Production):**
+     - `PYTHON_VERSION` = `3.11` (Cloudflare's default Python is older; pin to match the codebase)
+3. Optional: configure a custom domain in the Pages project settings.
+4. Save & deploy — Cloudflare will run the build on every push to `main`.
+
+**GitHub Secrets** (one only, for the weekly refresh):
+   - `FEC_API_KEY` — for `.github/workflows/refresh.yml`. **Never** appears in Cloudflare's environment.
 
 **How deploys happen:**
-- `.github/workflows/deploy.yml` runs on every push to `main` that touches `mockup/**`, `data/master.db`, `owners/**`, or `catalog/**`. It builds `mockup/data.json` from the committed `data/master.db`, runs a secret-leak guard (grep for `FEC_API_KEY` / 40-char hex), and uploads `mockup/` to Cloudflare Pages.
+- Cloudflare watches `main` for any push. On push, it runs the build command above (`pip install` + `build_data.py`), then deploys the contents of `mockup/` to the Pages project.
 - `mockup/_headers` sets CSP (allows Google Fonts + inline JS/CSS), cache controls (5min for `data.json`, immutable for `assets/*`), and `X-Frame-Options: DENY`.
 
-**Why `data/master.db` is committed:** it's the project's source of truth for the dashboard. `mockup/data.json` is regenerated at every Cloudflare build, so committing it would just thrash the diff. Raw FEC payloads (`data/raw/`) stay out of git — they're large and recoverable via re-ingestion if ever needed.
+**Why `data/master.db` is committed:** it's the project's source of truth for the dashboard. `mockup/data.json` is regenerated at every Cloudflare build from `master.db`, so committing it would just thrash the diff. Raw FEC payloads (`data/raw/`) stay out of git — they're large and recoverable via re-ingestion if ever needed.
 
 ## Refresh cadence
 
