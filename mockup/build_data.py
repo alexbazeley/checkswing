@@ -36,17 +36,26 @@ from scripts.dollars import (  # noqa: E402
 from scripts.parse_provenance import parse_provenance_file  # noqa: E402
 
 
-def filing_pdf_url(filing_id) -> str | None:
+def filing_page_url(filing_id) -> str | None:
     """
-    FEC publishes each filing's full PDF at https://fecfile.fec.gov/pdf/<id>.pdf.
-    The older docquery.fec.gov/pdf/<shard>/... path is gated (403) for these.
+    Public FEC filings detail page for this filing. Returns the modern
+    fec.gov data-portal URL, which always renders without auth.
+
+    Why not link the raw PDF? The canonical PDF lives at
+    docquery.fec.gov/pdf/<shard>/<image_number>/<image_number>.pdf where shard
+    is the last 3 digits of the FILING's image_number (not the file_number,
+    not a transaction's image_number — the filing record's own image_number,
+    which we'd have to fetch from /v1/filings/?file_number=<id>). That's a
+    pending data-enrichment job; in the meantime this URL is the closest
+    publicly-reachable surface to "the filing" the donation came from. The
+    fec.gov page has its own link to the FEC-hosted PDF.
     """
     if not filing_id:
         return None
     fid = str(filing_id).strip()
     if not fid.isdigit():
         return None
-    return f"https://fecfile.fec.gov/pdf/{fid}.pdf"
+    return f"https://www.fec.gov/data/filings/?file_number={fid}"
 
 
 def load_raw_payload_index(repo_root: Path, slugs: set[str]) -> dict[str, dict]:
@@ -272,7 +281,7 @@ def main() -> None:
                 "receipt_type": extra.get("receipt_type_full"),
                 "committee_type": extra.get("committee_type"),
                 "recipient_type": committee_type_label(extra.get("committee_type")),
-                "filing_pdf_url": filing_pdf_url(d["filing_id"]),
+                "filing_page_url": filing_page_url(d["filing_id"]),
             }
         )
 

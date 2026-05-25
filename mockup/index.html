@@ -5024,12 +5024,12 @@ function openDrawer(id) {
               <div class="drawer-source-sub">Image link not available in this payload</div>
             </div>
           </div>`}
-        ${d.filing_pdf_url ? `
-          <a class="drawer-source-link" href="${d.filing_pdf_url}" target="_blank" rel="noopener">
+        ${d.filing_page_url ? `
+          <a class="drawer-source-link" href="${d.filing_page_url}" target="_blank" rel="noopener">
             <span class="drawer-source-icon">📑</span>
             <div>
-              <div class="drawer-source-title">Full filing PDF</div>
-              <div class="drawer-source-sub">All transactions in filing ${escapeHtml(d.filing_id || "")}</div>
+              <div class="drawer-source-title">Filing on FEC.gov</div>
+              <div class="drawer-source-sub">Full filing record · #${escapeHtml(d.filing_id || "")}</div>
             </div>
           </a>` : ""}
         ${fecLink ? `

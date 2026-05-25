@@ -1935,3 +1935,23 @@ The previous weekly refresh ran 35 active owners sequentially in a single GHA jo
 - A new `consolidate` job runs after the matrix: downloads each bucket's `master.db` + YAML + log artifacts, runs `scripts/merge_buckets.py` (per-slug DB row replace from the disjoint bucket DBs) and `scripts/finalize_matrix.py` (YAML adoption + append-only log concat against the pre-refresh snapshot), rebuilds `mockup/data.json` once, and commits.
 - `scripts/fetch_fec.py:MIN_REQUEST_INTERVAL_S` bumped from 1.2 → 4.0 so 4 parallel workers sharing one FEC API key stay under the 1,000 req/hour cap.
 - New CLI flag `--bucket N/M` in `scripts/cli.py refresh` is the workflow's entry point; mutually exclusive with `--only`. When `--bucket` is passed, `mockup/data.json` regeneration is skipped — the consolidate job does it once after merge.
+
+### 2026-05-25 — NOTE — correction to earlier Bug A fix (filing link)
+
+The earlier Bug A fix changed `filing_pdf_url` to `https://fecfile.fec.gov/pdf/<file_number>.pdf`. Browser testing confirmed the URL **redirects to the FECfile+ login wall** — my pre-commit verification used `curl -I`, which returned 200 because the SPA shell at `fecfile.fec.gov` answers any path; the JS in the body then routes unauthenticated visitors to `/login`. The verification was inadequate.
+
+#### What's actually true
+
+- `https://fecfile.fec.gov/pdf/<id>.pdf` is the FECfile+ filer-portal SPA, not a public PDF host.
+- The canonical public PDF lives at `https://docquery.fec.gov/pdf/<last_3_digits_of_image_number>/<image_number>/<image_number>.pdf` — shard and path are keyed on the **filing's `image_number`** (18 digits), not the `file_number` (7 digits) we store. Verified one returns a real `application/pdf`.
+- The filing's `image_number` is not in our DB; it's returned by FEC's `/v1/filings/?file_number=<id>` endpoint. Populating it for all 2,218 distinct `filing_id`s in the archive is a follow-up enrichment job (~2.5h at the new 4s throttle).
+
+#### Correction applied
+
+- `mockup/build_data.py:filing_pdf_url` renamed → `filing_page_url`, now returns `https://www.fec.gov/data/filings/?file_number=<id>`. That's a public HTML page on FEC.gov with the filing's record and a link to FEC's own PDF when available. Verified 200 across 5 filings.
+- Field on each donation in `mockup/data.json` renamed `filing_pdf_url` → `filing_page_url`.
+- `mockup/index.html` drawer-source label changed from "Full filing PDF" → "Filing on FEC.gov"; subtitle changed from "All transactions in filing X" → "Full filing record · #X".
+
+#### Follow-up
+
+Direct-PDF support is queued behind a data-enrichment task: extend the schema with a per-filing `image_number` (or a new `filings` table), backfill via `/v1/filings/`, and switch the URL builder to the docquery `/pdf/<shard>/...` pattern. Will be its own PR.
