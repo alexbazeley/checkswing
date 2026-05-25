@@ -141,8 +141,15 @@ change_log:
     by: "claude-code-research (orchestrated by alex)"
     references:
       - "/tmp/feliciano-jose-research.md (session-local research file; covered both Seidler and Feliciano)"
+  - date: 2026-05-25
+    change: |
+      Tier-C audit pass — no signal changes applied. 1 CONFIRMED / 0
+      PROBABLE / 0 UNCERTAIN-open. Owner has minimal FEC footprint (only
+      1 record post-Feb-2025 control-person transition); signal block is
+      adequate for current volume. Signal review date advanced.
+    by: "claude-code-session (PR 4 Tier C light pass)"
 
 audit:
   created: 2026-05-23
   last_ingestion: null
-  last_signal_review: 2026-05-23
+  last_signal_review: 2026-05-25

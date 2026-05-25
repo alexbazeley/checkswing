@@ -65,7 +65,14 @@ strong_signals:
     - "Merchants Cold Storage"        # Phil has been President since 1993; uniquely his (Walton KY)
     - "Castellini Group"               # family-named entity Phil chairs
     - "Castellini Company"
-  zip_codes: []
+  zip_codes:
+    # 45202 = Cincinnati downtown / Castellini Management LP HQ cluster.
+    # Added 2026-05-25 Tier-C calibration. Strict name_variants ("Phillip
+    # J. Mr." with distinct first name from Bob "Robert H") protects
+    # against intra-family false-positive. 6 PROBABLE records at 45202
+    # all "CASTELLINI, PHILLIP J. MR." with empty employer promote via
+    # strong-zip.
+    - "45202"
 
 # Calibration round 1 for `castellini-bob` (2026-05-22) added three financial-
 # advisor doppelganger employers as negative_signals. The same pattern may
@@ -163,8 +170,22 @@ change_log:
     by: "claude-code-research (orchestrated by alex)"
     references:
       - "/tmp/castellini-phil-research.md (session-local research file)"
+  - date: 2026-05-25
+    change: |
+      Tier-C calibration pass — added strong_signals.zip_codes: ["45202"]
+      (Cincinnati downtown / Castellini Management LP HQ).
+
+      Audit: 6 PROBABLE records all "CASTELLINI, PHILLIP J. MR." at 45202
+      / 452022728 (ZIP+4) Cincinnati with empty / INFORMATION REQUESTED
+      employer. Phillip J. first name firewall protects against false-
+      positive on Bob (Robert H) and Bob Jr (Bob S. Mr. Jr) at the same
+      family-business ZIP.
+
+      Pre-cal: 41 CONFIRMED / 6 PROBABLE / 0 UNCERTAIN-open. P/C 0.15.
+      Predicted post-cal: ~47 CONFIRMED / ~0 PROBABLE. P/C ~0.0.
+    by: "claude-code-session (PR 4 Tier C light pass)"
 
 audit:
   created: 2026-05-23
   last_ingestion: null
-  last_signal_review: 2026-05-23
+  last_signal_review: 2026-05-25

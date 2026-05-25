@@ -198,8 +198,17 @@ change_log:
     references:
       - "data/raw/cohen-steven/ — 77 payloads from run 3ea399e7"
       - "data/snapshots/2026-05-22T20-51-24Z__3ea399e7.db"
+  - date: 2026-05-25
+    change: |
+      Tier-C audit pass-through — no additional changes beyond the
+      2026-05-22 calibration round 1 (which was the project's worked-
+      pilot precedent for negative_signals and strong-zip patterns).
+      Current state: 126 CONFIRMED / 10 PROBABLE / 0 UNCERTAIN-open.
+      P/C 0.08 — well-calibrated. The 10 PROBABLE are legitimate one-
+      signal residual. Signal review date advanced.
+    by: "claude-code-session (PR 4 Tier C light pass)"
 
 audit:
   created: 2026-05-22
   last_ingestion: 2026-05-22
-  last_signal_review: 2026-05-22
+  last_signal_review: 2026-05-25

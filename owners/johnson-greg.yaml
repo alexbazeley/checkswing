@@ -47,6 +47,12 @@ verifying_signals:
     - "Franklin Templeton Investments"
     - "San Francisco Giants"
     - "San Francisco Baseball Associates"
+    # Added 2026-05-25 Tier-C calibration — observed FEC clerk variants:
+    # "FRANKLIN/TEMPLETON USA SE" / "FRANKLIN/TEMPLETON DISTRI" (slash
+    # separator) and "FRANKLIN RESOURCEWS INC." (typo of Resources with
+    # extra W) in 7 PROBABLE records at San Mateo / Hillsborough.
+    - "Franklin/Templeton"
+    - "Franklin Resourcews"
   occupations:
     - "executive chairman"
     - "chairman"
@@ -143,8 +149,25 @@ change_log:
     by: "claude-code-research (orchestrated by alex)"
     references:
       - "/tmp/johnson-greg-research.md (session-local research file)"
+  - date: 2026-05-25
+    change: |
+      Tier-C calibration pass — added "Franklin/Templeton" and "Franklin
+      Resourcews" to verifying_signals.employers. Both observed in 7
+      PROBABLE records at San Mateo / Hillsborough as FEC clerk variants
+      of his Franklin Resources / Franklin Templeton employer:
+      "FRANKLIN/TEMPLETON USA SE" / "FRANKLIN/TEMPLETON DISTRI" use slash
+      separator instead of space; "FRANKLIN RESOURCEWS INC." has extra-W
+      typo.
+
+      Name-firewall (Gregory E middle initial) protects against family-
+      collision with father Charles, sister Jennifer, uncle Rupert at
+      same firm.
+
+      Pre-cal: 98 CONFIRMED / 9 PROBABLE / 0 UNCERTAIN-open. P/C 0.09.
+      Predicted post-cal: ~105 CONFIRMED / ~2 PROBABLE. P/C ~0.02.
+    by: "claude-code-session (PR 4 Tier C light pass)"
 
 audit:
   created: 2026-05-23
   last_ingestion: null
-  last_signal_review: 2026-05-23
+  last_signal_review: 2026-05-25

@@ -1779,3 +1779,107 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **uncertain_count**: `0`
 - **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-40-12Z__9531c521.db`
 - **notes**: skipped(no-name-match)=64 · min_date=default (no prior ingestion) · FROM-RAW
+
+### 2026-05-25 — DELETION — reclassify attanasio-mark
+
+- **entity_slug**: `attanasio-mark`
+- **reason**: Tier-C calibration
+- **rows_deleted_donations**: `30`
+- **rows_deleted_review_queue**: `28` (of which 0 had resolutions)
+- **include_related**: `False`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-51-33Z__pre-reclassify-attanasio-mark.db`
+- **note**: Rows are recoverable from the snapshot above and from data/raw/attanasio-mark/ payloads. Re-classification follows in the next INGESTION entry.
+
+### 2026-05-25 — INGESTION
+
+- **run_id**: `c5743e13`
+- **entity_slug**: `attanasio-mark`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2025-12-31`
+- **name_variants_queried**: `["Mark Attanasio", "Mark L Attanasio", "Mark L. Attanasio", "Attanasio, Mark", "Attanasio, Mark L", "Attanasio, Mark L."]`
+- **api_calls_made**: `0`
+- **records_fetched**: `58`
+- **confirmed_count**: `28`
+- **probable_count**: `2`
+- **uncertain_count**: `28`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-51-33Z__c5743e13.db`
+- **notes**: skipped(no-name-match)=0 · min_date=default (no prior ingestion) · FROM-RAW
+
+### 2026-05-25 — DELETION — reclassify dolan-paul
+
+- **entity_slug**: `dolan-paul`
+- **reason**: Tier-C calibration
+- **rows_deleted_donations**: `67`
+- **rows_deleted_review_queue**: `0` (of which 0 had resolutions)
+- **include_related**: `False`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-51-33Z__pre-reclassify-dolan-paul.db`
+- **note**: Rows are recoverable from the snapshot above and from data/raw/dolan-paul/ payloads. Re-classification follows in the next INGESTION entry.
+
+### 2026-05-25 — INGESTION
+
+- **run_id**: `925776a3`
+- **entity_slug**: `dolan-paul`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2025-05-19`
+- **name_variants_queried**: `["Paul J Dolan", "Paul J. Dolan", "Paul Dolan", "Paul Joseph Dolan", "Dolan, Paul", "Dolan, Paul J", "Dolan, Paul J."]`
+- **api_calls_made**: `0`
+- **records_fetched**: `68`
+- **confirmed_count**: `67`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-51-33Z__925776a3.db`
+- **notes**: skipped(no-name-match)=1 · min_date=default (no prior ingestion) · FROM-RAW
+
+### 2026-05-25 — DELETION — reclassify johnson-greg
+
+- **entity_slug**: `johnson-greg`
+- **reason**: Tier-C calibration
+- **rows_deleted_donations**: `107`
+- **rows_deleted_review_queue**: `2328` (of which 0 had resolutions)
+- **include_related**: `False`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-51-34Z__pre-reclassify-johnson-greg.db`
+- **note**: Rows are recoverable from the snapshot above and from data/raw/johnson-greg/ payloads. Re-classification follows in the next INGESTION entry.
+
+### 2026-05-25 — INGESTION
+
+- **run_id**: `01d82f45`
+- **entity_slug**: `johnson-greg`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2026-04-17`
+- **name_variants_queried**: `["Gregory E Johnson", "Gregory E. Johnson", "Gregory Eugene Johnson", "Greg E Johnson", "Greg E. Johnson", "Greg Johnson", "Johnson, Gregory", "Johnson, Gregory E", "Johnson, Gregory E.", "Johnson, Greg"]`
+- **api_calls_made**: `0`
+- **records_fetched**: `2497`
+- **confirmed_count**: `104`
+- **probable_count**: `3`
+- **uncertain_count**: `2328`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-51-34Z__01d82f45.db`
+- **notes**: skipped(no-name-match)=62 · min_date=default (no prior ingestion) · FROM-RAW
+
+### 2026-05-25 — DELETION — reclassify castellini-phil
+
+- **entity_slug**: `castellini-phil`
+- **reason**: Tier-C calibration
+- **rows_deleted_donations**: `47`
+- **rows_deleted_review_queue**: `0` (of which 0 had resolutions)
+- **include_related**: `False`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-51-34Z__pre-reclassify-castellini-phil.db`
+- **note**: Rows are recoverable from the snapshot above and from data/raw/castellini-phil/ payloads. Re-classification follows in the next INGESTION entry.
+
+### 2026-05-25 — INGESTION
+
+- **run_id**: `4dee96e5`
+- **entity_slug**: `castellini-phil`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2020-10-20`
+- **name_variants_queried**: `["Phillip J Castellini", "Phillip J. Castellini", "Phillip Castellini", "Phil Castellini", "Phil J. Castellini", "Phil J Castellini", "Castellini, Phillip", "Castellini, Phillip J", "Castellini, Phillip J.", "Castellini, Phil"]`
+- **api_calls_made**: `0`
+- **records_fetched**: `49`
+- **confirmed_count**: `47`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-51-34Z__4dee96e5.db`
+- **notes**: skipped(no-name-match)=2 · min_date=default (no prior ingestion) · FROM-RAW

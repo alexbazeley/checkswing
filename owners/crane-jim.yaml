@@ -150,8 +150,18 @@ change_log:
       PROBABLE on city_state alone. The addition promotes them to CONFIRMED.
       Approved by alex.
     by: "claude-code-session (calibration round 1)"
+  - date: 2026-05-25
+    change: |
+      Tier-C audit pass — no signal changes applied. 34 CONFIRMED / 2
+      PROBABLE / 0 UNCERTAIN-open. P/C 0.06 — already well-calibrated.
+      The 2 PROBABLE records are "CRANE, JAMES R" at Houston with empty
+      employer (1 record) and "EAGLE AIR FREIGHT USA" (1 record, not in
+      Tier 2 as a Crane vehicle — possibly subsidiary of Crane Worldwide
+      Logistics but conservatively left PROBABLE). Signal review date
+      advanced.
+    by: "claude-code-session (PR 4 Tier C light pass)"
 
 audit:
   created: 2026-05-22
   last_ingestion: null
-  last_signal_review: 2026-05-22
+  last_signal_review: 2026-05-25

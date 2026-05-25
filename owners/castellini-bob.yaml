@@ -168,8 +168,33 @@ change_log:
 
       Approved by alex.
     by: "claude-code-session (calibration round 1)"
+  - date: 2026-05-25
+    change: |
+      Tier-B audit pass — no signal changes applied. P/C 0.08 is already
+      well-calibrated; 34 PROBABLE records split between:
+        - 14 empty-employer Bob Sr records (would CONFIRM with strong-zip
+          45202 but 45202 is downtown Cincinnati office cluster with
+          Castellini Management LP HQ, risking Bob Castellini Jr ("Bob S.
+          Mr. Jr") false-positive)
+        - 11 Wells Fargo / UBS Paine Webber records that bypass existing
+          negative_signals because the haystack lacks the "Advisors"
+          suffix or has dots that change normalization
+        - 9 other generic-employer records (CAPITAL CO., SENTINEL, CHAIRMAN
+          & CEO occupation-misuse, etc.)
+
+      Adding 45202 to strong-zip would over-confirm Bob Jr's records. Bob
+      Jr ("CASTELLINI, BOB S. MR. JR") suffix detection is inconsistent —
+      some records correctly UNCERTAIN via existing negative_signals, but
+      Wells Fargo (no Advisors suffix) records bypass the negative-employer
+      check. Resolving cleanly requires a proper related_entities split
+      with Bob Jr as a separate slug (CLAUDE.md §1.7 — orchestrator-only
+      promotion).
+
+      Leaving 34 PROBABLE as honest one-signal classification. Signal
+      review date advanced.
+    by: "claude-code-session (PR 4 Tier B audit pass)"
 
 audit:
   created: 2026-05-22
   last_ingestion: null
-  last_signal_review: 2026-05-22
+  last_signal_review: 2026-05-25

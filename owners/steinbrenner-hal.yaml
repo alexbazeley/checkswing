@@ -158,8 +158,20 @@ change_log:
     by: "claude-code-research (orchestrated by alex)"
     references:
       - "/tmp/steinbrenner-hal-research.md (session-local research file)"
+  - date: 2026-05-25
+    change: |
+      Tier-C audit pass — no signal changes applied. 13 CONFIRMED / 2
+      PROBABLE / 0 UNCERTAIN-open. P/C 0.15. The 2 PROBABLE records are
+      "STEINBRENNER, HAROLD Z MR." with REQUESTED employer and
+      "STEINBRENNER, HAROLD" with TRANSMARINE MANAGEMENT employer, both
+      at Tampa FL. Transmarine Management is not in Tier 2 sources as a
+      documented Hal employer (Yankee Global Enterprises / Yankees /
+      Steinbrenner Family Foundation are his documented vehicles).
+      Conservatively left PROBABLE pending Tier 2 research. Signal review
+      date advanced.
+    by: "claude-code-session (PR 4 Tier C light pass)"
 
 audit:
   created: 2026-05-22
   last_ingestion: null
-  last_signal_review: 2026-05-22
+  last_signal_review: 2026-05-25

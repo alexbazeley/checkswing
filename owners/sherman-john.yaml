@@ -159,8 +159,19 @@ change_log:
     by: "claude-code-research (orchestrated by alex)"
     references:
       - "/tmp/sherman-john-research.md (session-local research file)"
+  - date: 2026-05-25
+    change: |
+      Tier-C audit pass — no signal changes applied. 34 CONFIRMED / 6
+      PROBABLE / 0 UNCERTAIN-open. P/C 0.18. The 6 PROBABLE records are
+      "SHERMAN, JOHN" / "SHERMAN, JOHN J" / "SHERMAN, JOHN J. MR." at
+      Kansas City 64113. 2 records show employer "MILACRON INC." (Ohio
+      machine-tools maker — could be a doppelgänger or could be Sherman
+      filing oddly), the rest empty / INFORMATION REQUESTED. Milacron is
+      not in Tier 2 as a documented Sherman employer; conservatively left
+      PROBABLE pending Tier 2 research. Signal review date advanced.
+    by: "claude-code-session (PR 4 Tier C light pass)"
 
 audit:
   created: 2026-05-23
   last_ingestion: null
-  last_signal_review: 2026-05-23
+  last_signal_review: 2026-05-25

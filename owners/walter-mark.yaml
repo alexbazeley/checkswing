@@ -115,8 +115,15 @@ change_log:
     by: "claude-code-research (orchestrated by alex)"
     references:
       - "/tmp/walter-mark-research.md (session-local)"
+  - date: 2026-05-25
+    change: |
+      Tier-C audit pass — no signal changes applied. 20 CONFIRMED / 0
+      PROBABLE / 0 UNCERTAIN-open. Signal block calibrated correctly via
+      TWG Global / TWG Global Holdings strong-signal employers. Signal
+      review date advanced.
+    by: "claude-code-session (PR 4 Tier C light pass)"
 
 audit:
   created: 2026-05-22
   last_ingestion: null
-  last_signal_review: 2026-05-22
+  last_signal_review: 2026-05-25

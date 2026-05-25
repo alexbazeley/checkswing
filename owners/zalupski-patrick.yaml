@@ -133,8 +133,15 @@ change_log:
     by: "claude-code-research (orchestrated by alex)"
     references:
       - "/tmp/zalupski-patrick-research.md (session-local research file)"
+  - date: 2026-05-25
+    change: |
+      Tier-C audit pass — no signal changes applied. 15 CONFIRMED / 0
+      PROBABLE / 0 UNCERTAIN-open. Signal block calibrated correctly via
+      Dream Finders Homes / DFH / DF Capital strong-signal employers.
+      Signal review date advanced.
+    by: "claude-code-session (PR 4 Tier C light pass)"
 
 audit:
   created: 2026-05-23
   last_ingestion: null
-  last_signal_review: 2026-05-23
+  last_signal_review: 2026-05-25

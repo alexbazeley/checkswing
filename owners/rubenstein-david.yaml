@@ -216,8 +216,16 @@ change_log:
     by: "claude-code-session (PR 4 Tier A, approved by alex)"
     references:
       - "data/master.db pre-calibration: 2 CONFIRMED / 6 PROBABLE / 23 UNCERTAIN-open"
+  - date: 2026-05-25
+    change: |
+      Tier-B / Tier-C audit pass-through — no additional changes beyond
+      the 2026-05-24 Tier-A entry above. P/C 2.5 (2 CONFIRMED / 5
+      PROBABLE) reflects the small sample size for this recently-added
+      owner (Phase 2 batch 1; tenure since 2024-03-27). Signals are
+      calibrated; calibration will reassess once volume increases.
+    by: "claude-code-session (PR 4 Tier C light pass)"
 
 audit:
   created: 2026-05-22
   last_ingestion: null
-  last_signal_review: 2026-05-22
+  last_signal_review: 2026-05-25

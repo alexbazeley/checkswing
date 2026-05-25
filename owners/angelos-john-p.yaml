@@ -169,8 +169,15 @@ change_log:
     by: "claude-code-research (orchestrated by alex)"
     references:
       - "/tmp/angelos-john-p-research.md (session-local research file)"
+  - date: 2026-05-25
+    change: |
+      Tier-C audit pass — no signal changes applied. Owner has 0 records
+      in DB (not yet ingested; status pilot with tenure_end_date
+      2024-08-01). Signal block is pre-configured for eventual historical
+      ingestion. Signal review date advanced.
+    by: "claude-code-session (PR 4 Tier C light pass)"
 
 audit:
   created: 2026-05-22
   last_ingestion: null
-  last_signal_review: 2026-05-22
+  last_signal_review: 2026-05-25

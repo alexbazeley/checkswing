@@ -139,8 +139,16 @@ change_log:
     by: "claude-code-research (orchestrated by alex)"
     references:
       - "/tmp/ilitch-chris-research.md (session-local research file)"
+  - date: 2026-05-25
+    change: |
+      Tier-C audit pass — no signal changes applied. 12 CONFIRMED / 0
+      PROBABLE / 0 UNCERTAIN-open. Signal block calibrated correctly at
+      creation; the 12 CONFIRMED Chris Ilitch records match cleanly via
+      his Ilitch Holdings / Ilitch Sports + Entertainment strong-signal
+      employers. Signal review date advanced.
+    by: "claude-code-session (PR 4 Tier C light pass)"
 
 audit:
   created: 2026-05-23
   last_ingestion: null
-  last_signal_review: 2026-05-23
+  last_signal_review: 2026-05-25

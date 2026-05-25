@@ -40,6 +40,12 @@ verifying_signals:
     - "Crescent Capital Corporation"
     - "Trust Company of the West"
     - "TCW"
+    # Added 2026-05-25 Tier-C calibration — observed FEC clerk abbreviation
+    # of "Trust Company of the West" as "TRUST CO. OF THE WEST" / "TRUST
+    # CO OF THE WEST" in PROBABLE records. The full-word "Company" form
+    # didn't substring-match the abbreviated "Co" form.
+    - "Trust Co. of the West"
+    - "Trust Co of the West"
     - "Milwaukee Brewers"
     - "Self-Employed"
     - "Self Employed"
@@ -137,8 +143,20 @@ change_log:
     by: "claude-code-research (orchestrated by alex)"
     references:
       - "/tmp/attanasio-mark-research.md (session-local research file)"
+  - date: 2026-05-25
+    change: |
+      Tier-C calibration pass — added "Trust Co. of the West" / "Trust Co
+      of the West" abbreviation variants to verifying_signals.employers.
+      Observed in 2 PROBABLE records ("TRUST CO. OF THE WEST" and "TRUST
+      CO OF THE WEST") at 90025 Los Angeles. The full-form "Trust Company
+      of the West" didn't substring-match the abbreviated "Co" forms.
+
+      Pre-cal: 26 CONFIRMED / 4 PROBABLE / 0 UNCERTAIN-open. P/C 0.15.
+      Predicted post-cal: ~28 CONFIRMED / ~2 PROBABLE. (The 2 empty-
+      employer records at 90025 stay PROBABLE.)
+    by: "claude-code-session (PR 4 Tier C light pass)"
 
 audit:
   created: 2026-05-22
   last_ingestion: null
-  last_signal_review: 2026-05-22
+  last_signal_review: 2026-05-25

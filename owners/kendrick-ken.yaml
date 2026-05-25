@@ -156,8 +156,34 @@ change_log:
     by: "claude-code-research (orchestrated by alex)"
     references:
       - "/tmp/kendrick-ken-research.md (session-local research file)"
+  - date: 2026-05-25
+    change: |
+      Tier-B audit pass — no signal changes applied. P/C 0.09 is already
+      well-calibrated; 60 PROBABLE records all at Paradise Valley 85253
+      ZIPs but split between:
+        - Ken Sr filings with title-as-employer (MANAGING GENERAL PARTNER:
+          11, MANAGING PARTNER: 6, OWNER: 3, MANAGING OWNER: 1) and
+          empty-employer (14 records) — clearly him
+        - Likely Randy Kendrick (his wife) filings with HOMEMAKER (3) /
+          HOUSEWIFE (1) employer at the same household ZIP — flagged in
+          notes as future related_entity
+        - Earl G. Kendrick III / Jr (his son) filings: "EARL G. JR." +
+          "EARL G. MR. JR." records (12 records, some are Ken Sr legacy
+          filings using historic JR designation, some are likely the son)
+        - Other suspicious doppelgängers: ATTORNEY (1), DIAMOND JACKS (2)
+          — different individuals at Paradise Valley
+
+      Adding 85253 to strong-zip would over-confirm Randy + Earl III. The
+      cleaner resolution is to create separate slugs for Randy (well-
+      documented major donor) and Earl III, but per CLAUDE.md §5 that
+      requires orchestrator approval and Tier 2 source population —
+      out of scope for this Tier-B pass.
+
+      Leaving 60 PROBABLE as honest one-signal classification. Signal
+      review date advanced.
+    by: "claude-code-session (PR 4 Tier B audit pass)"
 
 audit:
   created: 2026-05-22
   last_ingestion: null
-  last_signal_review: 2026-05-22
+  last_signal_review: 2026-05-25

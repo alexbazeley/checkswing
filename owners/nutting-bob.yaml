@@ -129,8 +129,19 @@ change_log:
     by: "claude-code-research (orchestrated by alex)"
     references:
       - "/tmp/nutting-bob-research.md (session-local)"
+  - date: 2026-05-25
+    change: |
+      Tier-C audit pass — no signal changes applied. 23 CONFIRMED / 1
+      PROBABLE / 0 UNCERTAIN-open. P/C 0.04. The 1 PROBABLE record is
+      "NUTTING, ROBERT MR." at Wheeling WV 26003 with empty employer.
+      Likely him (Wheeling is Ogden Newspapers HQ + his documented base)
+      but only city signal — honestly PROBABLE. Family-collision safety
+      (brother Bill / niece Cameron at same Ogden Newspapers in
+      Wheeling) is non-trivial — name_variants firewall holds (Bob =
+      Robert specifically). Signal review date advanced.
+    by: "claude-code-session (PR 4 Tier C light pass)"
 
 audit:
   created: 2026-05-22
   last_ingestion: null
-  last_signal_review: 2026-05-22
+  last_signal_review: 2026-05-25

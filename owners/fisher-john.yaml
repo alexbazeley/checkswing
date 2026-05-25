@@ -232,8 +232,18 @@ change_log:
     by: "claude-code-session (PR 4 Tier A, approved by alex)"
     references:
       - "data/master.db pre-calibration: 147 CONFIRMED / 246 PROBABLE / 1267 UNCERTAIN-open"
+  - date: 2026-05-25
+    change: |
+      Tier-B / Tier-C audit pass-through — no additional changes beyond
+      the 2026-05-24 Tier-A entry above. Current state: 138 CONFIRMED /
+      43 PROBABLE / 1479 UNCERTAIN-open. P/C 0.31. The 43 PROBABLE are
+      legitimate one-signal residual after the four doppelgänger
+      negative_signal additions; further calibration would require
+      individual record-level adjudication (not scalable). Signal review
+      date advanced.
+    by: "claude-code-session (PR 4 Tier C light pass)"
 
 audit:
   created: 2026-05-22
   last_ingestion: null
-  last_signal_review: 2026-05-22
+  last_signal_review: 2026-05-25

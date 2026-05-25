@@ -169,8 +169,17 @@ change_log:
     by: "claude-code-research (orchestrated by alex)"
     references:
       - "/tmp/feliciano-jose-research.md (session-local research file)"
+  - date: 2026-05-25
+    change: |
+      Tier-C audit pass — no signal changes applied. 23 CONFIRMED / 1
+      PROBABLE / 0 UNCERTAIN-open. P/C 0.04. The 1 PROBABLE record is
+      "FELICIANO, JOSE E" at Santa Monica 90405 with empty employer.
+      Could be Jose Feliciano (the Padres-incoming owner) or could be
+      the famous singer doppelgänger (Weston CT-based though). Left as
+      PROBABLE pending Tier 2 confirmation. Signal review date advanced.
+    by: "claude-code-session (PR 4 Tier C light pass)"
 
 audit:
   created: 2026-05-23
   last_ingestion: null
-  last_signal_review: 2026-05-23
+  last_signal_review: 2026-05-25
