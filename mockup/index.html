@@ -5,9 +5,29 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>CheckSwing — MLB owner federal political contributions</title>
 <meta name="description" content="Federal political contributions by MLB principal owners, 2000–present, sourced from FEC filings.">
-<meta property="og:title" content="CheckSwing">
+
+<!-- Favicons -->
+<link rel="icon" type="image/svg+xml" href="assets/checkswing-icon.svg">
+<link rel="icon" type="image/png" sizes="512x512" href="assets/checkswing-icon.png">
+<link rel="apple-touch-icon" href="assets/checkswing-icon.png">
+
+<!-- Open Graph -->
+<meta property="og:site_name" content="CheckSwing">
+<meta property="og:title" content="CheckSwing — MLB owner federal political contributions">
 <meta property="og:description" content="Federal political contributions by MLB principal owners, 2000–present, sourced from FEC filings.">
 <meta property="og:type" content="website">
+<meta property="og:url" content="https://checkswing.pages.dev/">
+<meta property="og:image" content="https://checkswing.pages.dev/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="CheckSwing — Where MLB's owners send their political money.">
+
+<!-- Twitter card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="CheckSwing — MLB owner federal political contributions">
+<meta name="twitter:description" content="Federal political contributions by MLB principal owners, 2000–present, sourced from FEC filings.">
+<meta name="twitter:image" content="https://checkswing.pages.dev/assets/og-image.png">
+<meta name="twitter:image:alt" content="CheckSwing — Where MLB's owners send their political money.">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -533,6 +553,19 @@ section.block:last-child { border-bottom: 0; }
 .timeline-wrap { padding: 18px 0 6px; }
 .timeline-svg { width: 100%; display: block; }
 
+/* On narrow viewports, alternating X-axis labels overlap. Hide the
+   "minor" labels (every other tick) — gridlines stay so the chart still
+   reads. The bare 4px dots scale below tap-target size; the
+   .timeline-tap overlays (24px) keep clicks usable. */
+@media (max-width: 700px) {
+  .timeline-xlabel-minor { display: none; }
+}
+/* In print, the interactive overlay is meaningless (and could trigger
+   strange hit-test behavior in some print-to-PDF chains). Hide it. */
+@media print {
+  .timeline-tap { display: none !important; }
+}
+
 /* Two-col */
 .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; }
 @media (max-width: 880px) { .two-col { grid-template-columns: 1fr; } }
@@ -1009,6 +1042,324 @@ section.block:last-child { border-bottom: 0; }
   font-family: var(--mono);
 }
 
+/* Copy-permalink button — visually a sibling of .drawer-source-link cards,
+   but a <button> so it doesn't get the external-link arrow and can show
+   "Copied ✓" state. */
+button.drawer-source-link {
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  width: 100%;
+}
+.drawer-source-link.copy-perma .drawer-source-title::after { content: ""; }
+.drawer-source-link.copy-perma.copied {
+  border-color: var(--ok-fg);
+  background: #ECF5EE;
+}
+.drawer-source-link.copy-perma.copied .drawer-source-title { color: var(--ok-fg); }
+.drawer-source-link.copy-perma.copied .drawer-source-icon { color: var(--ok-fg); }
+
+.drawer-not-found {
+  font-family: var(--sans); font-size: 14px; line-height: 1.5;
+  color: var(--ink-2); margin: 12px 0;
+}
+.drawer-not-found code {
+  font-family: var(--mono); font-size: 12px;
+  background: var(--bg-sunk); padding: 1px 6px; border-radius: 2px;
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   PIPELINE PAGE — tabbed chrome for /#/runs and /#/changelog
+   ══════════════════════════════════════════════════════════════════════ */
+.pipeline-tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid var(--rule);
+  margin-top: 24px;
+  padding: 0;
+}
+.pipeline-tabs a {
+  display: inline-block;
+  padding: 10px 16px;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-3);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color 80ms, border-color 80ms;
+}
+.pipeline-tabs a:hover { color: var(--ink); }
+.pipeline-tabs a.active {
+  color: var(--brand);
+  border-bottom-color: var(--brand);
+  font-weight: 600;
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   CHANGELOG (audit log)
+   ══════════════════════════════════════════════════════════════════════ */
+.changelog-filters {
+  display: flex; flex-direction: column; gap: 12px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--rule);
+}
+.changelog-type-row {
+  display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
+}
+.changelog-type-filter {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--sans); font-size: 12px; font-weight: 500;
+  padding: 4px 10px;
+  border: 1px solid var(--rule);
+  background: var(--bg-elev);
+  color: var(--ink-3);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: border-color 80ms, background 80ms, color 80ms;
+}
+.changelog-type-filter:hover { color: var(--ink); }
+.changelog-type-filter.on { color: var(--ink); border-color: var(--ink-2); background: var(--bg); }
+.changelog-type-filter .ct-count {
+  font-family: var(--mono); font-size: 11px; color: var(--ink-3);
+}
+.changelog-type-filter.on .ct-count { color: var(--ink-2); }
+.changelog-type-reset {
+  font-family: var(--sans); font-size: 12px;
+  padding: 4px 8px;
+  background: transparent; border: 0;
+  color: var(--accent); cursor: pointer;
+  margin-left: auto;
+}
+.changelog-type-reset:hover { text-decoration: underline; }
+.changelog-search-row {
+  display: flex; align-items: center; gap: 12px;
+}
+.changelog-search-row input {
+  flex: 1; max-width: 360px;
+  padding: 6px 10px;
+  font: inherit; font-size: 13px;
+  border: 1px solid var(--rule); border-radius: 3px;
+  background: var(--bg-elev); color: var(--ink);
+}
+.changelog-search-row input:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+
+.changelog-list {
+  display: flex; flex-direction: column; gap: 0;
+}
+.changelog-entry {
+  padding: 18px 0;
+  border-bottom: 1px solid var(--rule);
+}
+.changelog-entry:last-child { border-bottom: 0; }
+.changelog-entry-head {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+  margin-bottom: 8px;
+}
+.changelog-entry-date {
+  font-family: var(--mono); font-size: 12px; color: var(--ink-3);
+}
+.changelog-entry-subject {
+  font-family: var(--serif); font-size: 16px; font-weight: 600; color: var(--ink);
+}
+.changelog-entry-body {
+  font-family: var(--sans); font-size: 14px; line-height: 1.55; color: var(--ink-2);
+}
+.changelog-entry-body p { margin: 0 0 10px; }
+.changelog-entry-body p:last-child { margin-bottom: 0; }
+.changelog-entry-body ul { margin: 4px 0 10px; padding-left: 20px; }
+.changelog-entry-body li { margin: 2px 0; }
+.changelog-entry-body code {
+  font-family: var(--mono); font-size: 12px;
+  background: var(--bg-sunk); padding: 1px 5px; border-radius: 2px;
+  color: var(--ink);
+}
+.changelog-entry-body strong { color: var(--ink); font-weight: 600; }
+.changelog-entry-body h4 {
+  font-family: var(--serif); font-size: 14px; font-weight: 700;
+  color: var(--ink); margin: 16px 0 6px;
+  letter-spacing: 0.01em;
+}
+.changelog-entry-body h5 {
+  font-family: var(--sans); font-size: 12px; font-weight: 600;
+  color: var(--ink-2); margin: 12px 0 4px;
+  text-transform: uppercase; letter-spacing: 0.04em;
+}
+
+.changelog-type-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  font-family: var(--mono); font-size: 10px; font-weight: 500;
+  letter-spacing: 0.04em;
+  border-radius: 2px;
+  background: var(--bg-sunk);
+  color: var(--ink-2);
+  border: 1px solid var(--rule);
+  text-transform: uppercase;
+}
+.changelog-type-chip.ct-ingestion         { background: #E5F2EE; color: #1F5F4A; border-color: #BFE0D5; }
+.changelog-type-chip.ct-signal_change     { background: #FCEEDD; color: #884F18; border-color: #F0D0A5; }
+.changelog-type-chip.ct-status_change     { background: #FBE2E4; color: #8B1B2C; border-color: #F0B9BE; }
+.changelog-type-chip.ct-review_resolution { background: #DEE7F4; color: #1F4E89; border-color: #BFCDE5; }
+.changelog-type-chip.ct-schema_migration  { background: #ECE0F2; color: #4F2670; border-color: #D2BEDE; }
+.changelog-type-chip.ct-deletion          { background: #F4DCDF; color: #6E1322; border-color: #E1B0B6; }
+.changelog-type-chip.ct-setup             { background: var(--bg-sunk); color: var(--ink-3); border-color: var(--rule); }
+.changelog-type-chip.ct-note              { background: var(--bg-sunk); color: var(--ink-2); border-color: var(--rule); }
+
+/* Filter pills inherit the chip color when "on". */
+.changelog-type-filter.on.ct-ingestion         { border-color: #1F5F4A; }
+.changelog-type-filter.on.ct-signal_change     { border-color: #884F18; }
+.changelog-type-filter.on.ct-status_change     { border-color: #8B1B2C; }
+.changelog-type-filter.on.ct-review_resolution { border-color: #1F4E89; }
+.changelog-type-filter.on.ct-schema_migration  { border-color: #4F2670; }
+.changelog-type-filter.on.ct-deletion          { border-color: #6E1322; }
+
+.changelog-load-more {
+  display: flex; justify-content: center;
+  padding: 18px 0;
+  border-top: 1px solid var(--rule);
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   RECIPIENTS PAGE (B.1)
+   ══════════════════════════════════════════════════════════════════════ */
+.recipients-filters {
+  display: flex; flex-direction: column; gap: 10px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--rule);
+}
+.recipients-filter-row {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 6px;
+}
+.recipients-filter-label {
+  font-family: var(--sans); font-size: 12px; font-weight: 600;
+  color: var(--ink-3); letter-spacing: 0.04em;
+  text-transform: uppercase;
+  width: 56px;
+  flex-shrink: 0;
+}
+.recipients-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--sans); font-size: 12px; font-weight: 500;
+  padding: 4px 10px;
+  border: 1px solid var(--rule);
+  background: var(--bg-elev);
+  color: var(--ink-3);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: border-color 80ms, background 80ms, color 80ms;
+}
+.recipients-pill:hover { color: var(--ink); }
+.recipients-pill.on { color: var(--ink); border-color: var(--ink-2); background: var(--bg); }
+.recipients-pill.on.party-dem { border-color: var(--dem); }
+.recipients-pill.on.party-rep { border-color: var(--rep); }
+.recipients-pill .re-count {
+  font-family: var(--mono); font-size: 11px; color: var(--ink-3);
+}
+.recipients-pill.on .re-count { color: var(--ink-2); }
+.recipients-filter-row input {
+  flex: 1; max-width: 360px;
+  padding: 6px 10px;
+  font: inherit; font-size: 13px;
+  border: 1px solid var(--rule); border-radius: 3px;
+  background: var(--bg-elev); color: var(--ink);
+  margin-left: 56px;  /* align with pills above */
+}
+.recipients-filter-row input:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+.recipients-reset {
+  font-family: var(--sans); font-size: 12px;
+  padding: 4px 8px;
+  background: transparent; border: 0;
+  color: var(--accent); cursor: pointer;
+}
+.recipients-reset:hover { text-decoration: underline; }
+
+.recipients-table .re-name {
+  font-family: var(--serif); font-size: 14px; font-weight: 500;
+  color: var(--ink);
+}
+.recipients-table .re-sub {
+  font-family: var(--mono); font-size: 11px;
+  color: var(--ink-3); margin-top: 2px;
+}
+.recipients-table tbody tr:hover { background: var(--bg-sunk); }
+.recipients-table th.re-sort:hover { color: var(--accent); }
+
+.recipients-load-more {
+  display: flex; justify-content: center;
+  padding: 18px 0;
+  border-top: 1px solid var(--rule);
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   CYCLE HEATMAP (B.2)
+   ══════════════════════════════════════════════════════════════════════ */
+.heatmap-wrap {
+  overflow-x: auto;
+  padding-top: 14px;
+}
+.heatmap-wrap svg .hm-cell:hover {
+  stroke: var(--ink);
+  stroke-width: 1.5;
+}
+.heatmap-wrap svg .hm-row-label:hover {
+  fill: var(--accent);
+  text-decoration: underline;
+}
+.heatmap-sort-pills {
+  display: inline-flex;
+  gap: 4px;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  background: var(--bg-sunk);
+  overflow: hidden;
+  margin-top: 6px;
+}
+.heatmap-sort-pills button {
+  background: transparent;
+  border: 0;
+  padding: 6px 12px;
+  font-family: var(--sans);
+  font-size: 12px;
+  color: var(--ink-3);
+  cursor: pointer;
+  transition: background 80ms, color 80ms;
+}
+.heatmap-sort-pills button:hover { color: var(--ink); }
+.heatmap-sort-pills button.on {
+  background: var(--ink);
+  color: var(--bg);
+  font-weight: 600;
+}
+.heatmap-sort-pills button + button { border-left: 1px solid var(--rule); }
+
+.heatmap-legend {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+  padding: 12px 0 0;
+  font-family: var(--sans); font-size: 12px;
+  color: var(--ink-3);
+}
+.hm-legend-section {
+  font-weight: 600; color: var(--ink-2);
+  text-transform: uppercase; letter-spacing: 0.04em;
+  font-size: 11px;
+  margin-right: 4px;
+}
+.hm-legend-item { display: inline-flex; align-items: center; gap: 4px; }
+.hm-legend-sw {
+  display: inline-block; width: 14px; height: 14px;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+}
+.hm-legend-lbl { font-family: var(--mono); font-size: 11px; color: var(--ink-2); }
+.hm-legend-sep {
+  display: inline-block;
+  border-left: 1px solid var(--rule);
+  height: 16px;
+  margin: 0 6px;
+}
+
 /* ════════════════════════════════════════════════════════════════════════
    METHODOLOGY
    ══════════════════════════════════════════════════════════════════════ */
@@ -1112,8 +1463,12 @@ section.block:last-child { border-bottom: 0; }
   text-transform: uppercase; color: var(--ink-3);
   padding: 3px 7px; background: var(--bg-sunk); border-radius: 2px;
   text-align: center;
+  white-space: nowrap;  /* don't break the "cand. →" arrow onto a second line */
+  min-width: 64px;      /* keep the badge column visually aligned */
 }
 .cmdk-result.active .cmdk-result-type { background: var(--bg-elev); }
+/* Candidate-route badge: tint to hint at the redirect behavior. */
+.cmdk-result-type[data-kind="candidate"] { color: var(--accent); }
 .cmdk-result-label {
   font-family: var(--serif); font-size: 15px; font-weight: 600;
   line-height: 1.25; color: var(--ink);
@@ -1172,6 +1527,55 @@ section.block:last-child { border-bottom: 0; }
   color: var(--ink-3);
 }
 
+/* Dollars toggle — pill in the masthead nav. Two buttons; one is always
+   active. Active half adopts brand crimson; inactive sits in ink-3.
+   Reused on every page; the actual $-flipping happens via the JS
+   helpers `amt()` and `aggAmt()` (see state.dollars). */
+.dollars-toggle {
+  display: inline-flex;
+  align-items: stretch;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  background: var(--bg-sunk);
+  overflow: hidden;
+  margin-left: 6px;
+  font-family: var(--mono);
+}
+.dollars-toggle button {
+  background: transparent;
+  border: 0;
+  padding: 4px 9px;
+  font: inherit; font-size: 12px;
+  color: var(--ink-3);
+  cursor: pointer;
+  transition: background 80ms, color 80ms;
+  min-width: 28px;
+  line-height: 1.2;
+}
+.dollars-toggle button:hover { color: var(--ink); }
+.dollars-toggle button[aria-pressed="true"] {
+  background: var(--brand);
+  color: var(--bg);
+  font-weight: 600;
+}
+.dollars-toggle button + button { border-left: 1px solid var(--rule); }
+
+/* Footnote banner that appears under the masthead when Real mode is on. */
+.dollars-footnote {
+  background: var(--bg-sunk);
+  border-bottom: 1px solid var(--rule);
+  padding: 6px 24px;
+  font-family: var(--mono); font-size: 11px;
+  color: var(--ink-3);
+  text-align: center;
+}
+.dollars-footnote .di { color: var(--brand); margin-right: 6px; }
+
+@media (max-width: 760px) {
+  .nav { flex-wrap: wrap; row-gap: 6px; }
+  .dollars-toggle { margin-left: auto; }
+}
+
 /* ════════════════════════════════════════════════════════════════════════
    LOADING / EMPTY STATES
    ══════════════════════════════════════════════════════════════════════ */
@@ -1211,14 +1615,26 @@ section.block:last-child { border-bottom: 0; }
 
 /* ════════════════════════════════════════════════════════════════════════
    PRINT STYLES
-   Owner / committee / cycle pages print as research records: chrome hidden,
-   tables visible, URLs of FEC links shown in line for citation.
+   Owner / committee / cycle / recipients / changelog pages print as
+   research records: chrome hidden, tables expanded, URLs of FEC links
+   shown in line for citation. A `.print-header` block at the top of body
+   carries page title + snapshot date + dollar mode + source URL — see
+   the beforeprint hook in JS (search "registerPrintHooks").
    ══════════════════════════════════════════════════════════════════════ */
+@page { size: letter; margin: 0.75in; }
+
 @media print {
   body { background: white; color: black; }
-  .masthead, .site-footer, .hero-photo, .drawer, .drawer-scrim,
-  .cmdk-scrim, .scatter-tooltip, .skip-link, .search-btn,
-  .csv-btn, .filters, .back, .nav { display: none !important; }
+  .masthead, .site-footer, .hero-photo, .drawer-scrim,
+  .cmdk-scrim, .cmdk, .scatter-tooltip, .skip-link, .search-btn,
+  .csv-btn, .filters, .back, .nav,
+  .dollars-toggle, .pipeline-tabs,
+  .changelog-load-more, .recipients-load-more,
+  .load-all-btn, .load-all-row,
+  .heatmap-sort-pills,
+  /* Filter rows on the recipients / changelog pages are interactive — drop
+     for print. Section heads still carry the eyebrow + H2 + caption. */
+  .changelog-filters, .recipients-filters { display: none !important; }
   .container, .container-narrow { max-width: 100%; padding: 0; }
   section.block { padding: 18px 0; border-bottom: 1px solid #ccc; page-break-inside: avoid; }
   .kpis { grid-template-columns: repeat(4, 1fr) !important; }
@@ -1241,6 +1657,97 @@ section.block:last-child { border-bottom: 0; }
   .chip-party.dem { color: #1F4E89 !important; background: white !important; }
   .chip-party.rep { color: #B53326 !important; background: white !important; }
   h1, h2 { page-break-after: avoid; }
+  /* Keep the timeline chart from breaking mid-figure across pages. */
+  .timeline-wrap { page-break-inside: avoid; }
+
+  /* Drawer in print: by default hidden. If a permalink (?d=<id>) was
+     open at print time, render the drawer as a final-page block so the
+     record prints inline with the report. The beforeprint hook handles
+     the open/closed state — this rule just restyles when .open is set. */
+  .drawer { display: none !important; }
+  .drawer.open {
+    display: block !important;
+    position: static !important;
+    transform: none !important;
+    width: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
+    border-left: 0 !important;
+    box-shadow: none !important;
+    page-break-before: always;
+  }
+  .drawer.open .drawer-close { display: none !important; }
+  /* Tap-target overlays in the timeline are click-hit-areas only; hide
+     them in print so they don't cover the visible dots in print-to-PDF
+     pipelines that preserve interactive geometry. */
+  .timeline-tap { display: none !important; }
+  /* Pagination footer is auto-skipped at print time because the beforeprint
+     hook sets showAll=true; renderPaginationFooter returns "" when
+     visible >= total. No extra hide needed. */
+  .pagination-footer { display: none !important; }
+
+  /* Print-only header block — populated by beforeprint hook. Hidden on screen
+     via the `.print-header` rule outside @media print. */
+  .print-header { display: block !important; }
+}
+
+/* Screen-side: hide the print-only header block. */
+.print-header { display: none; }
+
+@media print {
+  .print-header {
+    padding: 0 0 14px;
+    margin-bottom: 22px;
+    border-bottom: 1px solid #999;
+    font-family: var(--sans);
+    color: black;
+  }
+  .print-header .ph-brand {
+    display: flex; align-items: center; gap: 10px;
+    font-family: var(--serif);
+    font-size: 18px; font-weight: 700;
+  }
+  .print-header .ph-mark {
+    width: 22px; height: 22px;
+    background: var(--brand);
+    color: white;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-family: var(--serif); font-weight: 700;
+    font-size: 16px;
+    border-radius: 3px;
+  }
+  .print-header .ph-title {
+    font-family: var(--serif);
+    font-size: 22px; font-weight: 700;
+    margin: 6px 0 4px;
+  }
+  .print-header .ph-meta {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: #555;
+    display: flex; flex-wrap: wrap; gap: 6px 14px;
+  }
+  .print-header .ph-meta span:not(:last-child)::after {
+    content: " ·";
+    color: #999;
+    padding-left: 6px;
+  }
+}
+
+/* Body-level print footer using a generated content rule.
+   `document.body.dataset.printfooter` is set in the beforeprint hook. */
+@media print {
+  body::after {
+    content: attr(data-printfooter);
+    display: block;
+    padding-top: 18px;
+    margin-top: 36px;
+    border-top: 1px solid #ccc;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: #555;
+    text-align: center;
+  }
 }
 
 /* ════════════════════════════════════════════════════════════════════════
@@ -1262,6 +1769,21 @@ section.block:last-child { border-bottom: 0; }
 <!-- Skip link for keyboard users — jumps past the masthead/hero to the main content -->
 <a href="#app" class="skip-link">Skip to content</a>
 
+<!-- Inflation-mode disclosure banner. Hidden in nominal mode; populated
+     with the CPI cutoff month after data.json loads. -->
+<div id="dollars-footnote" class="dollars-footnote" style="display:none">
+  <span class="di">ⓘ</span>
+  <span id="dollars-footnote-text">Real $ — adjusted for inflation using BLS CPI-U.</span>
+</div>
+
+<!-- Print-only header. Hidden on screen via CSS. Populated by the
+     beforeprint hook (search "registerPrintHooks"). -->
+<div class="print-header" id="print-header" aria-hidden="true">
+  <div class="ph-brand"><span class="ph-mark">C</span><span>CheckSwing</span></div>
+  <div class="ph-title" id="ph-title">CheckSwing</div>
+  <div class="ph-meta" id="ph-meta"></div>
+</div>
+
 <!-- ════════════════════════════════════════════════════════════════════
      MASTHEAD
      ════════════════════════════════════════════════════════════════════ -->
@@ -1269,7 +1791,7 @@ section.block:last-child { border-bottom: 0; }
   <div class="masthead-inner">
     <a class="brand" href="#/" style="text-decoration:none;color:inherit">
       <span class="brand-mark" aria-label="CheckSwing logo">
-        <img src="assets/owners-box-icon.png" alt="CheckSwing">
+        <img src="assets/checkswing-icon.png" alt="CheckSwing">
       </span>
       <div>
         <div class="brand-title">CheckSwing</div>
@@ -1277,9 +1799,15 @@ section.block:last-child { border-bottom: 0; }
     </a>
     <nav class="nav" role="navigation" aria-label="Primary">
       <a href="#/" data-nav="league">League</a>
+      <a href="#/whats-new" data-nav="whats-new">What's new</a>
+      <a href="#/recipients" data-nav="recipients">Recipients</a>
       <a href="#/methodology" data-nav="methodology">Methodology</a>
-      <a href="#/runs" data-nav="runs">Pipeline</a>
       <a href="#/about" data-nav="about">About</a>
+      <a href="#/runs" data-nav="runs">Pipeline</a>
+      <div class="dollars-toggle" role="group" aria-label="Currency mode">
+        <button type="button" data-mode="nominal" id="dollars-nominal" aria-pressed="true" title="Nominal dollars — amounts as filed with the FEC">$</button>
+        <button type="button" data-mode="real" id="dollars-real" aria-pressed="false" title="Inflation-adjusted to current dollars using BLS CPI-U">$↑</button>
+      </div>
       <button class="search-btn" id="search-btn" aria-label="Open search">
         <span class="search-btn-icon">⌕</span>
         <span>Search</span>
@@ -1383,11 +1911,23 @@ const state = {
   committeeFilters: { q: "", cycle: "", status: "", showAll: false },
   /* per-team filters */
   teamFilters: { q: "", cycle: "", party: "", status: "", owner: "", showAll: false },
+  /* changelog (audit-log) filters — lazy-loaded with provenance.json */
+  changelogFilters: { types: null, q: "", visibleN: 50 },
+  /* recipients page filters */
+  recipientFilters: { q: "", types: null, parties: null, sort: { key: "total_amount", dir: "desc" }, visibleN: 100 },
+  /* heatmap row sort — 'total' | 'name' | 'team' */
+  heatmapSort: "total",
+  /* currency mode — 'nominal' or 'real' (CPI-adjusted to cpi.base_year) */
+  dollars: "nominal",  // overwritten from localStorage in loadData() before route()
   /* derived indexes (built once after data load) */
   teams: null,
   searchIndex: null,
   /* cmd-k state */
   cmdk: { open: false, q: "", cursor: 0, results: [] },
+  /* provenance.json is lazy-loaded only when the changelog tab is visited. */
+  provenance: null,
+  provenanceLoading: false,
+  provenanceError: null,
 };
 
 const fmtMoney = (n) => {
@@ -1400,6 +1940,196 @@ const fmtMoney = (n) => {
 };
 const fmtMoneyExact = (n) => "$" + Math.round(n).toLocaleString();
 const fmtInt = (n) => (n ?? 0).toLocaleString();
+
+/* ──────────────────────────────────────────────────────────────────────
+   B.4 — Inflation toggle (Nominal $ vs CPI-adjusted Real $)
+   Per-donation `amount_2026` and per-aggregate `*_2026` fields are
+   pre-baked into data.json (see scripts/dollars.py). The frontend
+   just picks which field to read based on state.dollars. Persisted
+   via localStorage; wrapped in try/catch for Safari private mode.
+   ────────────────────────────────────────────────────────────────────── */
+const DOLLARS_KEY = "cs.dollars";
+function readDollarsPref() {
+  try {
+    const v = localStorage.getItem(DOLLARS_KEY);
+    return v === "real" ? "real" : "nominal";
+  } catch (_) { return "nominal"; }
+}
+function writeDollarsPref(mode) {
+  try { localStorage.setItem(DOLLARS_KEY, mode); } catch (_) { /* ignore */ }
+}
+
+/* Read amount from a donation row, respecting state.dollars. */
+function amt(d) {
+  if (!d) return 0;
+  return state.dollars === "real" && d.amount_2026 != null ? d.amount_2026 : d.amount;
+}
+/* Read an already-aggregated dollar field off any object (owner, league,
+   recipient, etc.). Falls back to nominal if the _2026 mirror is missing. */
+function aggAmt(obj, key) {
+  if (!obj) return 0;
+  if (state.dollars === "real") {
+    const v = obj[key + "_2026"];
+    if (v != null) return v;
+  }
+  return obj[key] ?? 0;
+}
+/* Read a per-cycle bucket like league.by_cycle[year].dollars_by_party. */
+function aggCycleParty(bucket) {
+  if (!bucket) return {};
+  if (state.dollars === "real" && bucket.dollars_by_party_2026) {
+    return bucket.dollars_by_party_2026;
+  }
+  return bucket.dollars_by_party || {};
+}
+/* Read total of a per-cycle bucket. */
+function aggCycleTotal(bucket) {
+  if (!bucket) return 0;
+  if (state.dollars === "real" && bucket.total_2026 != null) return bucket.total_2026;
+  return bucket.total ?? 0;
+}
+/* Read a value from a cycle-keyed map (owner.cycle_dollars{,_2026}). */
+function cycleAmt(obj, baseKey, cycle) {
+  const key = state.dollars === "real" ? baseKey + "_2026" : baseKey;
+  const m = obj[key] || obj[baseKey] || {};
+  return m[cycle] ?? m[String(cycle)] ?? 0;
+}
+/* Read a party-map from an owner's party_dollars{,_2026}. */
+function aggParty(obj, party) {
+  const key = state.dollars === "real" ? "party_dollars_2026" : "party_dollars";
+  return (obj[key] || obj.party_dollars || {})[party] ?? 0;
+}
+
+function setDollars(mode) {
+  const norm = mode === "real" ? "real" : "nominal";
+  if (state.dollars === norm) return;
+  state.dollars = norm;
+  writeDollarsPref(norm);
+  updateDollarsToggleUI();
+  /* Search index caches $ values per item — rebuild so cmd-k sort + meta
+     match the new mode. */
+  if (state.data) state.searchIndex = buildSearchIndex();
+  render();
+}
+function updateDollarsToggleUI() {
+  document.querySelectorAll(".dollars-toggle button").forEach((b) => {
+    const on = b.getAttribute("data-mode") === state.dollars;
+    b.setAttribute("aria-pressed", on ? "true" : "false");
+  });
+  const fn = document.getElementById("dollars-footnote");
+  if (fn) fn.style.display = state.dollars === "real" ? "" : "none";
+}
+
+/* ──────────────────────────────────────────────────────────────────────
+   C.4 — Print preparation (beforeprint / afterprint)
+   Expands paginated tables, populates the print-only header block, and
+   restores screen state after the print dialog closes. Idempotent — a
+   sentinel guards against Safari's dual-firing of matchMedia + beforeprint.
+   ────────────────────────────────────────────────────────────────────── */
+let __printSnapshot = null;
+
+function buildPrintHeader() {
+  const v = state.view.name;
+  let title = "League overview";
+  if (v === "owner") {
+    const o = state.data.owners[state.view.slug];
+    title = o ? `${o.name} — federal political giving` : `Owner: ${state.view.slug}`;
+  } else if (v === "team") {
+    const slug = state.view.slug;
+    const teamName = state.teams?.[slug]?.name || slug;
+    title = `${teamName} — team rollup`;
+  } else if (v === "cycle") {
+    title = `${state.view.year} election cycle`;
+  } else if (v === "committee") {
+    /* The committee's name is in donations; pick the first matching record. */
+    const d = state.data.donations.find((x) => x.committee_id === state.view.id);
+    title = d ? `Recipient: ${d.committee}` : `Committee: ${state.view.id}`;
+  } else if (v === "recipients") {
+    title = "Recipients — every committee that received MLB-owner money";
+  } else if (v === "changelog") {
+    title = "Audit log — every change to the archive";
+  } else if (v === "runs") {
+    title = "Pipeline — ingestion runs";
+  } else if (v === "whats-new") {
+    title = "What's new — most recent refresh";
+  } else if (v === "methodology") {
+    title = "Methodology";
+  } else if (v === "about") {
+    title = "About";
+  }
+
+  const ph = document.getElementById("ph-title");
+  if (ph) ph.textContent = title;
+
+  const cpi = state.data?.cpi;
+  const dollarMode = state.dollars === "real"
+    ? (cpi ? `Real $ — adjusted to ${cpi.base_year} via BLS CPI-U through ${cpi.latest_month}` : "Real $")
+    : "Nominal $ (as filed)";
+  const snapshot = state.data?.generated_at ? state.data.generated_at.slice(0, 10) : "—";
+  const url = window.location.href;
+
+  const meta = document.getElementById("ph-meta");
+  if (meta) {
+    meta.innerHTML = "";
+    [
+      `Snapshot ${snapshot}`,
+      dollarMode,
+      `Source: FEC`,
+      url,
+    ].forEach((s) => {
+      const el = document.createElement("span");
+      el.textContent = s;
+      meta.appendChild(el);
+    });
+  }
+
+  /* Body-level footer (rendered by `body::after` content from data-attr). */
+  document.body.dataset.printfooter =
+    `checkswing.pages.dev · Source: FEC · Snapshot ${snapshot} · ${url}`;
+}
+
+function registerPrintHooks() {
+  const onBefore = () => {
+    if (__printSnapshot) return;  /* Safari dual-fire guard */
+    __printSnapshot = {
+      ownerShowAll:     state.ownerFilters.showAll,
+      cycleShowAll:     state.cycleFilters.showAll,
+      committeeShowAll: state.committeeFilters.showAll,
+      teamShowAll:      state.teamFilters.showAll,
+      recipientN:       state.recipientFilters.visibleN,
+      changelogN:       state.changelogFilters.visibleN,
+    };
+    state.ownerFilters.showAll = true;
+    state.cycleFilters.showAll = true;
+    state.committeeFilters.showAll = true;
+    state.teamFilters.showAll = true;
+    state.recipientFilters.visibleN = Infinity;
+    state.changelogFilters.visibleN = Infinity;
+    buildPrintHeader();
+    render();
+  };
+  const onAfter = () => {
+    if (!__printSnapshot) return;
+    state.ownerFilters.showAll     = __printSnapshot.ownerShowAll;
+    state.cycleFilters.showAll     = __printSnapshot.cycleShowAll;
+    state.committeeFilters.showAll = __printSnapshot.committeeShowAll;
+    state.teamFilters.showAll      = __printSnapshot.teamShowAll;
+    state.recipientFilters.visibleN = __printSnapshot.recipientN;
+    state.changelogFilters.visibleN = __printSnapshot.changelogN;
+    __printSnapshot = null;
+    render();
+  };
+  window.addEventListener("beforeprint", onBefore);
+  window.addEventListener("afterprint", onAfter);
+  /* Safari fallback: matchMedia('print') change. Chrome fires both, hence
+     the sentinel guard. */
+  if (window.matchMedia) {
+    const mm = window.matchMedia("print");
+    if (mm.addEventListener) {
+      mm.addEventListener("change", (e) => e.matches ? onBefore() : onAfter());
+    }
+  }
+}
 const fmtDate = (s) => {
   if (!s) return "—";
   const d = new Date(s);
@@ -1485,8 +2215,8 @@ function buildSearchIndex() {
       sub: `${o.team || ""}${o.tenure_start ? " · since " + o.tenure_start.slice(0,4) : ""}`,
       key: (o.name + " " + (o.team || "")).toLowerCase(),
       url: `#/owner/${o.slug}`,
-      sortBy: o.total_amount,
-      metaText: fmtMoney(o.total_amount),
+      sortBy: aggAmt(o, "total_amount"),
+      metaText: fmtMoney(aggAmt(o, "total_amount")),
     });
   }
 
@@ -1496,7 +2226,7 @@ function buildSearchIndex() {
     if (!o.team) continue;
     const sl = teamSlug(o.team);
     if (!teamAgg[sl]) teamAgg[sl] = { name: o.team, slug: sl, total: 0, owners: 0 };
-    teamAgg[sl].total += o.total_amount;
+    teamAgg[sl].total += aggAmt(o, "total_amount");
     teamAgg[sl].owners += 1;
   }
   for (const t of Object.values(teamAgg)) {
@@ -1518,7 +2248,7 @@ function buildSearchIndex() {
     if (!cmAgg[d.committee_id]) {
       cmAgg[d.committee_id] = { id: d.committee_id, name: d.committee, party: d.party, amount: 0, count: 0 };
     }
-    cmAgg[d.committee_id].amount += d.amount;
+    cmAgg[d.committee_id].amount += amt(d);
     cmAgg[d.committee_id].count += 1;
   }
   for (const c of Object.values(cmAgg)) {
@@ -1550,11 +2280,11 @@ function buildSearchIndex() {
       };
     }
     const c = cdAgg[d.candidate_id];
-    c.amount += d.amount;
+    c.amount += amt(d);
     c.count += 1;
     if (d.committee_id) {
       const slot = c.byCommittee[d.committee_id] || { name: d.committee, amount: 0 };
-      slot.amount += d.amount;
+      slot.amount += amt(d);
       slot.name = d.committee;
       c.byCommittee[d.committee_id] = slot;
     }
@@ -1595,12 +2325,29 @@ function buildTeamsIndex() {
 
 /* ────────── Data load ────────── */
 async function loadData() {
+  /* Hydrate the inflation toggle preference before the first render so
+     nothing flashes in the wrong currency. */
+  state.dollars = readDollarsPref();
   try {
     const res = await fetch("./data.json", { cache: "no-cache" });
     if (!res.ok) throw new Error("HTTP " + res.status);
     state.data = await res.json();
     state.teams = buildTeamsIndex();
     state.searchIndex = buildSearchIndex();
+    /* Hydrate the inflation footnote text from the CPI metadata. */
+    if (state.data.cpi) {
+      const cpi = state.data.cpi;
+      const fn = document.getElementById("dollars-footnote-text");
+      if (fn) fn.textContent =
+        `Real $ — adjusted to ${cpi.base_year} dollars using BLS CPI-U through ${cpi.latest_month}. ` +
+        `Restates nominal contribution amounts in equivalent purchasing power.`;
+    }
+    /* Wire the masthead toggle once (idempotent because addEventListener
+       is called against a DOM that doesn't get re-rendered). */
+    document.querySelectorAll(".dollars-toggle button").forEach((b) => {
+      b.addEventListener("click", () => setDollars(b.getAttribute("data-mode")));
+    });
+    updateDollarsToggleUI();
     document.getElementById("generated-at").textContent =
       "Snapshot " + state.data.generated_at.slice(0, 10);
     const latestRun = state.data.pipeline?.latest_run;
@@ -1608,6 +2355,7 @@ async function loadData() {
       document.getElementById("latest-run-at").innerHTML =
         `<a href="#/runs" style="color:inherit">Latest ingestion run ${fmtAgo(latestRun)} ago · ${state.data.pipeline.n_runs} runs total →</a>`;
     }
+    registerPrintHooks();
     route();
   } catch (e) {
     document.getElementById("app").innerHTML = `
@@ -1647,6 +2395,12 @@ function route() {
     state.view = { name: "about" };
   } else if (hash === "#/runs") {
     state.view = { name: "runs" };
+  } else if (hash === "#/changelog") {
+    state.view = { name: "changelog" };
+  } else if (hash === "#/whats-new") {
+    state.view = { name: "whats-new" };
+  } else if (hash === "#/recipients") {
+    state.view = { name: "recipients" };
   } else {
     state.view = { name: "league" };
   }
@@ -1665,13 +2419,17 @@ function route() {
     state.teamFilters = { q: "", cycle: "", party: "", status: "", owner: "", showAll: false };
   }
 
-  /* Update nav active states */
+  /* Update nav active states. Pipeline link is active for both /#/runs
+     and /#/changelog (they're tabs on the same logical page). */
   document.querySelectorAll(".nav a").forEach((a) => {
     const t = a.getAttribute("data-nav");
-    const active = (t === "league" && state.view.name === "league")
-                || (t === "methodology" && state.view.name === "methodology")
-                || (t === "about" && state.view.name === "about")
-                || (t === "runs" && state.view.name === "runs");
+    const v = state.view.name;
+    const active = (t === "league" && v === "league")
+                || (t === "methodology" && v === "methodology")
+                || (t === "about" && v === "about")
+                || (t === "runs" && (v === "runs" || v === "changelog"))
+                || (t === "whats-new" && v === "whats-new")
+                || (t === "recipients" && v === "recipients");
     a.classList.toggle("active", active);
   });
 
@@ -1722,6 +2480,9 @@ function render() {
   else if (state.view.name === "methodology") app.innerHTML = renderMethodology();
   else if (state.view.name === "about") app.innerHTML = renderAbout();
   else if (state.view.name === "runs") app.innerHTML = renderRuns();
+  else if (state.view.name === "changelog") app.innerHTML = renderChangelog();
+  else if (state.view.name === "whats-new") app.innerHTML = renderWhatsNew();
+  else if (state.view.name === "recipients") app.innerHTML = renderRecipients();
 
   /* Re-bind */
   bindIndexHandlers();
@@ -1729,6 +2490,9 @@ function render() {
   bindCycleHandlers();
   bindCommitteeHandlers();
   bindTeamHandlers();
+  bindChangelogHandlers();
+  bindWhatsNewHandlers();
+  bindRecipientsHandlers();
 }
 
 /* ════════════════════════════════════════════════════════════════════════
@@ -1763,8 +2527,8 @@ function renderLeague() {
     <div class="kpis">
       <div class="kpi">
         <div class="kpi-label">Total tracked</div>
-        <div class="kpi-value">${fmtMoney(L.total_amount)}</div>
-        <div class="kpi-foot">${fmtMoneyExact(L.total_amount)}</div>
+        <div class="kpi-value">${fmtMoney(aggAmt(L, "total_amount"))}</div>
+        <div class="kpi-foot">${fmtMoneyExact(aggAmt(L, "total_amount"))}</div>
       </div>
       <div class="kpi">
         <div class="kpi-label">Donations</div>
@@ -1837,6 +2601,33 @@ function renderLeague() {
   <section class="container block">
     <div class="block-head-row">
       <div>
+        <span class="eyebrow">Owner × cycle heatmap</span>
+        <h2 style="margin-top:6px">Who gave when, at a glance</h2>
+        <p class="caption">
+          Each cell is one owner's total federal giving in one election cycle.
+          Cell brightness = dollars (log-banded). Cell hue = party majority
+          within that owner-cycle (blue Democratic, red Republican, neutral
+          if mixed or unaffiliated). <strong>Click a cell</strong> for that
+          owner-cycle's records, or sort the rows below.
+        </p>
+      </div>
+      <div class="heatmap-sort-pills" id="hm-sort" role="group" aria-label="Sort heatmap rows">
+        <button type="button" data-sort="total" class="${state.heatmapSort === 'total' ? 'on' : ''}">By total</button>
+        <button type="button" data-sort="name"  class="${state.heatmapSort === 'name'  ? 'on' : ''}">A→Z</button>
+        <button type="button" data-sort="team"  class="${state.heatmapSort === 'team'  ? 'on' : ''}">By team</button>
+      </div>
+    </div>
+    ${renderHeatmap()}
+    <p class="footnote">
+      Brightness bands: $0 · &lt;$500 · $500–$2.5K · $2.5K–$10K · $10K–$50K · $50K–$250K · $250K+.
+      Cells with no giving in a cycle appear muted. Family members and spouses
+      roll up under their principal owner.
+    </p>
+  </section>
+
+  <section class="container block">
+    <div class="block-head-row">
+      <div>
         <span class="eyebrow">The owners</span>
         <h2 style="margin-top:6px">All ${L.n_owners} tracked owners</h2>
         <p class="caption">Click any row to drill down into that owner's complete giving record.</p>
@@ -1903,7 +2694,7 @@ function renderRecentDonations(allDonations) {
               ${d.candidate ? `<span class="recent-meta">for ${escapeHtml(d.candidate)}</span>` : ""}
               ${d.report_type ? `<span class="recent-meta">· ${escapeHtml(d.report_type)}</span>` : ""}
             </div>
-            <div class="recent-amount">${fmtMoneyExact(d.amount)}</div>
+            <div class="recent-amount">${fmtMoneyExact(amt(d))}</div>
             <div class="recent-chips">
               ${chip48H(d)}
               <span class="chip-party ${partyClass}">${d.party}</span>
@@ -1919,9 +2710,9 @@ function renderRecentDonations(allDonations) {
 function renderScatterExclusionNote() {
   const owners = Object.values(state.data.owners);
   const excluded = owners.filter((o) => {
-    const dem = o.party_dollars.DEM || 0;
-    const rep = o.party_dollars.REP || 0;
-    return (dem + rep === 0) || o.total_amount === 0;
+    const dem = aggParty(o, "DEM");
+    const rep = aggParty(o, "REP");
+    return (dem + rep === 0) || aggAmt(o, "total_amount") === 0;
   });
   const partOne = `
     <p class="footnote">
@@ -1945,16 +2736,17 @@ function renderScatterExclusionNote() {
 function renderAlignmentScatter() {
   const owners = Object.values(state.data.owners);
   const points = owners.map((o) => {
-    const dem = o.party_dollars.DEM || 0;
-    const rep = o.party_dollars.REP || 0;
+    const dem = aggParty(o, "DEM");
+    const rep = aggParty(o, "REP");
     const denom = dem + rep;
-    if (denom === 0 || o.total_amount === 0) return null;
+    const total = aggAmt(o, "total_amount");
+    if (denom === 0 || total === 0) return null;
     return {
       slug: o.slug,
       name: o.name,
       team: o.team,
       lastName: o.name.split(" ").slice(-1)[0],
-      total: o.total_amount,
+      total,
       n: o.n_total,
       demShare: dem / denom,
       dem, rep,
@@ -2075,17 +2867,162 @@ function renderAlignmentScatter() {
   </div>`;
 }
 
+/* ──────────── Cycle heatmap (B.2) ──────────── */
+
+/* Banded color scale for the heatmap. Bands are log-ish dollar buckets;
+   hue picks DEM blue / mixed grey / REP red based on party share. Returns
+   {fill, label} so the tooltip can show the band name without recomputing. */
+function heatmapBandFor(amount) {
+  const bands = [
+    { max:       0, idx: 0, label: "$0" },
+    { max:     500, idx: 1, label: "<$500" },
+    { max:   2500, idx: 2, label: "$500–$2.5K" },
+    { max:  10000, idx: 3, label: "$2.5K–$10K" },
+    { max:  50000, idx: 4, label: "$10K–$50K" },
+    { max: 250000, idx: 5, label: "$50K–$250K" },
+    { max: Infinity, idx: 6, label: "$250K+" },
+  ];
+  for (const b of bands) if (amount <= b.max) return b;
+  return bands[bands.length - 1];
+}
+function heatmapCellFill(amount, demShare) {
+  if (amount <= 0) return "var(--bg-sunk)";
+  const band = heatmapBandFor(amount).idx;
+  /* 6 lightness steps from band 1 (lightest, 92%) to band 6 (darkest, 32%). */
+  const lightness = [null, 90, 80, 68, 54, 42, 30][band];
+  let hue, sat;
+  if (demShare > 0.6) { hue = 215; sat = 48; }       /* DEM blue family */
+  else if (demShare < 0.4) { hue = 0;   sat = 48; }  /* REP red family */
+  else { hue = 35;  sat = 8; }                       /* mixed / neutral warm */
+  return `hsl(${hue}, ${sat}%, ${lightness}%)`;
+}
+
+function renderHeatmap() {
+  const owners = Object.values(state.data.owners).filter((o) => o.n_total > 0);
+  /* Fixed cycle axis: every even year 2000..max-cycle-in-data. */
+  const allCycles = Object.keys(state.data.league.by_cycle).map(Number).sort((a, b) => a - b);
+  const cycleMin = Math.min(...allCycles);
+  const cycleMax = Math.max(...allCycles);
+  const cycles = [];
+  for (let y = cycleMin; y <= cycleMax; y += 2) cycles.push(y);
+
+  /* Sort rows. */
+  const sortKey = state.heatmapSort || "total";
+  const rows = [...owners].sort((a, b) => {
+    if (sortKey === "name") return a.name.localeCompare(b.name);
+    if (sortKey === "team") return (a.team || "").localeCompare(b.team || "") || a.name.localeCompare(b.name);
+    return aggAmt(b, "total_amount") - aggAmt(a, "total_amount");
+  });
+
+  /* Cell sizing. Compact enough to fit 1100px wide. */
+  const labelW = 200;
+  const cellW = 38;
+  const cellH = 22;
+  const headerH = 38;
+  const innerW = labelW + cellW * cycles.length;
+  const innerH = headerH + cellH * rows.length;
+  const W = innerW + 16;
+  const H = innerH + 30;
+
+  /* Column headers: cycle years, rotated 0deg (they're 4 chars and fit). */
+  const colHeads = cycles.map((c, i) => {
+    const x = labelW + i * cellW + cellW / 2;
+    return `<text x="${x}" y="${headerH - 12}" text-anchor="middle"
+              font-family="var(--mono)" font-size="11" fill="var(--ink-3)">${c}</text>`;
+  }).join("");
+
+  /* Body rows + cells. */
+  let cells = "";
+  rows.forEach((o, ri) => {
+    const yRow = headerH + ri * cellH;
+    /* Row label: owner name. Truncate with ellipsis if too long. */
+    const teamSuffix = o.team ? ` · ${o.team}` : "";
+    const fullLabel = o.name + teamSuffix;
+    const truncated = fullLabel.length > 32 ? fullLabel.slice(0, 31) + "…" : fullLabel;
+    cells += `
+      <text x="${labelW - 6}" y="${yRow + cellH / 2 + 4}" text-anchor="end"
+            font-family="var(--serif)" font-size="12" fill="var(--ink)"
+            class="hm-row-label" data-slug="${escapeAttr(o.slug)}"
+            style="cursor:pointer">${escapeHtml(truncated)}<title>${escapeHtml(fullLabel)}</title></text>`;
+
+    cycles.forEach((c, ci) => {
+      const x = labelW + ci * cellW;
+      const cycleDollars = aggAmt(o, "cycle_dollars") || {};
+      /* aggAmt only handles flat keys; cycle_dollars is a map, so go direct. */
+      const ckey = String(c);
+      const mapKey = state.dollars === "real" ? "cycle_dollars_2026" : "cycle_dollars";
+      const amount = (o[mapKey] || o.cycle_dollars || {})[ckey] || 0;
+      const partyKey = state.dollars === "real" ? "cycle_party_dollars_2026" : "cycle_party_dollars";
+      const pd = (o[partyKey] || o.cycle_party_dollars || {})[ckey] || {};
+      const dem = pd.DEM || 0;
+      const rep = pd.REP || 0;
+      const oth = (pd.OTH || 0) + (pd.IND || 0) + (pd.LIB || 0) + (pd.GRE || 0);
+      const partyDenom = dem + rep;
+      const demShare = partyDenom > 0 ? dem / partyDenom : 0.5;
+      const count = (o.cycle_count || {})[ckey] || 0;
+      const fill = heatmapCellFill(amount, demShare);
+      const tip = amount > 0
+        ? `${o.name} · ${c}: ${fmtMoneyExact(amount)} across ${count} donation${count === 1 ? "" : "s"} (DEM ${fmtMoney(dem)} · REP ${fmtMoney(rep)} · OTH ${fmtMoney(oth)})`
+        : `${o.name} · ${c}: no recorded giving`;
+      cells += `
+        <rect x="${x}" y="${yRow}" width="${cellW - 1}" height="${cellH - 1}"
+              fill="${fill}" stroke="#E5E1D5" stroke-width="0.5"
+              class="hm-cell" data-slug="${escapeAttr(o.slug)}" data-cycle="${c}"
+              ${amount > 0 ? 'style="cursor:pointer"' : ""}>
+          <title>${escapeHtml(tip)}</title>
+        </rect>`;
+    });
+  });
+
+  /* Legend swatches under the grid. */
+  const bandLabels = [
+    { label: "$0", color: "var(--bg-sunk)" },
+    { label: "<$500", color: heatmapCellFill(400, 0.5) },
+    { label: "<$2.5K", color: heatmapCellFill(2000, 0.5) },
+    { label: "<$10K", color: heatmapCellFill(8000, 0.5) },
+    { label: "<$50K", color: heatmapCellFill(40000, 0.5) },
+    { label: "<$250K", color: heatmapCellFill(200000, 0.5) },
+    { label: "$250K+", color: heatmapCellFill(500000, 0.5) },
+  ];
+  const legendMag = bandLabels.map((b) => `
+    <span class="hm-legend-item">
+      <span class="hm-legend-sw" style="background:${b.color}"></span>
+      <span class="hm-legend-lbl">${escapeHtml(b.label)}</span>
+    </span>`).join("");
+
+  const hueLegend = `
+    <span class="hm-legend-item"><span class="hm-legend-sw" style="background:${heatmapCellFill(50000, 1.0)}"></span><span class="hm-legend-lbl">DEM</span></span>
+    <span class="hm-legend-item"><span class="hm-legend-sw" style="background:${heatmapCellFill(50000, 0.5)}"></span><span class="hm-legend-lbl">mixed</span></span>
+    <span class="hm-legend-item"><span class="hm-legend-sw" style="background:${heatmapCellFill(50000, 0.0)}"></span><span class="hm-legend-lbl">REP</span></span>`;
+
+  return `
+    <div class="heatmap-wrap">
+      <svg viewBox="0 0 ${W} ${H}" style="display:block;width:100%;min-width:${innerW + 16}px;height:auto" preserveAspectRatio="xMinYMin meet">
+        ${colHeads}
+        ${cells}
+      </svg>
+    </div>
+    <div class="heatmap-legend">
+      <span class="hm-legend-section">Dollars</span>
+      ${legendMag}
+      <span class="hm-legend-sep"></span>
+      <span class="hm-legend-section">Party tilt</span>
+      ${hueLegend}
+    </div>`;
+}
+
 function renderCycleChart(byCycle) {
   const cycles = Object.keys(byCycle).map(Number).sort((a, b) => a - b);
   if (cycles.length === 0) return "";
-  const max = Math.max(...cycles.map((c) => byCycle[c].total));
+  const max = Math.max(...cycles.map((c) => aggCycleTotal(byCycle[c])));
   const H = 240;
 
   const bars = cycles.map((c) => {
     const d = byCycle[c];
-    const dem = d.dollars_by_party.DEM || 0;
-    const rep = d.dollars_by_party.REP || 0;
-    const oth = (d.dollars_by_party.OTH || 0) + (d.dollars_by_party.IND || 0) + (d.dollars_by_party.LIB || 0) + (d.dollars_by_party.GRE || 0);
+    const dp = aggCycleParty(d);
+    const dem = dp.DEM || 0;
+    const rep = dp.REP || 0;
+    const oth = (dp.OTH || 0) + (dp.IND || 0) + (dp.LIB || 0) + (dp.GRE || 0);
     const total = dem + rep + oth;
     const h = (total / max) * H;
     const demH = (dem / total) * h || 0;
@@ -2127,8 +3064,8 @@ function renderOwnersTable(owners) {
     if (q && !(o.name.toLowerCase().includes(q) || (o.team || "").toLowerCase().includes(q))) return false;
     if (f.team && o.team !== f.team) return false;
     if (f.tilt) {
-      const dem = o.party_dollars.DEM || 0;
-      const rep = o.party_dollars.REP || 0;
+      const dem = aggParty(o, "DEM");
+      const rep = aggParty(o, "REP");
       const denom = dem + rep;
       if (denom === 0) return false;
       const demShare = dem / denom;
@@ -2146,7 +3083,7 @@ function renderOwnersTable(owners) {
     let av, bv;
     if (key === "name")  { av = a.name; bv = b.name; }
     else if (key === "team")  { av = a.team || ""; bv = b.team || ""; }
-    else if (key === "total") { av = a.total_amount; bv = b.total_amount; }
+    else if (key === "total") { av = aggAmt(a, "total_amount"); bv = aggAmt(b, "total_amount"); }
     else if (key === "n")     { av = a.n_total; bv = b.n_total; }
     else if (key === "tenure") { av = a.tenure_start || ""; bv = b.tenure_start || ""; }
     else if (key === "refresh") {
@@ -2155,7 +3092,7 @@ function renderOwnersTable(owners) {
       av = a.last_run ? new Date(a.last_run.started_at).getTime() : (dir === 1 ? -Infinity : Infinity);
       bv = b.last_run ? new Date(b.last_run.started_at).getTime() : (dir === 1 ? -Infinity : Infinity);
     }
-    else { av = a.total_amount; bv = b.total_amount; }
+    else { av = aggAmt(a, "total_amount"); bv = aggAmt(b, "total_amount"); }
     if (typeof av === "string") return av.localeCompare(bv) * dir;
     return (av - bv) * dir;
   });
@@ -2199,9 +3136,9 @@ function renderOwnersTable(owners) {
 }
 
 function renderOwnerRow(o) {
-  const dem = o.party_dollars.DEM || 0;
-  const rep = o.party_dollars.REP || 0;
-  const oth = (o.party_dollars.OTH || 0) + (o.party_dollars.IND || 0) + (o.party_dollars.LIB || 0) + (o.party_dollars.GRE || 0);
+  const dem = aggParty(o, "DEM");
+  const rep = aggParty(o, "REP");
+  const oth = aggParty(o, "OTH") + aggParty(o, "IND") + aggParty(o, "LIB") + aggParty(o, "GRE");
   const tot = dem + rep + oth;
   const tenureStr = o.tenure_start ? `${o.tenure_start.slice(0,4)}–${o.tenure_end ? o.tenure_end.slice(0,4) : "now"}` : "—";
 
@@ -2214,9 +3151,9 @@ function renderOwnerRow(o) {
         ? `<span class="team-link" data-team-slug="${teamSlug(o.team)}">${escapeHtml(o.team)}</span>`
         : "—"}</td>
       <td class="col-tenure">${tenureStr}</td>
-      <td class="col-total num">${fmtMoney(o.total_amount)}</td>
+      <td class="col-total num">${fmtMoney(aggAmt(o, "total_amount"))}</td>
       <td class="col-count num">${fmtInt(o.n_total)}</td>
-      <td class="sparkline-cell">${renderSparkline(o.cycle_dollars)}</td>
+      <td class="sparkline-cell">${renderSparkline(state.dollars === "real" ? (o.cycle_dollars_2026 || o.cycle_dollars) : o.cycle_dollars)}</td>
       <td class="tilt-cell">${renderTilt(dem, rep, oth)}</td>
       <td class="ver-cell">
         <span class="ver-confirmed">${o.n_confirmed} confirmed</span>
@@ -2295,6 +3232,28 @@ function bindIndexHandlers() {
     tr.addEventListener("click", () => {
       const slug = tr.getAttribute("data-slug");
       window.location.hash = `#/owner/${slug}`;
+    });
+  });
+
+  /* Heatmap row-sort pills */
+  document.querySelectorAll("#hm-sort button[data-sort]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      state.heatmapSort = btn.getAttribute("data-sort");
+      render();
+    });
+  });
+  /* Heatmap cell click → owner page. Row labels too. Only fire for cells
+     with non-zero amount (set cursor:pointer in render conditionally). */
+  document.querySelectorAll(".hm-cell").forEach((cell) => {
+    cell.addEventListener("click", () => {
+      const slug = cell.getAttribute("data-slug");
+      if (slug) window.location.hash = `#/owner/${slug}`;
+    });
+  });
+  document.querySelectorAll(".hm-row-label").forEach((el) => {
+    el.addEventListener("click", () => {
+      const slug = el.getAttribute("data-slug");
+      if (slug) window.location.hash = `#/owner/${slug}`;
     });
   });
 
@@ -2437,8 +3396,8 @@ function renderOwner(slug) {
   const donations = state.data.donations.filter((d) => (d.parent || d.entity) === slug);
   const cycles = [...new Set(donations.map((d) => d.cycle).filter(Boolean))].sort((a,b) => b - a);
 
-  const dem = o.party_dollars.DEM || 0;
-  const rep = o.party_dollars.REP || 0;
+  const dem = aggParty(o, "DEM");
+  const rep = aggParty(o, "REP");
   const denom = dem + rep;
   const partyTilt = denom > 0
     ? (Math.round((dem / denom) * 100) >= 60 ? `Democratic-leaning (${Math.round((dem / denom) * 100)}% DEM)`
@@ -2470,8 +3429,8 @@ function renderOwner(slug) {
     <div class="kpis" style="border-top:0;border-bottom:1px solid var(--rule);">
       <div class="kpi">
         <div class="kpi-label">Total tracked</div>
-        <div class="kpi-value">${fmtMoney(o.total_amount)}</div>
-        <div class="kpi-foot">${fmtMoneyExact(o.total_amount)}</div>
+        <div class="kpi-value">${fmtMoney(aggAmt(o, "total_amount"))}</div>
+        <div class="kpi-foot">${fmtMoneyExact(aggAmt(o, "total_amount"))}</div>
       </div>
       <div class="kpi">
         <div class="kpi-label">Donations</div>
@@ -2522,7 +3481,7 @@ function renderOwner(slug) {
           <h2 style="margin-top:6px">Where the money went</h2>
           <p class="caption">Top recipient committees by total dollars, all cycles combined.</p>
           <div class="recipients-list" style="margin-top:18px">
-            ${o.top_recipients.map((r, i) => renderRecipient(r, i, o.total_amount)).join("")}
+            ${o.top_recipients.map((r, i) => renderRecipient(r, i, aggAmt(o, "total_amount"))).join("")}
           </div>
         </div>
 
@@ -2579,7 +3538,8 @@ function renderOwner(slug) {
 
 function renderRecipient(r, i, totalAmount) {
   const partyClass = r.party === "DEM" ? "dem" : r.party === "REP" ? "rep" : "oth";
-  const pct = totalAmount > 0 ? (r.amount / totalAmount) * 100 : 0;
+  const rAmt = aggAmt(r, "amount");
+  const pct = totalAmount > 0 ? (rAmt / totalAmount) * 100 : 0;
   const cid = r.committee_id;
   const linkable = cid && cid !== "_unknown";
   return `
@@ -2595,7 +3555,7 @@ function renderRecipient(r, i, totalAmount) {
         <div class="recipient-bar-track"><div class="recipient-bar ${partyClass}" style="width:${pct.toFixed(1)}%"></div></div>
       </div>
       <div>
-        <div class="recipient-amount">${fmtMoney(r.amount)}</div>
+        <div class="recipient-amount">${fmtMoney(rAmt)}</div>
         <div class="recipient-count">${r.count} donation${r.count === 1 ? "" : "s"}</div>
       </div>
     </div>`;
@@ -2605,7 +3565,7 @@ function renderVerificationCard(d) {
   return `
     <div class="ver-card">
       <span class="chip chip-confirmed">Confirmed</span>
-      <h4 style="margin-top:10px">${fmtMoney(d.amount)} to ${escapeHtml(d.committee)}</h4>
+      <h4 style="margin-top:10px">${fmtMoney(amt(d))} to ${escapeHtml(d.committee)}</h4>
       <div class="ver-meta">${fmtDate(d.date)} · Transaction ${escapeHtml(d.id)}</div>
 
       <div class="field">
@@ -2686,8 +3646,8 @@ function renderTimeline(donations, ownerOrSegments) {
     tMax = Math.max(tMax, s.end);
   }
 
-  const aMax = Math.max(...dated.map((d) => d.amount));
-  const aMin = Math.max(50, Math.min(...dated.map((d) => d.amount)));
+  const aMax = Math.max(...dated.map((d) => amt(d)));
+  const aMin = Math.max(50, Math.min(...dated.map((d) => amt(d))));
   const logMin = Math.log10(aMin);
   const logMax = Math.log10(Math.max(aMax, aMin * 2));
 
@@ -2772,9 +3732,13 @@ function renderTimeline(donations, ownerOrSegments) {
   const isMultiTenure = segmentTimes.length > 1;
   const earliestSegmentStart = segmentTimes.length > 0 ? Math.min(...segmentTimes.map((s) => s.start)) : null;
 
+  /* Visible dots — pure decoration. pointer-events:none so the transparent
+     tap-target overlays below catch hover/click. Each visible dot also
+     drops its own <title> (it'd never fire) since the overlay owns the
+     tooltip. */
   const dots = dated.map((d) => {
     const x = xScale(d.t).toFixed(1);
-    const y = yScale(d.amount).toFixed(1);
+    const y = yScale(amt(d)).toFixed(1);
     const c = partyColor[d.party] || "var(--oth)";
     const stroke = d.status === "PROBABLE" ? "var(--warn-fg)" : "none";
     const sw = d.status === "PROBABLE" ? 1 : 0;
@@ -2783,8 +3747,30 @@ function renderTimeline(donations, ownerOrSegments) {
     const dotStroke = preTenure ? "var(--ink-3)" : stroke;
     const dotSw     = preTenure ? 0.8 : sw;
     const opacity   = preTenure ? 0.5 : 0.78;
+    return `<circle class="timeline-dot" cx="${x}" cy="${y}" r="4" fill="${c}" fill-opacity="${opacity}" stroke="${dotStroke}" stroke-width="${dotSw}" pointer-events="none"/>`;
+  }).join("");
+
+  /* Tap-target overlays — invisible 24px-wide hit zones for fat-finger
+     mobile use. Sit on top of the dots (rendered last) so SVG hit-testing
+     picks them up. Each carries data-id + cursor:pointer + the title text.
+     bindOwnerHandlers() binds clicks on every `.timeline-svg circle[data-id]`. */
+  const tapTargets = dated.map((d) => {
+    const x = xScale(d.t).toFixed(1);
+    const y = yScale(amt(d)).toFixed(1);
+    const preTenure = !isMultiTenure && earliestSegmentStart && d.t < earliestSegmentStart;
     const tenureFlag = preTenure ? " · PRE-TENURE" : "";
-    return `<circle data-id="${escapeAttr(d.id)}" cx="${x}" cy="${y}" r="4" fill="${c}" fill-opacity="${opacity}" stroke="${dotStroke}" stroke-width="${dotSw}" style="cursor:pointer"><title>${escapeHtml(fmtDate(d.date))} · ${escapeHtml(fmtMoneyExact(d.amount))} · ${escapeHtml(d.committee)}${d.status === "PROBABLE" ? " · PROBABLE" : ""}${tenureFlag}</title></circle>`;
+    return `<circle class="timeline-tap" data-id="${escapeAttr(d.id)}" cx="${x}" cy="${y}" r="12" fill="transparent" style="cursor:pointer"><title>${escapeHtml(fmtDate(d.date))} · ${escapeHtml(fmtMoneyExact(amt(d)))} · ${escapeHtml(d.committee)}${d.status === "PROBABLE" ? " · PROBABLE" : ""}${tenureFlag}</title></circle>`;
+  }).join("");
+
+  /* X-axis label thinning: when ticks are dense in viewBox space we want
+     every-other-label on narrow viewports. We can't measure rendered CSS
+     width at template time, so we tag alternating labels with a `minor`
+     class and let CSS @media hide them below 700px. */
+  const xLabels = xTicks.map((t, i) => {
+    const labelClass = i % 2 === 0 ? "timeline-xlabel" : "timeline-xlabel timeline-xlabel-minor";
+    return `
+      <line x1="${xScale(t)}" x2="${xScale(t)}" y1="${padT}" y2="${H - padB}" stroke="var(--rule)" stroke-width="1" stroke-dasharray="2 3"/>
+      <text x="${xScale(t)}" y="${H - 10}" text-anchor="middle" font-family="var(--mono)" font-size="11" fill="var(--ink-3)" class="${labelClass}">${new Date(t).getFullYear()}</text>`;
   }).join("");
 
   return `
@@ -2795,11 +3781,9 @@ function renderTimeline(donations, ownerOrSegments) {
           <line x1="${padL}" x2="${W - padR}" y1="${yScale(v)}" y2="${yScale(v)}" stroke="var(--rule)" stroke-width="1"/>
           <text x="${padL - 8}" y="${yScale(v) + 4}" text-anchor="end" font-family="var(--mono)" font-size="11" fill="var(--ink-3)">${fmtMoney(v)}</text>
         `).join("")}
-        ${xTicks.map((t) => `
-          <line x1="${xScale(t)}" x2="${xScale(t)}" y1="${padT}" y2="${H - padB}" stroke="var(--rule)" stroke-width="1" stroke-dasharray="2 3"/>
-          <text x="${xScale(t)}" y="${H - 10}" text-anchor="middle" font-family="var(--mono)" font-size="11" fill="var(--ink-3)">${new Date(t).getFullYear()}</text>
-        `).join("")}
+        ${xLabels}
         ${dots}
+        ${tapTargets}
       </svg>
     </div>`;
 }
@@ -2875,7 +3859,7 @@ function renderDonationRow(d) {
   return `
     <tr data-id="${escapeAttr(d.id)}">
       <td class="col-date">${escapeHtml(d.date || "—")}</td>
-      <td class="num col-amount">${fmtMoneyExact(d.amount)}</td>
+      <td class="num col-amount">${fmtMoneyExact(amt(d))}</td>
       <td class="col-recipient">
         ${escapeHtml(d.committee || "—")}
         ${d.candidate ? `<span class="candidate">→ ${escapeHtml(d.candidate)}</span>` : ""}
@@ -2904,7 +3888,7 @@ function bindOwnerHandlers() {
     btn.addEventListener("click", () => { state.ownerFilters.showAll = true; rerenderOwnerTable(); });
   });
 
-  document.querySelectorAll(".timeline-svg circle").forEach((c) => {
+  document.querySelectorAll(".timeline-svg circle[data-id]").forEach((c) => {
     c.addEventListener("click", () => openDrawer(c.getAttribute("data-id")));
   });
 
@@ -2972,10 +3956,10 @@ function renderCycle(year) {
         partyDollars: { DEM: 0, REP: 0, OTH: 0 },
       };
     }
-    ownerTotals[slug].amount += d.amount;
+    ownerTotals[slug].amount += amt(d);
     ownerTotals[slug].count += 1;
     const p = ["DEM","REP"].includes(d.party) ? d.party : "OTH";
-    ownerTotals[slug].partyDollars[p] += d.amount;
+    ownerTotals[slug].partyDollars[p] += amt(d);
   }
   const topOwners = Object.values(ownerTotals)
     .filter((o) => state.data.owners[o.slug])
@@ -2991,7 +3975,7 @@ function renderCycle(year) {
         committee_id: cid, committee: d.committee, party: d.party, amount: 0, count: 0,
       };
     }
-    recipientTotals[cid].amount += d.amount;
+    recipientTotals[cid].amount += amt(d);
     recipientTotals[cid].count += 1;
   }
   const topRecipients = Object.values(recipientTotals)
@@ -3002,7 +3986,7 @@ function renderCycle(year) {
   const totals = { DEM: 0, REP: 0, OTH: 0 };
   for (const d of donations) {
     const p = ["DEM","REP"].includes(d.party) ? d.party : "OTH";
-    totals[p] += d.amount;
+    totals[p] += amt(d);
   }
   const total = totals.DEM + totals.REP + totals.OTH;
 
@@ -3211,7 +4195,7 @@ function renderCycleDonationsTable(allDonations) {
             <tr data-id="${escapeAttr(d.id)}">
               <td class="col-date">${escapeHtml(d.date || "—")}</td>
               <td><span style="font-family:var(--serif);font-weight:500">${escapeHtml(ownerName)}</span></td>
-              <td class="num col-amount">${fmtMoneyExact(d.amount)}</td>
+              <td class="num col-amount">${fmtMoneyExact(amt(d))}</td>
               <td class="col-recipient">${escapeHtml(d.committee || "—")}${d.candidate ? `<span class="candidate">→ ${escapeHtml(d.candidate)}</span>` : ""}</td>
               <td><span class="chip-party ${partyClass}">${d.party}</span></td>
               <td style="white-space:nowrap">${statusChip} ${chip48H(d)}</td>
@@ -3308,7 +4292,7 @@ function renderCommittee(committeeId) {
   for (const d of donations) {
     const slug = d.parent || d.entity;
     if (!ownerTotals[slug]) ownerTotals[slug] = { slug, amount: 0, count: 0 };
-    ownerTotals[slug].amount += d.amount;
+    ownerTotals[slug].amount += amt(d);
     ownerTotals[slug].count += 1;
   }
   const ownersRanked = Object.values(ownerTotals)
@@ -3320,12 +4304,12 @@ function renderCommittee(committeeId) {
   for (const d of donations) {
     if (!d.cycle) continue;
     if (!byCycle[d.cycle]) byCycle[d.cycle] = { amount: 0, count: 0 };
-    byCycle[d.cycle].amount += d.amount;
+    byCycle[d.cycle].amount += amt(d);
     byCycle[d.cycle].count += 1;
   }
   const cycles = Object.keys(byCycle).map(Number).sort((a, b) => a - b);
 
-  const total = donations.reduce((s, d) => s + d.amount, 0);
+  const total = donations.reduce((s, d) => s + amt(d), 0);
   const earliestDate = donations.map((d) => d.date).filter(Boolean).sort()[0];
   const latestDate = donations.map((d) => d.date).filter(Boolean).sort().slice(-1)[0];
   const partyClass = party === "DEM" ? "dem" : party === "REP" ? "rep" : "oth";
@@ -3466,7 +4450,7 @@ function renderCommitteeDonationsTable(allDonations) {
             <tr data-id="${escapeAttr(d.id)}">
               <td class="col-date">${escapeHtml(d.date || "—")}</td>
               <td><span style="font-family:var(--serif);font-weight:500">${escapeHtml(ownerName)}</span></td>
-              <td class="num col-amount">${fmtMoneyExact(d.amount)}</td>
+              <td class="num col-amount">${fmtMoneyExact(amt(d))}</td>
               <td class="num">${escapeHtml(String(d.cycle || "—"))}</td>
               <td style="white-space:nowrap">${statusChip} ${chip48H(d)}</td>
             </tr>`;
@@ -3563,7 +4547,7 @@ function renderTeam(slug) {
   }
 
   /* Combined stats */
-  const total = donations.reduce((s, d) => s + d.amount, 0);
+  const total = donations.reduce((s, d) => s + amt(d), 0);
   const nConfirmed = donations.filter((d) => d.status === "CONFIRMED").length;
   const nProbable  = donations.filter((d) => d.status === "PROBABLE").length;
   const cycles = [...new Set(donations.map((d) => d.cycle).filter(Boolean))].sort((a, b) => b - a);
@@ -3571,7 +4555,7 @@ function renderTeam(slug) {
   const partyDollars = { DEM: 0, REP: 0, OTH: 0 };
   for (const d of donations) {
     const p = ["DEM","REP"].includes(d.party) ? d.party : "OTH";
-    partyDollars[p] += d.amount;
+    partyDollars[p] += amt(d);
   }
 
   /* Top recipients (combined) */
@@ -3581,7 +4565,7 @@ function renderTeam(slug) {
     if (!recAgg[cid]) {
       recAgg[cid] = { committee_id: cid, committee: d.committee, party: d.party, amount: 0, count: 0 };
     }
-    recAgg[cid].amount += d.amount;
+    recAgg[cid].amount += amt(d);
     recAgg[cid].count += 1;
   }
   const topRecipients = Object.values(recAgg).sort((a, b) => b.amount - a.amount).slice(0, 10);
@@ -3723,9 +4707,9 @@ function renderTeamOwnersGrid(team) {
   return `
     <div class="team-owners-grid">
       ${team.owners.map((o) => {
-        const dem = o.party_dollars.DEM || 0;
-        const rep = o.party_dollars.REP || 0;
-        const oth = (o.party_dollars.OTH || 0) + (o.party_dollars.IND || 0) + (o.party_dollars.LIB || 0) + (o.party_dollars.GRE || 0);
+        const dem = aggParty(o, "DEM");
+        const rep = aggParty(o, "REP");
+        const oth = aggParty(o, "OTH") + aggParty(o, "IND") + aggParty(o, "LIB") + aggParty(o, "GRE");
         const tot = dem + rep + oth;
         const tenureStr = o.tenure_start ? `${o.tenure_start.slice(0,4)}–${o.tenure_end ? o.tenure_end.slice(0,4) : "now"}` : "—";
         return `
@@ -3740,7 +4724,7 @@ function renderTeamOwnersGrid(team) {
                 <div class="tilt-seg rep" style="width:${(rep/tot)*100}%"></div>
               </div>` : ""}
             <div class="team-owner-stats">
-              <div class="team-owner-total">${fmtMoney(o.total_amount)}</div>
+              <div class="team-owner-total">${fmtMoney(aggAmt(o, "total_amount"))}</div>
               <div class="team-owner-count">${o.n_confirmed} confirmed · ${o.n_probable} probable</div>
             </div>
           </a>`;
@@ -3805,7 +4789,7 @@ function renderTeamDonationsTable(allDonations) {
             <tr data-id="${escapeAttr(d.id)}">
               <td class="col-date">${escapeHtml(d.date || "—")}</td>
               <td><span style="font-family:var(--serif);font-weight:500">${escapeHtml(ownerName)}</span></td>
-              <td class="num col-amount">${fmtMoneyExact(d.amount)}</td>
+              <td class="num col-amount">${fmtMoneyExact(amt(d))}</td>
               <td class="col-recipient">${escapeHtml(d.committee || "—")}${d.candidate ? `<span class="candidate">→ ${escapeHtml(d.candidate)}</span>` : ""}</td>
               <td><span class="chip-party ${partyClass}">${d.party}</span></td>
               <td style="white-space:nowrap">${statusChip} ${chip48H(d)}</td>
@@ -3856,7 +4840,7 @@ function bindTeamHandlers() {
     });
   });
 
-  document.querySelectorAll(".timeline-svg circle").forEach((c) => {
+  document.querySelectorAll(".timeline-svg circle[data-id]").forEach((c) => {
     c.addEventListener("click", () => openDrawer(c.getAttribute("data-id")));
   });
 }
@@ -3917,7 +4901,30 @@ function downloadDonationsCSV(rows, filename) {
    ══════════════════════════════════════════════════════════════════════ */
 function openDrawer(id) {
   const d = state.data.donations.find((x) => x.id === id);
-  if (!d) return;
+  if (!d) {
+    document.getElementById("drawer-body").innerHTML = `
+      <h2>Donation not found</h2>
+      <div class="drawer-amount-meta" style="margin-bottom:0">
+        <span>Stale or invalid permalink</span>
+      </div>
+      <div class="drawer-section">
+        <p class="drawer-not-found">
+          Transaction <code>${escapeHtml(id || "")}</code> isn't in the current
+          archive snapshot. It may have been superseded by a later FEC filing,
+          or the link itself may be stale.
+        </p>
+        <p class="drawer-not-found">
+          <a href="#/" onclick="closeDrawer()" class="drawer-link">Browse all owners</a>
+        </p>
+      </div>
+    `;
+    document.getElementById("drawer").classList.add("open");
+    document.getElementById("drawer-scrim").classList.add("open");
+    document.getElementById("drawer").setAttribute("aria-hidden", "false");
+    /* Clear the bad ?d= so a refresh doesn't re-open this dead-end. */
+    setDrawerParam(null);
+    return;
+  }
 
   const partyClass = d.party === "DEM" ? "dem" : d.party === "REP" ? "rep" : "oth";
   const statusChip = d.status === "CONFIRMED"
@@ -3943,7 +4950,7 @@ function openDrawer(id) {
     <h2>${ownerNameHtml} <span class="donor-arrow">→</span> ${escapeHtml(d.committee || "—")}</h2>
     ${d.candidate ? `<div class="muted" style="margin-top:4px;font-size:14px">For ${escapeHtml(d.candidate)}</div>` : ""}
 
-    <div class="drawer-amount">${fmtMoneyExact(d.amount)}</div>
+    <div class="drawer-amount">${fmtMoneyExact(amt(d))}</div>
     <div class="drawer-amount-meta">
       <span>${fmtDate(d.date)}</span>
       <span>·</span>
@@ -4033,6 +5040,13 @@ function openDrawer(id) {
               <div class="drawer-source-sub">${escapeHtml(d.committee_id || "")}</div>
             </div>
           </a>` : ""}
+        <button type="button" class="drawer-source-link copy-perma" onclick="copyPermalink(this)">
+          <span class="drawer-source-icon">🔗</span>
+          <div>
+            <div class="drawer-source-title">Copy permalink</div>
+            <div class="drawer-source-sub">Share this exact donation</div>
+          </div>
+        </button>
       </div>
     </div>
 
@@ -4096,6 +5110,43 @@ function setDrawerParam(id) {
   if (id) url.searchParams.set("d", id);
   else url.searchParams.delete("d");
   window.history.replaceState(null, "", url.toString());
+}
+
+/* Copy the current URL (which carries ?d=<txn_id> while the drawer is open)
+   to clipboard. Falls back to a hidden textarea + execCommand for non-HTTPS
+   contexts (local http:// dev) where navigator.clipboard isn't available. */
+function copyPermalink(btn) {
+  const url = window.location.href;
+  const title = btn.querySelector(".drawer-source-title");
+  const sub = btn.querySelector(".drawer-source-sub");
+  const origTitle = title.textContent;
+  const origSub = sub.textContent;
+  const flash = (ok) => {
+    btn.classList.add("copied");
+    title.textContent = ok ? "Copied ✓" : "Copy failed";
+    sub.textContent = ok ? "Link in your clipboard" : "Select the URL bar and copy manually";
+    setTimeout(() => {
+      btn.classList.remove("copied");
+      title.textContent = origTitle;
+      sub.textContent = origSub;
+    }, 1500);
+  };
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(url).then(() => flash(true)).catch(() => flash(false));
+    return;
+  }
+  /* Fallback for non-secure contexts (local http:// dev). */
+  const ta = document.createElement("textarea");
+  ta.value = url;
+  ta.setAttribute("readonly", "");
+  ta.style.position = "fixed";
+  ta.style.top = "-1000px";
+  document.body.appendChild(ta);
+  ta.select();
+  let ok = false;
+  try { ok = document.execCommand("copy"); } catch (_) { ok = false; }
+  document.body.removeChild(ta);
+  flash(ok);
 }
 
 document.getElementById("drawer-close").addEventListener("click", closeDrawer);
@@ -4207,7 +5258,25 @@ function renderMethodology() {
 /* ════════════════════════════════════════════════════════════════════════
    RUNS / PIPELINE TRANSPARENCY VIEW (#/runs)
    ══════════════════════════════════════════════════════════════════════ */
+/* Pipeline page chrome: wraps either the Runs body or the Changelog body
+   in a shared container + tab strip. Keeps both routes (#/runs and
+   #/changelog) cite-able while presenting as one logical page. */
+function renderPipelinePage(activeTab, bodyHtml) {
+  return `
+  <div class="container">
+    <div class="pipeline-tabs" role="tablist" aria-label="Pipeline views">
+      <a href="#/runs" role="tab" class="${activeTab === 'runs' ? 'active' : ''}" aria-selected="${activeTab === 'runs'}">Ingestion runs</a>
+      <a href="#/changelog" role="tab" class="${activeTab === 'changelog' ? 'active' : ''}" aria-selected="${activeTab === 'changelog'}">Audit log</a>
+    </div>
+    ${bodyHtml}
+  </div>`;
+}
+
 function renderRuns() {
+  return renderPipelinePage("runs", renderRunsBody());
+}
+
+function renderRunsBody() {
   const p = state.data.pipeline;
   const runs = state.data.runs || [];
 
@@ -4221,7 +5290,6 @@ function renderRuns() {
   };
 
   return `
-  <div class="container">
     <section class="hero" style="padding-bottom:18px">
       <span class="eyebrow">Pipeline</span>
       <h1 style="margin-top:14px;max-width:24ch">Every ingestion run, every API call.</h1>
@@ -4307,8 +5375,646 @@ function renderRuns() {
         UNCERTAIN records are routed to a manual review queue and do not appear in
         canonical exports.
       </p>
+    </section>`;
+}
+
+/* ──────────── /#/changelog (Pipeline → Audit log tab) ──────────── */
+
+/* Lazy-fetch provenance.json. Triggered by renderChangelog the first time
+   the tab is visited. Re-renders on completion. */
+async function loadProvenance() {
+  if (state.provenance || state.provenanceLoading) return;
+  state.provenanceLoading = true;
+  try {
+    const res = await fetch("./provenance.json", { cache: "no-cache" });
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    state.provenance = await res.json();
+  } catch (e) {
+    state.provenanceError = String(e);
+  } finally {
+    state.provenanceLoading = false;
+    if (state.view.name === "changelog") render();
+  }
+}
+
+function renderChangelog() {
+  return renderPipelinePage("changelog", renderChangelogBody());
+}
+
+function renderChangelogBody() {
+  if (state.provenanceError) {
+    return `
+      <section class="hero" style="padding-bottom:18px">
+        <span class="eyebrow">Pipeline · Audit log</span>
+        <h1 style="margin-top:14px;max-width:24ch">Couldn't load the audit log.</h1>
+        <p class="deck">
+          <code>provenance.json</code> failed to load: ${escapeHtml(state.provenanceError)}.
+          Try a hard refresh or check the network tab.
+        </p>
+      </section>`;
+  }
+  if (!state.provenance) {
+    /* Kick off the fetch on the side; render returns immediately. */
+    loadProvenance();
+    return `
+      <section class="hero" style="padding-bottom:18px">
+        <span class="eyebrow">Pipeline · Audit log</span>
+        <h1 style="margin-top:14px;max-width:24ch">Every change to the archive, on the record.</h1>
+        <p class="deck">Loading audit trail…</p>
+      </section>`;
+  }
+
+  /* Reverse for display: the source file is forward-chronological. */
+  const all = [...state.provenance.entries].reverse();
+  const typeCounts = {};
+  for (const e of all) typeCounts[e.raw_type] = (typeCounts[e.raw_type] || 0) + 1;
+  const knownTypes = Object.keys(typeCounts).sort();
+
+  const f = state.changelogFilters;
+  if (f.types === null) f.types = new Set(knownTypes);
+
+  const q = f.q.trim().toLowerCase();
+  const filtered = all.filter((e) => {
+    if (!f.types.has(e.raw_type)) return false;
+    if (q && !((e.subject || "").toLowerCase().includes(q)
+            || (e.body_html || "").toLowerCase().includes(q))) return false;
+    return true;
+  });
+
+  const visible = filtered.slice(0, f.visibleN);
+  const hasMore = filtered.length > visible.length;
+
+  const typeChip = (t, n, on) =>
+    `<button type="button" class="changelog-type-filter ct-${t.toLowerCase()} ${on ? 'on' : ''}" data-type="${escapeAttr(t)}">${escapeHtml(t)} <span class="ct-count">${n}</span></button>`;
+
+  const fmtEntryDate = (e) => {
+    if (e.timestamp_utc && e.timestamp_utc.includes("T")) {
+      return e.timestamp_utc.replace("T", " ").replace("Z", " UTC");
+    }
+    return e.date;
+  };
+
+  return `
+    <section class="hero" style="padding-bottom:18px">
+      <span class="eyebrow">Pipeline · Audit log</span>
+      <h1 style="margin-top:14px;max-width:24ch">Every change to the archive, on the record.</h1>
+      <p class="deck">
+        Append-only log of every event that affects the data: ingestion runs,
+        signal changes, status promotions, review-queue resolutions, schema
+        migrations, deletions. Newest first.
+      </p>
+    </section>
+
+    <div class="changelog-filters" id="cl-filters">
+      <div class="changelog-type-row">
+        ${knownTypes.map((t) => typeChip(t, typeCounts[t], f.types.has(t))).join("")}
+        <button type="button" class="changelog-type-reset" id="cl-reset">Reset</button>
+      </div>
+      <div class="changelog-search-row">
+        <input id="cl-q" type="text" placeholder="Search subject or body…" value="${escapeAttr(f.q)}" autocomplete="off">
+        <span class="filter-result" id="cl-result">
+          ${fmtInt(filtered.length)} of ${fmtInt(all.length)} entries
+        </span>
+      </div>
+    </div>
+
+    <section class="block" style="margin-top:18px">
+      <div class="changelog-list">
+        ${visible.length === 0 ? `
+          <p class="caption" style="padding:24px 0">No entries match the current filters.</p>
+        ` : visible.map((e) => `
+          <article class="changelog-entry">
+            <header class="changelog-entry-head">
+              <span class="changelog-type-chip ct-${e.raw_type.toLowerCase()}">${escapeHtml(e.raw_type)}</span>
+              <time class="changelog-entry-date">${escapeHtml(fmtEntryDate(e))}</time>
+              ${e.subject ? `<span class="changelog-entry-subject">${escapeHtml(e.subject)}</span>` : ""}
+            </header>
+            <div class="changelog-entry-body">${e.body_html}</div>
+          </article>
+        `).join("")}
+      </div>
+      ${hasMore ? `
+        <div class="changelog-load-more">
+          <button type="button" id="cl-load-more" class="csv-btn">
+            Load ${Math.min(50, filtered.length - visible.length)} more (${fmtInt(filtered.length - visible.length)} remaining)
+          </button>
+        </div>` : ""}
+      <p class="footnote">
+        Source: <code>catalog/PROVENANCE_LOG.md</code> ·
+        ${fmtInt(all.length)} entries generated ${escapeHtml((state.provenance.generated_at || "").slice(0, 10))}
+      </p>
+    </section>
+  `;
+}
+
+function bindChangelogHandlers() {
+  if (state.view.name !== "changelog") return;
+  const f = state.changelogFilters;
+
+  document.querySelectorAll(".changelog-type-filter").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const t = btn.getAttribute("data-type");
+      if (f.types.has(t)) f.types.delete(t); else f.types.add(t);
+      f.visibleN = 50;
+      render();
+    });
+  });
+
+  const reset = document.getElementById("cl-reset");
+  if (reset) reset.addEventListener("click", () => {
+    f.types = null;  /* will be re-populated from knownTypes on next render */
+    f.q = "";
+    f.visibleN = 50;
+    render();
+  });
+
+  const q = document.getElementById("cl-q");
+  if (q) {
+    let t;
+    q.addEventListener("input", () => {
+      clearTimeout(t);
+      t = setTimeout(() => {
+        f.q = q.value;
+        f.visibleN = 50;
+        render();
+        const fresh = document.getElementById("cl-q");
+        if (fresh) { fresh.focus(); fresh.setSelectionRange(fresh.value.length, fresh.value.length); }
+      }, 150);
+    });
+  }
+
+  const more = document.getElementById("cl-load-more");
+  if (more) more.addEventListener("click", () => {
+    f.visibleN += 50;
+    render();
+  });
+}
+
+/* ──────────── /#/recipients ──────────── */
+
+/* Apply current recipient filters (type, party, q) to the recipients[] list
+   from data.json. Sorts by current sort key/dir. */
+function filterRecipients() {
+  const all = state.data.recipients || [];
+  const f = state.recipientFilters;
+  const knownTypes = ["Candidate", "Party", "PAC", "Other"];
+  const knownParties = ["DEM", "REP", "OTH", "IND", "LIB", "GRE"];
+  if (f.types === null)   f.types = new Set(knownTypes);
+  if (f.parties === null) f.parties = new Set(knownParties);
+
+  const q = f.q.trim().toLowerCase();
+  const rows = all.filter((r) => {
+    if (!f.types.has(r.recipient_type)) return false;
+    const party = r.party || "OTH";
+    /* Bucket exotic parties into OTH for the filter UI so we don't have to
+       expose 6 pills. The data.json party_raw is preserved if we ever need
+       finer control. */
+    const partyBucket = knownParties.includes(party) ? party : "OTH";
+    if (!f.parties.has(partyBucket)) return false;
+    if (q && !(r.committee || "").toLowerCase().includes(q)
+         && !(r.committee_id || "").toLowerCase().includes(q)) return false;
+    return true;
+  });
+
+  const k = f.sort.key;
+  const dir = f.sort.dir === "asc" ? 1 : -1;
+  rows.sort((a, b) => {
+    let av, bv;
+    if (k === "committee") { av = a.committee || ""; bv = b.committee || ""; }
+    else if (k === "n_donations") { av = a.n_donations; bv = b.n_donations; }
+    else if (k === "owner_count") { av = a.owner_count; bv = b.owner_count; }
+    else if (k === "latest_date") { av = a.latest_date || ""; bv = b.latest_date || ""; }
+    else if (k === "recipient_type") { av = a.recipient_type; bv = b.recipient_type; }
+    else { av = aggAmt(a, "total_amount"); bv = aggAmt(b, "total_amount"); }
+    if (typeof av === "string") return av.localeCompare(bv) * dir;
+    return (av - bv) * dir;
+  });
+  return { rows, all };
+}
+
+function renderRecipients() {
+  const { rows, all } = filterRecipients();
+  const f = state.recipientFilters;
+  const knownTypes = ["Candidate", "Party", "PAC", "Other"];
+  const knownParties = [
+    ["DEM", "Democratic"], ["REP", "Republican"], ["OTH", "Other / unaffil."],
+  ];
+
+  /* Header KPIs are computed against the filtered set so they reflect the
+     current view, not just the whole archive. */
+  const totalDollars = rows.reduce((s, r) => s + aggAmt(r, "total_amount"), 0);
+  const partyDollars = { DEM: 0, REP: 0, OTH: 0 };
+  for (const r of rows) {
+    const p = ["DEM", "REP"].includes(r.party) ? r.party : "OTH";
+    partyDollars[p] += aggAmt(r, "total_amount");
+  }
+
+  const typeCounts = { Candidate: 0, Party: 0, PAC: 0, Other: 0 };
+  for (const r of all) typeCounts[r.recipient_type] = (typeCounts[r.recipient_type] || 0) + 1;
+
+  const visible = rows.slice(0, f.visibleN);
+  const hasMore = rows.length > visible.length;
+
+  const sortArrow = (k) => f.sort.key === k ? (f.sort.dir === "asc" ? " ▲" : " ▼") : "";
+  const thSort = (k, label, klass = "") =>
+    `<th class="${klass} re-sort" data-sort="${k}" style="cursor:pointer">${escapeHtml(label)}${sortArrow(k)}</th>`;
+
+  return `
+  <div class="container">
+    <section class="hero" style="padding-bottom:18px">
+      <span class="eyebrow">Recipients</span>
+      <h1 style="margin-top:14px;max-width:24ch">Who received the money.</h1>
+      <p class="deck">
+        Every committee that received at least one CONFIRMED or PROBABLE
+        donation from an MLB principal owner. Sortable by amount, donations,
+        distinct donors, or recency. Click any row for the recipient detail.
+      </p>
+    </section>
+
+    <div class="kpis" style="border-top:0;border-bottom:1px solid var(--rule);">
+      <div class="kpi">
+        <div class="kpi-label">Recipients (filtered)</div>
+        <div class="kpi-value">${fmtInt(rows.length)}</div>
+        <div class="kpi-foot">of ${fmtInt(all.length)} distinct committees</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Total to filtered set</div>
+        <div class="kpi-value">${fmtMoney(totalDollars)}</div>
+        <div class="kpi-foot">${fmtMoneyExact(totalDollars)}</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">To Democratic</div>
+        <div class="kpi-value" style="color:var(--dem)">${fmtMoney(partyDollars.DEM)}</div>
+        <div class="kpi-foot">${totalDollars > 0 ? Math.round((partyDollars.DEM / totalDollars) * 100) : 0}% of filtered</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">To Republican</div>
+        <div class="kpi-value" style="color:var(--rep)">${fmtMoney(partyDollars.REP)}</div>
+        <div class="kpi-foot">${totalDollars > 0 ? Math.round((partyDollars.REP / totalDollars) * 100) : 0}% of filtered</div>
+      </div>
+    </div>
+
+    <div class="recipients-filters">
+      <div class="recipients-filter-row">
+        <span class="recipients-filter-label">Type</span>
+        ${knownTypes.map((t) => `
+          <button type="button" class="recipients-pill ${f.types.has(t) ? 'on' : ''}" data-type="${escapeAttr(t)}">
+            ${escapeHtml(t)} <span class="re-count">${fmtInt(typeCounts[t] || 0)}</span>
+          </button>`).join("")}
+      </div>
+      <div class="recipients-filter-row">
+        <span class="recipients-filter-label">Party</span>
+        ${knownParties.map(([k, label]) => `
+          <button type="button" class="recipients-pill party-${k.toLowerCase()} ${f.parties.has(k) ? 'on' : ''}" data-party="${escapeAttr(k)}">
+            ${escapeHtml(label)}
+          </button>`).join("")}
+      </div>
+      <div class="recipients-filter-row">
+        <input id="re-q" type="text" placeholder="Search committee name or ID…" value="${escapeAttr(f.q)}" autocomplete="off">
+        <button type="button" id="re-reset" class="recipients-reset">Reset</button>
+      </div>
+    </div>
+
+    <section class="block">
+      <div class="table-scroll">
+      <table class="donations-table recipients-table">
+        <thead>
+          <tr>
+            ${thSort("committee", "Committee")}
+            ${thSort("recipient_type", "Type")}
+            <th>Party</th>
+            ${thSort("total_amount", "Total $", "num")}
+            ${thSort("n_donations", "Donations", "num")}
+            ${thSort("owner_count", "Owners", "num")}
+            ${thSort("latest_date", "Last gift")}
+          </tr>
+        </thead>
+        <tbody>
+          ${visible.length === 0 ? `
+            <tr><td colspan="7" style="padding:24px 0;text-align:center;color:var(--ink-3)">No recipients match the current filters.</td></tr>
+          ` : visible.map((r) => {
+            const partyClass = r.party === "DEM" ? "dem" : r.party === "REP" ? "rep" : "oth";
+            const cyclesStr = (r.cycles_active && r.cycles_active.length)
+              ? `${r.cycles_active[0]}${r.cycles_active.length > 1 ? "–" + r.cycles_active[r.cycles_active.length - 1] : ""}`
+              : "—";
+            return `
+              <tr data-cid="${escapeAttr(r.committee_id)}" class="re-row" style="cursor:pointer">
+                <td>
+                  <div class="re-name">${escapeHtml(r.committee || "—")}</div>
+                  <div class="re-sub">${escapeHtml(r.committee_id)} · ${escapeHtml(cyclesStr)}</div>
+                </td>
+                <td>${escapeHtml(r.recipient_type)}</td>
+                <td><span class="chip-party ${partyClass}">${escapeHtml(r.party || "OTH")}</span></td>
+                <td class="num"><strong>${fmtMoney(aggAmt(r, "total_amount"))}</strong></td>
+                <td class="num">${fmtInt(r.n_donations)}</td>
+                <td class="num">${fmtInt(r.owner_count)}</td>
+                <td class="col-date">${escapeHtml(r.latest_date || "—")}</td>
+              </tr>`;
+          }).join("")}
+        </tbody>
+      </table>
+      </div>
+      ${hasMore ? `
+        <div class="recipients-load-more">
+          <button type="button" id="re-load-more" class="csv-btn">
+            Load ${Math.min(100, rows.length - visible.length)} more (${fmtInt(rows.length - visible.length)} remaining)
+          </button>
+        </div>` : ""}
+      <p class="footnote">
+        Recipients are uniquely identified by FEC <code>committee_id</code>. The
+        ${fmtInt(all.length)}-committee total is the canonical universe of
+        recipients in the archive; counts above filter by your selection.
+      </p>
     </section>
   </div>`;
+}
+
+function bindRecipientsHandlers() {
+  if (state.view.name !== "recipients") return;
+  const f = state.recipientFilters;
+
+  document.querySelectorAll(".recipients-pill[data-type]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const t = btn.getAttribute("data-type");
+      if (f.types.has(t)) f.types.delete(t); else f.types.add(t);
+      f.visibleN = 100;
+      render();
+    });
+  });
+  document.querySelectorAll(".recipients-pill[data-party]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const p = btn.getAttribute("data-party");
+      if (f.parties.has(p)) f.parties.delete(p); else f.parties.add(p);
+      f.visibleN = 100;
+      render();
+    });
+  });
+  document.querySelectorAll(".re-sort").forEach((th) => {
+    th.addEventListener("click", () => {
+      const k = th.getAttribute("data-sort");
+      if (f.sort.key === k) {
+        f.sort.dir = f.sort.dir === "asc" ? "desc" : "asc";
+      } else {
+        f.sort.key = k;
+        /* Numeric defaults desc, text defaults asc — matches typical UX. */
+        f.sort.dir = ["committee", "recipient_type", "latest_date"].includes(k) ? "asc" : "desc";
+      }
+      f.visibleN = 100;
+      render();
+    });
+  });
+
+  const q = document.getElementById("re-q");
+  if (q) {
+    let t;
+    q.addEventListener("input", () => {
+      clearTimeout(t);
+      t = setTimeout(() => {
+        f.q = q.value;
+        f.visibleN = 100;
+        render();
+        const fresh = document.getElementById("re-q");
+        if (fresh) { fresh.focus(); fresh.setSelectionRange(fresh.value.length, fresh.value.length); }
+      }, 150);
+    });
+  }
+
+  const reset = document.getElementById("re-reset");
+  if (reset) reset.addEventListener("click", () => {
+    state.recipientFilters = { q: "", types: null, parties: null, sort: { key: "total_amount", dir: "desc" }, visibleN: 100 };
+    render();
+  });
+
+  const more = document.getElementById("re-load-more");
+  if (more) more.addEventListener("click", () => { f.visibleN += 100; render(); });
+
+  /* Row click → committee detail (existing #/committee/<id> route). */
+  document.querySelectorAll(".re-row").forEach((row) => {
+    row.addEventListener("click", () => {
+      const cid = row.getAttribute("data-cid");
+      if (cid) window.location.hash = `#/committee/${encodeURIComponent(cid)}`;
+    });
+  });
+}
+
+/* ──────────── /#/whats-new ──────────── */
+
+/* Detect the most recent multi-owner refresh batch from runs[].
+   Heuristic: the most recent date (YYYY-MM-DD prefix of started_at)
+   that has ≥2 non-dry runs. If none, fall back to the single most
+   recent non-dry run. Returns { date, runs[] } or null. */
+function detectLatestBatch() {
+  const runs = (state.data.runs || []).filter((r) => !r.dry_run && r.started_at);
+  if (!runs.length) return null;
+  const byDate = {};
+  for (const r of runs) {
+    const d = r.started_at.slice(0, 10);
+    (byDate[d] = byDate[d] || []).push(r);
+  }
+  const dates = Object.keys(byDate).sort().reverse();
+  const multi = dates.find((d) => byDate[d].length >= 2);
+  const pickedDate = multi || dates[0];
+  return { date: pickedDate, runs: byDate[pickedDate] };
+}
+
+function renderWhatsNew() {
+  const batch = detectLatestBatch();
+  if (!batch) {
+    return `
+    <div class="container">
+      <section class="hero">
+        <span class="eyebrow">What's new</span>
+        <h1 style="margin-top:14px;max-width:24ch">Archive initial snapshot.</h1>
+        <p class="deck">
+          Weekly diffs will appear here after the first scheduled refresh.
+          The full archive is browsable now via the
+          <a href="#/" class="drawer-link" style="display:inline">League index</a>.
+        </p>
+      </section>
+    </div>`;
+  }
+
+  /* Aggregate run-level metrics across the batch. */
+  const sumApi = batch.runs.reduce((a, r) => a + (r.api_calls_made || 0), 0);
+  const sumRecordsFetched = batch.runs.reduce((a, r) => a + (r.records_fetched || 0), 0);
+  const sumUncertain = batch.runs.reduce((a, r) => a + (r.uncertain_count || 0), 0);
+  const distinctOwners = new Set(batch.runs.map((r) => r.entity_slug)).size;
+
+  /* Pull the *actual* new donations from donations[] using ingested_at
+     within the batch's window (start of batch date through end of date).
+     Counts here reflect what landed in the canonical archive, not what
+     was merely fetched — the runs[] confirmed/probable counts can
+     double-count when an owner has multiple per-cycle chunk runs. */
+  const dayStart = batch.date + "T00:00:00Z";
+  const dayEnd = batch.date + "T23:59:59Z";
+  const newDonations = state.data.donations.filter(
+    (d) => d.ingested_at && d.ingested_at >= dayStart && d.ingested_at <= dayEnd
+  );
+
+  if (newDonations.length === 0) {
+    return `
+    <div class="container">
+      <section class="hero">
+        <span class="eyebrow">What's new</span>
+        <h1 style="margin-top:14px;max-width:24ch">No new attributable activity.</h1>
+        <p class="deck">
+          The most recent refresh window (${escapeHtml(batch.date)}) added zero
+          CONFIRMED or PROBABLE donations. ${fmtInt(sumRecordsFetched)} records
+          were reviewed; ${fmtInt(sumUncertain)} routed to the manual review
+          queue.
+        </p>
+        <p class="caption" style="margin-top:18px">
+          See <a href="#/runs" class="drawer-link" style="display:inline">Pipeline</a>
+          for per-owner run details.
+        </p>
+      </section>
+    </div>`;
+  }
+
+  /* Top 5 by amount (respects toggle). */
+  const top5 = [...newDonations].sort((a, b) => amt(b) - amt(a)).slice(0, 5);
+
+  /* Roll up by parent owner (spouse rows attach to parent — matches the
+     same logic build_data.py uses for owner aggregates). */
+  const ownerStats = {};
+  for (const d of newDonations) {
+    const slug = d.parent || d.entity;
+    const s = ownerStats[slug] || (ownerStats[slug] = {
+      slug, amount: 0, count: 0, recipients: new Set(),
+    });
+    s.amount += amt(d);
+    s.count += 1;
+    if (d.committee_id) s.recipients.add(d.committee_id);
+  }
+  const ownerRows = Object.values(ownerStats)
+    .map((s) => ({ ...s, recipients: s.recipients.size }))
+    .sort((a, b) => b.amount - a.amount);
+
+  /* Total $ added this batch. */
+  const totalAmount = newDonations.reduce((a, d) => a + amt(d), 0);
+
+  return `
+  <div class="container">
+    <section class="hero" style="padding-bottom:18px">
+      <span class="eyebrow">What's new</span>
+      <h1 style="margin-top:14px;max-width:24ch">Latest refresh: ${escapeHtml(batch.date)}.</h1>
+      <p class="deck">
+        Most recent multi-owner refresh window. Counts below reflect donations
+        that landed in the canonical archive (CONFIRMED + PROBABLE) during this
+        window.
+      </p>
+    </section>
+
+    <div class="kpis" style="border-top:0;border-bottom:1px solid var(--rule);">
+      <div class="kpi">
+        <div class="kpi-label">New donations</div>
+        <div class="kpi-value">${fmtInt(newDonations.length)}</div>
+        <div class="kpi-foot">${fmtMoneyExact(totalAmount)} total</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Owners affected</div>
+        <div class="kpi-value">${fmtInt(ownerRows.length)}</div>
+        <div class="kpi-foot">${fmtInt(distinctOwners)} owner${distinctOwners === 1 ? "" : "s"} in batch</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Routed to review</div>
+        <div class="kpi-value">${fmtInt(sumUncertain)}</div>
+        <div class="kpi-foot">UNCERTAIN — not in archive</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">${sumApi > 0 ? "FEC API calls" : "Reclassifications"}</div>
+        <div class="kpi-value">${sumApi > 0 ? fmtInt(sumApi) : fmtInt(batch.runs.length)}</div>
+        <div class="kpi-foot">${sumApi > 0
+          ? `${batch.runs.length} run${batch.runs.length === 1 ? "" : "s"} on ${escapeHtml(batch.date)}`
+          : `runs against existing raw payloads`}</div>
+      </div>
+    </div>
+
+    <section class="block">
+      <div class="block-head">
+        <span class="eyebrow">Biggest new donations</span>
+        <h2 style="margin-top:6px">Top ${top5.length} by amount, this refresh</h2>
+        <p class="caption">Click a row to open the full FEC source record.</p>
+      </div>
+      <div class="table-scroll">
+      <table class="donations-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th class="num">Amount</th>
+            <th>Owner</th>
+            <th>Recipient</th>
+            <th>Party</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${top5.map((d) => {
+            const owner = state.data.owners[d.parent || d.entity];
+            const ownerName = owner ? owner.name : (d.entity || "—");
+            const partyClass = d.party === "DEM" ? "dem" : d.party === "REP" ? "rep" : "oth";
+            return `
+              <tr data-id="${escapeAttr(d.id)}" class="wn-donation-row" style="cursor:pointer">
+                <td class="col-date">${escapeHtml(fmtDate(d.date))}</td>
+                <td class="num"><strong>${escapeHtml(fmtMoneyExact(amt(d)))}</strong></td>
+                <td><span style="font-family:var(--serif);font-weight:500">${escapeHtml(ownerName)}</span></td>
+                <td>${escapeHtml(d.committee || "—")}</td>
+                <td><span class="chip-party ${partyClass}">${escapeHtml(d.party || "OTH")}</span></td>
+                <td>${d.status === "CONFIRMED"
+                       ? `<span class="chip chip-confirmed">Confirmed</span>`
+                       : `<span class="chip chip-probable">Probable</span>`}</td>
+              </tr>`;
+          }).join("")}
+        </tbody>
+      </table>
+      </div>
+    </section>
+
+    <section class="block">
+      <div class="block-head">
+        <span class="eyebrow">Owner activity</span>
+        <h2 style="margin-top:6px">${fmtInt(ownerRows.length)} owners with new records this refresh</h2>
+        <p class="caption">Sorted by dollars added.</p>
+      </div>
+      <div class="table-scroll">
+      <table class="donations-table">
+        <thead>
+          <tr>
+            <th>Owner</th>
+            <th class="num">New records</th>
+            <th class="num">Distinct recipients</th>
+            <th class="num">Total $</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${ownerRows.map((s) => {
+            const owner = state.data.owners[s.slug];
+            const name = owner ? owner.name : s.slug;
+            return `
+              <tr>
+                <td><a href="#/owner/${escapeAttr(s.slug)}" style="color:inherit;font-family:var(--serif);font-weight:500">${escapeHtml(name)}</a></td>
+                <td class="num">${fmtInt(s.count)}</td>
+                <td class="num">${fmtInt(s.recipients)}</td>
+                <td class="num">${escapeHtml(fmtMoneyExact(s.amount))}</td>
+              </tr>`;
+          }).join("")}
+        </tbody>
+      </table>
+      </div>
+      <p class="footnote">
+        Refresh batch detected as the most recent date with ≥2 owner runs.
+        See <a href="#/runs" style="color:var(--accent)">Pipeline → Ingestion runs</a>
+        for per-run detail.
+      </p>
+    </section>
+  </div>`;
+}
+
+function bindWhatsNewHandlers() {
+  if (state.view.name !== "whats-new") return;
+  document.querySelectorAll(".wn-donation-row").forEach((row) => {
+    row.addEventListener("click", () => openDrawer(row.getAttribute("data-id")));
+  });
 }
 
 function renderAbout() {
@@ -4321,7 +6027,7 @@ function renderAbout() {
 
       <div style="margin-top:48px">
         <h3>Coverage</h3>
-        <p>${fmtInt(L.n_donations)} donations across ${L.n_owners} owners, ${L.n_cycles} election cycles, totaling ${fmtMoneyExact(L.total_amount)}. Earliest record: ${fmtDate(L.earliest_date)}. Latest: ${fmtDate(L.latest_date)}.</p>
+        <p>${fmtInt(L.n_donations)} donations across ${L.n_owners} owners, ${L.n_cycles} election cycles, totaling ${fmtMoneyExact(aggAmt(L, "total_amount"))}. Earliest record: ${fmtDate(L.earliest_date)}. Latest: ${fmtDate(L.latest_date)}.</p>
       </div>
 
       <div style="margin-top:32px">
@@ -4332,7 +6038,7 @@ function renderAbout() {
       <div style="margin-top:32px">
         <h3>Top recipient committees (league-wide)</h3>
         <div class="recipients-list" style="margin-top:14px">
-          ${L.top_recipients.slice(0, 15).map((r, i) => renderRecipient(r, i, L.total_amount)).join("")}
+          ${L.top_recipients.slice(0, 15).map((r, i) => renderRecipient(r, i, aggAmt(L, "total_amount"))).join("")}
         </div>
       </div>
 
@@ -4432,15 +6138,21 @@ function renderCmdKResults() {
     ul.innerHTML = `<div class="cmdk-empty">No matches for "${escapeHtml(state.cmdk.q)}". Try an owner, team, or committee name.</div>`;
     return;
   }
-  ul.innerHTML = state.cmdk.results.map((r, i) => `
+  ul.innerHTML = state.cmdk.results.map((r, i) => {
+    /* Candidates route to their top-receiving committee. The "→" badge
+       mirrors the "→ COMMITTEE NAME" sub-line so the redirect isn't
+       mysterious. */
+    const typeLabel = r.type === "candidate" ? "cand. →" : r.type;
+    return `
     <li class="cmdk-result ${i === state.cmdk.cursor ? "active" : ""}" data-idx="${i}">
-      <div class="cmdk-result-type">${r.type}</div>
+      <div class="cmdk-result-type" data-kind="${escapeAttr(r.type)}">${typeLabel}</div>
       <div style="min-width:0">
         <div class="cmdk-result-label">${highlightMatch(r.label, q)}</div>
         <div class="cmdk-result-sub">${escapeHtml(r.sub || "")}</div>
       </div>
       <div class="cmdk-result-meta">${escapeHtml(r.metaText || "")}</div>
-    </li>`).join("");
+    </li>`;
+  }).join("");
 
   /* Click handlers */
   ul.querySelectorAll(".cmdk-result").forEach((el) => {

@@ -13,12 +13,27 @@ from __future__ import annotations
 
 import json
 import sqlite3
+import sys
 from collections import defaultdict
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 DB_PATH = REPO_ROOT / "data" / "master.db"
 OUT_PATH = REPO_ROOT / "mockup" / "data.json"
+PROVENANCE_SRC = REPO_ROOT / "catalog" / "PROVENANCE_LOG.md"
+PROVENANCE_OUT = REPO_ROOT / "mockup" / "provenance.json"
+
+# Allow `from scripts.* import …` when this script is run directly
+# (Cloudflare invokes it as `python mockup/build_data.py`).
+sys.path.insert(0, str(REPO_ROOT))
+from scripts.dollars import (  # noqa: E402
+    CPI_BASE_YEAR,
+    CPI_LATEST_MONTH,
+    CPI_TABLE,
+    committee_type_label,
+    to_real,
+)
+from scripts.parse_provenance import parse_provenance_file  # noqa: E402
 
 
 def filing_pdf_url(filing_id) -> str | None:
@@ -58,12 +73,19 @@ def load_raw_payload_index(repo_root: Path, payload_paths: set[str]) -> dict[str
             txn = r.get("transaction_id")
             if not txn:
                 continue
+            # Recipient committee type can live on the top-level result or
+            # nested under `committee`. Prefer top-level (cleaner pull).
+            rct = r.get("recipient_committee_type")
+            if not rct:
+                cmt = r.get("committee") or {}
+                rct = cmt.get("committee_type") if isinstance(cmt, dict) else None
             index[txn] = {
                 "image_number": r.get("image_number"),
                 "pdf_url": r.get("pdf_url"),
                 "filing_form": r.get("filing_form"),
                 "line_number": r.get("line_number"),
                 "receipt_type_full": r.get("receipt_type_full"),
+                "committee_type": rct,
             }
     return index
 
@@ -188,6 +210,9 @@ def main() -> None:
                 "party_raw": d["recipient_party"],
                 "office": d["recipient_office"],
                 "amount": d["amount"],
+                # CPI-adjusted to CPI_BASE_YEAR. Baked at build time so the
+                # frontend can flip the inflation toggle without re-aggregating.
+                "amount_2026": to_real(d["amount"], d["election_cycle"]),
                 "date": d["date"],
                 "cycle": d["election_cycle"],
                 "report_type": d["report_type"],
@@ -200,6 +225,8 @@ def main() -> None:
                 "filing_form": extra.get("filing_form"),
                 "line_number": extra.get("line_number"),
                 "receipt_type": extra.get("receipt_type_full"),
+                "committee_type": extra.get("committee_type"),
+                "recipient_type": committee_type_label(extra.get("committee_type")),
                 "filing_pdf_url": filing_pdf_url(d["filing_id"]),
             }
         )
@@ -220,29 +247,44 @@ def main() -> None:
 
         my_donations = owner_donations.get(slug, [])
         total_amount = sum(d["amount"] for d in my_donations)
+        total_amount_2026 = sum(d["amount_2026"] for d in my_donations)
         n_total = len(my_donations)
         n_confirmed = sum(1 for d in my_donations if d["status"] == "CONFIRMED")
         n_probable = sum(1 for d in my_donations if d["status"] == "PROBABLE")
 
-        # Party split by dollars
+        # Party split by dollars (both currencies)
         party_dollars = defaultdict(float)
+        party_dollars_2026 = defaultdict(float)
         for d in my_donations:
             party_dollars[d["party"]] += d["amount"]
+            party_dollars_2026[d["party"]] += d["amount_2026"]
 
-        # Sparkline: dollars per cycle 2000..2026 (even years)
+        # Sparkline: dollars per cycle 2000..2026 (even years) — both currencies
         cycle_dollars = defaultdict(float)
+        cycle_dollars_2026 = defaultdict(float)
+        # Per-cycle, per-party breakdown for B.2 heatmap.
+        cycle_party_dollars: dict[int, dict[str, float]] = defaultdict(lambda: defaultdict(float))
+        cycle_party_dollars_2026: dict[int, dict[str, float]] = defaultdict(lambda: defaultdict(float))
+        cycle_count: dict[int, int] = defaultdict(int)
         for d in my_donations:
             if d["cycle"]:
-                cycle_dollars[int(d["cycle"])] += d["amount"]
+                c = int(d["cycle"])
+                cycle_dollars[c] += d["amount"]
+                cycle_dollars_2026[c] += d["amount_2026"]
+                cycle_party_dollars[c][d["party"]] += d["amount"]
+                cycle_party_dollars_2026[c][d["party"]] += d["amount_2026"]
+                cycle_count[c] += 1
 
-        # Top 5 recipient committees by dollars
+        # Top 5 recipient committees by dollars (both currencies)
         committee_dollars = defaultdict(float)
+        committee_dollars_2026 = defaultdict(float)
         committee_count = defaultdict(int)
         committee_name = {}
         committee_party = {}
         for d in my_donations:
             cid = d["committee_id"] or "_unknown"
             committee_dollars[cid] += d["amount"]
+            committee_dollars_2026[cid] += d["amount_2026"]
             committee_count[cid] += 1
             committee_name[cid] = d["committee"]
             committee_party[cid] = d["party"]
@@ -252,6 +294,7 @@ def main() -> None:
                 "committee": committee_name[cid],
                 "party": committee_party[cid],
                 "amount": committee_dollars[cid],
+                "amount_2026": committee_dollars_2026[cid],
                 "count": committee_count[cid],
             }
             for cid in sorted(committee_dollars, key=committee_dollars.get, reverse=True)[:8]
@@ -292,11 +335,17 @@ def main() -> None:
             "tenure_end": ent["tenure_end_date"],
             "family_tenure_start": ent["family_tenure_start_date"],
             "total_amount": total_amount,
+            "total_amount_2026": total_amount_2026,
             "n_total": n_total,
             "n_confirmed": n_confirmed,
             "n_probable": n_probable,
             "party_dollars": dict(party_dollars),
+            "party_dollars_2026": dict(party_dollars_2026),
             "cycle_dollars": dict(cycle_dollars),
+            "cycle_dollars_2026": dict(cycle_dollars_2026),
+            "cycle_party_dollars": {str(c): dict(v) for c, v in cycle_party_dollars.items()},
+            "cycle_party_dollars_2026": {str(c): dict(v) for c, v in cycle_party_dollars_2026.items()},
+            "cycle_count": {str(c): n for c, n in cycle_count.items()},
             "top_recipients": top_recipients,
             "distinct_recipients": distinct_recipients,
             "earliest_date": earliest,
@@ -309,16 +358,22 @@ def main() -> None:
 
     # ── League-wide aggregates ───────────────────────────────────────────────
     league_cycle_party = defaultdict(lambda: defaultdict(float))
+    league_cycle_party_2026 = defaultdict(lambda: defaultdict(float))
     league_cycle_count = defaultdict(int)
     league_total = 0.0
+    league_total_2026 = 0.0
     for d in donations:
         if d["cycle"]:
-            league_cycle_party[int(d["cycle"])][d["party"]] += d["amount"]
-            league_cycle_count[int(d["cycle"])] += 1
+            c = int(d["cycle"])
+            league_cycle_party[c][d["party"]] += d["amount"]
+            league_cycle_party_2026[c][d["party"]] += d["amount_2026"]
+            league_cycle_count[c] += 1
         league_total += d["amount"]
+        league_total_2026 += d["amount_2026"]
 
     league = {
         "total_amount": league_total,
+        "total_amount_2026": league_total_2026,
         "n_donations": len(donations),
         "n_confirmed": sum(1 for d in donations if d["status"] == "CONFIRMED"),
         "n_probable": sum(1 for d in donations if d["status"] == "PROBABLE"),
@@ -329,18 +384,23 @@ def main() -> None:
         "by_cycle": {
             str(c): {
                 "dollars_by_party": dict(league_cycle_party[c]),
+                "dollars_by_party_2026": dict(league_cycle_party_2026[c]),
                 "count": league_cycle_count[c],
                 "total": sum(league_cycle_party[c].values()),
+                "total_2026": sum(league_cycle_party_2026[c].values()),
             }
             for c in sorted(league_cycle_party)
         },
     }
 
     # Top league-wide recipients
-    league_committee = defaultdict(lambda: {"amount": 0.0, "count": 0, "name": None, "party": None})
+    league_committee = defaultdict(
+        lambda: {"amount": 0.0, "amount_2026": 0.0, "count": 0, "name": None, "party": None}
+    )
     for d in donations:
         cid = d["committee_id"] or "_unknown"
         league_committee[cid]["amount"] += d["amount"]
+        league_committee[cid]["amount_2026"] += d["amount_2026"]
         league_committee[cid]["count"] += 1
         league_committee[cid]["name"] = d["committee"]
         league_committee[cid]["party"] = d["party"]
@@ -351,6 +411,7 @@ def main() -> None:
                 "committee": v["name"],
                 "party": v["party"],
                 "amount": v["amount"],
+                "amount_2026": v["amount_2026"],
                 "count": v["count"],
             }
             for cid, v in league_committee.items()
@@ -358,6 +419,65 @@ def main() -> None:
         key=lambda r: r["amount"],
         reverse=True,
     )[:25]
+
+    # ── Recipients (full distinct-committee rollup for the /#/recipients page) ─
+    # Each entry has both currencies, owner_count, cycles_active, and a
+    # recipient_type bucket derived from the FEC committee_type code via
+    # scripts.dollars.committee_type_label. Skipping "_unknown" because the
+    # frontend can't link through to a missing committee_id.
+    rec_data: dict[str, dict] = {}
+    for d in donations:
+        cid = d["committee_id"]
+        if not cid:
+            continue
+        if cid not in rec_data:
+            rec_data[cid] = {
+                "committee_id": cid,
+                "committee": d["committee"],
+                "party": d["party"],
+                "recipient_type": d.get("recipient_type") or "Other",
+                "total_amount": 0.0,
+                "total_amount_2026": 0.0,
+                "n_donations": 0,
+                "_owner_slugs": set(),
+                "_cycles": set(),
+                "earliest_date": d["date"],
+                "latest_date": d["date"],
+            }
+        r = rec_data[cid]
+        r["total_amount"] += d["amount"]
+        r["total_amount_2026"] += d["amount_2026"]
+        r["n_donations"] += 1
+        r["_owner_slugs"].add(d["parent"] or d["entity"])
+        if d["cycle"]:
+            r["_cycles"].add(int(d["cycle"]))
+        if d["date"] and (not r["earliest_date"] or d["date"] < r["earliest_date"]):
+            r["earliest_date"] = d["date"]
+        if d["date"] and (not r["latest_date"] or d["date"] > r["latest_date"]):
+            r["latest_date"] = d["date"]
+        # Prefer the most specific recipient_type seen — if any donation has a
+        # known bucket, keep it; if all are "Other", that's what we end up with.
+        if r["recipient_type"] == "Other" and (d.get("recipient_type") or "Other") != "Other":
+            r["recipient_type"] = d["recipient_type"]
+
+    recipients = []
+    for r in rec_data.values():
+        recipients.append(
+            {
+                "committee_id": r["committee_id"],
+                "committee": r["committee"],
+                "party": r["party"],
+                "recipient_type": r["recipient_type"],
+                "total_amount": r["total_amount"],
+                "total_amount_2026": r["total_amount_2026"],
+                "n_donations": r["n_donations"],
+                "owner_count": len(r["_owner_slugs"]),
+                "cycles_active": sorted(r["_cycles"]),
+                "earliest_date": r["earliest_date"],
+                "latest_date": r["latest_date"],
+            }
+        )
+    recipients.sort(key=lambda x: x["total_amount"], reverse=True)
 
     # Pipeline summary for the runs page
     completed_runs = [r for r in runs if r["completed_at"]]
@@ -372,9 +492,15 @@ def main() -> None:
 
     out = {
         "generated_at": __import__("datetime").datetime.utcnow().isoformat() + "Z",
+        "cpi": {
+            "table": {str(y): v for y, v in CPI_TABLE.items()},
+            "base_year": CPI_BASE_YEAR,
+            "latest_month": CPI_LATEST_MONTH,
+        },
         "league": league,
         "owners": owners_summary,
         "donations": donations,
+        "recipients": recipients,
         "runs": runs,
         "pipeline": pipeline,
     }
@@ -383,6 +509,30 @@ def main() -> None:
     size_mb = OUT_PATH.stat().st_size / 1024 / 1024
     print(f"wrote {OUT_PATH} ({size_mb:.2f} MB, {len(donations)} donations, "
           f"{len(owners_summary)} owners, {len(runs)} ingestion runs)")
+
+    write_provenance()
+
+
+def write_provenance() -> None:
+    """
+    Parse catalog/PROVENANCE_LOG.md into mockup/provenance.json so the
+    /#/changelog page can render the audit trail. Separate file (not baked
+    into data.json) to keep the main payload lean — the changelog page
+    lazy-fetches this only when visited.
+    """
+    if not PROVENANCE_SRC.exists():
+        print(f"warn: {PROVENANCE_SRC} not found; skipping provenance.json", file=sys.stderr)
+        return
+    entries = parse_provenance_file(PROVENANCE_SRC)
+    out = {
+        "generated_at": __import__("datetime").datetime.utcnow().isoformat() + "Z",
+        "source": "catalog/PROVENANCE_LOG.md",
+        "n_entries": len(entries),
+        "entries": entries,
+    }
+    PROVENANCE_OUT.write_text(json.dumps(out, indent=None, separators=(",", ":")))
+    size_kb = PROVENANCE_OUT.stat().st_size / 1024
+    print(f"wrote {PROVENANCE_OUT} ({size_kb:.1f} KB, {len(entries)} entries)")
 
 
 if __name__ == "__main__":

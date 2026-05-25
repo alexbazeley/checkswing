@@ -17,9 +17,14 @@ data/raw/
 # CSV exports are derivative — regenerable
 data/donations/
 
-# mockup/data.json is generated at Cloudflare build time from data/master.db;
-# do not commit. Local previews can regenerate via `python mockup/build_data.py`.
+# mockup/data.json and mockup/provenance.json are generated at Cloudflare build
+# time from data/master.db and catalog/PROVENANCE_LOG.md respectively.
+# Local previews regenerate them via `python mockup/build_data.py`.
 mockup/data.json
+mockup/provenance.json
+
+# Session-local state: handoff briefs, scratch notes, editor launch configs.
+.claude/
 
 # Python
 __pycache__/
