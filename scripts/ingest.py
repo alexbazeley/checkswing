@@ -408,14 +408,15 @@ def ingest_entity(
     return summary
 
 
-def reclassify_entity(slug: str, *, reason: str = "") -> dict:
+def reclassify_entity(slug: str, *, reason: str = "", include_related: bool = False) -> dict:
     """Re-run classification for an entity against its existing raw payloads.
 
     Workflow:
       1. Snapshot the master DB (audit safety net before any deletion).
-      2. Delete this entity's rows from `donations` and `review_queue`.
-      3. Run ingest_entity(slug, from_raw=True) — re-reads raw payloads,
-         re-applies the (possibly updated) owner YAML, writes fresh rows.
+      2. Delete this entity's rows from `donations` and `review_queue`. If
+         `include_related` is True, also delete rows whose `parent_owner_slug`
+         is this entity (the related-entity rows roll up under the owner).
+      3. Run ingest_entity(slug, from_raw=True, process_related_entities=...).
       4. Append a DELETION entry to PROVENANCE_LOG.md documenting the wipe.
          The ingest itself appends its own INGESTION entry.
 
@@ -436,7 +437,8 @@ def reclassify_entity(slug: str, *, reason: str = "") -> dict:
     # Count what we're wiping (for the audit entry).
     with db.connect() as conn:
         donations_before = conn.execute(
-            "SELECT COUNT(*) FROM donations WHERE entity_slug = ?", (slug,)
+            "SELECT COUNT(*) FROM donations WHERE entity_slug = ? OR parent_owner_slug = ?",
+            (slug, slug),
         ).fetchone()[0]
         review_before = conn.execute(
             "SELECT COUNT(*) FROM review_queue WHERE entity_slug = ?", (slug,)
@@ -446,8 +448,13 @@ def reclassify_entity(slug: str, *, reason: str = "") -> dict:
             (slug,),
         ).fetchone()[0]
 
-        # Wipe.
-        conn.execute("DELETE FROM donations    WHERE entity_slug = ?", (slug,))
+        # Wipe both owner-attributed rows and any related-entity rows that
+        # roll up to this owner. parent_owner_slug = slug catches spouses /
+        # children / business entities; entity_slug = slug catches the owner.
+        conn.execute(
+            "DELETE FROM donations WHERE entity_slug = ? OR parent_owner_slug = ?",
+            (slug, slug),
+        )
         conn.execute("DELETE FROM review_queue WHERE entity_slug = ?", (slug,))
 
     # Log the deletion (DELETION entry — distinct from the INGESTION entry
@@ -461,6 +468,7 @@ def reclassify_entity(slug: str, *, reason: str = "") -> dict:
         f"- **reason**: {reason or 'reclassification after signal/schema change'}",
         f"- **rows_deleted_donations**: `{donations_before}`",
         f"- **rows_deleted_review_queue**: `{review_before}` (of which {resolved_before} had resolutions)",
+        f"- **include_related**: `{include_related}`",
         f"- **snapshot_path**: `{snap_path}`",
         f"- **note**: Rows are recoverable from the snapshot above and from data/raw/{slug}/ payloads. Re-classification follows in the next INGESTION entry.",
         "",
@@ -468,12 +476,13 @@ def reclassify_entity(slug: str, *, reason: str = "") -> dict:
     PROVENANCE_LOG.write_text(existing + "\n".join(block), encoding="utf-8")
 
     # Run the classify-from-raw path.
-    summary = ingest_entity(slug, from_raw=True)
+    summary = ingest_entity(slug, from_raw=True, process_related_entities=include_related)
     summary["_reclassify"] = {
         "rows_deleted_donations": donations_before,
         "rows_deleted_review_queue": review_before,
         "resolved_items_lost": resolved_before,
         "pre_wipe_snapshot": str(snap_path) if snap_path else None,
         "reason": reason,
+        "include_related": include_related,
     }
     return summary

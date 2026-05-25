@@ -65,6 +65,36 @@ strong_signals:
     - "94111"
     - "94188"
 
+# Anti-pattern: AT LEAST FOUR DIFFERENT "John Fisher"s file from the SF Bay
+# area with employers that have no documented connection to John J. Fisher
+# (Athletics owner). Identified via Tier-A calibration round 1 (2026-05-24):
+#
+#   1. John M. Fisher — TRANSPORTATION MANAGER at WSP USA / WSP Inc / Parsons
+#      Brinckerhoff (engineering firm). Files small ($70) PAC contributions
+#      to WSP USA INC. PAC. Note middle initial M, not J. ~99 records.
+#
+#   2. A "John Fisher" with occupation REAL ESTATE at Sky Oak Partners and
+#      SKS Partners (both SF real-estate firms; same person or two
+#      doppelgängers using the same SF zips 94110 + 941103432). $250-$500
+#      donations to ActBlue. ~84 records combined.
+#
+#   3. John H.N. Fisher — VENTURE CAPITAL / MANAGING DIRECTOR at DFJ
+#      (Draper Fisher Jurvetson). Co-founder of the VC firm. $3,300-$10,000
+#      donations to ActBlue + various Democratic congressional campaigns.
+#      ZIP 94118 + 941181804. ~19 records.
+#
+# John J. Fisher (Athletics) has NO documented connection to any of these
+# firms — wealth is from Gap Inc + Pisces (family office) + Sansome (PE)
+# + Athletics ownership.
+negative_signals:
+  employers:
+    - "WSP"                       # catches WSP INC, WSP USA
+    - "Parsons Brinckerhoff"      # WSP-acquired engineering firm
+    - "Sky Oak"                   # catches Sky Oak Partners, Sky Oak LLC
+    - "SKS Partners"              # SF real estate doppelgänger
+    - "DFJ"                       # catches DFJ, DFJ Growth
+    - "Draper Fisher Jurvetson"   # spelled-out form
+
 related_entities: []
 # Documented future candidates (do NOT add without approval):
 #   - Wife Laura Fisher — sometimes mentioned in press
@@ -117,6 +147,17 @@ notes: |
   validate that CONFIRMED records all cluster in SF area + have Pisces /
   Sansome / Athletics employer signals.
 
+  Doppelgänger landscape (Tier-A calibration 2026-05-24): at least four
+  different "John Fisher"s file from the SF Bay area with distinct
+  employer footprints. See negative_signals block above for documented
+  cases. The middle-initial difference (John M vs John J) for the WSP
+  engineer is the cleanest disambiguator but we currently rely on
+  employer-string negative signals since the schema does not support
+  name-based negatives. Do NOT add View Park, Lancaster, Sonoma,
+  Sacramento, Laguna Woods, or Lincoln (CA) to verifying_signals.cities
+  — those review-queue clusters are additional doppelgängers and are
+  correctly held UNCERTAIN by the city/state-outside rule.
+
 change_log:
   - date: 2026-05-22
     change: |
@@ -143,6 +184,54 @@ change_log:
       User-suggested approach (alex): "find Pisces, find addresses, look for
       others at those addresses."
     by: "claude-code-session (alex-directed signal addition)"
+  - date: 2026-05-24
+    change: |
+      Tier-A calibration round 1 — added negative_signals.employers for
+      four distinct "John Fisher" doppelgängers identified by audit of all
+      246 PROBABLE records. Negative signals: WSP, Parsons Brinckerhoff,
+      Sky Oak, SKS Partners, DFJ, Draper Fisher Jurvetson.
+
+      Doppelgängers identified:
+        1. John M. Fisher — Transportation Manager at WSP USA / WSP Inc /
+           Parsons Brinckerhoff (engineering). ~99 records. WSP USA INC. PAC
+           is the recipient on most. Middle initial M ≠ J.
+        2. Real-estate John Fisher at Sky Oak Partners + SKS Partners. ~84
+           records, ZIPs 94110 + 941103432. $250-$500 ActBlue donations.
+        3. John H.N. Fisher — DFJ co-founder (Draper Fisher Jurvetson),
+           VENTURE CAPITAL / MANAGING DIRECTOR. ~19 records, ZIP 94118 /
+           941181804. $3.3k-$10k Democratic donations.
+
+      Measured impact: 138 CONFIRMED (was 147; -9) / 43 PROBABLE (was 246;
+      -203) / 1479 UNCERTAIN-open (was 1267; +212). P/C ratio 1.67 → 0.31.
+      Major calibration win.
+
+      Important finding — the 9-record drop in CONFIRMED is a CORRECTION,
+      not a regression. Those 9 records were previously CONFIRMED because
+      they hit Fisher's strong_signals.zip_codes (94111, 941112033,
+      941103432, 941885547 — variant ZIP+4 of SF Financial District)
+      despite having doppelgänger employer strings (Sky Oak LLC / WSP INC).
+      All 9 are now correctly UNCERTAIN:
+
+        - 5 Sky Oak LLC records — Democratic donor (Harris Victory Fund,
+          Harris for President, Jimmy Panetta-D) at ZIP 941103432 +
+          941885547
+        - 4 WSP INC records — Republican donor (Mike Johnson-R speaker
+          twice, Larry Hogan-R Maryland twice) at ZIPs 941112033 and 94111
+
+      The party split alone (D vs R donations from same "John Fisher") is
+      diagnostic of distinct people. Pre-calibration these were misattributed
+      to John J. Fisher (Athletics, predominantly D donor). The 5% CONFIRMED
+      drop alarm fired and was investigated; drop is correct.
+
+      View Park / Lancaster / Sonoma / Sacramento / Laguna Woods / Lincoln
+      (CA) review-queue clusters left UNCERTAIN — additional doppelgängers
+      that the city/state-outside rule correctly catches; adding those
+      cities would silently promote ~1,000 doppelgänger records to PROBABLE.
+
+      Notes block updated with the doppelgänger landscape.
+    by: "claude-code-session (PR 4 Tier A, approved by alex)"
+    references:
+      - "data/master.db pre-calibration: 147 CONFIRMED / 246 PROBABLE / 1267 UNCERTAIN-open"
 
 audit:
   created: 2026-05-22

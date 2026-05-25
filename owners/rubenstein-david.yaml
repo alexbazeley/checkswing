@@ -75,6 +75,21 @@ strong_signals:
     - "Inner Harbor Sports"
   zip_codes: []
 
+# Anti-pattern: at least one DIFFERENT David Rubenstein files small-dollar
+# (≤ $100) Democratic donations from the DC/MD area (Garrett Park MD primary,
+# Chevy Chase MD, Washington DC zip 20009, Westborough MA). That person's
+# employer/occupation pattern in FEC filings: "SELF" / "CONSULTANT",
+# "SELF-EMPLOYED" / "ADVISOR", "NOT EMPLOYED", or one specific Georgetown
+# University record listing occupation "V.P. OF FINANCIAL PLANNING & ANALYSIS"
+# — David Rubenstein the billionaire is chairman of Georgetown's BOARD, not
+# a VP of Financial Planning. The Georgetown record is the only one we can
+# disqualify by employer string; the generic "SELF" / "NOT EMPLOYED" records
+# correctly stay UNCERTAIN via the city/state outside documented residences
+# rule (Garrett Park / Chevy Chase / Westborough are NOT in cities).
+negative_signals:
+  employers:
+    - "Georgetown University"
+
 related_entities: []
 # Documented candidates (do NOT add without explicit approval per CLAUDE.md §1.7):
 #   - Alice Rogoff (ex-spouse, divorced 2017) — independent figure but unclear
@@ -148,6 +163,18 @@ notes: |
   long-time federal donor independent of baseball. Default per project rules
   is full available history; reports can filter to post-tenure if needed.
 
+  Doppelgänger pattern (documented during Tier-A calibration 2026-05-24): a
+  different David Rubenstein in the DC/MD area files small-dollar Democratic
+  donations to ActBlue from Garrett Park MD (20 records), Chevy Chase MD,
+  Washington DC zip 20009, and Westborough MA, with employer/occupation
+  combinations like "SELF / CONSULTANT", "SELF-EMPLOYED / ADVISOR", or
+  "NOT EMPLOYED". One PROBABLE record was filed under "GEORGETOWN UNIVERSITY"
+  with occupation "V.P. OF FINANCIAL PLANNING & ANALYSIS" — caught by
+  negative_signals.employers below. The remaining doppelgänger records
+  correctly stay UNCERTAIN via the city/state-outside-documented-residences
+  rule. Do NOT add Garrett Park, Chevy Chase, or Westborough to cities;
+  doing so would silently promote the doppelgänger to PROBABLE.
+
 change_log:
   - date: 2026-05-22
     change: |
@@ -162,6 +189,33 @@ change_log:
     by: "claude-code-research (orchestrated by alex)"
     references:
       - "/tmp/rubenstein-david-research.md (session-local research file)"
+  - date: 2026-05-24
+    change: |
+      Tier-A calibration round 1 — added negative_signals.employers:
+      "Georgetown University" after audit of all 8 CONFIRMED/PROBABLE records
+      plus all 23 UNCERTAIN review-queue entries.
+
+      Audit finding: a different David Rubenstein in the DC/MD area files
+      small-dollar ($1–$100) ActBlue donations from Garrett Park MD (20
+      UNCERTAINs), Chevy Chase MD (2 UNCERTAINs), Westborough MA (1
+      UNCERTAIN), and Washington DC zip 20009 (3 of the 6 PROBABLE records).
+      One PROBABLE record (2008, $750 to Rudy Giuliani Presidential
+      Committee) was filed by this doppelgänger under "GEORGETOWN UNIVERSITY"
+      + occupation "V.P. OF FINANCIAL PLANNING & ANALYSIS" — David
+      Rubenstein the billionaire chairs Georgetown's board (he is not a VP
+      of Financial Planning).
+
+      Result of change: 1 record demoted PROBABLE → UNCERTAIN; CONFIRMED
+      count unchanged at 2; P/C ratio drops 3.0 → 2.5. Doppelgänger pattern
+      documented in `notes`.
+
+      Other doppelgänger records remain correctly UNCERTAIN via the existing
+      city/state-outside-documented-residences rule; not adding Garrett Park
+      / Chevy Chase / Westborough to verifying_signals.cities (would silently
+      promote the doppelgänger to PROBABLE).
+    by: "claude-code-session (PR 4 Tier A, approved by alex)"
+    references:
+      - "data/master.db pre-calibration: 2 CONFIRMED / 6 PROBABLE / 23 UNCERTAIN-open"
 
 audit:
   created: 2026-05-22

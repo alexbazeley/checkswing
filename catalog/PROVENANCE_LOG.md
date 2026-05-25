@@ -1202,3 +1202,164 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **Historical-only YAMLs** — `sternberg-stuart` and optionally `seidler-peter` modeled on angelos-john-p.yaml.
 - **Family separate-slug expansions** — case-by-case, in priority order; each requires a deliberate scope-expansion decision per CLAUDE.md §1.7.
 - **Pipeline durability** — implement date-window chunking for common-name owners to address the FEC timeout pattern.
+
+### 2026-05-25 — DELETION — reclassify rubenstein-david
+
+- **entity_slug**: `rubenstein-david`
+- **reason**: Tier-A calibration round 1: added negative_signals.employers: Georgetown University to demote 1 doppelgänger PROBABLE record (2008 Giuliani filing under 'V.P. OF FINANCIAL PLANNING & ANALYSIS')
+- **rows_deleted_donations**: `8`
+- **rows_deleted_review_queue**: `23` (of which 0 had resolutions)
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T03-46-29Z__pre-reclassify-rubenstein-david.db`
+- **note**: Rows are recoverable from the snapshot above and from data/raw/rubenstein-david/ payloads. Re-classification follows in the next INGESTION entry.
+
+### 2026-05-25 — INGESTION
+
+- **run_id**: `3989d9b9`
+- **entity_slug**: `rubenstein-david`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2026-01-09`
+- **name_variants_queried**: `["David Rubenstein", "David M. Rubenstein", "David M Rubenstein", "Rubenstein, David", "Rubenstein, David M", "Rubenstein, David M."]`
+- **api_calls_made**: `0`
+- **records_fetched**: `31`
+- **confirmed_count**: `2`
+- **probable_count**: `5`
+- **uncertain_count**: `24`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T03-46-29Z__3989d9b9.db`
+- **notes**: skipped(no-name-match)=0 · min_date=default (no prior ingestion) · FROM-RAW
+
+### 2026-05-25 — DELETION — reclassify fisher-john
+
+- **entity_slug**: `fisher-john`
+- **reason**: Tier-A round 1: 6 negative_signals.employers (WSP/Parsons/Sky Oak/SKS/DFJ/Draper Fisher Jurvetson) to demote 4 distinct doppelgänger clusters
+- **rows_deleted_donations**: `393`
+- **rows_deleted_review_queue**: `1267` (of which 0 had resolutions)
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T03-50-05Z__pre-reclassify-fisher-john.db`
+- **note**: Rows are recoverable from the snapshot above and from data/raw/fisher-john/ payloads. Re-classification follows in the next INGESTION entry.
+
+### 2026-05-25 — INGESTION
+
+- **run_id**: `6aa2f908`
+- **entity_slug**: `fisher-john`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2026-03-30`
+- **name_variants_queried**: `["John Fisher", "John J. Fisher", "John J Fisher", "John Joseph Fisher", "Fisher, John", "Fisher, John J", "Fisher, John J."]`
+- **api_calls_made**: `0`
+- **records_fetched**: `1698`
+- **confirmed_count**: `138`
+- **probable_count**: `43`
+- **uncertain_count**: `1479`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T03-50-05Z__6aa2f908.db`
+- **notes**: skipped(no-name-match)=38 · min_date=default (no prior ingestion) · FROM-RAW
+
+### 2026-05-25 — DELETION — reclassify middleton-john
+
+- **entity_slug**: `middleton-john`
+- **reason**: Tier-A round 1: added John P. Middleton (son) as related_entity (kind: child); added Branford Holdings + Mc Intosh Inns typo variants to verifying_signals.employers
+- **rows_deleted_donations**: `71`
+- **rows_deleted_review_queue**: `19` (of which 0 had resolutions)
+- **include_related**: `True`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T04-02-44Z__pre-reclassify-middleton-john.db`
+- **note**: Rows are recoverable from the snapshot above and from data/raw/middleton-john/ payloads. Re-classification follows in the next INGESTION entry.
+
+### 2026-05-25 — INGESTION
+
+- **run_id**: `d5bea8f9`
+- **entity_slug**: `middleton-john`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2025-12-29`
+- **name_variants_queried**: `["John Middleton", "John S. Middleton", "John S Middleton", "John Staubus Middleton", "Middleton, John", "Middleton, John S", "Middleton, John S."]`
+- **api_calls_made**: `0`
+- **records_fetched**: `100`
+- **confirmed_count**: `53`
+- **probable_count**: `18`
+- **uncertain_count**: `19`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T04-02-44Z__d5bea8f9.db`
+- **notes**: skipped(no-name-match)=10 · min_date=default (no prior ingestion) · FROM-RAW
+
+### 2026-05-25 — DELETION — reclassify middleton-john
+
+- **entity_slug**: `middleton-john`
+- **reason**: Tier-A round 1 (revised): Vertigo negative_signal + Branford/Mc Intosh typo variants. Reverted from related_entity approach due to classifier middle-initial limitation — see YAML change_log for details
+- **rows_deleted_donations**: `71`
+- **rows_deleted_review_queue**: `0` (of which 0 had resolutions)
+- **include_related**: `True`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T04-05-04Z__pre-reclassify-middleton-john.db`
+- **note**: Rows are recoverable from the snapshot above and from data/raw/middleton-john/ payloads. Re-classification follows in the next INGESTION entry.
+
+### 2026-05-25 — INGESTION
+
+- **run_id**: `e74158c2`
+- **entity_slug**: `middleton-john`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2025-12-29`
+- **name_variants_queried**: `["John Middleton", "John S. Middleton", "John S Middleton", "John Staubus Middleton", "Middleton, John", "Middleton, John S", "Middleton, John S."]`
+- **api_calls_made**: `0`
+- **records_fetched**: `100`
+- **confirmed_count**: `35`
+- **probable_count**: `23`
+- **uncertain_count**: `32`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T04-05-04Z__e74158c2.db`
+- **notes**: skipped(no-name-match)=10 · min_date=default (no prior ingestion) · FROM-RAW
+
+### 2026-05-25 — DELETION — middleton-john-p (orphaned)
+
+- **entity_slug**: `middleton-john-p`
+- **reason**: Orphaned rows from the reverted related_entity experiment (see middleton-john.yaml change_log 2026-05-25). The middleton-john-p entity was added to the YAML, used for one reclassify run, then removed when the related_entity approach was reverted due to classifier middle-initial limitation. Donations under entity_slug=middleton-john-p were already cleaned by the subsequent reclassify (parent_owner_slug=middleton-john deletion); review_queue rows were missed by that SQL and are now cleaned up here.
+- **rows_deleted_review_queue**: `19`
+- **note**: Pre-deletion snapshot exists at data/snapshots/2026-05-25T04-05-04Z__pre-reclassify-middleton-john.db (taken before the corrective reclassify).
+
+### 2026-05-25 — DELETION — reclassify monfort-dick
+
+- **entity_slug**: `monfort-dick`
+- **reason**: Tier-A round 1: added 'eaton' + 'greenley' to verifying_signals.cities (ZIP 80615 spans both labels; all 17 UNCERTAINs verified as Dick Monfort)
+- **rows_deleted_donations**: `85`
+- **rows_deleted_review_queue**: `17` (of which 0 had resolutions)
+- **include_related**: `False`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T04-12-40Z__pre-reclassify-monfort-dick.db`
+- **note**: Rows are recoverable from the snapshot above and from data/raw/monfort-dick/ payloads. Re-classification follows in the next INGESTION entry.
+
+### 2026-05-25 — INGESTION
+
+- **run_id**: `0d3086ad`
+- **entity_slug**: `monfort-dick`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2025-06-03`
+- **name_variants_queried**: `["Richard L Monfort", "Richard L. Monfort", "Richard Monfort", "Dick Monfort", "Monfort, Richard", "Monfort, Richard L", "Monfort, Richard L.", "Monfort, Dick"]`
+- **api_calls_made**: `0`
+- **records_fetched**: `106`
+- **confirmed_count**: `60`
+- **probable_count**: `42`
+- **uncertain_count**: `0`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T04-12-40Z__0d3086ad.db`
+- **notes**: skipped(no-name-match)=4 · min_date=default (no prior ingestion) · FROM-RAW
+
+### 2026-05-25 — DELETION — reclassify reinsdorf-jerry
+
+- **entity_slug**: `reinsdorf-jerry`
+- **reason**: Tier-A round 1 Option B: promoted Bojer Financial to strong_signals.employers; promoted ZIPs 60616 + 606163621 to strong_signals.zip_codes
+- **rows_deleted_donations**: `422`
+- **rows_deleted_review_queue**: `0` (of which 0 had resolutions)
+- **include_related**: `False`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T04-15-04Z__pre-reclassify-reinsdorf-jerry.db`
+- **note**: Rows are recoverable from the snapshot above and from data/raw/reinsdorf-jerry/ payloads. Re-classification follows in the next INGESTION entry.
+
+### 2026-05-25 — INGESTION
+
+- **run_id**: `81b1167d`
+- **entity_slug**: `reinsdorf-jerry`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2026-02-04`
+- **name_variants_queried**: `["Jerry Reinsdorf", "Jerry M Reinsdorf", "Jerry M. Reinsdorf", "Jerry Michael Reinsdorf", "Reinsdorf, Jerry", "Reinsdorf, Jerry M", "Reinsdorf, Jerry M."]`
+- **api_calls_made**: `0`
+- **records_fetched**: `425`
+- **confirmed_count**: `422`
+- **probable_count**: `2`
+- **uncertain_count**: `0`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T04-15-04Z__81b1167d.db`
+- **notes**: skipped(no-name-match)=1 · min_date=default (no prior ingestion) · FROM-RAW

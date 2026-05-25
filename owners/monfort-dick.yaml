@@ -30,6 +30,8 @@ verifying_signals:
   cities:
     - "denver"
     - "greeley"              # family base; brother Charlie's primary residence
+    - "eaton"                # ZIP 80615 spans Eaton/Greeley/Kersey; FEC clerks fill either city (audit 2026-05-25)
+    - "greenley"             # FEC clerk typo of "Greeley" (1 record observed)
   states:
     - "CO"
   employers:
@@ -116,11 +118,17 @@ notes: |
   Dick remains Chairman/CEO; Charlie remains GP; Walker remains team
   president. Penners have no day-to-day involvement.
 
-  Doppelganger note: cattle-industry trade press "Calf News" has an article
-  titled "The Other Dick Monfort" — unfetchable in research. Flag suggests
-  agriculture-circles doppelganger exists. If filings from Greeley with
-  cattle-industry employer surface that don't match Dick's documented
-  entities, route to UNCERTAIN and calibrate.
+  No active doppelgänger. The "Other Dick Monfort" reference in cattle-industry
+  trade press (Calf News) is a profile of an older deceased relative of our
+  Dick Monfort who shared the name — not a living donor and not in the FEC
+  2000+ window in any meaningful way (clarified by alex 2026-05-25).
+
+  ZIP-to-city mapping note: ZIP 80615 spans both Greeley and Eaton city
+  labels in the USPS database, and FEC clerks fill it inconsistently as
+  either "GREELEY" or "EATON". Both cities are in verifying_signals.cities;
+  records at 80615 with employer "Colorado Rockies" + occupation "Owner/CEO"
+  are unambiguously Dick. Calibration round 1 audit (2026-05-25) inspected
+  all 16 EATON-labeled UNCERTAIN records and confirmed the pattern.
 
 change_log:
   - date: 2026-05-23
@@ -133,6 +141,46 @@ change_log:
     by: "claude-code-research (orchestrated by alex)"
     references:
       - "/tmp/monfort-dick-research.md (session-local research file)"
+  - date: 2026-05-25
+    change: |
+      Tier-A calibration round 1. Two city additions plus a notes correction.
+
+      Audit traced the 17 UNCERTAIN records (16 EATON + 1 GREENLEY) and
+      inspected all 10 raw payloads recoverable from data/raw/monfort-dick/.
+      Every record was Dick Monfort: donor names "MONFORT, DICK", "MONFORT,
+      RICHARD", or variants; employers "COLORADO ROCKIES" / "COLORADO ROCKIES
+      BASEBALL" / "COLORADO ROCKIES/OWNER"; occupations "OWNER", "OWNER/CEO",
+      "OWNER & CEO", or "VICE CHAIRMAN" (2012-13 records — title transition
+      ambiguity). All went to Republican recipients (consistent with Dick's
+      filing history).
+
+      Root cause: ZIP 80615 spans both Greeley and Eaton labels in USPS; FEC
+      clerks fill either city for the same physical address. Without "eaton"
+      in verifying_signals.cities, those records hit the city/state-outside-
+      documented-residences UNCERTAIN rule despite having Colorado Rockies as
+      employer.
+
+      Changes:
+        1. Added "eaton" to verifying_signals.cities — 16 UNCERTAINs move out
+           of review queue (most should land in CONFIRMED via city+state +
+           employer:Colorado Rockies = 2 signals).
+        2. Added "greenley" (typo of Greeley) — 1 UNCERTAIN moves.
+
+      Notes correction: removed the "Other Dick Monfort doppelgänger" warning
+      from the notes block. Alex clarified that the Calf News reference is to
+      an older deceased relative (not a living/active doppelgänger), and is
+      not present in the FEC 2000+ window in any meaningful way.
+
+      Pre-cal: 45 CONFIRMED / 40 PROBABLE / 17 UNCERTAIN-open.
+
+      Follow-up consideration (NOT in this round; flagged for alex review):
+      with the doppelgänger concern removed, the Greeley ZIPs (80631 / 80632 /
+      80615) are candidates for strong_signals.zip_codes promotion — they
+      would CONFIRM ~36 PROBABLE Greeley records that currently have generic
+      SELF / SELF-EMPLOYED / INVESTOR employers but match donor name + city.
+    by: "claude-code-session (PR 4 Tier A, approved by alex)"
+    references:
+      - "data/master.db pre-calibration: 45 CONFIRMED / 40 PROBABLE / 17 UNCERTAIN-open"
 
 audit:
   created: 2026-05-23

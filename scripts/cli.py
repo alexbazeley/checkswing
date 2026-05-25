@@ -10,6 +10,7 @@ import yaml
 from tabulate import tabulate
 
 from . import db
+from .audit import audit_slug
 from .export import export_aggregate, export_entity
 from .ingest import ingest_entity, reclassify_entity
 from .paths import OWNERS_DIR
@@ -143,12 +144,17 @@ def ingest_all_pilot(dry_run, min_date, full_refetch, include_related):
 @click.argument("slug")
 @click.option("--reason", default="", help="Reason for reclassification (recorded in PROVENANCE_LOG).")
 @click.option("--yes", is_flag=True, help="Skip confirmation prompt.")
-def reclassify(slug, reason, yes):
+@click.option("--include-related", is_flag=True, help="Also classify against related_entities (spouses, children, business entities) declared in the YAML.")
+def reclassify(slug, reason, yes, include_related):
     """Wipe SLUG's rows and reclassify against existing raw payloads.
 
     Use after editing the owner YAML (signal additions, negative_signals,
-    etc.) — applies the new rules without re-hitting FEC. Snapshots before
-    deletion; logs the wipe and the ingestion run in PROVENANCE_LOG.md.
+    new related_entities, etc.) — applies the new rules without re-hitting
+    FEC. Snapshots before deletion; logs the wipe and the ingestion run in
+    PROVENANCE_LOG.md.
+
+    Pass --include-related when the YAML has related_entities (spouses,
+    children, etc.) that should be classified into their own slugs.
 
     This is the right tool for calibration iterations. For a fresh fetch
     from FEC, use `ingest` instead.
@@ -170,7 +176,7 @@ def reclassify(slug, reason, yes):
         if not yes and not click.confirm("Continue?", default=False):
             click.echo("Aborted.")
             return
-    summary = reclassify_entity(slug, reason=reason)
+    summary = reclassify_entity(slug, reason=reason, include_related=include_related)
     click.echo("")
     click.echo(json.dumps(summary, indent=2, default=str))
 
@@ -244,6 +250,22 @@ def status():
         for r in rows
     ]
     click.echo(tabulate(table, headers=["slug", "team", "last_run", "CONFIRMED", "PROBABLE", "UNCERTAIN open"]))
+
+
+@cli.command()
+@click.argument("slug")
+def audit(slug):
+    """Read-only signal audit for one owner.
+
+    Surfaces the current signal-block summary, classification counts,
+    PROBABLE records grouped by employer + ZIP, REVIEW_QUEUE reasons, and
+    a heuristic suggestion checklist for tightening signals.
+
+    Apply changes by editing the owner YAML with a change_log entry
+    (CLAUDE.md §1.7), then `reclassify --from-raw <slug>`.
+    """
+    db.init()
+    click.echo(audit_slug(slug))
 
 
 @cli.command(name="sample")
