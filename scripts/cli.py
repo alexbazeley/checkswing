@@ -14,7 +14,7 @@ from .audit import audit_slug
 from .export import export_aggregate, export_entity
 from .ingest import ingest_entity, reclassify_entity
 from .paths import OWNERS_DIR
-from .refresh import refresh_all
+from .refresh import refresh_all, select_bucket
 from .validate_owners import format_report, validate_all
 
 
@@ -82,26 +82,52 @@ def ingest(slug, dry_run, min_date, full_refetch, max_pages, include_related, no
     default=None,
     help="Comma-separated owner slugs to limit the run to (default: every pilot/active owner).",
 )
+@click.option(
+    "--bucket",
+    default=None,
+    help=(
+        "Run only this matrix bucket, formatted N/M (0-indexed). E.g. --bucket 0/4 "
+        "runs ~1/4 of active owners, balanced by raw-payload weight. Used by the "
+        "GHA refresh matrix to parallelize the weekly run across 4 jobs."
+    ),
+)
 @click.option("--dry-run", is_flag=True, help="Fetch + classify but do not write to DB or regenerate data.json.")
 @click.option("--skip-data-json", is_flag=True, help="Do not regenerate mockup/data.json even if records changed.")
 @click.option("--full-refetch", is_flag=True, help="Ignore audit.last_ingestion for every owner; refetch from 2000-01-01.")
 @click.option("--chunk-by-cycle", is_flag=True, help="Pass --chunk-by-cycle to every owner's ingest.")
-def refresh(only, dry_run, skip_data_json, full_refetch, chunk_by_cycle):
+def refresh(only, bucket, dry_run, skip_data_json, full_refetch, chunk_by_cycle):
     """Refresh every pilot/active owner from FEC since their last_ingestion.
 
-    Loops alphabetically, runs the existing ingest pipeline per owner with
-    per-owner failure isolation, and regenerates mockup/data.json once at the
-    end if any owner ingested new records.
+    Loops the resolved owner set, runs the existing ingest pipeline per owner
+    with per-owner failure isolation, and regenerates mockup/data.json once at
+    the end if any owner ingested new records (and only if no --bucket scope —
+    the matrix consolidate job rebuilds data.json after all buckets land).
 
     Exit code: 0 if every attempted owner succeeded, 1 if any failed.
     """
+    if only and bucket:
+        click.echo("--only and --bucket are mutually exclusive.", err=True)
+        sys.exit(2)
+
     only_list: list[str] | None = None
     if only:
         only_list = [s.strip() for s in only.split(",") if s.strip()]
+    elif bucket:
+        try:
+            idx_s, count_s = bucket.split("/", 1)
+            idx, count = int(idx_s), int(count_s)
+        except ValueError:
+            click.echo(f"--bucket must be N/M (e.g. 0/4), got {bucket!r}.", err=True)
+            sys.exit(2)
+        only_list = select_bucket(idx, count)
+        click.echo(f"[refresh] bucket {idx}/{count}: {len(only_list)} owner(s): {only_list}")
+
     summary = refresh_all(
         only=only_list,
         dry_run=dry_run,
-        skip_data_json=skip_data_json,
+        # When running as one bucket of the matrix, leave data.json untouched
+        # — the consolidate job rebuilds it once after merging all buckets.
+        skip_data_json=skip_data_json or bool(bucket),
         full_refetch=full_refetch,
         chunk_by_cycle=chunk_by_cycle,
     )

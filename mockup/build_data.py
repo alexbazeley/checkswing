@@ -38,32 +38,44 @@ from scripts.parse_provenance import parse_provenance_file  # noqa: E402
 
 def filing_pdf_url(filing_id) -> str | None:
     """
-    The FEC publishes each filing's full PDF at a deterministic URL keyed by
-    the last 3 digits of the filing ID as a sharding prefix. e.g. filing
-    1917827 lives at /pdf/827/1917827/1917827.pdf.
+    FEC publishes each filing's full PDF at https://fecfile.fec.gov/pdf/<id>.pdf.
+    The older docquery.fec.gov/pdf/<shard>/... path is gated (403) for these.
     """
     if not filing_id:
         return None
     fid = str(filing_id).strip()
-    if not fid.isdigit() or len(fid) < 1:
+    if not fid.isdigit():
         return None
-    shard = fid[-3:].zfill(3)
-    return f"https://docquery.fec.gov/pdf/{shard}/{fid}/{fid}.pdf"
+    return f"https://fecfile.fec.gov/pdf/{fid}.pdf"
 
 
-def load_raw_payload_index(repo_root: Path, payload_paths: set[str]) -> dict[str, dict]:
+def load_raw_payload_index(repo_root: Path, slugs: set[str]) -> dict[str, dict]:
     """
-    Read each raw FEC payload once, index transactions by transaction_id, and
-    return the fields the UI needs to deep-link into FEC. This is the only
-    place we cross from the DB into the raw archive.
+    Read every raw FEC payload under data/raw/<slug>/ for each given slug, and
+    index transactions by transaction_id. This is the only place we cross from
+    the DB into the raw archive.
+
+    We walk the full per-owner dir (not just the donations' stamped
+    raw_payload_path) so that transactions whose stamped page was clobbered
+    by a same-second filename collision still get recovered from a sibling
+    payload (different name variant or cycle that returned the same txn).
+    The stamped path stays the provenance pointer; this index is just how the
+    UI finds the FEC image URL.
     """
+    raw_root = repo_root / "data" / "raw"
+    files: list[Path] = []
+    for slug in slugs:
+        slug_dir = raw_root / slug
+        if not slug_dir.is_dir():
+            continue
+        for p in sorted(slug_dir.glob("*.json")):
+            # Skip checkpoint/state files; they live alongside payloads.
+            if p.name.startswith("_"):
+                continue
+            files.append(p)
+
     index: dict[str, dict] = {}
-    for rel in payload_paths:
-        if not rel:
-            continue
-        path = repo_root / rel
-        if not path.exists():
-            continue
+    for path in files:
         try:
             data = json.loads(path.read_text())
         except (OSError, ValueError):
@@ -173,9 +185,42 @@ def main() -> None:
 
     # Index every raw FEC payload once, keyed by transaction_id. This is how
     # we surface per-transaction FEC image links (pdf_url / image_number) and
-    # the FEC line item number, none of which live in the DB schema.
-    payload_paths = {d["raw_payload_path"] for d in donations_raw if d["raw_payload_path"]}
-    raw_index = load_raw_payload_index(REPO_ROOT, payload_paths)
+    # the FEC line item number, none of which live in the DB schema. We walk
+    # the full per-owner dir so transactions whose stamped page was clobbered
+    # by a same-second filename collision still get found in a sibling payload.
+    donation_slugs = {d["entity_slug"] for d in donations_raw if d["entity_slug"]}
+    raw_index = load_raw_payload_index(REPO_ROOT, donation_slugs)
+
+    # Recovery accounting: how many donations would have been "image link not
+    # available" under the old stamped-path-only index? Surface in stdout so
+    # PROVENANCE_LOG entries can cite a real number.
+    stamped_index_hits = 0
+    wide_index_hits = 0
+    for d in donations_raw:
+        txn = d["transaction_id"]
+        stamped = d["raw_payload_path"]
+        wide_hit = txn in raw_index
+        stamped_hit = False
+        if stamped:
+            stamped_path = REPO_ROOT / stamped
+            if stamped_path.exists():
+                try:
+                    sd = json.loads(stamped_path.read_text())
+                    stamped_hit = any(
+                        r.get("transaction_id") == txn
+                        for r in (sd.get("response") or {}).get("results") or []
+                    )
+                except (OSError, ValueError):
+                    stamped_hit = False
+        if stamped_hit:
+            stamped_index_hits += 1
+        if wide_hit:
+            wide_index_hits += 1
+    recovered = wide_index_hits - stamped_index_hits
+    print(
+        f"raw_payload_index: {wide_index_hits}/{len(donations_raw)} donations resolved "
+        f"(recovered {recovered} from sibling payloads after stamped-path miss)"
+    )
 
     # Normalize, trim, and project to display shape.
     donations = []

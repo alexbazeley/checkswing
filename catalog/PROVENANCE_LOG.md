@@ -1883,3 +1883,55 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **uncertain_count**: `0`
 - **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-51-34Z__4dee96e5.db`
 - **notes**: skipped(no-name-match)=2 · min_date=default (no prior ingestion) · FROM-RAW
+
+### 2026-05-25 — NOTE — raw-payload integrity event (CLAUDE.md §1.4)
+
+While triaging broken donation-card links on the dashboard, discovered that **755 of 3,618 CONFIRMED+PROBABLE donations** have a `raw_payload_path` pointing at an on-disk JSON file that does not contain their `transaction_id`. The transactions are correctly recorded in `data/master.db` — but the raw FEC payloads that produced those rows have been silently overwritten and are gone from `data/raw/`.
+
+- **discovered_at**: `2026-05-25` (after the 2026-05-23 manual refresh)
+- **affected_donations**: `755` of `3618` (~21%)
+- **distinct_filings_affected**: `346`
+- **affected_with_filing_id**: `520`
+- **affected_with_null_filing_id**: `235`
+- **distinct_owners_affected**: `28`
+- **worst_owners** (by count of orphaned txns):
+  - `kendrick-ken`: 155
+  - `reinsdorf-jerry`: 133
+  - `castellini-bob`: 69
+  - `dewitt-bill`: 63
+  - `cohen-steven`: 50
+  - `stanton-john`: 47
+  - `monfort-dick`: 45
+  - `johnson-greg`: 27
+
+#### Root cause
+
+`scripts/fetch_fec.py:_utc_now_filename` produced raw-payload filenames with **second-level resolution** (`%Y-%m-%dT%H-%M-%SZ`). When two `_persist_raw` calls happened within the same second — common when FEC returned warm cache hits at the start of a paginate session, or when two name variants ran back-to-back — the second `write_text()` silently clobbered the first file. The DB rows extracted from the first page had already been stamped with that filename and live on as forensic references to a file that holds different content.
+
+This is a **CLAUDE.md §1.4 violation** (raw payloads must be preserved forever; the project must be reconstructible from `data/raw/` alone). For these 755 transactions, reconstruction from raw is no longer possible without a re-fetch.
+
+#### Mitigation applied
+
+1. **Prospective fix.** `_utc_now_filename` now uses **microsecond resolution** (`%Y-%m-%dT%H-%M-%S-%fZ`). Same-second collisions are no longer possible. Verified with a 2,000-call uniqueness test.
+2. **Indexer hardening.** `mockup/build_data.py:load_raw_payload_index` now walks every JSON file under each owner's `data/raw/<slug>/` directory rather than only the donations' stamped paths. For any future near-miss where a transaction is present in a sibling payload, this surfaces it; for the existing 755, a full directory scan confirmed that the data is **not** present anywhere on disk (recovery from sibling payloads = 0).
+3. **Filing PDF URL fix (unrelated but co-shipped).** `mockup/build_data.py:filing_pdf_url` switched from the gated `docquery.fec.gov/pdf/<shard>/<filing_id>/<filing_id>.pdf` pattern (HTTP 403 across all filings) to the canonical `fecfile.fec.gov/pdf/<filing_id>.pdf` (HTTP 200 verified).
+
+#### Recovery plan (not done in this entry)
+
+The 755 transactions need their raw payloads re-fetched from FEC to restore §1.4 compliance. Sketch:
+1. For each affected owner (28 of them), identify the affected `two_year_transaction_period` cycles by looking up the cycle of each orphan txn.
+2. Run `python -m scripts.cli ingest <slug> --full-refetch --chunk-by-cycle` for those owners, restricted to those cycles, against the now-microsecond-resolution filename code.
+3. The new raw payloads will be written without collision; the widened indexer will pick them up automatically; re-running `python mockup/build_data.py` will resolve their `pdf_url` from the new files.
+4. Append a follow-up NOTE entry recording the recovered count.
+
+This recovery is out of scope for the current PR (it requires hitting the FEC API at scale; should run after the matrix workflow is validated).
+
+### 2026-05-25 — NOTE — refresh workflow restructured to GHA matrix
+
+The previous weekly refresh ran 35 active owners sequentially in a single GHA job. The 2026-05-23 manual run hit the GitHub-hosted runner's 6h cap mid-iteration and was cancelled, leaving some owners unprocessed. Restructured the workflow:
+
+- `.github/workflows/refresh.yml` now fans out into **4 parallel matrix jobs**, each handling ~9 owners selected by `scripts/refresh.py:select_bucket`. Bucketing is balanced by raw-payload weight so the four heaviest owners (kendrick-ken / cohen-steven / johnson-greg / sherman-john) land in different buckets.
+- Per-job `timeout-minutes: 330` (5.5h) so a runaway fails fast with logs instead of being silently killed at exactly 6h.
+- A new `consolidate` job runs after the matrix: downloads each bucket's `master.db` + YAML + log artifacts, runs `scripts/merge_buckets.py` (per-slug DB row replace from the disjoint bucket DBs) and `scripts/finalize_matrix.py` (YAML adoption + append-only log concat against the pre-refresh snapshot), rebuilds `mockup/data.json` once, and commits.
+- `scripts/fetch_fec.py:MIN_REQUEST_INTERVAL_S` bumped from 1.2 → 4.0 so 4 parallel workers sharing one FEC API key stay under the 1,000 req/hour cap.
+- New CLI flag `--bucket N/M` in `scripts/cli.py refresh` is the workflow's entry point; mutually exclusive with `--only`. When `--bucket` is passed, `mockup/data.json` regeneration is skipped — the consolidate job does it once after merge.

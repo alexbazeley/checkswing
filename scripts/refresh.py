@@ -34,7 +34,7 @@ from typing import Iterator
 import yaml
 
 from .ingest import ingest_entity
-from .paths import DATA_DIR, OWNERS_DIR, PROVENANCE_LOG, REPO_ROOT
+from .paths import DATA_DIR, OWNERS_DIR, PROVENANCE_LOG, RAW_DIR, REPO_ROOT
 
 
 REFRESH_LOCK = DATA_DIR / ".refresh.lock"
@@ -113,6 +113,36 @@ def _list_active_owners(only: list[str] | None = None) -> list[str]:
         # Preserve caller order so tests / users get predictable execution.
         return [s for s in only if s in by_slug]
     return sorted(by_slug.keys())
+
+
+def select_bucket(bucket_index: int, bucket_count: int) -> list[str]:
+    """Pick this bucket's slugs from active owners, balanced by paginate volume.
+
+    The GHA refresh runs as N parallel matrix jobs sharing one FEC API key. To
+    avoid one bucket hitting the 6h cap while others sit idle, we order owners
+    by how heavy their raw-payload history is (proxy for how slow their next
+    fetch will be) and round-robin into buckets. Heaviest owners (kendrick-ken,
+    cohen-steven, johnson-greg, sherman-john) land in different buckets.
+
+    Falls back to alphabetical ordering for owners with zero raw history yet.
+    """
+    if bucket_count <= 0 or bucket_index < 0 or bucket_index >= bucket_count:
+        raise RuntimeError(
+            f"Invalid bucket: {bucket_index}/{bucket_count}. "
+            f"Expected 0 <= bucket_index < bucket_count."
+        )
+    all_active = _list_active_owners()
+
+    def _weight(slug: str) -> int:
+        slug_dir = RAW_DIR / slug
+        if not slug_dir.is_dir():
+            return 0
+        return sum(1 for p in slug_dir.glob("*.json") if not p.name.startswith("_"))
+
+    # Sort desc by weight, then alpha for ties. Round-robin into buckets so
+    # neighbouring weights end up in different buckets.
+    weighted = sorted(all_active, key=lambda s: (-_weight(s), s))
+    return [s for i, s in enumerate(weighted) if i % bucket_count == bucket_index]
 
 
 # ─── PROVENANCE_LOG append ───────────────────────────────────────────────────

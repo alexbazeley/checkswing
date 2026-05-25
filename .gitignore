@@ -10,6 +10,10 @@ data/master.db-journal
 data/master.db-wal
 data/master.db-shm
 
+# Runtime lock file from scripts/refresh.py — released on clean exit, but a
+# killed/crashed run can leave it behind.
+data/.refresh.lock
+
 # Snapshots and raw payloads — large, regenerable, never deployed
 data/snapshots/
 data/raw/

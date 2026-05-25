@@ -39,10 +39,13 @@ SCHEDULE_A = "/schedules/schedule_a/"
 PER_PAGE = 100  # FEC max
 DEFAULT_MIN_DATE = "2000-01-01"
 
-# Polite spacing between requests. FEC default cap is 1,000/hour ≈ 3.6s/req.
-# We target ~1.2s between requests with 429 backoff. 7 name variants × ~10 pages
-# = ~70 calls for Cohen, well under the cap.
-MIN_REQUEST_INTERVAL_S = 1.2
+# Polite spacing between requests. FEC's per-key cap is 1,000/hour ≈ 3.6s/req.
+# We target ~4.0s between requests because the weekly refresh now runs as 4
+# parallel matrix jobs sharing one key — 4 workers × ~4s spacing ≈ 60 req/min
+# combined, comfortably under the cap with retry/backoff headroom. Single-owner
+# `cli ingest` invocations also use this spacing; the wall-clock penalty there
+# is small relative to FEC response time.
+MIN_REQUEST_INTERVAL_S = 4.0
 
 # Auto-switch to cycle chunking when a name variant's first page reports more
 # pages than this. Common-name + populous-state fetches (Cohen NY+CT, Malone
@@ -61,7 +64,11 @@ CHECKPOINT_STALE_DAYS = 7
 
 
 def _utc_now_filename() -> str:
-    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H-%M-%SZ")
+    # Microsecond resolution so two persists inside the same second don't
+    # collide and silently clobber the earlier raw payload. The DB rows from
+    # the clobbered page point at a file that no longer contains their
+    # transaction_ids — observed at 21% loss before this fix.
+    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H-%M-%S-%fZ")
 
 
 def _utc_now_iso() -> str:

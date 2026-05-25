@@ -5,8 +5,15 @@ name: Weekly FEC refresh
 # updates). The deploy workflow picks up the resulting push and rebuilds the
 # Cloudflare deploy.
 #
-# Cadence: Monday 12:00 UTC (8am ET / 7am CT) — picks up the prior week's
-# FEC filings before the work week begins. GitHub may delay cron runs by
+# The refresh fans out into 4 parallel matrix jobs (one per "bucket" — see
+# scripts/refresh.py:select_bucket). Each bucket gets a roughly balanced
+# subset of owners weighted by raw-payload page volume, so the four heaviest
+# (kendrick-ken / cohen-steven / johnson-greg / sherman-john) land in
+# different buckets. Each bucket runs against the same FEC API key with
+# MIN_REQUEST_INTERVAL_S=4.0 in scripts/fetch_fec.py — 4 workers × ~4s spacing
+# stays under FEC's 1,000 req/hour cap.
+#
+# Cadence: Monday 12:00 UTC (8am ET / 7am CT). GitHub may delay cron runs by
 # 15+ minutes under load; that's acceptable given the 35d/95d freshness
 # thresholds documented in the dashboard.
 
@@ -14,6 +21,11 @@ on:
   schedule:
     - cron: '0 12 * * 1'
   workflow_dispatch:
+    inputs:
+      buckets:
+        description: 'Comma-separated bucket indexes to run (default: 0,1,2,3). Use a subset for dry-runs.'
+        required: false
+        default: '0,1,2,3'
 
 # Queue overlapping runs rather than cancel — partial refresh state is
 # harder to recover from than a delayed full one.
@@ -24,6 +36,67 @@ concurrency:
 jobs:
   refresh:
     runs-on: ubuntu-latest
+    # Each matrix job gets its own 6h GitHub cap. Setting an explicit
+    # timeout < 6h means we fail fast with logs rather than being silently
+    # killed at the cap.
+    timeout-minutes: 330
+    strategy:
+      fail-fast: false
+      matrix:
+        bucket: [0, 1, 2, 3]
+    permissions:
+      contents: read
+    steps:
+      - name: Skip bucket if not in workflow_dispatch input
+        id: gate
+        run: |
+          inputs='${{ github.event.inputs.buckets }}'
+          if [ -z "$inputs" ]; then inputs="0,1,2,3"; fi
+          if echo ",$inputs," | grep -q ",${{ matrix.bucket }},"; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=false" >> "$GITHUB_OUTPUT"
+            echo "Bucket ${{ matrix.bucket }} not in selected set ($inputs); skipping."
+          fi
+
+      - name: Checkout
+        if: steps.gate.outputs.run == 'true'
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        if: steps.gate.outputs.run == 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        if: steps.gate.outputs.run == 'true'
+        run: pip install -r requirements.txt
+
+      - name: Run refresh bucket ${{ matrix.bucket }}/4
+        if: steps.gate.outputs.run == 'true'
+        env:
+          FEC_API_KEY: ${{ secrets.FEC_API_KEY }}
+        run: python -m scripts.cli refresh --bucket ${{ matrix.bucket }}/4
+
+      - name: Upload bucket artifact
+        if: steps.gate.outputs.run == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: refresh-bucket-${{ matrix.bucket }}
+          path: |
+            data/master.db
+            owners/*.yaml
+            catalog/PROVENANCE_LOG.md
+            catalog/REVIEW_QUEUE.md
+          retention-days: 7
+          if-no-files-found: warn
+
+  consolidate:
+    needs: refresh
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
     permissions:
       contents: write
     steps:
@@ -41,19 +114,40 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Run weekly refresh
-        env:
-          FEC_API_KEY: ${{ secrets.FEC_API_KEY }}
-        run: python -m scripts.cli refresh
+      - name: Download bucket artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts/
+          pattern: refresh-bucket-*
+
+      - name: Merge bucket databases
+        run: |
+          bucket_dbs=()
+          for d in artifacts/refresh-bucket-*; do
+            if [ -f "$d/data/master.db" ]; then
+              bucket_dbs+=(--bucket-db "$d/data/master.db")
+            fi
+          done
+          if [ ${#bucket_dbs[@]} -eq 0 ]; then
+            echo "No bucket DB artifacts found; nothing to consolidate."
+            exit 0
+          fi
+          python -m scripts.merge_buckets --consolidated data/master.db "${bucket_dbs[@]}"
+
+      - name: Adopt per-bucket YAML and log changes
+        run: python -m scripts.finalize_matrix --base . --artifacts artifacts/
+
+      - name: Rebuild mockup/data.json
+        run: python mockup/build_data.py
 
       - name: Commit + push refreshed data
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          # Stage only the files that the refresh layer is allowed to touch:
-          # the master DB, owner YAMLs (audit.last_ingestion only — refresh
-          # never touches signal blocks), and the provenance / review logs.
-          git add data/master.db owners/*.yaml catalog/PROVENANCE_LOG.md catalog/REVIEW_QUEUE.md 2>/dev/null || true
+          # Stage only what the refresh layer is allowed to touch: master DB,
+          # the rebuilt data.json, owner YAMLs (audit.last_ingestion only),
+          # and the provenance / review logs.
+          git add data/master.db mockup/data.json owners/*.yaml catalog/PROVENANCE_LOG.md catalog/REVIEW_QUEUE.md 2>/dev/null || true
           if git diff --staged --quiet; then
             echo "No changes from refresh — nothing to commit."
           else
