@@ -2320,7 +2320,7 @@ function bindIndexHandlers() {
 
   document.querySelectorAll(".csv-btn[data-csv=\"league\"]").forEach((btn) => {
     btn.addEventListener("click", () => {
-      downloadDonationsCSV(state.data.donations, `owners-box-${state.data.generated_at.slice(0,10)}.csv`);
+      downloadDonationsCSV(state.data.donations, `checkswing-all-donations-${state.data.generated_at.slice(0,10)}.csv`);
     });
   });
 
