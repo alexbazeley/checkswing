@@ -697,6 +697,24 @@ section.block:last-child { border-bottom: 0; }
 .csv-btn::before { content: "↓"; font-weight: 600; }
 .csv-btn:hover { background: var(--accent); color: white; }
 
+/* Load-all button under truncated donation tables. */
+.load-all-btn {
+  background: transparent;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  padding: 8px 14px;
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 80ms, color 80ms;
+}
+.load-all-btn:hover { background: var(--accent); color: white; }
+.pagination-footer { margin-top: 14px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.pagination-footer .footnote { margin: 0; }
+
 /* Cycle prev/next nav */
 .cycle-nav {
   font-size: 13px;
@@ -1357,14 +1375,14 @@ const state = {
   /* index filters */
   indexSort: { key: "total", dir: "desc" },
   indexFilters: { q: "", team: "", tilt: "", confirmedOnly: false },
-  /* per-owner filters */
-  ownerFilters: { q: "", cycle: "", party: "", status: "" },
+  /* per-owner filters. showAll: false means default to 100 rows + load-all button. */
+  ownerFilters: { q: "", cycle: "", party: "", status: "", showAll: false },
   /* per-cycle filters */
-  cycleFilters: { q: "", party: "", status: "", owner: "" },
+  cycleFilters: { q: "", party: "", status: "", owner: "", showAll: false },
   /* per-committee filters */
-  committeeFilters: { q: "", cycle: "", status: "" },
+  committeeFilters: { q: "", cycle: "", status: "", showAll: false },
   /* per-team filters */
-  teamFilters: { q: "", cycle: "", party: "", status: "", owner: "" },
+  teamFilters: { q: "", cycle: "", party: "", status: "", owner: "", showAll: false },
   /* derived indexes (built once after data load) */
   teams: null,
   searchIndex: null,
@@ -1635,16 +1653,16 @@ function route() {
 
   // Reset per-view filters
   if (state.view.name !== "owner") {
-    state.ownerFilters = { q: "", cycle: "", party: "", status: "" };
+    state.ownerFilters = { q: "", cycle: "", party: "", status: "", showAll: false };
   }
   if (state.view.name !== "cycle") {
-    state.cycleFilters = { q: "", party: "", status: "", owner: "" };
+    state.cycleFilters = { q: "", party: "", status: "", owner: "", showAll: false };
   }
   if (state.view.name !== "committee") {
-    state.committeeFilters = { q: "", cycle: "", status: "" };
+    state.committeeFilters = { q: "", cycle: "", status: "", showAll: false };
   }
   if (state.view.name !== "team") {
-    state.teamFilters = { q: "", cycle: "", party: "", status: "", owner: "" };
+    state.teamFilters = { q: "", cycle: "", party: "", status: "", owner: "", showAll: false };
   }
 
   /* Update nav active states */
@@ -2483,7 +2501,7 @@ function renderOwner(slug) {
         <span><span class="legend-swatch dem"></span>Democratic</span>
         <span><span class="legend-swatch rep"></span>Republican</span>
         <span><span class="legend-swatch oth"></span>Other / unaffiliated</span>
-        ${o.tenure_start ? `<span style="margin-left:auto;color:var(--ink-3);font-size:12px"><span style="display:inline-block;width:18px;height:10px;background:#FBF2EC;border:1px solid var(--accent);border-style:dashed;vertical-align:-1px;margin-right:6px"></span>Tenure as ${escapeHtml(o.team || "owner")}</span>` : ""}
+        ${o.tenure_start ? `<span style="margin-left:auto;color:var(--ink-3);font-size:12px"><span style="display:inline-block;width:18px;height:10px;background:#FBF2EC;border:1px solid var(--accent);border-style:dashed;vertical-align:-1px;margin-right:6px"></span>Tenure as owner of ${escapeHtml(o.team || "team")}</span>` : ""}
       </div>
     </section>
 
@@ -2661,30 +2679,47 @@ function renderTimeline(donations, ownerOrSegments) {
   const partyColor = { DEM: "var(--dem)", REP: "var(--rep)", OTH: "var(--oth)", IND: "var(--oth)", LIB: "var(--oth)", GRE: "var(--oth)" };
 
   /* Tenure overlays. Multiple segments stack vertically if they overlap so
-     handoffs (Castellini father→son, Pohlad brothers) read at a glance. */
+     handoffs (Castellini father→son, Pohlad brothers) read at a glance.
+
+     Label placement: try inside-left first, then outside-right, then
+     outside-left. This keeps the label readable for post-2021 owners
+     whose tenure rect is narrow (Zalupski / Seidler / Feliciano /
+     Tom Pohlad). */
   let tenureOverlays = "";
   segmentTimes.forEach((s, i) => {
     const xs = xScale(s.start);
     const xe = xScale(s.end);
-    const stripeH = segmentTimes.length > 1 ? 18 : innerH;
-    const stripeY = segmentTimes.length > 1 ? padT + i * 20 : padT;
-    if (segmentTimes.length > 1) {
-      tenureOverlays += `
-        <rect x="${xs.toFixed(1)}" y="${stripeY}" width="${Math.max(1, xe - xs).toFixed(1)}" height="${stripeH}"
-              fill="#FBF2EC" stroke="var(--accent)" stroke-width="1" stroke-dasharray="3 3" opacity="0.85"/>
-        <text x="${(xs + 6).toFixed(1)}" y="${(stripeY + 13).toFixed(1)}"
-              font-family="var(--sans)" font-size="10" font-weight="600"
-              letter-spacing="0.06em" fill="var(--accent-2)"
-              style="text-transform:uppercase">${escapeHtml(s.label)}</text>`;
+    const isMulti = segmentTimes.length > 1;
+    const stripeH = isMulti ? 18 : innerH;
+    const stripeY = isMulti ? padT + i * 20 : padT;
+    const labelY = isMulti ? stripeY + 13 : padT + 14;
+    const letterSpacing = isMulti ? "0.06em" : "0.08em";
+    const insidePad = isMulti ? 6 : 8;
+
+    /* Estimate label width: uppercase + bold + letter-spacing at 10px
+       averages ~7.2px/char. Use 7.5 for safety. */
+    const labelWidthEst = s.label.length * 7.5;
+    const rectWidth = xe - xs;
+    const rightEdge = W - padR;
+    let labelX, labelAnchor;
+    if (rectWidth >= labelWidthEst + insidePad * 2) {
+      labelX = xs + insidePad;
+      labelAnchor = "start";
+    } else if (xe + 6 + labelWidthEst <= rightEdge) {
+      labelX = xe + 6;
+      labelAnchor = "start";
     } else {
-      tenureOverlays += `
-        <rect x="${xs.toFixed(1)}" y="${padT}" width="${Math.max(1, xe - xs).toFixed(1)}" height="${innerH}"
-              fill="#FBF2EC" stroke="var(--accent)" stroke-width="1" stroke-dasharray="3 3" opacity="0.85"/>
-        <text x="${(xs + 8).toFixed(1)}" y="${(padT + 14).toFixed(1)}"
-              font-family="var(--sans)" font-size="10" font-weight="600"
-              letter-spacing="0.08em" fill="var(--accent-2)"
-              style="text-transform:uppercase">${escapeHtml(s.label)}</text>`;
+      labelX = xs - 6;
+      labelAnchor = "end";
     }
+
+    tenureOverlays += `
+      <rect x="${xs.toFixed(1)}" y="${stripeY}" width="${Math.max(1, xe - xs).toFixed(1)}" height="${stripeH}"
+            fill="#FBF2EC" stroke="var(--accent)" stroke-width="1" stroke-dasharray="3 3" opacity="0.85"/>
+      <text x="${labelX.toFixed(1)}" y="${labelY.toFixed(1)}" text-anchor="${labelAnchor}"
+            font-family="var(--sans)" font-size="10" font-weight="600"
+            letter-spacing="${letterSpacing}" fill="var(--accent-2)"
+            style="text-transform:uppercase">${escapeHtml(s.label)}</text>`;
   });
 
   /* For pre-tenure styling: a donation is pre-tenure only if it falls
@@ -2725,6 +2760,20 @@ function renderTimeline(donations, ownerOrSegments) {
     </div>`;
 }
 
+/* Default rows shown before user clicks "Load all". Donation tables
+   can exceed 600 rows for the highest-volume owners; 100 keeps initial
+   render snappy without losing the option to see the full table. */
+const DEFAULT_TABLE_LIMIT = 100;
+
+function renderPaginationFooter(visibleCount, totalCount, tableKey) {
+  if (totalCount <= visibleCount) return "";
+  return `
+    <div class="pagination-footer">
+      <span class="footnote">Showing first ${fmtInt(visibleCount)} of ${fmtInt(totalCount)} records.</span>
+      <button class="load-all-btn" data-load-all="${tableKey}">Load all ${fmtInt(totalCount)} records</button>
+    </div>`;
+}
+
 function renderDonationsTable(allDonations) {
   const f = state.ownerFilters;
   const q = f.q.trim().toLowerCase();
@@ -2754,6 +2803,7 @@ function renderDonationsTable(allDonations) {
     );
   }
 
+  const visible = f.showAll ? rows : rows.slice(0, DEFAULT_TABLE_LIMIT);
   return `
     <table class="donations-table">
       <thead>
@@ -2766,10 +2816,10 @@ function renderDonationsTable(allDonations) {
         </tr>
       </thead>
       <tbody>
-        ${rows.slice(0, 500).map(renderDonationRow).join("")}
+        ${visible.map(renderDonationRow).join("")}
       </tbody>
     </table>
-    ${rows.length > 500 ? `<p class="footnote">Showing first 500 of ${rows.length} matching records. Refine filters above to narrow.</p>` : ""}
+    ${renderPaginationFooter(visible.length, rows.length, "owner")}
   `;
 }
 
@@ -2804,6 +2854,10 @@ function bindOwnerHandlers() {
 
   document.querySelectorAll(".donations-table tbody tr").forEach((tr) => {
     tr.addEventListener("click", () => openDrawer(tr.getAttribute("data-id")));
+  });
+
+  document.querySelectorAll('.load-all-btn[data-load-all="owner"]').forEach((btn) => {
+    btn.addEventListener("click", () => { state.ownerFilters.showAll = true; rerenderOwnerTable(); });
   });
 
   document.querySelectorAll(".timeline-svg circle").forEach((c) => {
@@ -2847,6 +2901,9 @@ function rerenderOwnerTable() {
   wrap.innerHTML = renderDonationsTable(donations);
   document.querySelectorAll(".donations-table tbody tr").forEach((tr) => {
     tr.addEventListener("click", () => openDrawer(tr.getAttribute("data-id")));
+  });
+  document.querySelectorAll('.load-all-btn[data-load-all="owner"]').forEach((btn) => {
+    btn.addEventListener("click", () => { state.ownerFilters.showAll = true; rerenderOwnerTable(); });
   });
 }
 
@@ -3085,6 +3142,7 @@ function renderCycleDonationsTable(allDonations) {
     );
   }
 
+  const visible = f.showAll ? rows : rows.slice(0, DEFAULT_TABLE_LIMIT);
   return `
     <table class="donations-table">
       <thead>
@@ -3098,7 +3156,7 @@ function renderCycleDonationsTable(allDonations) {
         </tr>
       </thead>
       <tbody>
-        ${rows.slice(0, 500).map((d) => {
+        ${visible.map((d) => {
           const partyClass = d.party === "DEM" ? "dem" : d.party === "REP" ? "rep" : "oth";
           const statusChip = d.status === "CONFIRMED"
             ? `<span class="chip chip-confirmed">Confirmed</span>`
@@ -3117,7 +3175,7 @@ function renderCycleDonationsTable(allDonations) {
         }).join("")}
       </tbody>
     </table>
-    ${rows.length > 500 ? `<p class="footnote">Showing first 500 of ${rows.length} matching records.</p>` : ""}`;
+    ${renderPaginationFooter(visible.length, rows.length, "cycle")}`;
 }
 
 function bindCycleHandlers() {
@@ -3146,6 +3204,9 @@ function bindCycleHandlers() {
   });
   document.querySelectorAll(".donations-table tbody tr").forEach((tr) => {
     tr.addEventListener("click", () => openDrawer(tr.getAttribute("data-id")));
+  });
+  document.querySelectorAll('.load-all-btn[data-load-all="cycle"]').forEach((btn) => {
+    btn.addEventListener("click", () => { state.cycleFilters.showAll = true; rerenderCycleTable(); });
   });
 
   document.querySelectorAll(".csv-btn[data-csv=\"cycle\"]").forEach((btn) => {
@@ -3179,6 +3240,9 @@ function rerenderCycleTable() {
   wrap.innerHTML = renderCycleDonationsTable(donations);
   document.querySelectorAll(".donations-table tbody tr").forEach((tr) => {
     tr.addEventListener("click", () => openDrawer(tr.getAttribute("data-id")));
+  });
+  document.querySelectorAll('.load-all-btn[data-load-all="cycle"]').forEach((btn) => {
+    btn.addEventListener("click", () => { state.cycleFilters.showAll = true; rerenderCycleTable(); });
   });
 }
 
@@ -3320,6 +3384,7 @@ function renderCommittee(committeeId) {
 }
 
 function renderCommitteeDonationsTable(allDonations) {
+  const f = state.committeeFilters;
   const rows = filterCommitteeDonations(allDonations);
 
   setTimeout(() => {
@@ -3334,6 +3399,7 @@ function renderCommitteeDonationsTable(allDonations) {
     );
   }
 
+  const visible = f.showAll ? rows : rows.slice(0, DEFAULT_TABLE_LIMIT);
   return `
     <table class="donations-table">
       <thead>
@@ -3346,7 +3412,7 @@ function renderCommitteeDonationsTable(allDonations) {
         </tr>
       </thead>
       <tbody>
-        ${rows.slice(0, 500).map((d) => {
+        ${visible.map((d) => {
           const statusChip = d.status === "CONFIRMED"
             ? `<span class="chip chip-confirmed">Confirmed</span>`
             : `<span class="chip chip-probable">Probable</span>`;
@@ -3363,7 +3429,7 @@ function renderCommitteeDonationsTable(allDonations) {
         }).join("")}
       </tbody>
     </table>
-    ${rows.length > 500 ? `<p class="footnote">Showing first 500 of ${rows.length} matching records.</p>` : ""}`;
+    ${renderPaginationFooter(visible.length, rows.length, "committee")}`;
 }
 
 function filterCommitteeDonations(allDonations) {
@@ -3401,6 +3467,9 @@ function bindCommitteeHandlers() {
   document.querySelectorAll(".donations-table tbody tr").forEach((tr) => {
     tr.addEventListener("click", () => openDrawer(tr.getAttribute("data-id")));
   });
+  document.querySelectorAll('.load-all-btn[data-load-all="committee"]').forEach((btn) => {
+    btn.addEventListener("click", () => { state.committeeFilters.showAll = true; rerenderCommitteeTable(); });
+  });
 
   document.querySelectorAll(".csv-btn[data-csv=\"committee\"]").forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -3418,6 +3487,9 @@ function rerenderCommitteeTable() {
   wrap.innerHTML = renderCommitteeDonationsTable(donations);
   document.querySelectorAll(".donations-table tbody tr").forEach((tr) => {
     tr.addEventListener("click", () => openDrawer(tr.getAttribute("data-id")));
+  });
+  document.querySelectorAll('.load-all-btn[data-load-all="committee"]').forEach((btn) => {
+    btn.addEventListener("click", () => { state.committeeFilters.showAll = true; rerenderCommitteeTable(); });
   });
 }
 
@@ -3649,6 +3721,7 @@ function filterTeamDonations(allDonations) {
 }
 
 function renderTeamDonationsTable(allDonations) {
+  const f = state.teamFilters;
   const rows = filterTeamDonations(allDonations);
 
   setTimeout(() => {
@@ -3663,6 +3736,7 @@ function renderTeamDonationsTable(allDonations) {
     );
   }
 
+  const visible = f.showAll ? rows : rows.slice(0, DEFAULT_TABLE_LIMIT);
   return `
     <table class="donations-table">
       <thead>
@@ -3676,7 +3750,7 @@ function renderTeamDonationsTable(allDonations) {
         </tr>
       </thead>
       <tbody>
-        ${rows.slice(0, 500).map((d) => {
+        ${visible.map((d) => {
           const partyClass = d.party === "DEM" ? "dem" : d.party === "REP" ? "rep" : "oth";
           const statusChip = d.status === "CONFIRMED"
             ? `<span class="chip chip-confirmed">Confirmed</span>`
@@ -3695,7 +3769,7 @@ function renderTeamDonationsTable(allDonations) {
         }).join("")}
       </tbody>
     </table>
-    ${rows.length > 500 ? `<p class="footnote">Showing first 500 of ${rows.length} matching records.</p>` : ""}`;
+    ${renderPaginationFooter(visible.length, rows.length, "team")}`;
 }
 
 function bindTeamHandlers() {
@@ -3718,6 +3792,9 @@ function bindTeamHandlers() {
 
   document.querySelectorAll(".donations-table tbody tr").forEach((tr) => {
     tr.addEventListener("click", () => openDrawer(tr.getAttribute("data-id")));
+  });
+  document.querySelectorAll('.load-all-btn[data-load-all="team"]').forEach((btn) => {
+    btn.addEventListener("click", () => { state.teamFilters.showAll = true; rerenderTeamTable(); });
   });
 
   /* Recipient links → committee pages */
@@ -3750,6 +3827,9 @@ function rerenderTeamTable() {
   wrap.innerHTML = renderTeamDonationsTable(donations);
   document.querySelectorAll(".donations-table tbody tr").forEach((tr) => {
     tr.addEventListener("click", () => openDrawer(tr.getAttribute("data-id")));
+  });
+  document.querySelectorAll('.load-all-btn[data-load-all="team"]').forEach((btn) => {
+    btn.addEventListener("click", () => { state.teamFilters.showAll = true; rerenderTeamTable(); });
   });
 }
 
