@@ -28,6 +28,15 @@ name_variants:
 verifying_signals:
   cities:
     - "naples"
+    # Added 2026-05-25 Tier-B calibration. 5 UNCERTAIN-open records at Boca
+    # Raton FL filed under "Sherman, Bruce / MIAMI MARLINS / CHAIRMAN" (or
+    # the typo "MAIMI MARLINS") — clearly the Marlins owner. Naples is his
+    # primary residence; Boca Raton appears to be a secondary/filing
+    # address. Adding promotes those 5 records via employer + city =
+    # CONFIRMED. Tradeoff: 6 generic-employer Boca records (N/A, NOT
+    # EMPLOYED, SELF) become PROBABLE rather than UNCERTAIN — honestly
+    # one-signal, could be Sherman or doppelgänger.
+    - "boca raton"
   states:
     - "FL"
   employers:
@@ -38,6 +47,8 @@ verifying_signals:
     - "Private Capital Management"   # 1986-2009 founded; sold to Legg Mason 2001
     - "Private Capital Mgmt"
     - "PCM"
+    # Added 2026-05-25 — observed FEC clerk typo of "Miami Marlins"
+    - "MAIMI MARLINS"
   occupations:
     - "chairman"
     - "owner"
@@ -52,6 +63,20 @@ strong_signals:
     - "M4 Capital"           # his Naples FL family office; uniquely named
     - "M4 Capital LLC"
   zip_codes: []
+
+negative_signals:
+  # Two distinct Bruce Sherman doppelgängers identified in 2026-05-25 Tier-B
+  # calibration audit of 131 UNCERTAIN-open records:
+  #   - Vistakon (Jacksonville FL, J&J contact lens subsidiary) — 40 records
+  #     of "Bruce Sherman / VISTAKON / CUSTOMER RELATIONS ASSOCIATE" are a
+  #     distinct low-level employee, not the Marlins owner.
+  #   - PWC (PricewaterhouseCoopers, Delray Beach FL) — 3 records of
+  #     "Bruce Sherman / PWC / CONSULTANT" are a distinct consultant.
+  # Both routed to UNCERTAIN via city/state-outside rule already; negative-
+  # signaling adds defense-in-depth if either filed from Naples in future.
+  employers:
+    - "Vistakon"
+    - "PWC"
 
 related_entities: []
 # Future candidates (do NOT add without user approval per CLAUDE.md §1.7):
@@ -116,8 +141,55 @@ change_log:
     by: "claude-code-research (orchestrated by alex)"
     references:
       - "/tmp/sherman-bruce-research.md (session-local research file)"
+  - date: 2026-05-25
+    change: |
+      Tier-B calibration round 1 — three changes based on UNCERTAIN-queue
+      audit (131 UNCERTAIN-open records inspected via raw-payload sampling).
+
+      (1) Added "boca raton" to verifying_signals.cities. 5 of 11 Boca
+      Raton UNCERTAIN-open records filed under "Sherman, Bruce" with
+      employer MIAMI MARLINS (4 records) or MAIMI MARLINS (1 record, FEC
+      clerk typo) + occupation CHAIRMAN. Clearly the Marlins owner using
+      a secondary/filing address. Tradeoff: 6 generic-employer Boca
+      records (N/A / NOT EMPLOYED / SELF) become PROBABLE post-cal —
+      honestly one-signal, alex approved.
+
+      (2) Added "MAIMI MARLINS" to verifying_signals.employers as the
+      observed FEC clerk typo variant of "Miami Marlins".
+
+      (3) Added negative_signals.employers block (new) with "Vistakon"
+      and "PWC". Two distinct doppelgängers identified:
+        - Vistakon (Jacksonville FL J&J subsidiary): 40 UNCERTAIN-open
+          records of "Bruce Sherman / VISTAKON / CUSTOMER RELATIONS
+          ASSOCIATE". Low-level customer service position; not the
+          Marlins owner.
+        - PWC (PricewaterhouseCoopers, Delray Beach FL): 3 UNCERTAIN-
+          open records of "Bruce Sherman / PWC / CONSULTANT". Distinct
+          consultant individual.
+      Both currently UNCERTAIN via city/state-outside rule; negative-
+      signaling adds defense-in-depth in case either filer ever uses
+      Naples FL return address.
+
+      Records left UNCERTAIN as legitimate doppelgängers / ambiguous:
+        - 76 Jacksonville NOT EMPLOYED records — ambiguous employer; no
+          way to disambiguate Sherman from a different Bruce-Sherman
+          retiree in Jacksonville. Stays UNCERTAIN.
+        - 1 Sarasota FL record (not investigated; small sample).
+        - 6 generic-employer Boca records — promoted to PROBABLE per
+          (1) tradeoff.
+
+      Pre-cal: 51 CONFIRMED / 14 PROBABLE / 131 UNCERTAIN-open. P/C 0.27.
+      Predicted post-cal: ~56 CONFIRMED / ~20 PROBABLE / ~83 UNCERTAIN.
+      (+5 from Boca Marlins; +6 from Boca generic via PROBABLE; -48 from
+      Vistakon+PWC remaining UNCERTAIN now flagged with explicit reason).
+      P/C ~0.36 — RATIO GOES UP because we're surfacing more records
+      honestly classified, not because of misattribution. The CONFIRMED-
+      count alarm is for drops, not increases.
+    by: "claude-code-session (PR 4 Tier B, approved by alex w/ Boca yes)"
+    references:
+      - "data/master.db pre-calibration: 51 CONFIRMED / 14 PROBABLE / 131 UNCERTAIN-open"
 
 audit:
   created: 2026-05-23
   last_ingestion: null
-  last_signal_review: 2026-05-23
+  last_signal_review: 2026-05-25

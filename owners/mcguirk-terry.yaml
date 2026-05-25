@@ -62,7 +62,18 @@ verifying_signals:
 
 strong_signals:
   employers: []
-  zip_codes: []
+  zip_codes:
+    # Added 2026-05-25 Tier-B calibration. 30327 is the Atlanta Buckhead
+    # area where 30 pre-cal CONFIRMED McGuirk records cluster. 3 of 8
+    # PROBABLE records at 30327 + 1 at ZIP+4 303271217 promote via strong-
+    # zip. Buckhead is McGuirk's documented residential cluster (per
+    # implicit Atlanta Magazine "55 Most Powerful" profile).
+    #
+    # 30303 (downtown Atlanta) deliberately NOT promoted — heavy corporate
+    # office ZIP with known Terry McGuirk doppelgänger risk (JLL real-
+    # estate exec + Atlanta-area realtor per notes block). 4 PROBABLE
+    # records at 30303 with empty employer + TBS occupation stay PROBABLE.
+    - "30327"
   # Conservative at creation. "Atlanta Braves Holdings" is the corporate
   # name but is shared with the ABH board (Brian Deevy, Wonya Lucas, Diana
   # Murphy) and ABH officers/staff. Calibrate after first ingestion if a
@@ -148,8 +159,43 @@ change_log:
     by: "claude-code-research (orchestrated by alex)"
     references:
       - "/tmp/braves-ownership-research.md (session-local research file)"
+  - date: 2026-05-25
+    change: |
+      Tier-B calibration round 1 — added strong_signals.zip_codes: ["30327"]
+      (Atlanta Buckhead area, McGuirk's residential cluster).
+
+      Audit finding (8 PROBABLE records inspected): every PROBABLE record
+      is "MCGUIRK, TERENCE F" or "MCGUIRK, TERENCE" at Atlanta GA, with
+      empty employer field but occupation populated with "TBS INC" / "TBS"
+      / "TIME WARNER CABLE" / "INFORMATION REQUESTED PER BEST EFFORTS".
+      Donations to Daschle-Leahy / Friends of Schumer / Leahy for U.S.
+      Senator / Chambliss for Senate / John McCain 2008 — consistent
+      McGuirk pattern (TBS/Turner-era 2003-2008). The classifier matches
+      employer-field against employer-list and occupation-field against
+      occupation-list separately, so company-info-in-occupation-field
+      doesn't trigger an employer match.
+
+      Promoting 30327 to strong-zip catches 3 of 8 PROBABLE at 30327 + 1
+      at 303271217 (ZIP+4 of 30327, prefix-matched). Total 4 records
+      promote to CONFIRMED via strong-zip.
+
+      30303 (downtown Atlanta) deliberately NOT promoted — heavy
+      corporate-office ZIP, documented Terry McGuirk doppelgänger risk
+      (JLL real-estate exec, Atlanta-area realtor per notes block). 4
+      PROBABLE records at 30303 stay PROBABLE — honestly one-signal.
+
+      Skipped: adding "TBS" or "Time Warner Cable" to occupations —
+      those are companies (not occupations) and "tbs" is too generic
+      a substring to risk.
+
+      Pre-cal: 39 CONFIRMED / 8 PROBABLE / 0 UNCERTAIN-open. P/C 0.21.
+      Predicted post-cal: ~43 CONFIRMED / ~4 PROBABLE / 0 UNCERTAIN.
+      P/C ~0.09.
+    by: "claude-code-session (PR 4 Tier B, approved by alex)"
+    references:
+      - "data/master.db pre-calibration: 39 CONFIRMED / 8 PROBABLE / 0 UNCERTAIN-open"
 
 audit:
   created: 2026-05-23
   last_ingestion: null
-  last_signal_review: 2026-05-23
+  last_signal_review: 2026-05-25

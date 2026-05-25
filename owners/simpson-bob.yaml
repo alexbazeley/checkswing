@@ -57,7 +57,21 @@ strong_signals:
     - "MorningStar Partners"        # 2012-2022 name for what became TXO
     - "Cross Timbers Oil"           # pre-2001 name for XTO
     - "Cross Timbers Oil Company"
-  zip_codes: []
+  zip_codes:
+    # 76102 downtown Fort Worth — XTO Energy HQ (810 Houston St) and TXO
+    # Partners HQ (400 W 7th St) office cluster. Added 2026-05-25 Tier-B
+    # calibration to resolve a 0 CONFIRMED / 8 PROBABLE anomaly. All 8
+    # PROBABLE records are "SIMPSON, BOB R. MR." (strict middle-initial
+    # firewall holding) at 76102 in Aug-Sept 2012 ($2,500-$50,000 Romney
+    # Victory / RNC / state Republican parties) with empty or
+    # INFORMATION REQUESTED employer fields. CAVEAT — this is an office-
+    # building ZIP per the system-prompt footgun warning, not a residence;
+    # the name_variants "Bob R." strict middle-initial requirement is the
+    # ONLY firewall against a hypothetical downtown Fort Worth namesake
+    # who also uses the "R." middle initial. Future calibration round
+    # should establish Simpson's residential ZIP (not in Tier 2 sources)
+    # and migrate the strong-zip from office 76102 to residence.
+    - "76102"
 
 related_entities: []
 # Future candidates (do NOT add without user approval per CLAUDE.md §1.7):
@@ -133,7 +147,9 @@ notes: |
   slug `davis-ray`.
 
   NEEDS-CONFIRMATION: Full first name (commonly "Robert" but not Tier 2-
-  documented). Middle name behind "R." not publicly disclosed.
+  documented). Middle name behind "R." not publicly disclosed. Residential
+  ZIP (within Fort Worth) not in Tier 2; strong-zip 76102 (office) is a
+  Tier-B calibration pragmatic choice pending residence research.
 
 change_log:
   - date: 2026-05-23
@@ -149,8 +165,39 @@ change_log:
     by: "claude-code-research (orchestrated by alex)"
     references:
       - "/tmp/rangers-ownership-research.md (session-local research file)"
+  - date: 2026-05-25
+    change: |
+      Tier-B calibration round 1 — resolved 0 CONFIRMED / 8 PROBABLE
+      anomaly by promoting 76102 (downtown Fort Worth XTO/TXO office
+      ZIP) to strong_signals.zip_codes.
+
+      Audit finding: every PROBABLE record is "SIMPSON, BOB R. MR."
+      (load-bearing middle initial intact) at 76102 Fort Worth filing
+      Aug-Sept 2012 to Republican mega-donor recipients (Romney Victory
+      $50k, Romney for President $2,500 x 2, RNC $30,800, Vermont/Idaho/
+      Massachusetts/Oklahoma Republican Federal $3,550 each). Empty
+      employer / "INFORMATION REQUESTED PER BEST EFFORTS" filings — FEC
+      clerk had no info during that 2012 fundraising sweep. Clearly
+      Simpson based on name + city + recipient + amount-scale.
+
+      OFFICE-ZIP CAVEAT: 76102 is downtown Fort Worth (XTO Energy HQ at
+      810 Houston St; TXO Partners HQ at 400 W 7th St), not Simpson's
+      personal residence. Per the system-prompt footgun warning about
+      office-building strong-zips, this carries doppelgänger risk that
+      residential ZIPs don't. The strict "Bob R." middle-initial
+      name_variants is the ONLY firewall against a hypothetical second
+      "Bob R. Simpson" working in 76102. Approved by alex with
+      acknowledgment of the caveat; future calibration round should
+      research Simpson's actual residential ZIP and migrate.
+
+      Pre-cal: 0 CONFIRMED / 8 PROBABLE / 0 UNCERTAIN-open.
+      Predicted post-cal: ~8 CONFIRMED / ~0 PROBABLE / 0 UNCERTAIN.
+      No CONFIRMED-drop alarm risk (positive swing only; was already 0).
+    by: "claude-code-session (PR 4 Tier B, approved by alex w/ office-ZIP caveat)"
+    references:
+      - "data/master.db pre-calibration: 0 CONFIRMED / 8 PROBABLE / 0 UNCERTAIN-open"
 
 audit:
   created: 2026-05-23
   last_ingestion: null
-  last_signal_review: 2026-05-23
+  last_signal_review: 2026-05-25

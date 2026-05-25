@@ -31,6 +31,15 @@ verifying_signals:
   cities:
     - "bellevue"
     - "seattle"
+    # Added 2026-05-25 Tier-B calibration. Medina is the Lake Washington
+    # exclusive eastside neighborhood (~3,000 residents) where Stanton
+    # actually resides — Bellevue + Seattle were too narrow. All 77
+    # MEDINA-labeled and 15 WEST MEDINA-labeled UNCERTAIN-open records
+    # are John W. Stanton (Western Wireless / Trilogy / Seattle Mariners
+    # employers + Chairman/CEO occupations). The 4 remaining UNCERTAIN
+    # records (3 Vashon, 1 Yakima) are distinct same-name doppelgängers.
+    - "medina"
+    - "west medina"
   states:
     - "WA"
   employers:
@@ -43,6 +52,21 @@ verifying_signals:
     - "Seattle Mariners"
     - "Mariners"
     - "SG Enterprises"               # holds Trilogy International stake per Wikipedia
+    # Added 2026-05-25 Tier-B calibration. Catches PROBABLE records using
+    # spelling/typo variants of Stanton's Trilogy firms:
+    # "Trilogy Partners" substring-covers TRILOGY PARTNERS, TRILOGY
+    # PARTNERS/PARTNERS observed in Bellevue PROBABLE records.
+    # "Triology" (typo of Trilogy) covers TRIOLOGY EQUITY PARTNERS,
+    # TRIOLOGY PARTNERSHIP, TRIOLOGY PARTNERS observed in data.
+    - "Trilogy Partners"
+    - "Triology"
+    # "VoiceStream" (one word, no Wireless suffix) — substring-covers
+    # VOICESTREAM, VOICESTREAM COMMUNICATIONS, VOICESTREAM/PRESIDENT & CEO
+    # variants observed in post-Medina-add PROBABLE records. The strong-
+    # signal "VoiceStream Wireless" alone didn't catch these because the
+    # haystack lacked "Wireless". Stanton's 1995-2001 firm is essentially
+    # the only "VoiceStream" entity.
+    - "VoiceStream"
   occupations:
     - "chairman"
     - "managing partner"
@@ -143,8 +167,51 @@ change_log:
     by: "claude-code-research (orchestrated by alex)"
     references:
       - "/tmp/stanton-john-research.md (session-local research file)"
+  - date: 2026-05-25
+    change: |
+      Tier-B calibration round 1 — added two cities and two employer
+      variants based on UNCERTAIN-queue audit.
+
+      Audit finding: 92 of 96 UNCERTAIN-open records were John W. Stanton
+      records being routed to UNCERTAIN by the city/state-outside-
+      documented-residences rule because the YAML's cities list (Bellevue
+      + Seattle) didn't include "medina" (77 records) or "west medina"
+      (15 records). Medina is the Lake Washington exclusive eastside
+      neighborhood where Stanton actually resides; Bellevue is adjacent
+      but distinct. All 77 Medina-labeled UNCERTAIN records have employer
+      patterns identifying Stanton: 17 TRILOGY PARTNERSHIPS, 8 WESTERN
+      WIRELESS variants, 3 SEATTLE MARINERS, plus Trilogy / Triology
+      variants. Plus 15 WEST MEDINA records under WESTERN WIRELESS
+      CORPORATION or SEATTLE MARINERS.
+
+      Added:
+        - cities: "medina", "west medina"
+        - employers: "Trilogy Partners" (substring-covers TRILOGY PARTNERS
+          + TRILOGY PARTNERS/PARTNERS), "Triology" (typo variant of
+          Trilogy; substring-covers TRIOLOGY EQUITY PARTNERS, TRIOLOGY
+          PARTNERSHIP, TRIOLOGY PARTNERS)
+
+      Records left UNCERTAIN as legitimate doppelgängers:
+        - 3 VASHON records: STANTON, JOHN at "VISD" (Vashon Island School
+          District) occupation TECH, $5-$50. Tech worker at school district
+          — distinct individual.
+        - 1 YAKIMA record: STANTON, JOHN at "YAKIMA COUNTY" occupation
+          PAVEMENT MANAGER, $5. County government worker — distinct
+          individual.
+
+      Bellevue PROBABLE records: 11 TRILOGY PARTNERS / 2 TRILOGY
+      PARTNERS/PARTNERS / 2 TRIOLOGY EQUITY PARTNERS will promote to
+      CONFIRMED via the new employer additions.
+
+      Pre-cal: 68 CONFIRMED / 19 PROBABLE / 96 UNCERTAIN-open. P/C 0.28.
+      Predicted post-cal: ~150 CONFIRMED / ~5 PROBABLE / 4 UNCERTAIN.
+      P/C ~0.03. CONFIRMED count goes up substantially — no >5% drop
+      alarm risk.
+    by: "claude-code-session (PR 4 Tier B, approved by alex)"
+    references:
+      - "data/master.db pre-calibration: 68 CONFIRMED / 19 PROBABLE / 96 UNCERTAIN-open"
 
 audit:
   created: 2026-05-23
   last_ingestion: null
-  last_signal_review: 2026-05-23
+  last_signal_review: 2026-05-25

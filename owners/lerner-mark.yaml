@@ -28,6 +28,15 @@ verifying_signals:
     - "bethesda"
     - "rockville"            # Lerner Enterprises HQ area
     - "north bethesda"
+    # Added 2026-05-25 Tier-B calibration. DC-area suburbs / weekend
+    # spots where Mark D filed under his Lerner Enterprises strong signal:
+    # Kensington MD (3 records), Stevensville MD Kent Island (2 records),
+    # Potomac MD (1 record). NOT adding Baltimore / Pikesville — those
+    # cluster around the "Mark Lerner at Chesapeake Partners" doppelgänger
+    # (see negative_signals.employers below).
+    - "kensington"
+    - "stevensville"
+    - "potomac"
   states:
     - "MD"
   employers:
@@ -36,6 +45,10 @@ verifying_signals:
     - "Washington Nationals"
     - "Nationals"
     - "Lerner Family Foundation"
+    # Added 2026-05-25 — substring catches "LERNER CORP" / "THE LERNER
+    # CORP" abbreviated form (strong-signal "Lerner Corporation" doesn't
+    # substring-match the shortened form).
+    - "Lerner Corp"
   occupations:
     - "principal"
     - "managing principal"
@@ -51,6 +64,25 @@ strong_signals:
     - "Lerner Enterprises"    # near-uniquely associated with this family in DC
     - "Lerner Corporation"
   zip_codes: []
+
+negative_signals:
+  # "Mark Lerner at Chesapeake Partners" doppelgänger — a Baltimore/
+  # Pikesville-area investment manager. Identified 2026-05-25 Tier-B
+  # calibration via raw-payload audit of all 163 UNCERTAIN-open records:
+  # 143 (117 Baltimore + 26 Pikesville) share employer in the Chesapeake
+  # Partners / CP Management family, with occupations PARTNER /
+  # INVESTMENT MANAGER / INVESTOR / FINANCIAL MANAGER. Distinct person
+  # from Mark D. Lerner of Lerner Enterprises (the Nationals owner).
+  # Without this block, 3 records leaked into PROBABLE at Mark D's
+  # Rockville / North Bethesda cities; they are now correctly demoted
+  # to UNCERTAIN with explicit doppelgänger reason.
+  employers:
+    - "Chesapeake Partners"
+    - "CP Management"
+    - "C.P. Management"
+    - "Chesepeake"               # observed typo of Chesapeake
+    - "Chesapeake Party"          # observed typo
+    - "CPMC"
 
 related_entities: []
 # Future candidates (do NOT add without user approval per CLAUDE.md §1.7):
@@ -131,8 +163,55 @@ change_log:
     by: "claude-code-research (orchestrated by alex)"
     references:
       - "/tmp/lerner-mark-research.md (session-local research file)"
+  - date: 2026-05-25
+    change: |
+      Tier-B calibration round 1 — identified the "Mark Lerner at
+      Chesapeake Partners" doppelgänger as the dominant feature of the
+      163 UNCERTAIN-open queue, added cities for legitimate Mark D
+      records previously caught by address-contradicts, and added a
+      negative_signals.employers block for the doppelgänger family.
+
+      Audit (raw-payload review of all 163 UNCERTAIN-open):
+
+      Doppelgänger: 143 records (117 BALTIMORE + 26 PIKESVILLE MD) are
+      a distinct "Mark Lerner" at Chesapeake Partners / CP Management
+      LLC / C.P. Management L.L.C. / Chesepeake Partners (typo) /
+      Chesapeake Party (typo) / Chesapeake Partners Management / CPMC,
+      with occupations PARTNER / INVESTMENT MANAGER / INVESTOR / FINANCIAL
+      MANAGER. Baltimore investment-manager profile incompatible with
+      Mark D. Lerner of Lerner Enterprises. Three records were leaking
+      into Mark D's PROBABLE bucket: 2 Chesapeake Partners at Rockville
+      + 1 Chesapeake Partners Management at North Bethesda — these now
+      demote to UNCERTAIN with explicit "negative employer signal"
+      reason via the new negative_signals block.
+
+      Legitimate Mark D records previously UNCERTAIN-via-address:
+        - 3 KENSINGTON MD records, all "Mark Lerner" / Lerner
+          Enterprises / Owner. Kensington is a DC-Bethesda-adjacent
+          suburb. Added "kensington" to cities.
+        - 2 STEVENSVILLE MD records (Kent Island vacation area), one
+          Lerner Enterprises / Executive, one The Lerner Companies /
+          Investment Manager. Added "stevensville" to cities.
+        - 1 POTOMAC MD record, Lerner Enterprises / Real Estate
+          Developer. Added "potomac" to cities.
+
+      The 1 Gaithersburg UNCERTAIN ("MARK LERNER" / employer "GOD" /
+      occupation "NONSECTARIAN BIBLICAL SPECIALIST" / $1 donation) is
+      clearly a distinct person — not adding "gaithersburg" to cities.
+
+      Also added "Lerner Corp" to verifying_signals.employers — the
+      strong-signal "Lerner Corporation" doesn't substring-match the
+      observed shortened form "THE LERNER CORP" (1 PROBABLE record).
+
+      Pre-cal: 62 CONFIRMED / 13 PROBABLE / 163 UNCERTAIN-open. P/C 0.21.
+      Predicted post-cal: ~68 CONFIRMED / ~9 PROBABLE / 163 UNCERTAIN
+      (composition changes: -3 leaking PROBABLE move to UNCERTAIN with
+      better tagging; +6 UNCERTAIN move to CONFIRMED). P/C ~0.13.
+    by: "claude-code-session (PR 4 Tier B, approved by alex)"
+    references:
+      - "data/master.db pre-calibration: 62 CONFIRMED / 13 PROBABLE / 163 UNCERTAIN-open"
 
 audit:
   created: 2026-05-23
   last_ingestion: null
-  last_signal_review: 2026-05-23
+  last_signal_review: 2026-05-25

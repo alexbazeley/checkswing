@@ -1519,3 +1519,159 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **uncertain_count**: `0`
 - **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-02-45Z__a9d60a8c.db`
 - **notes**: skipped(no-name-match)=1 · min_date=default (no prior ingestion) · FROM-RAW
+
+### 2026-05-25 — DELETION — reclassify stanton-john
+
+- **entity_slug**: `stanton-john`
+- **reason**: Tier-B: added medina/west-medina cities + Trilogy Partners/Triology employer variants
+- **rows_deleted_donations**: `87`
+- **rows_deleted_review_queue**: `96` (of which 0 had resolutions)
+- **include_related**: `False`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-07-37Z__pre-reclassify-stanton-john.db`
+- **note**: Rows are recoverable from the snapshot above and from data/raw/stanton-john/ payloads. Re-classification follows in the next INGESTION entry.
+
+### 2026-05-25 — INGESTION
+
+- **run_id**: `a1f9711f`
+- **entity_slug**: `stanton-john`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2025-08-12`
+- **name_variants_queried**: `["John W Stanton", "John W. Stanton", "John Stanton", "Stanton, John", "Stanton, John W", "Stanton, John W."]`
+- **api_calls_made**: `0`
+- **records_fetched**: `326`
+- **confirmed_count**: `159`
+- **probable_count**: `20`
+- **uncertain_count**: `4`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-07-37Z__a1f9711f.db`
+- **notes**: skipped(no-name-match)=143 · min_date=default (no prior ingestion) · FROM-RAW
+
+### 2026-05-25 — DELETION — reclassify stanton-john
+
+- **entity_slug**: `stanton-john`
+- **reason**: Tier-B follow-up: added VoiceStream (one-word) to catch VOICESTREAM/VOICESTREAM COMMUNICATIONS variants
+- **rows_deleted_donations**: `179`
+- **rows_deleted_review_queue**: `4` (of which 0 had resolutions)
+- **include_related**: `False`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-08-25Z__pre-reclassify-stanton-john.db`
+- **note**: Rows are recoverable from the snapshot above and from data/raw/stanton-john/ payloads. Re-classification follows in the next INGESTION entry.
+
+### 2026-05-25 — INGESTION
+
+- **run_id**: `d7c136ab`
+- **entity_slug**: `stanton-john`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2025-08-12`
+- **name_variants_queried**: `["John W Stanton", "John W. Stanton", "John Stanton", "Stanton, John", "Stanton, John W", "Stanton, John W."]`
+- **api_calls_made**: `0`
+- **records_fetched**: `326`
+- **confirmed_count**: `165`
+- **probable_count**: `14`
+- **uncertain_count**: `4`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-08-25Z__d7c136ab.db`
+- **notes**: skipped(no-name-match)=143 · min_date=default (no prior ingestion) · FROM-RAW
+
+### 2026-05-25 — DELETION — reclassify sherman-bruce
+
+- **entity_slug**: `sherman-bruce`
+- **reason**: Tier-B: added Boca Raton city + MAIMI MARLINS typo + Vistakon/PWC negative_signals
+- **rows_deleted_donations**: `65`
+- **rows_deleted_review_queue**: `131` (of which 0 had resolutions)
+- **include_related**: `False`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-13-44Z__pre-reclassify-sherman-bruce.db`
+- **note**: Rows are recoverable from the snapshot above and from data/raw/sherman-bruce/ payloads. Re-classification follows in the next INGESTION entry.
+
+### 2026-05-25 — INGESTION
+
+- **run_id**: `a7911b4c`
+- **entity_slug**: `sherman-bruce`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2026-03-31`
+- **name_variants_queried**: `["Bruce S Sherman", "Bruce S. Sherman", "Bruce Sherman", "Sherman, Bruce", "Sherman, Bruce S", "Sherman, Bruce S."]`
+- **api_calls_made**: `0`
+- **records_fetched**: `196`
+- **confirmed_count**: `57`
+- **probable_count**: `19`
+- **uncertain_count**: `120`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-13-44Z__a7911b4c.db`
+- **notes**: skipped(no-name-match)=0 · min_date=default (no prior ingestion) · FROM-RAW
+
+### 2026-05-25 — DELETION — reclassify lerner-mark
+
+- **entity_slug**: `lerner-mark`
+- **reason**: Tier-B: added Kensington/Stevensville/Potomac cities + Lerner Corp employer + Chesapeake Partners doppelganger negative_signals
+- **rows_deleted_donations**: `75`
+- **rows_deleted_review_queue**: `163` (of which 0 had resolutions)
+- **include_related**: `False`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-18-21Z__pre-reclassify-lerner-mark.db`
+- **note**: Rows are recoverable from the snapshot above and from data/raw/lerner-mark/ payloads. Re-classification follows in the next INGESTION entry.
+
+### 2026-05-25 — INGESTION
+
+- **run_id**: `20b98f28`
+- **entity_slug**: `lerner-mark`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2026-03-17`
+- **name_variants_queried**: `["Mark D Lerner", "Mark D. Lerner", "Mark Lerner", "Lerner, Mark", "Lerner, Mark D", "Lerner, Mark D."]`
+- **api_calls_made**: `0`
+- **records_fetched**: `240`
+- **confirmed_count**: `68`
+- **probable_count**: `10`
+- **uncertain_count**: `160`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-18-21Z__20b98f28.db`
+- **notes**: skipped(no-name-match)=2 · min_date=default (no prior ingestion) · FROM-RAW
+
+### 2026-05-25 — DELETION — reclassify mcguirk-terry
+
+- **entity_slug**: `mcguirk-terry`
+- **reason**: Tier-B: added 30327 Atlanta Buckhead to strong-zip
+- **rows_deleted_donations**: `47`
+- **rows_deleted_review_queue**: `0` (of which 0 had resolutions)
+- **include_related**: `False`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-22-40Z__pre-reclassify-mcguirk-terry.db`
+- **note**: Rows are recoverable from the snapshot above and from data/raw/mcguirk-terry/ payloads. Re-classification follows in the next INGESTION entry.
+
+### 2026-05-25 — INGESTION
+
+- **run_id**: `f57b26d0`
+- **entity_slug**: `mcguirk-terry`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2025-05-20`
+- **name_variants_queried**: `["Terence F McGuirk", "Terence F. McGuirk", "Terence McGuirk", "Terry McGuirk", "Terry F. McGuirk", "Terry F McGuirk", "McGuirk, Terence", "McGuirk, Terence F", "McGuirk, Terence F.", "McGuirk, Terry"]`
+- **api_calls_made**: `0`
+- **records_fetched**: `47`
+- **confirmed_count**: `43`
+- **probable_count**: `4`
+- **uncertain_count**: `0`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-22-40Z__f57b26d0.db`
+- **notes**: skipped(no-name-match)=0 · min_date=default (no prior ingestion) · FROM-RAW
+
+### 2026-05-25 — DELETION — reclassify simpson-bob
+
+- **entity_slug**: `simpson-bob`
+- **reason**: Tier-B: added 76102 office ZIP to strong-zip (Fort Worth XTO/TXO HQ); resolves 0 CONFIRMED / 8 PROBABLE anomaly
+- **rows_deleted_donations**: `8`
+- **rows_deleted_review_queue**: `0` (of which 0 had resolutions)
+- **include_related**: `False`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-30-56Z__pre-reclassify-simpson-bob.db`
+- **note**: Rows are recoverable from the snapshot above and from data/raw/simpson-bob/ payloads. Re-classification follows in the next INGESTION entry.
+
+### 2026-05-25 — INGESTION
+
+- **run_id**: `e1a2bec9`
+- **entity_slug**: `simpson-bob`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2012-09-07`
+- **name_variants_queried**: `["Bob R Simpson", "Bob R. Simpson", "Simpson, Bob R", "Simpson, Bob R."]`
+- **api_calls_made**: `0`
+- **records_fetched**: `8`
+- **confirmed_count**: `8`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-30-56Z__e1a2bec9.db`
+- **notes**: skipped(no-name-match)=0 · min_date=default (no prior ingestion) · FROM-RAW
