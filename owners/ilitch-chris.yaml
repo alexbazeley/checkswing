@@ -19,6 +19,7 @@ role: Principal owner
 status: pilot
 tenure_start_date: 2017-05-18    # MLB approval as controlling owner of Tigers
 tenure_end_date: null
+family_tenure_start_date: 1992-08-26    # Mike Ilitch bought Tigers from Tom Monaghan (Chris's father)
 
 name_variants:
   - "Christopher P Ilitch"

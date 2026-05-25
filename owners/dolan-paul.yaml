@@ -19,6 +19,7 @@ role: Principal owner
 status: pilot
 tenure_start_date: 2013-01-10
 tenure_end_date: null
+family_tenure_start_date: 2000-02-04    # Lawrence J. ("Larry") Dolan bought Cleveland Indians (Paul's father)
 
 name_variants:
   - "Paul J Dolan"

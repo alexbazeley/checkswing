@@ -18,6 +18,7 @@ role: Principal owner / President & CEO
 status: pilot
 tenure_start_date: 2026-02-12    # MLB approval of control-person transfer (matches castellini-bob tenure_end)
 tenure_end_date: null
+family_tenure_start_date: 2006-01-20    # Bob Castellini-led group bought Reds from Carl Lindner (Phil's father)
 
 name_variants:
   - "Phillip J Castellini"

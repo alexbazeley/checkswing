@@ -121,6 +121,25 @@ def validate_owner_file(path: Path) -> OwnerValidation:
     if ted is not None and _parse_date(ted) is None:
         res.errors.append(f"tenure_end_date {ted!r} is not a valid YYYY-MM-DD")
 
+    # family_tenure_start_date — optional. When present, must be a valid date
+    # and must not be AFTER tenure_start_date (family ownership precedes or
+    # equals the person's formal control-person role).
+    ftsd = data.get("family_tenure_start_date")
+    if ftsd is not None:
+        ftsd_parsed = _parse_date(ftsd)
+        if ftsd_parsed is None:
+            res.errors.append(
+                f"family_tenure_start_date {ftsd!r} is not a valid YYYY-MM-DD"
+            )
+        elif tsd is not None:
+            tsd_parsed = _parse_date(tsd)
+            if tsd_parsed is not None and ftsd_parsed > tsd_parsed:
+                res.errors.append(
+                    f"family_tenure_start_date {ftsd!r} is AFTER tenure_start_date "
+                    f"{tsd!r} — family ownership should precede or equal the person's "
+                    f"control-person date"
+                )
+
     # Rule 2: name_variants ≥ 2
     nv = data.get("name_variants")
     if not isinstance(nv, list) or len(nv) < 2:

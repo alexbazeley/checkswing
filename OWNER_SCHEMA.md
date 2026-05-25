@@ -12,9 +12,26 @@ name: Full Legal Name                  # as most commonly filed
 team: Team Name                        # full team name, no abbreviation
 role: Principal owner                  # one of: Principal owner | Co-owner | Limited partner (with caveat)
 status: pilot                          # one of: queued | pilot | active | paused
-tenure_start_date: YYYY-MM-DD          # when they took ownership; use partial date if exact unknown
+tenure_start_date: YYYY-MM-DD          # when this person took MLB control-person role; partial OK
 tenure_end_date: null                  # null while current; YYYY-MM-DD when they sell
 ```
+
+### `family_tenure_start_date` (optional)
+
+For family-inheritance cases where the team has been in this person's family
+longer than they personally have held the formal MLB control-person role.
+Set to the date the FAMILY acquired the team. Used by the timeline visual to
+show family ownership context — a rectangle from `family_tenure_start_date`
+to `tenure_end_date` (or now), with a vertical marker at `tenure_start_date`
+indicating when this person personally became control person.
+
+```yaml
+family_tenure_start_date: 1984-09-07   # Carl Pohlad's 1984 Twins purchase
+```
+
+Leave unset for owners who founded their team's ownership group (e.g., Steve
+Cohen 2020, John Henry 2002, Tom Ricketts 2009) — for them `tenure_start_date`
+is already the family acquisition.
 
 ### `name_variants` (required, ≥2 entries)
 

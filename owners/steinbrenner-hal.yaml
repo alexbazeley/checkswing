@@ -17,6 +17,7 @@ role: Principal owner
 status: pilot
 tenure_start_date: 2008-11-20
 tenure_end_date: null
+family_tenure_start_date: 1973-01-03    # George Steinbrenner-led group acquired Yankees from CBS
 
 # Conservative name variants. Critically:
 #   - "Steinbrenner" alone is NEVER a variant — it matches every family member.

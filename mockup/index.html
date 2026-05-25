@@ -2501,7 +2501,17 @@ function renderOwner(slug) {
         <span><span class="legend-swatch dem"></span>Democratic</span>
         <span><span class="legend-swatch rep"></span>Republican</span>
         <span><span class="legend-swatch oth"></span>Other / unaffiliated</span>
-        ${o.tenure_start ? `<span style="margin-left:auto;color:var(--ink-3);font-size:12px"><span style="display:inline-block;width:18px;height:10px;background:#FBF2EC;border:1px solid var(--accent);border-style:dashed;vertical-align:-1px;margin-right:6px"></span>Tenure as owner of ${escapeHtml(o.team || "team")}</span>` : ""}
+        ${o.tenure_start ? (() => {
+          const familyName = (o.name || "").split(" ").filter(Boolean).slice(-1)[0] || "Family";
+          const firstName = (o.name || "").split(" ").filter(Boolean)[0] || "Owner";
+          const tenureLabel = o.family_tenure_start
+            ? `${escapeHtml(familyName)} family ownership of ${escapeHtml(o.team || "team")}`
+            : `Tenure as owner of ${escapeHtml(o.team || "team")}`;
+          const markerLabel = o.family_tenure_start
+            ? `<span style="display:inline-block;width:0;height:10px;border-left:2px dashed var(--accent-2);vertical-align:-1px;margin:0 7px 0 14px"></span>${escapeHtml(firstName)} as control person`
+            : "";
+          return `<span style="margin-left:auto;color:var(--ink-3);font-size:12px"><span style="display:inline-block;width:18px;height:10px;background:#FBF2EC;border:1px solid var(--accent);border-style:dashed;vertical-align:-1px;margin-right:6px"></span>${tenureLabel}${markerLabel}</span>`;
+        })() : ""}
       </div>
     </section>
 
@@ -2617,18 +2627,40 @@ function renderTimeline(donations, ownerOrSegments) {
 
   /* Normalize tenure input to a list of segments.
      Single owner with tenure_start → one segment.
+     Family-inheritance case (family_tenure_start set) → one segment that
+     spans the family's ownership window, with a control-person marker at
+     the date this person personally took the formal role.
      Array of segments → use as-is.
      Null / undefined → no shading. */
   let segments = [];
   if (Array.isArray(ownerOrSegments)) {
     segments = ownerOrSegments;
   } else if (ownerOrSegments && ownerOrSegments.tenure_start) {
-    segments = [{
-      start: ownerOrSegments.tenure_start,
-      end: ownerOrSegments.tenure_end,
-      label: `Owner of ${ownerOrSegments.team || "team"}${ownerOrSegments.tenure_end ? " · " + ownerOrSegments.tenure_start.slice(0,4) + "–" + ownerOrSegments.tenure_end.slice(0,4) : " · since " + ownerOrSegments.tenure_start.slice(0,4)}`,
-      ownerSlug: ownerOrSegments.slug,
-    }];
+    const o = ownerOrSegments;
+    const familyStart = o.family_tenure_start;
+    if (familyStart) {
+      const nameParts = (o.name || "").split(" ").filter(Boolean);
+      const firstName = nameParts[0] || "Owner";
+      const familyName = nameParts[nameParts.length - 1] || "Family";
+      const familyYr = familyStart.slice(0, 4);
+      const personalYr = o.tenure_start.slice(0, 4);
+      const endYr = o.tenure_end ? o.tenure_end.slice(0, 4) : null;
+      const personalSpan = endYr ? `${personalYr}–${endYr}` : `since ${personalYr}`;
+      segments = [{
+        start: familyStart,
+        end: o.tenure_end,
+        controlPersonStart: o.tenure_start,
+        label: `${familyName} family since ${familyYr} · ${firstName} control person ${personalSpan}`,
+        ownerSlug: o.slug,
+      }];
+    } else {
+      segments = [{
+        start: o.tenure_start,
+        end: o.tenure_end,
+        label: `Owner of ${o.team || "team"}${o.tenure_end ? " · " + o.tenure_start.slice(0,4) + "–" + o.tenure_end.slice(0,4) : " · since " + o.tenure_start.slice(0,4)}`,
+        ownerSlug: o.slug,
+      }];
+    }
   }
 
   const W = 1100, H = 280, padL = 50, padR = 16, padT = 18, padB = 30;
@@ -2642,6 +2674,7 @@ function renderTimeline(donations, ownerOrSegments) {
   const segmentTimes = segments.map((s) => ({
     start: s.start ? new Date(s.start).getTime() : null,
     end: s.end ? new Date(s.end).getTime() : Date.now(),
+    controlPersonStart: s.controlPersonStart ? new Date(s.controlPersonStart).getTime() : null,
     label: s.label,
     ownerSlug: s.ownerSlug,
   })).filter((s) => s.start != null);
@@ -2720,6 +2753,17 @@ function renderTimeline(donations, ownerOrSegments) {
             font-family="var(--sans)" font-size="10" font-weight="600"
             letter-spacing="${letterSpacing}" fill="var(--accent-2)"
             style="text-transform:uppercase">${escapeHtml(s.label)}</text>`;
+
+    /* Family-inheritance marker: vertical line at the date this person
+       personally became MLB control person, inside the broader family-
+       ownership rectangle. */
+    if (s.controlPersonStart) {
+      const xm = xScale(s.controlPersonStart);
+      tenureOverlays += `
+      <line x1="${xm.toFixed(1)}" y1="${stripeY}"
+            x2="${xm.toFixed(1)}" y2="${stripeY + stripeH}"
+            stroke="var(--accent-2)" stroke-width="1.5" stroke-dasharray="2 2" opacity="0.7"/>`;
+    }
   });
 
   /* For pre-tenure styling: a donation is pre-tenure only if it falls

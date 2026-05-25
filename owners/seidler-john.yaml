@@ -19,6 +19,7 @@ role: Principal owner
 status: pilot
 tenure_start_date: 2025-02-15    # Feb 2025 MLB unanimous approval (exact day not in Tier 2)
 tenure_end_date: null            # Will be set to ~mid-2026 close date when Feliciano deal completes
+family_tenure_start_date: 2012-08-31    # Peter Seidler / O'Malley group bought Padres (John's uncle)
 
 name_variants:
   - "John Seidler"

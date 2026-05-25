@@ -23,6 +23,7 @@ role: Principal owner / Executive Chair
 status: pilot
 tenure_start_date: 2025-12-17    # Target Field press conference; MLB approval shortly after
 tenure_end_date: null
+family_tenure_start_date: 1984-09-07    # Carl Pohlad acquired Twins from Calvin Griffith (Tom's grandfather)
 
 name_variants:
   - "Thomas Pohlad"

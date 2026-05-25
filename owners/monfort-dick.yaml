@@ -15,6 +15,7 @@ role: Principal owner
 status: pilot
 tenure_start_date: 2011-01-01    # Chairman/CEO; family control of franchise since 2005
 tenure_end_date: null
+family_tenure_start_date: 2005-01-01    # Monfort family acquired controlling stake from Jerry McMorris
 
 name_variants:
   - "Richard L Monfort"

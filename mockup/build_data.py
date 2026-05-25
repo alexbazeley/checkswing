@@ -94,7 +94,7 @@ def main() -> None:
     cur.execute(
         """
         SELECT slug, kind, parent_slug, name, team,
-               tenure_start_date, tenure_end_date,
+               tenure_start_date, tenure_end_date, family_tenure_start_date,
                refreshed_at
         FROM entities
         """
@@ -290,6 +290,7 @@ def main() -> None:
             "team": ent["team"],
             "tenure_start": ent["tenure_start_date"],
             "tenure_end": ent["tenure_end_date"],
+            "family_tenure_start": ent["family_tenure_start_date"],
             "total_amount": total_amount,
             "n_total": n_total,
             "n_confirmed": n_confirmed,

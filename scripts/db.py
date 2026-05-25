@@ -85,6 +85,7 @@ CREATE TABLE IF NOT EXISTS entities (
     team TEXT,
     tenure_start_date TEXT,
     tenure_end_date TEXT,
+    family_tenure_start_date TEXT,
     yaml_path TEXT NOT NULL,
     yaml_sha256 TEXT NOT NULL,
     refreshed_at TEXT NOT NULL
@@ -184,6 +185,11 @@ def refresh_entities(db_path: Path = MASTER_DB) -> int:
     rows = 0
     now = _utc_now_iso()
     with connect(db_path) as conn:
+        # Ensure family_tenure_start_date column exists on the entities table
+        # (migration for pre-existing DBs created before this column landed).
+        existing_cols = {r["name"] for r in conn.execute("PRAGMA table_info(entities)")}
+        if "family_tenure_start_date" not in existing_cols:
+            conn.execute("ALTER TABLE entities ADD COLUMN family_tenure_start_date TEXT")
         conn.execute("DELETE FROM entities")
         for yaml_path in sorted(OWNERS_DIR.glob("*.yaml")):
             if yaml_path.name.startswith("_"):
@@ -195,8 +201,9 @@ def refresh_entities(db_path: Path = MASTER_DB) -> int:
                 """
                 INSERT INTO entities
                   (slug, kind, parent_slug, name, team, tenure_start_date,
-                   tenure_end_date, yaml_path, yaml_sha256, refreshed_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                   tenure_end_date, family_tenure_start_date,
+                   yaml_path, yaml_sha256, refreshed_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     data.get("slug"),
@@ -206,6 +213,7 @@ def refresh_entities(db_path: Path = MASTER_DB) -> int:
                     data.get("team"),
                     str(data.get("tenure_start_date")) if data.get("tenure_start_date") else None,
                     str(data.get("tenure_end_date")) if data.get("tenure_end_date") else None,
+                    str(data.get("family_tenure_start_date")) if data.get("family_tenure_start_date") else None,
                     relpath(yaml_path),
                     _sha256_file(yaml_path),
                     now,

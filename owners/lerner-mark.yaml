@@ -13,6 +13,7 @@ role: Principal owner
 status: pilot
 tenure_start_date: 2018-06-14    # MLB ownership meeting transition from father Ted
 tenure_end_date: null
+family_tenure_start_date: 2006-07-25    # Theodore N. Lerner family bought Nationals from MLB ($450M)
 
 name_variants:
   - "Mark D Lerner"
