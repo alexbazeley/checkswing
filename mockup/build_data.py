@@ -514,24 +514,104 @@ def main() -> None:
         if r["recipient_type"] == "Other" and (d.get("recipient_type") or "Other") != "Other":
             r["recipient_type"] = d["recipient_type"]
 
+    # Pull committee-enrichment rows from the v2 schema. join in identity
+    # fields and bundle per-cycle totals into a sibling map. Tolerant of a
+    # pre-v2 DB (no committees table yet): treat as no enrichment data,
+    # recipients[] still renders the legacy shape.
+    enrichment_by_cid: dict[str, dict] = {}
+    scale_by_cid: dict[str, list[dict]] = {}
+    relevant_cids = tuple(rec_data.keys())
+    if relevant_cids:
+        placeholders = ",".join(["?"] * len(relevant_cids))
+        try:
+            cur.execute(
+                f"""
+                SELECT committee_id, name, designation, designation_label,
+                       committee_type, committee_type_label, party, party_full,
+                       organization_type, affiliated_committee_name,
+                       treasurer_name, custodian_name, city, state, zip,
+                       filing_frequency, first_file_date, last_file_date,
+                       last_f1_date, is_terminated,
+                       external_link, external_link_label, external_link_source,
+                       refreshed_at
+                  FROM committees
+                 WHERE committee_id IN ({placeholders})
+                """,
+                relevant_cids,
+            )
+            for row in cur.fetchall():
+                enrichment_by_cid[row["committee_id"]] = dict(row)
+
+            cur.execute(
+                f"""
+                SELECT committee_id, cycle, receipts, disbursements,
+                       cash_on_hand_end_period, individual_contributions,
+                       other_political_committee_contributions, independent_expenditures,
+                       coverage_start_date, coverage_end_date
+                  FROM committee_totals
+                 WHERE committee_id IN ({placeholders})
+                 ORDER BY committee_id, cycle
+                """,
+                relevant_cids,
+            )
+            for row in cur.fetchall():
+                scale_by_cid.setdefault(row["committee_id"], []).append(dict(row))
+        except sqlite3.OperationalError as e:
+            # Schema v1 DB — committees tables don't exist yet. That's fine for
+            # the legacy render path. Run `python -m scripts.cli init` to bump.
+            if "no such table" in str(e):
+                print(
+                    f"note: committee enrichment tables not present yet ({e}). "
+                    f"Run `python -m scripts.cli init` to migrate.",
+                    file=sys.stderr,
+                )
+            else:
+                raise
+
     recipients = []
     for r in rec_data.values():
-        recipients.append(
-            {
-                "committee_id": r["committee_id"],
-                "committee": r["committee"],
-                "party": r["party"],
-                "recipient_type": r["recipient_type"],
-                "total_amount": r["total_amount"],
-                "total_amount_2026": r["total_amount_2026"],
-                "n_donations": r["n_donations"],
-                "owner_count": len(r["_owner_slugs"]),
-                "cycles_active": sorted(r["_cycles"]),
-                "earliest_date": r["earliest_date"],
-                "latest_date": r["latest_date"],
-            }
-        )
+        entry = {
+            "committee_id": r["committee_id"],
+            "committee": r["committee"],
+            "party": r["party"],
+            "recipient_type": r["recipient_type"],
+            "total_amount": r["total_amount"],
+            "total_amount_2026": r["total_amount_2026"],
+            "n_donations": r["n_donations"],
+            "owner_count": len(r["_owner_slugs"]),
+            "cycles_active": sorted(r["_cycles"]),
+            "earliest_date": r["earliest_date"],
+            "latest_date": r["latest_date"],
+        }
+        enr = enrichment_by_cid.get(r["committee_id"])
+        if enr:
+            # Prefer FEC's name over the most-recently-seen donation name —
+            # the donation field is whatever the filer typed on Schedule A.
+            entry["committee"] = enr.get("name") or entry["committee"]
+            entry["designation"] = enr.get("designation")
+            entry["designation_label"] = enr.get("designation_label")
+            entry["committee_type_code"] = enr.get("committee_type")
+            entry["committee_type_label"] = enr.get("committee_type_label")
+            entry["organization_type"] = enr.get("organization_type")
+            entry["affiliated_committee_name"] = enr.get("affiliated_committee_name")
+            entry["treasurer_name"] = enr.get("treasurer_name")
+            entry["city"] = enr.get("city")
+            entry["state_short"] = enr.get("state")
+            entry["filing_frequency"] = enr.get("filing_frequency")
+            entry["first_file_date"] = enr.get("first_file_date")
+            entry["last_file_date"] = enr.get("last_file_date")
+            entry["is_terminated"] = bool(enr.get("is_terminated"))
+            if enr.get("external_link"):
+                entry["external_link"] = enr["external_link"]
+                entry["external_link_label"] = enr.get("external_link_label") or "Read more"
+            entry["enriched_at"] = enr.get("refreshed_at")
+        recipients.append(entry)
     recipients.sort(key=lambda x: x["total_amount"], reverse=True)
+
+    # Per-committee scale (lifetime per-cycle totals). Keyed by committee_id;
+    # frontend looks up only on the committee detail page so the lookup cost
+    # is per-render, not per-row.
+    committee_scale = {cid: cycles for cid, cycles in scale_by_cid.items() if cycles}
 
     # Pipeline summary for the runs page
     completed_runs = [r for r in runs if r["completed_at"]]
@@ -555,14 +635,19 @@ def main() -> None:
         "owners": owners_summary,
         "donations": donations,
         "recipients": recipients,
+        "committee_scale": committee_scale,
         "runs": runs,
         "pipeline": pipeline,
     }
 
     OUT_PATH.write_text(json.dumps(out, indent=None, separators=(",", ":")))
     size_mb = OUT_PATH.stat().st_size / 1024 / 1024
+    n_enriched = sum(1 for r in recipients if r.get("designation_label"))
+    n_with_scale = len(committee_scale)
     print(f"wrote {OUT_PATH} ({size_mb:.2f} MB, {len(donations)} donations, "
-          f"{len(owners_summary)} owners, {len(runs)} ingestion runs)")
+          f"{len(owners_summary)} owners, {len(runs)} ingestion runs, "
+          f"{n_enriched}/{len(recipients)} recipients enriched, "
+          f"{n_with_scale} committee scale blocks)")
 
     write_provenance()
 

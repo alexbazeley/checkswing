@@ -1,0 +1,31 @@
+# Hand-curated external reference links for committees on the dashboard.
+#
+# These are "Read more →" pointers shown on the committee detail page. They are
+# CROSS-REFERENCES, not primary sources of fact. Per CLAUDE.md §3, OpenSecrets,
+# news aggregators, and the like are pointers — never authority on donation
+# data. The UI surfaces them as a small follow-up link, never as a chip or
+# title.
+#
+# To apply this YAML to the DB:
+#   python -m scripts.cli apply-committee-external-links
+#
+# Re-runnable. Entries can be added, edited, removed at will. Removing an
+# entry does NOT clear the link from the DB — set all three fields to null
+# to explicitly clear:
+#
+#   - committee_id: C00012345
+#     external_link: null
+#     external_link_label: null
+#     external_link_source: null
+#
+# Schema:
+#   - committee_id        — required; must match an existing committees row
+#   - external_link       — full URL
+#   - external_link_label — short label shown on the UI button ("Wikipedia", "Ballotpedia", "FollowTheMoney")
+#   - external_link_source — provenance note (who added, when, why)
+
+# Example — uncomment and edit as needed:
+# - committee_id: C00401224
+#   external_link: https://en.wikipedia.org/wiki/Senate_Majority_PAC
+#   external_link_label: Wikipedia
+#   external_link_source: manual; added by alex 2026-05-25

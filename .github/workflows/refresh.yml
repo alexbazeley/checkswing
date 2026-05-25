@@ -76,12 +76,21 @@ jobs:
 
       - name: Run refresh bucket ${{ matrix.bucket }}/4
         if: steps.gate.outputs.run == 'true'
+        # Per-owner failures are isolated in refresh_all (CLAUDE.md §1.9 — try
+        # again next time) and surfaced in the summary JSON. We don't want one
+        # timed-out owner to throw away the work of the other 8 in this bucket
+        # by skipping the artifact upload. continue-on-error lets the job keep
+        # going to the upload step. A catastrophic crash still shows up in
+        # the step summary; the consolidate job tolerates a missing bucket DB.
+        continue-on-error: true
         env:
           FEC_API_KEY: ${{ secrets.FEC_API_KEY }}
         run: python -m scripts.cli refresh --bucket ${{ matrix.bucket }}/4
 
       - name: Upload bucket artifact
-        if: steps.gate.outputs.run == 'true'
+        # always(): upload whatever progress we made even if the refresh step
+        # reported a non-zero exit (per-owner failure).
+        if: always() && steps.gate.outputs.run == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: refresh-bucket-${{ matrix.bucket }}
@@ -152,5 +161,56 @@ jobs:
             echo "No changes from refresh — nothing to commit."
           else
             git commit -m "weekly refresh ($(date -u +%Y-%m-%d))"
+            git push
+          fi
+
+  committees_refresh:
+    # Enrich the committees and committee_totals tables for any recipient
+    # newly seen or whose last refresh is > FRESHNESS_DAYS (30 days). Runs
+    # after consolidate so it sees the merged master.db. Steady-state ~30 min
+    # per week (only stale committees get re-fetched).
+    needs: consolidate
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          # Pull the freshly-pushed master.db from `consolidate` so we enrich
+          # against the current state of recipients, not the pre-refresh one.
+          ref: main
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Ingest committees (identity + per-cycle totals)
+        env:
+          FEC_API_KEY: ${{ secrets.FEC_API_KEY }}
+        run: python -m scripts.cli ingest-committees
+
+      - name: Apply curated external links
+        run: python -m scripts.cli apply-committee-external-links
+
+      - name: Rebuild mockup/data.json with enrichment
+        run: python mockup/build_data.py
+
+      - name: Commit + push committee enrichment
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/master.db mockup/data.json catalog/PROVENANCE_LOG.md 2>/dev/null || true
+          if git diff --staged --quiet; then
+            echo "No committee enrichment deltas — nothing to commit."
+          else
+            git commit -m "committees: weekly enrichment ($(date -u +%Y-%m-%d))"
             git push
           fi

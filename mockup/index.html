@@ -4284,7 +4284,15 @@ function renderCommittee(committeeId) {
     return `<div class="container"><a class="back" href="#/">← Back to league</a><div class="loading">No donations to committee ${escapeHtml(decoded)}.</div></div>`;
   }
 
-  const committeeName = donations[0].committee || decoded;
+  // Enrichment lookup. recipientRow may be undefined for a committee that
+  // hasn't been ingested yet (DB is pre-v2 OR ingest-committees hasn't been
+  // run for this id); in that case the page falls back to the legacy render
+  // and only shows the donation-side aggregates.
+  const recipientRow = (state.data.recipients || []).find((r) => r.committee_id === decoded);
+  const scaleCycles = (state.data.committee_scale || {})[decoded] || [];
+
+  // Prefer FEC-canonical name when we have it.
+  const committeeName = (recipientRow && recipientRow.committee) || donations[0].committee || decoded;
   const party = donations[0].party;
 
   // Aggregate by owner
@@ -4321,7 +4329,7 @@ function renderCommittee(committeeId) {
     <a class="back" href="#/">← All committees</a>
 
     <header class="owner-head">
-      <span class="eyebrow">Recipient committee · <span class="chip-party ${partyClass}" style="margin-left:6px">${party}</span></span>
+      <span class="eyebrow">Recipient committee · <span class="chip-party ${partyClass}" style="margin-left:6px">${party}</span>${recipientRow && recipientRow.designation_label ? `<span class="chip-party oth" style="margin-left:6px">${escapeHtml(recipientRow.designation_label)}</span>` : ""}${recipientRow && recipientRow.is_terminated ? `<span class="chip-party oth" style="margin-left:6px;opacity:0.7">Terminated</span>` : ""}</span>
       <h1 style="margin-top:10px;max-width:32ch">${escapeHtml(committeeName)}</h1>
       <div class="owner-meta">
         <span style="font-family:var(--mono)">${escapeHtml(decoded)}</span>
@@ -4351,7 +4359,86 @@ function renderCommittee(committeeId) {
         <div class="kpi-value">${cycles.length}</div>
         <div class="kpi-foot">${cycles[0]} – ${cycles[cycles.length - 1]}</div>
       </div>
+      ${(() => {
+        // 5th tile: owner contribution as a share of the committee's most-recent
+        // cycle receipts. Only shown when we have committee_scale data.
+        if (!scaleCycles.length) return "";
+        const latest = scaleCycles[scaleCycles.length - 1];
+        const recv = latest.receipts || 0;
+        if (!recv) return "";
+        const pct = (total / recv) * 100;
+        const display = pct >= 0.1 ? pct.toFixed(2) + "%" : "<0.1%";
+        return `
+        <div class="kpi">
+          <div class="kpi-label">Owner share (${latest.cycle})</div>
+          <div class="kpi-value">${display}</div>
+          <div class="kpi-foot">of ${fmtMoney(recv)} total receipts</div>
+        </div>`;
+      })()}
     </div>
+
+    ${recipientRow && (recipientRow.designation_label || recipientRow.treasurer_name || recipientRow.first_file_date) ? `
+    <section class="block">
+      <span class="eyebrow">What this committee is</span>
+      <h2 style="margin-top:6px">FEC record</h2>
+      <p class="caption">From OpenFEC <code>/committee/${escapeHtml(decoded)}/</code>${recipientRow.enriched_at ? ` · refreshed ${fmtDate(recipientRow.enriched_at.slice(0, 10))}` : ""}</p>
+      <div class="drawer-grid" style="margin-top:18px">
+        ${recipientRow.designation_label ? `<div class="label">Designation</div><div class="value">${escapeHtml(recipientRow.designation_label)}</div>` : ""}
+        ${recipientRow.committee_type_label ? `<div class="label">Type</div><div class="value">${escapeHtml(recipientRow.committee_type_label)}</div>` : ""}
+        ${recipientRow.organization_type ? `<div class="label">Organization</div><div class="value">${escapeHtml(recipientRow.organization_type)}</div>` : ""}
+        ${recipientRow.affiliated_committee_name ? `<div class="label">Affiliated with</div><div class="value">${escapeHtml(recipientRow.affiliated_committee_name)}</div>` : ""}
+        ${recipientRow.treasurer_name ? `<div class="label">Treasurer</div><div class="value">${escapeHtml(recipientRow.treasurer_name)}</div>` : ""}
+        ${recipientRow.city || recipientRow.state_short ? `<div class="label">Headquarters</div><div class="value">${escapeHtml([recipientRow.city, recipientRow.state_short].filter(Boolean).join(", "))}</div>` : ""}
+        ${recipientRow.filing_frequency ? `<div class="label">Filing cadence</div><div class="value">${escapeHtml(recipientRow.filing_frequency)}</div>` : ""}
+        ${recipientRow.first_file_date ? `<div class="label">First FEC filing</div><div class="value">${fmtDate(recipientRow.first_file_date)}</div>` : ""}
+        ${recipientRow.last_file_date ? `<div class="label">Last FEC filing</div><div class="value">${fmtDate(recipientRow.last_file_date)}</div>` : ""}
+      </div>
+      ${recipientRow.external_link ? `
+      <p style="margin-top:16px">
+        <a class="back" href="${escapeHtml(recipientRow.external_link)}" target="_blank" rel="noopener">${escapeHtml(recipientRow.external_link_label || "Read more")} →</a>
+      </p>` : ""}
+    </section>` : ""}
+
+    ${scaleCycles.length ? `
+    <section class="block">
+      <span class="eyebrow">Scale</span>
+      <h2 style="margin-top:6px">Committee receipts vs. MLB-owner share, by cycle</h2>
+      <p class="caption">FEC per-cycle totals from <code>/committee/${escapeHtml(decoded)}/totals/</code>. Bar = total receipts; colored sliver = MLB-owner contribution in that cycle.</p>
+      <div class="recipients-list" style="margin-top:18px">
+        ${(() => {
+          const maxReceipts = Math.max(...scaleCycles.map((c) => c.receipts || 0)) || 1;
+          // Per-cycle MLB-owner amounts, computed from the donations array
+          const ownerByCycle = {};
+          for (const d of donations) {
+            if (!d.cycle) continue;
+            ownerByCycle[d.cycle] = (ownerByCycle[d.cycle] || 0) + amt(d);
+          }
+          // Show newest first; cap at 12 cycles to keep the band scannable
+          const display = [...scaleCycles].sort((a, b) => b.cycle - a.cycle).slice(0, 12);
+          return display.map((c) => {
+            const receipts = c.receipts || 0;
+            const owner = ownerByCycle[c.cycle] || 0;
+            const barPct = receipts > 0 ? (receipts / maxReceipts) * 100 : 0;
+            const sliverPct = receipts > 0 ? (owner / receipts) * 100 : 0;
+            return `
+              <div class="recipient">
+                <div class="recipient-rank">${c.cycle}</div>
+                <div>
+                  <div class="recipient-name">${fmtMoney(receipts)} <span class="muted" style="font-size:12px;font-weight:400">total receipts · ${fmtMoney(c.disbursements || 0)} disbursed</span></div>
+                  <div class="recipient-bar-track" style="position:relative">
+                    <div class="recipient-bar oth" style="width:${barPct.toFixed(1)}%;opacity:0.45"></div>
+                    ${owner > 0 ? `<div class="recipient-bar ${partyClass}" style="width:${(barPct * sliverPct / 100).toFixed(2)}%;position:absolute;top:0;left:0"></div>` : ""}
+                  </div>
+                </div>
+                <div>
+                  <div class="recipient-amount">${owner > 0 ? fmtMoney(owner) : "—"}</div>
+                  <div class="recipient-count">${owner > 0 ? (sliverPct >= 0.01 ? sliverPct.toFixed(2) + "% from owners" : "<0.01% from owners") : "no owner gifts"}</div>
+                </div>
+              </div>`;
+          }).join("");
+        })()}
+      </div>
+    </section>` : ""}
 
     <section class="block">
       <span class="eyebrow">MLB owners who gave to this committee</span>

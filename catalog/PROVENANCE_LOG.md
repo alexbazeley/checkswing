@@ -1955,3 +1955,53 @@ The earlier Bug A fix changed `filing_pdf_url` to `https://fecfile.fec.gov/pdf/<
 #### Follow-up
 
 Direct-PDF support is queued behind a data-enrichment task: extend the schema with a per-filing `image_number` (or a new `filings` table), backfill via `/v1/filings/`, and switch the URL builder to the docquery `/pdf/<shard>/...` pattern. Will be its own PR.
+
+### 2026-05-25 — SCHEMA_MIGRATION — v1 → v2 (committees + committee_totals)
+
+Added two tables to back the recipient-page Identity + Scale enrichment. See `CHARTER.md` Phase 1 scope addition for what these surfaces are for, and the design constraints (FEC primary-source, never editorial — CLAUDE.md §1.4 / §3 / §6).
+
+- **committees** — one row per FEC committee_id that received an attributed donation. Identity fields: designation, committee_type, party, organization_type, affiliated_committee_name, treasurer, address, filing dates, termination flag. Optional `external_link*` columns for hand-curated Wikipedia/Ballotpedia pointers (catalog/committee_external_links.yaml). Indices on `party` and `committee_type`.
+- **committee_totals** — composite PK `(committee_id, cycle)`. Per-cycle scale: receipts, disbursements, cash_on_hand_end_period, individual_contributions, other_political_committee_contributions, independent_expenditures, coverage start/end dates. Indexed on `cycle`.
+- **schema_version** — new row at v2.
+
+The migration is idempotent (`CREATE TABLE IF NOT EXISTS`). `scripts.db.init` records the v2 row only when a v1 DB is upgraded. New ingest code:
+
+- `scripts/fetch_committees.py` — wraps `FECClient` for `/committee/<id>/` and `/committee/<id>/totals/`. Persists raw payloads to `data/raw/_committees/<id>/<UTC>__<endpoint>.json` (underscored dir to distinguish from per-owner slugs).
+- `scripts/ingest_committees.py` — orchestrator with 30-day freshness gate, snapshots master.db before first row write (§1.6), preserves curated `external_link*` columns across FEC re-fetches.
+- `scripts/apply_committee_external_links.py` — reads `catalog/committee_external_links.yaml` and writes the curated columns. Re-runnable.
+- CLI: `python -m scripts.cli ingest-committees [--only ID,ID --force-refresh --max N]`, `python -m scripts.cli apply-committee-external-links`.
+
+Workflow integration: `.github/workflows/refresh.yml` grows a new `committees_refresh` job after `consolidate` (90-min timeout). Steady-state ~30 min/week — only committees outside the 30-day freshness window are re-fetched.
+
+The first full backfill across all ~925 distinct recipient committees runs after this PR merges (see follow-up entry).
+
+### 2026-05-25 — NOTE — matrix workflow robustness fix
+
+While validating the Phase 1 committee enrichment via a `workflow_dispatch` bucket-0 dry run (run #26413887828), discovered that a single FEC `Read timed out` failure in `refresh_all` would: cause `scripts/cli.py refresh` to exit 1 → cause the GHA step to fail → skip the artifact upload → block the consolidate job → throw away the 7 (of 9) successfully-fetched owners' work.
+
+Per CLAUDE.md §1.9, per-owner failures are isolated and already surface in the run summary JSON. Treating them as catastrophic in the workflow contradicts that design.
+
+Patch in this PR's `.github/workflows/refresh.yml`:
+- `Run refresh bucket` step now has `continue-on-error: true` — the bucket job's overall conclusion isn't dragged down by a per-owner timeout.
+- `Upload bucket artifact` step now has `if: always() && steps.gate.outputs.run == 'true'` — uploads whatever progress the bucket made, even after a partial failure.
+
+The consolidate job's existing `needs: refresh` semantics keep working because continue-on-error masks the step failure at the job level. The summary JSON still records the failed owners; user-visible behavior of `cli refresh` (exit 1 on partial failure) is unchanged.
+
+This fix is part of the same Phase 1 commit; it would otherwise have caused next Monday's cron to lose work on any FEC timeout.
+
+### 2026-05-25 — SETUP — committee enrichment first backfill
+
+Initial local backfill across every recipient committee in the donations table.
+
+- **started_at**: `2026-05-25T20:08:46Z`
+- **completed_at**: `2026-05-25T23:57:50Z`
+- **wall_clock**: ~3h49m (first pass) + 45s (re-run of 6 failures after fix)
+- **committees attempted**: `925`
+- **fetched**: `915` first pass + `6` re-run = `921` total fresh fetches
+- **skipped (already fresh from earlier smoke tests)**: `4` first pass + `0` re-run
+- **first-pass failures**: `6` — all six were `UNIQUE constraint failed: committee_totals.committee_id, committee_totals.cycle` on candidate committees where FEC's `/totals/` returns one row per election round per cycle (primary + general). Fixed by switching the INSERT to `INSERT OR REPLACE` keyed on `(committee_id, cycle)`. Last row per cycle survives. Re-ran the 6 affected committees clean. Regression test added in `tests/test_ingest_committees.py::TestIngestCommittee::test_duplicate_cycle_rows_dont_blow_up`.
+- **committee_totals rows written**: `5,660`
+- **snapshots**: `data/snapshots/2026-05-25T20-08-46Z__committees_ingest_2026-05-25T20-08-46Z.db` (pre-backfill) and `data/snapshots/2026-05-25T23-57-05Z__committees_ingest_2026-05-25T23-57-05Z.db` (pre-recovery).
+- **raw payloads**: persisted under `data/raw/_committees/<committee_id>/` (gitignored per usual). Project remains rebuildable from raw per CLAUDE.md §1.4.
+
+Resulting `mockup/data.json`: 925/925 recipients enriched, 918 committee_scale blocks (7 committees have no FEC-reported financial activity, e.g. nonfederal-only accounts).

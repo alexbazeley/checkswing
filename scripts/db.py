@@ -107,9 +107,63 @@ CREATE TABLE IF NOT EXISTS schema_version (
     version INTEGER PRIMARY KEY,
     applied_at TEXT NOT NULL
 );
+
+-- v2: committee enrichment.
+-- These tables back the per-recipient identity + scale cards on the dashboard
+-- (#/committee/<id>). Sourced from OpenFEC /committee/<id>/ and /committee/<id>/totals/.
+-- See CHARTER.md for the active-phase scope statement.
+CREATE TABLE IF NOT EXISTS committees (
+    committee_id              TEXT PRIMARY KEY,
+    name                      TEXT NOT NULL,
+    designation               TEXT,
+    designation_label         TEXT,
+    committee_type            TEXT,
+    committee_type_label      TEXT,
+    party                     TEXT,
+    party_full                TEXT,
+    organization_type         TEXT,
+    affiliated_committee_name TEXT,
+    candidate_ids             TEXT,
+    treasurer_name            TEXT,
+    custodian_name            TEXT,
+    city                      TEXT,
+    state                     TEXT,
+    zip                       TEXT,
+    filing_frequency          TEXT,
+    first_file_date           TEXT,
+    last_file_date            TEXT,
+    last_f1_date              TEXT,
+    is_terminated             INTEGER NOT NULL DEFAULT 0,
+    cycles                    TEXT,
+    external_link             TEXT,
+    external_link_label       TEXT,
+    external_link_source      TEXT,
+    raw_payload_path          TEXT NOT NULL,
+    fetched_at                TEXT NOT NULL,
+    refreshed_at              TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_committees_party ON committees(party);
+CREATE INDEX IF NOT EXISTS idx_committees_type ON committees(committee_type);
+
+CREATE TABLE IF NOT EXISTS committee_totals (
+    committee_id                            TEXT NOT NULL,
+    cycle                                   INTEGER NOT NULL,
+    receipts                                REAL,
+    disbursements                           REAL,
+    cash_on_hand_end_period                 REAL,
+    individual_contributions                REAL,
+    other_political_committee_contributions REAL,
+    independent_expenditures                REAL,
+    coverage_start_date                     TEXT,
+    coverage_end_date                       TEXT,
+    raw_payload_path                        TEXT NOT NULL,
+    fetched_at                              TEXT NOT NULL,
+    PRIMARY KEY (committee_id, cycle)
+);
+CREATE INDEX IF NOT EXISTS idx_committee_totals_cycle ON committee_totals(cycle);
 """
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 
 
 def _utc_now_iso() -> str:
@@ -138,14 +192,17 @@ def connect(db_path: Path = MASTER_DB) -> Iterator[sqlite3.Connection]:
 
 
 def init(db_path: Path = MASTER_DB) -> None:
-    """Create schema idempotently."""
+    """Create schema idempotently. Records a new schema_version row whenever
+    SCHEMA_VERSION is bumped beyond the DB's current MAX(version), so the
+    migration trail is preserved."""
     ensure_data_dirs()
     with connect(db_path) as conn:
         conn.executescript(SCHEMA_SQL)
         existing = conn.execute("SELECT MAX(version) AS v FROM schema_version").fetchone()
-        if existing is None or existing["v"] is None:
+        current = existing["v"] if existing else None
+        if current is None or current < SCHEMA_VERSION:
             conn.execute(
-                "INSERT INTO schema_version (version, applied_at) VALUES (?, ?)",
+                "INSERT OR IGNORE INTO schema_version (version, applied_at) VALUES (?, ?)",
                 (SCHEMA_VERSION, _utc_now_iso()),
             )
 

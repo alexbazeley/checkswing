@@ -24,6 +24,7 @@ The conservative attribution standard is itself an editorial commitment: we'd ra
 - Donations by named adult family members (children, parents) where the relationship is publicly disclosed and the family member is identified in FEC filings.
 - PACs directly affiliated with teams (rare — historically only one or two examples; document case by case).
 - PACs of corporate parent companies for corporate-owned teams (e.g., Liberty Media for the Braves). Attribution only when the team-ownership link is documented.
+- **Recipient committee enrichment.** For any committee that received an attributed donation: factual identity (designation, type, status, party, treasurer, connected organization, first/last filing dates) and lifetime per-cycle scale (receipts, disbursements, cash on hand). Sourced from OpenFEC `/committee/<id>/` and `/committee/<id>/totals/`. Out of scope at this layer: who the committee in turn funded (Phase 1b, beneficiary expansion), or any editorial framing of what the committee "stands for" (forever out — see CLAUDE.md §6). Optional hand-curated external-link pointers (Wikipedia / Ballotpedia) are surfaced as cross-references only, never as fact.
 
 ## Out of scope (explicit, not just "later")
 

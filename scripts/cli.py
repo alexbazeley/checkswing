@@ -10,9 +10,11 @@ import yaml
 from tabulate import tabulate
 
 from . import db
+from .apply_committee_external_links import apply_external_links
 from .audit import audit_slug
 from .export import export_aggregate, export_entity
 from .ingest import ingest_entity, reclassify_entity
+from .ingest_committees import ingest_all_committees
 from .paths import OWNERS_DIR
 from .refresh import refresh_all, select_bucket
 from .validate_owners import format_report, validate_all
@@ -134,6 +136,58 @@ def refresh(only, bucket, dry_run, skip_data_json, full_refetch, chunk_by_cycle)
     click.echo("")
     click.echo(json.dumps(summary, indent=2, default=str))
     if summary["owners_failed"] > 0:
+        sys.exit(1)
+
+
+@cli.command(name="ingest-committees")
+@click.option(
+    "--only",
+    default=None,
+    help="Comma-separated committee_ids to refresh (default: every distinct recipient on a CONFIRMED/PROBABLE donation).",
+)
+@click.option(
+    "--force-refresh",
+    is_flag=True,
+    help="Re-fetch even if the committees row was refreshed within the freshness window.",
+)
+@click.option(
+    "--max",
+    "max_count",
+    type=int,
+    default=None,
+    help="Cap the number of committees processed (for testing / smoke runs).",
+)
+def ingest_committees_cmd(only, force_refresh, max_count):
+    """Enrich the committees and committee_totals tables from OpenFEC.
+
+    Fetches /committee/<id>/ (identity) and /committee/<id>/totals/ (per-cycle
+    scale) for every committee that has received an attributed donation.
+    Idempotent — re-runs within 30 days are no-ops unless --force-refresh.
+    """
+    only_list: list[str] | None = None
+    if only:
+        only_list = [s.strip() for s in only.split(",") if s.strip()]
+    summary = ingest_all_committees(
+        only=only_list,
+        force_refresh=force_refresh,
+        max_count=max_count,
+    )
+    click.echo("")
+    click.echo(json.dumps(summary, indent=2, default=str))
+    if summary.get("failed", 0) > 0:
+        sys.exit(1)
+
+
+@cli.command(name="apply-committee-external-links")
+def apply_committee_external_links_cmd():
+    """Apply curated external links from catalog/committee_external_links.yaml.
+
+    Edit the YAML to add Wikipedia/Ballotpedia/etc. pointers per committee, then
+    run this to push them onto the committees table. Re-runnable.
+    """
+    summary = apply_external_links()
+    click.echo(json.dumps(summary, indent=2, default=str))
+    if summary.get("error"):
         sys.exit(1)
 
 
