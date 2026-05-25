@@ -1,0 +1,62 @@
+name: Weekly FEC refresh
+
+# Runs the self-maintaining refresh layer (scripts/refresh.py) on a weekly
+# cron and commits any data changes (master.db + per-owner audit.last_ingestion
+# updates). The deploy workflow picks up the resulting push and rebuilds the
+# Cloudflare deploy.
+#
+# Cadence: Monday 12:00 UTC (8am ET / 7am CT) — picks up the prior week's
+# FEC filings before the work week begins. GitHub may delay cron runs by
+# 15+ minutes under load; that's acceptable given the 35d/95d freshness
+# thresholds documented in the dashboard.
+
+on:
+  schedule:
+    - cron: '0 12 * * 1'
+  workflow_dispatch:
+
+# Queue overlapping runs rather than cancel — partial refresh state is
+# harder to recover from than a delayed full one.
+concurrency:
+  group: refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run weekly refresh
+        env:
+          FEC_API_KEY: ${{ secrets.FEC_API_KEY }}
+        run: python -m scripts.cli refresh
+
+      - name: Commit + push refreshed data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # Stage only the files that the refresh layer is allowed to touch:
+          # the master DB, owner YAMLs (audit.last_ingestion only — refresh
+          # never touches signal blocks), and the provenance / review logs.
+          git add data/master.db owners/*.yaml catalog/PROVENANCE_LOG.md catalog/REVIEW_QUEUE.md 2>/dev/null || true
+          if git diff --staged --quiet; then
+            echo "No changes from refresh — nothing to commit."
+          else
+            git commit -m "weekly refresh ($(date -u +%Y-%m-%d))"
+            git push
+          fi

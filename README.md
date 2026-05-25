@@ -42,12 +42,58 @@ To work on this project, read in order:
 
 ## Status
 
-- **Phase 0** (setup): files created 2026-05-22. No code or data yet.
-- **Phase 1** (Cohen pilot): not started.
-- **Phase 1.5** (4 more pilot owners): not started.
-- **Phase 2** (remaining 25 owners): not started.
+- **Phase 0** (setup): complete — files + project structure live 2026-05-22.
+- **Phase 1** (Cohen pilot): complete — worked-pilot precedent for signal calibration.
+- **Phase 1.5** (4 more pilot owners): complete.
+- **Phase 2** (remaining owners): complete — 36 owners ingested across 14 election cycles.
 - **Phase 3** (legislative cross-reference): not started.
 - **Phase 4** (state/local): not started.
-- **Phase 5** (maintenance automation): not started.
+- **Phase 5** (maintenance automation): complete — `scripts/refresh.py` + weekly GitHub Actions cron.
+- **CheckSwing dashboard** (public-facing site at `mockup/index.html`): live on Cloudflare Pages.
 
 See `CHARTER.md` for phase definitions and exit criteria.
+
+## Deployment
+
+The public dashboard ships as a static site on **Cloudflare Pages**.
+
+**One-time setup** (already done; documented for reference):
+1. Create a Cloudflare Pages project named `checkswing` in **Direct Upload** mode (no build on Cloudflare's side — GitHub Actions does the build).
+2. Add these to **GitHub Secrets**:
+   - `CLOUDFLARE_API_TOKEN` — account-scoped, **Pages:Edit** permission only.
+   - `CLOUDFLARE_ACCOUNT_ID` — visible on the Cloudflare dashboard overview.
+   - `FEC_API_KEY` — for the weekly refresh job. **Never** in Cloudflare env.
+3. Optional: configure a custom domain in Cloudflare Pages dashboard.
+
+**How deploys happen:**
+- `.github/workflows/deploy.yml` runs on every push to `main` that touches `mockup/**`, `data/master.db`, `owners/**`, or `catalog/**`. It builds `mockup/data.json` from the committed `data/master.db`, runs a secret-leak guard (grep for `FEC_API_KEY` / 40-char hex), and uploads `mockup/` to Cloudflare Pages.
+- `mockup/_headers` sets CSP (allows Google Fonts + inline JS/CSS), cache controls (5min for `data.json`, immutable for `assets/*`), and `X-Frame-Options: DENY`.
+
+**Why `data/master.db` is committed:** it's the project's source of truth for the dashboard. `mockup/data.json` is regenerated at every Cloudflare build, so committing it would just thrash the diff. Raw FEC payloads (`data/raw/`) stay out of git — they're large and recoverable via re-ingestion if ever needed.
+
+## Refresh cadence
+
+`.github/workflows/refresh.yml` runs weekly (Monday 12:00 UTC) and can also be triggered manually via the Actions tab (`workflow_dispatch`).
+
+What it does, in order, per active owner:
+1. Reads `audit.last_ingestion` from the owner's YAML.
+2. Calls the OpenFEC API for filings since that date (jittered backoff, per-cycle chunking, per-variant checkpointing — see [scripts/fetch_fec.py](scripts/fetch_fec.py)).
+3. Classifies new records against the owner's signal block.
+4. Writes new CONFIRMED + PROBABLE rows to `data/master.db`; routes UNCERTAINs to `catalog/REVIEW_QUEUE.md`.
+5. Updates `audit.last_ingestion` on success only — failures leave the field untouched so next run retries the same window.
+6. Once all owners are processed: rebuilds `mockup/data.json` and pushes the result, which triggers a redeploy.
+
+**⚠️ `--full-refetch` warning:** plain `python -m scripts.cli ingest <slug>` reads `audit.last_ingestion` and only fetches *since* that date. To re-fetch full history (e.g., after a classifier bug fix), pass `--full-refetch` explicitly. The refresh layer always uses the incremental mode.
+
+## Calibration playbook
+
+Every signal change to an owner YAML is a deliberate, version-controlled edit with a `change_log` entry inside the YAML (see CLAUDE.md §1.7). The reproducible workflow is:
+
+1. `python -m scripts.cli audit <slug>` — read-only audit; prints signal block, PROBABLE clusters by employer/ZIP, review-queue reasons, suggestion checklist.
+2. Inspect raw payloads for ambiguous records (`data/raw/<slug>/*.json`).
+3. Edit the owner YAML; add a `change_log` entry citing pre-cal counts + rationale.
+4. `python -m scripts.cli validate` — must pass.
+5. `python -m scripts.cli reclassify <slug> --yes --reason "..."` — re-applies classifier against immutable raw payloads (no FEC API calls).
+6. Verify post-cal counts. If CONFIRMED dropped > 5%, investigate before accepting (the 5% alarm caught real misattributions in fisher-john Tier-A calibration).
+
+See change_log entries in `owners/cohen-steven.yaml` (Phase 1 precedent), the five Tier-A owners (Tier-A round 2026-05-24), and the Tier-B sweep (2026-05-25) for worked examples.

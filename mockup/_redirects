@@ -1,0 +1,9 @@
+# CheckSwing is a single-page app with hash-based routing (#/owner/<slug>,
+# #/cycle/<year>, etc.). Hash fragments never reach the server, so no
+# server-side rewrite is needed for client-side routes.
+#
+# This file exists so future redirects (e.g., short URLs, renamed pages)
+# have a documented home.
+
+# Example future redirects:
+# /old-path  /new-path  301

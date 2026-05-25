@@ -1,0 +1,66 @@
+name: Deploy to Cloudflare Pages
+
+# Builds mockup/data.json from data/master.db, runs a secret-leak guard,
+# then deploys the mockup/ directory to Cloudflare Pages.
+#
+# Trigger: any push to main that touches deploy-relevant files. Manual
+# trigger (workflow_dispatch) also available.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'mockup/**'
+      - 'data/master.db'
+      - 'owners/**'
+      - 'catalog/**'
+      - '.github/workflows/deploy.yml'
+  workflow_dispatch:
+
+# Don't deploy two pushes in parallel — race conditions on Pages.
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Build mockup/data.json from master.db
+        run: python mockup/build_data.py
+
+      - name: Guard against accidental secret leak
+        # CRITICAL: FEC_API_KEY is never supposed to land in the static
+        # deploy. This grep catches any 40-char hex token (the FEC key
+        # shape) or the literal env var name in the mockup/ output.
+        # If the deploy ever leaks the key, this fails the job.
+        run: |
+          if grep -rE "FEC_API_KEY|[0-9a-f]{40}" mockup/ ; then
+            echo "::error::Possible secret found in mockup/ — aborting deploy"
+            exit 1
+          fi
+          echo "Secret-leak check passed."
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: checkswing
+          directory: mockup
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}

@@ -1,17 +1,25 @@
 # Secrets
 .env
 
-# Database and raw payloads (rebuildable from raw + YAMLs; raw is the ground truth
-# but is large enough we don't want it in git — back it up separately)
-data/master.db
+# Database transient files (journal/WAL/shm); the master.db file itself is
+# committed because the Cloudflare deploy regenerates mockup/data.json from
+# it at build time. master.db is the project's source of truth (CLAUDE.md
+# §1.4 — raw payloads are ground truth but live outside git; master.db is
+# the rebuildable derivative the static site depends on).
 data/master.db-journal
 data/master.db-wal
 data/master.db-shm
+
+# Snapshots and raw payloads — large, regenerable, never deployed
 data/snapshots/
 data/raw/
 
 # CSV exports are derivative — regenerable
 data/donations/
+
+# mockup/data.json is generated at Cloudflare build time from data/master.db;
+# do not commit. Local previews can regenerate via `python mockup/build_data.py`.
+mockup/data.json
 
 # Python
 __pycache__/
