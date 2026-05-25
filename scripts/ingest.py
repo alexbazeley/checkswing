@@ -18,11 +18,12 @@ from __future__ import annotations
 
 import json
 import uuid
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from pathlib import Path
 from typing import Iterable
 
 import yaml
+from ruamel.yaml import YAML as _RoundTripYAML
 
 from . import db
 from .fetch_fec import DEFAULT_MIN_DATE, FECClient, load_raw_payloads
@@ -41,11 +42,62 @@ def _utc_now_iso() -> str:
     return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
+def _utc_today_iso() -> str:
+    return datetime.now(timezone.utc).strftime("%Y-%m-%d")
+
+
 def _load_owner(slug: str) -> dict:
     path = OWNERS_DIR / f"{slug}.yaml"
     if not path.exists():
         raise FileNotFoundError(f"owners/{slug}.yaml not found")
     return yaml.safe_load(path.read_text(encoding="utf-8"))
+
+
+def _resolve_min_date(owner: dict, explicit_min_date: str | None, full_refetch: bool) -> tuple[str, str]:
+    """Resolve the effective min_date for this ingestion.
+
+    Returns (min_date, source) where source explains the choice for logging:
+      - "user --min-date" — explicit CLI override
+      - "audit.last_ingestion" — incremental refresh from prior run
+      - "--full-refetch" — explicit override back to project floor
+      - "default (no prior ingestion)" — first-run for this owner
+    """
+    if full_refetch:
+        return DEFAULT_MIN_DATE, "--full-refetch"
+    if explicit_min_date is not None:
+        return explicit_min_date, "user --min-date"
+    last = (owner.get("audit") or {}).get("last_ingestion")
+    if last:
+        # YAML may load this as a date object or a string.
+        return str(last), "audit.last_ingestion"
+    return DEFAULT_MIN_DATE, "default (no prior ingestion)"
+
+
+def _write_audit_last_ingestion(slug: str, date_iso: str) -> None:
+    """Patch owners/<slug>.yaml so audit.last_ingestion = date_iso.
+
+    Uses ruamel.yaml round-trip to preserve comments and ordering. This is the
+    only field refresh.py / ingest is allowed to mutate on the YAML — signal
+    blocks remain read-only (CLAUDE.md §1.7).
+    """
+    path = OWNERS_DIR / f"{slug}.yaml"
+    if not path.exists():
+        raise FileNotFoundError(f"owners/{slug}.yaml not found")
+    yaml_rt = _RoundTripYAML()
+    yaml_rt.preserve_quotes = True
+    yaml_rt.width = 4096  # don't re-wrap long lines
+    with path.open("r", encoding="utf-8") as f:
+        data = yaml_rt.load(f)
+    if data is None:
+        raise ValueError(f"owners/{slug}.yaml is empty or unparseable")
+    audit = data.get("audit")
+    if audit is None:
+        # Add the audit block. Rare — every existing owner has it.
+        data["audit"] = {"last_ingestion": date_iso}
+    else:
+        audit["last_ingestion"] = date_iso
+    with path.open("w", encoding="utf-8") as f:
+        yaml_rt.dump(data, f)
 
 
 def _record_to_donation_row(
@@ -180,15 +232,27 @@ def ingest_entity(
     slug: str,
     *,
     dry_run: bool = False,
-    min_date: str = DEFAULT_MIN_DATE,
+    min_date: str | None = None,
     max_pages: int | None = None,
     process_related_entities: bool = False,
     state_filter: bool = True,
     from_raw: bool = False,
+    full_refetch: bool = False,
+    chunk_by_cycle: bool = False,
+    force_resume: bool = False,
 ) -> dict:
     """Run the full pipeline for one entity.
 
     Returns a summary dict (counts, run_id, etc).
+
+    min_date semantics:
+      - None (default): use owner's audit.last_ingestion if set; else DEFAULT_MIN_DATE.
+      - explicit str: use that exact date.
+      - full_refetch=True: ignore everything else and use DEFAULT_MIN_DATE.
+
+    On successful (non-dry-run, non-from-raw) completion, owner's
+    audit.last_ingestion is patched to today's UTC date so the next run
+    fetches incrementally. CLAUDE.md §1.7 — signal blocks are NOT touched.
     """
     # ── Step 1: validate ───────────────────────────────────────────────────
     results = validate_all()
@@ -200,6 +264,9 @@ def ingest_entity(
         )
 
     owner = _load_owner(slug)
+
+    # Resolve effective min_date from CLI + YAML state.
+    effective_min_date, min_date_source = _resolve_min_date(owner, min_date, full_refetch)
 
     # ── Step 2: snapshot ───────────────────────────────────────────────────
     run_id = uuid.uuid4().hex[:8]
@@ -231,9 +298,21 @@ def ingest_entity(
     else:
         client = FECClient()
         state_label = f" states={states}" if states else " (no state filter)"
-        print(f"[{slug}] Fetching schedule_a for {len(name_variants)} name variants since {min_date}{state_label}…")
+        chunk_label = " · chunk-by-cycle" if chunk_by_cycle else ""
+        print(
+            f"[{slug}] Fetching schedule_a for {len(name_variants)} name variants "
+            f"since {effective_min_date} ({min_date_source}){state_label}{chunk_label}…"
+        )
+        if min_date_source == "audit.last_ingestion":
+            print(f"[{slug}]   (incremental refresh — use --full-refetch for complete history)")
         records, raw_paths = client.fetch_all_name_variants(
-            slug, name_variants, min_date=min_date, max_pages=max_pages, states=states
+            slug,
+            name_variants,
+            min_date=effective_min_date,
+            max_pages=max_pages,
+            states=states,
+            chunk_by_cycle=chunk_by_cycle,
+            force_resume=force_resume,
         )
         api_calls_made = client.calls_made
         print(f"[{slug}] Fetched {len(records)} unique records ({api_calls_made} API calls).")
@@ -260,13 +339,22 @@ def ingest_entity(
     print(f"[{slug}] Classification: CONFIRMED={len(confirmed)} · PROBABLE={len(probable)} · UNCERTAIN={len(uncertain)} · skipped(name no-match)={skipped_no_name_match}")
 
     completed_at = _utc_now_iso()
+    # period_end = latest contribution date among all classified records in
+    # this run; falls back to None if nothing matched at all.
+    all_dates = [
+        d for d in (
+            str(r.get("contribution_receipt_date") or "")[:10]
+            for r, _ in confirmed + probable + uncertain
+        ) if d
+    ]
+    period_end = max(all_dates) if all_dates else None
     summary: dict = {
         "run_id": run_id,
         "entity_slug": slug,
         "started_at": started_at,
         "completed_at": completed_at,
-        "period_start": min_date,
-        "period_end": None,
+        "period_start": effective_min_date,
+        "period_end": period_end,
         "name_variants_queried": json.dumps(name_variants),
         "api_calls_made": api_calls_made,
         "records_fetched": len(records),
@@ -276,7 +364,9 @@ def ingest_entity(
         "snapshot_path": snapshot_path,
         "notes": (
             f"skipped(no-name-match)={skipped_no_name_match}"
+            + f" · min_date={min_date_source}"
             + (" · FROM-RAW" if from_raw else (f" · states={states}" if states else " · NO STATE FILTER"))
+            + (" · chunk-by-cycle" if chunk_by_cycle else "")
             + (" · DRY RUN" if dry_run else "")
         ),
         "dry_run": 1 if dry_run else 0,
@@ -303,6 +393,17 @@ def ingest_entity(
     # ── Step 8: append markdown logs ───────────────────────────────────────
     _append_review_queue_md(uncertain, run_id)
     _append_provenance_log(summary)
+
+    # ── Step 9: write audit.last_ingestion ─────────────────────────────────
+    # Records today's UTC date as the freshness watermark so the NEXT ingest
+    # fetches incrementally (B.5 reads this back). Skipped for `from_raw`
+    # runs — those don't fetch from FEC, so they shouldn't move the watermark.
+    # CLAUDE.md §1.7 boundary: this only touches audit.last_ingestion;
+    # signal blocks remain untouched.
+    if not from_raw:
+        today_iso = _utc_today_iso()
+        _write_audit_last_ingestion(slug, today_iso)
+        summary["audit_last_ingestion_set"] = today_iso
 
     return summary
 

@@ -11,7 +11,6 @@ from tabulate import tabulate
 
 from . import db
 from .export import export_aggregate, export_entity
-from .fetch_fec import DEFAULT_MIN_DATE
 from .ingest import ingest_entity, reclassify_entity
 from .paths import OWNERS_DIR
 from .validate_owners import format_report, validate_all
@@ -41,12 +40,23 @@ def init():
 @cli.command()
 @click.argument("slug")
 @click.option("--dry-run", is_flag=True, help="Fetch + classify but do not write to DB.")
-@click.option("--min-date", default=DEFAULT_MIN_DATE, help="Minimum contribution_receipt_date (default 2000-01-01).")
+@click.option(
+    "--min-date",
+    default=None,
+    help=(
+        "Explicit minimum contribution_receipt_date (YYYY-MM-DD). "
+        "Default: use owner's audit.last_ingestion if set, else 2000-01-01. "
+        "Use --full-refetch to override audit.last_ingestion and pull complete history."
+    ),
+)
+@click.option("--full-refetch", is_flag=True, help="Ignore audit.last_ingestion; fetch from 2000-01-01 forward.")
 @click.option("--max-pages", type=int, default=None, help="Per-variant page cap (for testing).")
 @click.option("--include-related", is_flag=True, help="Also classify against related_entities (default: principals only).")
 @click.option("--no-state-filter", is_flag=True, help="Disable state pre-filter at fetch — search FEC by name only. Use for discovery, not production.")
 @click.option("--from-raw", is_flag=True, help="Skip the network fetch; classify against existing raw payloads in data/raw/<slug>/.")
-def ingest(slug, dry_run, min_date, max_pages, include_related, no_state_filter, from_raw):
+@click.option("--chunk-by-cycle", is_flag=True, help="Always paginate FEC per 2-year election cycle (use for common-name owners like Malone, Sherman, Davis where total page count would otherwise timeout).")
+@click.option("--force-resume", is_flag=True, help="Resume from data/raw/<slug>/_fetch_state.json even if older than 7 days.")
+def ingest(slug, dry_run, min_date, full_refetch, max_pages, include_related, no_state_filter, from_raw, chunk_by_cycle, force_resume):
     """Run the full ingestion pipeline for one entity."""
     summary = ingest_entity(
         slug,
@@ -56,6 +66,9 @@ def ingest(slug, dry_run, min_date, max_pages, include_related, no_state_filter,
         process_related_entities=include_related,
         state_filter=not no_state_filter,
         from_raw=from_raw,
+        full_refetch=full_refetch,
+        chunk_by_cycle=chunk_by_cycle,
+        force_resume=force_resume,
     )
     click.echo("")
     click.echo(json.dumps(summary, indent=2, default=str))
@@ -63,9 +76,10 @@ def ingest(slug, dry_run, min_date, max_pages, include_related, no_state_filter,
 
 @cli.command(name="ingest-all-pilot")
 @click.option("--dry-run", is_flag=True)
-@click.option("--min-date", default=DEFAULT_MIN_DATE)
+@click.option("--min-date", default=None, help="Explicit min_date for ALL pilots (overrides per-owner audit.last_ingestion).")
+@click.option("--full-refetch", is_flag=True, help="Ignore audit.last_ingestion for every pilot.")
 @click.option("--include-related", is_flag=True)
-def ingest_all_pilot(dry_run, min_date, include_related):
+def ingest_all_pilot(dry_run, min_date, full_refetch, include_related):
     """Run ingestion for every entity marked status=pilot in owners/."""
     pilots = []
     for path in sorted(OWNERS_DIR.glob("*.yaml")):
@@ -80,7 +94,13 @@ def ingest_all_pilot(dry_run, min_date, include_related):
     click.echo(f"Pilots: {', '.join(pilots)}")
     for slug in pilots:
         click.echo(f"\n========== {slug} ==========")
-        ingest_entity(slug, dry_run=dry_run, min_date=min_date, process_related_entities=include_related)
+        ingest_entity(
+            slug,
+            dry_run=dry_run,
+            min_date=min_date,
+            full_refetch=full_refetch,
+            process_related_entities=include_related,
+        )
 
 
 @cli.command()
