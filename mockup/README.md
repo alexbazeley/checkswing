@@ -1,6 +1,6 @@
-# The Owner's Box
+# CheckSwing
 
-A self-contained, static, single-page prototype for **The Owner's Box** —
+A self-contained, static, single-page prototype for **CheckSwing** —
 a public-facing dashboard layered over the MLB Owner FEC Donations Archive.
 
 This is a **presentation layer**, not canonical data — the database and
@@ -67,7 +67,7 @@ the editorial backbone of the UI:
 - **Methodology is one click from every page.** The masthead link, the
   footer, and the verification cards on owner pages all surface it.
 - **Color is reserved for meaning.** Party colors (DEM blue, REP red, OTH
-  grey) carry data. Deep crimson (`--brand`) is reserved for The Owner's Box
+  grey) carry data. Deep crimson (`--brand`) is reserved for the CheckSwing
   identity itself. Burnt sienna (`--accent`) carries interactive UI (links,
   CSV buttons, focus states).
 - **Tabular figures everywhere.** Money columns align on the decimal point

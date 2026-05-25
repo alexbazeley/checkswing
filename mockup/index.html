@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>The Owner's Box — MLB ownership's federal political giving</title>
-<meta name="description" content="A verified archive of federal political donations by the principal owners of all 30 MLB franchises, 2000–present. Every record sourced to a specific FEC filing.">
-<meta property="og:title" content="The Owner's Box">
-<meta property="og:description" content="Every federal political donation by Major League Baseball's principal owners, sourced and verified.">
+<title>CheckSwing — MLB owner federal political contributions</title>
+<meta name="description" content="Federal political contributions by MLB principal owners, 2000–present, sourced from FEC filings.">
+<meta property="og:title" content="CheckSwing">
+<meta property="og:description" content="Federal political contributions by MLB principal owners, 2000–present, sourced from FEC filings.">
 <meta property="og:type" content="website">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -30,7 +30,7 @@
   --rule:        #E5E1D5;
   --rule-strong: #C9C4B4;
 
-  --brand:       #8B1B2C;  /* The Owner's Box — wordmark + logo accent */
+  --brand:       #8B1B2C;  /* CheckSwing — wordmark + logo accent */
   --brand-2:     #6E1322;
   --brand-soft:  #F4E2E3;  /* subtle tinted background for brand surfaces */
   --accent:      #B8552B;  /* burnt sienna — interactive UI (links, focus, CSV button) */
@@ -1250,12 +1250,11 @@ section.block:last-child { border-bottom: 0; }
 <header class="masthead" role="banner">
   <div class="masthead-inner">
     <a class="brand" href="#/" style="text-decoration:none;color:inherit">
-      <span class="brand-mark" aria-label="The Owner's Box logo">
-        <img src="assets/owners-box-icon.png" alt="The Owner's Box">
+      <span class="brand-mark" aria-label="CheckSwing logo">
+        <img src="assets/owners-box-icon.png" alt="CheckSwing">
       </span>
       <div>
-        <div class="brand-title">The Owner's Box</div>
-        <div class="brand-sub">MLB ownership · federal political giving</div>
+        <div class="brand-title">CheckSwing</div>
       </div>
     </a>
     <nav class="nav" role="navigation" aria-label="Primary">
@@ -1322,12 +1321,11 @@ section.block:last-child { border-bottom: 0; }
     <div>
       <h4>About this archive</h4>
       <p class="colophon">
-        <strong>The Owner's Box</strong> is a verified archive of federal political
-        donations by the principal owners of all 30 Major League Baseball franchises.
-        Every record traces back to a specific FEC filing. We classify each record
-        CONFIRMED or PROBABLE based on a documented verification rubric. Records that
-        match a donor name but no other signal stay UNCERTAIN and never enter the
-        canonical dataset. This is factual infrastructure, not editorial analysis.
+        <strong>CheckSwing</strong> tracks federal political contributions by the
+        principal owners of all 30 Major League Baseball franchises, sourced from
+        FEC filings. Records are classified CONFIRMED or PROBABLE under a documented
+        verification rubric; records matching a donor name but no other signal stay
+        UNCERTAIN and do not enter the canonical dataset.
       </p>
     </div>
     <div>
@@ -1728,14 +1726,10 @@ function renderLeague() {
   return `
   <section class="hero-photo">
     <div class="hero-photo-inner">
-      <span class="eyebrow">The Owner's Box · ${L.n_owners} principal owners · ${L.n_cycles} election cycles</span>
       <h1>Where MLB's owners send their political money.</h1>
       <p class="deck">
-        A verified archive of every federal political donation reported to the FEC
-        by the principal owners of all 30 Major League Baseball franchises,
-        2000–present. Built to a journalist's standard of attribution: every record
-        tied to a documented owner via two confirming signals, sourced back to a
-        specific FEC filing, and tagged with its verification tier.
+        Federal political contributions reported to the FEC by the principal owners
+        of all 30 Major League Baseball franchises, 2000–present.
       </p>
       <div class="meta">
         <span>Snapshot ${state.data.generated_at.slice(0,10)}</span>
@@ -1745,7 +1739,6 @@ function renderLeague() {
         <span>CONFIRMED + PROBABLE shown</span>
       </div>
     </div>
-    <span class="photo-credit">Citi Field, New York · luxury suite + grandstand</span>
   </section>
 
   <section class="container">
@@ -1776,12 +1769,12 @@ function renderLeague() {
   <section class="container block">
     <div class="block-head">
       <span class="eyebrow">Latest activity</span>
-      <h2 style="margin-top:6px">Most recent attributed donations</h2>
+      <h2 style="margin-top:6px">Recent contributions</h2>
       <p class="caption">The 20 most recently dated contributions in the archive. Each is one click from its FEC filing image.</p>
     </div>
     ${renderRecentDonations(state.data.donations)}
     <p class="footnote">
-      "Most recent" is by the donation date as filed with the FEC, not by ingestion date.
+      Sorted by donation date as filed with the FEC, not by ingestion date.
       During an election cycle, late additions can include contributions filed under
       the FEC's 48-hour notice rule.
     </p>
@@ -2751,7 +2744,7 @@ function renderDonationsTable(allDonations) {
   if (allDonations.length === 0) {
     return emptyState(
       "No donations recorded for this owner",
-      "This owner is tracked in the registry but has no attributed donations yet. They may be a newly-added entity awaiting first ingestion, or a former owner whose records sit outside the current scope."
+      "This owner is tracked in the registry but has no donations recorded yet. They may be a newly-added entity awaiting first ingestion, or a former owner whose records sit outside the current scope."
     );
   }
   if (rows.length === 0) {
@@ -4068,10 +4061,9 @@ function renderMethodology() {
       <h2>What we don't claim</h2>
       <p>
         This archive does not interpret. It does not assert what a donation means,
-        whom it influenced, or what it implies about an owner's politics. The
-        archive is factual infrastructure; any editorial framing built on top
-        of it belongs in clearly-labeled reporting elsewhere, never inside the
-        data itself.
+        whom it influenced, or what it implies about an owner's politics. Any
+        editorial framing built on top of this data belongs in clearly-labeled
+        reporting elsewhere, never inside the dataset itself.
       </p>
 
       <h2>Reproducibility</h2>
@@ -4107,13 +4099,12 @@ function renderRuns() {
   return `
   <div class="container">
     <section class="hero" style="padding-bottom:18px">
-      <span class="eyebrow">Pipeline transparency</span>
-      <h1 style="margin-top:14px;max-width:24ch">Every ingestion run, every API call, in the open.</h1>
+      <span class="eyebrow">Pipeline</span>
+      <h1 style="margin-top:14px;max-width:24ch">Every ingestion run, every API call.</h1>
       <p class="deck">
-        The archive is built by running a documented ingestion pipeline against the
-        FEC API. Every run is logged: when it started, which owner it targeted,
-        how many records came back, how they were classified. Records below
-        are the full operational history of how this dataset was assembled.
+        Ingestion runs against the FEC API. Each row records when the run started,
+        which owner it targeted, how many records came back, and how they were
+        classified.
       </p>
     </section>
 
@@ -4189,11 +4180,8 @@ function renderRuns() {
       </table>
       </div>
       <p class="footnote">
-        UNCERTAIN records are routed to a manual review queue and never appear in
-        canonical exports. Records that the classifier could not match against
-        the owner's documented verifying signals are deliberately held out — the
-        archive's editorial standard is to miss a real donation rather than
-        attribute one to the wrong person.
+        UNCERTAIN records are routed to a manual review queue and do not appear in
+        canonical exports.
       </p>
     </section>
   </div>`;
@@ -4209,7 +4197,7 @@ function renderAbout() {
 
       <div style="margin-top:48px">
         <h3>Coverage</h3>
-        <p>${fmtInt(L.n_donations)} attributed donations across ${L.n_owners} owners, ${L.n_cycles} election cycles, totaling ${fmtMoneyExact(L.total_amount)}. Earliest record: ${fmtDate(L.earliest_date)}. Latest: ${fmtDate(L.latest_date)}.</p>
+        <p>${fmtInt(L.n_donations)} donations across ${L.n_owners} owners, ${L.n_cycles} election cycles, totaling ${fmtMoneyExact(L.total_amount)}. Earliest record: ${fmtDate(L.earliest_date)}. Latest: ${fmtDate(L.latest_date)}.</p>
       </div>
 
       <div style="margin-top:32px">
