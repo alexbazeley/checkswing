@@ -57,7 +57,18 @@ strong_signals:
   employers:
     - "SRB Management"
     - "Angels Baseball LP"
-  zip_codes: []
+  zip_codes:
+    # Biltmore Estates / Arcadia Phoenix — Arte's documented residence cluster
+    # (60 Biltmore Estates Drive per The Real Deal Phoenix). Promoted in
+    # Tier-B calibration 2026-05-25 after audit confirmed all 26 PROBABLE
+    # records at these ZIPs are Arte ($2,500-$50,000 Republican donations,
+    # name variants "Moreno, Arte R. Mr." / "Moreno, Arturo R." consistent
+    # with his profile). 85016 is the Biltmore Estates ZIP proper; 85018 is
+    # adjacent Arcadia neighborhood (9 pre-cal CONFIRMED + 3 PROBABLE share
+    # it). Name-variants are conservative enough (full "Arte" or "Arturo R"
+    # required) that family-collision risk is low.
+    - "85016"
+    - "85018"
 
 related_entities: []
 # Documented candidate (do NOT add without approval): spouse Carole Moreno.
@@ -101,6 +112,15 @@ notes: |
   Foundations (Moreno Family Foundation, Angels Baseball Foundation) are
   explicitly out of scope per CLAUDE.md §6 (IRS 990s = separate project).
 
+  Doppelgänger landscape (audit 2026-05-25): UNCERTAIN-open records are
+  distinct Morenos in different metros — Bonita CA (R.J. Donovan
+  Correctional Facility Lieutenant), Chula Vista CA (retired WinRed donor),
+  Mesa AZ (CPA ActBlue donor). One Anaheim CA filing IS Arte (employer
+  "ANGELS BASEBALL L.P./OWNER" + occupation OWNER) but is UNCERTAIN
+  because address-contradicts rule fires before strong-signal CONFIRMED
+  per VERIFICATION.md. Not adding "anaheim" to cities — would also
+  capture team-employee Morenos.
+
 change_log:
   - date: 2026-05-22
     change: |
@@ -115,8 +135,52 @@ change_log:
     by: "claude-code-research (orchestrated by alex)"
     references:
       - "/tmp/moreno-arte-research.md (session-local research file)"
+  - date: 2026-05-25
+    change: |
+      Tier-B calibration round 1 — added strong_signals.zip_codes:
+      ["85016", "85018"] for the Biltmore Estates / Arcadia Phoenix
+      residence cluster.
+
+      Audit findings (read-only audit + raw payload inspection of all 26
+      PROBABLE records): every PROBABLE record is "MORENO, ARTE" /
+      "MORENO, ARTE R. MR." / "MORENO, ARTURO" / "MORENO, ARTURO R." in
+      Phoenix AZ at ZIPs 85016 (13 records), 850162826 (10 records, ZIP+4
+      of 85016), 85018 (1 record), and 850182843 (2 records, ZIP+4 of
+      85018). Donations are big-Republican-pattern: $2,500-$50,000 to
+      Romney 2012 / Romney Victory / RNC / state Republican parties
+      (Massachusetts, Idaho, Vermont, Oklahoma) in 2012; Trump
+      President 2017, Trump Victory 2017; McSally for Senate 2018;
+      McConnell for Majority Leader / McConnell Senate Committee 2019;
+      Tiffany Shedd 2020; Tanya for Arizona 2021; Ciscomani for Congress
+      / Ciscomani Victory Fund / AZ Republican Party 2024. Employers
+      observed: "ANGELS BASEBALL" (no LP suffix — not in verifying list),
+      "RETIRED", "SELF EMPLOYED" with occupation "REAL ESTATE", or blank.
+      All consistent with Arte's documented profile (sold Outdoor Systems
+      1999, sold operational role at Angels though still principal owner,
+      Arizona real estate investments per Tier 2 sources).
+
+      85018 included because Arcadia is adjacent to Biltmore Estates and
+      the 9 pre-cal CONFIRMED records at 85018 / 850182821 are clearly
+      Arte (employer "LA ANGELS" / "ANGELS BASEBALL" + occupation OWNER).
+      Could be a secondary property or office address.
+
+      Doppelgänger safety: name_variants require full "Arte" or "Arturo"
+      first name — no bare "A. Moreno" / "Moreno, A" forms. The 6
+      UNCERTAIN-open records are distinct Morenos in distinct metros and
+      are correctly caught by address-contradicts. Documented in notes.
+
+      Strong-signal ZIP risk consideration: 85016 Biltmore Estates is a
+      narrow affluent residential ZIP (not an office building cluster
+      like Carlyle 20004); name+ZIP combination is highly specific.
+
+      Pre-cal: 47 CONFIRMED / 26 PROBABLE / 6 UNCERTAIN-open. P/C 0.55.
+      Predicted post-cal: ~73 CONFIRMED / ~0 PROBABLE / 6 UNCERTAIN.
+      P/C ~0.0. CONFIRMED count goes up — no >5% drop alarm risk.
+    by: "claude-code-session (PR 4 Tier B, approved by alex)"
+    references:
+      - "data/master.db pre-calibration: 47 CONFIRMED / 26 PROBABLE / 6 UNCERTAIN-open"
 
 audit:
   created: 2026-05-22
   last_ingestion: null
-  last_signal_review: 2026-05-22
+  last_signal_review: 2026-05-25

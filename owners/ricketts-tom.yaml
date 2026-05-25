@@ -63,6 +63,19 @@ verifying_signals:
     - "Incapital LLC"
     - "Incapital"
     - "InspereX"
+    # Added 2026-05-25 Tier-B calibration. All four below confirmed as Tom
+    # via shared street address (531 Laurel Ave, Wilmette IL 60091) on at
+    # least one RAM Investment-linked donation matching other CONFIRMED
+    # donations (verified by alex during proposal review). The "Incapitol"
+    # / "EnCapital Holdings" / "Capitol Building" are clerical typo /
+    # spelling variants of Tom's Incapital LLC firm. "RAM Investment(s)"
+    # is Tom's personal investment vehicle (not in Tier 2 sources but
+    # confirmed via shared residence-address with CONFIRMED records).
+    - "Incapitol"
+    - "EnCapital Holdings"
+    - "RAM Investment"
+    - "RAM Investments"
+    - "Capitol Building"
   occupations:
     - "chairman"
     - "executive chairman"
@@ -177,8 +190,50 @@ change_log:
     by: "claude-code-research (orchestrated by alex)"
     references:
       - "/tmp/ricketts-tom-research.md (session-local research file)"
+  - date: 2026-05-25
+    change: |
+      Tier-B calibration round 1 — added five employer-string variants to
+      verifying_signals.employers after alex's address-confirmation review.
+
+      Audit findings (read-only audit of all 15 PROBABLE records): all are
+      "RICKETTS, THOMAS" / "RICKETTS, THOMAS MR." at Wilmette 60091 / 600911934 /
+      600912811 ZIPs (Tom's residence). Five employer variants observed,
+      none in the original verifying list:
+        - INCAPITOL (3 records, 2007-12) — clerical typo of Tom's Incapital
+          firm; same date + same Nebraska Republican recipients as legitimate
+          CONFIRMED Incapital records
+        - ENCAPITAL HOLDINGS (3 records, 2020-09) — typo/spelling variant of
+          Incapital per alex review; 2020 timing post-Incapital pre-InspereX-
+          merger
+        - RAM INVESTMENT (6 records, 2008) + RAM INVESTMENTS (1 record, 2008)
+          — Tom's personal investment vehicle. Not in Tier 2 sources but
+          confirmed via shared street address (531 Laurel Ave Wilmette IL
+          60091) with other CONFIRMED Tom records, per alex verification
+          during proposal review
+        - CAPITOL BUILDING (1 record, 2006-09) — generic-named typo of
+          Incapital Building/Incapital; 2006 Tom Incapital-era timing,
+          $10k to Nebraska Republican Party (Tom's brother Pete-aligned)
+
+      Skipped 60091 strong-zip promotion per the YAML's explicit conservative
+      warning ("Wilmette ZIP 60091 is shared with Laura — DO NOT promote
+      ZIP alone"). Sister Laura also lives in Wilmette, and while
+      name_variants firewall against her ("Ricketts, Laura" wouldn't match
+      Tom-only variants), respecting the original conservative posture.
+      The 1 remaining PROBABLE (2004 Jack Ryan donation with empty employer
+      field) stays PROBABLE on city-signal-only.
+
+      Family-collision check: all 15 PROBABLE records use "Thomas" or "Tom"
+      explicit first names — name_variants firewall holds. Joe / Pete /
+      Laura / Todd / Marlene records would not name-match this slug.
+
+      Pre-cal: 47 CONFIRMED / 15 PROBABLE / 0 UNCERTAIN-open. P/C 0.32.
+      Predicted post-cal: ~61 CONFIRMED / ~1 PROBABLE / 0 UNCERTAIN.
+      P/C ~0.02. CONFIRMED count goes up — no >5% drop alarm risk.
+    by: "claude-code-session (PR 4 Tier B, approved by alex w/ address confirmation)"
+    references:
+      - "data/master.db pre-calibration: 47 CONFIRMED / 15 PROBABLE / 0 UNCERTAIN-open"
 
 audit:
   created: 2026-05-22
   last_ingestion: null
-  last_signal_review: 2026-05-22
+  last_signal_review: 2026-05-25

@@ -1363,3 +1363,159 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **uncertain_count**: `0`
 - **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T04-15-04Z__81b1167d.db`
 - **notes**: skipped(no-name-match)=1 · min_date=default (no prior ingestion) · FROM-RAW
+
+### 2026-05-25 — DELETION — reclassify monfort-dick
+
+- **entity_slug**: `monfort-dick`
+- **reason**: Tier-B calibration: promoted 80631/80632/80615 to strong_signals.zip_codes (Greeley/Eaton Monfort family base ZIPs); follow-up to Tier-A round 1
+- **rows_deleted_donations**: `102`
+- **rows_deleted_review_queue**: `0` (of which 0 had resolutions)
+- **include_related**: `False`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T04-27-50Z__pre-reclassify-monfort-dick.db`
+- **note**: Rows are recoverable from the snapshot above and from data/raw/monfort-dick/ payloads. Re-classification follows in the next INGESTION entry.
+
+### 2026-05-25 — INGESTION
+
+- **run_id**: `042a1431`
+- **entity_slug**: `monfort-dick`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2025-06-03`
+- **name_variants_queried**: `["Richard L Monfort", "Richard L. Monfort", "Richard Monfort", "Dick Monfort", "Monfort, Richard", "Monfort, Richard L", "Monfort, Richard L.", "Monfort, Dick"]`
+- **api_calls_made**: `0`
+- **records_fetched**: `106`
+- **confirmed_count**: `101`
+- **probable_count**: `1`
+- **uncertain_count**: `0`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T04-27-50Z__042a1431.db`
+- **notes**: skipped(no-name-match)=4 · min_date=default (no prior ingestion) · FROM-RAW
+
+### 2026-05-25 — DELETION — reclassify davis-ray
+
+- **entity_slug**: `davis-ray`
+- **reason**: Tier-B calibration: added 75225 (Highland Park / Avatar Investments Sherry Lane office) to strong_signals.zip_codes
+- **rows_deleted_donations**: `81`
+- **rows_deleted_review_queue**: `13` (of which 0 had resolutions)
+- **include_related**: `False`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T04-32-38Z__pre-reclassify-davis-ray.db`
+- **note**: Rows are recoverable from the snapshot above and from data/raw/davis-ray/ payloads. Re-classification follows in the next INGESTION entry.
+
+### 2026-05-25 — INGESTION
+
+- **run_id**: `5cebeea6`
+- **entity_slug**: `davis-ray`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2026-01-23`
+- **name_variants_queried**: `["Ray C Davis", "Ray C. Davis", "Ray Davis", "Davis, Ray", "Davis, Ray C", "Davis, Ray C."]`
+- **api_calls_made**: `0`
+- **records_fetched**: `318`
+- **confirmed_count**: `71`
+- **probable_count**: `10`
+- **uncertain_count**: `13`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T04-32-38Z__5cebeea6.db`
+- **notes**: skipped(no-name-match)=224 · min_date=default (no prior ingestion) · FROM-RAW
+
+### 2026-05-25 — DELETION — reclassify moreno-arte
+
+- **entity_slug**: `moreno-arte`
+- **reason**: Tier-B: added 85016 + 85018 (Biltmore Estates / Arcadia Phoenix residence ZIPs) to strong_signals.zip_codes
+- **rows_deleted_donations**: `73`
+- **rows_deleted_review_queue**: `6` (of which 0 had resolutions)
+- **include_related**: `False`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T04-38-53Z__pre-reclassify-moreno-arte.db`
+- **note**: Rows are recoverable from the snapshot above and from data/raw/moreno-arte/ payloads. Re-classification follows in the next INGESTION entry.
+
+### 2026-05-25 — INGESTION
+
+- **run_id**: `892671fc`
+- **entity_slug**: `moreno-arte`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2025-06-03`
+- **name_variants_queried**: `["Arturo Moreno", "Arte Moreno", "Arturo R. Moreno", "Arturo R Moreno", "Moreno, Arturo", "Moreno, Arte", "Moreno, Arturo R"]`
+- **api_calls_made**: `0`
+- **records_fetched**: `79`
+- **confirmed_count**: `73`
+- **probable_count**: `0`
+- **uncertain_count**: `6`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T04-38-53Z__892671fc.db`
+- **notes**: skipped(no-name-match)=0 · min_date=default (no prior ingestion) · FROM-RAW
+
+### 2026-05-25 — DELETION — reclassify pohlad-tom
+
+- **entity_slug**: `pohlad-tom`
+- **reason**: Tier-B: added Twin Cities Automotive/Inver Grove Volkswagen employers + Lake Minnetonka suburb cities (Excelsior/Deephaven/Shorewood); middle initial O identified via cross-period FEC match
+- **rows_deleted_donations**: `95`
+- **rows_deleted_review_queue**: `24` (of which 0 had resolutions)
+- **include_related**: `False`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T04-45-43Z__pre-reclassify-pohlad-tom.db`
+- **note**: Rows are recoverable from the snapshot above and from data/raw/pohlad-tom/ payloads. Re-classification follows in the next INGESTION entry.
+
+### 2026-05-25 — INGESTION
+
+- **run_id**: `7afb021a`
+- **entity_slug**: `pohlad-tom`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2024-09-24`
+- **name_variants_queried**: `["Thomas Pohlad", "Tom Pohlad", "Pohlad, Thomas", "Pohlad, Tom"]`
+- **api_calls_made**: `0`
+- **records_fetched**: `152`
+- **confirmed_count**: `111`
+- **probable_count**: `8`
+- **uncertain_count**: `0`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T04-45-43Z__7afb021a.db`
+- **notes**: skipped(no-name-match)=33 · min_date=default (no prior ingestion) · FROM-RAW
+
+### 2026-05-25 — DELETION — reclassify pohlad-tom
+
+- **entity_slug**: `pohlad-tom`
+- **reason**: Tier-B re-reclassify after restoring inadvertently-dropped occupations block
+- **rows_deleted_donations**: `118`
+- **rows_deleted_review_queue**: `0` (of which 0 had resolutions)
+- **include_related**: `False`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T04-46-32Z__pre-reclassify-pohlad-tom.db`
+- **note**: Rows are recoverable from the snapshot above and from data/raw/pohlad-tom/ payloads. Re-classification follows in the next INGESTION entry.
+
+### 2026-05-25 — INGESTION
+
+- **run_id**: `a04736c9`
+- **entity_slug**: `pohlad-tom`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2024-09-24`
+- **name_variants_queried**: `["Thomas Pohlad", "Tom Pohlad", "Pohlad, Thomas", "Pohlad, Tom"]`
+- **api_calls_made**: `0`
+- **records_fetched**: `152`
+- **confirmed_count**: `118`
+- **probable_count**: `1`
+- **uncertain_count**: `0`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T04-46-32Z__a04736c9.db`
+- **notes**: skipped(no-name-match)=33 · min_date=default (no prior ingestion) · FROM-RAW
+
+### 2026-05-25 — DELETION — reclassify ricketts-tom
+
+- **entity_slug**: `ricketts-tom`
+- **reason**: Tier-B: added Incapitol/EnCapital Holdings/RAM Investment/RAM Investments/Capitol Building employer variants (alex-verified via 531 Laurel Ave shared address)
+- **rows_deleted_donations**: `62`
+- **rows_deleted_review_queue**: `0` (of which 0 had resolutions)
+- **include_related**: `False`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-02-45Z__pre-reclassify-ricketts-tom.db`
+- **note**: Rows are recoverable from the snapshot above and from data/raw/ricketts-tom/ payloads. Re-classification follows in the next INGESTION entry.
+
+### 2026-05-25 — INGESTION
+
+- **run_id**: `a9d60a8c`
+- **entity_slug**: `ricketts-tom`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2026-03-25`
+- **name_variants_queried**: `["Tom Ricketts", "Thomas Ricketts", "Thomas S Ricketts", "Thomas S. Ricketts", "Thomas Stuart Ricketts", "Ricketts, Tom", "Ricketts, Thomas", "Ricketts, Thomas S", "Ricketts, Thomas S."]`
+- **api_calls_made**: `0`
+- **records_fetched**: `63`
+- **confirmed_count**: `61`
+- **probable_count**: `1`
+- **uncertain_count**: `0`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-02-45Z__a9d60a8c.db`
+- **notes**: skipped(no-name-match)=1 · min_date=default (no prior ingestion) · FROM-RAW

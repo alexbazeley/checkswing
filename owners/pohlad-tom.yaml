@@ -35,12 +35,30 @@ verifying_signals:
     - "wayzata"          # primary residence per Camp Dudley + Minnesota Monthly
     - "minneapolis"
     - "shoreview"         # PaR Systems HQ; possible employer-address filings
+    # Lake Minnetonka suburbs (within 5 mi of Wayzata) added 2026-05-25
+    # Tier-B calibration. 24 UNCERTAIN records at these three cities all
+    # filed under "POHLAD, TOM" with his documented employers (Carousel
+    # Motor Group / PaR Systems / Twin Cities Automotive Group / Voyager
+    # Outward Bound School). No documented family-collision in these
+    # suburbs — Joe / Chris Pohlad have distinct first names.
+    - "excelsior"
+    - "deephaven"
+    - "shorewood"
   states:
     - "MN"
   employers:
     - "Minnesota Twins"
     - "Twins"
     - "Pohlad Companies"      # Executive Chairman until Dec 2025; SHARED with family — verifying only
+    # Carousel Motor Group precursor / DBA names — added 2026-05-25 Tier-B
+    # calibration after timeline reconstruction confirmed "POHLAD, THOMAS O"
+    # at Twin Cities Automotive 2011-2015 + 55405 Minneapolis is the same
+    # person as the 2023 CONFIRMED "POHLAD, THOMAS O" at Pohlad Companies +
+    # Wayzata (Tom's middle initial is O, not research-suggested K). Both
+    # the 2009 Inver Grove Volkswagen record and the 2011-2015 Twin Cities
+    # Automotive records track to Tom's pre-Carousel auto-retail career.
+    - "Twin Cities Automotive"
+    - "Inver Grove Volkswagen"
   occupations:
     - "executive chair"
     - "executive chairman"
@@ -116,9 +134,15 @@ notes: |
   Pohlad" or initial-only forms NOT included (would collide with Joe,
   Chris, Bob, Jim, Bill, Carl, Eddie Pohlad, etc.).
 
-  NEEDS-CONFIRMATION: Full middle name (research-suggested "K" NOT confirmed
-  in Tier 2 sources — omitted from this YAML). Birth year (~1980 derived
-  from age 45 at Dec 2025 press conference).
+  Middle initial is "O" — established 2026-05-25 via timeline reconstruction
+  of FEC filings: "POHLAD, THOMAS O" appears in 2009-2015 records at 55405
+  Minneapolis (Twin Cities Automotive / Inver Grove Volkswagen) and again
+  in 2023 records at his Wayzata residence (553911513 + employer Pohlad
+  Companies). Same person across the career arc. Research-suggested "K"
+  was wrong. Full middle name still not in Tier 2 sources (begins with O).
+
+  NEEDS-CONFIRMATION: birth year (~1980 derived from age 45 at Dec 2025
+  press conference).
 
 change_log:
   - date: 2026-05-23
@@ -133,8 +157,56 @@ change_log:
     by: "claude-code-research (orchestrated by alex)"
     references:
       - "/tmp/pohlad-tom-research.md (session-local research file)"
+  - date: 2026-05-25
+    change: |
+      Tier-B calibration round 1 — three coordinated changes:
+
+      (1) Career-arc reconstruction established that "POHLAD, THOMAS O"
+      at Twin Cities Automotive / Inver Grove Volkswagen (Minneapolis 55405,
+      2009-2015) is Tom Pohlad. The 2023-09 CONFIRMED records at his Wayzata
+      residence (553911513) + employer Pohlad Companies show identical
+      middle initial "O". Tom's career: NorthMarq Capital (2007-2008) →
+      Twin Cities Automotive Group / Inver Grove Volkswagen (2009-2015,
+      pre-Carousel auto-retail) → Carousel Motor Group GM/COO (2010-2019,
+      overlapping period) → PaR Systems CEO (2019-2022) → Pohlad Companies
+      Executive Chair (until Dec 2025) → Twins Executive Chair (since
+      2025-12-17). Twin Cities Automotive Group is most likely a Carousel
+      Motor Group parent/precursor/DBA — the timeline of name variants
+      and Tom's continuous "POHLAD, THOMAS O" identity supports this.
+
+      Added "Twin Cities Automotive" and "Inver Grove Volkswagen" to
+      verifying_signals.employers. Effect: 24 PROBABLE → CONFIRMED via
+      employer + city Minneapolis = 2 signals.
+
+      (2) Added "excelsior", "deephaven", "shorewood" to
+      verifying_signals.cities. All three are Lake Minnetonka suburbs
+      within 5 mi of Wayzata. All 24 UNCERTAIN-open records at these
+      three cities were filed under "POHLAD, TOM" with his documented
+      strong-signal employers: 12 at Excelsior + Carousel Motor Group, 7
+      at Deephaven + Carousel Motor Group, 2 at Shorewood + PaR Systems,
+      1 at Excelsior + Twin Cities Automotive Group, 1 at Excelsior +
+      Voyager Outward Bound School. The address-contradicts rule had
+      been routing these to UNCERTAIN despite the strong-signal employer
+      match (correct per VERIFICATION.md spec to catch family
+      doppelgängers; here every record is Tom's first name explicitly).
+      Effect: 24 UNCERTAIN → CONFIRMED via strong-signal employer.
+      Doppelgänger safety: Joe / Chris Pohlad have distinct first names;
+      no other Tom Pohlad documented at Carousel / PaR / Pohlad
+      Companies / Voyager Outward Bound.
+
+      (3) Notes block updated to correct middle initial from research-
+      suggested "K" (unconfirmed) to "O" (established via cross-period
+      FEC match).
+
+      Pre-cal: 71 CONFIRMED / 24 PROBABLE / 24 UNCERTAIN-open. P/C 0.34.
+      Predicted post-cal: ~119 CONFIRMED / ~0 PROBABLE / ~0 UNCERTAIN.
+      P/C ~0.0. CONFIRMED count goes up substantially — no >5% drop
+      alarm risk; reverse swing should be celebrated.
+    by: "claude-code-session (PR 4 Tier B, approved by alex full-sweep)"
+    references:
+      - "data/master.db pre-calibration: 71 CONFIRMED / 24 PROBABLE / 24 UNCERTAIN-open"
 
 audit:
   created: 2026-05-23
   last_ingestion: null
-  last_signal_review: 2026-05-23
+  last_signal_review: 2026-05-25

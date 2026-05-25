@@ -53,7 +53,20 @@ verifying_signals:
 strong_signals:
   employers:
     - "West Lot LLC"          # Westword + Denver Gazette name Dick as principal; McGregor Square dev
-  zip_codes: []
+  zip_codes:
+    # Monfort family base ZIPs in NW Colorado. Promoted in Tier-B calibration
+    # round 1 (2026-05-25) after the deceased-relative doppelgänger reference
+    # was cleared. All 60 pre-cal CONFIRMED records cluster at these three ZIPs;
+    # the 40 pre-cal PROBABLE records at these ZIPs are Dick filings with
+    # generic SELF / SELF-EMPLOYED / INVESTOR / INFO REQUESTED employer
+    # strings. Name_variants firewall (full "Richard" or "Dick" first name)
+    # excludes brother Charlie and other Monfort family at the same ZIPs.
+    # 80202 (Denver/McGregor Square) deliberately NOT added — heavy downtown
+    # office ZIP; the employer signal already CONFIRMS the 7 Rockies-employer
+    # records there.
+    - "80631"                 # Greeley (11 CONFIRMED + 26 PROBABLE pre-cal)
+    - "80632"                 # Greeley (25 CONFIRMED + 14 PROBABLE pre-cal)
+    - "80615"                 # Eaton/Greeley (ZIP spans both labels; 13 CONFIRMED + 1 PROBABLE pre-cal)
   # "Colorado Rockies" stays in verifying — team employees would also report it.
 
 related_entities: []
@@ -181,8 +194,60 @@ change_log:
     by: "claude-code-session (PR 4 Tier A, approved by alex)"
     references:
       - "data/master.db pre-calibration: 45 CONFIRMED / 40 PROBABLE / 17 UNCERTAIN-open"
+  - date: 2026-05-25
+    change: |
+      Tier-B calibration round 1 — promoted Greeley/Eaton ZIPs to
+      strong_signals.zip_codes, completing the follow-up flagged at the end
+      of the 2026-05-25 Tier-A entry above.
+
+      Added strong_signals.zip_codes: ["80631", "80632", "80615"]. All three
+      are Monfort family base ZIPs in NW Colorado.
+
+      Audit findings (read-only audit + raw payload inspection): all 42 pre-
+      cal PROBABLE records were inspected. 40 of 42 (95%) are at Greeley
+      ZIPs (80631: 26 records; 80632: 13 records; 80631-9-4-2-8 ZIP+4: 3
+      records, ZIP5 = 80631). 1 record at 80615 (Eaton), 1 record at 80202
+      (Denver), 1 record at 80632 (city-misspelled as "GREENLEY"). Every
+      Greeley/Eaton PROBABLE is a "MONFORT, RICHARD" / "MONFORT, DICK" /
+      "MONFORT, RICHARD L." filing with generic employer strings (SELF,
+      SELF-EMPLOYED, INVESTOR, INFO REQUESTED, BUSINESS OWNER, SELF/CATTLE
+      FEEDING, or blank). Recipient pattern matches the CONFIRMED records:
+      Bush-Cheney 2000/2004, RNC, NRSC, NRCC, Bedingfield, Musgrave, Allard,
+      Pete Coors, Conrad Burns, Dinsdale, Lazio — consistent Republican
+      filing history.
+
+      Doppelgänger safety:
+        - notes block (updated 2026-05-25 Tier A) documents no active
+          doppelgänger. The Calf News "Other Dick Monfort" reference is a
+          deceased older relative, not a living/active filer.
+        - name_variants are tight: every variant requires "Richard" or
+          "Dick" as the full first name. Brother Charles K. ("Charlie")
+          Monfort has a distinct first name and is not picked up.
+        - Sons Walker, Sterling, and daughter Lyndsey have first-name
+          firewall.
+
+      80202 (Denver/McGregor Square) deliberately NOT promoted despite
+      being Dick's documented primary residence per the notes block. 80202
+      is heavy LoDo office ZIP territory and matches the system-prompt
+      footgun warning about office-building strong-signal ZIPs. The single
+      80202 PROBABLE record (Joe O'Dea for Senate, $1000, 2022) remains
+      PROBABLE; the 7 existing 80202 CONFIRMED records (all with employer
+      "Colorado Rockies") are unaffected.
+
+      "INFO REQUESTED" employer (2 PROBABLE records) audit-suggested as
+      candidate negative_signal — investigated and rejected. It is FEC
+      clerk shorthand for missing/requested info, not a real employer
+      string; the records are Dick (Greeley, Republican recipients).
+
+      Pre-cal: 60 CONFIRMED / 42 PROBABLE / 0 UNCERTAIN-open. P/C ratio 0.70.
+      Predicted post-cal: ~98 CONFIRMED / ~4 PROBABLE / 0 UNCERTAIN-open.
+      P/C ratio drops to ~0.04. CONFIRMED count goes up (positive swing
+      only) so no >5% CONFIRMED-drop alarm risk.
+    by: "claude-code-session (PR 4 Tier B, approved by alex)"
+    references:
+      - "data/master.db pre-calibration: 60 CONFIRMED / 42 PROBABLE / 0 UNCERTAIN-open"
 
 audit:
   created: 2026-05-23
   last_ingestion: null
-  last_signal_review: 2026-05-23
+  last_signal_review: 2026-05-25
