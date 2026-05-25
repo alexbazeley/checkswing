@@ -78,10 +78,24 @@ strong_signals:
   # file it. Same with Red Sox / Globe / Liverpool. Per Cohen precedent.
   employers:
     - "JWH"
-  zip_codes: []
-  # No specific residence ZIP confirmed at creation. Brookline is 02445/02446;
-  # Boca Raton Le Lac gated community is ~33496. Leave empty until calibration
-  # audit identifies actual filed ZIPs (cf. Cohen 10001 promotion).
+  zip_codes:
+    # 33496 = Le Lac gated community Boca Raton (documented Tier 2
+    # residence). Added 2026-05-25 Tier-B calibration; narrow gated-
+    # community ZIP minimizes doppelgänger risk. 33431 (broader east Boca
+    # Raton ZIP) deliberately NOT promoted — name_variants include bare
+    # "John Henry" which is one of the commonest American names, and
+    # multiple non-Henry John Henrys could live in the broader 33431
+    # cluster.
+    - "33496"
+
+negative_signals:
+  # Boston-area tech employee John Henry at CarGurus (auto-shopping site,
+  # Cambridge MA HQ). 1 record observed: HENRY, JOHN / CARGURUS, INC. /
+  # SALES / $50 ActBlue 2019. Sales-rep profile is incompatible with John
+  # W. Henry the FSG owner. Added 2026-05-25 Tier-B calibration as defense-
+  # in-depth against future CarGurus filings.
+  employers:
+    - "CarGurus"
 
 related_entities: []
 # Linda Pizzuti Henry (spouse, CEO Boston Globe Media; chair John W. Henry
@@ -188,8 +202,45 @@ change_log:
 
       Approved by alex.
     by: "claude-code-session (calibration round 1)"
+  - date: 2026-05-25
+    change: |
+      Tier-B calibration round 2 — added strong_signals.zip_codes:
+      ["33496"] (Le Lac gated community per documented Tier 2) and a
+      new negative_signals.employers block with "CarGurus".
+
+      Audit (5 PROBABLE inspected, sample of 247 UNCERTAIN-open
+      reviewed):
+
+      4 of 5 PROBABLE records at Boca Raton 33431/33496 are John W.
+      Henry with the John W. Henry & Co company name appearing in the
+      OCCUPATION field (instead of employer): "JOHN W HENRY COMPANIES",
+      "JOHN W HENRY & CO", "JOHN W HENRY AND CO". The classifier
+      matches occupation-field against vs_occupations only, so company
+      names in that field don't trigger employer matches. Adding 33496
+      promotes the 1 PROBABLE record there to CONFIRMED via strong-zip
+      (the 3 PROBABLE at 33431 stay PROBABLE — 33431 is broader and
+      name_variants include bare "John Henry" which over-confirms).
+
+      1 PROBABLE at Boston 02113 is a distinct doppelgänger: "HENRY,
+      JOHN / CARGURUS, INC. / SALES" $50 ActBlue. Added "CarGurus" to
+      a new negative_signals.employers block. Currently the record is
+      PROBABLE (Boston is in cities); the negative_signal demotes it
+      to UNCERTAIN.
+
+      247 UNCERTAIN-open records (Holyoke / Weston / Milton MA, plus
+      Altamonte Springs / Naples / Pierson / Winter Park / Milton /
+      Venice FL) are left UNCERTAIN — most are different John Henrys
+      per the YAML's anticipated common-name doppelgänger pattern.
+      Adding city expansions would over-promote.
+
+      Pre-cal: 14 CONFIRMED / 5 PROBABLE / 247 UNCERTAIN-open. P/C 0.36.
+      Predicted post-cal: ~15 CONFIRMED / ~3 PROBABLE / ~247 UNCERTAIN
+      (1 CarGurus PROBABLE → UNCERTAIN). P/C ~0.20.
+    by: "claude-code-session (PR 4 Tier B, approved by alex)"
+    references:
+      - "data/master.db pre-calibration: 14 CONFIRMED / 5 PROBABLE / 247 UNCERTAIN-open"
 
 audit:
   created: 2026-05-22
   last_ingestion: null
-  last_signal_review: 2026-05-22
+  last_signal_review: 2026-05-25

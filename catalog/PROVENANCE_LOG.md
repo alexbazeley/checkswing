@@ -1675,3 +1675,107 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **uncertain_count**: `0`
 - **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-30-56Z__e1a2bec9.db`
 - **notes**: skipped(no-name-match)=0 · min_date=default (no prior ingestion) · FROM-RAW
+
+### 2026-05-25 — DELETION — reclassify henry-john
+
+- **entity_slug**: `henry-john`
+- **reason**: Tier-B: added 33496 Le Lac strong-zip + CarGurus negative_signal
+- **rows_deleted_donations**: `19`
+- **rows_deleted_review_queue**: `247` (of which 0 had resolutions)
+- **include_related**: `False`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-34-30Z__pre-reclassify-henry-john.db`
+- **note**: Rows are recoverable from the snapshot above and from data/raw/henry-john/ payloads. Re-classification follows in the next INGESTION entry.
+
+### 2026-05-25 — INGESTION
+
+- **run_id**: `93a2a0eb`
+- **entity_slug**: `henry-john`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2026-03-31`
+- **name_variants_queried**: `["John W. Henry", "John W Henry", "John William Henry", "John William Henry II", "John Henry", "Henry, John W", "Henry, John W.", "Henry, John"]`
+- **api_calls_made**: `0`
+- **records_fetched**: `1142`
+- **confirmed_count**: `15`
+- **probable_count**: `3`
+- **uncertain_count**: `248`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-34-30Z__93a2a0eb.db`
+- **notes**: skipped(no-name-match)=876 · min_date=default (no prior ingestion) · FROM-RAW
+
+### 2026-05-25 — DELETION — reclassify dewitt-bill
+
+- **entity_slug**: `dewitt-bill`
+- **reason**: Tier-B batch: added 45243 Indian Hill strong-zip + Reynolds DeWitt typo variants + cincinatti city typo
+- **rows_deleted_donations**: `221`
+- **rows_deleted_review_queue**: `124` (of which 0 had resolutions)
+- **include_related**: `False`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-40-11Z__pre-reclassify-dewitt-bill.db`
+- **note**: Rows are recoverable from the snapshot above and from data/raw/dewitt-bill/ payloads. Re-classification follows in the next INGESTION entry.
+
+### 2026-05-25 — INGESTION
+
+- **run_id**: `598ab7b9`
+- **entity_slug**: `dewitt-bill`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2025-12-31`
+- **name_variants_queried**: `["William O DeWitt Jr", "William O. DeWitt Jr.", "William O. DeWitt Jr", "William DeWitt Jr", "William DeWitt Jr.", "Bill DeWitt Jr", "Bill DeWitt Jr.", "William DeWitt", "Bill DeWitt", "DeWitt, William", "DeWitt, William O", "DeWitt, William O Jr", "DeWitt, Bill"]`
+- **api_calls_made**: `0`
+- **records_fetched**: `359`
+- **confirmed_count**: `235`
+- **probable_count**: `6`
+- **uncertain_count**: `104`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-40-11Z__598ab7b9.db`
+- **notes**: skipped(no-name-match)=14 · min_date=default (no prior ingestion) · FROM-RAW
+
+### 2026-05-25 — DELETION — reclassify malone-john
+
+- **entity_slug**: `malone-john`
+- **reason**: Tier-B batch: added 80107 + 80112 to strong_signals.zip_codes (Elizabeth ranch + Englewood Liberty office)
+- **rows_deleted_donations**: `47`
+- **rows_deleted_review_queue**: `7` (of which 0 had resolutions)
+- **include_related**: `False`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-40-12Z__pre-reclassify-malone-john.db`
+- **note**: Rows are recoverable from the snapshot above and from data/raw/malone-john/ payloads. Re-classification follows in the next INGESTION entry.
+
+### 2026-05-25 — INGESTION
+
+- **run_id**: `54b0ee9a`
+- **entity_slug**: `malone-john`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2025-12-01`
+- **name_variants_queried**: `["John C Malone", "John C. Malone", "John Malone", "John Carl Malone", "Malone, John", "Malone, John C", "Malone, John C."]`
+- **api_calls_made**: `0`
+- **records_fetched**: `57`
+- **confirmed_count**: `48`
+- **probable_count**: `0`
+- **uncertain_count**: `7`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-40-12Z__54b0ee9a.db`
+- **notes**: skipped(no-name-match)=2 · min_date=default (no prior ingestion) · FROM-RAW
+
+### 2026-05-25 — DELETION — reclassify pohlad-joe
+
+- **entity_slug**: `pohlad-joe`
+- **reason**: Tier-B batch: added 55436+55424 Edina strong-zips + Mail Holdings employer + edna city typo
+- **rows_deleted_donations**: `106`
+- **rows_deleted_review_queue**: `1` (of which 0 had resolutions)
+- **include_related**: `False`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-40-12Z__pre-reclassify-pohlad-joe.db`
+- **note**: Rows are recoverable from the snapshot above and from data/raw/pohlad-joe/ payloads. Re-classification follows in the next INGESTION entry.
+
+### 2026-05-25 — INGESTION
+
+- **run_id**: `9531c521`
+- **entity_slug**: `pohlad-joe`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2026-02-21`
+- **name_variants_queried**: `["Joseph C Pohlad", "Joseph C. Pohlad", "Joseph Pohlad", "Joe Pohlad", "Pohlad, Joseph", "Pohlad, Joseph C", "Pohlad, Joseph C.", "Pohlad, Joe"]`
+- **api_calls_made**: `0`
+- **records_fetched**: `171`
+- **confirmed_count**: `107`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-40-12Z__9531c521.db`
+- **notes**: skipped(no-name-match)=64 · min_date=default (no prior ingestion) · FROM-RAW

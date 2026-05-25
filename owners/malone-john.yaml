@@ -71,11 +71,17 @@ verifying_signals:
 
 strong_signals:
   employers: []
-  zip_codes: []
-  # Conservative at creation. The uniquely-identifying combination is
-  # Elizabeth CO + Liberty employer string, but neither alone is strong.
-  # Calibrate via post-ingestion audit: if his specific ZIP (80107 area)
-  # surfaces consistently in confirmed records, add as strong_signal.
+  zip_codes:
+    # Added 2026-05-25 Tier-B calibration. Malone's documented Elizabeth
+    # CO private ranch (80107) and Liberty Media Englewood office (80112).
+    # Pre-cal: 17 CONFIRMED at 80107/801072630 + 22 CONFIRMED at
+    # 80112/801127009. 7 PROBABLE records at these ZIPs (all "MALONE,
+    # JOHN C." with empty or INFORMATION REQUESTED employer, Republican
+    # mega-donor pattern 2003-2023) promote to CONFIRMED.
+    # 80112 caveat: Liberty Media office cluster — name_variants ("John C."
+    # middle initial required) is the firewall. Approved by alex.
+    - "80107"
+    - "80112"
 
 related_entities: []
 # Future candidates (do NOT add without user approval per CLAUDE.md §1.7):
@@ -171,8 +177,39 @@ change_log:
     by: "claude-code-research (orchestrated by alex)"
     references:
       - "/tmp/braves-ownership-research.md (session-local research file)"
+  - date: 2026-05-25
+    change: |
+      Tier-B calibration round 1 — added strong_signals.zip_codes:
+      ["80107", "80112"] (his Elizabeth CO private ranch and Liberty
+      Media Englewood office).
+
+      Audit findings: All 7 PROBABLE records are "MALONE, JOHN C." at
+      80107 ELIZABETH (3 records) or 80112 ENGLEWOOD (4 records) with
+      empty or INFORMATION REQUESTED employer fields. Donations are
+      $1,000-$28,500 to Republican causes (Colorado Republican Federal,
+      RNC, Republican Party of Wisconsin, Friends of Kelly Ayotte, Mast
+      for Congress) — consistent Malone pattern 2003-2023.
+
+      80107 (Elizabeth CO, Malone's documented private ranch — Tier 2
+      sources confirm) is narrow rural ZIP, low doppelgänger risk.
+      80112 (Englewood CO, Liberty Media office cluster) carries some
+      doppelgänger risk per system-prompt office-ZIP warning; the
+      "John C." middle-initial name_variants firewall is what guards
+      against a hypothetical Liberty employee with same name. Approved
+      by alex with this caveat.
+
+      UNCERTAIN-open records (6 Broomfield + 1 Parker CO) not
+      investigated in this round — different Denver-metro John Malones,
+      likely distinct individuals.
+
+      Pre-cal: 40 CONFIRMED / 7 PROBABLE / 7 UNCERTAIN-open. P/C 0.17.
+      Predicted post-cal: ~47 CONFIRMED / ~0 PROBABLE / ~7 UNCERTAIN.
+      P/C ~0.0.
+    by: "claude-code-session (PR 4 Tier B, approved by alex batch)"
+    references:
+      - "data/master.db pre-calibration: 40 CONFIRMED / 7 PROBABLE / 7 UNCERTAIN-open"
 
 audit:
   created: 2026-05-23
   last_ingestion: null
-  last_signal_review: 2026-05-23
+  last_signal_review: 2026-05-25
