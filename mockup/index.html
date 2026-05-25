@@ -1,0 +1,4433 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Owner's Box — MLB ownership's federal political giving</title>
+<meta name="description" content="A verified archive of federal political donations by the principal owners of all 30 MLB franchises, 2000–present. Every record sourced to a specific FEC filing.">
+<meta property="og:title" content="The Owner's Box">
+<meta property="og:description" content="Every federal political donation by Major League Baseball's principal owners, sourced and verified.">
+<meta property="og:type" content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+/* ════════════════════════════════════════════════════════════════════════
+   DESIGN TOKENS
+   The verification system *is* the design. The visual language is
+   journalistic — restrained chrome, charts as primary content, status
+   provenance carried on every record.
+   ══════════════════════════════════════════════════════════════════════ */
+:root {
+  --bg:           #FAFAF6;
+  --bg-elev:     #FFFFFF;
+  --bg-sunk:     #F2F0E8;
+  --ink:         #1A1916;
+  --ink-2:       #4A4842;
+  --ink-3:       #7A7669;
+  --rule:        #E5E1D5;
+  --rule-strong: #C9C4B4;
+
+  --brand:       #8B1B2C;  /* The Owner's Box — wordmark + logo accent */
+  --brand-2:     #6E1322;
+  --brand-soft:  #F4E2E3;  /* subtle tinted background for brand surfaces */
+  --accent:      #B8552B;  /* burnt sienna — interactive UI (links, focus, CSV button) */
+  --accent-2:    #964322;
+
+  --dem:         #1F4E89;
+  --dem-soft:    #DCE5F2;
+  --rep:         #B53326;
+  --rep-soft:    #F3D9D5;
+  --oth:         #8A8475;
+  --oth-soft:    #E8E5DC;
+
+  --ok-bg:       #E6EFE6;
+  --ok-fg:       #1F5635;
+  --warn-bg:     #F6E9CA;
+  --warn-fg:     #7A5614;
+
+  --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --sans:  "Inter", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --mono:  "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --measure: 64ch;
+  --shadow-sm:  0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md:  0 4px 16px rgba(0,0,0,0.07);
+  --shadow-lg:  0 24px 64px rgba(0,0,0,0.16);
+}
+
+/* ────────── Reset ────────── */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+button { font: inherit; cursor: pointer; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; text-underline-offset: 2px; text-decoration-thickness: 1px; }
+table { border-collapse: collapse; }
+
+/* ────────── Accessibility ──────────
+   Visible focus rings on keyboard navigation, but NOT on mouse clicks
+   (quieter UX). :focus-visible is the modern selector for keyboard-only focus. */
+:focus { outline: none; }
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -1px;
+}
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 12px;
+  background: var(--ink);
+  color: white;
+  padding: 10px 14px;
+  border-radius: 0 0 4px 4px;
+  font-size: 13px;
+  font-weight: 600;
+  z-index: 1000;
+  transition: top 120ms;
+}
+.skip-link:focus {
+  top: 0;
+  text-decoration: none;
+}
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+
+/* ────────── Body ────────── */
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.55;
+  font-feature-settings: "ss01", "cv11";
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ────────── Type ────────── */
+h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; letter-spacing: -0.01em; margin: 0; }
+h1 { font-size: 44px; line-height: 1.08; letter-spacing: -0.02em; }
+h2 { font-size: 22px; line-height: 1.2; }
+h3 { font-size: 15px; font-family: var(--sans); font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-2); }
+.deck { font-family: var(--serif); font-size: 19px; line-height: 1.5; color: var(--ink-2); max-width: var(--measure); margin: 0; font-weight: 400; }
+.eyebrow { font-family: var(--sans); font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); }
+.caption { font-size: 13px; color: var(--ink-3); margin: 4px 0 0; }
+.footnote { font-size: 12px; color: var(--ink-3); margin-top: 10px; }
+
+.num, .mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+
+/* ────────── Layout ────────── */
+.container { max-width: 1280px; margin: 0 auto; padding: 0 32px; }
+.container-narrow { max-width: 720px; margin: 0 auto; padding: 0 32px; }
+
+/* ────────── Masthead ────────── */
+.masthead {
+  border-bottom: 1px solid var(--rule);
+  background: var(--bg);
+  position: sticky; top: 0; z-index: 30;
+  /* backdrop-filter removed: was forcing GPU re-compositing of the blurred
+     region on every scroll frame, badly when scrolling past the dark hero
+     photo. Solid background is faster and visually nearly identical at the
+     0.92 opacity we were using. */
+}
+.masthead-inner {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 32px;
+  max-width: 1280px; margin: 0 auto;
+}
+.brand { display: flex; align-items: center; gap: 14px; cursor: pointer; }
+.brand-mark {
+  width: 44px; height: 44px;
+  display: grid; place-items: center;
+  color: var(--ink);
+  flex-shrink: 0;
+}
+.brand-mark svg, .brand-mark img {
+  display: block;
+  width: 100%; height: 100%;
+  object-fit: contain;
+}
+.brand-title {
+  font-family: var(--serif); font-weight: 600; font-size: 19px;
+  line-height: 1.05; color: var(--brand);
+  letter-spacing: -0.01em;
+}
+.brand-sub   { font-size: 10px; color: var(--ink-3); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 2px; }
+.nav { display: flex; gap: 4px; align-items: center; }
+.nav a {
+  color: var(--ink-2);
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 4px;
+}
+.nav a:hover { background: var(--bg-sunk); text-decoration: none; }
+.nav a.active { color: var(--ink); background: var(--bg-sunk); }
+
+/* ════════════════════════════════════════════════════════════════════════
+   RESPONSIVE — MOBILE PASS
+   Below ~880px the layout tightens: masthead collapses, container padding
+   shrinks, tables get horizontal scroll wrappers, KPIs flow vertically.
+   ══════════════════════════════════════════════════════════════════════ */
+@media (max-width: 880px) {
+  .container, .container-narrow { padding: 0 18px; }
+  .masthead-inner { padding: 10px 18px; }
+  .brand-sub { display: none; }              /* keep the wordmark, drop the subtitle */
+  .brand-title { font-size: 16px; }
+  .brand-mark { width: 36px; height: 36px; }
+  .nav { gap: 0; }
+  .nav a { padding: 6px 8px; font-size: 12px; }
+  .nav .search-btn span:not(.search-btn-icon) { display: none; }   /* icon only */
+  .nav .search-btn { padding: 5px 8px; }
+  /* KPI strip stacks 2x2 on tablet, single col on phone */
+  .kpis { grid-template-columns: repeat(2, 1fr); }
+  .kpi { padding: 12px 14px; border-right: 0; border-bottom: 1px solid var(--rule); }
+  .kpi:nth-child(2n) { border-right: 0; }
+  .kpi:nth-last-child(-n+2) { border-bottom: 0; }
+  .kpi-value { font-size: 28px; }
+  /* Tables become horizontally scrollable instead of clipping the layout.
+     The wrapper handles the scroll; the table keeps a min-width so columns
+     don't compress to unreadable. */
+  .table-scroll,
+  #od-table-wrap, #cy-table-wrap, #cm-table-wrap, #tm-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .owners-table, .donations-table { min-width: 800px; }
+  /* Filter rows wrap aggressively */
+  .filters input[type="text"] { min-width: 100%; }
+  .filters .filter-spacer { display: none; }
+  /* Drawer goes full-screen on mobile */
+  .drawer { width: 100vw; }
+  .drawer-head, .drawer-body { padding-left: 20px; padding-right: 20px; }
+  /* Sections breathe less */
+  section.block { padding: 32px 0; }
+  .hero { padding: 36px 0 24px; }
+  h1 { font-size: 32px; }
+  h2 { font-size: 20px; }
+  .deck { font-size: 16px; }
+}
+@media (max-width: 560px) {
+  .kpis { grid-template-columns: 1fr; }
+  .kpi { border-bottom: 1px solid var(--rule); }
+  .kpi:last-child { border-bottom: 0; }
+  /* Drop the methodology tier grid to a stack */
+  .method-tiers { grid-template-columns: 1fr; }
+  .method-scope { grid-template-columns: 1fr; gap: 18px; }
+  /* Two-col owner-page layout stacks */
+  .two-col { grid-template-columns: 1fr; gap: 28px; }
+  /* Footer grid stacks too */
+  .site-footer .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   HERO + LEDE
+   The league index uses a full-bleed photo hero. Inner views (owner, cycle,
+   committee, team, methodology) use the plain .hero text block.
+   ══════════════════════════════════════════════════════════════════════ */
+.hero {
+  padding: 64px 0 36px;
+  border-bottom: 1px solid var(--rule);
+}
+.hero h1 { max-width: 18ch; margin-bottom: 22px; }
+.hero .meta { display: flex; gap: 14px; align-items: center; margin-top: 22px; color: var(--ink-3); font-size: 13px; }
+.hero .meta-dot { width: 3px; height: 3px; background: var(--ink-3); border-radius: 50%; }
+
+/* Photo hero — league index only */
+.hero-photo {
+  position: relative;
+  min-height: 560px;
+  height: 72vh;
+  max-height: 720px;
+  /* Layered: top-to-bottom dark gradient over the photo. The fallback
+     background-color shows if the photo is missing — text stays legible. */
+  background:
+    linear-gradient(180deg,
+      rgba(15,12,8,0.20) 0%,
+      rgba(15,12,8,0.10) 35%,
+      rgba(15,12,8,0.70) 78%,
+      rgba(15,12,8,0.92) 100%),
+    url('assets/hero-ballpark.webp') center 32% / cover no-repeat,
+    #2a2520;
+  display: flex;
+  align-items: flex-end;
+  border-bottom: 1px solid var(--rule);
+  color: white;
+}
+.hero-photo-inner {
+  padding: 80px 32px 64px;
+  max-width: 1280px;
+  margin: 0 auto;
+  width: 100%;
+}
+.hero-photo .eyebrow {
+  color: #E8C9B3;
+  display: block;
+  margin-bottom: 20px;
+  font-weight: 700;
+}
+.hero-photo h1 {
+  color: white;
+  max-width: 22ch;
+  margin-bottom: 22px;
+  font-size: 56px;
+  line-height: 1.04;
+  text-shadow: 0 2px 32px rgba(0,0,0,0.45);
+}
+.hero-photo .deck {
+  color: rgba(255,255,255,0.92);
+  max-width: 60ch;
+  font-size: 19px;
+  text-shadow: 0 1px 18px rgba(0,0,0,0.4);
+}
+.hero-photo .meta {
+  display: flex; gap: 14px; align-items: center;
+  margin-top: 32px;
+  color: rgba(255,255,255,0.7);
+  font-size: 13px;
+  font-family: var(--mono);
+}
+.hero-photo .meta-dot { width: 3px; height: 3px; background: rgba(255,255,255,0.5); border-radius: 50%; }
+.hero-photo .photo-credit {
+  position: absolute; bottom: 8px; right: 14px;
+  font-size: 10px; color: rgba(255,255,255,0.5);
+  letter-spacing: 0.04em;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.6);
+}
+@media (max-width: 720px) {
+  .hero-photo { min-height: 420px; height: 60vh; }
+  .hero-photo h1 { font-size: 40px; }
+  .hero-photo .deck { font-size: 16px; }
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   KPI CARDS
+   ══════════════════════════════════════════════════════════════════════ */
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  border-bottom: 1px solid var(--rule);
+  padding: 28px 0;
+}
+.kpi { padding: 0 24px; border-right: 1px solid var(--rule); }
+.kpi:last-child { border-right: 0; }
+.kpi-label { font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); }
+.kpi-value { font-family: var(--serif); font-size: 36px; font-weight: 600; line-height: 1.1; margin-top: 6px; font-feature-settings: "lnum"; font-variant-numeric: tabular-nums lining-nums; }
+.kpi-foot  { font-size: 12px; color: var(--ink-3); margin-top: 4px; }
+
+/* ════════════════════════════════════════════════════════════════════════
+   SECTION CHROME
+   ══════════════════════════════════════════════════════════════════════ */
+section.block { padding: 48px 0; border-bottom: 1px solid var(--rule); }
+section.block:last-child { border-bottom: 0; }
+.block-head { margin-bottom: 24px; }
+.block-head h2 { margin-bottom: 2px; }
+.block-head .caption { margin-top: 6px; }
+
+/* ════════════════════════════════════════════════════════════════════════
+   LEAGUE CYCLE CHART
+   ══════════════════════════════════════════════════════════════════════ */
+.cycle-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 260px;
+  padding: 18px 0 4px;
+  border-bottom: 1px solid var(--rule);
+  position: relative;
+}
+.cycle-bar {
+  flex: 1;
+  display: flex;
+  flex-direction: column-reverse;
+  position: relative;
+  min-width: 0;
+}
+/* IMPORTANT: keep translateX(-50%) on hover too. Using translateY(0) here
+   would silently zero out the X translation and shift the tooltip rightward
+   by half its own width. */
+.cycle-bar:hover .cycle-bar-tooltip { opacity: 1; transform: translate(-50%, 0); }
+.cycle-bar-seg { width: 100%; }
+.cycle-bar-seg.dem { background: var(--dem); }
+.cycle-bar-seg.rep { background: var(--rep); }
+.cycle-bar-seg.oth { background: var(--oth); }
+/* Cycle-bar tooltip — visually consistent with .scatter-tooltip but
+   anchored per-bar (CSS-only, no JS) since each bar has one fixed tooltip. */
+.cycle-bar-tooltip {
+  position: absolute;
+  bottom: calc(100% + 10px); left: 50%;
+  transform: translate(-50%, 4px);
+  background: #15130F; color: white;
+  min-width: 200px;
+  font-size: 12px; line-height: 1.45;
+  padding: 12px 14px; border-radius: 4px;
+  font-family: var(--sans);
+  white-space: nowrap;
+  opacity: 0; transition: opacity 100ms;
+  pointer-events: none; z-index: 10;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.25);
+}
+.cycle-bar-tooltip::after {
+  content: ""; position: absolute; top: 100%; left: 50%; margin-left: -6px;
+  border: 6px solid transparent; border-top-color: #15130F;
+}
+.cycle-bar-tooltip .tt-head {
+  font-family: var(--serif); font-size: 16px; font-weight: 600;
+  line-height: 1.15; margin-bottom: 8px;
+  font-variant-numeric: lining-nums tabular-nums;
+}
+.cycle-bar-tooltip .row {
+  display: flex; gap: 16px; justify-content: space-between;
+  padding: 2px 0;
+  font-variant-numeric: tabular-nums;
+}
+.cycle-bar-tooltip .row .label { color: rgba(255,255,255,0.6); }
+.cycle-bar-tooltip .row .label.dem { color: #93B4DC; }
+.cycle-bar-tooltip .row .label.rep { color: #DBA9A3; }
+.cycle-bar-tooltip .row .label.oth { color: rgba(255,255,255,0.45); }
+.cycle-bar-tooltip .row .value { font-family: var(--mono); }
+.cycle-bar-tooltip .tt-divider {
+  height: 1px; background: rgba(255,255,255,0.12); margin: 8px 0;
+}
+.cycle-bar-tooltip .tt-hint {
+  color: rgba(255,255,255,0.5); font-size: 10px;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  margin-top: 8px;
+}
+.cycle-bar-label {
+  text-align: center; font-size: 11px; font-family: var(--mono);
+  color: var(--ink-3); padding-top: 6px;
+}
+.cycle-chart-axis {
+  display: flex; gap: 6px; padding-top: 0;
+}
+.cycle-chart-axis > div { flex: 1; text-align: center; font-family: var(--mono); font-size: 11px; color: var(--ink-3); padding-top: 6px; }
+
+.legend {
+  display: flex; gap: 18px; font-size: 12px; color: var(--ink-2); margin-top: 16px;
+}
+.legend-swatch { width: 12px; height: 12px; display: inline-block; margin-right: 6px; vertical-align: -2px; }
+.legend-swatch.dem { background: var(--dem); }
+.legend-swatch.rep { background: var(--rep); }
+.legend-swatch.oth { background: var(--oth); }
+
+/* ════════════════════════════════════════════════════════════════════════
+   FILTERS ROW
+   ══════════════════════════════════════════════════════════════════════ */
+.filters {
+  display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
+  padding: 14px 0; margin-bottom: 0;
+  border-bottom: 1px solid var(--rule);
+}
+.filters input[type="text"], .filters select {
+  font: 13px var(--sans);
+  border: 1px solid var(--rule-strong);
+  background: var(--bg-elev);
+  padding: 6px 10px;
+  border-radius: 3px;
+  color: var(--ink);
+}
+.filters input[type="text"] { min-width: 220px; }
+.filters input[type="text"]:focus, .filters select:focus { outline: 2px solid var(--accent); outline-offset: -1px; border-color: var(--accent); }
+.filters .filter-label { font-size: 12px; color: var(--ink-3); font-weight: 500; }
+.filter-toggle { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--ink-2); }
+.filter-spacer { flex: 1; }
+.filter-result { font-size: 12px; color: var(--ink-3); font-family: var(--mono); }
+
+/* ════════════════════════════════════════════════════════════════════════
+   OWNERS TABLE (the index)
+   ══════════════════════════════════════════════════════════════════════ */
+.owners-table { width: 100%; font-size: 14px; }
+.owners-table th, .owners-table td {
+  padding: 14px 12px; border-bottom: 1px solid var(--rule);
+  text-align: left; vertical-align: middle;
+}
+.owners-table th {
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em;
+  color: var(--ink-3); font-weight: 600; font-family: var(--sans);
+  cursor: pointer; user-select: none;
+  border-bottom: 1px solid var(--rule-strong);
+  background: var(--bg);
+  position: sticky; top: 60px; z-index: 5;
+}
+.owners-table th.num, .owners-table td.num { text-align: right; }
+.owners-table th .sort-arrow { color: var(--accent); margin-left: 4px; font-family: var(--mono); }
+.owners-table tbody tr { cursor: pointer; transition: background 80ms; }
+.owners-table tbody tr:hover { background: var(--bg-sunk); }
+.owners-table .col-owner { font-weight: 600; color: var(--ink); }
+.owners-table .col-owner-name { font-family: var(--serif); font-size: 16px; font-weight: 600; }
+.owners-table .col-tenure { font-family: var(--mono); font-size: 12px; color: var(--ink-3); }
+.owners-table .col-total { font-family: var(--mono); font-size: 15px; font-weight: 500; font-variant-numeric: tabular-nums; }
+.owners-table .col-count { font-family: var(--mono); font-size: 13px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.owners-table .col-team { color: var(--ink-2); font-size: 13px; }
+
+/* Sparkline cell */
+.sparkline-cell { width: 200px; }
+.sparkline-svg { display: block; }
+
+/* Party tilt bar */
+.tilt-cell { width: 170px; }
+.tilt-bar {
+  height: 10px; border-radius: 2px; overflow: hidden;
+  display: flex; background: var(--oth-soft);
+}
+.tilt-seg { height: 100%; }
+.tilt-seg.dem { background: var(--dem); }
+.tilt-seg.rep { background: var(--rep); }
+.tilt-seg.oth { background: var(--oth); }
+.tilt-labels {
+  display: flex; justify-content: space-between; font-family: var(--mono);
+  font-size: 10px; color: var(--ink-3); margin-top: 4px;
+}
+.tilt-labels .dem { color: var(--dem); }
+.tilt-labels .rep { color: var(--rep); }
+
+/* Verified cell */
+.ver-cell { white-space: nowrap; }
+.ver-confirmed { font-family: var(--mono); font-size: 12px; color: var(--ok-fg); }
+.ver-probable  { font-family: var(--mono); font-size: 12px; color: var(--warn-fg); margin-left: 8px; }
+
+/* Freshness chip — used in owners table + runs page */
+.fresh-chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-family: var(--mono); font-size: 11px;
+  padding: 2px 7px; border-radius: 2px;
+  white-space: nowrap;
+}
+.fresh-chip::before { content: "●"; font-size: 8px; }
+.fresh-chip.fresh-good       { background: #E6EFE6; color: var(--ok-fg); }
+.fresh-chip.fresh-stale      { background: #FAF1DC; color: var(--warn-fg); }
+.fresh-chip.fresh-very-stale { background: #F4DCD7; color: #8B2A1E; }
+.fresh-chip.fresh-never      { background: var(--bg-sunk); color: var(--ink-3); }
+.fresh-chip.fresh-never::before { content: "○"; }
+
+/* ════════════════════════════════════════════════════════════════════════
+   OWNER DETAIL
+   ══════════════════════════════════════════════════════════════════════ */
+.back {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 13px; color: var(--ink-2);
+  padding: 24px 0 0;
+}
+.back:hover { color: var(--accent); text-decoration: none; }
+
+.owner-head {
+  padding: 24px 0 36px; border-bottom: 1px solid var(--rule);
+}
+.owner-head h1 { max-width: none; margin-bottom: 10px; }
+.owner-meta { display: flex; gap: 14px; align-items: center; color: var(--ink-3); font-size: 14px; }
+.owner-meta .dot { width: 3px; height: 3px; background: var(--ink-3); border-radius: 50%; }
+.owner-role { color: var(--ink-2); }
+
+/* Timeline */
+.timeline-wrap { padding: 18px 0 6px; }
+.timeline-svg { width: 100%; display: block; }
+
+/* Two-col */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; }
+@media (max-width: 880px) { .two-col { grid-template-columns: 1fr; } }
+
+.recipients-list { display: flex; flex-direction: column; gap: 12px; }
+.recipient {
+  display: grid;
+  grid-template-columns: 24px 1fr auto;
+  gap: 10px; align-items: center;
+  font-size: 13px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--rule);
+}
+.recipient:last-child { border-bottom: 0; }
+.recipient-bar-track { position: relative; height: 4px; background: var(--bg-sunk); border-radius: 2px; margin-top: 6px; }
+.recipient-bar { position: absolute; left: 0; top: 0; height: 100%; border-radius: 2px; }
+.recipient-bar.dem { background: var(--dem); }
+.recipient-bar.rep { background: var(--rep); }
+.recipient-bar.oth { background: var(--oth); }
+.recipient-name { font-weight: 500; line-height: 1.25; }
+.recipient-rank { font-family: var(--mono); font-size: 11px; color: var(--ink-3); text-align: right; padding-top: 2px; }
+.recipient-amount { font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: 14px; font-weight: 500; text-align: right; }
+.recipient-count { font-family: var(--mono); font-size: 11px; color: var(--ink-3); text-align: right; }
+
+/* ════════════════════════════════════════════════════════════════════════
+   SCATTER TOOLTIP (league political map)
+   One global tooltip element, repositioned per-dot on hover. Cheaper than
+   one-per-circle and easier to manage across re-renders.
+   ══════════════════════════════════════════════════════════════════════ */
+.scatter-tooltip {
+  position: absolute;
+  z-index: 50;
+  background: #15130F;
+  color: #FFFFFF;
+  padding: 12px 14px;
+  border-radius: 4px;
+  min-width: 220px;
+  max-width: 280px;
+  font-family: var(--sans);
+  font-size: 12px;
+  line-height: 1.45;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, calc(-100% - 10px));
+  transition: opacity 100ms;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.25);
+}
+.scatter-tooltip.visible { opacity: 1; }
+.scatter-tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border: 6px solid transparent;
+  border-top-color: #15130F;
+}
+.scatter-tt-name {
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.15;
+  margin-bottom: 1px;
+}
+.scatter-tt-team {
+  color: rgba(255,255,255,0.6);
+  font-size: 11px;
+  margin-bottom: 10px;
+  font-family: var(--mono);
+}
+.scatter-tt-row {
+  display: flex; justify-content: space-between; gap: 16px;
+  padding: 3px 0;
+  font-variant-numeric: tabular-nums;
+}
+.scatter-tt-row .label { color: rgba(255,255,255,0.6); }
+.scatter-tt-row .label.dem { color: #93B4DC; }
+.scatter-tt-row .label.rep { color: #DBA9A3; }
+.scatter-tt-row .label.oth { color: rgba(255,255,255,0.45); }
+.scatter-tt-row .value { font-family: var(--mono); }
+.scatter-tt-divider {
+  height: 1px; background: rgba(255,255,255,0.12);
+  margin: 8px 0;
+}
+.scatter-tt-hint {
+  color: rgba(255,255,255,0.5);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-top: 8px;
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   RECENT DONATIONS FEED (league index)
+   ══════════════════════════════════════════════════════════════════════ */
+.recent-list { border-top: 1px solid var(--rule); }
+.recent-row {
+  display: grid;
+  /* date | flow (grows) | amount (mono, right-aligned) | chips (party + status) */
+  grid-template-columns: 100px minmax(0, 1fr) 130px 170px;
+  align-items: center;
+  gap: 20px;
+  padding: 12px 6px;
+  border-bottom: 1px solid var(--rule);
+  cursor: pointer;
+  transition: background 80ms;
+}
+.recent-row:hover { background: var(--bg-sunk); }
+.recent-date {
+  font-family: var(--mono); font-size: 12px; color: var(--ink-3);
+  white-space: nowrap;
+}
+.recent-flow {
+  display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap;
+  font-size: 14px; line-height: 1.4;
+  min-width: 0;       /* let the column shrink instead of pushing right neighbors */
+}
+.recent-flow .recent-donor {
+  font-family: var(--serif); font-weight: 600; font-size: 15px; color: var(--ink);
+}
+.recent-flow .recent-arrow { color: var(--ink-3); font-family: var(--mono); }
+.recent-flow .recent-recipient { color: var(--ink-2); font-weight: 500; }
+.recent-flow .recent-meta { font-size: 11px; color: var(--ink-3); font-family: var(--mono); margin-left: 4px; }
+.recent-amount {
+  font-family: var(--mono); font-variant-numeric: tabular-nums;
+  font-size: 16px; font-weight: 600;
+  text-align: right;
+  white-space: nowrap;
+}
+.recent-chips {
+  display: flex; gap: 6px; justify-content: flex-end; align-items: center;
+  white-space: nowrap;
+}
+@media (max-width: 1100px) {
+  .recent-row { grid-template-columns: 90px minmax(0, 1fr) 110px 150px; gap: 14px; }
+}
+@media (max-width: 880px) {
+  .recent-row { grid-template-columns: 80px minmax(0, 1fr) 100px; gap: 12px; }
+  .recent-chips { display: none; }
+}
+
+/* Block-head row with action button (eg "Download CSV") */
+.block-head-row {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  gap: 24px;
+}
+
+/* Download CSV button */
+.csv-btn {
+  background: transparent;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  padding: 8px 14px;
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  display: inline-flex; align-items: center; gap: 6px;
+  white-space: nowrap;
+  transition: background 80ms, color 80ms;
+}
+.csv-btn::before { content: "↓"; font-weight: 600; }
+.csv-btn:hover { background: var(--accent); color: white; }
+
+/* Cycle prev/next nav */
+.cycle-nav {
+  font-size: 13px;
+  font-family: var(--mono);
+  color: var(--ink-2);
+  padding: 4px 10px;
+  border: 1px solid var(--rule-strong);
+  border-radius: 3px;
+  text-decoration: none !important;
+}
+.cycle-nav:hover { border-color: var(--accent); color: var(--accent); }
+
+/* Recipient names that link to committee pages */
+.recipient-link {
+  cursor: pointer;
+  border-bottom: 1px dotted transparent;
+}
+.recipient-link:hover { color: var(--accent); border-bottom-color: var(--accent); }
+
+/* Team page: tracked-owner cards */
+.team-owners-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 14px;
+  margin-top: 18px;
+}
+.team-owner-card {
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  padding: 16px 18px;
+  background: var(--bg-elev);
+  cursor: pointer;
+  transition: border-color 80ms, background 80ms;
+}
+.team-owner-card:hover { border-color: var(--accent); background: #FBF2EC; }
+.team-owner-card .team-owner-name {
+  font-family: var(--serif); font-size: 18px; font-weight: 600;
+  line-height: 1.2; margin-bottom: 4px;
+}
+.team-owner-card .team-owner-role { font-size: 12px; color: var(--ink-3); }
+.team-owner-card .team-owner-tenure {
+  font-family: var(--mono); font-size: 11px; color: var(--ink-3); margin-top: 8px;
+}
+.team-owner-card .team-owner-stats {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--rule);
+}
+.team-owner-card .team-owner-total {
+  font-family: var(--mono); font-variant-numeric: tabular-nums;
+  font-size: 18px; font-weight: 600;
+}
+.team-owner-card .team-owner-count {
+  font-size: 11px; color: var(--ink-3); font-family: var(--mono);
+}
+.team-owner-card .team-owner-tilt-bar {
+  height: 4px; border-radius: 2px; overflow: hidden;
+  display: flex; background: var(--oth-soft); margin-top: 10px;
+}
+
+/* Team-clickable cell in owners table */
+.team-link {
+  cursor: pointer;
+  border-bottom: 1px dotted transparent;
+}
+.team-link:hover { color: var(--accent); border-bottom-color: var(--accent); }
+
+/* Verification preview card */
+.ver-card {
+  background: var(--bg-sunk);
+  border: 1px solid var(--rule);
+  padding: 18px;
+  border-radius: 3px;
+  font-size: 13px;
+}
+.ver-card h4 { font-family: var(--serif); font-size: 16px; font-weight: 600; margin: 0 0 4px; }
+.ver-card .ver-meta { color: var(--ink-3); font-size: 12px; margin-bottom: 14px; font-family: var(--mono); }
+.ver-card .field { margin-bottom: 8px; }
+.ver-card .field-label { font-size: 11px; text-transform: uppercase; color: var(--ink-3); letter-spacing: 0.06em; font-weight: 600; }
+.ver-card .field-value { font-family: var(--mono); font-size: 13px; color: var(--ink); }
+.ver-card .signal-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+
+/* ════════════════════════════════════════════════════════════════════════
+   STATUS CHIPS
+   These appear EVERYWHERE a donation is shown. Never hidden.
+   ══════════════════════════════════════════════════════════════════════ */
+.chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-family: var(--sans); font-size: 10px; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 3px 7px; border-radius: 2px;
+  white-space: nowrap;
+}
+.chip-confirmed { background: var(--ok-bg); color: var(--ok-fg); }
+.chip-confirmed::before { content: "●"; font-size: 10px; }
+.chip-probable  { background: var(--warn-bg); color: var(--warn-fg); }
+.chip-probable::before  { content: "◐"; font-size: 10px; }
+
+/* 48-hour notice flag — high-urgency FEC report type, filed within 48 hours
+   of a $1K+ contribution received in the final 20 days before an election. */
+.chip-48h {
+  background: #FAEAD4; color: #7A4A0F;
+  border: 1px solid #E6C794;
+  font-family: var(--mono); font-size: 9px; font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 2px 5px; border-radius: 2px;
+  display: inline-flex; align-items: center; gap: 4px;
+}
+.chip-48h::before { content: "⚡"; font-size: 10px; }
+
+.chip-signal {
+  background: var(--bg-elev);
+  border: 1px solid var(--rule-strong);
+  color: var(--ink-2);
+  font-family: var(--mono); font-size: 11px; font-weight: 400;
+  letter-spacing: 0; text-transform: none;
+  padding: 3px 7px; border-radius: 2px;
+  display: inline-flex; align-items: center; gap: 5px;
+}
+.chip-signal::before { content: "✓"; color: var(--ok-fg); font-weight: 700; }
+
+.chip-party {
+  font-family: var(--sans); font-size: 10px; font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 2px 6px; border-radius: 2px;
+}
+.chip-party.dem { background: var(--dem-soft); color: var(--dem); }
+.chip-party.rep { background: var(--rep-soft); color: var(--rep); }
+.chip-party.oth { background: var(--oth-soft); color: var(--ink-2); }
+
+/* ════════════════════════════════════════════════════════════════════════
+   DONATIONS TABLE (per owner)
+   ══════════════════════════════════════════════════════════════════════ */
+.donations-table { width: 100%; font-size: 13px; }
+.donations-table th, .donations-table td {
+  padding: 10px 10px; border-bottom: 1px solid var(--rule);
+  text-align: left; vertical-align: top;
+}
+.donations-table th {
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em;
+  color: var(--ink-3); font-weight: 600;
+  background: var(--bg);
+  position: sticky; top: 60px; z-index: 5;
+  border-bottom: 1px solid var(--rule-strong);
+}
+.donations-table tbody tr { cursor: pointer; }
+.donations-table tbody tr:hover { background: var(--bg-sunk); }
+.donations-table td.num { text-align: right; font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.donations-table .col-date { font-family: var(--mono); white-space: nowrap; color: var(--ink-2); }
+.donations-table .col-amount { font-weight: 600; }
+.donations-table .col-recipient { line-height: 1.3; }
+.donations-table .col-recipient .candidate { color: var(--ink-3); font-size: 12px; display: block; margin-top: 2px; }
+
+/* ════════════════════════════════════════════════════════════════════════
+   DRAWER (donation detail)
+   ══════════════════════════════════════════════════════════════════════ */
+.drawer-scrim {
+  position: fixed; inset: 0; background: rgba(20,18,15,0.4);
+  opacity: 0; pointer-events: none; transition: opacity 200ms; z-index: 90;
+}
+.drawer-scrim.open { opacity: 1; pointer-events: auto; }
+
+.drawer {
+  position: fixed; top: 0; right: 0; bottom: 0;
+  width: 520px; max-width: 100vw;
+  background: var(--bg-elev);
+  box-shadow: var(--shadow-lg);
+  transform: translateX(100%); transition: transform 240ms cubic-bezier(.2,.7,.2,1);
+  z-index: 100;
+  overflow-y: auto;
+}
+.drawer.open { transform: translateX(0); }
+.drawer-head {
+  padding: 18px 28px;
+  border-bottom: 1px solid var(--rule);
+  display: flex; justify-content: space-between; align-items: center;
+  position: sticky; top: 0; background: var(--bg-elev); z-index: 2;
+}
+.drawer-head .eyebrow { font-size: 10px; }
+.drawer-close {
+  background: transparent; border: 0; font-size: 22px; color: var(--ink-2);
+  width: 32px; height: 32px; border-radius: 3px;
+}
+.drawer-close:hover { background: var(--bg-sunk); }
+
+.drawer-body { padding: 24px 28px 80px; }
+.drawer h2 { font-size: 24px; line-height: 1.2; margin-bottom: 6px; }
+.drawer .donor-arrow { color: var(--ink-3); font-weight: 400; }
+
+.drawer-amount {
+  font-family: var(--serif); font-size: 44px; font-weight: 600;
+  letter-spacing: -0.02em; line-height: 1; padding-top: 18px;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+/* Owner name as a link inside the drawer — subtle hint that it's clickable,
+   navigates to the owner's full profile page (and closes the drawer). */
+.drawer-owner-link {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px dotted var(--ink-3);
+  transition: color 80ms, border-color 80ms;
+}
+.drawer-owner-link:hover {
+  color: var(--brand);
+  border-bottom-color: var(--brand);
+  border-bottom-style: solid;
+}
+.drawer-amount-meta {
+  margin-top: 8px; display: flex; gap: 10px; align-items: center;
+  font-size: 13px; color: var(--ink-3);
+  font-family: var(--mono);
+}
+.drawer-amount-meta .chip { font-family: var(--sans); }
+
+.drawer-section {
+  margin-top: 32px; padding-top: 22px; border-top: 1px solid var(--rule);
+}
+.drawer-section:first-of-type { border-top: 0; padding-top: 0; }
+.drawer-section h3 {
+  font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--ink-3); margin-bottom: 14px;
+}
+.drawer-grid {
+  display: grid; grid-template-columns: 110px 1fr; gap: 8px 18px;
+  font-size: 13px;
+}
+.drawer-grid .label { color: var(--ink-3); font-size: 12px; padding-top: 2px; }
+.drawer-grid .value { color: var(--ink); font-family: var(--mono); font-size: 13px; word-break: break-word; }
+.drawer-grid .value-prose { font-family: var(--sans); font-size: 14px; line-height: 1.45; }
+
+.drawer-reason {
+  background: var(--bg-sunk);
+  border-left: 3px solid var(--ok-fg);
+  padding: 12px 14px;
+  font-size: 13px;
+  line-height: 1.5;
+  border-radius: 0 3px 3px 0;
+  color: var(--ink-2);
+}
+.drawer-reason.probable { border-left-color: var(--warn-fg); }
+
+.drawer-signals { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+
+.drawer-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--mono); font-size: 12px;
+  color: var(--accent);
+  word-break: break-all;
+}
+.drawer-link::after { content: "↗"; font-family: var(--sans); }
+
+/* FEC source-link cards in the drawer */
+.drawer-source-links { display: flex; flex-direction: column; gap: 8px; }
+.drawer-source-link {
+  display: flex; align-items: center; gap: 14px;
+  padding: 12px 14px;
+  border: 1px solid var(--rule);
+  background: var(--bg-elev);
+  border-radius: 3px;
+  font-family: var(--sans);
+  text-decoration: none !important;
+  color: var(--ink);
+  transition: border-color 80ms, background 80ms;
+}
+.drawer-source-link:hover {
+  border-color: var(--accent);
+  background: var(--bg);
+}
+.drawer-source-link.primary {
+  border-color: var(--accent);
+  background: #FBF2EC;
+}
+.drawer-source-link.primary:hover { background: #F8E9DE; }
+.drawer-source-link.disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.drawer-source-icon {
+  font-size: 20px; line-height: 1;
+  flex-shrink: 0;
+  filter: grayscale(0.2);
+}
+.drawer-source-title {
+  font-size: 14px; font-weight: 600; color: var(--ink); line-height: 1.2;
+}
+.drawer-source-link:not(.disabled) .drawer-source-title::after {
+  content: " ↗"; color: var(--accent); font-weight: 400;
+}
+.drawer-source-sub {
+  font-size: 12px; color: var(--ink-3); margin-top: 2px; line-height: 1.3;
+  font-family: var(--mono);
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   METHODOLOGY
+   ══════════════════════════════════════════════════════════════════════ */
+.method-body { padding: 48px 0; }
+.method-body h2 { margin: 48px 0 14px; }
+.method-body h2:first-of-type { margin-top: 0; }
+.method-body p { font-size: 16px; line-height: 1.65; color: var(--ink-2); max-width: 64ch; margin: 0 0 16px; }
+.method-body p strong { color: var(--ink); font-weight: 600; }
+.method-tiers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin: 20px 0 32px; }
+.method-tier { padding: 20px; border: 1px solid var(--rule); border-radius: 3px; background: var(--bg-elev); }
+.method-tier.confirmed { border-top: 3px solid var(--ok-fg); }
+.method-tier.probable  { border-top: 3px solid var(--warn-fg); }
+.method-tier.uncertain { border-top: 3px solid var(--rule-strong); }
+.method-tier h3 { font-family: var(--serif); font-size: 18px; font-weight: 600; text-transform: none; letter-spacing: 0; color: var(--ink); margin-bottom: 6px; }
+.method-tier .tier-rule { font-family: var(--mono); font-size: 12px; color: var(--ink-3); margin-bottom: 12px; }
+.method-tier p { font-size: 14px; line-height: 1.5; margin: 0; }
+
+.method-scope { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin: 16px 0; }
+.method-scope ul { padding-left: 22px; margin: 0; }
+.method-scope li { font-size: 14px; color: var(--ink-2); margin-bottom: 6px; }
+.method-scope h4 { font-family: var(--sans); font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-3); font-weight: 600; margin-bottom: 8px; }
+
+/* ════════════════════════════════════════════════════════════════════════
+   FOOTER
+   ══════════════════════════════════════════════════════════════════════ */
+.site-footer {
+  border-top: 1px solid var(--rule);
+  padding: 40px 0 80px;
+  font-size: 13px;
+  color: var(--ink-3);
+}
+.site-footer .footer-grid {
+  display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 48px;
+}
+.site-footer h4 {
+  font-family: var(--sans); font-size: 11px; text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--ink-2); font-weight: 600;
+  margin-bottom: 12px;
+}
+.site-footer a { color: var(--ink-2); }
+.site-footer .colophon { font-size: 12px; line-height: 1.55; color: var(--ink-3); max-width: 50ch; }
+
+/* ════════════════════════════════════════════════════════════════════════
+   CMD-K SEARCH PALETTE
+   ══════════════════════════════════════════════════════════════════════ */
+.cmdk-scrim {
+  position: fixed; inset: 0;
+  background: rgba(20,18,15,0.4);
+  z-index: 200;
+  display: flex; justify-content: center; align-items: flex-start;
+  padding-top: 12vh;
+  opacity: 0; pointer-events: none;
+  transition: opacity 120ms;
+}
+.cmdk-scrim.open { opacity: 1; pointer-events: auto; }
+.cmdk-modal {
+  width: 600px; max-width: calc(100vw - 32px);
+  background: var(--bg-elev);
+  border: 1px solid var(--rule-strong);
+  border-radius: 5px;
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  transform: translateY(-12px);
+  transition: transform 160ms cubic-bezier(.2,.7,.2,1);
+}
+.cmdk-scrim.open .cmdk-modal { transform: translateY(0); }
+.cmdk-input-wrap {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--rule);
+}
+.cmdk-input-icon {
+  color: var(--ink-3); font-size: 18px;
+}
+.cmdk-input {
+  flex: 1; border: 0; outline: none; background: transparent;
+  font: 17px var(--sans);
+  color: var(--ink);
+}
+.cmdk-input::placeholder { color: var(--ink-3); }
+.cmdk-results {
+  max-height: 50vh; overflow-y: auto;
+  padding: 6px 0;
+  margin: 0; list-style: none;
+}
+.cmdk-result {
+  display: grid;
+  grid-template-columns: 70px 1fr auto;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 18px;
+  cursor: pointer;
+  border-left: 2px solid transparent;
+}
+.cmdk-result.active {
+  background: var(--bg-sunk);
+  border-left-color: var(--accent);
+}
+.cmdk-result-type {
+  font-size: 9px; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--ink-3);
+  padding: 3px 7px; background: var(--bg-sunk); border-radius: 2px;
+  text-align: center;
+}
+.cmdk-result.active .cmdk-result-type { background: var(--bg-elev); }
+.cmdk-result-label {
+  font-family: var(--serif); font-size: 15px; font-weight: 600;
+  line-height: 1.25; color: var(--ink);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.cmdk-result-sub {
+  font-size: 12px; color: var(--ink-3); margin-top: 2px;
+  font-family: var(--mono); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.cmdk-result-meta {
+  font-family: var(--mono); font-variant-numeric: tabular-nums;
+  font-size: 12px; color: var(--ink-3); text-align: right;
+  white-space: nowrap;
+}
+.cmdk-result mark {
+  background: rgba(184, 85, 43, 0.16);
+  color: var(--accent-2);
+  padding: 0 1px;
+  border-radius: 1px;
+}
+.cmdk-empty {
+  padding: 36px 18px; text-align: center; color: var(--ink-3); font-size: 13px;
+}
+.cmdk-footer {
+  display: flex; gap: 18px; justify-content: flex-start;
+  padding: 10px 18px; border-top: 1px solid var(--rule);
+  font-size: 11px; color: var(--ink-3); font-family: var(--mono);
+}
+.cmdk-footer kbd {
+  display: inline-block;
+  background: var(--bg-sunk); border: 1px solid var(--rule);
+  border-bottom-width: 2px;
+  padding: 1px 5px; border-radius: 2px;
+  font-family: var(--mono); font-size: 10px; color: var(--ink-2);
+  margin-right: 4px;
+}
+
+/* Masthead search button */
+.search-btn {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--bg-sunk);
+  border: 1px solid var(--rule);
+  color: var(--ink-2);
+  padding: 5px 10px;
+  border-radius: 3px;
+  font-size: 12px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+.search-btn:hover { border-color: var(--accent); color: var(--accent); }
+.search-btn .search-btn-icon { font-size: 13px; }
+.search-btn .search-btn-kbd {
+  font-family: var(--mono); font-size: 10px;
+  background: var(--bg-elev); border: 1px solid var(--rule);
+  padding: 1px 5px; border-radius: 2px;
+  color: var(--ink-3);
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   LOADING / EMPTY STATES
+   ══════════════════════════════════════════════════════════════════════ */
+.loading { padding: 80px 0; text-align: center; color: var(--ink-3); font-size: 14px; }
+.empty-state {
+  padding: 48px 24px;
+  text-align: center;
+  background: var(--bg-sunk);
+  border: 1px dashed var(--rule-strong);
+  border-radius: 4px;
+  margin: 12px 0;
+}
+.empty-state-icon {
+  font-size: 28px; color: var(--ink-3);
+  display: block; margin-bottom: 10px;
+}
+.empty-state-title {
+  font-family: var(--serif); font-size: 17px; font-weight: 600;
+  color: var(--ink); margin-bottom: 6px;
+}
+.empty-state-body {
+  font-size: 13px; color: var(--ink-3);
+  max-width: 48ch; margin: 0 auto;
+}
+.empty-state-body a {
+  text-decoration: none; border-bottom: 1px dotted currentColor;
+}
+.error-banner {
+  background: #FDE8DD; color: #6D3216;
+  padding: 16px 20px; border-radius: 3px; margin: 24px 0;
+  font-size: 14px;
+}
+.error-banner code {
+  font-family: var(--mono); background: rgba(0,0,0,0.05);
+  padding: 1px 5px; border-radius: 2px;
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   PRINT STYLES
+   Owner / committee / cycle pages print as research records: chrome hidden,
+   tables visible, URLs of FEC links shown in line for citation.
+   ══════════════════════════════════════════════════════════════════════ */
+@media print {
+  body { background: white; color: black; }
+  .masthead, .site-footer, .hero-photo, .drawer, .drawer-scrim,
+  .cmdk-scrim, .scatter-tooltip, .skip-link, .search-btn,
+  .csv-btn, .filters, .back, .nav { display: none !important; }
+  .container, .container-narrow { max-width: 100%; padding: 0; }
+  section.block { padding: 18px 0; border-bottom: 1px solid #ccc; page-break-inside: avoid; }
+  .kpis { grid-template-columns: repeat(4, 1fr) !important; }
+  .kpi { padding: 8px 14px !important; border-color: #ccc !important; }
+  table { font-size: 11px; }
+  th, td { padding: 6px 8px !important; border-color: #ccc !important; }
+  .owners-table, .donations-table { min-width: 0 !important; }
+  /* Show URLs after external FEC links so a print reader can find them */
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 10px; color: #666; font-family: var(--mono);
+  }
+  /* Don't show URLs after navigation hash links */
+  a[href^="#"]::after { content: ""; }
+  /* Keep status chips readable in print */
+  .chip-confirmed, .chip-probable, .chip-48h {
+    background: white !important; color: black !important;
+    border: 1px solid #666 !important;
+  }
+  .chip-party.dem { color: #1F4E89 !important; background: white !important; }
+  .chip-party.rep { color: #B53326 !important; background: white !important; }
+  h1, h2 { page-break-after: avoid; }
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   UTILITIES
+   ══════════════════════════════════════════════════════════════════════ */
+.hidden { display: none !important; }
+.muted { color: var(--ink-3); }
+.flex { display: flex; }
+.flex-1 { flex: 1; }
+.gap-2 { gap: 8px; }
+.gap-3 { gap: 12px; }
+.mt-2 { margin-top: 8px; } .mt-3 { margin-top: 12px; } .mt-4 { margin-top: 16px; }
+
+</style>
+</head>
+
+<body>
+
+<!-- Skip link for keyboard users — jumps past the masthead/hero to the main content -->
+<a href="#app" class="skip-link">Skip to content</a>
+
+<!-- ════════════════════════════════════════════════════════════════════
+     MASTHEAD
+     ════════════════════════════════════════════════════════════════════ -->
+<header class="masthead" role="banner">
+  <div class="masthead-inner">
+    <a class="brand" href="#/" style="text-decoration:none;color:inherit">
+      <span class="brand-mark" aria-label="The Owner's Box logo">
+        <img src="assets/owners-box-icon.png" alt="The Owner's Box">
+      </span>
+      <div>
+        <div class="brand-title">The Owner's Box</div>
+        <div class="brand-sub">MLB ownership · federal political giving</div>
+      </div>
+    </a>
+    <nav class="nav" role="navigation" aria-label="Primary">
+      <a href="#/" data-nav="league">League</a>
+      <a href="#/methodology" data-nav="methodology">Methodology</a>
+      <a href="#/runs" data-nav="runs">Pipeline</a>
+      <a href="#/about" data-nav="about">About</a>
+      <button class="search-btn" id="search-btn" aria-label="Open search">
+        <span class="search-btn-icon">⌕</span>
+        <span>Search</span>
+        <span class="search-btn-kbd" id="search-btn-kbd">⌘K</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<!-- ════════════════════════════════════════════════════════════════════
+     CMD-K SEARCH PALETTE
+     ════════════════════════════════════════════════════════════════════ -->
+<div id="cmdk-scrim" class="cmdk-scrim">
+  <div class="cmdk-modal" role="dialog" aria-label="Search">
+    <div class="cmdk-input-wrap">
+      <span class="cmdk-input-icon">⌕</span>
+      <input id="cmdk-input" class="cmdk-input"
+             placeholder="Jump to owner, team, or recipient committee…"
+             autocomplete="off" spellcheck="false">
+    </div>
+    <ul id="cmdk-results" class="cmdk-results"></ul>
+    <div class="cmdk-footer">
+      <span><kbd>↑</kbd><kbd>↓</kbd>navigate</span>
+      <span><kbd>↵</kbd>jump</span>
+      <span><kbd>esc</kbd>close</span>
+    </div>
+  </div>
+</div>
+
+<!-- App mounts here -->
+<main id="app" role="main" tabindex="-1">
+  <div class="loading">Loading data…</div>
+</main>
+
+<!-- ════════════════════════════════════════════════════════════════════
+     DONATION DRAWER (mounted globally; toggled by state)
+     ════════════════════════════════════════════════════════════════════ -->
+<div id="drawer-scrim" class="drawer-scrim"></div>
+<aside id="drawer" class="drawer" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Donation record">
+  <div class="drawer-head">
+    <span class="eyebrow">Donation record</span>
+    <button class="drawer-close" id="drawer-close" aria-label="Close">✕</button>
+  </div>
+  <div class="drawer-body" id="drawer-body"></div>
+</aside>
+
+<!-- ════════════════════════════════════════════════════════════════════
+     SCATTER TOOLTIP (league political map — global, repositioned per-dot)
+     ════════════════════════════════════════════════════════════════════ -->
+<div id="scatter-tooltip" class="scatter-tooltip" role="tooltip" aria-hidden="true"></div>
+
+<!-- ════════════════════════════════════════════════════════════════════
+     FOOTER (rendered always; not part of routes)
+     ════════════════════════════════════════════════════════════════════ -->
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <h4>About this archive</h4>
+      <p class="colophon">
+        <strong>The Owner's Box</strong> is a verified archive of federal political
+        donations by the principal owners of all 30 Major League Baseball franchises.
+        Every record traces back to a specific FEC filing. We classify each record
+        CONFIRMED or PROBABLE based on a documented verification rubric. Records that
+        match a donor name but no other signal stay UNCERTAIN and never enter the
+        canonical dataset. This is factual infrastructure, not editorial analysis.
+      </p>
+    </div>
+    <div>
+      <h4>Project</h4>
+      <p style="margin:0;"><a href="#/methodology">Methodology</a></p>
+      <p style="margin:6px 0 0;"><a href="#/runs">Pipeline transparency</a></p>
+      <p style="margin:6px 0 0;"><a href="#/about">About the data</a></p>
+      <p style="margin:6px 0 0;"><a href="https://www.fec.gov" target="_blank" rel="noopener">FEC.gov</a></p>
+    </div>
+    <div>
+      <h4>Snapshot</h4>
+      <p id="generated-at" style="margin:0;font-family:var(--mono);font-size:12px;"></p>
+      <p id="latest-run-at" style="margin:6px 0 0;font-family:var(--mono);font-size:12px;color:var(--ink-3);"></p>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ════════════════════════════════════════════════════════════════════
+     APP LOGIC
+     ════════════════════════════════════════════════════════════════════ -->
+<script>
+"use strict";
+
+/* ────────── State ────────── */
+const state = {
+  data: null,
+  view: { name: "league" },
+  /* index filters */
+  indexSort: { key: "total", dir: "desc" },
+  indexFilters: { q: "", team: "", tilt: "", confirmedOnly: false },
+  /* per-owner filters */
+  ownerFilters: { q: "", cycle: "", party: "", status: "" },
+  /* per-cycle filters */
+  cycleFilters: { q: "", party: "", status: "", owner: "" },
+  /* per-committee filters */
+  committeeFilters: { q: "", cycle: "", status: "" },
+  /* per-team filters */
+  teamFilters: { q: "", cycle: "", party: "", status: "", owner: "" },
+  /* derived indexes (built once after data load) */
+  teams: null,
+  searchIndex: null,
+  /* cmd-k state */
+  cmdk: { open: false, q: "", cursor: 0, results: [] },
+};
+
+const fmtMoney = (n) => {
+  if (n == null || isNaN(n)) return "—";
+  const a = Math.abs(n);
+  if (a >= 1_000_000) return "$" + (n / 1_000_000).toFixed(n >= 10_000_000 ? 1 : 2) + "M";
+  if (a >= 10_000)    return "$" + Math.round(n / 1000) + "K";
+  if (a >= 1000)      return "$" + (n / 1000).toFixed(1) + "K";
+  return "$" + Math.round(n).toLocaleString();
+};
+const fmtMoneyExact = (n) => "$" + Math.round(n).toLocaleString();
+const fmtInt = (n) => (n ?? 0).toLocaleString();
+const fmtDate = (s) => {
+  if (!s) return "—";
+  const d = new Date(s);
+  if (isNaN(d)) return s;
+  return d.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+};
+
+/* Renders a friendly empty-state card. Used when filters return nothing,
+   when an owner has no donations, or any other "we found nothing" path. */
+function emptyState(title, body) {
+  return `
+    <div class="empty-state">
+      <span class="empty-state-icon">∅</span>
+      <div class="empty-state-title">${title}</div>
+      <div class="empty-state-body">${body}</div>
+    </div>`;
+}
+
+/* True if this donation came in on FEC's 48-hour pre-election notice rule.
+   The report_type "48H" is what FEC uses for those filings. Helper isolates
+   the test so we can extend later (e.g. "24H" for independent expenditures). */
+const is48HourNotice = (d) => (d.report_type || "").toUpperCase() === "48H";
+
+/* Renders the 48-hour-notice chip when applicable. Returns empty string
+   otherwise, so it can be inlined safely in template strings. */
+const chip48H = (d) => is48HourNotice(d)
+  ? `<span class="chip-48h" title="Filed under FEC 48-hour notice rule — $1K+ contribution received within 20 days of an election">48H</span>`
+  : "";
+
+/* Relative time: returns a short compact string ("3d", "1w", "6mo", "2y") for
+   table-cell freshness indicators. Returns "—" for null/invalid input. */
+const fmtAgo = (s) => {
+  if (!s) return "—";
+  const t = new Date(s).getTime();
+  if (isNaN(t)) return "—";
+  const sec = Math.max(0, (Date.now() - t) / 1000);
+  if (sec < 60) return "now";
+  if (sec < 3600) return Math.floor(sec / 60) + "m";
+  if (sec < 86400) return Math.floor(sec / 3600) + "h";
+  if (sec < 86400 * 30) return Math.floor(sec / 86400) + "d";
+  if (sec < 86400 * 365) return Math.floor(sec / (86400 * 30)) + "mo";
+  return Math.floor(sec / (86400 * 365)) + "y";
+};
+
+/* Freshness CSS class: green for fresh, amber for stale, red for very stale,
+   muted grey for never-ingested. Thresholds matched to the project's
+   recommended monthly refresh cadence. */
+const freshnessClass = (s) => {
+  if (!s) return "fresh-never";
+  const t = new Date(s).getTime();
+  if (isNaN(t)) return "fresh-never";
+  const days = (Date.now() - t) / (86400 * 1000);
+  if (days < 35) return "fresh-good";
+  if (days < 95) return "fresh-stale";
+  return "fresh-very-stale";
+};
+
+const PARTIES = ["DEM", "REP", "OTH"];
+
+/* ────────── Team slug ──────────
+   Stable, URL-safe team identifier derived from the team name.
+   "New York Mets" → "new-york-mets", "St. Louis Cardinals" → "st-louis-cardinals".
+*/
+function teamSlug(name) {
+  if (!name) return null;
+  return name.toLowerCase()
+    .replace(/[\.']/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/[^a-z0-9-]/g, "");
+}
+
+/* Build a unified search index over owners, teams, and committees.
+   Each item: { type, label, sub, key, url, sortBy }.
+   Computed once after data load. */
+function buildSearchIndex() {
+  const items = [];
+
+  /* Owners */
+  for (const o of Object.values(state.data.owners)) {
+    items.push({
+      type: "owner",
+      label: o.name,
+      sub: `${o.team || ""}${o.tenure_start ? " · since " + o.tenure_start.slice(0,4) : ""}`,
+      key: (o.name + " " + (o.team || "")).toLowerCase(),
+      url: `#/owner/${o.slug}`,
+      sortBy: o.total_amount,
+      metaText: fmtMoney(o.total_amount),
+    });
+  }
+
+  /* Teams (deduped from owner team field) */
+  const teamAgg = {};
+  for (const o of Object.values(state.data.owners)) {
+    if (!o.team) continue;
+    const sl = teamSlug(o.team);
+    if (!teamAgg[sl]) teamAgg[sl] = { name: o.team, slug: sl, total: 0, owners: 0 };
+    teamAgg[sl].total += o.total_amount;
+    teamAgg[sl].owners += 1;
+  }
+  for (const t of Object.values(teamAgg)) {
+    items.push({
+      type: "team",
+      label: t.name,
+      sub: `${t.owners} tracked owner${t.owners === 1 ? "" : "s"}`,
+      key: t.name.toLowerCase(),
+      url: `#/team/${t.slug}`,
+      sortBy: t.total,
+      metaText: fmtMoney(t.total),
+    });
+  }
+
+  /* Committees (recipient organizations). Dedup by committee_id. */
+  const cmAgg = {};
+  for (const d of state.data.donations) {
+    if (!d.committee_id || !d.committee) continue;
+    if (!cmAgg[d.committee_id]) {
+      cmAgg[d.committee_id] = { id: d.committee_id, name: d.committee, party: d.party, amount: 0, count: 0 };
+    }
+    cmAgg[d.committee_id].amount += d.amount;
+    cmAgg[d.committee_id].count += 1;
+  }
+  for (const c of Object.values(cmAgg)) {
+    items.push({
+      type: "committee",
+      label: c.name,
+      sub: `${c.party} · ${c.count} donation${c.count === 1 ? "" : "s"} from MLB`,
+      key: c.name.toLowerCase(),
+      url: `#/committee/${encodeURIComponent(c.id)}`,
+      sortBy: c.amount,
+      metaText: fmtMoney(c.amount),
+    });
+  }
+
+  /* Candidates — dedup by candidate_id. We don't have a candidate detail
+     page, so candidate hits route to the committee that received the most
+     MLB money on their behalf (e.g. "Pete Ricketts" → PETE RICKETTS FOR
+     SENATE). The cmd-k result label shows the candidate name; the sub-line
+     names the committee they're being redirected to so the redirect isn't
+     mysterious. Candidates with no candidate_id are skipped (would dedupe
+     poorly by name alone). */
+  const cdAgg = {};
+  for (const d of state.data.donations) {
+    if (!d.candidate || !d.candidate_id) continue;
+    if (!cdAgg[d.candidate_id]) {
+      cdAgg[d.candidate_id] = {
+        id: d.candidate_id, name: d.candidate, party: d.party,
+        amount: 0, count: 0, byCommittee: {},
+      };
+    }
+    const c = cdAgg[d.candidate_id];
+    c.amount += d.amount;
+    c.count += 1;
+    if (d.committee_id) {
+      const slot = c.byCommittee[d.committee_id] || { name: d.committee, amount: 0 };
+      slot.amount += d.amount;
+      slot.name = d.committee;
+      c.byCommittee[d.committee_id] = slot;
+    }
+  }
+  for (const cd of Object.values(cdAgg)) {
+    const top = Object.entries(cd.byCommittee).sort((a, b) => b[1].amount - a[1].amount)[0];
+    if (!top) continue;   // no committee_id to route to — skip
+    const [topCommitteeId, topCommittee] = top;
+    items.push({
+      type: "candidate",
+      label: cd.name,
+      sub: `→ ${topCommittee.name}`,
+      key: cd.name.toLowerCase(),
+      url: `#/committee/${encodeURIComponent(topCommitteeId)}`,
+      sortBy: cd.amount,
+      metaText: fmtMoney(cd.amount),
+    });
+  }
+
+  return items;
+}
+
+/* Build a team → {name, slug, owners[]} index, computed once after data load. */
+function buildTeamsIndex() {
+  const teams = {};
+  for (const o of Object.values(state.data.owners)) {
+    if (!o.team) continue;
+    const slug = teamSlug(o.team);
+    if (!teams[slug]) teams[slug] = { name: o.team, slug, owners: [] };
+    teams[slug].owners.push(o);
+  }
+  /* Sort owners within each team by tenure start (oldest first) */
+  for (const t of Object.values(teams)) {
+    t.owners.sort((a, b) => (a.tenure_start || "").localeCompare(b.tenure_start || ""));
+  }
+  return teams;
+}
+
+/* ────────── Data load ────────── */
+async function loadData() {
+  try {
+    const res = await fetch("./data.json", { cache: "no-cache" });
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    state.data = await res.json();
+    state.teams = buildTeamsIndex();
+    state.searchIndex = buildSearchIndex();
+    document.getElementById("generated-at").textContent =
+      "Snapshot " + state.data.generated_at.slice(0, 10);
+    const latestRun = state.data.pipeline?.latest_run;
+    if (latestRun) {
+      document.getElementById("latest-run-at").innerHTML =
+        `<a href="#/runs" style="color:inherit">Latest ingestion run ${fmtAgo(latestRun)} ago · ${state.data.pipeline.n_runs} runs total →</a>`;
+    }
+    route();
+  } catch (e) {
+    document.getElementById("app").innerHTML = `
+      <div class="container" style="padding:40px 0">
+        <div class="error-banner">
+          <strong>Could not load <code>data.json</code>.</strong>
+          Most browsers block <code>fetch()</code> on <code>file://</code> for security.
+          Run <code>./mockup/serve.sh</code> (or <code>python3 -m http.server 8000</code>
+          inside <code>mockup/</code>) and open <code>http://localhost:8000</code>.
+        </div>
+      </div>`;
+  }
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   ROUTING
+   ══════════════════════════════════════════════════════════════════════ */
+function route() {
+  const hash = window.location.hash || "#/";
+
+  const ownerMatch = hash.match(/^#\/owner\/(.+)$/);
+  const cycleMatch = hash.match(/^#\/cycle\/(\d{4})$/);
+  const committeeMatch = hash.match(/^#\/committee\/(.+)$/);
+  const teamMatch = hash.match(/^#\/team\/(.+)$/);
+
+  if (ownerMatch) {
+    state.view = { name: "owner", slug: ownerMatch[1] };
+  } else if (cycleMatch) {
+    state.view = { name: "cycle", year: parseInt(cycleMatch[1], 10) };
+  } else if (committeeMatch) {
+    state.view = { name: "committee", id: committeeMatch[1] };
+  } else if (teamMatch) {
+    state.view = { name: "team", slug: teamMatch[1] };
+  } else if (hash === "#/methodology") {
+    state.view = { name: "methodology" };
+  } else if (hash === "#/about") {
+    state.view = { name: "about" };
+  } else if (hash === "#/runs") {
+    state.view = { name: "runs" };
+  } else {
+    state.view = { name: "league" };
+  }
+
+  // Reset per-view filters
+  if (state.view.name !== "owner") {
+    state.ownerFilters = { q: "", cycle: "", party: "", status: "" };
+  }
+  if (state.view.name !== "cycle") {
+    state.cycleFilters = { q: "", party: "", status: "", owner: "" };
+  }
+  if (state.view.name !== "committee") {
+    state.committeeFilters = { q: "", cycle: "", status: "" };
+  }
+  if (state.view.name !== "team") {
+    state.teamFilters = { q: "", cycle: "", party: "", status: "", owner: "" };
+  }
+
+  /* Update nav active states */
+  document.querySelectorAll(".nav a").forEach((a) => {
+    const t = a.getAttribute("data-nav");
+    const active = (t === "league" && state.view.name === "league")
+                || (t === "methodology" && state.view.name === "methodology")
+                || (t === "about" && state.view.name === "about")
+                || (t === "runs" && state.view.name === "runs");
+    a.classList.toggle("active", active);
+  });
+
+  /* Dismiss any lingering scatter tooltip when navigating between routes —
+     mouseleave doesn't always fire when the SVG node is removed from DOM. */
+  hideScatterTooltip(document.getElementById("scatter-tooltip"));
+
+  render();
+  window.scrollTo(0, 0);
+
+  /* Honor ?d=<txn_id> after the view renders, so the drawer opens on top.
+     Cleared on any subsequent hash change. */
+  const drawerId = new URL(window.location.href).searchParams.get("d");
+  if (drawerId) {
+    openDrawer(drawerId);
+  } else {
+    /* Close any open drawer when navigating between routes */
+    if (document.getElementById("drawer").classList.contains("open")) {
+      document.getElementById("drawer").classList.remove("open");
+      document.getElementById("drawer-scrim").classList.remove("open");
+    }
+  }
+}
+
+window.addEventListener("hashchange", () => {
+  /* Strip any drawer permalink so navigation closes the drawer instead of
+     re-opening it on the new view. The initial page load is the only place
+     ?d= is honored. */
+  const url = new URL(window.location.href);
+  if (url.searchParams.has("d")) {
+    url.searchParams.delete("d");
+    window.history.replaceState(null, "", url.toString());
+  }
+  route();
+});
+
+/* ════════════════════════════════════════════════════════════════════════
+   RENDER DISPATCH
+   ══════════════════════════════════════════════════════════════════════ */
+function render() {
+  const app = document.getElementById("app");
+  if (!state.data) return;
+  if (state.view.name === "league") app.innerHTML = renderLeague();
+  else if (state.view.name === "owner") app.innerHTML = renderOwner(state.view.slug);
+  else if (state.view.name === "cycle") app.innerHTML = renderCycle(state.view.year);
+  else if (state.view.name === "committee") app.innerHTML = renderCommittee(state.view.id);
+  else if (state.view.name === "team") app.innerHTML = renderTeam(state.view.slug);
+  else if (state.view.name === "methodology") app.innerHTML = renderMethodology();
+  else if (state.view.name === "about") app.innerHTML = renderAbout();
+  else if (state.view.name === "runs") app.innerHTML = renderRuns();
+
+  /* Re-bind */
+  bindIndexHandlers();
+  bindOwnerHandlers();
+  bindCycleHandlers();
+  bindCommitteeHandlers();
+  bindTeamHandlers();
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   LEAGUE INDEX VIEW
+   ══════════════════════════════════════════════════════════════════════ */
+function renderLeague() {
+  const L = state.data.league;
+  const owners = Object.values(state.data.owners);
+
+  // Distinct teams for filter
+  const teams = [...new Set(owners.map((o) => o.team).filter(Boolean))].sort();
+
+  return `
+  <section class="hero-photo">
+    <div class="hero-photo-inner">
+      <span class="eyebrow">The Owner's Box · ${L.n_owners} principal owners · ${L.n_cycles} election cycles</span>
+      <h1>Where MLB's owners send their political money.</h1>
+      <p class="deck">
+        A verified archive of every federal political donation reported to the FEC
+        by the principal owners of all 30 Major League Baseball franchises,
+        2000–present. Built to a journalist's standard of attribution: every record
+        tied to a documented owner via two confirming signals, sourced back to a
+        specific FEC filing, and tagged with its verification tier.
+      </p>
+      <div class="meta">
+        <span>Snapshot ${state.data.generated_at.slice(0,10)}</span>
+        <span class="meta-dot"></span>
+        <span>Federal contributions only</span>
+        <span class="meta-dot"></span>
+        <span>CONFIRMED + PROBABLE shown</span>
+      </div>
+    </div>
+    <span class="photo-credit">Citi Field, New York · luxury suite + grandstand</span>
+  </section>
+
+  <section class="container">
+    <div class="kpis">
+      <div class="kpi">
+        <div class="kpi-label">Total tracked</div>
+        <div class="kpi-value">${fmtMoney(L.total_amount)}</div>
+        <div class="kpi-foot">${fmtMoneyExact(L.total_amount)}</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Donations</div>
+        <div class="kpi-value">${fmtInt(L.n_donations)}</div>
+        <div class="kpi-foot">${fmtInt(L.n_confirmed)} confirmed · ${fmtInt(L.n_probable)} probable</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Owners covered</div>
+        <div class="kpi-value">${L.n_owners}</div>
+        <div class="kpi-foot">of 30 principal owners</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Cycles</div>
+        <div class="kpi-value">${L.n_cycles}</div>
+        <div class="kpi-foot">${L.earliest_date?.slice(0,4)} – ${L.latest_date?.slice(0,4)}</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="container block">
+    <div class="block-head">
+      <span class="eyebrow">Latest activity</span>
+      <h2 style="margin-top:6px">Most recent attributed donations</h2>
+      <p class="caption">The 20 most recently dated contributions in the archive. Each is one click from its FEC filing image.</p>
+    </div>
+    ${renderRecentDonations(state.data.donations)}
+    <p class="footnote">
+      "Most recent" is by the donation date as filed with the FEC, not by ingestion date.
+      During an election cycle, late additions can include contributions filed under
+      the FEC's 48-hour notice rule.
+    </p>
+  </section>
+
+  <section class="container block">
+    <div class="block-head">
+      <span class="eyebrow">League political map</span>
+      <h2 style="margin-top:6px">MLB ownership at a glance</h2>
+      <p class="caption">Each dot is one owner. Horizontal position is how their party-classified giving splits (Republican on the left, Democratic on the right). Vertical position is total dollars given, on a log scale. Click a dot for that owner's record.</p>
+    </div>
+    ${renderAlignmentScatter()}
+    <div class="legend" style="margin-top:24px">
+      <span><span class="legend-swatch" style="background:var(--rep)"></span>≥80% Republican</span>
+      <span><span class="legend-swatch" style="background:#C16A55"></span>60–80% Republican</span>
+      <span><span class="legend-swatch" style="background:var(--oth)"></span>40–60% mixed</span>
+      <span><span class="legend-swatch" style="background:#5478A8"></span>60–80% Democratic</span>
+      <span><span class="legend-swatch" style="background:var(--dem)"></span>≥80% Democratic</span>
+    </div>
+    ${renderScatterExclusionNote()}
+  </section>
+
+  <section class="container block">
+    <div class="block-head">
+      <span class="eyebrow">League-wide</span>
+      <h2 style="margin-top:6px">Political giving by election cycle</h2>
+      <p class="caption">Bars show total dollars given by MLB principal owners per cycle, colored by the recipient committee's party. <strong>Click a bar</strong> to see every donation in that cycle.</p>
+    </div>
+    ${renderCycleChart(L.by_cycle)}
+    <div class="legend">
+      <span><span class="legend-swatch dem"></span>Democratic recipients</span>
+      <span><span class="legend-swatch rep"></span>Republican recipients</span>
+      <span><span class="legend-swatch oth"></span>Other / unaffiliated</span>
+    </div>
+    <p class="footnote">
+      "Other / unaffiliated" includes party committees with no FEC party code,
+      joint fundraising committees that route to multiple parties, and the
+      MLB Commissioner's Office PAC (the league's own committee).
+    </p>
+  </section>
+
+  <section class="container block">
+    <div class="block-head-row">
+      <div>
+        <span class="eyebrow">The owners</span>
+        <h2 style="margin-top:6px">All ${L.n_owners} tracked owners</h2>
+        <p class="caption">Click any row to drill down into that owner's complete giving record.</p>
+      </div>
+      <button class="csv-btn" data-csv="league">Download full dataset</button>
+    </div>
+
+    <div class="filters">
+      <input id="ix-q" type="text" placeholder="Search owner or team…" value="${state.indexFilters.q}">
+      <span class="filter-label">Team</span>
+      <select id="ix-team">
+        <option value="">All</option>
+        ${teams.map((t) => `<option value="${escapeHtml(t)}"${t === state.indexFilters.team ? " selected" : ""}>${escapeHtml(t)}</option>`).join("")}
+      </select>
+      <span class="filter-label">Party tilt</span>
+      <select id="ix-tilt">
+        <option value=""${state.indexFilters.tilt === "" ? " selected" : ""}>All</option>
+        <option value="dem"${state.indexFilters.tilt === "dem" ? " selected" : ""}>Democratic-leaning (≥60%)</option>
+        <option value="rep"${state.indexFilters.tilt === "rep" ? " selected" : ""}>Republican-leaning (≥60%)</option>
+        <option value="mixed"${state.indexFilters.tilt === "mixed" ? " selected" : ""}>Mixed</option>
+      </select>
+      <span class="filter-spacer"></span>
+      <span class="filter-result" id="ix-result"></span>
+    </div>
+
+    ${renderOwnersTable(owners)}
+
+    <p class="footnote">
+      Party tilt is computed from CONFIRMED + PROBABLE dollars to identifiable
+      Democratic vs. Republican recipients only; "Other / unaffiliated" giving is
+      excluded from the tilt ratio. Owners with no party-classified giving
+      show neutral.
+    </p>
+  </section>
+  `;
+}
+
+function renderRecentDonations(allDonations) {
+  // Donations come pre-sorted by date DESC from build_data.py.
+  // Defensive re-sort in case future builds change that.
+  const recent = [...allDonations]
+    .filter((d) => d.date)
+    .sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0))
+    .slice(0, 20);
+
+  if (recent.length === 0) return `<p class="loading">No recent donations.</p>`;
+
+  return `
+    <div class="recent-list">
+      ${recent.map((d) => {
+        const owner = state.data.owners[d.parent || d.entity];
+        const ownerName = owner ? owner.name : (d.donor_name || d.entity);
+        const partyClass = d.party === "DEM" ? "dem" : d.party === "REP" ? "rep" : "oth";
+        const statusChip = d.status === "CONFIRMED"
+          ? `<span class="chip chip-confirmed">Confirmed</span>`
+          : `<span class="chip chip-probable">Probable</span>`;
+        return `
+          <div class="recent-row" data-id="${escapeAttr(d.id)}">
+            <div class="recent-date">${escapeHtml(d.date || "—")}</div>
+            <div class="recent-flow">
+              <span class="recent-donor">${escapeHtml(ownerName)}</span>
+              <span class="recent-arrow">→</span>
+              <span class="recent-recipient">${escapeHtml(d.committee || "—")}</span>
+              ${d.candidate ? `<span class="recent-meta">for ${escapeHtml(d.candidate)}</span>` : ""}
+              ${d.report_type ? `<span class="recent-meta">· ${escapeHtml(d.report_type)}</span>` : ""}
+            </div>
+            <div class="recent-amount">${fmtMoneyExact(d.amount)}</div>
+            <div class="recent-chips">
+              ${chip48H(d)}
+              <span class="chip-party ${partyClass}">${d.party}</span>
+              ${statusChip}
+            </div>
+          </div>`;
+      }).join("")}
+    </div>`;
+}
+
+/* Footnote explaining who is/isn't on the scatter, with a list of the
+   excluded owners so the chart's filtering rule is transparent. */
+function renderScatterExclusionNote() {
+  const owners = Object.values(state.data.owners);
+  const excluded = owners.filter((o) => {
+    const dem = o.party_dollars.DEM || 0;
+    const rep = o.party_dollars.REP || 0;
+    return (dem + rep === 0) || o.total_amount === 0;
+  });
+  const partOne = `
+    <p class="footnote">
+      Each dot represents one owner with party-classified federal giving.
+      Owners with no donations to identifiable Democratic or Republican
+      committees — those who gave only to the MLB Commissioner's Office PAC,
+      unaffiliated joint fundraising committees, or other unparty-coded
+      recipients — fall off the X axis and are excluded from this map. They
+      still appear in the owners table below.
+    </p>`;
+  if (excluded.length === 0) return partOne;
+  const names = excluded
+    .map((o) => `<a href="#/owner/${o.slug}" style="color:inherit;border-bottom:1px dotted var(--ink-3);text-decoration:none">${escapeHtml(o.name)}</a>`)
+    .join(", ");
+  return partOne + `
+    <p class="footnote" style="margin-top:4px">
+      <strong>Not on the map (${excluded.length}):</strong> ${names}.
+    </p>`;
+}
+
+function renderAlignmentScatter() {
+  const owners = Object.values(state.data.owners);
+  const points = owners.map((o) => {
+    const dem = o.party_dollars.DEM || 0;
+    const rep = o.party_dollars.REP || 0;
+    const denom = dem + rep;
+    if (denom === 0 || o.total_amount === 0) return null;
+    return {
+      slug: o.slug,
+      name: o.name,
+      team: o.team,
+      lastName: o.name.split(" ").slice(-1)[0],
+      total: o.total_amount,
+      n: o.n_total,
+      demShare: dem / denom,
+      dem, rep,
+    };
+  }).filter(Boolean);
+
+  if (points.length === 0) return `<p class="loading">No party-classified giving to chart.</p>`;
+
+  const W = 1100, H = 460, padL = 80, padR = 40, padT = 30, padB = 60;
+  const innerW = W - padL - padR;
+  const innerH = H - padT - padB;
+
+  const totals = points.map((p) => p.total);
+  const logMin = Math.log10(Math.min(...totals) * 0.7);
+  const logMax = Math.log10(Math.max(...totals) * 1.4);
+
+  const xScale = (s) => padL + s * innerW;
+  const yScale = (t) => padT + innerH - ((Math.log10(t) - logMin) / (logMax - logMin)) * innerH;
+
+  const colorFor = (s) => {
+    if (s < 0.2) return "var(--rep)";
+    if (s < 0.4) return "#C16A55";
+    if (s < 0.6) return "var(--oth)";
+    if (s < 0.8) return "#5478A8";
+    return "var(--dem)";
+  };
+
+  /* Dot radius scales with number of donations (log) */
+  const ns = points.map((p) => p.n);
+  const nMin = Math.min(...ns), nMax = Math.max(...ns);
+  const rFor = (n) => {
+    const t = Math.log10(n + 1) / Math.log10(nMax + 1);
+    return 5 + t * 8;
+  };
+
+  /* Label only outliers: top 3 by total, top 3 most partisan each side */
+  const byTotal = [...points].sort((a, b) => b.total - a.total).slice(0, 4);
+  const mostRep = [...points].sort((a, b) => a.demShare - b.demShare).slice(0, 3);
+  const mostDem = [...points].sort((a, b) => b.demShare - a.demShare).slice(0, 3);
+  const labelSet = new Set([...byTotal, ...mostRep, ...mostDem].map((p) => p.slug));
+
+  /* Y-axis ticks at powers of 10 */
+  const yTicks = [];
+  for (let p = Math.ceil(logMin); p <= Math.floor(logMax); p++) {
+    yTicks.push(Math.pow(10, p));
+  }
+
+  /* X-axis ticks */
+  const xTicks = [
+    { v: 0,    label: "100% REP" },
+    { v: 0.25, label: "75/25" },
+    { v: 0.5,  label: "50/50" },
+    { v: 0.75, label: "75/25" },
+    { v: 1,    label: "100% DEM" },
+  ];
+
+  return `
+  <div style="overflow-x:auto">
+    <svg viewBox="0 0 ${W} ${H}" style="display:block;width:100%;min-width:760px;height:auto" preserveAspectRatio="xMidYMid meet">
+      <!-- Y gridlines + labels (log $) -->
+      ${yTicks.map((v) => `
+        <line x1="${padL}" x2="${W - padR}" y1="${yScale(v)}" y2="${yScale(v)}" stroke="var(--rule)" stroke-width="1"/>
+        <text x="${padL - 10}" y="${yScale(v) + 4}" text-anchor="end" font-family="var(--mono)" font-size="11" fill="var(--ink-3)">${fmtMoney(v)}</text>
+      `).join("")}
+
+      <!-- 50/50 reference line, slightly stronger -->
+      <line x1="${xScale(0.5)}" x2="${xScale(0.5)}" y1="${padT}" y2="${H - padB}" stroke="var(--rule-strong)" stroke-width="1" stroke-dasharray="3 3"/>
+
+      <!-- X axis baseline -->
+      <line x1="${padL}" x2="${W - padR}" y1="${H - padB + 0.5}" y2="${H - padB + 0.5}" stroke="var(--rule-strong)" stroke-width="1"/>
+
+      <!-- X tick labels -->
+      ${xTicks.map((t) => `
+        <text x="${xScale(t.v)}" y="${H - padB + 18}" text-anchor="${t.v === 0 ? "start" : t.v === 1 ? "end" : "middle"}" font-family="var(--mono)" font-size="11" fill="var(--ink-3)">${t.label}</text>
+      `).join("")}
+
+      <!-- Axis titles -->
+      <text x="${padL}" y="${H - 10}" text-anchor="start" font-family="var(--sans)" font-size="11" font-weight="600" fill="var(--ink-2)" letter-spacing="0.08em">← MORE REPUBLICAN</text>
+      <text x="${W - padR}" y="${H - 10}" text-anchor="end" font-family="var(--sans)" font-size="11" font-weight="600" fill="var(--ink-2)" letter-spacing="0.08em">MORE DEMOCRATIC →</text>
+      <text x="20" y="${padT + innerH / 2}" text-anchor="middle" font-family="var(--sans)" font-size="11" font-weight="600" fill="var(--ink-2)" letter-spacing="0.08em" transform="rotate(-90 20 ${padT + innerH / 2})">TOTAL GIVING (LOG SCALE) →</text>
+
+      <!-- Dots. Data attributes feed the custom tooltip in bindIndexHandlers. -->
+      ${points.map((p) => {
+        const x = xScale(p.demShare);
+        const y = yScale(p.total);
+        const r = rFor(p.n);
+        const color = colorFor(p.demShare);
+        return `
+          <circle class="scatter-dot"
+                  data-slug="${p.slug}"
+                  data-name="${escapeAttr(p.name)}"
+                  data-team="${escapeAttr(p.team || '')}"
+                  data-total="${p.total}"
+                  data-n="${p.n}"
+                  data-dem="${p.dem}"
+                  data-rep="${p.rep}"
+                  data-dem-share="${p.demShare}"
+                  cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(1)}"
+                  fill="${color}" fill-opacity="0.78" stroke="var(--ink)" stroke-width="0.5"
+                  style="cursor:pointer"></circle>`;
+      }).join("")}
+
+      <!-- Labels for outliers, placed to avoid the dot -->
+      ${points.filter((p) => labelSet.has(p.slug)).map((p) => {
+        const x = xScale(p.demShare);
+        const y = yScale(p.total);
+        const r = rFor(p.n);
+        /* Place label to the right of the dot, or left if it would overflow */
+        const labelRight = x < W - padR - 110;
+        const lx = labelRight ? x + r + 4 : x - r - 4;
+        const anchor = labelRight ? "start" : "end";
+        return `
+          <text x="${lx.toFixed(1)}" y="${(y + 3).toFixed(1)}" text-anchor="${anchor}"
+                font-family="var(--serif)" font-size="12" font-weight="600" fill="var(--ink)"
+                style="pointer-events:none">${escapeHtml(p.lastName)}</text>`;
+      }).join("")}
+    </svg>
+  </div>`;
+}
+
+function renderCycleChart(byCycle) {
+  const cycles = Object.keys(byCycle).map(Number).sort((a, b) => a - b);
+  if (cycles.length === 0) return "";
+  const max = Math.max(...cycles.map((c) => byCycle[c].total));
+  const H = 240;
+
+  const bars = cycles.map((c) => {
+    const d = byCycle[c];
+    const dem = d.dollars_by_party.DEM || 0;
+    const rep = d.dollars_by_party.REP || 0;
+    const oth = (d.dollars_by_party.OTH || 0) + (d.dollars_by_party.IND || 0) + (d.dollars_by_party.LIB || 0) + (d.dollars_by_party.GRE || 0);
+    const total = dem + rep + oth;
+    const h = (total / max) * H;
+    const demH = (dem / total) * h || 0;
+    const repH = (rep / total) * h || 0;
+    const othH = (oth / total) * h || 0;
+
+    return `
+      <div class="cycle-bar" data-cycle="${c}" style="height:${H}px">
+        <div class="cycle-bar-tooltip">
+          <div class="tt-head">${c} cycle</div>
+          <div class="row"><span class="label">Total</span><span class="value">${fmtMoneyExact(total)}</span></div>
+          <div class="row"><span class="label">Donations</span><span class="value">${fmtInt(d.count)}</span></div>
+          <div class="tt-divider"></div>
+          <div class="row"><span class="label dem">Democratic</span><span class="value">${fmtMoney(dem)}</span></div>
+          <div class="row"><span class="label rep">Republican</span><span class="value">${fmtMoney(rep)}</span></div>
+          <div class="row"><span class="label oth">Other</span><span class="value">${fmtMoney(oth)}</span></div>
+          <div class="tt-hint">Click bar to view cycle →</div>
+        </div>
+        <div style="position:absolute;bottom:0;left:0;right:0;height:${h}px;display:flex;flex-direction:column-reverse">
+          <div class="cycle-bar-seg dem" style="height:${demH}px"></div>
+          <div class="cycle-bar-seg rep" style="height:${repH}px"></div>
+          <div class="cycle-bar-seg oth" style="height:${othH}px"></div>
+        </div>
+      </div>`;
+  }).join("");
+
+  const axis = cycles.map((c) => `<div>${c.toString().slice(2)}</div>`).join("");
+
+  return `
+    <div class="cycle-chart">${bars}</div>
+    <div class="cycle-chart-axis">${axis}</div>`;
+}
+
+function renderOwnersTable(owners) {
+  /* Sort + filter */
+  const f = state.indexFilters;
+  const q = f.q.trim().toLowerCase();
+  let rows = owners.filter((o) => {
+    if (q && !(o.name.toLowerCase().includes(q) || (o.team || "").toLowerCase().includes(q))) return false;
+    if (f.team && o.team !== f.team) return false;
+    if (f.tilt) {
+      const dem = o.party_dollars.DEM || 0;
+      const rep = o.party_dollars.REP || 0;
+      const denom = dem + rep;
+      if (denom === 0) return false;
+      const demShare = dem / denom;
+      if (f.tilt === "dem" && demShare < 0.6) return false;
+      if (f.tilt === "rep" && demShare > 0.4) return false;
+      if (f.tilt === "mixed" && (demShare < 0.4 || demShare > 0.6)) return false;
+    }
+    return true;
+  });
+
+  /* Sort */
+  const key = state.indexSort.key;
+  const dir = state.indexSort.dir === "asc" ? 1 : -1;
+  rows.sort((a, b) => {
+    let av, bv;
+    if (key === "name")  { av = a.name; bv = b.name; }
+    else if (key === "team")  { av = a.team || ""; bv = b.team || ""; }
+    else if (key === "total") { av = a.total_amount; bv = b.total_amount; }
+    else if (key === "n")     { av = a.n_total; bv = b.n_total; }
+    else if (key === "tenure") { av = a.tenure_start || ""; bv = b.tenure_start || ""; }
+    else if (key === "refresh") {
+      /* Sort by ingestion-run time. Null (never ingested) sinks to the bottom
+         in DESC order and to the top in ASC order. */
+      av = a.last_run ? new Date(a.last_run.started_at).getTime() : (dir === 1 ? -Infinity : Infinity);
+      bv = b.last_run ? new Date(b.last_run.started_at).getTime() : (dir === 1 ? -Infinity : Infinity);
+    }
+    else { av = a.total_amount; bv = b.total_amount; }
+    if (typeof av === "string") return av.localeCompare(bv) * dir;
+    return (av - bv) * dir;
+  });
+
+  setTimeout(() => {
+    const r = document.getElementById("ix-result");
+    if (r) r.textContent = `${rows.length} of ${owners.length} owners`;
+  }, 0);
+
+  if (rows.length === 0) {
+    return emptyState(
+      "No owners match those filters",
+      `Try a different search term or remove a filter above. ${owners.length} owners total in the archive.`
+    );
+  }
+
+  const sortArrow = (k) => state.indexSort.key === k ? `<span class="sort-arrow">${state.indexSort.dir === "asc" ? "↑" : "↓"}</span>` : "";
+
+  return `
+    <div class="table-scroll">
+    <table class="owners-table">
+      <thead>
+        <tr>
+          <th data-sort="name" style="cursor:pointer">Owner ${sortArrow("name")}</th>
+          <th data-sort="team" style="cursor:pointer">Team ${sortArrow("team")}</th>
+          <th data-sort="tenure" style="cursor:pointer">Tenure ${sortArrow("tenure")}</th>
+          <th data-sort="total" class="num" style="cursor:pointer">Total ${sortArrow("total")}</th>
+          <th data-sort="n" class="num" style="cursor:pointer"># ${sortArrow("n")}</th>
+          <th>Activity ${state.data.league.earliest_date?.slice(0,4)}–${state.data.league.latest_date?.slice(0,4)}</th>
+          <th>Party tilt</th>
+          <th>Verified</th>
+          <th data-sort="refresh" style="cursor:pointer">Last refresh ${sortArrow("refresh")}</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${rows.map(renderOwnerRow).join("")}
+      </tbody>
+    </table>
+    </div>
+  `;
+}
+
+function renderOwnerRow(o) {
+  const dem = o.party_dollars.DEM || 0;
+  const rep = o.party_dollars.REP || 0;
+  const oth = (o.party_dollars.OTH || 0) + (o.party_dollars.IND || 0) + (o.party_dollars.LIB || 0) + (o.party_dollars.GRE || 0);
+  const tot = dem + rep + oth;
+  const tenureStr = o.tenure_start ? `${o.tenure_start.slice(0,4)}–${o.tenure_end ? o.tenure_end.slice(0,4) : "now"}` : "—";
+
+  return `
+    <tr data-slug="${o.slug}">
+      <td class="col-owner">
+        <div class="col-owner-name">${escapeHtml(o.name)}</div>
+      </td>
+      <td class="col-team">${o.team
+        ? `<span class="team-link" data-team-slug="${teamSlug(o.team)}">${escapeHtml(o.team)}</span>`
+        : "—"}</td>
+      <td class="col-tenure">${tenureStr}</td>
+      <td class="col-total num">${fmtMoney(o.total_amount)}</td>
+      <td class="col-count num">${fmtInt(o.n_total)}</td>
+      <td class="sparkline-cell">${renderSparkline(o.cycle_dollars)}</td>
+      <td class="tilt-cell">${renderTilt(dem, rep, oth)}</td>
+      <td class="ver-cell">
+        <span class="ver-confirmed">${o.n_confirmed} confirmed</span>
+        ${o.n_probable > 0 ? `<span class="ver-probable">${o.n_probable} probable</span>` : ""}
+      </td>
+      <td>
+        ${o.last_run
+          ? `<span class="fresh-chip ${freshnessClass(o.last_run.started_at)}" title="Last ingestion run: ${escapeHtml(o.last_run.started_at)} · ${o.n_runs} run${o.n_runs === 1 ? "" : "s"} total">${fmtAgo(o.last_run.started_at)}</span>`
+          : `<span class="fresh-chip fresh-never" title="No ingestion runs recorded for this owner">never</span>`}
+      </td>
+    </tr>`;
+}
+
+function renderSparkline(cycleDollars) {
+  const cycles = [];
+  for (let y = 2000; y <= 2026; y += 2) cycles.push(y);
+  const vals = cycles.map((c) => cycleDollars[c] || 0);
+  const max = Math.max(1, ...vals);
+  const W = 180, H = 32, pad = 2;
+  const barW = (W - pad * 2) / cycles.length - 1;
+
+  const bars = vals.map((v, i) => {
+    const h = max > 0 ? (v / max) * (H - 4) : 0;
+    const x = pad + i * (barW + 1);
+    const y = H - h;
+    return `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${barW.toFixed(1)}" height="${h.toFixed(1)}" fill="${v > 0 ? "var(--ink-2)" : "transparent"}" />`;
+  }).join("");
+
+  /* baseline */
+  return `<svg class="sparkline-svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
+    <line x1="${pad}" y1="${H - 0.5}" x2="${W - pad}" y2="${H - 0.5}" stroke="var(--rule)" stroke-width="1" />
+    ${bars}
+  </svg>`;
+}
+
+function renderTilt(dem, rep, oth) {
+  const t = dem + rep + oth;
+  if (t === 0) return `<div class="tilt-bar"></div><div class="tilt-labels"><span class="muted">no party-classified giving</span></div>`;
+  const demPct = (dem / t) * 100;
+  const repPct = (rep / t) * 100;
+  const othPct = (oth / t) * 100;
+  const partyDenom = dem + rep;
+  const partyTilt = partyDenom > 0 ? `${Math.round((dem / partyDenom) * 100)}% DEM` : "—";
+  return `
+    <div class="tilt-bar">
+      <div class="tilt-seg dem" style="width:${demPct}%"></div>
+      <div class="tilt-seg oth" style="width:${othPct}%"></div>
+      <div class="tilt-seg rep" style="width:${repPct}%"></div>
+    </div>
+    <div class="tilt-labels">
+      <span class="dem">DEM ${Math.round(demPct)}%</span>
+      <span class="muted">OTH ${Math.round(othPct)}%</span>
+      <span class="rep">REP ${Math.round(repPct)}%</span>
+    </div>`;
+}
+
+function bindIndexHandlers() {
+  if (state.view.name !== "league") return;
+  const q = document.getElementById("ix-q");
+  const tm = document.getElementById("ix-team");
+  const tilt = document.getElementById("ix-tilt");
+  if (q) q.addEventListener("input", (e) => { state.indexFilters.q = e.target.value; rerenderOwnersTableOnly(); });
+  if (tm) tm.addEventListener("change", (e) => { state.indexFilters.team = e.target.value; rerenderOwnersTableOnly(); });
+  if (tilt) tilt.addEventListener("change", (e) => { state.indexFilters.tilt = e.target.value; rerenderOwnersTableOnly(); });
+
+  document.querySelectorAll(".owners-table th[data-sort]").forEach((th) => {
+    th.addEventListener("click", () => {
+      const k = th.getAttribute("data-sort");
+      if (state.indexSort.key === k) state.indexSort.dir = state.indexSort.dir === "asc" ? "desc" : "asc";
+      else { state.indexSort.key = k; state.indexSort.dir = k === "name" || k === "team" || k === "tenure" ? "asc" : "desc"; }
+      rerenderOwnersTableOnly();
+    });
+  });
+
+  document.querySelectorAll(".owners-table tbody tr").forEach((tr) => {
+    tr.addEventListener("click", () => {
+      const slug = tr.getAttribute("data-slug");
+      window.location.hash = `#/owner/${slug}`;
+    });
+  });
+
+  /* Team links in the owners table — stop propagation so the team cell
+     navigates to the team page instead of the owner page. */
+  document.querySelectorAll(".team-link[data-team-slug]").forEach((el) => {
+    el.addEventListener("click", (ev) => {
+      ev.stopPropagation();
+      window.location.hash = `#/team/${el.getAttribute("data-team-slug")}`;
+    });
+  });
+
+  document.querySelectorAll(".recent-row").forEach((row) => {
+    row.addEventListener("click", () => openDrawer(row.getAttribute("data-id")));
+  });
+
+  document.querySelectorAll(".cycle-bar[data-cycle]").forEach((bar) => {
+    bar.addEventListener("click", () => {
+      window.location.hash = `#/cycle/${bar.getAttribute("data-cycle")}`;
+    });
+    bar.style.cursor = "pointer";
+  });
+
+  document.querySelectorAll(".csv-btn[data-csv=\"league\"]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      downloadDonationsCSV(state.data.donations, `owners-box-${state.data.generated_at.slice(0,10)}.csv`);
+    });
+  });
+
+  /* Alignment scatter dots → click navigates to owner; hover shows tooltip */
+  const tooltip = document.getElementById("scatter-tooltip");
+  document.querySelectorAll("circle.scatter-dot").forEach((c) => {
+    c.addEventListener("click", () => {
+      hideScatterTooltip(tooltip);
+      window.location.hash = `#/owner/${c.getAttribute("data-slug")}`;
+    });
+    c.addEventListener("mouseenter", () => showScatterTooltip(c, tooltip));
+    c.addEventListener("mouseleave", () => hideScatterTooltip(tooltip));
+  });
+}
+
+/* Tooltip population, positioning, and dismissal for the league scatter. */
+function showScatterTooltip(circle, tooltip) {
+  if (!tooltip) return;
+  const ds = circle.dataset;
+  const total = parseFloat(ds.total);
+  const n = parseInt(ds.n, 10);
+  const dem = parseFloat(ds.dem);
+  const rep = parseFloat(ds.rep);
+  const partyDenom = dem + rep;
+  const demPct = partyDenom > 0 ? Math.round((dem / partyDenom) * 100) : 0;
+  const repPct = partyDenom > 0 ? 100 - demPct : 0;
+
+  tooltip.innerHTML = `
+    <div class="scatter-tt-name">${escapeHtml(ds.name)}</div>
+    <div class="scatter-tt-team">${escapeHtml(ds.team || "—")}</div>
+    <div class="scatter-tt-row">
+      <span class="label">Total giving</span>
+      <span class="value">${fmtMoneyExact(total)}</span>
+    </div>
+    <div class="scatter-tt-row">
+      <span class="label">Donations</span>
+      <span class="value">${fmtInt(n)}</span>
+    </div>
+    <div class="scatter-tt-divider"></div>
+    <div class="scatter-tt-row">
+      <span class="label dem">Democratic</span>
+      <span class="value">${fmtMoney(dem)} · ${demPct}%</span>
+    </div>
+    <div class="scatter-tt-row">
+      <span class="label rep">Republican</span>
+      <span class="value">${fmtMoney(rep)} · ${repPct}%</span>
+    </div>
+    <div class="scatter-tt-hint">Click for full record →</div>`;
+
+  positionScatterTooltip(circle, tooltip);
+  tooltip.classList.add("visible");
+  tooltip.setAttribute("aria-hidden", "false");
+}
+
+function positionScatterTooltip(circle, tooltip) {
+  /* Position the tooltip centered above the dot. Use getBoundingClientRect
+     so it works regardless of SVG viewBox scaling. Account for scroll. */
+  const rect = circle.getBoundingClientRect();
+  const cx = rect.left + rect.width / 2 + window.scrollX;
+  const cy = rect.top + window.scrollY;
+  tooltip.style.left = `${cx}px`;
+  tooltip.style.top = `${cy}px`;
+
+  /* Edge-of-viewport guard: if the tooltip would overflow the right edge,
+     nudge it leftward. Read its width AFTER content is set. */
+  const tipRect = tooltip.getBoundingClientRect();
+  const viewportRight = window.innerWidth + window.scrollX;
+  if (rect.left + tipRect.width / 2 > window.innerWidth - 16) {
+    const overflow = (rect.left + tipRect.width / 2) - (window.innerWidth - 16);
+    tooltip.style.left = `${cx - overflow}px`;
+  } else if (rect.left - tipRect.width / 2 < 16) {
+    const underflow = 16 - (rect.left - tipRect.width / 2);
+    tooltip.style.left = `${cx + underflow}px`;
+  }
+}
+
+function hideScatterTooltip(tooltip) {
+  if (!tooltip) return;
+  tooltip.classList.remove("visible");
+  tooltip.setAttribute("aria-hidden", "true");
+}
+
+function rerenderOwnersTableOnly() {
+  /* Light re-render: just the table, preserving inputs/focus */
+  const owners = Object.values(state.data.owners);
+  const cur = document.querySelector(".owners-table");
+  if (!cur) return;
+  const wrap = document.createElement("div");
+  wrap.innerHTML = renderOwnersTable(owners);
+  cur.replaceWith(wrap.firstElementChild);
+  document.querySelectorAll(".owners-table th[data-sort]").forEach((th) => {
+    th.addEventListener("click", () => {
+      const k = th.getAttribute("data-sort");
+      if (state.indexSort.key === k) state.indexSort.dir = state.indexSort.dir === "asc" ? "desc" : "asc";
+      else { state.indexSort.key = k; state.indexSort.dir = k === "name" || k === "team" || k === "tenure" ? "asc" : "desc"; }
+      rerenderOwnersTableOnly();
+    });
+  });
+  document.querySelectorAll(".owners-table tbody tr").forEach((tr) => {
+    tr.addEventListener("click", () => {
+      const slug = tr.getAttribute("data-slug");
+      window.location.hash = `#/owner/${slug}`;
+    });
+  });
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   OWNER DETAIL VIEW
+   ══════════════════════════════════════════════════════════════════════ */
+function renderOwner(slug) {
+  const o = state.data.owners[slug];
+  if (!o) return `<div class="container loading">Owner not found.</div>`;
+
+  const donations = state.data.donations.filter((d) => (d.parent || d.entity) === slug);
+  const cycles = [...new Set(donations.map((d) => d.cycle).filter(Boolean))].sort((a,b) => b - a);
+
+  const dem = o.party_dollars.DEM || 0;
+  const rep = o.party_dollars.REP || 0;
+  const denom = dem + rep;
+  const partyTilt = denom > 0
+    ? (Math.round((dem / denom) * 100) >= 60 ? `Democratic-leaning (${Math.round((dem / denom) * 100)}% DEM)`
+       : Math.round((rep / denom) * 100) >= 60 ? `Republican-leaning (${Math.round((rep / denom) * 100)}% REP)`
+       : `Mixed (${Math.round((dem / denom) * 100)}% DEM / ${Math.round((rep / denom) * 100)}% REP)`)
+    : "No party-classified giving";
+
+  const cyclesSpanned = Object.keys(o.cycle_dollars).length;
+
+  /* Pick a sample CONFIRMED donation for the verification preview */
+  const confirmedSample = donations.find((d) => d.status === "CONFIRMED" && d.signals && d.signals.length >= 2);
+
+  return `
+  <div class="container">
+    <a class="back" href="#/">← All owners</a>
+
+    <header class="owner-head">
+      <span class="eyebrow">${o.team ? `<a href="#/team/${teamSlug(o.team)}" style="color:inherit;text-decoration:none;border-bottom:1px dotted var(--ink-3)">${escapeHtml(o.team)} →</a>` : ""}</span>
+      <h1 style="margin-top:8px">${escapeHtml(o.name)}</h1>
+      <div class="owner-meta">
+        <span class="owner-role">Principal owner</span>
+        <span class="dot"></span>
+        <span>Tenure ${o.tenure_start ? o.tenure_start.slice(0,4) : "—"}${o.tenure_end ? "–" + o.tenure_end.slice(0,4) : "–present"}</span>
+        <span class="dot"></span>
+        <span>${partyTilt}</span>
+      </div>
+    </header>
+
+    <div class="kpis" style="border-top:0;border-bottom:1px solid var(--rule);">
+      <div class="kpi">
+        <div class="kpi-label">Total tracked</div>
+        <div class="kpi-value">${fmtMoney(o.total_amount)}</div>
+        <div class="kpi-foot">${fmtMoneyExact(o.total_amount)}</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Donations</div>
+        <div class="kpi-value">${fmtInt(o.n_total)}</div>
+        <div class="kpi-foot">${fmtInt(o.n_confirmed)} confirmed · ${fmtInt(o.n_probable)} probable</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Cycles active</div>
+        <div class="kpi-value">${cyclesSpanned}</div>
+        <div class="kpi-foot">${o.earliest_date?.slice(0,4) || "—"} – ${o.latest_date?.slice(0,4) || "—"}</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Distinct recipients</div>
+        <div class="kpi-value">${fmtInt(o.distinct_recipients)}</div>
+        <div class="kpi-foot">Committees, candidates, PACs</div>
+      </div>
+    </div>
+
+    <section class="block">
+      <div class="block-head">
+        <span class="eyebrow">Timeline</span>
+        <h2 style="margin-top:6px">Every donation, plotted by date and amount</h2>
+        <p class="caption">Each dot is one FEC-reported contribution. Y-axis is dollar amount (log scale). Color = recipient party. Hover for details, click for the full record.</p>
+      </div>
+      ${renderTimeline(donations, o)}
+      <div class="legend">
+        <span><span class="legend-swatch dem"></span>Democratic</span>
+        <span><span class="legend-swatch rep"></span>Republican</span>
+        <span><span class="legend-swatch oth"></span>Other / unaffiliated</span>
+        ${o.tenure_start ? `<span style="margin-left:auto;color:var(--ink-3);font-size:12px"><span style="display:inline-block;width:18px;height:10px;background:#FBF2EC;border:1px solid var(--accent);border-style:dashed;vertical-align:-1px;margin-right:6px"></span>Tenure as ${escapeHtml(o.team || "owner")}</span>` : ""}
+      </div>
+    </section>
+
+    <section class="block">
+      <div class="two-col">
+        <div>
+          <span class="eyebrow">Recipients</span>
+          <h2 style="margin-top:6px">Where the money went</h2>
+          <p class="caption">Top recipient committees by total dollars, all cycles combined.</p>
+          <div class="recipients-list" style="margin-top:18px">
+            ${o.top_recipients.map((r, i) => renderRecipient(r, i, o.total_amount)).join("")}
+          </div>
+        </div>
+
+        <div>
+          <span class="eyebrow">Verification</span>
+          <h2 style="margin-top:6px">How a record gets attributed to ${escapeHtml(o.name.split(" ").slice(-1)[0])}</h2>
+          <p class="caption">A name match alone is never enough. Every CONFIRMED record needs at least two of: documented residence, documented employer, documented occupation. PROBABLE means name + one signal.</p>
+          ${confirmedSample ? renderVerificationCard(confirmedSample) : `<p class="muted" style="font-size:14px;margin-top:18px">No sample available.</p>`}
+        </div>
+      </div>
+    </section>
+
+    <section class="block">
+      <div class="block-head-row">
+        <div>
+          <span class="eyebrow">The data</span>
+          <h2 style="margin-top:6px">All donations</h2>
+          <p class="caption">${fmtInt(donations.length)} records. Click any row for the full provenance trail.</p>
+        </div>
+        <button class="csv-btn" data-csv="owner">Download CSV</button>
+      </div>
+
+      <div class="filters">
+        <input id="od-q" type="text" placeholder="Search recipient or candidate…" value="${state.ownerFilters.q}">
+        <span class="filter-label">Cycle</span>
+        <select id="od-cycle">
+          <option value="">All</option>
+          ${cycles.map((c) => `<option value="${c}"${state.ownerFilters.cycle == c ? " selected" : ""}>${c}</option>`).join("")}
+        </select>
+        <span class="filter-label">Party</span>
+        <select id="od-party">
+          <option value="">All</option>
+          <option value="DEM"${state.ownerFilters.party === "DEM" ? " selected" : ""}>Democratic</option>
+          <option value="REP"${state.ownerFilters.party === "REP" ? " selected" : ""}>Republican</option>
+          <option value="OTH"${state.ownerFilters.party === "OTH" ? " selected" : ""}>Other / unaffiliated</option>
+        </select>
+        <span class="filter-label">Status</span>
+        <select id="od-status">
+          <option value="">Both</option>
+          <option value="CONFIRMED"${state.ownerFilters.status === "CONFIRMED" ? " selected" : ""}>Confirmed only</option>
+          <option value="PROBABLE"${state.ownerFilters.status === "PROBABLE" ? " selected" : ""}>Probable only</option>
+        </select>
+        <span class="filter-spacer"></span>
+        <span class="filter-result" id="od-result"></span>
+      </div>
+
+      <div id="od-table-wrap">
+        ${renderDonationsTable(donations)}
+      </div>
+    </section>
+  </div>
+  `;
+}
+
+function renderRecipient(r, i, totalAmount) {
+  const partyClass = r.party === "DEM" ? "dem" : r.party === "REP" ? "rep" : "oth";
+  const pct = totalAmount > 0 ? (r.amount / totalAmount) * 100 : 0;
+  const cid = r.committee_id;
+  const linkable = cid && cid !== "_unknown";
+  return `
+    <div class="recipient">
+      <div class="recipient-rank">${(i + 1).toString().padStart(2, "0")}</div>
+      <div>
+        <div class="recipient-name">
+          ${linkable
+            ? `<span class="recipient-link" data-cid="${escapeAttr(cid)}">${escapeHtml(r.committee || "—")}</span>`
+            : escapeHtml(r.committee || "—")}
+          <span class="chip-party ${partyClass}" style="margin-left:6px;font-size:9px">${r.party}</span>
+        </div>
+        <div class="recipient-bar-track"><div class="recipient-bar ${partyClass}" style="width:${pct.toFixed(1)}%"></div></div>
+      </div>
+      <div>
+        <div class="recipient-amount">${fmtMoney(r.amount)}</div>
+        <div class="recipient-count">${r.count} donation${r.count === 1 ? "" : "s"}</div>
+      </div>
+    </div>`;
+}
+
+function renderVerificationCard(d) {
+  return `
+    <div class="ver-card">
+      <span class="chip chip-confirmed">Confirmed</span>
+      <h4 style="margin-top:10px">${fmtMoney(d.amount)} to ${escapeHtml(d.committee)}</h4>
+      <div class="ver-meta">${fmtDate(d.date)} · Transaction ${escapeHtml(d.id)}</div>
+
+      <div class="field">
+        <div class="field-label">As filed with FEC</div>
+        <div class="field-value">${escapeHtml(d.donor_name)}</div>
+        <div class="field-value muted">${escapeHtml(d.employer || "—")} · ${escapeHtml(d.occupation || "—")}</div>
+        <div class="field-value muted">${escapeHtml(d.city || "—")}, ${escapeHtml(d.state || "—")} ${escapeHtml(d.zip || "")}</div>
+      </div>
+
+      <div class="field" style="margin-top:14px">
+        <div class="field-label">Signals matched (${d.signals.length})</div>
+        <div class="signal-chips">${d.signals.map((s) => `<span class="chip-signal">${escapeHtml(s)}</span>`).join("")}</div>
+      </div>
+    </div>`;
+}
+
+function renderTimeline(donations, ownerOrSegments) {
+  if (donations.length === 0) return `<p class="loading">No donations to chart.</p>`;
+
+  /* Normalize tenure input to a list of segments.
+     Single owner with tenure_start → one segment.
+     Array of segments → use as-is.
+     Null / undefined → no shading. */
+  let segments = [];
+  if (Array.isArray(ownerOrSegments)) {
+    segments = ownerOrSegments;
+  } else if (ownerOrSegments && ownerOrSegments.tenure_start) {
+    segments = [{
+      start: ownerOrSegments.tenure_start,
+      end: ownerOrSegments.tenure_end,
+      label: `Owner of ${ownerOrSegments.team || "team"}${ownerOrSegments.tenure_end ? " · " + ownerOrSegments.tenure_start.slice(0,4) + "–" + ownerOrSegments.tenure_end.slice(0,4) : " · since " + ownerOrSegments.tenure_start.slice(0,4)}`,
+      ownerSlug: ownerOrSegments.slug,
+    }];
+  }
+
+  const W = 1100, H = 280, padL = 50, padR = 16, padT = 18, padB = 30;
+  const innerW = W - padL - padR;
+  const innerH = H - padT - padB;
+
+  const dated = donations.filter((d) => d.date).map((d) => ({ ...d, t: new Date(d.date).getTime() }));
+  if (dated.length === 0) return `<p class="loading">No dated donations.</p>`;
+
+  /* Extend visible window to include all tenure segments */
+  const segmentTimes = segments.map((s) => ({
+    start: s.start ? new Date(s.start).getTime() : null,
+    end: s.end ? new Date(s.end).getTime() : Date.now(),
+    label: s.label,
+    ownerSlug: s.ownerSlug,
+  })).filter((s) => s.start != null);
+
+  let tMin = Math.min(...dated.map((d) => d.t));
+  let tMax = Math.max(...dated.map((d) => d.t));
+  for (const s of segmentTimes) {
+    tMin = Math.min(tMin, s.start);
+    tMax = Math.max(tMax, s.end);
+  }
+
+  const aMax = Math.max(...dated.map((d) => d.amount));
+  const aMin = Math.max(50, Math.min(...dated.map((d) => d.amount)));
+  const logMin = Math.log10(aMin);
+  const logMax = Math.log10(Math.max(aMax, aMin * 2));
+
+  const xScale = (t) => padL + ((t - tMin) / (tMax - tMin || 1)) * innerW;
+  const yScale = (a) => padT + innerH - ((Math.log10(Math.max(a, aMin)) - logMin) / (logMax - logMin || 1)) * innerH;
+
+  /* Y axis ticks */
+  const yTicks = [];
+  for (let p = Math.ceil(logMin); p <= Math.floor(logMax); p++) {
+    const v = Math.pow(10, p);
+    if (v >= aMin && v <= aMax * 1.5) yTicks.push(v);
+  }
+
+  /* X axis ticks (years) */
+  const startY = new Date(tMin).getFullYear();
+  const endY = new Date(tMax).getFullYear();
+  const xTicks = [];
+  for (let y = Math.ceil(startY / 2) * 2; y <= endY; y += 2) {
+    xTicks.push(new Date(y, 0, 1).getTime());
+  }
+
+  const partyColor = { DEM: "var(--dem)", REP: "var(--rep)", OTH: "var(--oth)", IND: "var(--oth)", LIB: "var(--oth)", GRE: "var(--oth)" };
+
+  /* Tenure overlays. Multiple segments stack vertically if they overlap so
+     handoffs (Castellini father→son, Pohlad brothers) read at a glance. */
+  let tenureOverlays = "";
+  segmentTimes.forEach((s, i) => {
+    const xs = xScale(s.start);
+    const xe = xScale(s.end);
+    const stripeH = segmentTimes.length > 1 ? 18 : innerH;
+    const stripeY = segmentTimes.length > 1 ? padT + i * 20 : padT;
+    if (segmentTimes.length > 1) {
+      tenureOverlays += `
+        <rect x="${xs.toFixed(1)}" y="${stripeY}" width="${Math.max(1, xe - xs).toFixed(1)}" height="${stripeH}"
+              fill="#FBF2EC" stroke="var(--accent)" stroke-width="1" stroke-dasharray="3 3" opacity="0.85"/>
+        <text x="${(xs + 6).toFixed(1)}" y="${(stripeY + 13).toFixed(1)}"
+              font-family="var(--sans)" font-size="10" font-weight="600"
+              letter-spacing="0.06em" fill="var(--accent-2)"
+              style="text-transform:uppercase">${escapeHtml(s.label)}</text>`;
+    } else {
+      tenureOverlays += `
+        <rect x="${xs.toFixed(1)}" y="${padT}" width="${Math.max(1, xe - xs).toFixed(1)}" height="${innerH}"
+              fill="#FBF2EC" stroke="var(--accent)" stroke-width="1" stroke-dasharray="3 3" opacity="0.85"/>
+        <text x="${(xs + 8).toFixed(1)}" y="${(padT + 14).toFixed(1)}"
+              font-family="var(--sans)" font-size="10" font-weight="600"
+              letter-spacing="0.08em" fill="var(--accent-2)"
+              style="text-transform:uppercase">${escapeHtml(s.label)}</text>`;
+    }
+  });
+
+  /* For pre-tenure styling: a donation is pre-tenure only if it falls
+     before ALL segments AND is attributed to one of those segment owners
+     (in team view we don't apply pre-tenure styling since owners are mixed). */
+  const isMultiTenure = segmentTimes.length > 1;
+  const earliestSegmentStart = segmentTimes.length > 0 ? Math.min(...segmentTimes.map((s) => s.start)) : null;
+
+  const dots = dated.map((d) => {
+    const x = xScale(d.t).toFixed(1);
+    const y = yScale(d.amount).toFixed(1);
+    const c = partyColor[d.party] || "var(--oth)";
+    const stroke = d.status === "PROBABLE" ? "var(--warn-fg)" : "none";
+    const sw = d.status === "PROBABLE" ? 1 : 0;
+    /* Pre-tenure styling only applies for single-owner timelines */
+    const preTenure = !isMultiTenure && earliestSegmentStart && d.t < earliestSegmentStart;
+    const dotStroke = preTenure ? "var(--ink-3)" : stroke;
+    const dotSw     = preTenure ? 0.8 : sw;
+    const opacity   = preTenure ? 0.5 : 0.78;
+    const tenureFlag = preTenure ? " · PRE-TENURE" : "";
+    return `<circle data-id="${escapeAttr(d.id)}" cx="${x}" cy="${y}" r="4" fill="${c}" fill-opacity="${opacity}" stroke="${dotStroke}" stroke-width="${dotSw}" style="cursor:pointer"><title>${escapeHtml(fmtDate(d.date))} · ${escapeHtml(fmtMoneyExact(d.amount))} · ${escapeHtml(d.committee)}${d.status === "PROBABLE" ? " · PROBABLE" : ""}${tenureFlag}</title></circle>`;
+  }).join("");
+
+  return `
+    <div class="timeline-wrap">
+      <svg class="timeline-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+        ${tenureOverlays}
+        ${yTicks.map((v) => `
+          <line x1="${padL}" x2="${W - padR}" y1="${yScale(v)}" y2="${yScale(v)}" stroke="var(--rule)" stroke-width="1"/>
+          <text x="${padL - 8}" y="${yScale(v) + 4}" text-anchor="end" font-family="var(--mono)" font-size="11" fill="var(--ink-3)">${fmtMoney(v)}</text>
+        `).join("")}
+        ${xTicks.map((t) => `
+          <line x1="${xScale(t)}" x2="${xScale(t)}" y1="${padT}" y2="${H - padB}" stroke="var(--rule)" stroke-width="1" stroke-dasharray="2 3"/>
+          <text x="${xScale(t)}" y="${H - 10}" text-anchor="middle" font-family="var(--mono)" font-size="11" fill="var(--ink-3)">${new Date(t).getFullYear()}</text>
+        `).join("")}
+        ${dots}
+      </svg>
+    </div>`;
+}
+
+function renderDonationsTable(allDonations) {
+  const f = state.ownerFilters;
+  const q = f.q.trim().toLowerCase();
+  const rows = allDonations.filter((d) => {
+    if (q && !((d.committee || "").toLowerCase().includes(q) || (d.candidate || "").toLowerCase().includes(q))) return false;
+    if (f.cycle && d.cycle != f.cycle) return false;
+    if (f.party && d.party !== f.party) return false;
+    if (f.status && d.status !== f.status) return false;
+    return true;
+  });
+
+  setTimeout(() => {
+    const r = document.getElementById("od-result");
+    if (r) r.textContent = `${rows.length} of ${allDonations.length} donations`;
+  }, 0);
+
+  if (allDonations.length === 0) {
+    return emptyState(
+      "No donations recorded for this owner",
+      "This owner is tracked in the registry but has no attributed donations yet. They may be a newly-added entity awaiting first ingestion, or a former owner whose records sit outside the current scope."
+    );
+  }
+  if (rows.length === 0) {
+    return emptyState(
+      "No donations match those filters",
+      `Try removing a filter above. ${allDonations.length} total donation${allDonations.length === 1 ? "" : "s"} on file for this owner.`
+    );
+  }
+
+  return `
+    <table class="donations-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th class="num">Amount</th>
+          <th>Recipient</th>
+          <th>Party</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${rows.slice(0, 500).map(renderDonationRow).join("")}
+      </tbody>
+    </table>
+    ${rows.length > 500 ? `<p class="footnote">Showing first 500 of ${rows.length} matching records. Refine filters above to narrow.</p>` : ""}
+  `;
+}
+
+function renderDonationRow(d) {
+  const partyClass = d.party === "DEM" ? "dem" : d.party === "REP" ? "rep" : "oth";
+  const statusChip = d.status === "CONFIRMED"
+    ? `<span class="chip chip-confirmed">Confirmed</span>`
+    : `<span class="chip chip-probable">Probable</span>`;
+  return `
+    <tr data-id="${escapeAttr(d.id)}">
+      <td class="col-date">${escapeHtml(d.date || "—")}</td>
+      <td class="num col-amount">${fmtMoneyExact(d.amount)}</td>
+      <td class="col-recipient">
+        ${escapeHtml(d.committee || "—")}
+        ${d.candidate ? `<span class="candidate">→ ${escapeHtml(d.candidate)}</span>` : ""}
+      </td>
+      <td><span class="chip-party ${partyClass}">${d.party}</span></td>
+      <td style="white-space:nowrap">${statusChip} ${chip48H(d)}</td>
+    </tr>`;
+}
+
+function bindOwnerHandlers() {
+  if (state.view.name !== "owner") return;
+  const q = document.getElementById("od-q");
+  const c = document.getElementById("od-cycle");
+  const p = document.getElementById("od-party");
+  const s = document.getElementById("od-status");
+  if (q) q.addEventListener("input", (e) => { state.ownerFilters.q = e.target.value; rerenderOwnerTable(); });
+  if (c) c.addEventListener("change", (e) => { state.ownerFilters.cycle = e.target.value; rerenderOwnerTable(); });
+  if (p) p.addEventListener("change", (e) => { state.ownerFilters.party = e.target.value; rerenderOwnerTable(); });
+  if (s) s.addEventListener("change", (e) => { state.ownerFilters.status = e.target.value; rerenderOwnerTable(); });
+
+  document.querySelectorAll(".donations-table tbody tr").forEach((tr) => {
+    tr.addEventListener("click", () => openDrawer(tr.getAttribute("data-id")));
+  });
+
+  document.querySelectorAll(".timeline-svg circle").forEach((c) => {
+    c.addEventListener("click", () => openDrawer(c.getAttribute("data-id")));
+  });
+
+  /* Recipient links → committee pages */
+  document.querySelectorAll(".recipient-link[data-cid]").forEach((el) => {
+    el.addEventListener("click", (ev) => {
+      ev.stopPropagation();
+      window.location.hash = `#/committee/${encodeURIComponent(el.getAttribute("data-cid"))}`;
+    });
+  });
+
+  /* CSV download for the owner's filtered donations */
+  document.querySelectorAll(".csv-btn[data-csv=\"owner\"]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const slug = state.view.slug;
+      const all = state.data.donations.filter((d) => (d.parent || d.entity) === slug);
+      const f = state.ownerFilters;
+      const q = f.q.trim().toLowerCase();
+      const rows = all.filter((d) => {
+        if (q && !((d.committee || "").toLowerCase().includes(q) || (d.candidate || "").toLowerCase().includes(q))) return false;
+        if (f.cycle && d.cycle != f.cycle) return false;
+        if (f.party && d.party !== f.party) return false;
+        if (f.status && d.status !== f.status) return false;
+        return true;
+      });
+      const owner = state.data.owners[slug];
+      const label = owner ? slug : "donations";
+      downloadDonationsCSV(rows, `${label}.csv`);
+    });
+  });
+}
+
+function rerenderOwnerTable() {
+  const slug = state.view.slug;
+  const donations = state.data.donations.filter((d) => (d.parent || d.entity) === slug);
+  const wrap = document.getElementById("od-table-wrap");
+  if (!wrap) return;
+  wrap.innerHTML = renderDonationsTable(donations);
+  document.querySelectorAll(".donations-table tbody tr").forEach((tr) => {
+    tr.addEventListener("click", () => openDrawer(tr.getAttribute("data-id")));
+  });
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   CYCLE DETAIL VIEW (#/cycle/<year>)
+   ══════════════════════════════════════════════════════════════════════ */
+function renderCycle(year) {
+  const cycleData = state.data.league.by_cycle[String(year)];
+  const donations = state.data.donations.filter((d) => d.cycle === year);
+
+  if (donations.length === 0) {
+    return `<div class="container"><a class="back" href="#/">← Back to league</a><div class="loading">No donations recorded for the ${year} cycle.</div></div>`;
+  }
+
+  // Per-owner totals for this cycle
+  const ownerTotals = {};
+  for (const d of donations) {
+    const slug = d.parent || d.entity;
+    if (!ownerTotals[slug]) {
+      ownerTotals[slug] = {
+        slug, amount: 0, count: 0,
+        partyDollars: { DEM: 0, REP: 0, OTH: 0 },
+      };
+    }
+    ownerTotals[slug].amount += d.amount;
+    ownerTotals[slug].count += 1;
+    const p = ["DEM","REP"].includes(d.party) ? d.party : "OTH";
+    ownerTotals[slug].partyDollars[p] += d.amount;
+  }
+  const topOwners = Object.values(ownerTotals)
+    .filter((o) => state.data.owners[o.slug])
+    .sort((a, b) => b.amount - a.amount)
+    .slice(0, 12);
+
+  // Per-recipient totals for this cycle
+  const recipientTotals = {};
+  for (const d of donations) {
+    const cid = d.committee_id || "_unknown";
+    if (!recipientTotals[cid]) {
+      recipientTotals[cid] = {
+        committee_id: cid, committee: d.committee, party: d.party, amount: 0, count: 0,
+      };
+    }
+    recipientTotals[cid].amount += d.amount;
+    recipientTotals[cid].count += 1;
+  }
+  const topRecipients = Object.values(recipientTotals)
+    .sort((a, b) => b.amount - a.amount)
+    .slice(0, 10);
+
+  // Party split
+  const totals = { DEM: 0, REP: 0, OTH: 0 };
+  for (const d of donations) {
+    const p = ["DEM","REP"].includes(d.party) ? d.party : "OTH";
+    totals[p] += d.amount;
+  }
+  const total = totals.DEM + totals.REP + totals.OTH;
+
+  // Owner select options
+  const ownersInCycle = Object.values(ownerTotals)
+    .filter((o) => state.data.owners[o.slug])
+    .map((o) => ({ slug: o.slug, name: state.data.owners[o.slug].name }))
+    .sort((a, b) => a.name.localeCompare(b.name));
+
+  // Cycle navigation arrows
+  const allCycles = Object.keys(state.data.league.by_cycle).map(Number).sort((a, b) => a - b);
+  const idx = allCycles.indexOf(year);
+  const prev = idx > 0 ? allCycles[idx - 1] : null;
+  const next = idx < allCycles.length - 1 ? allCycles[idx + 1] : null;
+
+  return `
+  <div class="container">
+    <a class="back" href="#/">← All cycles</a>
+
+    <header class="owner-head">
+      <span class="eyebrow">Election cycle</span>
+      <div style="display:flex;align-items:baseline;gap:18px;flex-wrap:wrap;margin-top:8px">
+        <h1 style="margin:0">${year}</h1>
+        <div style="display:flex;gap:8px">
+          ${prev ? `<a href="#/cycle/${prev}" class="cycle-nav">← ${prev}</a>` : ""}
+          ${next ? `<a href="#/cycle/${next}" class="cycle-nav">${next} →</a>` : ""}
+        </div>
+      </div>
+      <div class="owner-meta" style="margin-top:14px">
+        <span>${fmtInt(donations.length)} donations</span>
+        <span class="dot"></span>
+        <span>${fmtMoneyExact(total)} total</span>
+        <span class="dot"></span>
+        <span>${topOwners.length} owners active this cycle</span>
+      </div>
+    </header>
+
+    <div class="kpis" style="border-top:0;border-bottom:1px solid var(--rule);">
+      <div class="kpi">
+        <div class="kpi-label">Cycle total</div>
+        <div class="kpi-value">${fmtMoney(total)}</div>
+        <div class="kpi-foot">${fmtMoneyExact(total)}</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">To Democratic</div>
+        <div class="kpi-value" style="color:var(--dem)">${fmtMoney(totals.DEM)}</div>
+        <div class="kpi-foot">${total > 0 ? Math.round((totals.DEM / total) * 100) : 0}% of cycle</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">To Republican</div>
+        <div class="kpi-value" style="color:var(--rep)">${fmtMoney(totals.REP)}</div>
+        <div class="kpi-foot">${total > 0 ? Math.round((totals.REP / total) * 100) : 0}% of cycle</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Other / unaffiliated</div>
+        <div class="kpi-value" style="color:var(--ink-2)">${fmtMoney(totals.OTH)}</div>
+        <div class="kpi-foot">${total > 0 ? Math.round((totals.OTH / total) * 100) : 0}% of cycle</div>
+      </div>
+    </div>
+
+    <section class="block">
+      <div class="two-col">
+        <div>
+          <span class="eyebrow">Owners</span>
+          <h2 style="margin-top:6px">Biggest MLB-owner donors this cycle</h2>
+          <p class="caption">Click any owner for their full history.</p>
+          <div class="recipients-list" style="margin-top:18px">
+            ${topOwners.map((o, i) => {
+              const ent = state.data.owners[o.slug];
+              const partyDenom = o.partyDollars.DEM + o.partyDollars.REP;
+              const tilt = partyDenom > 0
+                ? (o.partyDollars.DEM > o.partyDollars.REP ? "dem" : "rep")
+                : "oth";
+              const pct = total > 0 ? (o.amount / total) * 100 : 0;
+              return `
+                <div class="recipient cycle-owner-row" data-slug="${o.slug}" style="cursor:pointer">
+                  <div class="recipient-rank">${(i + 1).toString().padStart(2, "0")}</div>
+                  <div>
+                    <div class="recipient-name">${escapeHtml(ent.name)} <span class="muted" style="font-size:12px;font-weight:400">· ${escapeHtml(ent.team || "")}</span></div>
+                    <div class="recipient-bar-track"><div class="recipient-bar ${tilt}" style="width:${pct.toFixed(1)}%"></div></div>
+                  </div>
+                  <div>
+                    <div class="recipient-amount">${fmtMoney(o.amount)}</div>
+                    <div class="recipient-count">${o.count} donation${o.count === 1 ? "" : "s"}</div>
+                  </div>
+                </div>`;
+            }).join("")}
+          </div>
+        </div>
+
+        <div>
+          <span class="eyebrow">Recipients</span>
+          <h2 style="margin-top:6px">Where the money went this cycle</h2>
+          <p class="caption">Top committees by MLB-owner dollars received. Click for cross-cut by owner.</p>
+          <div class="recipients-list" style="margin-top:18px">
+            ${topRecipients.map((r, i) => {
+              const partyClass = r.party === "DEM" ? "dem" : r.party === "REP" ? "rep" : "oth";
+              const pct = total > 0 ? (r.amount / total) * 100 : 0;
+              return `
+                <div class="recipient cycle-recipient-row" data-cid="${escapeAttr(r.committee_id)}" style="cursor:pointer">
+                  <div class="recipient-rank">${(i + 1).toString().padStart(2, "0")}</div>
+                  <div>
+                    <div class="recipient-name">${escapeHtml(r.committee || "—")} <span class="chip-party ${partyClass}" style="margin-left:6px;font-size:9px">${r.party}</span></div>
+                    <div class="recipient-bar-track"><div class="recipient-bar ${partyClass}" style="width:${pct.toFixed(1)}%"></div></div>
+                  </div>
+                  <div>
+                    <div class="recipient-amount">${fmtMoney(r.amount)}</div>
+                    <div class="recipient-count">${r.count} donation${r.count === 1 ? "" : "s"}</div>
+                  </div>
+                </div>`;
+            }).join("")}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block">
+      <div class="block-head-row">
+        <div>
+          <span class="eyebrow">The data</span>
+          <h2 style="margin-top:6px">Every donation in the ${year} cycle</h2>
+          <p class="caption">${fmtInt(donations.length)} records.</p>
+        </div>
+        <button class="csv-btn" data-csv="cycle">Download CSV</button>
+      </div>
+
+      <div class="filters">
+        <input id="cy-q" type="text" placeholder="Search recipient or candidate…" value="${state.cycleFilters.q}">
+        <span class="filter-label">Owner</span>
+        <select id="cy-owner">
+          <option value="">All</option>
+          ${ownersInCycle.map((o) => `<option value="${o.slug}"${state.cycleFilters.owner === o.slug ? " selected" : ""}>${escapeHtml(o.name)}</option>`).join("")}
+        </select>
+        <span class="filter-label">Party</span>
+        <select id="cy-party">
+          <option value="">All</option>
+          <option value="DEM"${state.cycleFilters.party === "DEM" ? " selected" : ""}>Democratic</option>
+          <option value="REP"${state.cycleFilters.party === "REP" ? " selected" : ""}>Republican</option>
+          <option value="OTH"${state.cycleFilters.party === "OTH" ? " selected" : ""}>Other / unaffiliated</option>
+        </select>
+        <span class="filter-label">Status</span>
+        <select id="cy-status">
+          <option value="">Both</option>
+          <option value="CONFIRMED"${state.cycleFilters.status === "CONFIRMED" ? " selected" : ""}>Confirmed only</option>
+          <option value="PROBABLE"${state.cycleFilters.status === "PROBABLE" ? " selected" : ""}>Probable only</option>
+        </select>
+        <span class="filter-spacer"></span>
+        <span class="filter-result" id="cy-result"></span>
+      </div>
+
+      <div id="cy-table-wrap">
+        ${renderCycleDonationsTable(donations)}
+      </div>
+    </section>
+  </div>`;
+}
+
+function renderCycleDonationsTable(allDonations) {
+  const f = state.cycleFilters;
+  const q = f.q.trim().toLowerCase();
+  const rows = allDonations.filter((d) => {
+    if (q && !((d.committee || "").toLowerCase().includes(q) || (d.candidate || "").toLowerCase().includes(q))) return false;
+    if (f.party && d.party !== f.party) return false;
+    if (f.status && d.status !== f.status) return false;
+    if (f.owner) {
+      const slug = d.parent || d.entity;
+      if (slug !== f.owner) return false;
+    }
+    return true;
+  });
+
+  setTimeout(() => {
+    const r = document.getElementById("cy-result");
+    if (r) r.textContent = `${rows.length} of ${allDonations.length} donations`;
+  }, 0);
+
+  if (rows.length === 0) {
+    return emptyState(
+      "No donations match those filters",
+      `Try removing a filter above. ${allDonations.length} total donation${allDonations.length === 1 ? "" : "s"} in this cycle.`
+    );
+  }
+
+  return `
+    <table class="donations-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Owner</th>
+          <th class="num">Amount</th>
+          <th>Recipient</th>
+          <th>Party</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${rows.slice(0, 500).map((d) => {
+          const partyClass = d.party === "DEM" ? "dem" : d.party === "REP" ? "rep" : "oth";
+          const statusChip = d.status === "CONFIRMED"
+            ? `<span class="chip chip-confirmed">Confirmed</span>`
+            : `<span class="chip chip-probable">Probable</span>`;
+          const owner = state.data.owners[d.parent || d.entity];
+          const ownerName = owner ? owner.name : d.entity;
+          return `
+            <tr data-id="${escapeAttr(d.id)}">
+              <td class="col-date">${escapeHtml(d.date || "—")}</td>
+              <td><span style="font-family:var(--serif);font-weight:500">${escapeHtml(ownerName)}</span></td>
+              <td class="num col-amount">${fmtMoneyExact(d.amount)}</td>
+              <td class="col-recipient">${escapeHtml(d.committee || "—")}${d.candidate ? `<span class="candidate">→ ${escapeHtml(d.candidate)}</span>` : ""}</td>
+              <td><span class="chip-party ${partyClass}">${d.party}</span></td>
+              <td style="white-space:nowrap">${statusChip} ${chip48H(d)}</td>
+            </tr>`;
+        }).join("")}
+      </tbody>
+    </table>
+    ${rows.length > 500 ? `<p class="footnote">Showing first 500 of ${rows.length} matching records.</p>` : ""}`;
+}
+
+function bindCycleHandlers() {
+  if (state.view.name !== "cycle") return;
+  const year = state.view.year;
+  const allDonations = state.data.donations.filter((d) => d.cycle === year);
+
+  const q = document.getElementById("cy-q");
+  const ow = document.getElementById("cy-owner");
+  const p = document.getElementById("cy-party");
+  const s = document.getElementById("cy-status");
+  if (q) q.addEventListener("input", (e) => { state.cycleFilters.q = e.target.value; rerenderCycleTable(); });
+  if (ow) ow.addEventListener("change", (e) => { state.cycleFilters.owner = e.target.value; rerenderCycleTable(); });
+  if (p) p.addEventListener("change", (e) => { state.cycleFilters.party = e.target.value; rerenderCycleTable(); });
+  if (s) s.addEventListener("change", (e) => { state.cycleFilters.status = e.target.value; rerenderCycleTable(); });
+
+  document.querySelectorAll(".cycle-owner-row").forEach((row) => {
+    row.addEventListener("click", () => {
+      window.location.hash = `#/owner/${row.getAttribute("data-slug")}`;
+    });
+  });
+  document.querySelectorAll(".cycle-recipient-row").forEach((row) => {
+    row.addEventListener("click", () => {
+      window.location.hash = `#/committee/${encodeURIComponent(row.getAttribute("data-cid"))}`;
+    });
+  });
+  document.querySelectorAll(".donations-table tbody tr").forEach((tr) => {
+    tr.addEventListener("click", () => openDrawer(tr.getAttribute("data-id")));
+  });
+
+  document.querySelectorAll(".csv-btn[data-csv=\"cycle\"]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const rows = filterCycleDonations(allDonations);
+      downloadDonationsCSV(rows, `cycle-${year}.csv`);
+    });
+  });
+}
+
+function filterCycleDonations(allDonations) {
+  const f = state.cycleFilters;
+  const q = f.q.trim().toLowerCase();
+  return allDonations.filter((d) => {
+    if (q && !((d.committee || "").toLowerCase().includes(q) || (d.candidate || "").toLowerCase().includes(q))) return false;
+    if (f.party && d.party !== f.party) return false;
+    if (f.status && d.status !== f.status) return false;
+    if (f.owner) {
+      const slug = d.parent || d.entity;
+      if (slug !== f.owner) return false;
+    }
+    return true;
+  });
+}
+
+function rerenderCycleTable() {
+  const year = state.view.year;
+  const donations = state.data.donations.filter((d) => d.cycle === year);
+  const wrap = document.getElementById("cy-table-wrap");
+  if (!wrap) return;
+  wrap.innerHTML = renderCycleDonationsTable(donations);
+  document.querySelectorAll(".donations-table tbody tr").forEach((tr) => {
+    tr.addEventListener("click", () => openDrawer(tr.getAttribute("data-id")));
+  });
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   COMMITTEE / RECIPIENT DETAIL VIEW (#/committee/<id>)
+   ══════════════════════════════════════════════════════════════════════ */
+function renderCommittee(committeeId) {
+  const decoded = decodeURIComponent(committeeId);
+  const donations = state.data.donations.filter((d) => (d.committee_id || "") === decoded);
+  if (donations.length === 0) {
+    return `<div class="container"><a class="back" href="#/">← Back to league</a><div class="loading">No donations to committee ${escapeHtml(decoded)}.</div></div>`;
+  }
+
+  const committeeName = donations[0].committee || decoded;
+  const party = donations[0].party;
+
+  // Aggregate by owner
+  const ownerTotals = {};
+  for (const d of donations) {
+    const slug = d.parent || d.entity;
+    if (!ownerTotals[slug]) ownerTotals[slug] = { slug, amount: 0, count: 0 };
+    ownerTotals[slug].amount += d.amount;
+    ownerTotals[slug].count += 1;
+  }
+  const ownersRanked = Object.values(ownerTotals)
+    .filter((o) => state.data.owners[o.slug])
+    .sort((a, b) => b.amount - a.amount);
+
+  // By cycle
+  const byCycle = {};
+  for (const d of donations) {
+    if (!d.cycle) continue;
+    if (!byCycle[d.cycle]) byCycle[d.cycle] = { amount: 0, count: 0 };
+    byCycle[d.cycle].amount += d.amount;
+    byCycle[d.cycle].count += 1;
+  }
+  const cycles = Object.keys(byCycle).map(Number).sort((a, b) => a - b);
+
+  const total = donations.reduce((s, d) => s + d.amount, 0);
+  const earliestDate = donations.map((d) => d.date).filter(Boolean).sort()[0];
+  const latestDate = donations.map((d) => d.date).filter(Boolean).sort().slice(-1)[0];
+  const partyClass = party === "DEM" ? "dem" : party === "REP" ? "rep" : "oth";
+
+  const allCycles = [...new Set(donations.map((d) => d.cycle).filter(Boolean))].sort((a,b) => b - a);
+
+  return `
+  <div class="container">
+    <a class="back" href="#/">← All committees</a>
+
+    <header class="owner-head">
+      <span class="eyebrow">Recipient committee · <span class="chip-party ${partyClass}" style="margin-left:6px">${party}</span></span>
+      <h1 style="margin-top:10px;max-width:32ch">${escapeHtml(committeeName)}</h1>
+      <div class="owner-meta">
+        <span style="font-family:var(--mono)">${escapeHtml(decoded)}</span>
+        <span class="dot"></span>
+        <span>MLB owners gave from ${fmtDate(earliestDate)} to ${fmtDate(latestDate)}</span>
+      </div>
+    </header>
+
+    <div class="kpis" style="border-top:0;border-bottom:1px solid var(--rule);">
+      <div class="kpi">
+        <div class="kpi-label">From MLB owners</div>
+        <div class="kpi-value">${fmtMoney(total)}</div>
+        <div class="kpi-foot">${fmtMoneyExact(total)}</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Donations</div>
+        <div class="kpi-value">${fmtInt(donations.length)}</div>
+        <div class="kpi-foot">${donations.filter((d) => d.status === "CONFIRMED").length} confirmed · ${donations.filter((d) => d.status === "PROBABLE").length} probable</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">MLB donors</div>
+        <div class="kpi-value">${ownersRanked.length}</div>
+        <div class="kpi-foot">distinct owners or family members</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Cycles</div>
+        <div class="kpi-value">${cycles.length}</div>
+        <div class="kpi-foot">${cycles[0]} – ${cycles[cycles.length - 1]}</div>
+      </div>
+    </div>
+
+    <section class="block">
+      <span class="eyebrow">MLB owners who gave to this committee</span>
+      <h2 style="margin-top:6px">${ownersRanked.length} donor${ownersRanked.length === 1 ? "" : "s"}</h2>
+      <p class="caption">Ranked by total dollars to ${escapeHtml(committeeName)}, all cycles combined.</p>
+      <div class="recipients-list" style="margin-top:18px">
+        ${ownersRanked.slice(0, 30).map((o, i) => {
+          const ent = state.data.owners[o.slug];
+          const pct = total > 0 ? (o.amount / total) * 100 : 0;
+          return `
+            <div class="recipient cycle-owner-row" data-slug="${o.slug}" style="cursor:pointer">
+              <div class="recipient-rank">${(i + 1).toString().padStart(2, "0")}</div>
+              <div>
+                <div class="recipient-name">${escapeHtml(ent.name)} <span class="muted" style="font-size:12px;font-weight:400">· ${escapeHtml(ent.team || "")}</span></div>
+                <div class="recipient-bar-track"><div class="recipient-bar ${partyClass}" style="width:${pct.toFixed(1)}%"></div></div>
+              </div>
+              <div>
+                <div class="recipient-amount">${fmtMoney(o.amount)}</div>
+                <div class="recipient-count">${o.count} donation${o.count === 1 ? "" : "s"}</div>
+              </div>
+            </div>`;
+        }).join("")}
+      </div>
+    </section>
+
+    <section class="block">
+      <div class="block-head-row">
+        <div>
+          <span class="eyebrow">The data</span>
+          <h2 style="margin-top:6px">Every MLB-owner donation to ${escapeHtml(committeeName)}</h2>
+          <p class="caption">${fmtInt(donations.length)} records.</p>
+        </div>
+        <button class="csv-btn" data-csv="committee">Download CSV</button>
+      </div>
+
+      <div class="filters">
+        <input id="cm-q" type="text" placeholder="Search owner…" value="${state.committeeFilters.q}">
+        <span class="filter-label">Cycle</span>
+        <select id="cm-cycle">
+          <option value="">All</option>
+          ${allCycles.map((c) => `<option value="${c}"${state.committeeFilters.cycle == c ? " selected" : ""}>${c}</option>`).join("")}
+        </select>
+        <span class="filter-label">Status</span>
+        <select id="cm-status">
+          <option value="">Both</option>
+          <option value="CONFIRMED"${state.committeeFilters.status === "CONFIRMED" ? " selected" : ""}>Confirmed only</option>
+          <option value="PROBABLE"${state.committeeFilters.status === "PROBABLE" ? " selected" : ""}>Probable only</option>
+        </select>
+        <span class="filter-spacer"></span>
+        <span class="filter-result" id="cm-result"></span>
+      </div>
+
+      <div id="cm-table-wrap">
+        ${renderCommitteeDonationsTable(donations)}
+      </div>
+    </section>
+  </div>`;
+}
+
+function renderCommitteeDonationsTable(allDonations) {
+  const rows = filterCommitteeDonations(allDonations);
+
+  setTimeout(() => {
+    const r = document.getElementById("cm-result");
+    if (r) r.textContent = `${rows.length} of ${allDonations.length} donations`;
+  }, 0);
+
+  if (rows.length === 0) {
+    return emptyState(
+      "No donations match those filters",
+      `Try removing a filter above. ${allDonations.length} total MLB-owner donation${allDonations.length === 1 ? "" : "s"} to this committee.`
+    );
+  }
+
+  return `
+    <table class="donations-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Owner</th>
+          <th class="num">Amount</th>
+          <th>Cycle</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${rows.slice(0, 500).map((d) => {
+          const statusChip = d.status === "CONFIRMED"
+            ? `<span class="chip chip-confirmed">Confirmed</span>`
+            : `<span class="chip chip-probable">Probable</span>`;
+          const owner = state.data.owners[d.parent || d.entity];
+          const ownerName = owner ? owner.name : d.entity;
+          return `
+            <tr data-id="${escapeAttr(d.id)}">
+              <td class="col-date">${escapeHtml(d.date || "—")}</td>
+              <td><span style="font-family:var(--serif);font-weight:500">${escapeHtml(ownerName)}</span></td>
+              <td class="num col-amount">${fmtMoneyExact(d.amount)}</td>
+              <td class="num">${escapeHtml(String(d.cycle || "—"))}</td>
+              <td style="white-space:nowrap">${statusChip} ${chip48H(d)}</td>
+            </tr>`;
+        }).join("")}
+      </tbody>
+    </table>
+    ${rows.length > 500 ? `<p class="footnote">Showing first 500 of ${rows.length} matching records.</p>` : ""}`;
+}
+
+function filterCommitteeDonations(allDonations) {
+  const f = state.committeeFilters;
+  const q = f.q.trim().toLowerCase();
+  return allDonations.filter((d) => {
+    if (q) {
+      const owner = state.data.owners[d.parent || d.entity];
+      const ownerName = (owner ? owner.name : d.entity || "").toLowerCase();
+      if (!ownerName.includes(q)) return false;
+    }
+    if (f.cycle && d.cycle != f.cycle) return false;
+    if (f.status && d.status !== f.status) return false;
+    return true;
+  });
+}
+
+function bindCommitteeHandlers() {
+  if (state.view.name !== "committee") return;
+  const decoded = decodeURIComponent(state.view.id);
+  const allDonations = state.data.donations.filter((d) => (d.committee_id || "") === decoded);
+
+  const q = document.getElementById("cm-q");
+  const c = document.getElementById("cm-cycle");
+  const s = document.getElementById("cm-status");
+  if (q) q.addEventListener("input", (e) => { state.committeeFilters.q = e.target.value; rerenderCommitteeTable(); });
+  if (c) c.addEventListener("change", (e) => { state.committeeFilters.cycle = e.target.value; rerenderCommitteeTable(); });
+  if (s) s.addEventListener("change", (e) => { state.committeeFilters.status = e.target.value; rerenderCommitteeTable(); });
+
+  document.querySelectorAll(".cycle-owner-row").forEach((row) => {
+    row.addEventListener("click", () => {
+      window.location.hash = `#/owner/${row.getAttribute("data-slug")}`;
+    });
+  });
+  document.querySelectorAll(".donations-table tbody tr").forEach((tr) => {
+    tr.addEventListener("click", () => openDrawer(tr.getAttribute("data-id")));
+  });
+
+  document.querySelectorAll(".csv-btn[data-csv=\"committee\"]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const rows = filterCommitteeDonations(allDonations);
+      downloadDonationsCSV(rows, `committee-${decoded}.csv`);
+    });
+  });
+}
+
+function rerenderCommitteeTable() {
+  const decoded = decodeURIComponent(state.view.id);
+  const donations = state.data.donations.filter((d) => (d.committee_id || "") === decoded);
+  const wrap = document.getElementById("cm-table-wrap");
+  if (!wrap) return;
+  wrap.innerHTML = renderCommitteeDonationsTable(donations);
+  document.querySelectorAll(".donations-table tbody tr").forEach((tr) => {
+    tr.addEventListener("click", () => openDrawer(tr.getAttribute("data-id")));
+  });
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   TEAM ROLLUP VIEW (#/team/<slug>)
+   ══════════════════════════════════════════════════════════════════════ */
+function renderTeam(slug) {
+  const team = state.teams[slug];
+  if (!team) {
+    return `<div class="container"><a class="back" href="#/">← Back to league</a><div class="loading">No team matching "${escapeHtml(slug)}".</div></div>`;
+  }
+
+  const ownerSlugs = new Set(team.owners.map((o) => o.slug));
+  const donations = state.data.donations.filter((d) => ownerSlugs.has(d.parent || d.entity));
+
+  if (donations.length === 0) {
+    return `
+      <div class="container">
+        <a class="back" href="#/">← Back to league</a>
+        <header class="owner-head">
+          <span class="eyebrow">Team</span>
+          <h1 style="margin-top:8px">${escapeHtml(team.name)}</h1>
+          <div class="owner-meta"><span>${team.owners.length} tracked owner${team.owners.length === 1 ? "" : "s"}</span><span class="dot"></span><span>No donations recorded yet</span></div>
+        </header>
+        ${renderTeamOwnersGrid(team)}
+      </div>`;
+  }
+
+  /* Combined stats */
+  const total = donations.reduce((s, d) => s + d.amount, 0);
+  const nConfirmed = donations.filter((d) => d.status === "CONFIRMED").length;
+  const nProbable  = donations.filter((d) => d.status === "PROBABLE").length;
+  const cycles = [...new Set(donations.map((d) => d.cycle).filter(Boolean))].sort((a, b) => b - a);
+
+  const partyDollars = { DEM: 0, REP: 0, OTH: 0 };
+  for (const d of donations) {
+    const p = ["DEM","REP"].includes(d.party) ? d.party : "OTH";
+    partyDollars[p] += d.amount;
+  }
+
+  /* Top recipients (combined) */
+  const recAgg = {};
+  for (const d of donations) {
+    const cid = d.committee_id || "_unknown";
+    if (!recAgg[cid]) {
+      recAgg[cid] = { committee_id: cid, committee: d.committee, party: d.party, amount: 0, count: 0 };
+    }
+    recAgg[cid].amount += d.amount;
+    recAgg[cid].count += 1;
+  }
+  const topRecipients = Object.values(recAgg).sort((a, b) => b.amount - a.amount).slice(0, 10);
+  const distinctRecipients = Object.keys(recAgg).length;
+
+  /* Tenure segments for the combined timeline — one per owner */
+  const tenureSegments = team.owners
+    .filter((o) => o.tenure_start)
+    .map((o) => ({
+      start: o.tenure_start,
+      end: o.tenure_end,
+      ownerSlug: o.slug,
+      label: `${o.name.split(" ").slice(-1)[0]}${o.tenure_end ? " " + o.tenure_start.slice(0,4) + "–" + o.tenure_end.slice(0,4) : " since " + o.tenure_start.slice(0,4)}`,
+    }));
+
+  const partyDenom = partyDollars.DEM + partyDollars.REP;
+  const partyTiltText = partyDenom > 0
+    ? (Math.round((partyDollars.DEM / partyDenom) * 100) >= 60 ? `Democratic-leaning (${Math.round((partyDollars.DEM / partyDenom) * 100)}% DEM)`
+       : Math.round((partyDollars.REP / partyDenom) * 100) >= 60 ? `Republican-leaning (${Math.round((partyDollars.REP / partyDenom) * 100)}% REP)`
+       : `Mixed (${Math.round((partyDollars.DEM / partyDenom) * 100)}% DEM / ${Math.round((partyDollars.REP / partyDenom) * 100)}% REP)`)
+    : "No party-classified giving";
+
+  return `
+  <div class="container">
+    <a class="back" href="#/">← All teams</a>
+
+    <header class="owner-head">
+      <span class="eyebrow">Team rollup</span>
+      <h1 style="margin-top:8px">${escapeHtml(team.name)}</h1>
+      <div class="owner-meta">
+        <span>${team.owners.length} tracked principal owner${team.owners.length === 1 ? "" : "s"}</span>
+        <span class="dot"></span>
+        <span>${partyTiltText}</span>
+        <span class="dot"></span>
+        <span>${fmtMoneyExact(total)} combined federal giving</span>
+      </div>
+    </header>
+
+    <div class="kpis" style="border-top:0;border-bottom:1px solid var(--rule);">
+      <div class="kpi">
+        <div class="kpi-label">Combined total</div>
+        <div class="kpi-value">${fmtMoney(total)}</div>
+        <div class="kpi-foot">${fmtMoneyExact(total)}</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Donations</div>
+        <div class="kpi-value">${fmtInt(donations.length)}</div>
+        <div class="kpi-foot">${fmtInt(nConfirmed)} confirmed · ${fmtInt(nProbable)} probable</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Distinct recipients</div>
+        <div class="kpi-value">${fmtInt(distinctRecipients)}</div>
+        <div class="kpi-foot">Committees, candidates, PACs</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Cycles</div>
+        <div class="kpi-value">${cycles.length}</div>
+        <div class="kpi-foot">${cycles[cycles.length-1]} – ${cycles[0]}</div>
+      </div>
+    </div>
+
+    <section class="block">
+      <span class="eyebrow">Tracked owners</span>
+      <h2 style="margin-top:6px">${team.owners.length === 1 ? "The principal owner" : "Principal owners, past and current"}</h2>
+      <p class="caption">Click any card for that owner's complete giving record.</p>
+      ${renderTeamOwnersGrid(team)}
+    </section>
+
+    <section class="block">
+      <div class="block-head">
+        <span class="eyebrow">Combined timeline</span>
+        <h2 style="margin-top:6px">Every donation across ${team.owners.length === 1 ? "this owner's tenure" : "all tracked owners"}</h2>
+        <p class="caption">Each dot is one FEC-reported contribution. ${team.owners.length > 1 ? "Stacked amber bars show each owner's tenure as principal — useful for spotting handoffs." : "Amber band shows tenure as principal."} Click any dot for the full record.</p>
+      </div>
+      ${renderTimeline(donations, tenureSegments)}
+      <div class="legend">
+        <span><span class="legend-swatch dem"></span>Democratic</span>
+        <span><span class="legend-swatch rep"></span>Republican</span>
+        <span><span class="legend-swatch oth"></span>Other / unaffiliated</span>
+      </div>
+    </section>
+
+    <section class="block">
+      <span class="eyebrow">Recipients</span>
+      <h2 style="margin-top:6px">Top recipient committees (combined)</h2>
+      <p class="caption">Across all tracked owners of ${escapeHtml(team.name)}, all cycles. Click any recipient to see who else in MLB gave to them.</p>
+      <div class="recipients-list" style="margin-top:18px">
+        ${topRecipients.map((r, i) => renderRecipient(r, i, total)).join("")}
+      </div>
+    </section>
+
+    <section class="block">
+      <div class="block-head-row">
+        <div>
+          <span class="eyebrow">The data</span>
+          <h2 style="margin-top:6px">All donations</h2>
+          <p class="caption">${fmtInt(donations.length)} records across ${team.owners.length} owner${team.owners.length === 1 ? "" : "s"}.</p>
+        </div>
+        <button class="csv-btn" data-csv="team">Download CSV</button>
+      </div>
+
+      <div class="filters">
+        <input id="tm-q" type="text" placeholder="Search recipient or candidate…" value="${state.teamFilters.q}">
+        <span class="filter-label">Owner</span>
+        <select id="tm-owner">
+          <option value="">All</option>
+          ${team.owners.map((o) => `<option value="${o.slug}"${state.teamFilters.owner === o.slug ? " selected" : ""}>${escapeHtml(o.name)}</option>`).join("")}
+        </select>
+        <span class="filter-label">Cycle</span>
+        <select id="tm-cycle">
+          <option value="">All</option>
+          ${cycles.map((c) => `<option value="${c}"${state.teamFilters.cycle == c ? " selected" : ""}>${c}</option>`).join("")}
+        </select>
+        <span class="filter-label">Party</span>
+        <select id="tm-party">
+          <option value="">All</option>
+          <option value="DEM"${state.teamFilters.party === "DEM" ? " selected" : ""}>Democratic</option>
+          <option value="REP"${state.teamFilters.party === "REP" ? " selected" : ""}>Republican</option>
+          <option value="OTH"${state.teamFilters.party === "OTH" ? " selected" : ""}>Other / unaffiliated</option>
+        </select>
+        <span class="filter-label">Status</span>
+        <select id="tm-status">
+          <option value="">Both</option>
+          <option value="CONFIRMED"${state.teamFilters.status === "CONFIRMED" ? " selected" : ""}>Confirmed only</option>
+          <option value="PROBABLE"${state.teamFilters.status === "PROBABLE" ? " selected" : ""}>Probable only</option>
+        </select>
+        <span class="filter-spacer"></span>
+        <span class="filter-result" id="tm-result"></span>
+      </div>
+
+      <div id="tm-table-wrap">
+        ${renderTeamDonationsTable(donations)}
+      </div>
+    </section>
+  </div>`;
+}
+
+function renderTeamOwnersGrid(team) {
+  return `
+    <div class="team-owners-grid">
+      ${team.owners.map((o) => {
+        const dem = o.party_dollars.DEM || 0;
+        const rep = o.party_dollars.REP || 0;
+        const oth = (o.party_dollars.OTH || 0) + (o.party_dollars.IND || 0) + (o.party_dollars.LIB || 0) + (o.party_dollars.GRE || 0);
+        const tot = dem + rep + oth;
+        const tenureStr = o.tenure_start ? `${o.tenure_start.slice(0,4)}–${o.tenure_end ? o.tenure_end.slice(0,4) : "now"}` : "—";
+        return `
+          <a class="team-owner-card" href="#/owner/${o.slug}" style="text-decoration:none;color:inherit;display:block">
+            <div class="team-owner-name">${escapeHtml(o.name)}</div>
+            <div class="team-owner-role">Principal owner${o.tenure_end ? " (former)" : ""}</div>
+            <div class="team-owner-tenure">Tenure ${tenureStr} · ${o.n_total} donation${o.n_total === 1 ? "" : "s"}</div>
+            ${tot > 0 ? `
+              <div class="team-owner-tilt-bar">
+                <div class="tilt-seg dem" style="width:${(dem/tot)*100}%"></div>
+                <div class="tilt-seg oth" style="width:${(oth/tot)*100}%"></div>
+                <div class="tilt-seg rep" style="width:${(rep/tot)*100}%"></div>
+              </div>` : ""}
+            <div class="team-owner-stats">
+              <div class="team-owner-total">${fmtMoney(o.total_amount)}</div>
+              <div class="team-owner-count">${o.n_confirmed} confirmed · ${o.n_probable} probable</div>
+            </div>
+          </a>`;
+      }).join("")}
+    </div>`;
+}
+
+function filterTeamDonations(allDonations) {
+  const f = state.teamFilters;
+  const q = f.q.trim().toLowerCase();
+  return allDonations.filter((d) => {
+    if (q && !((d.committee || "").toLowerCase().includes(q) || (d.candidate || "").toLowerCase().includes(q))) return false;
+    if (f.cycle && d.cycle != f.cycle) return false;
+    if (f.party && d.party !== f.party) return false;
+    if (f.status && d.status !== f.status) return false;
+    if (f.owner) {
+      const slug = d.parent || d.entity;
+      if (slug !== f.owner) return false;
+    }
+    return true;
+  });
+}
+
+function renderTeamDonationsTable(allDonations) {
+  const rows = filterTeamDonations(allDonations);
+
+  setTimeout(() => {
+    const r = document.getElementById("tm-result");
+    if (r) r.textContent = `${rows.length} of ${allDonations.length} donations`;
+  }, 0);
+
+  if (rows.length === 0) {
+    return emptyState(
+      "No donations match those filters",
+      `Try removing a filter above. ${allDonations.length} total donation${allDonations.length === 1 ? "" : "s"} on file for this team.`
+    );
+  }
+
+  return `
+    <table class="donations-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Owner</th>
+          <th class="num">Amount</th>
+          <th>Recipient</th>
+          <th>Party</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${rows.slice(0, 500).map((d) => {
+          const partyClass = d.party === "DEM" ? "dem" : d.party === "REP" ? "rep" : "oth";
+          const statusChip = d.status === "CONFIRMED"
+            ? `<span class="chip chip-confirmed">Confirmed</span>`
+            : `<span class="chip chip-probable">Probable</span>`;
+          const owner = state.data.owners[d.parent || d.entity];
+          const ownerName = owner ? owner.name : d.entity;
+          return `
+            <tr data-id="${escapeAttr(d.id)}">
+              <td class="col-date">${escapeHtml(d.date || "—")}</td>
+              <td><span style="font-family:var(--serif);font-weight:500">${escapeHtml(ownerName)}</span></td>
+              <td class="num col-amount">${fmtMoneyExact(d.amount)}</td>
+              <td class="col-recipient">${escapeHtml(d.committee || "—")}${d.candidate ? `<span class="candidate">→ ${escapeHtml(d.candidate)}</span>` : ""}</td>
+              <td><span class="chip-party ${partyClass}">${d.party}</span></td>
+              <td style="white-space:nowrap">${statusChip} ${chip48H(d)}</td>
+            </tr>`;
+        }).join("")}
+      </tbody>
+    </table>
+    ${rows.length > 500 ? `<p class="footnote">Showing first 500 of ${rows.length} matching records.</p>` : ""}`;
+}
+
+function bindTeamHandlers() {
+  if (state.view.name !== "team") return;
+  const team = state.teams[state.view.slug];
+  if (!team) return;
+  const ownerSlugs = new Set(team.owners.map((o) => o.slug));
+  const allDonations = state.data.donations.filter((d) => ownerSlugs.has(d.parent || d.entity));
+
+  const q = document.getElementById("tm-q");
+  const ow = document.getElementById("tm-owner");
+  const c = document.getElementById("tm-cycle");
+  const p = document.getElementById("tm-party");
+  const s = document.getElementById("tm-status");
+  if (q) q.addEventListener("input", (e) => { state.teamFilters.q = e.target.value; rerenderTeamTable(); });
+  if (ow) ow.addEventListener("change", (e) => { state.teamFilters.owner = e.target.value; rerenderTeamTable(); });
+  if (c) c.addEventListener("change", (e) => { state.teamFilters.cycle = e.target.value; rerenderTeamTable(); });
+  if (p) p.addEventListener("change", (e) => { state.teamFilters.party = e.target.value; rerenderTeamTable(); });
+  if (s) s.addEventListener("change", (e) => { state.teamFilters.status = e.target.value; rerenderTeamTable(); });
+
+  document.querySelectorAll(".donations-table tbody tr").forEach((tr) => {
+    tr.addEventListener("click", () => openDrawer(tr.getAttribute("data-id")));
+  });
+
+  /* Recipient links → committee pages */
+  document.querySelectorAll(".recipient-link[data-cid]").forEach((el) => {
+    el.addEventListener("click", (ev) => {
+      ev.stopPropagation();
+      window.location.hash = `#/committee/${encodeURIComponent(el.getAttribute("data-cid"))}`;
+    });
+  });
+
+  document.querySelectorAll(".csv-btn[data-csv=\"team\"]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const rows = filterTeamDonations(allDonations);
+      downloadDonationsCSV(rows, `team-${team.slug}.csv`);
+    });
+  });
+
+  document.querySelectorAll(".timeline-svg circle").forEach((c) => {
+    c.addEventListener("click", () => openDrawer(c.getAttribute("data-id")));
+  });
+}
+
+function rerenderTeamTable() {
+  const team = state.teams[state.view.slug];
+  if (!team) return;
+  const ownerSlugs = new Set(team.owners.map((o) => o.slug));
+  const donations = state.data.donations.filter((d) => ownerSlugs.has(d.parent || d.entity));
+  const wrap = document.getElementById("tm-table-wrap");
+  if (!wrap) return;
+  wrap.innerHTML = renderTeamDonationsTable(donations);
+  document.querySelectorAll(".donations-table tbody tr").forEach((tr) => {
+    tr.addEventListener("click", () => openDrawer(tr.getAttribute("data-id")));
+  });
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   CSV DOWNLOAD UTILITY
+   ══════════════════════════════════════════════════════════════════════ */
+function downloadDonationsCSV(rows, filename) {
+  const cols = [
+    "id","date","cycle","status","status_reason",
+    "entity","entity_kind","parent",
+    "donor_name","employer","occupation","city","state","zip",
+    "committee_id","committee","candidate_id","candidate","party","party_raw","office",
+    "amount","report_type","filing_id","filing_form","line_number","image_number","pdf_url","filing_pdf_url",
+    "raw_payload","ingested_at",
+  ];
+  const escape = (v) => {
+    if (v == null) return "";
+    const s = String(v);
+    if (s.includes('"') || s.includes(",") || s.includes("\n")) {
+      return '"' + s.replace(/"/g, '""') + '"';
+    }
+    return s;
+  };
+  const lines = [cols.join(",")];
+  for (const r of rows) {
+    lines.push(cols.map((c) => escape(r[c])).join(","));
+  }
+  const blob = new Blob([lines.join("\n")], { type: "text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   DRAWER
+   ══════════════════════════════════════════════════════════════════════ */
+function openDrawer(id) {
+  const d = state.data.donations.find((x) => x.id === id);
+  if (!d) return;
+
+  const partyClass = d.party === "DEM" ? "dem" : d.party === "REP" ? "rep" : "oth";
+  const statusChip = d.status === "CONFIRMED"
+    ? `<span class="chip chip-confirmed">Confirmed</span>`
+    : `<span class="chip chip-probable">Probable</span>`;
+
+  const ent = state.data.owners[d.parent || d.entity];
+  const ownerName = ent ? ent.name : (d.entity || "—");
+
+  const fecLink = d.committee_id
+    ? `https://www.fec.gov/data/committee/${d.committee_id}/`
+    : null;
+  const fecTxnLink = `https://www.fec.gov/data/receipts/?two_year_transaction_period=${d.cycle}&data_type=processed&min_date=${d.date}&max_date=${d.date}&contributor_name=${encodeURIComponent(d.donor_name || "")}`;
+
+  /* Owner page exists for any donation whose entity resolves to a known owner.
+     Spouse/family rows roll up to their parent owner's profile. */
+  const ownerPageSlug = ent ? ent.slug : null;
+  const ownerNameHtml = ownerPageSlug
+    ? `<a href="#/owner/${ownerPageSlug}" onclick="closeDrawer()" class="drawer-owner-link">${escapeHtml(ownerName)}</a>`
+    : escapeHtml(ownerName);
+
+  document.getElementById("drawer-body").innerHTML = `
+    <h2>${ownerNameHtml} <span class="donor-arrow">→</span> ${escapeHtml(d.committee || "—")}</h2>
+    ${d.candidate ? `<div class="muted" style="margin-top:4px;font-size:14px">For ${escapeHtml(d.candidate)}</div>` : ""}
+
+    <div class="drawer-amount">${fmtMoneyExact(d.amount)}</div>
+    <div class="drawer-amount-meta">
+      <span>${fmtDate(d.date)}</span>
+      <span>·</span>
+      <span>${d.cycle} cycle</span>
+      <span style="margin-left:6px">${statusChip}</span>
+      <span class="chip-party ${partyClass}" style="margin-left:4px">${d.party}</span>
+      ${is48HourNotice(d) ? `<span style="margin-left:4px">${chip48H(d)}</span>` : ""}
+    </div>
+
+    <div class="drawer-section">
+      <h3>Why this is ${d.status === "CONFIRMED" ? "confirmed" : "probable"}</h3>
+      <div class="drawer-reason ${d.status === "PROBABLE" ? "probable" : ""}">
+        ${escapeHtml(d.status_reason || "—")}
+      </div>
+      <div class="drawer-signals">
+        ${(d.signals || []).map((s) => `<span class="chip-signal">${escapeHtml(s)}</span>`).join("")}
+      </div>
+    </div>
+
+    <div class="drawer-section">
+      <h3>Recipient</h3>
+      <div class="drawer-grid">
+        <div class="label">Committee</div>
+        <div class="value">${escapeHtml(d.committee || "—")}</div>
+        <div class="label">Committee ID</div>
+        <div class="value">${escapeHtml(d.committee_id || "—")}</div>
+        ${d.candidate ? `
+          <div class="label">Candidate</div>
+          <div class="value">${escapeHtml(d.candidate)}</div>` : ""}
+        <div class="label">Party</div>
+        <div class="value">${escapeHtml(d.party_raw || d.party || "—")}</div>
+        ${d.office ? `
+          <div class="label">Office</div>
+          <div class="value">${escapeHtml(d.office)}</div>` : ""}
+      </div>
+      ${d.committee_id ? `
+        <p style="margin-top:14px">
+          <a class="drawer-link" href="#/committee/${encodeURIComponent(d.committee_id)}" onclick="closeDrawer()">View all MLB-owner donations to this committee</a>
+        </p>` : ""}
+    </div>
+
+    <div class="drawer-section">
+      <h3>Contributor (as filed)</h3>
+      <div class="drawer-grid">
+        <div class="label">Name</div>
+        <div class="value">${escapeHtml(d.donor_name || "—")}</div>
+        <div class="label">Employer</div>
+        <div class="value">${escapeHtml(d.employer || "—")}</div>
+        <div class="label">Occupation</div>
+        <div class="value">${escapeHtml(d.occupation || "—")}</div>
+        <div class="label">Location</div>
+        <div class="value">${escapeHtml(d.city || "—")}, ${escapeHtml(d.state || "—")} ${escapeHtml(d.zip || "")}</div>
+      </div>
+    </div>
+
+    <div class="drawer-section">
+      <h3>FEC source documents</h3>
+      <div class="drawer-source-links">
+        ${d.pdf_url ? `
+          <a class="drawer-source-link primary" href="${d.pdf_url}" target="_blank" rel="noopener">
+            <span class="drawer-source-icon">📄</span>
+            <div>
+              <div class="drawer-source-title">Transaction image</div>
+              <div class="drawer-source-sub">The actual filed page${d.line_number ? ` · line ${escapeHtml(d.line_number)}` : ""}${d.filing_form ? ` · Form ${escapeHtml(d.filing_form)}` : ""}</div>
+            </div>
+          </a>` : `
+          <div class="drawer-source-link disabled">
+            <span class="drawer-source-icon">📄</span>
+            <div>
+              <div class="drawer-source-title">Transaction image</div>
+              <div class="drawer-source-sub">Image link not available in this payload</div>
+            </div>
+          </div>`}
+        ${d.filing_pdf_url ? `
+          <a class="drawer-source-link" href="${d.filing_pdf_url}" target="_blank" rel="noopener">
+            <span class="drawer-source-icon">📑</span>
+            <div>
+              <div class="drawer-source-title">Full filing PDF</div>
+              <div class="drawer-source-sub">All transactions in filing ${escapeHtml(d.filing_id || "")}</div>
+            </div>
+          </a>` : ""}
+        ${fecLink ? `
+          <a class="drawer-source-link" href="${fecLink}" target="_blank" rel="noopener">
+            <span class="drawer-source-icon">🏛︎</span>
+            <div>
+              <div class="drawer-source-title">Committee on FEC.gov</div>
+              <div class="drawer-source-sub">${escapeHtml(d.committee_id || "")}</div>
+            </div>
+          </a>` : ""}
+      </div>
+    </div>
+
+    <div class="drawer-section">
+      <h3>Provenance</h3>
+      <div class="drawer-grid">
+        <div class="label">Transaction ID</div>
+        <div class="value">${escapeHtml(d.id)}</div>
+        <div class="label">Filing ID</div>
+        <div class="value">${escapeHtml(d.filing_id || "—")}</div>
+        <div class="label">Image #</div>
+        <div class="value">${escapeHtml(d.image_number || "—")}</div>
+        <div class="label">Filing form</div>
+        <div class="value">${escapeHtml(d.filing_form || "—")}${d.line_number ? ` · line ${escapeHtml(d.line_number)}` : ""}</div>
+        <div class="label">Report type</div>
+        <div class="value">${escapeHtml(d.report_type || "—")}</div>
+        <div class="label">Raw payload</div>
+        <div class="value" style="font-size:11px">${escapeHtml(d.raw_payload || "—")}</div>
+        <div class="label">Ingested</div>
+        <div class="value">${escapeHtml(d.ingested_at || "—")}</div>
+      </div>
+    </div>
+
+    <div class="drawer-section">
+      <h3>Attribution</h3>
+      <div class="drawer-grid">
+        <div class="label">Attributed to</div>
+        <div class="value value-prose">
+          ${ownerPageSlug
+            ? `<a href="#/owner/${ownerPageSlug}" onclick="closeDrawer()" class="drawer-owner-link">${escapeHtml(ownerName)}</a>`
+            : escapeHtml(ownerName)}${d.entity_kind !== "owner" ? ` <span class="muted">(${escapeHtml(d.entity_kind)})</span>` : ""}
+        </div>
+        <div class="label">Slug</div>
+        <div class="value">${escapeHtml(d.entity)}</div>
+      </div>
+      ${ownerPageSlug ? `
+        <p style="margin-top:14px">
+          <a class="drawer-link" href="#/owner/${ownerPageSlug}" onclick="closeDrawer()">View ${escapeHtml(ownerName)}'s full giving record</a>
+        </p>` : ""}
+    </div>
+  `;
+
+  document.getElementById("drawer").classList.add("open");
+  document.getElementById("drawer-scrim").classList.add("open");
+  document.getElementById("drawer").setAttribute("aria-hidden", "false");
+
+  /* Reflect drawer state in URL for shareable permalinks */
+  setDrawerParam(id);
+}
+
+function closeDrawer() {
+  document.getElementById("drawer").classList.remove("open");
+  document.getElementById("drawer-scrim").classList.remove("open");
+  document.getElementById("drawer").setAttribute("aria-hidden", "true");
+  setDrawerParam(null);
+}
+
+/* Sync ?d=<txn_id> to URL without triggering a route. */
+function setDrawerParam(id) {
+  const url = new URL(window.location.href);
+  if (id) url.searchParams.set("d", id);
+  else url.searchParams.delete("d");
+  window.history.replaceState(null, "", url.toString());
+}
+
+document.getElementById("drawer-close").addEventListener("click", closeDrawer);
+document.getElementById("drawer-scrim").addEventListener("click", closeDrawer);
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeDrawer(); });
+
+/* ════════════════════════════════════════════════════════════════════════
+   METHODOLOGY VIEW
+   ══════════════════════════════════════════════════════════════════════ */
+function renderMethodology() {
+  return `
+  <div class="container">
+    <section class="hero" style="border-bottom:0">
+      <span class="eyebrow">Methodology</span>
+      <h1 style="margin-top:14px;max-width:24ch">How this archive is built — and where we draw the line.</h1>
+      <p class="deck">
+        The premise of this database is trustworthy attribution. A FEC record only
+        enters the canonical dataset when it can be tied to a documented owner via
+        two confirming signals. Everything else lives in a review queue or stays
+        out. The standard is itself an editorial commitment: we'd rather miss a
+        real donation than attribute one to the wrong person.
+      </p>
+    </section>
+
+    <section class="method-body" style="border-top:1px solid var(--rule)">
+      <h2>The three tiers</h2>
+      <p>
+        Every potential donation runs through a documented scoring rubric. The
+        donor's name must match. After that, we look for additional signals —
+        employer, occupation, residence — drawn from the owner's profile.
+      </p>
+
+      <div class="method-tiers">
+        <div class="method-tier confirmed">
+          <span class="chip chip-confirmed">Confirmed</span>
+          <h3 style="margin-top:10px">CONFIRMED</h3>
+          <div class="tier-rule">name + ≥2 signals · OR · name + 1 strong unique signal</div>
+          <p>The default tier for export. Used in citations and reports.</p>
+        </div>
+        <div class="method-tier probable">
+          <span class="chip chip-probable">Probable</span>
+          <h3 style="margin-top:10px">PROBABLE</h3>
+          <div class="tier-rule">name + exactly 1 confirming signal</div>
+          <p>Shown in the dataset, always with the chip. Cited only with the qualifier "probable."</p>
+        </div>
+        <div class="method-tier uncertain">
+          <span style="display:inline-block;padding:3px 7px;background:var(--bg-sunk);font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-3);border-radius:2px">Uncertain</span>
+          <h3 style="margin-top:10px">UNCERTAIN</h3>
+          <div class="tier-rule">name match only · OR · contradicting signals</div>
+          <p>Routes to a manual review queue. Never appears in the canonical export.</p>
+        </div>
+      </div>
+
+      <h2>What's in scope</h2>
+      <div class="method-scope">
+        <div>
+          <h4>In</h4>
+          <ul>
+            <li>Federal donations reported to the FEC, all available years</li>
+            <li>The principal owners of all 30 MLB franchises</li>
+            <li>Donations by owners' spouses, where the relationship is publicly documented</li>
+            <li>Named adult family members publicly identified as donors</li>
+            <li>PACs directly affiliated with teams or their corporate parents (case-by-case)</li>
+          </ul>
+        </div>
+        <div>
+          <h4>Out</h4>
+          <ul>
+            <li>State and local campaign finance (different sources per state)</li>
+            <li>501(c)(4) "dark money" (not in FEC data)</li>
+            <li>Federal lobbying disclosures (separate LD-1/LD-2 system)</li>
+            <li>Charitable donations (separate IRS 990 system)</li>
+            <li>Aggregated employer-based queries without a named-individual anchor</li>
+            <li>Donations by team employees who are not owners</li>
+          </ul>
+        </div>
+      </div>
+
+      <h2>What every record carries</h2>
+      <p>
+        Each donation row in this database stores the original FEC transaction ID,
+        the recipient committee ID, the filing ID, and a path to the raw API response
+        preserved at ingestion time. The dataset is reconstructible from raw payloads
+        alone — the database is a derivative; the raw payloads are the ground truth.
+      </p>
+
+      <h2>What we don't claim</h2>
+      <p>
+        This archive does not interpret. It does not assert what a donation means,
+        whom it influenced, or what it implies about an owner's politics. The
+        archive is factual infrastructure; any editorial framing built on top
+        of it belongs in clearly-labeled reporting elsewhere, never inside the
+        data itself.
+      </p>
+
+      <h2>Reproducibility</h2>
+      <p>
+        Re-running ingestion for the same period must not duplicate rows; the FEC
+        transaction ID is the primary key. If the FEC restates a record, the new
+        version is recorded and the old row is marked superseded — it is never
+        deleted. A pre-run snapshot of the master database is taken before each
+        ingestion and stored alongside the data, so any past state of the archive
+        can be rebuilt.
+      </p>
+    </section>
+  </div>
+  `;
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   RUNS / PIPELINE TRANSPARENCY VIEW (#/runs)
+   ══════════════════════════════════════════════════════════════════════ */
+function renderRuns() {
+  const p = state.data.pipeline;
+  const runs = state.data.runs || [];
+
+  /* Duration helper */
+  const fmtDuration = (started, completed) => {
+    if (!completed) return "—";
+    const sec = Math.max(0, (new Date(completed).getTime() - new Date(started).getTime()) / 1000);
+    if (sec < 60) return Math.round(sec) + "s";
+    if (sec < 3600) return Math.floor(sec / 60) + "m " + Math.round(sec % 60) + "s";
+    return Math.floor(sec / 3600) + "h " + Math.floor((sec % 3600) / 60) + "m";
+  };
+
+  return `
+  <div class="container">
+    <section class="hero" style="padding-bottom:18px">
+      <span class="eyebrow">Pipeline transparency</span>
+      <h1 style="margin-top:14px;max-width:24ch">Every ingestion run, every API call, in the open.</h1>
+      <p class="deck">
+        The archive is built by running a documented ingestion pipeline against the
+        FEC API. Every run is logged: when it started, which owner it targeted,
+        how many records came back, how they were classified. Records below
+        are the full operational history of how this dataset was assembled.
+      </p>
+    </section>
+
+    <div class="kpis" style="border-top:0;border-bottom:1px solid var(--rule);">
+      <div class="kpi">
+        <div class="kpi-label">Ingestion runs</div>
+        <div class="kpi-value">${fmtInt(p.n_runs)}</div>
+        <div class="kpi-foot">${p.n_dry_runs} dry run${p.n_dry_runs === 1 ? "" : "s"}</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Records fetched</div>
+        <div class="kpi-value">${fmtInt(p.total_records_fetched)}</div>
+        <div class="kpi-foot">cumulative across all runs</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">FEC API calls</div>
+        <div class="kpi-value">${fmtInt(p.total_api_calls)}</div>
+        <div class="kpi-foot">cumulative</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Latest run</div>
+        <div class="kpi-value" style="font-size:22px">${fmtAgo(p.latest_run)}</div>
+        <div class="kpi-foot">${escapeHtml((p.latest_run || "").slice(0, 16).replace("T", " "))} UTC</div>
+      </div>
+    </div>
+
+    <section class="block">
+      <div class="block-head">
+        <span class="eyebrow">Ingestion runs</span>
+        <h2 style="margin-top:6px">All ${fmtInt(runs.length)} runs, most recent first</h2>
+        <p class="caption">
+          Each row is one FEC API session for one owner. Records fetched is the raw
+          count from the API before classification; CONFIRMED + PROBABLE + UNCERTAIN
+          shows how the records were tiered.
+        </p>
+      </div>
+      <div class="table-scroll">
+      <table class="donations-table">
+        <thead>
+          <tr>
+            <th>Started</th>
+            <th>Duration</th>
+            <th>Owner</th>
+            <th class="num">API calls</th>
+            <th class="num">Records</th>
+            <th class="num">Confirmed</th>
+            <th class="num">Probable</th>
+            <th class="num">Uncertain</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${runs.map((r) => {
+            const owner = state.data.owners[r.entity_slug];
+            const ownerName = owner ? owner.name : r.entity_slug;
+            const ownerLink = owner
+              ? `<a href="#/owner/${r.entity_slug}" style="color:inherit">${escapeHtml(ownerName)}</a>`
+              : escapeHtml(ownerName);
+            return `
+              <tr>
+                <td class="col-date" title="${escapeHtml(r.started_at)}">${escapeHtml((r.started_at || "").slice(0, 16).replace("T", " "))}</td>
+                <td class="col-date">${fmtDuration(r.started_at, r.completed_at)}</td>
+                <td><span style="font-family:var(--serif);font-weight:500">${ownerLink}</span></td>
+                <td class="num">${fmtInt(r.api_calls_made)}</td>
+                <td class="num">${fmtInt(r.records_fetched)}</td>
+                <td class="num" style="color:var(--ok-fg)">${fmtInt(r.confirmed_count)}</td>
+                <td class="num" style="color:var(--warn-fg)">${fmtInt(r.probable_count)}</td>
+                <td class="num" style="color:var(--ink-3)">${fmtInt(r.uncertain_count)}</td>
+                <td style="font-family:var(--mono);font-size:11px;color:var(--ink-3);max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${escapeHtml(r.notes || "")}">${escapeHtml((r.notes || "").slice(0, 60))}${r.notes && r.notes.length > 60 ? "…" : ""}</td>
+              </tr>`;
+          }).join("")}
+        </tbody>
+      </table>
+      </div>
+      <p class="footnote">
+        UNCERTAIN records are routed to a manual review queue and never appear in
+        canonical exports. Records that the classifier could not match against
+        the owner's documented verifying signals are deliberately held out — the
+        archive's editorial standard is to miss a real donation rather than
+        attribute one to the wrong person.
+      </p>
+    </section>
+  </div>`;
+}
+
+function renderAbout() {
+  const L = state.data.league;
+  return `
+    <div class="container-narrow" style="padding:48px 0">
+      <span class="eyebrow">About the data</span>
+      <h1 style="margin-top:14px;max-width:22ch">The shape of the dataset, in numbers.</h1>
+      <p class="deck">A snapshot of what's currently in the archive — coverage, freshness, and where you can find the underlying records.</p>
+
+      <div style="margin-top:48px">
+        <h3>Coverage</h3>
+        <p>${fmtInt(L.n_donations)} attributed donations across ${L.n_owners} owners, ${L.n_cycles} election cycles, totaling ${fmtMoneyExact(L.total_amount)}. Earliest record: ${fmtDate(L.earliest_date)}. Latest: ${fmtDate(L.latest_date)}.</p>
+      </div>
+
+      <div style="margin-top:32px">
+        <h3>Verification breakdown</h3>
+        <p><strong>${fmtInt(L.n_confirmed)}</strong> CONFIRMED · <strong>${fmtInt(L.n_probable)}</strong> PROBABLE. Both tiers appear in this dashboard; UNCERTAIN records are routed to a review queue and never published.</p>
+      </div>
+
+      <div style="margin-top:32px">
+        <h3>Top recipient committees (league-wide)</h3>
+        <div class="recipients-list" style="margin-top:14px">
+          ${L.top_recipients.slice(0, 15).map((r, i) => renderRecipient(r, i, L.total_amount)).join("")}
+        </div>
+      </div>
+
+      <div style="margin-top:48px">
+        <h3>Snapshot generated</h3>
+        <p style="font-family:var(--mono);font-size:13px;">${state.data.generated_at}</p>
+        <p style="font-size:13px;">This page is regenerated after every ingestion run. The underlying database, raw FEC payloads, and per-owner CSV exports live in the project repository.</p>
+      </div>
+    </div>
+  `;
+}
+
+/* ────────── Utils ────────── */
+function escapeHtml(s) {
+  if (s == null) return "";
+  return String(s).replace(/[&<>"']/g, (c) => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+  }[c]));
+}
+function escapeAttr(s) { return escapeHtml(s); }
+
+/* ════════════════════════════════════════════════════════════════════════
+   CMD-K SEARCH PALETTE — open/close, search, keyboard nav
+   ══════════════════════════════════════════════════════════════════════ */
+function openCmdK() {
+  if (!state.searchIndex) return;
+  state.cmdk.open = true;
+  state.cmdk.q = "";
+  state.cmdk.cursor = 0;
+  document.getElementById("cmdk-scrim").classList.add("open");
+  const input = document.getElementById("cmdk-input");
+  input.value = "";
+  /* Defer focus to after the transition so the caret lands cleanly */
+  setTimeout(() => input.focus(), 30);
+  renderCmdKResults();
+}
+
+function closeCmdK() {
+  state.cmdk.open = false;
+  document.getElementById("cmdk-scrim").classList.remove("open");
+}
+
+function scoreMatch(q, item) {
+  if (!q) {
+    /* No query: rank by sortBy with a small type bonus */
+    let score = Math.log10((item.sortBy || 0) + 1);
+    if (item.type === "team") score += 0.5;
+    return score;
+  }
+  const k = item.key;
+  const idx = k.indexOf(q);
+  if (idx < 0) return -1;
+  let score = 0;
+  /* Position bonus: matches near the start of the string outrank later matches */
+  score += Math.max(0, 100 - idx);
+  /* Word-start bonus: matches at a word boundary outrank mid-word */
+  const wordStarts = new Set();
+  let lastBreak = 0;
+  for (let i = 0; i < k.length; i++) {
+    if (i === 0 || /[\s\-,./]/.test(k[i - 1])) wordStarts.add(i);
+  }
+  if (wordStarts.has(idx)) score += 60;
+  /* Entity type weights: owners and teams rank slightly above committees */
+  if (item.type === "owner") score += 25;
+  else if (item.type === "team") score += 20;
+  /* Money tiebreak */
+  score += Math.log10((item.sortBy || 0) + 1) * 0.5;
+  return score;
+}
+
+function highlightMatch(label, q) {
+  if (!q) return escapeHtml(label);
+  const lower = label.toLowerCase();
+  const idx = lower.indexOf(q);
+  if (idx < 0) return escapeHtml(label);
+  return escapeHtml(label.slice(0, idx))
+    + "<mark>" + escapeHtml(label.slice(idx, idx + q.length)) + "</mark>"
+    + escapeHtml(label.slice(idx + q.length));
+}
+
+function computeCmdKResults() {
+  const q = state.cmdk.q.trim().toLowerCase();
+  const scored = state.searchIndex
+    .map((item) => ({ item, score: scoreMatch(q, item) }))
+    .filter((r) => r.score >= 0)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 10);
+  state.cmdk.results = scored.map((r) => r.item);
+  if (state.cmdk.cursor >= state.cmdk.results.length) state.cmdk.cursor = 0;
+}
+
+function renderCmdKResults() {
+  computeCmdKResults();
+  const q = state.cmdk.q.trim().toLowerCase();
+  const ul = document.getElementById("cmdk-results");
+  if (state.cmdk.results.length === 0) {
+    ul.innerHTML = `<div class="cmdk-empty">No matches for "${escapeHtml(state.cmdk.q)}". Try an owner, team, or committee name.</div>`;
+    return;
+  }
+  ul.innerHTML = state.cmdk.results.map((r, i) => `
+    <li class="cmdk-result ${i === state.cmdk.cursor ? "active" : ""}" data-idx="${i}">
+      <div class="cmdk-result-type">${r.type}</div>
+      <div style="min-width:0">
+        <div class="cmdk-result-label">${highlightMatch(r.label, q)}</div>
+        <div class="cmdk-result-sub">${escapeHtml(r.sub || "")}</div>
+      </div>
+      <div class="cmdk-result-meta">${escapeHtml(r.metaText || "")}</div>
+    </li>`).join("");
+
+  /* Click handlers */
+  ul.querySelectorAll(".cmdk-result").forEach((el) => {
+    el.addEventListener("click", () => {
+      const idx = parseInt(el.getAttribute("data-idx"), 10);
+      navigateToCmdKResult(idx);
+    });
+    el.addEventListener("mouseenter", () => {
+      state.cmdk.cursor = parseInt(el.getAttribute("data-idx"), 10);
+      updateActiveResult();
+    });
+  });
+}
+
+function updateActiveResult() {
+  document.querySelectorAll(".cmdk-result").forEach((el) => {
+    const idx = parseInt(el.getAttribute("data-idx"), 10);
+    el.classList.toggle("active", idx === state.cmdk.cursor);
+  });
+  /* Scroll active into view if it's off-screen */
+  const active = document.querySelector(".cmdk-result.active");
+  if (active) active.scrollIntoView({ block: "nearest" });
+}
+
+function navigateToCmdKResult(idx) {
+  const r = state.cmdk.results[idx];
+  if (!r || !r.url) return;
+  closeCmdK();
+  /* If we're already on the target URL, force a re-render */
+  if (window.location.hash === r.url) {
+    route();
+  } else {
+    window.location.hash = r.url;
+  }
+}
+
+/* Set up cmd-k event wiring once */
+(() => {
+  const input = document.getElementById("cmdk-input");
+  const scrim = document.getElementById("cmdk-scrim");
+  const btn = document.getElementById("search-btn");
+
+  /* Search button + keyboard shortcut */
+  btn.addEventListener("click", openCmdK);
+
+  /* Show platform-appropriate kbd hint */
+  const isMac = /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform);
+  document.getElementById("search-btn-kbd").textContent = isMac ? "⌘K" : "Ctrl K";
+
+  /* Global keyboard handler */
+  document.addEventListener("keydown", (e) => {
+    /* Cmd/Ctrl+K toggles, anywhere */
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+      e.preventDefault();
+      if (state.cmdk.open) closeCmdK();
+      else openCmdK();
+      return;
+    }
+    /* "/" opens when not already in an input */
+    if (e.key === "/" && !state.cmdk.open
+        && !["INPUT", "TEXTAREA", "SELECT"].includes(document.activeElement.tagName)) {
+      e.preventDefault();
+      openCmdK();
+      return;
+    }
+    /* In-modal nav */
+    if (!state.cmdk.open) return;
+    if (e.key === "Escape") { e.preventDefault(); closeCmdK(); }
+    else if (e.key === "ArrowDown") {
+      e.preventDefault();
+      state.cmdk.cursor = Math.min(state.cmdk.results.length - 1, state.cmdk.cursor + 1);
+      updateActiveResult();
+    }
+    else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      state.cmdk.cursor = Math.max(0, state.cmdk.cursor - 1);
+      updateActiveResult();
+    }
+    else if (e.key === "Enter") {
+      e.preventDefault();
+      navigateToCmdKResult(state.cmdk.cursor);
+    }
+  });
+
+  /* Input → re-rank */
+  input.addEventListener("input", (e) => {
+    state.cmdk.q = e.target.value;
+    state.cmdk.cursor = 0;
+    renderCmdKResults();
+  });
+
+  /* Backdrop click closes */
+  scrim.addEventListener("click", (e) => {
+    if (e.target === scrim) closeCmdK();
+  });
+})();
+
+/* Boot */
+loadData();
+</script>
+</body>
+</html>
