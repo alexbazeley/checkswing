@@ -17,40 +17,40 @@ team: Pittsburgh Pirates
 role: Chairman / Principal owner
 status: pilot
 tenure_start_date: 2007-01-12    # Officially announced as principal owner
-tenure_end_date: null
+tenure_end_date:
 family_tenure_start_date: 1996-02-14    # Pittsburgh Group (Ogden Nutting partner) bought Pirates (Bob's father)
 
 # Conservative variants. EXCLUDE bare "Nutting", "R. Nutting", "W. Nutting"
 # (brother William), "C. Nutting" (niece Cameron), "Ogden Nutting" (father).
 name_variants:
-  - "Robert Nutting"
-  - "Bob Nutting"
-  - "Nutting, Robert"
-  - "Nutting, Bob"
+- "Robert Nutting"
+- "Bob Nutting"
+- "Nutting, Robert"
+- "Nutting, Bob"
 
 verifying_signals:
   cities:
     # Wheeling, WV (birthplace + Ogden Newspapers HQ + primary residence per
     # Tier 2). PA secondary state because of Pirates/Seven Springs ties — no
     # specific PA city confirmed for Bob personally.
-    - "wheeling"
+  - "wheeling"
   states:
-    - "WV"
-    - "PA"
+  - "WV"
+  - "PA"
   employers:
-    - "Pittsburgh Pirates"
-    - "Pirates"
-    - "Ogden Newspapers"
-    - "Seven Springs Mountain Resort"
-    - "Seven Springs"
+  - "Pittsburgh Pirates"
+  - "Pirates"
+  - "Ogden Newspapers"
+  - "Seven Springs Mountain Resort"
+  - "Seven Springs"
   occupations:
-    - "chairman"
-    - "owner"
-    - "principal"
-    - "principal owner"
-    - "ceo"
-    - "president"
-    - "publisher"
+  - "chairman"
+  - "owner"
+  - "principal"
+  - "principal owner"
+  - "ceo"
+  - "president"
+  - "publisher"
 
 strong_signals:
   # Intentionally empty at creation. Ogden Newspapers, Pirates, and Seven
@@ -69,22 +69,22 @@ related_entities: []
 #   - Spouse Leslie — insufficient Tier 2 detail to scope yet
 
 sources:
-  - description: "MLB.com Pittsburgh Pirates (current ownership)"
-    url: "https://www.mlb.com/pirates"
-    accessed: "2026-05-22"
-    archive_url: ""
-  - description: "Pittsburgh Post-Gazette — Bob Nutting officially principal owner (Jan 2007)"
-    url: "https://www.post-gazette.com/sports/pirates/2007/01/12/nutting-named-principal-owner"
-    accessed: "2026-05-22"
-    archive_url: ""
-  - description: "Pittsburgh Post-Gazette — April 2026 Bob Nutting interview confirming current chairmanship"
-    url: "https://www.post-gazette.com/sports/pirates/2026/04/nutting-interview"
-    accessed: "2026-05-22"
-    archive_url: ""
-  - description: "Ogden Newspapers corporate site — Bob Nutting President/CEO"
-    url: "https://www.ogdennews.com/about/leadership"
-    accessed: "2026-05-22"
-    archive_url: ""
+- description: "MLB.com Pittsburgh Pirates (current ownership)"
+  url: "https://www.mlb.com/pirates"
+  accessed: "2026-05-22"
+  archive_url: ""
+- description: "Pittsburgh Post-Gazette — Bob Nutting officially principal owner (Jan 2007)"
+  url: "https://www.post-gazette.com/sports/pirates/2007/01/12/nutting-named-principal-owner"
+  accessed: "2026-05-22"
+  archive_url: ""
+- description: "Pittsburgh Post-Gazette — April 2026 Bob Nutting interview confirming current chairmanship"
+  url: "https://www.post-gazette.com/sports/pirates/2026/04/nutting-interview"
+  accessed: "2026-05-22"
+  archive_url: ""
+- description: "Ogden Newspapers corporate site — Bob Nutting President/CEO"
+  url: "https://www.ogdennews.com/about/leadership"
+  accessed: "2026-05-22"
+  archive_url: ""
 
 notes: |
   Robert "Bob" Nutting, b. Wheeling, WV, March 29, 1962. Primary residence
@@ -113,36 +113,36 @@ notes: |
   sold in 2021 (verify); pre-2021 filings may use it as employer.
 
 change_log:
-  - date: 2026-05-22
-    change: |
-      Created during Phase 2 batch 2 research. Tier 2 sources: MLB.com,
-      Pittsburgh Post-Gazette (Jan 2007 + Apr 2026), Ogden Newspapers
-      corporate page.
+- date: 2026-05-22
+  change: |
+    Created during Phase 2 batch 2 research. Tier 2 sources: MLB.com,
+    Pittsburgh Post-Gazette (Jan 2007 + Apr 2026), Ogden Newspapers
+    corporate page.
 
-      cities=[wheeling] only; states=[WV, PA]. strong_signals empty per
-      conservative launch — Ogden Newspapers has too many family members
-      filing under the firm name to qualify as strong.
+    cities=[wheeling] only; states=[WV, PA]. strong_signals empty per
+    conservative launch — Ogden Newspapers has too many family members
+    filing under the firm name to qualify as strong.
 
-      Family collision: name_variants strict (no bare "Nutting", no
-      first-initial-only forms) to keep father Ogden, brother Bill,
-      niece Cameron out. Pre-2007 records of "Ogden Nutting" → father,
-      separate slug if added.
-    by: "claude-code-research (orchestrated by alex)"
-    references:
-      - "/tmp/nutting-bob-research.md (session-local)"
-  - date: 2026-05-25
-    change: |
-      Tier-C audit pass — no signal changes applied. 23 CONFIRMED / 1
-      PROBABLE / 0 UNCERTAIN-open. P/C 0.04. The 1 PROBABLE record is
-      "NUTTING, ROBERT MR." at Wheeling WV 26003 with empty employer.
-      Likely him (Wheeling is Ogden Newspapers HQ + his documented base)
-      but only city signal — honestly PROBABLE. Family-collision safety
-      (brother Bill / niece Cameron at same Ogden Newspapers in
-      Wheeling) is non-trivial — name_variants firewall holds (Bob =
-      Robert specifically). Signal review date advanced.
-    by: "claude-code-session (PR 4 Tier C light pass)"
+    Family collision: name_variants strict (no bare "Nutting", no
+    first-initial-only forms) to keep father Ogden, brother Bill,
+    niece Cameron out. Pre-2007 records of "Ogden Nutting" → father,
+    separate slug if added.
+  by: "claude-code-research (orchestrated by alex)"
+  references:
+  - "/tmp/nutting-bob-research.md (session-local)"
+- date: 2026-05-25
+  change: |
+    Tier-C audit pass — no signal changes applied. 23 CONFIRMED / 1
+    PROBABLE / 0 UNCERTAIN-open. P/C 0.04. The 1 PROBABLE record is
+    "NUTTING, ROBERT MR." at Wheeling WV 26003 with empty employer.
+    Likely him (Wheeling is Ogden Newspapers HQ + his documented base)
+    but only city signal — honestly PROBABLE. Family-collision safety
+    (brother Bill / niece Cameron at same Ogden Newspapers in
+    Wheeling) is non-trivial — name_variants firewall holds (Bob =
+    Robert specifically). Signal review date advanced.
+  by: "claude-code-session (PR 4 Tier C light pass)"
 
 audit:
   created: 2026-05-22
-  last_ingestion: null
+  last_ingestion: '2026-05-26'
   last_signal_review: 2026-05-25

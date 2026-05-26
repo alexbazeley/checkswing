@@ -11,54 +11,54 @@ team: Milwaukee Brewers
 role: Principal owner
 status: pilot
 tenure_start_date: 2005-01-14
-tenure_end_date: null
+tenure_end_date:
 
 name_variants:
-  - "Mark Attanasio"
-  - "Mark L Attanasio"
-  - "Mark L. Attanasio"
-  - "Attanasio, Mark"
-  - "Attanasio, Mark L"
-  - "Attanasio, Mark L."
+- "Mark Attanasio"
+- "Mark L Attanasio"
+- "Mark L. Attanasio"
+- "Attanasio, Mark"
+- "Attanasio, Mark L"
+- "Attanasio, Mark L."
 
 verifying_signals:
   cities:
     # Brentwood (LA) primary residence. Malibu beach home (Broad Beach).
     # Milwaukee penthouse (University Club Tower 29th/30th floor).
     # Los Angeles broadly — Crescent HQ at 11100 Santa Monica Blvd.
-    - "los angeles"
-    - "brentwood"
-    - "malibu"
-    - "milwaukee"
+  - "los angeles"
+  - "brentwood"
+  - "malibu"
+  - "milwaukee"
   states:
     # CA primary (residence + business); WI secondary (team + penthouse).
-    - "CA"
-    - "WI"
+  - "CA"
+  - "WI"
   employers:
-    - "Crescent Capital Group"
-    - "Crescent Capital"
-    - "Crescent Capital Corporation"
-    - "Trust Company of the West"
-    - "TCW"
+  - "Crescent Capital Group"
+  - "Crescent Capital"
+  - "Crescent Capital Corporation"
+  - "Trust Company of the West"
+  - "TCW"
     # Added 2026-05-25 Tier-C calibration — observed FEC clerk abbreviation
     # of "Trust Company of the West" as "TRUST CO. OF THE WEST" / "TRUST
     # CO OF THE WEST" in PROBABLE records. The full-word "Company" form
     # didn't substring-match the abbreviated "Co" form.
-    - "Trust Co. of the West"
-    - "Trust Co of the West"
-    - "Milwaukee Brewers"
-    - "Self-Employed"
-    - "Self Employed"
+  - "Trust Co. of the West"
+  - "Trust Co of the West"
+  - "Milwaukee Brewers"
+  - "Self-Employed"
+  - "Self Employed"
   occupations:
-    - "investor"
-    - "owner"
-    - "principal"
-    - "chairman"
-    - "co-founder"
-    - "founder"
-    - "managing partner"
-    - "managing director"
-    - "investment manager"
+  - "investor"
+  - "owner"
+  - "principal"
+  - "chairman"
+  - "co-founder"
+  - "founder"
+  - "managing partner"
+  - "managing director"
+  - "investment manager"
 
 strong_signals:
   # MLA Sports LLC — his personal sports-holding entity at the Crescent LA
@@ -69,8 +69,8 @@ strong_signals:
   # TCW is NOT a strong signal — Trust Company of the West has thousands
   # of employees.
   employers:
-    - "MLA Sports"
-    - "MLA Sports LLC"
+  - "MLA Sports"
+  - "MLA Sports LLC"
   zip_codes: []
 
 related_entities: []
@@ -83,30 +83,30 @@ related_entities: []
 #     out of scope for this archive
 
 sources:
-  - description: "MLB.com Milwaukee Brewers front-office page for Mark Attanasio (chairman & principal owner)"
-    url: "https://www.mlb.com/brewers/team/front-office/mark-attanasio"
-    accessed: "2026-05-22"
-    archive_url: ""
-  - description: "ESPN — MLB owners approve $223M Brewers sale to Attanasio (Jan 13, 2005)"
-    url: "https://www.espn.com/mlb/news/story?id=1966198"
-    accessed: "2026-05-22"
-    archive_url: ""
-  - description: "Crescent Capital Group team page for Mark Attanasio (co-founder, managing partner)"
-    url: "https://www.crescentcap.com/team-member/mark-attanasio/"
-    accessed: "2026-05-22"
-    archive_url: ""
-  - description: "LA Business Journal LA500 2026 profile (banking & finance)"
-    url: "https://labusinessjournal.com/la500-2026/banking-finance-2026/la500-2026-mark-attanasio/"
-    accessed: "2026-05-22"
-    archive_url: ""
-  - description: "Urban Milwaukee House Confidential — Brentwood (LA) primary residence; Malibu beach home; Milwaukee penthouse at University Club Tower"
-    url: "https://urbanmilwaukee.com/2013/04/05/house-confidential-mark-attanasios-palatial-penthouse/"
-    accessed: "2026-05-22"
-    archive_url: ""
-  - description: "Columbia Law School alumni profile — Attanasio (M&A → MLB)"
-    url: "https://www.law.columbia.edu/news/archive/mark-attanasio-82-ma-major-league-baseball"
-    accessed: "2026-05-22"
-    archive_url: ""
+- description: "MLB.com Milwaukee Brewers front-office page for Mark Attanasio (chairman & principal owner)"
+  url: "https://www.mlb.com/brewers/team/front-office/mark-attanasio"
+  accessed: "2026-05-22"
+  archive_url: ""
+- description: "ESPN — MLB owners approve $223M Brewers sale to Attanasio (Jan 13, 2005)"
+  url: "https://www.espn.com/mlb/news/story?id=1966198"
+  accessed: "2026-05-22"
+  archive_url: ""
+- description: "Crescent Capital Group team page for Mark Attanasio (co-founder, managing partner)"
+  url: "https://www.crescentcap.com/team-member/mark-attanasio/"
+  accessed: "2026-05-22"
+  archive_url: ""
+- description: "LA Business Journal LA500 2026 profile (banking & finance)"
+  url: "https://labusinessjournal.com/la500-2026/banking-finance-2026/la500-2026-mark-attanasio/"
+  accessed: "2026-05-22"
+  archive_url: ""
+- description: "Urban Milwaukee House Confidential — Brentwood (LA) primary residence; Malibu beach home; Milwaukee penthouse at University Club Tower"
+  url: "https://urbanmilwaukee.com/2013/04/05/house-confidential-mark-attanasios-palatial-penthouse/"
+  accessed: "2026-05-22"
+  archive_url: ""
+- description: "Columbia Law School alumni profile — Attanasio (M&A → MLB)"
+  url: "https://www.law.columbia.edu/news/archive/mark-attanasio-82-ma-major-league-baseball"
+  accessed: "2026-05-22"
+  archive_url: ""
 
 notes: |
   Primary residence Brentwood (LA), with secondary Malibu beach home and
@@ -130,33 +130,33 @@ notes: |
   English soccer club, 85% stake), NOT the Brewers — out of scope.
 
 change_log:
-  - date: 2026-05-22
-    change: |
-      Created during Phase 2 batch 1 research. Tier 2 sources: MLB.com (406,
-      cross-confirmed), ESPN 2005 sale, Crescent Capital team page,
-      LA Business Journal LA500 2026, Urban Milwaukee (residences), Columbia
-      Law alumni profile.
+- date: 2026-05-22
+  change: |
+    Created during Phase 2 batch 1 research. Tier 2 sources: MLB.com (406,
+    cross-confirmed), ESPN 2005 sale, Crescent Capital team page,
+    LA Business Journal LA500 2026, Urban Milwaukee (residences), Columbia
+    Law alumni profile.
 
-      strong_signals.employers initialized with MLA Sports / MLA Sports LLC
-      (his personal sports-holding entity). Crescent Capital Group and TCW
-      deliberately NOT strong (large firms).
-    by: "claude-code-research (orchestrated by alex)"
-    references:
-      - "/tmp/attanasio-mark-research.md (session-local research file)"
-  - date: 2026-05-25
-    change: |
-      Tier-C calibration pass — added "Trust Co. of the West" / "Trust Co
-      of the West" abbreviation variants to verifying_signals.employers.
-      Observed in 2 PROBABLE records ("TRUST CO. OF THE WEST" and "TRUST
-      CO OF THE WEST") at 90025 Los Angeles. The full-form "Trust Company
-      of the West" didn't substring-match the abbreviated "Co" forms.
+    strong_signals.employers initialized with MLA Sports / MLA Sports LLC
+    (his personal sports-holding entity). Crescent Capital Group and TCW
+    deliberately NOT strong (large firms).
+  by: "claude-code-research (orchestrated by alex)"
+  references:
+  - "/tmp/attanasio-mark-research.md (session-local research file)"
+- date: 2026-05-25
+  change: |
+    Tier-C calibration pass — added "Trust Co. of the West" / "Trust Co
+    of the West" abbreviation variants to verifying_signals.employers.
+    Observed in 2 PROBABLE records ("TRUST CO. OF THE WEST" and "TRUST
+    CO OF THE WEST") at 90025 Los Angeles. The full-form "Trust Company
+    of the West" didn't substring-match the abbreviated "Co" forms.
 
-      Pre-cal: 26 CONFIRMED / 4 PROBABLE / 0 UNCERTAIN-open. P/C 0.15.
-      Predicted post-cal: ~28 CONFIRMED / ~2 PROBABLE. (The 2 empty-
-      employer records at 90025 stay PROBABLE.)
-    by: "claude-code-session (PR 4 Tier C light pass)"
+    Pre-cal: 26 CONFIRMED / 4 PROBABLE / 0 UNCERTAIN-open. P/C 0.15.
+    Predicted post-cal: ~28 CONFIRMED / ~2 PROBABLE. (The 2 empty-
+    employer records at 90025 stay PROBABLE.)
+  by: "claude-code-session (PR 4 Tier C light pass)"
 
 audit:
   created: 2026-05-22
-  last_ingestion: null
+  last_ingestion: '2026-05-26'
   last_signal_review: 2026-05-25

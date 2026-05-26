@@ -16,7 +16,7 @@ team: New York Yankees
 role: Principal owner
 status: pilot
 tenure_start_date: 2008-11-20
-tenure_end_date: null
+tenure_end_date:
 family_tenure_start_date: 1973-01-03    # George Steinbrenner-led group acquired Yankees from CBS
 
 # Conservative name variants. Critically:
@@ -26,14 +26,14 @@ family_tenure_start_date: 1973-01-03    # George Steinbrenner-led group acquired
 #   - Both "first last" and "last, first" forms included; FEC contributor-name
 #     field flips between the two depending on filer.
 name_variants:
-  - "Harold Z Steinbrenner"
-  - "Harold Z. Steinbrenner"
-  - "Harold Steinbrenner"
-  - "Hal Steinbrenner"
-  - "Steinbrenner, Harold"
-  - "Steinbrenner, Harold Z"
-  - "Steinbrenner, Harold Z."
-  - "Steinbrenner, Hal"
+- "Harold Z Steinbrenner"
+- "Harold Z. Steinbrenner"
+- "Harold Steinbrenner"
+- "Hal Steinbrenner"
+- "Steinbrenner, Harold"
+- "Steinbrenner, Harold Z"
+- "Steinbrenner, Harold Z."
+- "Steinbrenner, Hal"
 
 verifying_signals:
   cities:
@@ -42,9 +42,9 @@ verifying_signals:
     # of Tampa Bay board. No Tier-2 source affirmatively documents a current
     # NYC residence; if calibration finds clearly-Hal NYC filings, add NYC /
     # NY with a change_log entry.
-    - "tampa"
+  - "tampa"
   states:
-    - "FL"
+  - "FL"
   employers:
     # Hal's documented affiliations (Tier 2):
     # - Yankee Global Enterprises (YGE) — the LLC that owns the Yankees, of
@@ -54,24 +54,24 @@ verifying_signals:
     # These strings are NOT unique to Hal (other Yankees executives may file
     # "New York Yankees" as employer) — they live here in verifying_signals,
     # requiring a SECOND confirming signal for CONFIRMED.
-    - "Yankee Global Enterprises"
-    - "Yankee Global"
-    - "New York Yankees"
-    - "NY Yankees"
-    - "Yankees"
-    - "Steinbrenner Hotel Properties"
+  - "Yankee Global Enterprises"
+  - "Yankee Global"
+  - "New York Yankees"
+  - "NY Yankees"
+  - "Yankees"
+  - "Steinbrenner Hotel Properties"
   occupations:
-    - "managing general partner"
-    - "general partner"
-    - "managing partner"
-    - "partner"
-    - "owner"
-    - "principal owner"
-    - "chairman"
-    - "chairperson"
-    - "co-chairperson"
-    - "ceo"
-    - "businessman"
+  - "managing general partner"
+  - "general partner"
+  - "managing partner"
+  - "partner"
+  - "owner"
+  - "principal owner"
+  - "chairman"
+  - "chairperson"
+  - "co-chairperson"
+  - "ceo"
+  - "businessman"
 
 strong_signals:
   # Intentionally empty at creation. "Yankee Global Enterprises" and
@@ -99,22 +99,22 @@ related_entities: []
 #   pre-2010 but are out of scope (deceased, no longer a tracked principal).
 
 sources:
-  - description: "MLB.com / New York Yankees official Front Office Staff Directory — Hal as 'Managing General Partner / Chairperson'; identifies his personal ownership-stake holding entity as 'Martinique Holdings, Inc.' Sibling holding entities listed separately (Marsh Harbor for Jennifer; JJS NYY for Jessica)"
-    url: "https://www.mlb.com/yankees/team/front-office"
-    accessed: "2026-05-22"
-    archive_url: ""
-  - description: "Special Operations Warrior Foundation Board page (owner's own listed board bio) — Hal's titles: Managing General Partner/Co-Chairperson of the Yankees, Chairman & CEO of Steinbrenner Hotel Properties, board of Legends Hospitality, LLC, board of Boys & Girls Club of Tampa Bay. Tampa civic ties"
-    url: "https://specialops.org/who-we-are/board-and-staff/harold-steinbrenner/"
-    accessed: "2026-05-22"
-    archive_url: ""
-  - description: "ESPN long-form profile (March 2016) — full legal name 'Harold Zieg Steinbrenner', Davis Islands (Tampa) residence as of 2016, preference for 'managing general partner' title, Hank as older brother"
-    url: "https://www.espn.com/mlb/story/_/page/springtraining_halsteinbrenner/who-exactly-new-york-yankees-owner-hal-steinbrenner"
-    accessed: "2026-05-22"
-    archive_url: ""
-  - description: "Premier Sotheby's International Realty blog — documents Hal Steinbrenner's former Davis Islands residence at 114 Martinique Avenue, Tampa, FL (the property after which his Yankees-ownership holding company, Martinique Holdings Inc., is named). Sold July 2020 for $9.1M"
-    url: "https://www.premiersothebysrealty.com/blog/the-former-davis-island-home-of-new-york-yankees-owner-hal-steinbrenner-sells-for--9-1-million"
-    accessed: "2026-05-22"
-    archive_url: ""
+- description: "MLB.com / New York Yankees official Front Office Staff Directory — Hal as 'Managing General Partner / Chairperson'; identifies his personal ownership-stake holding entity as 'Martinique Holdings, Inc.' Sibling holding entities listed separately (Marsh Harbor for Jennifer; JJS NYY for Jessica)"
+  url: "https://www.mlb.com/yankees/team/front-office"
+  accessed: "2026-05-22"
+  archive_url: ""
+- description: "Special Operations Warrior Foundation Board page (owner's own listed board bio) — Hal's titles: Managing General Partner/Co-Chairperson of the Yankees, Chairman & CEO of Steinbrenner Hotel Properties, board of Legends Hospitality, LLC, board of Boys & Girls Club of Tampa Bay. Tampa civic ties"
+  url: "https://specialops.org/who-we-are/board-and-staff/harold-steinbrenner/"
+  accessed: "2026-05-22"
+  archive_url: ""
+- description: "ESPN long-form profile (March 2016) — full legal name 'Harold Zieg Steinbrenner', Davis Islands (Tampa) residence as of 2016, preference for 'managing general partner' title, Hank as older brother"
+  url: "https://www.espn.com/mlb/story/_/page/springtraining_halsteinbrenner/who-exactly-new-york-yankees-owner-hal-steinbrenner"
+  accessed: "2026-05-22"
+  archive_url: ""
+- description: "Premier Sotheby's International Realty blog — documents Hal Steinbrenner's former Davis Islands residence at 114 Martinique Avenue, Tampa, FL (the property after which his Yankees-ownership holding company, Martinique Holdings Inc., is named). Sold July 2020 for $9.1M"
+  url: "https://www.premiersothebysrealty.com/blog/the-former-davis-island-home-of-new-york-yankees-owner-hal-steinbrenner-sells-for--9-1-million"
+  accessed: "2026-05-22"
+  archive_url: ""
 
 notes: |
   CRITICAL — family-name collision risk. Hal is one of four Steinbrenner
@@ -148,31 +148,31 @@ notes: |
     - Is the doppelgänger landscape clean, or are sibling records leaking?
 
 change_log:
-  - date: 2026-05-22
-    change: |
-      Created during Phase 1.5 research. Tier 2 sources: MLB.com Yankees
-      Front Office page, Special Operations Warrior Foundation board bio,
-      ESPN long-form profile, Premier Sotheby's blog re Davis Islands
-      residence. Tampa-only / FL-only at creation. strong_signals empty
-      pending calibration. Name variants explicitly exclude "Steinbrenner"
-      alone and "H. Steinbrenner" to keep sibling/parent records out.
-    by: "claude-code-research (orchestrated by alex)"
-    references:
-      - "/tmp/steinbrenner-hal-research.md (session-local research file)"
-  - date: 2026-05-25
-    change: |
-      Tier-C audit pass — no signal changes applied. 13 CONFIRMED / 2
-      PROBABLE / 0 UNCERTAIN-open. P/C 0.15. The 2 PROBABLE records are
-      "STEINBRENNER, HAROLD Z MR." with REQUESTED employer and
-      "STEINBRENNER, HAROLD" with TRANSMARINE MANAGEMENT employer, both
-      at Tampa FL. Transmarine Management is not in Tier 2 sources as a
-      documented Hal employer (Yankee Global Enterprises / Yankees /
-      Steinbrenner Family Foundation are his documented vehicles).
-      Conservatively left PROBABLE pending Tier 2 research. Signal review
-      date advanced.
-    by: "claude-code-session (PR 4 Tier C light pass)"
+- date: 2026-05-22
+  change: |
+    Created during Phase 1.5 research. Tier 2 sources: MLB.com Yankees
+    Front Office page, Special Operations Warrior Foundation board bio,
+    ESPN long-form profile, Premier Sotheby's blog re Davis Islands
+    residence. Tampa-only / FL-only at creation. strong_signals empty
+    pending calibration. Name variants explicitly exclude "Steinbrenner"
+    alone and "H. Steinbrenner" to keep sibling/parent records out.
+  by: "claude-code-research (orchestrated by alex)"
+  references:
+  - "/tmp/steinbrenner-hal-research.md (session-local research file)"
+- date: 2026-05-25
+  change: |
+    Tier-C audit pass — no signal changes applied. 13 CONFIRMED / 2
+    PROBABLE / 0 UNCERTAIN-open. P/C 0.15. The 2 PROBABLE records are
+    "STEINBRENNER, HAROLD Z MR." with REQUESTED employer and
+    "STEINBRENNER, HAROLD" with TRANSMARINE MANAGEMENT employer, both
+    at Tampa FL. Transmarine Management is not in Tier 2 sources as a
+    documented Hal employer (Yankee Global Enterprises / Yankees /
+    Steinbrenner Family Foundation are his documented vehicles).
+    Conservatively left PROBABLE pending Tier 2 research. Signal review
+    date advanced.
+  by: "claude-code-session (PR 4 Tier C light pass)"
 
 audit:
   created: 2026-05-22
-  last_ingestion: null
+  last_ingestion: '2026-05-26'
   last_signal_review: 2026-05-25

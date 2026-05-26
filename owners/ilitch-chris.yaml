@@ -18,48 +18,48 @@ team: Detroit Tigers
 role: Principal owner
 status: pilot
 tenure_start_date: 2017-05-18    # MLB approval as controlling owner of Tigers
-tenure_end_date: null
+tenure_end_date:
 family_tenure_start_date: 1992-08-26    # Mike Ilitch bought Tigers from Tom Monaghan (Chris's father)
 
 name_variants:
-  - "Christopher P Ilitch"
-  - "Christopher P. Ilitch"
-  - "Christopher Ilitch"
-  - "Chris Ilitch"
-  - "Christopher Paul Ilitch"
-  - "Ilitch, Christopher"
-  - "Ilitch, Christopher P"
-  - "Ilitch, Christopher P."
-  - "Ilitch, Chris"
+- "Christopher P Ilitch"
+- "Christopher P. Ilitch"
+- "Christopher Ilitch"
+- "Chris Ilitch"
+- "Christopher Paul Ilitch"
+- "Ilitch, Christopher"
+- "Ilitch, Christopher P"
+- "Ilitch, Christopher P."
+- "Ilitch, Chris"
 
 verifying_signals:
   cities:
-    - "detroit"
-    - "bloomfield hills"   # Cranbrook School area; Ilitch family suburb
-    - "bingham farms"       # Mike & Marian's historical family home
+  - "detroit"
+  - "bloomfield hills"     # Cranbrook School area; Ilitch family suburb
+  - "bingham farms"         # Mike & Marian's historical family home
   states:
-    - "MI"
+  - "MI"
   employers:
     # NOTE: "Ilitch Holdings" and "Ilitch Sports + Entertainment" are in
     # strong_signals — not duplicated here per OWNER_SCHEMA.md rule 6.
-    - "Detroit Tigers"
-    - "Detroit Red Wings"
-    - "Little Caesars"           # huge employee base; verifying only
-    - "Olympia Entertainment"
-    - "Olympia Development"
-    - "Ilitch Sports"            # shorter form; distinct exact string from strong "Ilitch Sports + Entertainment"
+  - "Detroit Tigers"
+  - "Detroit Red Wings"
+  - "Little Caesars"             # huge employee base; verifying only
+  - "Olympia Entertainment"
+  - "Olympia Development"
+  - "Ilitch Sports"              # shorter form; distinct exact string from strong "Ilitch Sports + Entertainment"
   occupations:
-    - "president"
-    - "ceo"
-    - "chairman"
-    - "executive"
-    - "businessman"
-    - "governor"                  # NHL Governor title for Red Wings
+  - "president"
+  - "ceo"
+  - "chairman"
+  - "executive"
+  - "businessman"
+  - "governor"                    # NHL Governor title for Red Wings
 
 strong_signals:
   employers:
-    - "Ilitch Holdings"            # rare surname + family parent co.
-    - "Ilitch Sports + Entertainment"
+  - "Ilitch Holdings"              # rare surname + family parent co.
+  - "Ilitch Sports + Entertainment"
   zip_codes: []
 
 related_entities: []
@@ -75,30 +75,30 @@ related_entities: []
 #   - spouse: Kelle Lites Ilitch — Aug 2024 divorce filing reported.
 
 sources:
-  - description: "ESPN — Chris Ilitch approved as Tigers' controlling owner (May 18, 2017). MLB approval date, controlling-owner status, succession-plan context"
-    url: "https://www.espn.com/mlb/story/_/id/19410859/chris-ilitch-approved-detroit-tigers-controlling-owner"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "Detroit News — Chris Ilitch approved as Tigers' controlling owner (May 18, 2017). Regional press corroboration"
-    url: "https://eu.detroitnews.com/story/sports/mlb/tigers/2017/05/18/chris-ilitch-approved-tigers-controlling-owner/101835784/"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "NHL.com — Chris Ilitch (Detroit Red Wings official team site). Titles (CEO Ilitch Holdings; Governor/CEO Red Wings; Chairman/CEO Tigers), Michigan residence, U-Michigan BBA"
-    url: "https://www.nhl.com/redwings/team/chris-ilitch"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "Crain's Detroit Business — Chris Ilitch named CEO; Denise out (July 26, 2004). Original press confirmation of his 2004 ascension to sole CEO of Ilitch Holdings"
-    url: "https://www.crainsdetroit.com/article/20040726/SUB/407260861/chris-ilitch-named-ceo-denise-out"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "Crain's Detroit Business — MLB / MotorCity Casino gambling-rules story. Documents Marian (MotorCity Casino) vs. Christopher (Tigers) firewall"
-    url: "https://www.crainsdetroit.com/sports/mlb-mulls-change-gambling-rules-accommodate-sports-betting-ilitch-owned-motorcity-casino"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "MLB Trade Rumors (March 2026) — Christopher Ilitch discusses Tigers spending after Valdez and Verlander signings. Continued active ownership"
-    url: "https://www.mlbtraderumors.com/2026/03/tigers-rumors-luxury-tax-2026-chris-ilitch.html"
-    accessed: "2026-05-23"
-    archive_url: ""
+- description: "ESPN — Chris Ilitch approved as Tigers' controlling owner (May 18, 2017). MLB approval date, controlling-owner status, succession-plan context"
+  url: "https://www.espn.com/mlb/story/_/id/19410859/chris-ilitch-approved-detroit-tigers-controlling-owner"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "Detroit News — Chris Ilitch approved as Tigers' controlling owner (May 18, 2017). Regional press corroboration"
+  url: "https://eu.detroitnews.com/story/sports/mlb/tigers/2017/05/18/chris-ilitch-approved-tigers-controlling-owner/101835784/"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "NHL.com — Chris Ilitch (Detroit Red Wings official team site). Titles (CEO Ilitch Holdings; Governor/CEO Red Wings; Chairman/CEO Tigers), Michigan residence, U-Michigan BBA"
+  url: "https://www.nhl.com/redwings/team/chris-ilitch"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "Crain's Detroit Business — Chris Ilitch named CEO; Denise out (July 26, 2004). Original press confirmation of his 2004 ascension to sole CEO of Ilitch Holdings"
+  url: "https://www.crainsdetroit.com/article/20040726/SUB/407260861/chris-ilitch-named-ceo-denise-out"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "Crain's Detroit Business — MLB / MotorCity Casino gambling-rules story. Documents Marian (MotorCity Casino) vs. Christopher (Tigers) firewall"
+  url: "https://www.crainsdetroit.com/sports/mlb-mulls-change-gambling-rules-accommodate-sports-betting-ilitch-owned-motorcity-casino"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "MLB Trade Rumors (March 2026) — Christopher Ilitch discusses Tigers spending after Valdez and Verlander signings. Continued active ownership"
+  url: "https://www.mlbtraderumors.com/2026/03/tigers-rumors-luxury-tax-2026-chris-ilitch.html"
+  accessed: "2026-05-23"
+  archive_url: ""
 
 notes: |
   Christopher Paul Ilitch (b. 1965-06-02). Controlling owner of the Detroit
@@ -130,26 +130,26 @@ notes: |
   are listed in verifying_signals.cities; refine via calibration.
 
 change_log:
-  - date: 2026-05-23
-    change: |
-      Created during Phase 2 batch 3. Tier 2 sources: ESPN, Detroit News,
-      NHL.com, Crain's Detroit Business (multiple), MLB Trade Rumors.
-      Strong_signals = "Ilitch Holdings" + "Ilitch Sports + Entertainment".
-      Marian Ilitch flagged as separate-slug candidate (different first
-      name, no variant collision).
-    by: "claude-code-research (orchestrated by alex)"
-    references:
-      - "/tmp/ilitch-chris-research.md (session-local research file)"
-  - date: 2026-05-25
-    change: |
-      Tier-C audit pass — no signal changes applied. 12 CONFIRMED / 0
-      PROBABLE / 0 UNCERTAIN-open. Signal block calibrated correctly at
-      creation; the 12 CONFIRMED Chris Ilitch records match cleanly via
-      his Ilitch Holdings / Ilitch Sports + Entertainment strong-signal
-      employers. Signal review date advanced.
-    by: "claude-code-session (PR 4 Tier C light pass)"
+- date: 2026-05-23
+  change: |
+    Created during Phase 2 batch 3. Tier 2 sources: ESPN, Detroit News,
+    NHL.com, Crain's Detroit Business (multiple), MLB Trade Rumors.
+    Strong_signals = "Ilitch Holdings" + "Ilitch Sports + Entertainment".
+    Marian Ilitch flagged as separate-slug candidate (different first
+    name, no variant collision).
+  by: "claude-code-research (orchestrated by alex)"
+  references:
+  - "/tmp/ilitch-chris-research.md (session-local research file)"
+- date: 2026-05-25
+  change: |
+    Tier-C audit pass — no signal changes applied. 12 CONFIRMED / 0
+    PROBABLE / 0 UNCERTAIN-open. Signal block calibrated correctly at
+    creation; the 12 CONFIRMED Chris Ilitch records match cleanly via
+    his Ilitch Holdings / Ilitch Sports + Entertainment strong-signal
+    employers. Signal review date advanced.
+  by: "claude-code-session (PR 4 Tier C light pass)"
 
 audit:
   created: 2026-05-23
-  last_ingestion: null
+  last_ingestion: '2026-05-26'
   last_signal_review: 2026-05-25

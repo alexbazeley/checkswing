@@ -14,15 +14,15 @@ team: Baltimore Orioles
 role: Principal owner
 status: pilot
 tenure_start_date: 2024-03-27   # MLB unanimous approval / control-stake closing
-tenure_end_date: null
+tenure_end_date:
 
 name_variants:
-  - "David Rubenstein"
-  - "David M. Rubenstein"
-  - "David M Rubenstein"
-  - "Rubenstein, David"
-  - "Rubenstein, David M"
-  - "Rubenstein, David M."
+- "David Rubenstein"
+- "David M. Rubenstein"
+- "David M Rubenstein"
+- "Rubenstein, David"
+- "Rubenstein, David M"
+- "Rubenstein, David M."
 
 verifying_signals:
   cities:
@@ -31,34 +31,34 @@ verifying_signals:
     #   employer city rather than home address.
     # Nantucket, MA — large compound (purchased 1998); seasonal home.
     # Baltimore, MD — birthplace and team city; filings expected post-2024.
-    - "bethesda"
-    - "washington"
-    - "nantucket"
-    - "baltimore"
+  - "bethesda"
+  - "washington"
+  - "nantucket"
+  - "baltimore"
   states:
-    - "MD"
-    - "DC"
-    - "MA"
+  - "MD"
+  - "DC"
+  - "MA"
   employers:
     # Declaration Capital, Declaration Partners, Inner Harbor Sports are in
     # strong_signals below — not duplicated here (OWNER_SCHEMA.md rule 6).
-    - "The Carlyle Group"
-    - "Carlyle Group"
-    - "Carlyle"
-    - "Baltimore Orioles"
-    - "Orioles"
+  - "The Carlyle Group"
+  - "Carlyle Group"
+  - "Carlyle"
+  - "Baltimore Orioles"
+  - "Orioles"
   occupations:
-    - "co-founder"
-    - "cofounder"
-    - "co-chairman"
-    - "cochairman"
-    - "chairman"
-    - "founder"
-    - "investor"
-    - "philanthropist"
-    - "owner"
-    - "principal"
-    - "ceo"
+  - "co-founder"
+  - "cofounder"
+  - "co-chairman"
+  - "cochairman"
+  - "chairman"
+  - "founder"
+  - "investor"
+  - "philanthropist"
+  - "owner"
+  - "principal"
+  - "ceo"
 
 strong_signals:
   # Declaration Capital / Declaration Partners: his family office and
@@ -70,9 +70,9 @@ strong_signals:
   # The Carlyle Group is NOT a strong signal — ~1,800 employees, many file
   # Carlyle as employer — stays in verifying_signals.
   employers:
-    - "Declaration Capital"
-    - "Declaration Partners"
-    - "Inner Harbor Sports"
+  - "Declaration Capital"
+  - "Declaration Partners"
+  - "Inner Harbor Sports"
   zip_codes: []
 
 # Anti-pattern: at least one DIFFERENT David Rubenstein files small-dollar
@@ -88,7 +88,7 @@ strong_signals:
 # rule (Garrett Park / Chevy Chase / Westborough are NOT in cities).
 negative_signals:
   employers:
-    - "Georgetown University"
+  - "Georgetown University"
 
 related_entities: []
 # Documented candidates (do NOT add without explicit approval per CLAUDE.md §1.7):
@@ -100,42 +100,42 @@ related_entities: []
 #     employee PAC)
 
 sources:
-  - description: "MLB.com — Sale of Orioles to David Rubenstein approved by MLB owners (2024-03-27)"
-    url: "https://www.mlb.com/news/david-rubenstein-orioles-ownership-approved"
-    accessed: "2026-05-22"
-    archive_url: ""
-  - description: "MLB.com — Rubenstein group closes on remaining Orioles shares (2024-08-01)"
-    url: "https://www.mlb.com/news/orioles-ownership-deal-closes"
-    accessed: "2026-05-22"
-    archive_url: ""
-  - description: "ESPN — Rubenstein unanimously approved as new Orioles owner (2024-03-27)"
-    url: "https://www.espn.com/mlb/story/_/id/39820434/david-rubenstein-unanimously-approved-new-orioles-owner"
-    accessed: "2026-05-22"
-    archive_url: ""
-  - description: "Washington Post — MLB owners approve sale to David Rubenstein (2024-03-27)"
-    url: "https://www.washingtonpost.com/sports/2024/03/27/orioles-david-rubenstein-owner/"
-    accessed: "2026-05-22"
-    archive_url: ""
-  - description: "Baltimore Sun — Rubenstein group closes on rest of Orioles (2024-08-01)"
-    url: "https://www.baltimoresun.com/2024/08/01/david-rubenstein-group-closes-on-deal-for-rest-of-orioles/"
-    accessed: "2026-05-22"
-    archive_url: ""
-  - description: "Baltimore Sun — Maryland Stadium Authority approves transfer to Inner Harbor Sports LLC (2024-03-20)"
-    url: "https://www.baltimoresun.com/2024/03/20/msa-orioles-owner-david-rubenstein/"
-    accessed: "2026-05-22"
-    archive_url: ""
-  - description: "The Carlyle Group official leadership bio — David M. Rubenstein, Co-Founder & Co-Chairman"
-    url: "https://www.carlyle.com/about-carlyle/team/david-m-rubenstein"
-    accessed: "2026-05-22"
-    archive_url: ""
-  - description: "Bloomberg — Carlyle's Rubenstein Builds Family Office (Declaration Capital, 2018)"
-    url: "https://www.bloomberg.com/news/articles/2018-05-24/carlyle-s-rubenstein-builds-family-office-with-outside-ambitions"
-    accessed: "2026-05-22"
-    archive_url: ""
-  - description: "Baltimore Banner — Rubenstein long ago moved on from Baltimore (Bethesda residency)"
-    url: "https://www.thebaltimorebanner.com/politics-power/david-rubenstein-orioles-baltimore-W3VE6LRGK5EL3NWIAY2FPDKG5Y/"
-    accessed: "2026-05-22"
-    archive_url: ""
+- description: "MLB.com — Sale of Orioles to David Rubenstein approved by MLB owners (2024-03-27)"
+  url: "https://www.mlb.com/news/david-rubenstein-orioles-ownership-approved"
+  accessed: "2026-05-22"
+  archive_url: ""
+- description: "MLB.com — Rubenstein group closes on remaining Orioles shares (2024-08-01)"
+  url: "https://www.mlb.com/news/orioles-ownership-deal-closes"
+  accessed: "2026-05-22"
+  archive_url: ""
+- description: "ESPN — Rubenstein unanimously approved as new Orioles owner (2024-03-27)"
+  url: "https://www.espn.com/mlb/story/_/id/39820434/david-rubenstein-unanimously-approved-new-orioles-owner"
+  accessed: "2026-05-22"
+  archive_url: ""
+- description: "Washington Post — MLB owners approve sale to David Rubenstein (2024-03-27)"
+  url: "https://www.washingtonpost.com/sports/2024/03/27/orioles-david-rubenstein-owner/"
+  accessed: "2026-05-22"
+  archive_url: ""
+- description: "Baltimore Sun — Rubenstein group closes on rest of Orioles (2024-08-01)"
+  url: "https://www.baltimoresun.com/2024/08/01/david-rubenstein-group-closes-on-deal-for-rest-of-orioles/"
+  accessed: "2026-05-22"
+  archive_url: ""
+- description: "Baltimore Sun — Maryland Stadium Authority approves transfer to Inner Harbor Sports LLC (2024-03-20)"
+  url: "https://www.baltimoresun.com/2024/03/20/msa-orioles-owner-david-rubenstein/"
+  accessed: "2026-05-22"
+  archive_url: ""
+- description: "The Carlyle Group official leadership bio — David M. Rubenstein, Co-Founder & Co-Chairman"
+  url: "https://www.carlyle.com/about-carlyle/team/david-m-rubenstein"
+  accessed: "2026-05-22"
+  archive_url: ""
+- description: "Bloomberg — Carlyle's Rubenstein Builds Family Office (Declaration Capital, 2018)"
+  url: "https://www.bloomberg.com/news/articles/2018-05-24/carlyle-s-rubenstein-builds-family-office-with-outside-ambitions"
+  accessed: "2026-05-22"
+  archive_url: ""
+- description: "Baltimore Banner — Rubenstein long ago moved on from Baltimore (Bethesda residency)"
+  url: "https://www.thebaltimorebanner.com/politics-power/david-rubenstein-orioles-baltimore-W3VE6LRGK5EL3NWIAY2FPDKG5Y/"
+  accessed: "2026-05-22"
+  archive_url: ""
 
 notes: |
   Rubenstein is a Baltimore native (born 1949) but has lived in Bethesda, MD
@@ -176,56 +176,56 @@ notes: |
   doing so would silently promote the doppelgänger to PROBABLE.
 
 change_log:
-  - date: 2026-05-22
-    change: |
-      Created during Phase 2 batch 1 research. Tier 2 sources: MLB.com (sale
-      approvals), ESPN, Washington Post, Baltimore Sun (both March + August
-      2024 closings), Carlyle Group official bio, Bloomberg (Declaration
-      Capital), Baltimore Banner (Bethesda residency).
+- date: 2026-05-22
+  change: |
+    Created during Phase 2 batch 1 research. Tier 2 sources: MLB.com (sale
+    approvals), ESPN, Washington Post, Baltimore Sun (both March + August
+    2024 closings), Carlyle Group official bio, Bloomberg (Declaration
+    Capital), Baltimore Banner (Bethesda residency).
 
-      strong_signals.employers initialized with Declaration Capital,
-      Declaration Partners, Inner Harbor Sports — all virtually unique to
-      him. Carlyle deliberately NOT in strong_signals.
-    by: "claude-code-research (orchestrated by alex)"
-    references:
-      - "/tmp/rubenstein-david-research.md (session-local research file)"
-  - date: 2026-05-24
-    change: |
-      Tier-A calibration round 1 — added negative_signals.employers:
-      "Georgetown University" after audit of all 8 CONFIRMED/PROBABLE records
-      plus all 23 UNCERTAIN review-queue entries.
+    strong_signals.employers initialized with Declaration Capital,
+    Declaration Partners, Inner Harbor Sports — all virtually unique to
+    him. Carlyle deliberately NOT in strong_signals.
+  by: "claude-code-research (orchestrated by alex)"
+  references:
+  - "/tmp/rubenstein-david-research.md (session-local research file)"
+- date: 2026-05-24
+  change: |
+    Tier-A calibration round 1 — added negative_signals.employers:
+    "Georgetown University" after audit of all 8 CONFIRMED/PROBABLE records
+    plus all 23 UNCERTAIN review-queue entries.
 
-      Audit finding: a different David Rubenstein in the DC/MD area files
-      small-dollar ($1–$100) ActBlue donations from Garrett Park MD (20
-      UNCERTAINs), Chevy Chase MD (2 UNCERTAINs), Westborough MA (1
-      UNCERTAIN), and Washington DC zip 20009 (3 of the 6 PROBABLE records).
-      One PROBABLE record (2008, $750 to Rudy Giuliani Presidential
-      Committee) was filed by this doppelgänger under "GEORGETOWN UNIVERSITY"
-      + occupation "V.P. OF FINANCIAL PLANNING & ANALYSIS" — David
-      Rubenstein the billionaire chairs Georgetown's board (he is not a VP
-      of Financial Planning).
+    Audit finding: a different David Rubenstein in the DC/MD area files
+    small-dollar ($1–$100) ActBlue donations from Garrett Park MD (20
+    UNCERTAINs), Chevy Chase MD (2 UNCERTAINs), Westborough MA (1
+    UNCERTAIN), and Washington DC zip 20009 (3 of the 6 PROBABLE records).
+    One PROBABLE record (2008, $750 to Rudy Giuliani Presidential
+    Committee) was filed by this doppelgänger under "GEORGETOWN UNIVERSITY"
+    + occupation "V.P. OF FINANCIAL PLANNING & ANALYSIS" — David
+    Rubenstein the billionaire chairs Georgetown's board (he is not a VP
+    of Financial Planning).
 
-      Result of change: 1 record demoted PROBABLE → UNCERTAIN; CONFIRMED
-      count unchanged at 2; P/C ratio drops 3.0 → 2.5. Doppelgänger pattern
-      documented in `notes`.
+    Result of change: 1 record demoted PROBABLE → UNCERTAIN; CONFIRMED
+    count unchanged at 2; P/C ratio drops 3.0 → 2.5. Doppelgänger pattern
+    documented in `notes`.
 
-      Other doppelgänger records remain correctly UNCERTAIN via the existing
-      city/state-outside-documented-residences rule; not adding Garrett Park
-      / Chevy Chase / Westborough to verifying_signals.cities (would silently
-      promote the doppelgänger to PROBABLE).
-    by: "claude-code-session (PR 4 Tier A, approved by alex)"
-    references:
-      - "data/master.db pre-calibration: 2 CONFIRMED / 6 PROBABLE / 23 UNCERTAIN-open"
-  - date: 2026-05-25
-    change: |
-      Tier-B / Tier-C audit pass-through — no additional changes beyond
-      the 2026-05-24 Tier-A entry above. P/C 2.5 (2 CONFIRMED / 5
-      PROBABLE) reflects the small sample size for this recently-added
-      owner (Phase 2 batch 1; tenure since 2024-03-27). Signals are
-      calibrated; calibration will reassess once volume increases.
-    by: "claude-code-session (PR 4 Tier C light pass)"
+    Other doppelgänger records remain correctly UNCERTAIN via the existing
+    city/state-outside-documented-residences rule; not adding Garrett Park
+    / Chevy Chase / Westborough to verifying_signals.cities (would silently
+    promote the doppelgänger to PROBABLE).
+  by: "claude-code-session (PR 4 Tier A, approved by alex)"
+  references:
+  - "data/master.db pre-calibration: 2 CONFIRMED / 6 PROBABLE / 23 UNCERTAIN-open"
+- date: 2026-05-25
+  change: |
+    Tier-B / Tier-C audit pass-through — no additional changes beyond
+    the 2026-05-24 Tier-A entry above. P/C 2.5 (2 CONFIRMED / 5
+    PROBABLE) reflects the small sample size for this recently-added
+    owner (Phase 2 batch 1; tenure since 2024-03-27). Signals are
+    calibrated; calibration will reassess once volume increases.
+  by: "claude-code-session (PR 4 Tier C light pass)"
 
 audit:
   created: 2026-05-22
-  last_ingestion: null
+  last_ingestion: '2026-05-26'
   last_signal_review: 2026-05-25

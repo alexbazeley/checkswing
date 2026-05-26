@@ -22,35 +22,35 @@ team: Minnesota Twins
 role: Principal owner / Executive Chair
 status: pilot
 tenure_start_date: 2025-12-17    # Target Field press conference; MLB approval shortly after
-tenure_end_date: null
+tenure_end_date:
 family_tenure_start_date: 1984-09-07    # Carl Pohlad acquired Twins from Calvin Griffith (Tom's grandfather)
 
 name_variants:
-  - "Thomas Pohlad"
-  - "Tom Pohlad"
-  - "Pohlad, Thomas"
-  - "Pohlad, Tom"
+- "Thomas Pohlad"
+- "Tom Pohlad"
+- "Pohlad, Thomas"
+- "Pohlad, Tom"
 
 verifying_signals:
   cities:
-    - "wayzata"          # primary residence per Camp Dudley + Minnesota Monthly
-    - "minneapolis"
-    - "shoreview"         # PaR Systems HQ; possible employer-address filings
+  - "wayzata"            # primary residence per Camp Dudley + Minnesota Monthly
+  - "minneapolis"
+  - "shoreview"           # PaR Systems HQ; possible employer-address filings
     # Lake Minnetonka suburbs (within 5 mi of Wayzata) added 2026-05-25
     # Tier-B calibration. 24 UNCERTAIN records at these three cities all
     # filed under "POHLAD, TOM" with his documented employers (Carousel
     # Motor Group / PaR Systems / Twin Cities Automotive Group / Voyager
     # Outward Bound School). No documented family-collision in these
     # suburbs — Joe / Chris Pohlad have distinct first names.
-    - "excelsior"
-    - "deephaven"
-    - "shorewood"
+  - "excelsior"
+  - "deephaven"
+  - "shorewood"
   states:
-    - "MN"
+  - "MN"
   employers:
-    - "Minnesota Twins"
-    - "Twins"
-    - "Pohlad Companies"      # Executive Chairman until Dec 2025; SHARED with family — verifying only
+  - "Minnesota Twins"
+  - "Twins"
+  - "Pohlad Companies"        # Executive Chairman until Dec 2025; SHARED with family — verifying only
     # Carousel Motor Group precursor / DBA names — added 2026-05-25 Tier-B
     # calibration after timeline reconstruction confirmed "POHLAD, THOMAS O"
     # at Twin Cities Automotive 2011-2015 + 55405 Minneapolis is the same
@@ -58,23 +58,23 @@ verifying_signals:
     # Wayzata (Tom's middle initial is O, not research-suggested K). Both
     # the 2009 Inver Grove Volkswagen record and the 2011-2015 Twin Cities
     # Automotive records track to Tom's pre-Carousel auto-retail career.
-    - "Twin Cities Automotive"
-    - "Inver Grove Volkswagen"
+  - "Twin Cities Automotive"
+  - "Inver Grove Volkswagen"
   occupations:
-    - "executive chair"
-    - "executive chairman"
-    - "ceo"
-    - "executive"
-    - "businessman"
-    - "owner"
-    - "gm"                   # Carousel Motor Group GM 2010-
-    - "coo"                   # Carousel Motor Group COO 2010-2019
+  - "executive chair"
+  - "executive chairman"
+  - "ceo"
+  - "executive"
+  - "businessman"
+  - "owner"
+  - "gm"                     # Carousel Motor Group GM 2010-
+  - "coo"                     # Carousel Motor Group COO 2010-2019
 
 strong_signals:
   employers:
-    - "PaR Systems"           # CEO Feb 4, 2019 to Dec 6, 2022; small private (Shoreview MN robotics/automation)
-    - "Carousel Motor Group"  # GM/COO 2010-2019; small private Twin Cities auto-retail
-    - "Carousel Motors"        # alternate brand form
+  - "PaR Systems"             # CEO Feb 4, 2019 to Dec 6, 2022; small private (Shoreview MN robotics/automation)
+  - "Carousel Motor Group"    # GM/COO 2010-2019; small private Twin Cities auto-retail
+  - "Carousel Motors"          # alternate brand form
   zip_codes: []
 
 related_entities: []
@@ -88,22 +88,22 @@ related_entities: []
 #     "Bill" Pohlad (River Road Entertainment).
 
 sources:
-  - description: "ESPN (Dec 2025) — Twins finalize sales, name Tom Pohlad new controlling owner. Confirms 2025-12-17 transition; MLB approval pending at announcement but confirmed in 2026"
-    url: "https://www.espn.com/mlb/story/_/id/47336092/twins-finalize-sales-name-tom-pohlad-new-controlling-owner"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "Twin Cities Business — 'The Twins Reset' (Tom Pohlad replaces brother Joe in leading team)"
-    url: "https://tcbmag.com/the-twins-tom-pohlad-to-replace-brother-joe-in-leading-team-organization/"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "Sports Illustrated / Onsi — 'We've lost trust: Tom Pohlad on replacing brother Joe atop the Twins'. Includes Tom's statements"
-    url: "https://www.si.com/mlb/twins/onsi/minnesota-twins-news/we-have-lost-trust-tom-pohlad-on-replacing-brother-joe-atop-the-twins"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "Star Tribune — 'Tom Pohlad to lead Twins business operations during 2026 season'"
-    url: "https://www.startribune.com/tom-pohlad-to-lead-twins-business-operations-throughout-2026-season/601660044"
-    accessed: "2026-05-23"
-    archive_url: ""
+- description: "ESPN (Dec 2025) — Twins finalize sales, name Tom Pohlad new controlling owner. Confirms 2025-12-17 transition; MLB approval pending at announcement but confirmed in 2026"
+  url: "https://www.espn.com/mlb/story/_/id/47336092/twins-finalize-sales-name-tom-pohlad-new-controlling-owner"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "Twin Cities Business — 'The Twins Reset' (Tom Pohlad replaces brother Joe in leading team)"
+  url: "https://tcbmag.com/the-twins-tom-pohlad-to-replace-brother-joe-in-leading-team-organization/"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "Sports Illustrated / Onsi — 'We've lost trust: Tom Pohlad on replacing brother Joe atop the Twins'. Includes Tom's statements"
+  url: "https://www.si.com/mlb/twins/onsi/minnesota-twins-news/we-have-lost-trust-tom-pohlad-on-replacing-brother-joe-atop-the-twins"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "Star Tribune — 'Tom Pohlad to lead Twins business operations during 2026 season'"
+  url: "https://www.startribune.com/tom-pohlad-to-lead-twins-business-operations-throughout-2026-season/601660044"
+  accessed: "2026-05-23"
+  archive_url: ""
 
 notes: |
   Thomas ("Tom") Pohlad (b. ~1980; age 45 at 2025-12-17 press conference) —
@@ -146,68 +146,68 @@ notes: |
   press conference).
 
 change_log:
-  - date: 2026-05-23
-    change: |
-      Created during Phase 2 owner-roster-completion (post-special-case
-      batch). Confirmed current MLB control person of Twins per ESPN /
-      Twin Cities Business / SI / Star Tribune coverage of the Dec 17 2025
-      family transition. tenure_start_date = 2025-12-17 (matches Joe
-      Pohlad's tenure_end_date). Strong_signals: PaR Systems + Carousel
-      Motor Group (both tenure-specific uniquely-identifying small private
-      employers). HIGH family-collision risk noted; strict name_variants.
-    by: "claude-code-research (orchestrated by alex)"
-    references:
-      - "/tmp/pohlad-tom-research.md (session-local research file)"
-  - date: 2026-05-25
-    change: |
-      Tier-B calibration round 1 — three coordinated changes:
+- date: 2026-05-23
+  change: |
+    Created during Phase 2 owner-roster-completion (post-special-case
+    batch). Confirmed current MLB control person of Twins per ESPN /
+    Twin Cities Business / SI / Star Tribune coverage of the Dec 17 2025
+    family transition. tenure_start_date = 2025-12-17 (matches Joe
+    Pohlad's tenure_end_date). Strong_signals: PaR Systems + Carousel
+    Motor Group (both tenure-specific uniquely-identifying small private
+    employers). HIGH family-collision risk noted; strict name_variants.
+  by: "claude-code-research (orchestrated by alex)"
+  references:
+  - "/tmp/pohlad-tom-research.md (session-local research file)"
+- date: 2026-05-25
+  change: |
+    Tier-B calibration round 1 — three coordinated changes:
 
-      (1) Career-arc reconstruction established that "POHLAD, THOMAS O"
-      at Twin Cities Automotive / Inver Grove Volkswagen (Minneapolis 55405,
-      2009-2015) is Tom Pohlad. The 2023-09 CONFIRMED records at his Wayzata
-      residence (553911513) + employer Pohlad Companies show identical
-      middle initial "O". Tom's career: NorthMarq Capital (2007-2008) →
-      Twin Cities Automotive Group / Inver Grove Volkswagen (2009-2015,
-      pre-Carousel auto-retail) → Carousel Motor Group GM/COO (2010-2019,
-      overlapping period) → PaR Systems CEO (2019-2022) → Pohlad Companies
-      Executive Chair (until Dec 2025) → Twins Executive Chair (since
-      2025-12-17). Twin Cities Automotive Group is most likely a Carousel
-      Motor Group parent/precursor/DBA — the timeline of name variants
-      and Tom's continuous "POHLAD, THOMAS O" identity supports this.
+    (1) Career-arc reconstruction established that "POHLAD, THOMAS O"
+    at Twin Cities Automotive / Inver Grove Volkswagen (Minneapolis 55405,
+    2009-2015) is Tom Pohlad. The 2023-09 CONFIRMED records at his Wayzata
+    residence (553911513) + employer Pohlad Companies show identical
+    middle initial "O". Tom's career: NorthMarq Capital (2007-2008) →
+    Twin Cities Automotive Group / Inver Grove Volkswagen (2009-2015,
+    pre-Carousel auto-retail) → Carousel Motor Group GM/COO (2010-2019,
+    overlapping period) → PaR Systems CEO (2019-2022) → Pohlad Companies
+    Executive Chair (until Dec 2025) → Twins Executive Chair (since
+    2025-12-17). Twin Cities Automotive Group is most likely a Carousel
+    Motor Group parent/precursor/DBA — the timeline of name variants
+    and Tom's continuous "POHLAD, THOMAS O" identity supports this.
 
-      Added "Twin Cities Automotive" and "Inver Grove Volkswagen" to
-      verifying_signals.employers. Effect: 24 PROBABLE → CONFIRMED via
-      employer + city Minneapolis = 2 signals.
+    Added "Twin Cities Automotive" and "Inver Grove Volkswagen" to
+    verifying_signals.employers. Effect: 24 PROBABLE → CONFIRMED via
+    employer + city Minneapolis = 2 signals.
 
-      (2) Added "excelsior", "deephaven", "shorewood" to
-      verifying_signals.cities. All three are Lake Minnetonka suburbs
-      within 5 mi of Wayzata. All 24 UNCERTAIN-open records at these
-      three cities were filed under "POHLAD, TOM" with his documented
-      strong-signal employers: 12 at Excelsior + Carousel Motor Group, 7
-      at Deephaven + Carousel Motor Group, 2 at Shorewood + PaR Systems,
-      1 at Excelsior + Twin Cities Automotive Group, 1 at Excelsior +
-      Voyager Outward Bound School. The address-contradicts rule had
-      been routing these to UNCERTAIN despite the strong-signal employer
-      match (correct per VERIFICATION.md spec to catch family
-      doppelgängers; here every record is Tom's first name explicitly).
-      Effect: 24 UNCERTAIN → CONFIRMED via strong-signal employer.
-      Doppelgänger safety: Joe / Chris Pohlad have distinct first names;
-      no other Tom Pohlad documented at Carousel / PaR / Pohlad
-      Companies / Voyager Outward Bound.
+    (2) Added "excelsior", "deephaven", "shorewood" to
+    verifying_signals.cities. All three are Lake Minnetonka suburbs
+    within 5 mi of Wayzata. All 24 UNCERTAIN-open records at these
+    three cities were filed under "POHLAD, TOM" with his documented
+    strong-signal employers: 12 at Excelsior + Carousel Motor Group, 7
+    at Deephaven + Carousel Motor Group, 2 at Shorewood + PaR Systems,
+    1 at Excelsior + Twin Cities Automotive Group, 1 at Excelsior +
+    Voyager Outward Bound School. The address-contradicts rule had
+    been routing these to UNCERTAIN despite the strong-signal employer
+    match (correct per VERIFICATION.md spec to catch family
+    doppelgängers; here every record is Tom's first name explicitly).
+    Effect: 24 UNCERTAIN → CONFIRMED via strong-signal employer.
+    Doppelgänger safety: Joe / Chris Pohlad have distinct first names;
+    no other Tom Pohlad documented at Carousel / PaR / Pohlad
+    Companies / Voyager Outward Bound.
 
-      (3) Notes block updated to correct middle initial from research-
-      suggested "K" (unconfirmed) to "O" (established via cross-period
-      FEC match).
+    (3) Notes block updated to correct middle initial from research-
+    suggested "K" (unconfirmed) to "O" (established via cross-period
+    FEC match).
 
-      Pre-cal: 71 CONFIRMED / 24 PROBABLE / 24 UNCERTAIN-open. P/C 0.34.
-      Predicted post-cal: ~119 CONFIRMED / ~0 PROBABLE / ~0 UNCERTAIN.
-      P/C ~0.0. CONFIRMED count goes up substantially — no >5% drop
-      alarm risk; reverse swing should be celebrated.
-    by: "claude-code-session (PR 4 Tier B, approved by alex full-sweep)"
-    references:
-      - "data/master.db pre-calibration: 71 CONFIRMED / 24 PROBABLE / 24 UNCERTAIN-open"
+    Pre-cal: 71 CONFIRMED / 24 PROBABLE / 24 UNCERTAIN-open. P/C 0.34.
+    Predicted post-cal: ~119 CONFIRMED / ~0 PROBABLE / ~0 UNCERTAIN.
+    P/C ~0.0. CONFIRMED count goes up substantially — no >5% drop
+    alarm risk; reverse swing should be celebrated.
+  by: "claude-code-session (PR 4 Tier B, approved by alex full-sweep)"
+  references:
+  - "data/master.db pre-calibration: 71 CONFIRMED / 24 PROBABLE / 24 UNCERTAIN-open"
 
 audit:
   created: 2026-05-23
-  last_ingestion: null
+  last_ingestion: '2026-05-26'
   last_signal_review: 2026-05-25

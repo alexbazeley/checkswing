@@ -12,7 +12,7 @@ team: Chicago White Sox
 role: Chairman / Principal owner
 status: pilot
 tenure_start_date: 1981-01-29   # 14-0 AL owners' vote at O'Hare Hilton (SABR)
-tenure_end_date: null
+tenure_end_date:
 
 # Conservative name variants. Critically:
 #   - "Reinsdorf" alone is NEVER a variant — matches every family member.
@@ -22,37 +22,37 @@ tenure_end_date: null
 #   - Jerry's middle name is "Michael" — that compounds the Michael-the-son
 #     collision risk. The variants require the full first name "Jerry".
 name_variants:
-  - "Jerry Reinsdorf"
-  - "Jerry M Reinsdorf"
-  - "Jerry M. Reinsdorf"
-  - "Jerry Michael Reinsdorf"
-  - "Reinsdorf, Jerry"
-  - "Reinsdorf, Jerry M"
-  - "Reinsdorf, Jerry M."
+- "Jerry Reinsdorf"
+- "Jerry M Reinsdorf"
+- "Jerry M. Reinsdorf"
+- "Jerry Michael Reinsdorf"
+- "Reinsdorf, Jerry"
+- "Reinsdorf, Jerry M"
+- "Reinsdorf, Jerry M."
 
 verifying_signals:
   cities:
     # Chicago + Highland Park (North Shore). Bannockburn (sometimes cited in
     # press) was not confirmed by Tier 2; not added. AZ secondary (Camelback
     # Ranch spring training) not affirmatively a residence.
-    - "chicago"
-    - "highland park"
+  - "chicago"
+  - "highland park"
   states:
-    - "IL"
+  - "IL"
   employers:
     # White Sox + Bulls — both his properties. Bulls filings will appear
     # because he's also Bulls chairman.
-    - "Chicago White Sox"
-    - "White Sox"
-    - "Chicago Bulls"
-    - "Balcor Company"
-    - "Balcor"
+  - "Chicago White Sox"
+  - "White Sox"
+  - "Chicago Bulls"
+  - "Balcor Company"
+  - "Balcor"
   occupations:
-    - "chairman"
-    - "owner"
-    - "principal"
-    - "principal owner"
-    - "managing partner"
+  - "chairman"
+  - "owner"
+  - "principal"
+  - "principal owner"
+  - "managing partner"
 
 strong_signals:
   # Bojer Financial Ltd is Jerry's family investment office (Chicago).
@@ -66,15 +66,15 @@ strong_signals:
   # sold 1987; many ex-Balcor employees may still file historical "Balcor"
   # as employer. Stays in verifying_signals.employers.
   employers:
-    - "Bojer Financial"          # case-insensitive substring catches LTD / LTD. / ,LTD / etc.
+  - "Bojer Financial"            # case-insensitive substring catches LTD / LTD. / ,LTD / etc.
   # ZIPs 60616 + 606163621 are Jerry's Chicago address. Tier-A audit showed
   # 247 CONFIRMED records share these two ZIPs (102 + 145 respectively); the
   # PROBABLE records at the same ZIPs (119 + 34) are also Jerry, just with
   # generic SELF / (none) / Bojer-variant employer strings. Strong-ZIP
   # promotion lets those records CONFIRM on name + ZIP alone.
   zip_codes:
-    - "60616"
-    - "606163621"
+  - "60616"
+  - "606163621"
 
 # Negative signals: no doppelgängers identified at creation. Calibration may
 # need to add if son Michael Reinsdorf files records that match Jerry's
@@ -88,22 +88,22 @@ related_entities: []
 #   - Daughter Susan Reinsdorf — separate slug if added
 
 sources:
-  - description: "SABR biography of Jerry Reinsdorf — 1981-01-29 vote to purchase White Sox"
-    url: "https://sabr.org/bioproj/person/jerry-reinsdorf/"
-    accessed: "2026-05-22"
-    archive_url: ""
-  - description: "MLB.com Chicago White Sox front office page (current chairman)"
-    url: "https://www.mlb.com/whitesox/team/front-office"
-    accessed: "2026-05-22"
-    archive_url: ""
-  - description: "Britannica — Jerry Michael Reinsdorf full legal name and biographical detail"
-    url: "https://www.britannica.com/biography/Jerry-Reinsdorf"
-    accessed: "2026-05-22"
-    archive_url: ""
-  - description: "GW Alumni profile — Reinsdorf education + career history"
-    url: "https://www.gwu.edu/alumni/jerry-reinsdorf"
-    accessed: "2026-05-22"
-    archive_url: ""
+- description: "SABR biography of Jerry Reinsdorf — 1981-01-29 vote to purchase White Sox"
+  url: "https://sabr.org/bioproj/person/jerry-reinsdorf/"
+  accessed: "2026-05-22"
+  archive_url: ""
+- description: "MLB.com Chicago White Sox front office page (current chairman)"
+  url: "https://www.mlb.com/whitesox/team/front-office"
+  accessed: "2026-05-22"
+  archive_url: ""
+- description: "Britannica — Jerry Michael Reinsdorf full legal name and biographical detail"
+  url: "https://www.britannica.com/biography/Jerry-Reinsdorf"
+  accessed: "2026-05-22"
+  archive_url: ""
+- description: "GW Alumni profile — Reinsdorf education + career history"
+  url: "https://www.gwu.edu/alumni/jerry-reinsdorf"
+  accessed: "2026-05-22"
+  archive_url: ""
 
 notes: |
   Full legal name is Jerry Michael Reinsdorf (NOT "Jerome" as sometimes
@@ -137,61 +137,61 @@ notes: |
   See change_log for measured impact and rationale.
 
 change_log:
-  - date: 2026-05-22
-    change: |
-      Created during Phase 2 batch 2 research. Tier 2 sources: SABR
-      biography, MLB.com (406, cross-confirmed), Britannica, GW Alumni.
+- date: 2026-05-22
+  change: |
+    Created during Phase 2 batch 2 research. Tier 2 sources: SABR
+    biography, MLB.com (406, cross-confirmed), Britannica, GW Alumni.
 
-      name_variants designed for sibling/parent disambiguation (no bare
-      Reinsdorf, no first-initial-only forms). strong_signals empty
-      pending calibration; Balcor candidate for promotion if first
-      ingestion shows clean profile.
+    name_variants designed for sibling/parent disambiguation (no bare
+    Reinsdorf, no first-initial-only forms). strong_signals empty
+    pending calibration; Balcor candidate for promotion if first
+    ingestion shows clean profile.
 
-      tenure_end_date null because the June 2025 Ishbia option-based deal
-      retains Jerry as chairman/controlling owner; sale option opens 2029.
-    by: "claude-code-research (orchestrated by alex)"
-    references:
-      - "/tmp/reinsdorf-jerry-research.md (session-local)"
-  - date: 2026-05-25
-    change: |
-      Tier-A calibration round 1 — populated strong_signals (both employers
-      and zip_codes) based on the pattern that emerged from the first
-      ingestion's 255 CONFIRMED / 167 PROBABLE distribution.
+    tenure_end_date null because the June 2025 Ishbia option-based deal
+    retains Jerry as chairman/controlling owner; sale option opens 2029.
+  by: "claude-code-research (orchestrated by alex)"
+  references:
+  - "/tmp/reinsdorf-jerry-research.md (session-local)"
+- date: 2026-05-25
+  change: |
+    Tier-A calibration round 1 — populated strong_signals (both employers
+    and zip_codes) based on the pattern that emerged from the first
+    ingestion's 255 CONFIRMED / 167 PROBABLE distribution.
 
-      Audit findings: the 167 PROBABLE records were dominated by Bojer
-      Financial variants (73 + 14 + 10 + 9 + 6 + 4 = 116 records across six
-      string spellings) plus generic SELF / SELF-EMPLOYED / (none) employer
-      strings, all in CHICAGO IL at the same ZIPs (60616 + 606163621) as
-      the CONFIRMED records.
+    Audit findings: the 167 PROBABLE records were dominated by Bojer
+    Financial variants (73 + 14 + 10 + 9 + 6 + 4 = 116 records across six
+    string spellings) plus generic SELF / SELF-EMPLOYED / (none) employer
+    strings, all in CHICAGO IL at the same ZIPs (60616 + 606163621) as
+    the CONFIRMED records.
 
-      Changes applied:
-        1. strong_signals.employers += "Bojer Financial" — Jerry's family
-           investment office. Case-insensitive substring catches every
-           observed Bojer Financial variant. Family-collision firewall: the
-           name_variants require full "Jerry" first name; other Reinsdorfs
-           at Bojer (Michael, Jonathan, David, Susan) have different first
-           names and are not picked up.
-        2. strong_signals.zip_codes += "60616" and "606163621" — Jerry's
-           Chicago address. 247 CONFIRMED records already shared these ZIPs
-           (102 + 145 respectively) at the time of the audit. The 153
-           PROBABLE records at the same ZIPs were all "MONFORT, JERRY"... I
-           mean "REINSDORF, JERRY"-named records with generic employer
-           strings — clearly him, missing the employer-signal corroboration.
+    Changes applied:
+      1. strong_signals.employers += "Bojer Financial" — Jerry's family
+         investment office. Case-insensitive substring catches every
+         observed Bojer Financial variant. Family-collision firewall: the
+         name_variants require full "Jerry" first name; other Reinsdorfs
+         at Bojer (Michael, Jonathan, David, Susan) have different first
+         names and are not picked up.
+      2. strong_signals.zip_codes += "60616" and "606163621" — Jerry's
+         Chicago address. 247 CONFIRMED records already shared these ZIPs
+         (102 + 145 respectively) at the time of the audit. The 153
+         PROBABLE records at the same ZIPs were all "MONFORT, JERRY"... I
+         mean "REINSDORF, JERRY"-named records with generic employer
+         strings — clearly him, missing the employer-signal corroboration.
 
-      Balcor intentionally NOT promoted (notes flagged that pre-1987
-      ex-Balcor employees may still file Balcor historically).
+    Balcor intentionally NOT promoted (notes flagged that pre-1987
+    ex-Balcor employees may still file Balcor historically).
 
-      Pre-calibration counts: 255 CONFIRMED / 167 PROBABLE / 0 UNCERTAIN-open.
-      Expected impact: ~250-300 PROBABLE records → CONFIRMED via the new
-      strong signals; CONFIRMED total ~400+; PROBABLE drops to single digits.
-      This is a large positive swing; if any unexpected drop in CONFIRMED
-      occurs (the >5% manual-review threshold), the pre-reclassify snapshot
-      is the rollback path.
-    by: "claude-code-session (PR 4 Tier A, approved by alex via Option B)"
-    references:
-      - "data/master.db pre-calibration: 255 CONFIRMED / 167 PROBABLE / 0 UNCERTAIN-open"
+    Pre-calibration counts: 255 CONFIRMED / 167 PROBABLE / 0 UNCERTAIN-open.
+    Expected impact: ~250-300 PROBABLE records → CONFIRMED via the new
+    strong signals; CONFIRMED total ~400+; PROBABLE drops to single digits.
+    This is a large positive swing; if any unexpected drop in CONFIRMED
+    occurs (the >5% manual-review threshold), the pre-reclassify snapshot
+    is the rollback path.
+  by: "claude-code-session (PR 4 Tier A, approved by alex via Option B)"
+  references:
+  - "data/master.db pre-calibration: 255 CONFIRMED / 167 PROBABLE / 0 UNCERTAIN-open"
 
 audit:
   created: 2026-05-22
-  last_ingestion: null
+  last_ingestion: '2026-05-26'
   last_signal_review: 2026-05-22

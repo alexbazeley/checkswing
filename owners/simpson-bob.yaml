@@ -18,45 +18,45 @@ team: Texas Rangers
 role: Co-Chairman / Principal Owner
 status: pilot
 tenure_start_date: 2010-08-12    # Rangers Baseball Express closing (approximate; press universally "August 2010")
-tenure_end_date: null
+tenure_end_date:
 
 name_variants:
-  - "Bob R Simpson"
-  - "Bob R. Simpson"
-  - "Simpson, Bob R"
-  - "Simpson, Bob R."
+- "Bob R Simpson"
+- "Bob R. Simpson"
+- "Simpson, Bob R"
+- "Simpson, Bob R."
   # NOTE: Deliberately NO bare "Bob Simpson" or "Robert Simpson" form —
   # the "R." middle initial is required for disambiguation. Without it,
   # the classifier would catch many unrelated Bob/Robert Simpsons.
 
 verifying_signals:
   cities:
-    - "fort worth"
+  - "fort worth"
   states:
-    - "TX"
+  - "TX"
   employers:
-    - "Texas Rangers"
-    - "Rangers Baseball Express"
-    - "RayLynn Records"           # small record label co-founded with wife Janice 2012
+  - "Texas Rangers"
+  - "Rangers Baseball Express"
+  - "RayLynn Records"             # small record label co-founded with wife Janice 2012
   occupations:
-    - "chairman"
-    - "ceo"
-    - "founder"
-    - "executive"
-    - "investor"
-    - "businessman"
-    - "oil and gas"
-    - "cpa"
-    - "certified public accountant"
+  - "chairman"
+  - "ceo"
+  - "founder"
+  - "executive"
+  - "investor"
+  - "businessman"
+  - "oil and gas"
+  - "cpa"
+  - "certified public accountant"
 
 strong_signals:
   employers:
-    - "XTO Energy"                 # founded 1986 (originally Cross Timbers); sold to ExxonMobil 2010
-    - "TXO Partners"               # founded 2012 as MorningStar; renamed TXO 2023; NYSE: TXO
-    - "TXO Energy Partners"
-    - "MorningStar Partners"        # 2012-2022 name for what became TXO
-    - "Cross Timbers Oil"           # pre-2001 name for XTO
-    - "Cross Timbers Oil Company"
+  - "XTO Energy"                   # founded 1986 (originally Cross Timbers); sold to ExxonMobil 2010
+  - "TXO Partners"                 # founded 2012 as MorningStar; renamed TXO 2023; NYSE: TXO
+  - "TXO Energy Partners"
+  - "MorningStar Partners"          # 2012-2022 name for what became TXO
+  - "Cross Timbers Oil"             # pre-2001 name for XTO
+  - "Cross Timbers Oil Company"
   zip_codes:
     # 76102 downtown Fort Worth — XTO Energy HQ (810 Houston St) and TXO
     # Partners HQ (400 W 7th St) office cluster. Added 2026-05-25 Tier-B
@@ -71,7 +71,7 @@ strong_signals:
     # who also uses the "R." middle initial. Future calibration round
     # should establish Simpson's residential ZIP (not in Tier 2 sources)
     # and migrate the strong-zip from office 76102 to residence.
-    - "76102"
+  - "76102"
 
 related_entities: []
 # Future candidates (do NOT add without user approval per CLAUDE.md §1.7):
@@ -83,30 +83,30 @@ related_entities: []
 #     entity; co-chairman with own donor profile).
 
 sources:
-  - description: "MLB.com — Bob R. Simpson front office page. Official team-published bio"
-    url: "https://www.mlb.com/rangers/team/front-office/bob-simpson"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "Fort Worth Report (March 20, 2025) — Bob Simpson to step down as CEO of Fort Worth's TXO, remain as chairman. Confirms Fort Worth residence and Rangers co-ownership"
-    url: "https://fortworthreport.org/2025/03/20/bob-simpson-to-step-down-as-ceo-of-fort-worths-txo-remain-as-chairman/"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "Fort Worth Magazine — Bob Simpson Retires as CEO of TXO Partners; Co-CEOs Brent W. Clum and Gary D. Simpson Appointed"
-    url: "https://fwtx.com/news/bob-simpson-steps-down-as-ceo-of-txo-partners/"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "Baylor University Alumni — Bob Simpson Distinguished Alumni Profile. BBA Accounting 1970, MBA 1971; CPA; XTO Energy founder"
-    url: "https://alumni.web.baylor.edu/person/2013/bob-simpson"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "TXO Partners L.P. — Board of Directors. Official corporate listing of Simpson as Chairman"
-    url: "https://www.txopartners.com/investors/corporate-governance/board-of-directors"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "SEC EDGAR — XTO Energy Form 8-K (2008) signed by Bob R. Simpson as Chairman. Corporate-regulatory primary documentation"
-    url: "https://www.sec.gov/Archives/edgar/data/0000868809/000086880908000051/form_8k.htm"
-    accessed: "2026-05-23"
-    archive_url: ""
+- description: "MLB.com — Bob R. Simpson front office page. Official team-published bio"
+  url: "https://www.mlb.com/rangers/team/front-office/bob-simpson"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "Fort Worth Report (March 20, 2025) — Bob Simpson to step down as CEO of Fort Worth's TXO, remain as chairman. Confirms Fort Worth residence and Rangers co-ownership"
+  url: "https://fortworthreport.org/2025/03/20/bob-simpson-to-step-down-as-ceo-of-fort-worths-txo-remain-as-chairman/"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "Fort Worth Magazine — Bob Simpson Retires as CEO of TXO Partners; Co-CEOs Brent W. Clum and Gary D. Simpson Appointed"
+  url: "https://fwtx.com/news/bob-simpson-steps-down-as-ceo-of-txo-partners/"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "Baylor University Alumni — Bob Simpson Distinguished Alumni Profile. BBA Accounting 1970, MBA 1971; CPA; XTO Energy founder"
+  url: "https://alumni.web.baylor.edu/person/2013/bob-simpson"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "TXO Partners L.P. — Board of Directors. Official corporate listing of Simpson as Chairman"
+  url: "https://www.txopartners.com/investors/corporate-governance/board-of-directors"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "SEC EDGAR — XTO Energy Form 8-K (2008) signed by Bob R. Simpson as Chairman. Corporate-regulatory primary documentation"
+  url: "https://www.sec.gov/Archives/edgar/data/0000868809/000086880908000051/form_8k.htm"
+  accessed: "2026-05-23"
+  archive_url: ""
 
 notes: |
   Bob R. Simpson (b. ~1948; Baylor BBA Accounting 1970, MBA 1971; CPA) —
@@ -152,52 +152,52 @@ notes: |
   Tier-B calibration pragmatic choice pending residence research.
 
 change_log:
-  - date: 2026-05-23
-    change: |
-      Created during Phase 2 batch 4. Replaces misnamed `simpson-ray`
-      registry slug (which combined Davis and Simpson). Tier 2 sources:
-      MLB.com, Fort Worth Report, Fort Worth Magazine, Baylor Alumni,
-      TXO Partners IR, SEC EDGAR. tenure_start_date = 2010-08-12 (Rangers
-      Baseball Express closing; exact day approximate). Strong_signals =
-      XTO Energy / TXO Partners / MorningStar Partners / Cross Timbers
-      Oil. name_variants DELIBERATELY EXCLUDE bare "Bob Simpson" / "Robert
-      Simpson" — "R." middle initial is load-bearing.
-    by: "claude-code-research (orchestrated by alex)"
-    references:
-      - "/tmp/rangers-ownership-research.md (session-local research file)"
-  - date: 2026-05-25
-    change: |
-      Tier-B calibration round 1 — resolved 0 CONFIRMED / 8 PROBABLE
-      anomaly by promoting 76102 (downtown Fort Worth XTO/TXO office
-      ZIP) to strong_signals.zip_codes.
+- date: 2026-05-23
+  change: |
+    Created during Phase 2 batch 4. Replaces misnamed `simpson-ray`
+    registry slug (which combined Davis and Simpson). Tier 2 sources:
+    MLB.com, Fort Worth Report, Fort Worth Magazine, Baylor Alumni,
+    TXO Partners IR, SEC EDGAR. tenure_start_date = 2010-08-12 (Rangers
+    Baseball Express closing; exact day approximate). Strong_signals =
+    XTO Energy / TXO Partners / MorningStar Partners / Cross Timbers
+    Oil. name_variants DELIBERATELY EXCLUDE bare "Bob Simpson" / "Robert
+    Simpson" — "R." middle initial is load-bearing.
+  by: "claude-code-research (orchestrated by alex)"
+  references:
+  - "/tmp/rangers-ownership-research.md (session-local research file)"
+- date: 2026-05-25
+  change: |
+    Tier-B calibration round 1 — resolved 0 CONFIRMED / 8 PROBABLE
+    anomaly by promoting 76102 (downtown Fort Worth XTO/TXO office
+    ZIP) to strong_signals.zip_codes.
 
-      Audit finding: every PROBABLE record is "SIMPSON, BOB R. MR."
-      (load-bearing middle initial intact) at 76102 Fort Worth filing
-      Aug-Sept 2012 to Republican mega-donor recipients (Romney Victory
-      $50k, Romney for President $2,500 x 2, RNC $30,800, Vermont/Idaho/
-      Massachusetts/Oklahoma Republican Federal $3,550 each). Empty
-      employer / "INFORMATION REQUESTED PER BEST EFFORTS" filings — FEC
-      clerk had no info during that 2012 fundraising sweep. Clearly
-      Simpson based on name + city + recipient + amount-scale.
+    Audit finding: every PROBABLE record is "SIMPSON, BOB R. MR."
+    (load-bearing middle initial intact) at 76102 Fort Worth filing
+    Aug-Sept 2012 to Republican mega-donor recipients (Romney Victory
+    $50k, Romney for President $2,500 x 2, RNC $30,800, Vermont/Idaho/
+    Massachusetts/Oklahoma Republican Federal $3,550 each). Empty
+    employer / "INFORMATION REQUESTED PER BEST EFFORTS" filings — FEC
+    clerk had no info during that 2012 fundraising sweep. Clearly
+    Simpson based on name + city + recipient + amount-scale.
 
-      OFFICE-ZIP CAVEAT: 76102 is downtown Fort Worth (XTO Energy HQ at
-      810 Houston St; TXO Partners HQ at 400 W 7th St), not Simpson's
-      personal residence. Per the system-prompt footgun warning about
-      office-building strong-zips, this carries doppelgänger risk that
-      residential ZIPs don't. The strict "Bob R." middle-initial
-      name_variants is the ONLY firewall against a hypothetical second
-      "Bob R. Simpson" working in 76102. Approved by alex with
-      acknowledgment of the caveat; future calibration round should
-      research Simpson's actual residential ZIP and migrate.
+    OFFICE-ZIP CAVEAT: 76102 is downtown Fort Worth (XTO Energy HQ at
+    810 Houston St; TXO Partners HQ at 400 W 7th St), not Simpson's
+    personal residence. Per the system-prompt footgun warning about
+    office-building strong-zips, this carries doppelgänger risk that
+    residential ZIPs don't. The strict "Bob R." middle-initial
+    name_variants is the ONLY firewall against a hypothetical second
+    "Bob R. Simpson" working in 76102. Approved by alex with
+    acknowledgment of the caveat; future calibration round should
+    research Simpson's actual residential ZIP and migrate.
 
-      Pre-cal: 0 CONFIRMED / 8 PROBABLE / 0 UNCERTAIN-open.
-      Predicted post-cal: ~8 CONFIRMED / ~0 PROBABLE / 0 UNCERTAIN.
-      No CONFIRMED-drop alarm risk (positive swing only; was already 0).
-    by: "claude-code-session (PR 4 Tier B, approved by alex w/ office-ZIP caveat)"
-    references:
-      - "data/master.db pre-calibration: 0 CONFIRMED / 8 PROBABLE / 0 UNCERTAIN-open"
+    Pre-cal: 0 CONFIRMED / 8 PROBABLE / 0 UNCERTAIN-open.
+    Predicted post-cal: ~8 CONFIRMED / ~0 PROBABLE / 0 UNCERTAIN.
+    No CONFIRMED-drop alarm risk (positive swing only; was already 0).
+  by: "claude-code-session (PR 4 Tier B, approved by alex w/ office-ZIP caveat)"
+  references:
+  - "data/master.db pre-calibration: 0 CONFIRMED / 8 PROBABLE / 0 UNCERTAIN-open"
 
 audit:
   created: 2026-05-23
-  last_ingestion: null
+  last_ingestion: '2026-05-26'
   last_signal_review: 2026-05-25

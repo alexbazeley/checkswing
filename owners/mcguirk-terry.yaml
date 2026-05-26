@@ -21,44 +21,44 @@ team: Atlanta Braves
 role: Principal owner / Chairman, President & CEO Atlanta Braves Holdings / MLB Control Person
 status: pilot
 tenure_start_date: 2007-01-01    # Chairman of Atlanta Braves since 2007 (Liberty Media era); year-precision
-tenure_end_date: null
+tenure_end_date:
 
 name_variants:
-  - "Terence F McGuirk"
-  - "Terence F. McGuirk"
-  - "Terence McGuirk"
-  - "Terry McGuirk"
-  - "Terry F. McGuirk"
-  - "Terry F McGuirk"
-  - "McGuirk, Terence"
-  - "McGuirk, Terence F"
-  - "McGuirk, Terence F."
-  - "McGuirk, Terry"
+- "Terence F McGuirk"
+- "Terence F. McGuirk"
+- "Terence McGuirk"
+- "Terry McGuirk"
+- "Terry F. McGuirk"
+- "Terry F McGuirk"
+- "McGuirk, Terence"
+- "McGuirk, Terence F"
+- "McGuirk, Terence F."
+- "McGuirk, Terry"
 
 verifying_signals:
   cities:
-    - "atlanta"
+  - "atlanta"
   states:
-    - "GA"
+  - "GA"
   employers:
-    - "Atlanta Braves"
-    - "Atlanta Braves Holdings"
-    - "Atlanta Braves Holdings Inc"
-    - "Atlanta Braves Holdings, Inc."
-    - "Braves Holdings"
-    - "Braves Holdings LLC"
-    - "Atlanta National League Baseball Club"   # historical legal name
-    - "Turner Broadcasting"                       # 1972-2001 historical
-    - "Turner Broadcasting System"
-    - "TBS"
-    - "Time Warner"                               # 1996- historical (post-Turner/TBS merger)
-    - "AOL Time Warner"                           # historical 2001-2003
+  - "Atlanta Braves"
+  - "Atlanta Braves Holdings"
+  - "Atlanta Braves Holdings Inc"
+  - "Atlanta Braves Holdings, Inc."
+  - "Braves Holdings"
+  - "Braves Holdings LLC"
+  - "Atlanta National League Baseball Club"     # historical legal name
+  - "Turner Broadcasting"                         # 1972-2001 historical
+  - "Turner Broadcasting System"
+  - "TBS"
+  - "Time Warner"                                 # 1996- historical (post-Turner/TBS merger)
+  - "AOL Time Warner"                             # historical 2001-2003
   occupations:
-    - "chairman"
-    - "ceo"
-    - "president"
-    - "executive"
-    - "businessman"
+  - "chairman"
+  - "ceo"
+  - "president"
+  - "executive"
+  - "businessman"
 
 strong_signals:
   employers: []
@@ -73,7 +73,7 @@ strong_signals:
     # office ZIP with known Terry McGuirk doppelgänger risk (JLL real-
     # estate exec + Atlanta-area realtor per notes block). 4 PROBABLE
     # records at 30303 with empty employer + TBS occupation stay PROBABLE.
-    - "30327"
+  - "30327"
   # Conservative at creation. "Atlanta Braves Holdings" is the corporate
   # name but is shared with the ABH board (Brian Deevy, Wonya Lucas, Diana
   # Murphy) and ABH officers/staff. Calibrate after first ingestion if a
@@ -85,30 +85,30 @@ related_entities: []
 #   - children: 4 children per profiles; names not publicly enumerated.
 
 sources:
-  - description: "MLB.com — Terry McGuirk front office page. Title (Chairman, President & CEO Atlanta Braves Holdings; Chairman and Control Person Atlanta Braves)"
-    url: "https://www.mlb.com/braves/team/front-office/terry-mcguirk"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "Atlanta Braves Holdings IR — Board of Directors / Officers. Confirms current titles; confirms John Malone is NOT on the ABH board"
-    url: "https://www.bravesholdings.com/about/board-of-directors"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "Atlanta Braves Holdings press release (Aug 23, 2024) — Corporate Governance Update. Granted McGuirk proxy over Malone's 44% Series B voting block; Maffei resigned"
-    url: "https://www.bravesholdings.com/news/press-releases/detail/198/atlanta-braves-holdings-provides-corporate-governance-update"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "Atlanta Journal-Constitution (Nov 7, 2024) — 'John Malone gives Terry McGuirk more power with Atlanta Braves.' Documents proxy, right of first refusal, appreciation right above $50/share"
-    url: "https://www.ajc.com/sports/atlanta-braves/john-malone-gives-terry-mcguirk-more-power-with-atlanta-braves/B3HXGRCMVZBGNLSY3LXBQCV6UM/"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "Syndeo Institute (Cable Hall of Fame, 2010 inductee) — Terence F. McGuirk bio. Career arc Turner Broadcasting 1972- through TBS / Time Warner"
-    url: "https://syndeoinstitute.org/honorees/past-honorees/2010-honorees/terence-f-mcguirk/"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "Atlanta Magazine — 'Atlanta's 55 Most Powerful' #27 Terry McGuirk. Confirms Atlanta residence (with wife Nancy), four children, civic role"
-    url: "https://www.atlantamagazine.com/news-culture-articles/27-terry-mcgurk/"
-    accessed: "2026-05-23"
-    archive_url: ""
+- description: "MLB.com — Terry McGuirk front office page. Title (Chairman, President & CEO Atlanta Braves Holdings; Chairman and Control Person Atlanta Braves)"
+  url: "https://www.mlb.com/braves/team/front-office/terry-mcguirk"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "Atlanta Braves Holdings IR — Board of Directors / Officers. Confirms current titles; confirms John Malone is NOT on the ABH board"
+  url: "https://www.bravesholdings.com/about/board-of-directors"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "Atlanta Braves Holdings press release (Aug 23, 2024) — Corporate Governance Update. Granted McGuirk proxy over Malone's 44% Series B voting block; Maffei resigned"
+  url: "https://www.bravesholdings.com/news/press-releases/detail/198/atlanta-braves-holdings-provides-corporate-governance-update"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "Atlanta Journal-Constitution (Nov 7, 2024) — 'John Malone gives Terry McGuirk more power with Atlanta Braves.' Documents proxy, right of first refusal, appreciation right above $50/share"
+  url: "https://www.ajc.com/sports/atlanta-braves/john-malone-gives-terry-mcguirk-more-power-with-atlanta-braves/B3HXGRCMVZBGNLSY3LXBQCV6UM/"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "Syndeo Institute (Cable Hall of Fame, 2010 inductee) — Terence F. McGuirk bio. Career arc Turner Broadcasting 1972- through TBS / Time Warner"
+  url: "https://syndeoinstitute.org/honorees/past-honorees/2010-honorees/terence-f-mcguirk/"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "Atlanta Magazine — 'Atlanta's 55 Most Powerful' #27 Terry McGuirk. Confirms Atlanta residence (with wife Nancy), four children, civic role"
+  url: "https://www.atlantamagazine.com/news-culture-articles/27-terry-mcgurk/"
+  accessed: "2026-05-23"
+  archive_url: ""
 
 notes: |
   Terence F. ("Terry") McGuirk — Chairman, President & CEO of Atlanta Braves
@@ -145,57 +145,57 @@ notes: |
   "atlanta" generally; refine via calibration if filings cluster.
 
 change_log:
-  - date: 2026-05-23
-    change: |
-      Created during Phase 2 special-case batch. Per user direction (Davis-
-      Simpson-style separate slugs for Braves co-principals), tracking
-      McGuirk as the MLB Control Person + day-to-day chair, with Malone as
-      a separate slug for his individual donor footprint. Tier 2 sources:
-      MLB.com, Atlanta Braves Holdings IR, AJC, Cable Hall of Fame, Atlanta
-      Magazine. tenure_start_date = 2007-01-01 (year-precision; Chairman of
-      Braves under Liberty Media). strong_signals empty at creation —
-      calibrate after first ingestion. Replaces the original
-      `liberty-media-group` registry placeholder.
-    by: "claude-code-research (orchestrated by alex)"
-    references:
-      - "/tmp/braves-ownership-research.md (session-local research file)"
-  - date: 2026-05-25
-    change: |
-      Tier-B calibration round 1 — added strong_signals.zip_codes: ["30327"]
-      (Atlanta Buckhead area, McGuirk's residential cluster).
+- date: 2026-05-23
+  change: |
+    Created during Phase 2 special-case batch. Per user direction (Davis-
+    Simpson-style separate slugs for Braves co-principals), tracking
+    McGuirk as the MLB Control Person + day-to-day chair, with Malone as
+    a separate slug for his individual donor footprint. Tier 2 sources:
+    MLB.com, Atlanta Braves Holdings IR, AJC, Cable Hall of Fame, Atlanta
+    Magazine. tenure_start_date = 2007-01-01 (year-precision; Chairman of
+    Braves under Liberty Media). strong_signals empty at creation —
+    calibrate after first ingestion. Replaces the original
+    `liberty-media-group` registry placeholder.
+  by: "claude-code-research (orchestrated by alex)"
+  references:
+  - "/tmp/braves-ownership-research.md (session-local research file)"
+- date: 2026-05-25
+  change: |
+    Tier-B calibration round 1 — added strong_signals.zip_codes: ["30327"]
+    (Atlanta Buckhead area, McGuirk's residential cluster).
 
-      Audit finding (8 PROBABLE records inspected): every PROBABLE record
-      is "MCGUIRK, TERENCE F" or "MCGUIRK, TERENCE" at Atlanta GA, with
-      empty employer field but occupation populated with "TBS INC" / "TBS"
-      / "TIME WARNER CABLE" / "INFORMATION REQUESTED PER BEST EFFORTS".
-      Donations to Daschle-Leahy / Friends of Schumer / Leahy for U.S.
-      Senator / Chambliss for Senate / John McCain 2008 — consistent
-      McGuirk pattern (TBS/Turner-era 2003-2008). The classifier matches
-      employer-field against employer-list and occupation-field against
-      occupation-list separately, so company-info-in-occupation-field
-      doesn't trigger an employer match.
+    Audit finding (8 PROBABLE records inspected): every PROBABLE record
+    is "MCGUIRK, TERENCE F" or "MCGUIRK, TERENCE" at Atlanta GA, with
+    empty employer field but occupation populated with "TBS INC" / "TBS"
+    / "TIME WARNER CABLE" / "INFORMATION REQUESTED PER BEST EFFORTS".
+    Donations to Daschle-Leahy / Friends of Schumer / Leahy for U.S.
+    Senator / Chambliss for Senate / John McCain 2008 — consistent
+    McGuirk pattern (TBS/Turner-era 2003-2008). The classifier matches
+    employer-field against employer-list and occupation-field against
+    occupation-list separately, so company-info-in-occupation-field
+    doesn't trigger an employer match.
 
-      Promoting 30327 to strong-zip catches 3 of 8 PROBABLE at 30327 + 1
-      at 303271217 (ZIP+4 of 30327, prefix-matched). Total 4 records
-      promote to CONFIRMED via strong-zip.
+    Promoting 30327 to strong-zip catches 3 of 8 PROBABLE at 30327 + 1
+    at 303271217 (ZIP+4 of 30327, prefix-matched). Total 4 records
+    promote to CONFIRMED via strong-zip.
 
-      30303 (downtown Atlanta) deliberately NOT promoted — heavy
-      corporate-office ZIP, documented Terry McGuirk doppelgänger risk
-      (JLL real-estate exec, Atlanta-area realtor per notes block). 4
-      PROBABLE records at 30303 stay PROBABLE — honestly one-signal.
+    30303 (downtown Atlanta) deliberately NOT promoted — heavy
+    corporate-office ZIP, documented Terry McGuirk doppelgänger risk
+    (JLL real-estate exec, Atlanta-area realtor per notes block). 4
+    PROBABLE records at 30303 stay PROBABLE — honestly one-signal.
 
-      Skipped: adding "TBS" or "Time Warner Cable" to occupations —
-      those are companies (not occupations) and "tbs" is too generic
-      a substring to risk.
+    Skipped: adding "TBS" or "Time Warner Cable" to occupations —
+    those are companies (not occupations) and "tbs" is too generic
+    a substring to risk.
 
-      Pre-cal: 39 CONFIRMED / 8 PROBABLE / 0 UNCERTAIN-open. P/C 0.21.
-      Predicted post-cal: ~43 CONFIRMED / ~4 PROBABLE / 0 UNCERTAIN.
-      P/C ~0.09.
-    by: "claude-code-session (PR 4 Tier B, approved by alex)"
-    references:
-      - "data/master.db pre-calibration: 39 CONFIRMED / 8 PROBABLE / 0 UNCERTAIN-open"
+    Pre-cal: 39 CONFIRMED / 8 PROBABLE / 0 UNCERTAIN-open. P/C 0.21.
+    Predicted post-cal: ~43 CONFIRMED / ~4 PROBABLE / 0 UNCERTAIN.
+    P/C ~0.09.
+  by: "claude-code-session (PR 4 Tier B, approved by alex)"
+  references:
+  - "data/master.db pre-calibration: 39 CONFIRMED / 8 PROBABLE / 0 UNCERTAIN-open"
 
 audit:
   created: 2026-05-23
-  last_ingestion: null
+  last_ingestion: '2026-05-26'
   last_signal_review: 2026-05-25

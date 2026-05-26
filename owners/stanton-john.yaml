@@ -17,20 +17,20 @@ team: Seattle Mariners
 role: Principal owner
 status: pilot
 tenure_start_date: 2016-08-19    # MLB-approved closing of ownership transition
-tenure_end_date: null
+tenure_end_date:
 
 name_variants:
-  - "John W Stanton"
-  - "John W. Stanton"
-  - "John Stanton"
-  - "Stanton, John"
-  - "Stanton, John W"
-  - "Stanton, John W."
+- "John W Stanton"
+- "John W. Stanton"
+- "John Stanton"
+- "Stanton, John"
+- "Stanton, John W"
+- "Stanton, John W."
 
 verifying_signals:
   cities:
-    - "bellevue"
-    - "seattle"
+  - "bellevue"
+  - "seattle"
     # Added 2026-05-25 Tier-B calibration. Medina is the Lake Washington
     # exclusive eastside neighborhood (~3,000 residents) where Stanton
     # actually resides — Bellevue + Seattle were too narrow. All 77
@@ -38,53 +38,53 @@ verifying_signals:
     # are John W. Stanton (Western Wireless / Trilogy / Seattle Mariners
     # employers + Chairman/CEO occupations). The 4 remaining UNCERTAIN
     # records (3 Vashon, 1 Yakima) are distinct same-name doppelgängers.
-    - "medina"
-    - "west medina"
+  - "medina"
+  - "west medina"
   states:
-    - "WA"
+  - "WA"
   employers:
     # NOTE: "First Avenue Entertainment", "First Avenue Entertainment LLLP",
     # "Trilogy Equity Partners", "Trilogy International Partners",
     # "Western Wireless", and "VoiceStream Wireless" are in strong_signals —
     # not duplicated here per OWNER_SCHEMA.md rule 6.
-    - "Trilogy Partnership"
-    - "Trilogy Search Partners"
-    - "Seattle Mariners"
-    - "Mariners"
-    - "SG Enterprises"               # holds Trilogy International stake per Wikipedia
+  - "Trilogy Partnership"
+  - "Trilogy Search Partners"
+  - "Seattle Mariners"
+  - "Mariners"
+  - "SG Enterprises"                 # holds Trilogy International stake per Wikipedia
     # Added 2026-05-25 Tier-B calibration. Catches PROBABLE records using
     # spelling/typo variants of Stanton's Trilogy firms:
     # "Trilogy Partners" substring-covers TRILOGY PARTNERS, TRILOGY
     # PARTNERS/PARTNERS observed in Bellevue PROBABLE records.
     # "Triology" (typo of Trilogy) covers TRIOLOGY EQUITY PARTNERS,
     # TRIOLOGY PARTNERSHIP, TRIOLOGY PARTNERS observed in data.
-    - "Trilogy Partners"
-    - "Triology"
+  - "Trilogy Partners"
+  - "Triology"
     # "VoiceStream" (one word, no Wireless suffix) — substring-covers
     # VOICESTREAM, VOICESTREAM COMMUNICATIONS, VOICESTREAM/PRESIDENT & CEO
     # variants observed in post-Medina-add PROBABLE records. The strong-
     # signal "VoiceStream Wireless" alone didn't catch these because the
     # haystack lacked "Wireless". Stanton's 1995-2001 firm is essentially
     # the only "VoiceStream" entity.
-    - "VoiceStream"
+  - "VoiceStream"
   occupations:
-    - "chairman"
-    - "managing partner"
-    - "investor"
-    - "owner"
-    - "executive"
-    - "ceo"
-    - "founder"
-    - "businessman"
+  - "chairman"
+  - "managing partner"
+  - "investor"
+  - "owner"
+  - "executive"
+  - "ceo"
+  - "founder"
+  - "businessman"
 
 strong_signals:
   employers:
-    - "First Avenue Entertainment"        # Mariners-specific LLLP; small private partnership
-    - "First Avenue Entertainment LLLP"
-    - "Trilogy Equity Partners"            # founded by him; small PE firm
-    - "Trilogy International Partners"     # co-founded; small private; he owns via SG Enterprises
-    - "Western Wireless"                    # defunct 2005; he was founder/Chairman/CEO
-    - "VoiceStream Wireless"                # 1995-2001 chairman/CEO; defunct
+  - "First Avenue Entertainment"          # Mariners-specific LLLP; small private partnership
+  - "First Avenue Entertainment LLLP"
+  - "Trilogy Equity Partners"              # founded by him; small PE firm
+  - "Trilogy International Partners"       # co-founded; small private; he owns via SG Enterprises
+  - "Western Wireless"                      # defunct 2005; he was founder/Chairman/CEO
+  - "VoiceStream Wireless"                  # 1995-2001 chairman/CEO; defunct
   zip_codes: []
 
 negative_signals:
@@ -92,9 +92,9 @@ negative_signals:
   # DC/New Orleans-based). Same first/last name; distinct person. Pre-emptive
   # block per CLAUDE.md §1.7 (well-known doppelganger).
   employers:
-    - "BuzzFeed"
-    - "BuzzFeed News"
-    - "CongressDaily"
+  - "BuzzFeed"
+  - "BuzzFeed News"
+  - "CongressDaily"
 
 related_entities: []
 # Future candidates (do NOT add without user approval per CLAUDE.md §1.7):
@@ -105,30 +105,30 @@ related_entities: []
 #     FEC — out of scope per CHARTER §6).
 
 sources:
-  - description: "MLB.com press release — Seattle Mariners ownership transition completed (Aug 19, 2016). Closing date; Nintendo retains 10% stake; Stanton as MLB control person"
-    url: "https://www.mlb.com/press-release/seattle-mariners-ownership-transition-completed-today-196485364"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "MLB.com — Seattle Mariners official owners page. First Avenue Entertainment LLLP ownership entity; Stanton chairman/managing partner"
-    url: "https://www.mlb.com/mariners/history/owners"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "Microsoft Newsroom — Board Member: John W. Stanton (since July 2014). Full name; Costco board; First Avenue Entertainment chair; Whitman + Harvard MBA"
-    url: "https://news.microsoft.com/source/exec/john-w-stanton/"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "Costco Investor Relations — Board Member John W. Stanton (since Oct 2015). Trilogy Equity Partners chair; First Avenue Entertainment chair; Western Wireless / T-Mobile USA history"
-    url: "https://investor.costco.com/governance/board-of-directors/person-details/default.aspx"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "Little League International (Aug 2025) — 'Seattle Mariners Chairman & Managing Partner John Stanton joins Hall of Excellence.' Most recent dated Tier 2 confirmation of current role"
-    url: "https://www.littleleague.org/world-series/2025/llbws/news/seattle-mariners-chairman-managing-partner-longtime-little-league-volunteer-and-advocate-john-stanton-joins-hall-of-excellence/"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "Trilogy Equity Partners official firm bio — John Stanton (Managing Director / Founding Partner). Spouse Terry Gillespie; two sons; education; board roles"
-    url: "https://trilogyequity.com/team/john-stanton/"
-    accessed: "2026-05-23"
-    archive_url: ""
+- description: "MLB.com press release — Seattle Mariners ownership transition completed (Aug 19, 2016). Closing date; Nintendo retains 10% stake; Stanton as MLB control person"
+  url: "https://www.mlb.com/press-release/seattle-mariners-ownership-transition-completed-today-196485364"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "MLB.com — Seattle Mariners official owners page. First Avenue Entertainment LLLP ownership entity; Stanton chairman/managing partner"
+  url: "https://www.mlb.com/mariners/history/owners"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "Microsoft Newsroom — Board Member: John W. Stanton (since July 2014). Full name; Costco board; First Avenue Entertainment chair; Whitman + Harvard MBA"
+  url: "https://news.microsoft.com/source/exec/john-w-stanton/"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "Costco Investor Relations — Board Member John W. Stanton (since Oct 2015). Trilogy Equity Partners chair; First Avenue Entertainment chair; Western Wireless / T-Mobile USA history"
+  url: "https://investor.costco.com/governance/board-of-directors/person-details/default.aspx"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "Little League International (Aug 2025) — 'Seattle Mariners Chairman & Managing Partner John Stanton joins Hall of Excellence.' Most recent dated Tier 2 confirmation of current role"
+  url: "https://www.littleleague.org/world-series/2025/llbws/news/seattle-mariners-chairman-managing-partner-longtime-little-league-volunteer-and-advocate-john-stanton-joins-hall-of-excellence/"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "Trilogy Equity Partners official firm bio — John Stanton (Managing Director / Founding Partner). Spouse Terry Gillespie; two sons; education; board roles"
+  url: "https://trilogyequity.com/team/john-stanton/"
+  accessed: "2026-05-23"
+  archive_url: ""
 
 notes: |
   John W. Stanton (b. 1955) — Chairman and Managing Partner of the Seattle
@@ -155,63 +155,63 @@ notes: |
   in scope; state/local are not (CHARTER, §6).
 
 change_log:
-  - date: 2026-05-23
-    change: |
-      Created during Phase 2 batch 3. Tier 2 sources: MLB.com press release +
-      owners page; Microsoft Newsroom; Costco Investor Relations; Little
-      League International (Aug 2025); Trilogy Equity Partners firm bio.
-      tenure_start_date = 2016-08-19. Strong_signals: First Avenue
-      Entertainment + Trilogy entities + Western Wireless + VoiceStream
-      Wireless. Pre-emptive negative_signals.employers = BuzzFeed / BuzzFeed
-      News / CongressDaily (journalist John Stanton, DC/New Orleans).
-    by: "claude-code-research (orchestrated by alex)"
-    references:
-      - "/tmp/stanton-john-research.md (session-local research file)"
-  - date: 2026-05-25
-    change: |
-      Tier-B calibration round 1 — added two cities and two employer
-      variants based on UNCERTAIN-queue audit.
+- date: 2026-05-23
+  change: |
+    Created during Phase 2 batch 3. Tier 2 sources: MLB.com press release +
+    owners page; Microsoft Newsroom; Costco Investor Relations; Little
+    League International (Aug 2025); Trilogy Equity Partners firm bio.
+    tenure_start_date = 2016-08-19. Strong_signals: First Avenue
+    Entertainment + Trilogy entities + Western Wireless + VoiceStream
+    Wireless. Pre-emptive negative_signals.employers = BuzzFeed / BuzzFeed
+    News / CongressDaily (journalist John Stanton, DC/New Orleans).
+  by: "claude-code-research (orchestrated by alex)"
+  references:
+  - "/tmp/stanton-john-research.md (session-local research file)"
+- date: 2026-05-25
+  change: |
+    Tier-B calibration round 1 — added two cities and two employer
+    variants based on UNCERTAIN-queue audit.
 
-      Audit finding: 92 of 96 UNCERTAIN-open records were John W. Stanton
-      records being routed to UNCERTAIN by the city/state-outside-
-      documented-residences rule because the YAML's cities list (Bellevue
-      + Seattle) didn't include "medina" (77 records) or "west medina"
-      (15 records). Medina is the Lake Washington exclusive eastside
-      neighborhood where Stanton actually resides; Bellevue is adjacent
-      but distinct. All 77 Medina-labeled UNCERTAIN records have employer
-      patterns identifying Stanton: 17 TRILOGY PARTNERSHIPS, 8 WESTERN
-      WIRELESS variants, 3 SEATTLE MARINERS, plus Trilogy / Triology
-      variants. Plus 15 WEST MEDINA records under WESTERN WIRELESS
-      CORPORATION or SEATTLE MARINERS.
+    Audit finding: 92 of 96 UNCERTAIN-open records were John W. Stanton
+    records being routed to UNCERTAIN by the city/state-outside-
+    documented-residences rule because the YAML's cities list (Bellevue
+    + Seattle) didn't include "medina" (77 records) or "west medina"
+    (15 records). Medina is the Lake Washington exclusive eastside
+    neighborhood where Stanton actually resides; Bellevue is adjacent
+    but distinct. All 77 Medina-labeled UNCERTAIN records have employer
+    patterns identifying Stanton: 17 TRILOGY PARTNERSHIPS, 8 WESTERN
+    WIRELESS variants, 3 SEATTLE MARINERS, plus Trilogy / Triology
+    variants. Plus 15 WEST MEDINA records under WESTERN WIRELESS
+    CORPORATION or SEATTLE MARINERS.
 
-      Added:
-        - cities: "medina", "west medina"
-        - employers: "Trilogy Partners" (substring-covers TRILOGY PARTNERS
-          + TRILOGY PARTNERS/PARTNERS), "Triology" (typo variant of
-          Trilogy; substring-covers TRIOLOGY EQUITY PARTNERS, TRIOLOGY
-          PARTNERSHIP, TRIOLOGY PARTNERS)
+    Added:
+      - cities: "medina", "west medina"
+      - employers: "Trilogy Partners" (substring-covers TRILOGY PARTNERS
+        + TRILOGY PARTNERS/PARTNERS), "Triology" (typo variant of
+        Trilogy; substring-covers TRIOLOGY EQUITY PARTNERS, TRIOLOGY
+        PARTNERSHIP, TRIOLOGY PARTNERS)
 
-      Records left UNCERTAIN as legitimate doppelgängers:
-        - 3 VASHON records: STANTON, JOHN at "VISD" (Vashon Island School
-          District) occupation TECH, $5-$50. Tech worker at school district
-          — distinct individual.
-        - 1 YAKIMA record: STANTON, JOHN at "YAKIMA COUNTY" occupation
-          PAVEMENT MANAGER, $5. County government worker — distinct
-          individual.
+    Records left UNCERTAIN as legitimate doppelgängers:
+      - 3 VASHON records: STANTON, JOHN at "VISD" (Vashon Island School
+        District) occupation TECH, $5-$50. Tech worker at school district
+        — distinct individual.
+      - 1 YAKIMA record: STANTON, JOHN at "YAKIMA COUNTY" occupation
+        PAVEMENT MANAGER, $5. County government worker — distinct
+        individual.
 
-      Bellevue PROBABLE records: 11 TRILOGY PARTNERS / 2 TRILOGY
-      PARTNERS/PARTNERS / 2 TRIOLOGY EQUITY PARTNERS will promote to
-      CONFIRMED via the new employer additions.
+    Bellevue PROBABLE records: 11 TRILOGY PARTNERS / 2 TRILOGY
+    PARTNERS/PARTNERS / 2 TRIOLOGY EQUITY PARTNERS will promote to
+    CONFIRMED via the new employer additions.
 
-      Pre-cal: 68 CONFIRMED / 19 PROBABLE / 96 UNCERTAIN-open. P/C 0.28.
-      Predicted post-cal: ~150 CONFIRMED / ~5 PROBABLE / 4 UNCERTAIN.
-      P/C ~0.03. CONFIRMED count goes up substantially — no >5% drop
-      alarm risk.
-    by: "claude-code-session (PR 4 Tier B, approved by alex)"
-    references:
-      - "data/master.db pre-calibration: 68 CONFIRMED / 19 PROBABLE / 96 UNCERTAIN-open"
+    Pre-cal: 68 CONFIRMED / 19 PROBABLE / 96 UNCERTAIN-open. P/C 0.28.
+    Predicted post-cal: ~150 CONFIRMED / ~5 PROBABLE / 4 UNCERTAIN.
+    P/C ~0.03. CONFIRMED count goes up substantially — no >5% drop
+    alarm risk.
+  by: "claude-code-session (PR 4 Tier B, approved by alex)"
+  references:
+  - "data/master.db pre-calibration: 68 CONFIRMED / 19 PROBABLE / 96 UNCERTAIN-open"
 
 audit:
   created: 2026-05-23
-  last_ingestion: null
+  last_ingestion: '2026-05-26'
   last_signal_review: 2026-05-25

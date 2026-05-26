@@ -17,20 +17,20 @@ team: Cincinnati Reds
 role: Principal owner / President & CEO
 status: pilot
 tenure_start_date: 2026-02-12    # MLB approval of control-person transfer (matches castellini-bob tenure_end)
-tenure_end_date: null
+tenure_end_date:
 family_tenure_start_date: 2006-01-20    # Bob Castellini-led group bought Reds from Carl Lindner (Phil's father)
 
 name_variants:
-  - "Phillip J Castellini"
-  - "Phillip J. Castellini"
-  - "Phillip Castellini"
-  - "Phil Castellini"
-  - "Phil J. Castellini"
-  - "Phil J Castellini"
-  - "Castellini, Phillip"
-  - "Castellini, Phillip J"
-  - "Castellini, Phillip J."
-  - "Castellini, Phil"
+- "Phillip J Castellini"
+- "Phillip J. Castellini"
+- "Phillip Castellini"
+- "Phil Castellini"
+- "Phil J. Castellini"
+- "Phil J Castellini"
+- "Castellini, Phillip"
+- "Castellini, Phillip J"
+- "Castellini, Phillip J."
+- "Castellini, Phil"
   # Cautionary: NOT including bare "P. Castellini" or single-initial forms;
   # also intentionally NOT including "Philip" single-L (despite being a
   # common alternate spelling) because Tier 2 sources consistently use
@@ -39,33 +39,33 @@ name_variants:
 
 verifying_signals:
   cities:
-    - "cincinnati"
-    - "hyde park"           # Cincinnati neighborhood — Tier 2 suggestive (Castellini Preserve); needs-confirmation
-    - "indian hill"          # Family's primary suburb (per Bob's profile)
-    - "walton"               # Merchants Cold Storage HQ in Walton KY; possible employer-address filings
+  - "cincinnati"
+  - "hyde park"             # Cincinnati neighborhood — Tier 2 suggestive (Castellini Preserve); needs-confirmation
+  - "indian hill"            # Family's primary suburb (per Bob's profile)
+  - "walton"                 # Merchants Cold Storage HQ in Walton KY; possible employer-address filings
   states:
-    - "OH"
-    - "KY"                   # Merchants Cold Storage is Walton KY (Cincinnati metro spans the border)
+  - "OH"
+  - "KY"                     # Merchants Cold Storage is Walton KY (Cincinnati metro spans the border)
   employers:
-    - "Cincinnati Reds"
-    - "Reds"
-    - "Castellini Group of Companies"   # family parent (founded 1896; ~2,500 employees)
-    - "Castellini Companies"
+  - "Cincinnati Reds"
+  - "Reds"
+  - "Castellini Group of Companies"     # family parent (founded 1896; ~2,500 employees)
+  - "Castellini Companies"
   occupations:
-    - "president"
-    - "ceo"
-    - "chief executive officer"
-    - "owner"
-    - "principal"
-    - "chairman"
-    - "executive"
-    - "businessman"
+  - "president"
+  - "ceo"
+  - "chief executive officer"
+  - "owner"
+  - "principal"
+  - "chairman"
+  - "executive"
+  - "businessman"
 
 strong_signals:
   employers:
-    - "Merchants Cold Storage"        # Phil has been President since 1993; uniquely his (Walton KY)
-    - "Castellini Group"               # family-named entity Phil chairs
-    - "Castellini Company"
+  - "Merchants Cold Storage"          # Phil has been President since 1993; uniquely his (Walton KY)
+  - "Castellini Group"                 # family-named entity Phil chairs
+  - "Castellini Company"
   zip_codes:
     # 45202 = Cincinnati downtown / Castellini Management LP HQ cluster.
     # Added 2026-05-25 Tier-C calibration. Strict name_variants ("Phillip
@@ -73,7 +73,7 @@ strong_signals:
     # against intra-family false-positive. 6 PROBABLE records at 45202
     # all "CASTELLINI, PHILLIP J. MR." with empty employer promote via
     # strong-zip.
-    - "45202"
+  - "45202"
 
 # Calibration round 1 for `castellini-bob` (2026-05-22) added three financial-
 # advisor doppelganger employers as negative_signals. The same pattern may
@@ -83,9 +83,9 @@ strong_signals:
 # being treated as load-bearing.
 negative_signals:
   employers:
-    - "UBS PAINE WEBBER"
-    - "Sena Weller Rohs & Williams"
-    - "Wells Fargo Advisors"
+  - "UBS PAINE WEBBER"
+  - "Sena Weller Rohs & Williams"
+  - "Wells Fargo Advisors"
 
 related_entities: []
 # Future candidates (do NOT add without user approval per CLAUDE.md §1.7):
@@ -98,18 +98,18 @@ related_entities: []
 #   - other Castellini siblings — names not Tier 2-confirmed.
 
 sources:
-  - description: "Fox19 (2026-02-13) — 'Phil Castellini takes over control of Reds from Bob Castellini.' MLB approved transfer 2026-02-12; Phil was named President & CEO in July 2024 as start of succession"
-    url: "https://www.fox19.com/2026/02/13/phil-castellini-takes-over-control-reds-bob-castellini/"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "MLB.com — Cincinnati Reds front office. Phil Castellini titles"
-    url: "https://www.mlb.com/reds/team/front-office/phil-castellini"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "Cincinnati Business Courier — coverage of Reds succession; Phil's July 2024 promotion to President & CEO as start of formal succession"
-    url: "https://www.bizjournals.com/cincinnati/news/2024/07/"
-    accessed: "2026-05-23"
-    archive_url: ""
+- description: "Fox19 (2026-02-13) — 'Phil Castellini takes over control of Reds from Bob Castellini.' MLB approved transfer 2026-02-12; Phil was named President & CEO in July 2024 as start of succession"
+  url: "https://www.fox19.com/2026/02/13/phil-castellini-takes-over-control-reds-bob-castellini/"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "MLB.com — Cincinnati Reds front office. Phil Castellini titles"
+  url: "https://www.mlb.com/reds/team/front-office/phil-castellini"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "Cincinnati Business Courier — coverage of Reds succession; Phil's July 2024 promotion to President & CEO as start of formal succession"
+  url: "https://www.bizjournals.com/cincinnati/news/2024/07/"
+  accessed: "2026-05-23"
+  archive_url: ""
 
 notes: |
   Phillip J. ("Phil") Castellini — Current MLB-approved control person of
@@ -157,36 +157,36 @@ notes: |
   residence.
 
 change_log:
-  - date: 2026-05-23
-    change: |
-      Created during Phase 2 owner-roster-completion (post-special-case
-      batch). Confirmed current MLB control person of Reds per Fox19 +
-      MLB.com + Cincinnati Business Courier coverage of the 2026-02-12
-      transfer from father Bob. tenure_start_date = 2026-02-12 (matches
-      castellini-bob tenure_end_date). Strong_signals = Merchants Cold
-      Storage (uniquely his 1993-present role) + Castellini Group +
-      Castellini Company. Pre-emptive negative_signals mirroring Bob's
-      financial-advisor doppelganger blocks. Spouse Britt flagged for
-      future scope decision (politically active per Tier 2).
-    by: "claude-code-research (orchestrated by alex)"
-    references:
-      - "/tmp/castellini-phil-research.md (session-local research file)"
-  - date: 2026-05-25
-    change: |
-      Tier-C calibration pass — added strong_signals.zip_codes: ["45202"]
-      (Cincinnati downtown / Castellini Management LP HQ).
+- date: 2026-05-23
+  change: |
+    Created during Phase 2 owner-roster-completion (post-special-case
+    batch). Confirmed current MLB control person of Reds per Fox19 +
+    MLB.com + Cincinnati Business Courier coverage of the 2026-02-12
+    transfer from father Bob. tenure_start_date = 2026-02-12 (matches
+    castellini-bob tenure_end_date). Strong_signals = Merchants Cold
+    Storage (uniquely his 1993-present role) + Castellini Group +
+    Castellini Company. Pre-emptive negative_signals mirroring Bob's
+    financial-advisor doppelganger blocks. Spouse Britt flagged for
+    future scope decision (politically active per Tier 2).
+  by: "claude-code-research (orchestrated by alex)"
+  references:
+  - "/tmp/castellini-phil-research.md (session-local research file)"
+- date: 2026-05-25
+  change: |
+    Tier-C calibration pass — added strong_signals.zip_codes: ["45202"]
+    (Cincinnati downtown / Castellini Management LP HQ).
 
-      Audit: 6 PROBABLE records all "CASTELLINI, PHILLIP J. MR." at 45202
-      / 452022728 (ZIP+4) Cincinnati with empty / INFORMATION REQUESTED
-      employer. Phillip J. first name firewall protects against false-
-      positive on Bob (Robert H) and Bob Jr (Bob S. Mr. Jr) at the same
-      family-business ZIP.
+    Audit: 6 PROBABLE records all "CASTELLINI, PHILLIP J. MR." at 45202
+    / 452022728 (ZIP+4) Cincinnati with empty / INFORMATION REQUESTED
+    employer. Phillip J. first name firewall protects against false-
+    positive on Bob (Robert H) and Bob Jr (Bob S. Mr. Jr) at the same
+    family-business ZIP.
 
-      Pre-cal: 41 CONFIRMED / 6 PROBABLE / 0 UNCERTAIN-open. P/C 0.15.
-      Predicted post-cal: ~47 CONFIRMED / ~0 PROBABLE. P/C ~0.0.
-    by: "claude-code-session (PR 4 Tier C light pass)"
+    Pre-cal: 41 CONFIRMED / 6 PROBABLE / 0 UNCERTAIN-open. P/C 0.15.
+    Predicted post-cal: ~47 CONFIRMED / ~0 PROBABLE. P/C ~0.0.
+  by: "claude-code-session (PR 4 Tier C light pass)"
 
 audit:
   created: 2026-05-23
-  last_ingestion: null
+  last_ingestion: '2026-05-26'
   last_signal_review: 2026-05-25

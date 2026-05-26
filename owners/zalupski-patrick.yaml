@@ -13,45 +13,45 @@ team: Tampa Bay Rays
 role: Principal owner
 status: pilot
 tenure_start_date: 2025-09-30    # closing date; MLB approval 2025-09-22
-tenure_end_date: null
+tenure_end_date:
 
 name_variants:
-  - "Patrick O Zalupski"
-  - "Patrick O. Zalupski"
-  - "Patrick Zalupski"
-  - "Zalupski, Patrick"
-  - "Zalupski, Patrick O"
-  - "Zalupski, Patrick O."
+- "Patrick O Zalupski"
+- "Patrick O. Zalupski"
+- "Patrick Zalupski"
+- "Zalupski, Patrick"
+- "Zalupski, Patrick O"
+- "Zalupski, Patrick O."
 
 verifying_signals:
   cities:
-    - "jacksonville"           # current primary (Avondale neighborhood, since Jan 2024)
-    - "ponte vedra beach"      # former primary (sold Dec 2025); covers 2016-2025 history
+  - "jacksonville"             # current primary (Avondale neighborhood, since Jan 2024)
+  - "ponte vedra beach"        # former primary (sold Dec 2025); covers 2016-2025 history
   states:
-    - "FL"
+  - "FL"
   employers:
-    - "Tampa Bay Rays"
-    - "Rays"
-    - "Tampa Bay Rowdies"      # USL Championship soccer; owned by Rays group post-Sept 2025
+  - "Tampa Bay Rays"
+  - "Rays"
+  - "Tampa Bay Rowdies"        # USL Championship soccer; owned by Rays group post-Sept 2025
   occupations:
-    - "ceo"
-    - "chief executive officer"
-    - "president"
-    - "chairman"
-    - "founder"
-    - "homebuilder"
-    - "real estate developer"
-    - "executive"
-    - "director"
+  - "ceo"
+  - "chief executive officer"
+  - "president"
+  - "chairman"
+  - "founder"
+  - "homebuilder"
+  - "real estate developer"
+  - "executive"
+  - "director"
 
 strong_signals:
   employers:
-    - "Dream Finders Homes"        # NYSE: DFH; he is founder/CEO/Chairman
-    - "Dream Finders Homes, Inc"
-    - "Dream Finders"
-    - "DFH"
-    - "DF Capital"                  # investment-management affiliate; he's on investment committee
-    - "DF Capital Management"
+  - "Dream Finders Homes"          # NYSE: DFH; he is founder/CEO/Chairman
+  - "Dream Finders Homes, Inc"
+  - "Dream Finders"
+  - "DFH"
+  - "DF Capital"                    # investment-management affiliate; he's on investment committee
+  - "DF Capital Management"
   zip_codes: []
 
 related_entities: []
@@ -61,34 +61,34 @@ related_entities: []
 #   - children: 3 children reported; names not disclosed.
 
 sources:
-  - description: "MLB.com — Rays sale finalized to ownership group led by Patrick Zalupski (Sept 30, 2025 closing)"
-    url: "https://www.mlb.com/news/rays-sale-finalized-to-ownership-group-led-by-patrick-zalupski"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "ESPN — MLB owners OK sale of Rays to group headed by Patrick Zalupski (Sept 22, 2025 unanimous approval)"
-    url: "https://www.espn.com/mlb/story/_/id/46349044/mlb-owners-ok-sale-rays-group-headed-patrick-zalupski"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "Sportico — Tampa Bay Rays Sale: MLB / Patrick Zalupski. Sternberg ~10% retention; ~$1.7B"
-    url: "https://www.sportico.com/leagues/baseball/2025/tampa-bay-rays-sale-mlb-patrick-zalupski-1234871544/"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "Jacksonville Daily Record (Sept 30, 2025) — Group led by Jacksonville homebuilder Patrick Zalupski now owns Tampa Bay Rays. Group composition (Cosgrove, Babby, advisory board)"
-    url: "https://www.jaxdailyrecord.com/news/2025/sep/30/group-led-by-jacksonville-homebuilder-patrick-zalupski-now-owns-tampa-bay-rays/"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "Dream Finders Homes Investor Relations — Management page. Official corporate bio: 'Patrick O. Zalupski', founder/President/CEO/Chairman; DF Capital investment committee since April 2018"
-    url: "https://investors.dreamfindershomes.com/corporate-governance/management"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "University of Florida Board of Trustees — Patrick Zalupski trustee bio. Confirms appointment 2023; UF '03 Finance"
-    url: "https://trustees.ufl.edu/about-the-board/current-trustees/patrick-zalupski/"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "Jacksonville Daily Record (Dec 12, 2025) — Zalupski sells Ponte Vedra Beach home for $8.75M; confirms current Avondale/Jacksonville residence and spouse name Leah"
-    url: "https://www.jaxdailyrecord.com/news/2025/dec/12/new-tampa-bay-rays-owner-patrick-zalupski-sells-ponte-vedra-beach-home-for-875-million/"
-    accessed: "2026-05-23"
-    archive_url: ""
+- description: "MLB.com — Rays sale finalized to ownership group led by Patrick Zalupski (Sept 30, 2025 closing)"
+  url: "https://www.mlb.com/news/rays-sale-finalized-to-ownership-group-led-by-patrick-zalupski"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "ESPN — MLB owners OK sale of Rays to group headed by Patrick Zalupski (Sept 22, 2025 unanimous approval)"
+  url: "https://www.espn.com/mlb/story/_/id/46349044/mlb-owners-ok-sale-rays-group-headed-patrick-zalupski"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "Sportico — Tampa Bay Rays Sale: MLB / Patrick Zalupski. Sternberg ~10% retention; ~$1.7B"
+  url: "https://www.sportico.com/leagues/baseball/2025/tampa-bay-rays-sale-mlb-patrick-zalupski-1234871544/"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "Jacksonville Daily Record (Sept 30, 2025) — Group led by Jacksonville homebuilder Patrick Zalupski now owns Tampa Bay Rays. Group composition (Cosgrove, Babby, advisory board)"
+  url: "https://www.jaxdailyrecord.com/news/2025/sep/30/group-led-by-jacksonville-homebuilder-patrick-zalupski-now-owns-tampa-bay-rays/"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "Dream Finders Homes Investor Relations — Management page. Official corporate bio: 'Patrick O. Zalupski', founder/President/CEO/Chairman; DF Capital investment committee since April 2018"
+  url: "https://investors.dreamfindershomes.com/corporate-governance/management"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "University of Florida Board of Trustees — Patrick Zalupski trustee bio. Confirms appointment 2023; UF '03 Finance"
+  url: "https://trustees.ufl.edu/about-the-board/current-trustees/patrick-zalupski/"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "Jacksonville Daily Record (Dec 12, 2025) — Zalupski sells Ponte Vedra Beach home for $8.75M; confirms current Avondale/Jacksonville residence and spouse name Leah"
+  url: "https://www.jaxdailyrecord.com/news/2025/dec/12/new-tampa-bay-rays-owner-patrick-zalupski-sells-ponte-vedra-beach-home-for-875-million/"
+  accessed: "2026-05-23"
+  archive_url: ""
 
 notes: |
   Patrick O. Zalupski — Principal Owner / MLB Control Person of the Tampa
@@ -122,26 +122,26 @@ notes: |
   2028.
 
 change_log:
-  - date: 2026-05-23
-    change: |
-      Created during Phase 2 batch 4. Tier 2 sources: MLB.com press release,
-      ESPN, Sportico, Jacksonville Daily Record (multiple), DFH Investor
-      Relations, UF Trustees page. tenure_start_date = 2025-09-30 (closing).
-      Strong_signals = Dream Finders Homes / DFH / DF Capital. Replaces
-      sternberg-stuart as Rays principal owner per project policy (NOT
-      outgoing owners after sale closes).
-    by: "claude-code-research (orchestrated by alex)"
-    references:
-      - "/tmp/zalupski-patrick-research.md (session-local research file)"
-  - date: 2026-05-25
-    change: |
-      Tier-C audit pass — no signal changes applied. 15 CONFIRMED / 0
-      PROBABLE / 0 UNCERTAIN-open. Signal block calibrated correctly via
-      Dream Finders Homes / DFH / DF Capital strong-signal employers.
-      Signal review date advanced.
-    by: "claude-code-session (PR 4 Tier C light pass)"
+- date: 2026-05-23
+  change: |
+    Created during Phase 2 batch 4. Tier 2 sources: MLB.com press release,
+    ESPN, Sportico, Jacksonville Daily Record (multiple), DFH Investor
+    Relations, UF Trustees page. tenure_start_date = 2025-09-30 (closing).
+    Strong_signals = Dream Finders Homes / DFH / DF Capital. Replaces
+    sternberg-stuart as Rays principal owner per project policy (NOT
+    outgoing owners after sale closes).
+  by: "claude-code-research (orchestrated by alex)"
+  references:
+  - "/tmp/zalupski-patrick-research.md (session-local research file)"
+- date: 2026-05-25
+  change: |
+    Tier-C audit pass — no signal changes applied. 15 CONFIRMED / 0
+    PROBABLE / 0 UNCERTAIN-open. Signal block calibrated correctly via
+    Dream Finders Homes / DFH / DF Capital strong-signal employers.
+    Signal review date advanced.
+  by: "claude-code-session (PR 4 Tier C light pass)"
 
 audit:
   created: 2026-05-23
-  last_ingestion: null
+  last_ingestion: '2026-05-26'
   last_signal_review: 2026-05-25

@@ -18,39 +18,39 @@ team: San Diego Padres
 role: Principal owner
 status: pilot
 tenure_start_date: 2025-02-15    # Feb 2025 MLB unanimous approval (exact day not in Tier 2)
-tenure_end_date: null            # Will be set to ~mid-2026 close date when Feliciano deal completes
+tenure_end_date:                 # Will be set to ~mid-2026 close date when Feliciano deal completes
 family_tenure_start_date: 2012-08-31    # Peter Seidler / O'Malley group bought Padres (John's uncle)
 
 name_variants:
-  - "John Seidler"
-  - "Seidler, John"
+- "John Seidler"
+- "Seidler, John"
 
 verifying_signals:
   cities:
-    - "los angeles"           # O'Malley-Seidler family LA-based per Wikipedia / Padres front office
-    - "san diego"             # may file from team-affiliated SD addresses post-tenure
+  - "los angeles"             # O'Malley-Seidler family LA-based per Wikipedia / Padres front office
+  - "san diego"               # may file from team-affiliated SD addresses post-tenure
   states:
-    - "CA"
+  - "CA"
   employers:
     # NOTE: "O'Malley Seidler Partners" and "OMalley Seidler Partners" are
     # in strong_signals — not duplicated here per OWNER_SCHEMA.md rule 6.
-    - "Rawlings Sporting Goods"
-    - "Rawlings"
-    - "San Diego Padres"
-    - "Padres"
+  - "Rawlings Sporting Goods"
+  - "Rawlings"
+  - "San Diego Padres"
+  - "Padres"
   occupations:
-    - "chairman"
-    - "ceo"
-    - "executive"
-    - "businessman"
-    - "investor"
-    - "family office"
-    - "owner"
+  - "chairman"
+  - "ceo"
+  - "executive"
+  - "businessman"
+  - "investor"
+  - "family office"
+  - "owner"
 
 strong_signals:
   employers:
-    - "O'Malley Seidler Partners"    # uniquely-named family-office vehicle
-    - "OMalley Seidler Partners"
+  - "O'Malley Seidler Partners"      # uniquely-named family-office vehicle
+  - "OMalley Seidler Partners"
   zip_codes: []
 
 related_entities: []
@@ -67,30 +67,30 @@ related_entities: []
 #   - extended: ten Seidler siblings + the broader O'Malley-Seidler family.
 
 sources:
-  - description: "ESPN — MLB owners approve John Seidler as Padres' new control person (Feb 2025)"
-    url: "https://www.espn.com/mlb/story/_/id/43719785/mlb-owners-approve-john-seidler-padres-new-control-person"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "NBC San Diego — MLB vote approves Peter Seidler's brother as Padres control person. Biographical detail on John Seidler"
-    url: "https://www.nbcsandiego.com/news/local/mlb-vote-approves-john-seidler-padres-control-person/3747627/"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "CBS Sports — MLB owners unanimously approve John Seidler as Padres' control person"
-    url: "https://www.cbssports.com/mlb/news/mlb-owners-unanimously-approve-john-seidler-as-padres-control-person-per-report/"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "MLB.com — Padres Front Office: John Seidler. Official team-published bio. Title and family background"
-    url: "https://www.mlb.com/padres/team/front-office/john-seidler"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "MLB.com (May 2, 2026) — Padres announce agreement to sell team to Kwanza Jones and José E. Feliciano. Begins tenure_end clock for John Seidler"
-    url: "https://www.mlb.com/news/padres-agree-to-sell-team-to-kwanza-jones-jose-e-feliciano"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "KPBS (Nov 13, 2025) — Seidler family explores Padres sale. Public start of the sale process"
-    url: "https://www.kpbs.org/news/local/2025/11/13/seidler-family-to-explore-padres-sale-among-strategic-options"
-    accessed: "2026-05-23"
-    archive_url: ""
+- description: "ESPN — MLB owners approve John Seidler as Padres' new control person (Feb 2025)"
+  url: "https://www.espn.com/mlb/story/_/id/43719785/mlb-owners-approve-john-seidler-padres-new-control-person"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "NBC San Diego — MLB vote approves Peter Seidler's brother as Padres control person. Biographical detail on John Seidler"
+  url: "https://www.nbcsandiego.com/news/local/mlb-vote-approves-john-seidler-padres-control-person/3747627/"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "CBS Sports — MLB owners unanimously approve John Seidler as Padres' control person"
+  url: "https://www.cbssports.com/mlb/news/mlb-owners-unanimously-approve-john-seidler-as-padres-control-person-per-report/"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "MLB.com — Padres Front Office: John Seidler. Official team-published bio. Title and family background"
+  url: "https://www.mlb.com/padres/team/front-office/john-seidler"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "MLB.com (May 2, 2026) — Padres announce agreement to sell team to Kwanza Jones and José E. Feliciano. Begins tenure_end clock for John Seidler"
+  url: "https://www.mlb.com/news/padres-agree-to-sell-team-to-kwanza-jones-jose-e-feliciano"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "KPBS (Nov 13, 2025) — Seidler family explores Padres sale. Public start of the sale process"
+  url: "https://www.kpbs.org/news/local/2025/11/13/seidler-family-to-explore-padres-sale-among-strategic-options"
+  accessed: "2026-05-23"
+  archive_url: ""
 
 notes: |
   John Seidler (b. 1959) — MLB-approved control person of the Padres since
@@ -130,27 +130,27 @@ notes: |
   "los angeles" generally in verifying_signals.cities for now.
 
 change_log:
-  - date: 2026-05-23
-    change: |
-      Created during Phase 2 batch 4. Tier 2 sources: ESPN, NBC San Diego,
-      CBS Sports, MLB.com (Padres front office + sale announcement), KPBS.
-      tenure_start_date = 2025-02-15 (Feb 2025 MLB unanimous approval; exact
-      day not in Tier 2 — used mid-month placeholder). Strong_signal =
-      "O'Malley Seidler Partners". Replaces interim Kutsenda-led seidler-
-      family registry placeholder per user direction (track both Seidler
-      and Feliciano as pilots during transition).
-    by: "claude-code-research (orchestrated by alex)"
-    references:
-      - "/tmp/feliciano-jose-research.md (session-local research file; covered both Seidler and Feliciano)"
-  - date: 2026-05-25
-    change: |
-      Tier-C audit pass — no signal changes applied. 1 CONFIRMED / 0
-      PROBABLE / 0 UNCERTAIN-open. Owner has minimal FEC footprint (only
-      1 record post-Feb-2025 control-person transition); signal block is
-      adequate for current volume. Signal review date advanced.
-    by: "claude-code-session (PR 4 Tier C light pass)"
+- date: 2026-05-23
+  change: |
+    Created during Phase 2 batch 4. Tier 2 sources: ESPN, NBC San Diego,
+    CBS Sports, MLB.com (Padres front office + sale announcement), KPBS.
+    tenure_start_date = 2025-02-15 (Feb 2025 MLB unanimous approval; exact
+    day not in Tier 2 — used mid-month placeholder). Strong_signal =
+    "O'Malley Seidler Partners". Replaces interim Kutsenda-led seidler-
+    family registry placeholder per user direction (track both Seidler
+    and Feliciano as pilots during transition).
+  by: "claude-code-research (orchestrated by alex)"
+  references:
+  - "/tmp/feliciano-jose-research.md (session-local research file; covered both Seidler and Feliciano)"
+- date: 2026-05-25
+  change: |
+    Tier-C audit pass — no signal changes applied. 1 CONFIRMED / 0
+    PROBABLE / 0 UNCERTAIN-open. Owner has minimal FEC footprint (only
+    1 record post-Feb-2025 control-person transition); signal block is
+    adequate for current volume. Signal review date advanced.
+  by: "claude-code-session (PR 4 Tier C light pass)"
 
 audit:
   created: 2026-05-23
-  last_ingestion: null
+  last_ingestion: '2026-05-26'
   last_signal_review: 2026-05-25

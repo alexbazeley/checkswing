@@ -14,7 +14,7 @@ team: Arizona Diamondbacks
 role: Managing general partner / Principal owner
 status: pilot
 tenure_start_date: 2004-01-01    # approximate; exact MGP-transition date not pinned in Tier 2 sources
-tenure_end_date: null
+tenure_end_date:
 
 # Notes on name design:
 #   - "Ken" is his nickname (unrelated to given names — middle name is Gentry)
@@ -23,49 +23,49 @@ tenure_end_date: null
 #     donor. Variants without "Jr." still included since FEC filings often
 #     drop it; calibration will catch any father-era collisions.
 name_variants:
-  - "Ken Kendrick"
-  - "Earl G. Kendrick"
-  - "Earl G Kendrick"
-  - "Earl G. Kendrick Jr."
-  - "Earl G. Kendrick, Jr."
-  - "Earl Kendrick"
-  - "E. G. Kendrick"
-  - "E.G. Kendrick"
-  - "E G Kendrick"
-  - "Earl Gentry Kendrick"
-  - "Kendrick, Ken"
-  - "Kendrick, Earl G"
-  - "Kendrick, Earl G."
-  - "Kendrick, Earl G., Jr."
+- "Ken Kendrick"
+- "Earl G. Kendrick"
+- "Earl G Kendrick"
+- "Earl G. Kendrick Jr."
+- "Earl G. Kendrick, Jr."
+- "Earl Kendrick"
+- "E. G. Kendrick"
+- "E.G. Kendrick"
+- "E G Kendrick"
+- "Earl Gentry Kendrick"
+- "Kendrick, Ken"
+- "Kendrick, Earl G"
+- "Kendrick, Earl G."
+- "Kendrick, Earl G., Jr."
 
 verifying_signals:
   cities:
-    - "paradise valley"
-    - "phoenix"
+  - "paradise valley"
+  - "phoenix"
   states:
-    - "AZ"
+  - "AZ"
   employers:
     # Current primary
-    - "Arizona Diamondbacks"
-    - "Diamondbacks"
-    - "AZ Diamondbacks"
+  - "Arizona Diamondbacks"
+  - "Diamondbacks"
+  - "AZ Diamondbacks"
     # Historical: Datatel (correctly spelled — NOT "Datatec")
-    - "Datatel"
-    - "Datatel, Inc."
+  - "Datatel"
+  - "Datatel, Inc."
     # Banking-investor era (1989+)
-    - "Woodforest National Bank"
+  - "Woodforest National Bank"
     # Placeholders for owners without corp employer
-    - "Self-Employed"
-    - "Self Employed"
+  - "Self-Employed"
+  - "Self Employed"
   occupations:
-    - "owner"
-    - "managing general partner"
-    - "principal"
-    - "investor"
-    - "businessman"
-    - "chairman"
-    - "retired"
-    - "self-employed"
+  - "owner"
+  - "managing general partner"
+  - "principal"
+  - "investor"
+  - "businessman"
+  - "chairman"
+  - "retired"
+  - "self-employed"
 
 strong_signals:
   # Intentionally empty at creation. Kendrick Group, Inc. (SEC firm #114602)
@@ -95,22 +95,22 @@ related_entities: []
 #     principal (Broncos NFL owner) and not a Kendrick related_entity
 
 sources:
-  - description: "MLB.com Arizona Diamondbacks front office — Ken Kendrick (managing general partner)"
-    url: "https://www.mlb.com/dbacks/team/front-office/ken-kendrick"
-    accessed: "2026-05-22"
-    archive_url: ""
-  - description: "WVU John Chambers College of Business — Earl G. Kendrick (Business Hall of Fame inductee)"
-    url: "https://business.wvu.edu/alumni/business-hall-of-fame/inductees/earl-g-kendrick"
-    accessed: "2026-05-22"
-    archive_url: ""
-  - description: "WVU Roll of Distinguished Alumni — Ken Kendrick"
-    url: "https://business.wvu.edu/alumni/roll-of-distinguished-alumni/previous-inductees/ken-kendrick"
-    accessed: "2026-05-22"
-    archive_url: ""
-  - description: "Sportico — Rob Walton 10% minority stake in Arizona Diamondbacks at $2B valuation (publicly disclosed March 2026)"
-    url: "https://www.sportico.com/business/team-sales/2026/rob-walton-arizona-diamondbacks-stake-sale-1234886015/"
-    accessed: "2026-05-22"
-    archive_url: ""
+- description: "MLB.com Arizona Diamondbacks front office — Ken Kendrick (managing general partner)"
+  url: "https://www.mlb.com/dbacks/team/front-office/ken-kendrick"
+  accessed: "2026-05-22"
+  archive_url: ""
+- description: "WVU John Chambers College of Business — Earl G. Kendrick (Business Hall of Fame inductee)"
+  url: "https://business.wvu.edu/alumni/business-hall-of-fame/inductees/earl-g-kendrick"
+  accessed: "2026-05-22"
+  archive_url: ""
+- description: "WVU Roll of Distinguished Alumni — Ken Kendrick"
+  url: "https://business.wvu.edu/alumni/roll-of-distinguished-alumni/previous-inductees/ken-kendrick"
+  accessed: "2026-05-22"
+  archive_url: ""
+- description: "Sportico — Rob Walton 10% minority stake in Arizona Diamondbacks at $2B valuation (publicly disclosed March 2026)"
+  url: "https://www.sportico.com/business/team-sales/2026/rob-walton-arizona-diamondbacks-stake-sale-1234886015/"
+  accessed: "2026-05-22"
+  archive_url: ""
 
 notes: |
   Primary residence Paradise Valley, AZ. Managing general partner of the
@@ -139,51 +139,51 @@ notes: |
   the company is Datatel.)
 
 change_log:
-  - date: 2026-05-22
-    change: |
-      Created during Phase 2 batch 1 research. Tier 2 sources: MLB.com (406,
-      cross-confirmed), WVU Hall of Fame, WVU Roll of Distinguished Alumni,
-      Sportico (Walton minority-stake disclosure).
+- date: 2026-05-22
+  change: |
+    Created during Phase 2 batch 1 research. Tier 2 sources: MLB.com (406,
+    cross-confirmed), WVU Hall of Fame, WVU Roll of Distinguished Alumni,
+    Sportico (Walton minority-stake disclosure).
 
-      tenure_start_date 2004-01-01 (approximate MGP-transition date; exact
-      day not in Tier 2 sources). Mirroring Cohen YAML pattern of using
-      principal-owner-status date.
+    tenure_start_date 2004-01-01 (approximate MGP-transition date; exact
+    day not in Tier 2 sources). Mirroring Cohen YAML pattern of using
+    principal-owner-status date.
 
-      strong_signals empty at creation per conservative launch. Kendrick
-      Group, Inc. flagged for future promotion pending SEC ADV verification.
-      Randy Kendrick flagged for future related_entity creation as her own
-      slug (independent donor, same household — Cohen/Alexandra parallel).
-    by: "claude-code-research (orchestrated by alex)"
-    references:
-      - "/tmp/kendrick-ken-research.md (session-local research file)"
-  - date: 2026-05-25
-    change: |
-      Tier-B audit pass — no signal changes applied. P/C 0.09 is already
-      well-calibrated; 60 PROBABLE records all at Paradise Valley 85253
-      ZIPs but split between:
-        - Ken Sr filings with title-as-employer (MANAGING GENERAL PARTNER:
-          11, MANAGING PARTNER: 6, OWNER: 3, MANAGING OWNER: 1) and
-          empty-employer (14 records) — clearly him
-        - Likely Randy Kendrick (his wife) filings with HOMEMAKER (3) /
-          HOUSEWIFE (1) employer at the same household ZIP — flagged in
-          notes as future related_entity
-        - Earl G. Kendrick III / Jr (his son) filings: "EARL G. JR." +
-          "EARL G. MR. JR." records (12 records, some are Ken Sr legacy
-          filings using historic JR designation, some are likely the son)
-        - Other suspicious doppelgängers: ATTORNEY (1), DIAMOND JACKS (2)
-          — different individuals at Paradise Valley
+    strong_signals empty at creation per conservative launch. Kendrick
+    Group, Inc. flagged for future promotion pending SEC ADV verification.
+    Randy Kendrick flagged for future related_entity creation as her own
+    slug (independent donor, same household — Cohen/Alexandra parallel).
+  by: "claude-code-research (orchestrated by alex)"
+  references:
+  - "/tmp/kendrick-ken-research.md (session-local research file)"
+- date: 2026-05-25
+  change: |
+    Tier-B audit pass — no signal changes applied. P/C 0.09 is already
+    well-calibrated; 60 PROBABLE records all at Paradise Valley 85253
+    ZIPs but split between:
+      - Ken Sr filings with title-as-employer (MANAGING GENERAL PARTNER:
+        11, MANAGING PARTNER: 6, OWNER: 3, MANAGING OWNER: 1) and
+        empty-employer (14 records) — clearly him
+      - Likely Randy Kendrick (his wife) filings with HOMEMAKER (3) /
+        HOUSEWIFE (1) employer at the same household ZIP — flagged in
+        notes as future related_entity
+      - Earl G. Kendrick III / Jr (his son) filings: "EARL G. JR." +
+        "EARL G. MR. JR." records (12 records, some are Ken Sr legacy
+        filings using historic JR designation, some are likely the son)
+      - Other suspicious doppelgängers: ATTORNEY (1), DIAMOND JACKS (2)
+        — different individuals at Paradise Valley
 
-      Adding 85253 to strong-zip would over-confirm Randy + Earl III. The
-      cleaner resolution is to create separate slugs for Randy (well-
-      documented major donor) and Earl III, but per CLAUDE.md §5 that
-      requires orchestrator approval and Tier 2 source population —
-      out of scope for this Tier-B pass.
+    Adding 85253 to strong-zip would over-confirm Randy + Earl III. The
+    cleaner resolution is to create separate slugs for Randy (well-
+    documented major donor) and Earl III, but per CLAUDE.md §5 that
+    requires orchestrator approval and Tier 2 source population —
+    out of scope for this Tier-B pass.
 
-      Leaving 60 PROBABLE as honest one-signal classification. Signal
-      review date advanced.
-    by: "claude-code-session (PR 4 Tier B audit pass)"
+    Leaving 60 PROBABLE as honest one-signal classification. Signal
+    review date advanced.
+  by: "claude-code-session (PR 4 Tier B audit pass)"
 
 audit:
   created: 2026-05-22
-  last_ingestion: null
+  last_ingestion: '2026-05-26'
   last_signal_review: 2026-05-25

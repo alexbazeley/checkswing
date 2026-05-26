@@ -20,46 +20,46 @@ team: San Francisco Giants
 role: Principal owner
 status: pilot
 tenure_start_date: 2019-11-21    # MLB ownership-meeting approval as control person
-tenure_end_date: null
+tenure_end_date:
 
 name_variants:
-  - "Gregory E Johnson"
-  - "Gregory E. Johnson"
-  - "Gregory Eugene Johnson"
-  - "Greg E Johnson"
-  - "Greg E. Johnson"
-  - "Greg Johnson"
-  - "Johnson, Gregory"
-  - "Johnson, Gregory E"
-  - "Johnson, Gregory E."
-  - "Johnson, Greg"
+- "Gregory E Johnson"
+- "Gregory E. Johnson"
+- "Gregory Eugene Johnson"
+- "Greg E Johnson"
+- "Greg E. Johnson"
+- "Greg Johnson"
+- "Johnson, Gregory"
+- "Johnson, Gregory E"
+- "Johnson, Gregory E."
+- "Johnson, Greg"
 
 verifying_signals:
   cities:
-    - "hillsborough"   # primary residence per public-records aggregators (needs-confirmation)
-    - "san mateo"      # Franklin Resources HQ area
+  - "hillsborough"     # primary residence per public-records aggregators (needs-confirmation)
+  - "san mateo"        # Franklin Resources HQ area
   states:
-    - "CA"
+  - "CA"
   employers:
-    - "Franklin Resources"
-    - "Franklin Resources Inc"
-    - "Franklin Templeton"
-    - "Franklin Templeton Investments"
-    - "San Francisco Giants"
-    - "San Francisco Baseball Associates"
+  - "Franklin Resources"
+  - "Franklin Resources Inc"
+  - "Franklin Templeton"
+  - "Franklin Templeton Investments"
+  - "San Francisco Giants"
+  - "San Francisco Baseball Associates"
     # Added 2026-05-25 Tier-C calibration — observed FEC clerk variants:
     # "FRANKLIN/TEMPLETON USA SE" / "FRANKLIN/TEMPLETON DISTRI" (slash
     # separator) and "FRANKLIN RESOURCEWS INC." (typo of Resources with
     # extra W) in 7 PROBABLE records at San Mateo / Hillsborough.
-    - "Franklin/Templeton"
-    - "Franklin Resourcews"
+  - "Franklin/Templeton"
+  - "Franklin Resourcews"
   occupations:
-    - "executive chairman"
-    - "chairman"
-    - "ceo"
-    - "executive"
-    - "businessman"
-    - "investor"
+  - "executive chairman"
+  - "chairman"
+  - "ceo"
+  - "executive"
+  - "businessman"
+  - "investor"
 
 strong_signals:
   employers: []
@@ -83,26 +83,26 @@ related_entities: []
 #     added.
 
 sources:
-  - description: "ESPN — 'Baseball owners approve Greg Johnson as Giants' control person' (Nov 21, 2019). MLB approval; Rob Dean as vice chairman/co-managing member"
-    url: "https://www.espn.com/mlb/story/_/id/28131684/baseball-owners-approve-greg-johnson-giants-control-person"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "Franklin Resources investor press release — Gregory E. Johnson named Executive Chairman; sister Jennifer M. Johnson named President & CEO (effective Feb 11, 2020)"
-    url: "https://investors.franklinresources.com/news-center/press-releases/"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "Wikipedia — List of San Francisco Giants owners and executives. Confirms Charles B. Johnson as largest stakeholder and Greg Johnson as chairman of the board"
-    url: "https://en.wikipedia.org/wiki/List_of_San_Francisco_Giants_owners_and_executives"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "SF Standard (Nov 1, 2025) — 'Giants chairman Greg Johnson details the team's financial outlook for 2026.' Continued chairman role"
-    url: "https://sfstandard.com/2025/11/01/greg-johnson-sf-giants-payroll-salary/"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "MLB Trade Rumors (Nov 2025) — 'Giants Chairman Greg Johnson Discusses Team Spending'"
-    url: "https://www.mlbtraderumors.com/2025/11/giants-chairman-greg-johnson-discusses-team-spending.html"
-    accessed: "2026-05-23"
-    archive_url: ""
+- description: "ESPN — 'Baseball owners approve Greg Johnson as Giants' control person' (Nov 21, 2019). MLB approval; Rob Dean as vice chairman/co-managing member"
+  url: "https://www.espn.com/mlb/story/_/id/28131684/baseball-owners-approve-greg-johnson-giants-control-person"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "Franklin Resources investor press release — Gregory E. Johnson named Executive Chairman; sister Jennifer M. Johnson named President & CEO (effective Feb 11, 2020)"
+  url: "https://investors.franklinresources.com/news-center/press-releases/"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "Wikipedia — List of San Francisco Giants owners and executives. Confirms Charles B. Johnson as largest stakeholder and Greg Johnson as chairman of the board"
+  url: "https://en.wikipedia.org/wiki/List_of_San_Francisco_Giants_owners_and_executives"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "SF Standard (Nov 1, 2025) — 'Giants chairman Greg Johnson details the team's financial outlook for 2026.' Continued chairman role"
+  url: "https://sfstandard.com/2025/11/01/greg-johnson-sf-giants-payroll-salary/"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "MLB Trade Rumors (Nov 2025) — 'Giants Chairman Greg Johnson Discusses Team Spending'"
+  url: "https://www.mlbtraderumors.com/2025/11/giants-chairman-greg-johnson-discusses-team-spending.html"
+  accessed: "2026-05-23"
+  archive_url: ""
 
 notes: |
   Gregory Eugene Johnson (b. 1961/1962) — Chairman of the San Francisco
@@ -138,36 +138,36 @@ notes: |
   variants anyway.
 
 change_log:
-  - date: 2026-05-23
-    change: |
-      Created during Phase 2 batch 3. Tier 2 sources: ESPN, Franklin
-      Resources press release, Wikipedia/Wiki-based cross-ref, SF Standard
-      (Nov 2025), MLB Trade Rumors. HIGH doppelganger risk noted; strong_
-      signals empty at creation. Father Charles B. Johnson, sister Jennifer
-      M. Johnson, uncle Rupert H. Johnson Jr. flagged as separate-slug
-      candidates with different first names.
-    by: "claude-code-research (orchestrated by alex)"
-    references:
-      - "/tmp/johnson-greg-research.md (session-local research file)"
-  - date: 2026-05-25
-    change: |
-      Tier-C calibration pass — added "Franklin/Templeton" and "Franklin
-      Resourcews" to verifying_signals.employers. Both observed in 7
-      PROBABLE records at San Mateo / Hillsborough as FEC clerk variants
-      of his Franklin Resources / Franklin Templeton employer:
-      "FRANKLIN/TEMPLETON USA SE" / "FRANKLIN/TEMPLETON DISTRI" use slash
-      separator instead of space; "FRANKLIN RESOURCEWS INC." has extra-W
-      typo.
+- date: 2026-05-23
+  change: |
+    Created during Phase 2 batch 3. Tier 2 sources: ESPN, Franklin
+    Resources press release, Wikipedia/Wiki-based cross-ref, SF Standard
+    (Nov 2025), MLB Trade Rumors. HIGH doppelganger risk noted; strong_
+    signals empty at creation. Father Charles B. Johnson, sister Jennifer
+    M. Johnson, uncle Rupert H. Johnson Jr. flagged as separate-slug
+    candidates with different first names.
+  by: "claude-code-research (orchestrated by alex)"
+  references:
+  - "/tmp/johnson-greg-research.md (session-local research file)"
+- date: 2026-05-25
+  change: |
+    Tier-C calibration pass — added "Franklin/Templeton" and "Franklin
+    Resourcews" to verifying_signals.employers. Both observed in 7
+    PROBABLE records at San Mateo / Hillsborough as FEC clerk variants
+    of his Franklin Resources / Franklin Templeton employer:
+    "FRANKLIN/TEMPLETON USA SE" / "FRANKLIN/TEMPLETON DISTRI" use slash
+    separator instead of space; "FRANKLIN RESOURCEWS INC." has extra-W
+    typo.
 
-      Name-firewall (Gregory E middle initial) protects against family-
-      collision with father Charles, sister Jennifer, uncle Rupert at
-      same firm.
+    Name-firewall (Gregory E middle initial) protects against family-
+    collision with father Charles, sister Jennifer, uncle Rupert at
+    same firm.
 
-      Pre-cal: 98 CONFIRMED / 9 PROBABLE / 0 UNCERTAIN-open. P/C 0.09.
-      Predicted post-cal: ~105 CONFIRMED / ~2 PROBABLE. P/C ~0.02.
-    by: "claude-code-session (PR 4 Tier C light pass)"
+    Pre-cal: 98 CONFIRMED / 9 PROBABLE / 0 UNCERTAIN-open. P/C 0.09.
+    Predicted post-cal: ~105 CONFIRMED / ~2 PROBABLE. P/C ~0.02.
+  by: "claude-code-session (PR 4 Tier C light pass)"
 
 audit:
   created: 2026-05-23
-  last_ingestion: null
+  last_ingestion: '2026-05-26'
   last_signal_review: 2026-05-25

@@ -11,16 +11,16 @@ team: Los Angeles Angels
 role: Principal owner
 status: pilot
 tenure_start_date: 2003-05-15
-tenure_end_date: null
+tenure_end_date:
 
 name_variants:
-  - "Arturo Moreno"
-  - "Arte Moreno"
-  - "Arturo R. Moreno"
-  - "Arturo R Moreno"
-  - "Moreno, Arturo"
-  - "Moreno, Arte"
-  - "Moreno, Arturo R"
+- "Arturo Moreno"
+- "Arte Moreno"
+- "Arturo R. Moreno"
+- "Arturo R Moreno"
+- "Moreno, Arturo"
+- "Moreno, Arte"
+- "Moreno, Arturo R"
 
 verifying_signals:
   cities:
@@ -28,25 +28,25 @@ verifying_signals:
     # — every Tier 2 source says "Phoenix" (Biltmore Estates is a Phoenix
     # neighborhood). Anaheim NOT included — that's the team's location, not
     # his personal residence.
-    - "phoenix"
+  - "phoenix"
   states:
     # AZ primary (his residence). CA secondary because filings from the Angels
     # HQ in Anaheim sometimes carry CA address.
-    - "AZ"
-    - "CA"
+  - "AZ"
+  - "CA"
   employers:
-    - "Los Angeles Angels"
-    - "Anaheim Angels"
-    - "Los Angeles Angels of Anaheim"
-    - "Outdoor Systems"
+  - "Los Angeles Angels"
+  - "Anaheim Angels"
+  - "Los Angeles Angels of Anaheim"
+  - "Outdoor Systems"
   occupations:
-    - "owner"
-    - "principal"
-    - "ceo"
-    - "chairman"
-    - "investor"
-    - "self-employed"
-    - "retired"
+  - "owner"
+  - "principal"
+  - "ceo"
+  - "chairman"
+  - "investor"
+  - "self-employed"
+  - "retired"
 
 strong_signals:
   # SRB Management LLC — the Moreno family holding company (vehicle used for
@@ -55,8 +55,8 @@ strong_signals:
   # group. Caveat: some team executives may also file "Angels Baseball LP";
   # if calibration shows false positives, demote.
   employers:
-    - "SRB Management"
-    - "Angels Baseball LP"
+  - "SRB Management"
+  - "Angels Baseball LP"
   zip_codes:
     # Biltmore Estates / Arcadia Phoenix — Arte's documented residence cluster
     # (60 Biltmore Estates Drive per The Real Deal Phoenix). Promoted in
@@ -67,33 +67,33 @@ strong_signals:
     # adjacent Arcadia neighborhood (9 pre-cal CONFIRMED + 3 PROBABLE share
     # it). Name-variants are conservative enough (full "Arte" or "Arturo R"
     # required) that family-collision risk is low.
-    - "85016"
-    - "85018"
+  - "85016"
+  - "85018"
 
 related_entities: []
 # Documented candidate (do NOT add without approval): spouse Carole Moreno.
 
 sources:
-  - description: "MLB.com — Moreno family ends exploratory Angels sale process (Jan 2023)"
-    url: "https://www.mlb.com/news/moreno-family-ends-exploratory-angels-sale-process"
-    accessed: "2026-05-22"
-    archive_url: ""
-  - description: "ESPN — Moreno to maintain ownership of Angels after pulling sale (Jan 2023)"
-    url: "https://www.espn.com/mlb/story/_/id/35512412/arte-moreno-maintain-ownership-angels-exploring-sale"
-    accessed: "2026-05-22"
-    archive_url: ""
-  - description: "Orange County Business Journal — 'OC's Wealthiest 2024: ARTURO ARTE R. MORENO' — confirms net worth source, business entities (Angels Baseball LP, SRB Management LLC)"
-    url: "https://www.ocbj.com/special-report/ocs-wealthiest-2024/ocs-wealthiest-2024-arturo-arte-r-moreno/"
-    accessed: "2026-05-22"
-    archive_url: ""
-  - description: "Axios Phoenix — Arte Moreno identified as Arizona's wealthiest resident (July 2023); Phoenix residence"
-    url: "https://www.axios.com/local/phoenix/2023/07/05/arizona-wealthiest-billionaire-arturo-moreno"
-    accessed: "2026-05-22"
-    archive_url: ""
-  - description: "The Real Deal Phoenix — Billionaire Arte Moreno buys offices near Phoenix mansion (Nov 2024); confirms Biltmore Estates residence and 2024 ownership status"
-    url: "https://therealdeal.com/national/phoenix/2024/11/25/billionaire-arte-moreno-buys-offices-next-to-phoenix-mansion/"
-    accessed: "2026-05-22"
-    archive_url: ""
+- description: "MLB.com — Moreno family ends exploratory Angels sale process (Jan 2023)"
+  url: "https://www.mlb.com/news/moreno-family-ends-exploratory-angels-sale-process"
+  accessed: "2026-05-22"
+  archive_url: ""
+- description: "ESPN — Moreno to maintain ownership of Angels after pulling sale (Jan 2023)"
+  url: "https://www.espn.com/mlb/story/_/id/35512412/arte-moreno-maintain-ownership-angels-exploring-sale"
+  accessed: "2026-05-22"
+  archive_url: ""
+- description: "Orange County Business Journal — 'OC's Wealthiest 2024: ARTURO ARTE R. MORENO' — confirms net worth source, business entities (Angels Baseball LP, SRB Management LLC)"
+  url: "https://www.ocbj.com/special-report/ocs-wealthiest-2024/ocs-wealthiest-2024-arturo-arte-r-moreno/"
+  accessed: "2026-05-22"
+  archive_url: ""
+- description: "Axios Phoenix — Arte Moreno identified as Arizona's wealthiest resident (July 2023); Phoenix residence"
+  url: "https://www.axios.com/local/phoenix/2023/07/05/arizona-wealthiest-billionaire-arturo-moreno"
+  accessed: "2026-05-22"
+  archive_url: ""
+- description: "The Real Deal Phoenix — Billionaire Arte Moreno buys offices near Phoenix mansion (Nov 2024); confirms Biltmore Estates residence and 2024 ownership status"
+  url: "https://therealdeal.com/national/phoenix/2024/11/25/billionaire-arte-moreno-buys-offices-next-to-phoenix-mansion/"
+  accessed: "2026-05-22"
+  archive_url: ""
 
 notes: |
   Bought Angels from Walt Disney Company in 2003 for ~$184M. Pulled sale
@@ -122,65 +122,65 @@ notes: |
   capture team-employee Morenos.
 
 change_log:
-  - date: 2026-05-22
-    change: |
-      Created during Phase 2 batch 1 research. Tier 2 sources: MLB.com sale
-      pullback, ESPN, Orange County Business Journal (OC's Wealthiest 2024),
-      Axios Phoenix, The Real Deal Phoenix.
+- date: 2026-05-22
+  change: |
+    Created during Phase 2 batch 1 research. Tier 2 sources: MLB.com sale
+    pullback, ESPN, Orange County Business Journal (OC's Wealthiest 2024),
+    Axios Phoenix, The Real Deal Phoenix.
 
-      cities=[phoenix] (single — sources consistently report Phoenix proper).
-      states=[AZ, CA] (CA secondary for Angels-HQ filings).
-      strong_signals.employers includes SRB Management and Angels Baseball LP;
-      both are conservative-but-promotable per Cohen precedent.
-    by: "claude-code-research (orchestrated by alex)"
-    references:
-      - "/tmp/moreno-arte-research.md (session-local research file)"
-  - date: 2026-05-25
-    change: |
-      Tier-B calibration round 1 — added strong_signals.zip_codes:
-      ["85016", "85018"] for the Biltmore Estates / Arcadia Phoenix
-      residence cluster.
+    cities=[phoenix] (single — sources consistently report Phoenix proper).
+    states=[AZ, CA] (CA secondary for Angels-HQ filings).
+    strong_signals.employers includes SRB Management and Angels Baseball LP;
+    both are conservative-but-promotable per Cohen precedent.
+  by: "claude-code-research (orchestrated by alex)"
+  references:
+  - "/tmp/moreno-arte-research.md (session-local research file)"
+- date: 2026-05-25
+  change: |
+    Tier-B calibration round 1 — added strong_signals.zip_codes:
+    ["85016", "85018"] for the Biltmore Estates / Arcadia Phoenix
+    residence cluster.
 
-      Audit findings (read-only audit + raw payload inspection of all 26
-      PROBABLE records): every PROBABLE record is "MORENO, ARTE" /
-      "MORENO, ARTE R. MR." / "MORENO, ARTURO" / "MORENO, ARTURO R." in
-      Phoenix AZ at ZIPs 85016 (13 records), 850162826 (10 records, ZIP+4
-      of 85016), 85018 (1 record), and 850182843 (2 records, ZIP+4 of
-      85018). Donations are big-Republican-pattern: $2,500-$50,000 to
-      Romney 2012 / Romney Victory / RNC / state Republican parties
-      (Massachusetts, Idaho, Vermont, Oklahoma) in 2012; Trump
-      President 2017, Trump Victory 2017; McSally for Senate 2018;
-      McConnell for Majority Leader / McConnell Senate Committee 2019;
-      Tiffany Shedd 2020; Tanya for Arizona 2021; Ciscomani for Congress
-      / Ciscomani Victory Fund / AZ Republican Party 2024. Employers
-      observed: "ANGELS BASEBALL" (no LP suffix — not in verifying list),
-      "RETIRED", "SELF EMPLOYED" with occupation "REAL ESTATE", or blank.
-      All consistent with Arte's documented profile (sold Outdoor Systems
-      1999, sold operational role at Angels though still principal owner,
-      Arizona real estate investments per Tier 2 sources).
+    Audit findings (read-only audit + raw payload inspection of all 26
+    PROBABLE records): every PROBABLE record is "MORENO, ARTE" /
+    "MORENO, ARTE R. MR." / "MORENO, ARTURO" / "MORENO, ARTURO R." in
+    Phoenix AZ at ZIPs 85016 (13 records), 850162826 (10 records, ZIP+4
+    of 85016), 85018 (1 record), and 850182843 (2 records, ZIP+4 of
+    85018). Donations are big-Republican-pattern: $2,500-$50,000 to
+    Romney 2012 / Romney Victory / RNC / state Republican parties
+    (Massachusetts, Idaho, Vermont, Oklahoma) in 2012; Trump
+    President 2017, Trump Victory 2017; McSally for Senate 2018;
+    McConnell for Majority Leader / McConnell Senate Committee 2019;
+    Tiffany Shedd 2020; Tanya for Arizona 2021; Ciscomani for Congress
+    / Ciscomani Victory Fund / AZ Republican Party 2024. Employers
+    observed: "ANGELS BASEBALL" (no LP suffix — not in verifying list),
+    "RETIRED", "SELF EMPLOYED" with occupation "REAL ESTATE", or blank.
+    All consistent with Arte's documented profile (sold Outdoor Systems
+    1999, sold operational role at Angels though still principal owner,
+    Arizona real estate investments per Tier 2 sources).
 
-      85018 included because Arcadia is adjacent to Biltmore Estates and
-      the 9 pre-cal CONFIRMED records at 85018 / 850182821 are clearly
-      Arte (employer "LA ANGELS" / "ANGELS BASEBALL" + occupation OWNER).
-      Could be a secondary property or office address.
+    85018 included because Arcadia is adjacent to Biltmore Estates and
+    the 9 pre-cal CONFIRMED records at 85018 / 850182821 are clearly
+    Arte (employer "LA ANGELS" / "ANGELS BASEBALL" + occupation OWNER).
+    Could be a secondary property or office address.
 
-      Doppelgänger safety: name_variants require full "Arte" or "Arturo"
-      first name — no bare "A. Moreno" / "Moreno, A" forms. The 6
-      UNCERTAIN-open records are distinct Morenos in distinct metros and
-      are correctly caught by address-contradicts. Documented in notes.
+    Doppelgänger safety: name_variants require full "Arte" or "Arturo"
+    first name — no bare "A. Moreno" / "Moreno, A" forms. The 6
+    UNCERTAIN-open records are distinct Morenos in distinct metros and
+    are correctly caught by address-contradicts. Documented in notes.
 
-      Strong-signal ZIP risk consideration: 85016 Biltmore Estates is a
-      narrow affluent residential ZIP (not an office building cluster
-      like Carlyle 20004); name+ZIP combination is highly specific.
+    Strong-signal ZIP risk consideration: 85016 Biltmore Estates is a
+    narrow affluent residential ZIP (not an office building cluster
+    like Carlyle 20004); name+ZIP combination is highly specific.
 
-      Pre-cal: 47 CONFIRMED / 26 PROBABLE / 6 UNCERTAIN-open. P/C 0.55.
-      Predicted post-cal: ~73 CONFIRMED / ~0 PROBABLE / 6 UNCERTAIN.
-      P/C ~0.0. CONFIRMED count goes up — no >5% drop alarm risk.
-    by: "claude-code-session (PR 4 Tier B, approved by alex)"
-    references:
-      - "data/master.db pre-calibration: 47 CONFIRMED / 26 PROBABLE / 6 UNCERTAIN-open"
+    Pre-cal: 47 CONFIRMED / 26 PROBABLE / 6 UNCERTAIN-open. P/C 0.55.
+    Predicted post-cal: ~73 CONFIRMED / ~0 PROBABLE / 6 UNCERTAIN.
+    P/C ~0.0. CONFIRMED count goes up — no >5% drop alarm risk.
+  by: "claude-code-session (PR 4 Tier B, approved by alex)"
+  references:
+  - "data/master.db pre-calibration: 47 CONFIRMED / 26 PROBABLE / 6 UNCERTAIN-open"
 
 audit:
   created: 2026-05-22
-  last_ingestion: null
+  last_ingestion: '2026-05-26'
   last_signal_review: 2026-05-25

@@ -18,39 +18,39 @@ team: Cleveland Guardians
 role: Principal owner
 status: pilot
 tenure_start_date: 2013-01-10
-tenure_end_date: null
+tenure_end_date:
 family_tenure_start_date: 2000-02-04    # Lawrence J. ("Larry") Dolan bought Cleveland Indians (Paul's father)
 
 name_variants:
-  - "Paul J Dolan"
-  - "Paul J. Dolan"
-  - "Paul Dolan"
-  - "Paul Joseph Dolan"
-  - "Dolan, Paul"
-  - "Dolan, Paul J"
-  - "Dolan, Paul J."
+- "Paul J Dolan"
+- "Paul J. Dolan"
+- "Paul Dolan"
+- "Paul Joseph Dolan"
+- "Dolan, Paul"
+- "Dolan, Paul J"
+- "Dolan, Paul J."
 
 verifying_signals:
   cities:
-    - "chagrin falls"
-    - "cleveland"
-    - "chardon"           # historical, pre-2000 era at Thrasher Dinsmore & Dolan
+  - "chagrin falls"
+  - "cleveland"
+  - "chardon"             # historical, pre-2000 era at Thrasher Dinsmore & Dolan
   states:
-    - "OH"
+  - "OH"
   employers:
-    - "Cleveland Guardians"
-    - "Cleveland Indians"          # team's name pre-2022 rebrand
-    - "Cleveland Indians Baseball"
-    - "Thrasher Dinsmore"          # family law firm (partner pre-2000)
-    - "Thrasher, Dinsmore & Dolan"
-    - "Dix & Eaton"                # board director since 2014
+  - "Cleveland Guardians"
+  - "Cleveland Indians"            # team's name pre-2022 rebrand
+  - "Cleveland Indians Baseball"
+  - "Thrasher Dinsmore"            # family law firm (partner pre-2000)
+  - "Thrasher, Dinsmore & Dolan"
+  - "Dix & Eaton"                  # board director since 2014
   occupations:
-    - "chairman"
-    - "ceo"
-    - "owner"
-    - "president"
-    - "attorney"
-    - "executive"
+  - "chairman"
+  - "ceo"
+  - "owner"
+  - "president"
+  - "attorney"
+  - "executive"
 
 strong_signals:
   employers: []
@@ -62,7 +62,7 @@ strong_signals:
     # "Paul" first name, so brother Matt / deceased father Larry don't
     # match; cousin James L. Dolan is NYC-based and would have different
     # state anyway.
-    - "44022"
+  - "44022"
   # Conservative at creation. "Cleveland Indians Baseball" would be uniquely
   # identifying paired with chairman/CEO occupation, but stays in verifying
   # because brother Matt and (deceased) father Larry are also tied to Indians
@@ -74,8 +74,8 @@ negative_signals:
     # Paul E. Dolan (CA winemaker, d. 2023-07) — Fetzer Vineyards / Bonterra
     # Vineyards (Mendocino County). Same first name; pre-emptive negative
     # per CLAUDE.md §1.7 (well-known doppelganger).
-    - "Fetzer Vineyards"
-    - "Bonterra Vineyards"
+  - "Fetzer Vineyards"
+  - "Bonterra Vineyards"
 
 related_entities: []
 # Future candidates (do NOT add without user approval per CLAUDE.md §1.7):
@@ -88,26 +88,26 @@ related_entities: []
 #     branch, different first name.
 
 sources:
-  - description: "Akron Roundtable — Paul J. Dolan speaker bio. Confirms title (Owner/Chairman/CEO), education (St Lawrence 1980, Notre Dame Law 1983), Geauga County residence, wife Karen, two sons, board memberships"
-    url: "https://www.akronroundtable.org/speakers/paul-j-dolan/7381/"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "Cleveland State University — Paul J. Dolan appointed to CSU Board of Trustees (June 2022, by Governor of Ohio)"
-    url: "https://www.csuohio.edu/news/paul-j-dolan-appointed-cleveland-state-university-board-trustees"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "Sportico (Feb 2025) — Larry Dolan death and Paul Dolan's continued control. Paul has been MLB-designated 'control person' since 2013-01-10; Blitzer succession option not expected before ~2028"
-    url: "https://www.sportico.com/business/team-sales/2025/cleveland-guardians-owner-succession-plan-david-blitzer-1234831439/"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "Cleveland Clinic Magazine (Fall 2023) — Karen and Paul Dolan profile. 34-year marriage (married 1990), two adult sons, Cleveland-area residence"
-    url: "https://magazine.clevelandclinic.org/2023-fall/karen-and-paul-dolan"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "Crain's Cleveland Business — Greater Cleveland Partnership board chair appointment (2022)"
-    url: "https://www.crainscleveland.com/kim-palmer-blog/guardians-owner-paul-dolan-named-greater-cleveland-partnership-board-chair"
-    accessed: "2026-05-23"
-    archive_url: ""
+- description: "Akron Roundtable — Paul J. Dolan speaker bio. Confirms title (Owner/Chairman/CEO), education (St Lawrence 1980, Notre Dame Law 1983), Geauga County residence, wife Karen, two sons, board memberships"
+  url: "https://www.akronroundtable.org/speakers/paul-j-dolan/7381/"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "Cleveland State University — Paul J. Dolan appointed to CSU Board of Trustees (June 2022, by Governor of Ohio)"
+  url: "https://www.csuohio.edu/news/paul-j-dolan-appointed-cleveland-state-university-board-trustees"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "Sportico (Feb 2025) — Larry Dolan death and Paul Dolan's continued control. Paul has been MLB-designated 'control person' since 2013-01-10; Blitzer succession option not expected before ~2028"
+  url: "https://www.sportico.com/business/team-sales/2025/cleveland-guardians-owner-succession-plan-david-blitzer-1234831439/"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "Cleveland Clinic Magazine (Fall 2023) — Karen and Paul Dolan profile. 34-year marriage (married 1990), two adult sons, Cleveland-area residence"
+  url: "https://magazine.clevelandclinic.org/2023-fall/karen-and-paul-dolan"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "Crain's Cleveland Business — Greater Cleveland Partnership board chair appointment (2022)"
+  url: "https://www.crainscleveland.com/kim-palmer-blog/guardians-owner-paul-dolan-named-greater-cleveland-partnership-board-chair"
+  accessed: "2026-05-23"
+  archive_url: ""
 
 notes: |
   Paul J. Dolan (b. 1958-07-07) — MLB-designated "control person" of the
@@ -139,35 +139,35 @@ notes: |
   OH; family-named firm). Pre-2000 FEC records may carry that employer.
 
 change_log:
-  - date: 2026-05-23
-    change: |
-      Created during Phase 2 batch 3. Tier 2 sources: Akron Roundtable, CSU
-      appointment release, Sportico 2025 Larry-Dolan-death coverage, Cleveland
-      Clinic Magazine, Crain's Cleveland Business. tenure_start_date =
-      2013-01-10 (MLB control person approval). Negative_signals.employers =
-      Fetzer Vineyards / Bonterra Vineyards (Paul E. Dolan winemaker
-      doppelganger). strong_signals empty at creation; calibrate after first
-      ingestion.
-    by: "claude-code-research (orchestrated by alex)"
-    references:
-      - "/tmp/dolan-paul-research.md (session-local research file)"
-  - date: 2026-05-25
-    change: |
-      Tier-C calibration pass — added strong_signals.zip_codes: ["44022"]
-      (Chagrin Falls OH, Paul's documented Geauga County residence area).
+- date: 2026-05-23
+  change: |
+    Created during Phase 2 batch 3. Tier 2 sources: Akron Roundtable, CSU
+    appointment release, Sportico 2025 Larry-Dolan-death coverage, Cleveland
+    Clinic Magazine, Crain's Cleveland Business. tenure_start_date =
+    2013-01-10 (MLB control person approval). Negative_signals.employers =
+    Fetzer Vineyards / Bonterra Vineyards (Paul E. Dolan winemaker
+    doppelganger). strong_signals empty at creation; calibrate after first
+    ingestion.
+  by: "claude-code-research (orchestrated by alex)"
+  references:
+  - "/tmp/dolan-paul-research.md (session-local research file)"
+- date: 2026-05-25
+  change: |
+    Tier-C calibration pass — added strong_signals.zip_codes: ["44022"]
+    (Chagrin Falls OH, Paul's documented Geauga County residence area).
 
-      Audit: 7 PROBABLE records all "DOLAN, PAUL" / "DOLAN, PAUL J" /
-      "DOLAN, PAUL J. MR." at 44022 / 440223946 (ZIP+4) Chagrin Falls
-      with empty or INFORMATION REQUESTED employer. Strong-zip promotes
-      all 7 via name + ZIP. Family-collision firewall holds: brother
-      Matt / father Larry / cousin James L. Dolan have different first
-      names; name_variants strictly require "Paul" first name.
+    Audit: 7 PROBABLE records all "DOLAN, PAUL" / "DOLAN, PAUL J" /
+    "DOLAN, PAUL J. MR." at 44022 / 440223946 (ZIP+4) Chagrin Falls
+    with empty or INFORMATION REQUESTED employer. Strong-zip promotes
+    all 7 via name + ZIP. Family-collision firewall holds: brother
+    Matt / father Larry / cousin James L. Dolan have different first
+    names; name_variants strictly require "Paul" first name.
 
-      Pre-cal: 60 CONFIRMED / 7 PROBABLE / 0 UNCERTAIN-open. P/C 0.12.
-      Predicted post-cal: ~67 CONFIRMED / ~0 PROBABLE. P/C ~0.0.
-    by: "claude-code-session (PR 4 Tier C light pass)"
+    Pre-cal: 60 CONFIRMED / 7 PROBABLE / 0 UNCERTAIN-open. P/C 0.12.
+    Predicted post-cal: ~67 CONFIRMED / ~0 PROBABLE. P/C ~0.0.
+  by: "claude-code-session (PR 4 Tier C light pass)"
 
 audit:
   created: 2026-05-23
-  last_ingestion: null
+  last_ingestion: '2026-05-26'
   last_signal_review: 2026-05-25

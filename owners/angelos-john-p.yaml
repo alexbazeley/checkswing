@@ -26,12 +26,12 @@ family_tenure_start_date: 1993-08-02    # Peter Angelos-led group bought Orioles
 #   - "L. Angelos" / similar — excluded; ambiguous with brother Louis.
 #   - Middle initial "P" included to disambiguate from Peter when full form filed.
 name_variants:
-  - "John P Angelos"
-  - "John P. Angelos"
-  - "John Angelos"
-  - "Angelos, John"
-  - "Angelos, John P"
-  - "Angelos, John P."
+- "John P Angelos"
+- "John P. Angelos"
+- "John Angelos"
+- "Angelos, John"
+- "Angelos, John P"
+- "Angelos, John P."
 
 verifying_signals:
   cities:
@@ -42,35 +42,35 @@ verifying_signals:
     # - Baltimore area — through his Orioles role; family properties exist
     #   but no Tier-2 source affirmatively documents his personal residential
     #   address there.
-    - "franklin"
-    - "nashville"
-    - "baltimore"
+  - "franklin"
+  - "nashville"
+  - "baltimore"
   states:
-    - "TN"
-    - "MD"
+  - "TN"
+  - "MD"
   employers:
     # NOT INCLUDED: "Law Offices of Peter G. Angelos" / "Angelos Law" — that
     # is Peter's and Louis's firm. John was a lawyer (J.D., U. Baltimore) but
     # made his career in the Orioles/MASN, not the law firm. Including it
     # here would catastrophically merge Peter's records into John's totals.
     # See negative_signals.
-    - "Baltimore Orioles"
-    - "Orioles"
-    - "Mid-Atlantic Sports Network"
-    - "MASN"
+  - "Baltimore Orioles"
+  - "Orioles"
+  - "Mid-Atlantic Sports Network"
+  - "MASN"
   occupations:
-    - "owner"
-    - "principal owner"
-    - "chairman"
-    - "chairman and ceo"
-    - "ceo"
-    - "chief executive officer"
-    - "president"
-    - "executive vice president"
-    - "evp"
-    - "coo"
-    - "chief operating officer"
-    - "executive"
+  - "owner"
+  - "principal owner"
+  - "chairman"
+  - "chairman and ceo"
+  - "ceo"
+  - "chief executive officer"
+  - "president"
+  - "executive vice president"
+  - "evp"
+  - "coo"
+  - "chief operating officer"
+  - "executive"
 
 strong_signals:
   # Intentionally empty. "Mid-Atlantic Sports Network" tempting but other MASN
@@ -87,12 +87,12 @@ strong_signals:
 # different person — route to UNCERTAIN.
 negative_signals:
   employers:
-    - "Law Offices of Peter G. Angelos"
-    - "Law Offices of Peter Angelos"
-    - "Law Office of Peter Angelos"
-    - "Angelos Law"
-    - "Peter Angelos Law"
-    - "Angelos & Angelos"
+  - "Law Offices of Peter G. Angelos"
+  - "Law Offices of Peter Angelos"
+  - "Law Office of Peter Angelos"
+  - "Angelos Law"
+  - "Peter Angelos Law"
+  - "Angelos & Angelos"
 
 related_entities: []
 # Documented future candidates (do NOT add without explicit approval):
@@ -104,26 +104,26 @@ related_entities: []
 #   - Mother Georgia Angelos
 
 sources:
-  - description: "Wikipedia, John P. Angelos — biography, Orioles role, MASN role, family relationships"
-    url: "https://en.wikipedia.org/wiki/John_P._Angelos"
-    accessed: "2026-05-22"
-    archive_url: ""
-  - description: "Baltimore Sun (Jeff Barker), Nov 3, 2020 — MLB owners approved John Angelos as Orioles control person; vote held Oct 2020"
-    url: "https://www.baltimoresun.com/sports/orioles/bs-sp-orioles-angelos-named-control-person-20201103-hc24jajfrrcxvefk2jqdopfeoi-story.html"
-    accessed: "2026-05-22"
-    archive_url: ""
-  - description: "ESPN, Mar 27, 2024 — David Rubenstein unanimously approved as new Orioles owner; initial 40% stake at closing"
-    url: "https://www.espn.com/mlb/story/_/id/39820434/david-rubenstein-unanimously-approved-new-orioles-owner"
-    accessed: "2026-05-22"
-    archive_url: ""
-  - description: "BaltimoreBaseball.com, Aug 1, 2024 — Rubenstein group completes purchase; remaining 60% stake transferred from Angelos family"
-    url: "https://www.baltimorebaseball.com/2024/08/01/rubenstein-group-completes-purchase-orioles/"
-    accessed: "2026-05-22"
-    archive_url: ""
-  - description: "Nashville Scene — John Angelos purchased Franklin TN home in 2016; wife Margaret Valentine's Nashville music business"
-    url: "https://www.nashvillescene.com/news/headline-homes-september-2016/article_425d7784-27ef-5119-bb67-07f0b1e7c199.html"
-    accessed: "2026-05-22"
-    archive_url: ""
+- description: "Wikipedia, John P. Angelos — biography, Orioles role, MASN role, family relationships"
+  url: "https://en.wikipedia.org/wiki/John_P._Angelos"
+  accessed: "2026-05-22"
+  archive_url: ""
+- description: "Baltimore Sun (Jeff Barker), Nov 3, 2020 — MLB owners approved John Angelos as Orioles control person; vote held Oct 2020"
+  url: "https://www.baltimoresun.com/sports/orioles/bs-sp-orioles-angelos-named-control-person-20201103-hc24jajfrrcxvefk2jqdopfeoi-story.html"
+  accessed: "2026-05-22"
+  archive_url: ""
+- description: "ESPN, Mar 27, 2024 — David Rubenstein unanimously approved as new Orioles owner; initial 40% stake at closing"
+  url: "https://www.espn.com/mlb/story/_/id/39820434/david-rubenstein-unanimously-approved-new-orioles-owner"
+  accessed: "2026-05-22"
+  archive_url: ""
+- description: "BaltimoreBaseball.com, Aug 1, 2024 — Rubenstein group completes purchase; remaining 60% stake transferred from Angelos family"
+  url: "https://www.baltimorebaseball.com/2024/08/01/rubenstein-group-completes-purchase-orioles/"
+  accessed: "2026-05-22"
+  archive_url: ""
+- description: "Nashville Scene — John Angelos purchased Franklin TN home in 2016; wife Margaret Valentine's Nashville music business"
+  url: "https://www.nashvillescene.com/news/headline-homes-september-2016/article_425d7784-27ef-5119-bb67-07f0b1e7c199.html"
+  accessed: "2026-05-22"
+  archive_url: ""
 
 notes: |
   CRITICAL — family-name collision risk, particularly severe.
@@ -157,28 +157,28 @@ notes: |
   2024-08-01 to capture John's full ownership-stake window.
 
 change_log:
-  - date: 2026-05-22
-    change: |
-      Created during Phase 2 batch 1 research. Tier 2 sources: Baltimore Sun,
-      MLB.com (406'd, cross-confirmed via ESPN), BaltimoreBaseball.com (Aug 1
-      2024 final closing), Nashville Scene (TN residence). Conservative
-      name_variants exclude "Angelos" alone and all first-initial-only forms.
-      negative_signals added at creation (atypical, but justified by the
-      unusually severe Peter-Angelos collision risk). strong_signals empty.
-      tenure_end_date 2024-08-01 (full ownership end; control-person role
-      ended 2024-03-27 per notes).
-    by: "claude-code-research (orchestrated by alex)"
-    references:
-      - "/tmp/angelos-john-p-research.md (session-local research file)"
-  - date: 2026-05-25
-    change: |
-      Tier-C audit pass — no signal changes applied. Owner has 0 records
-      in DB (not yet ingested; status pilot with tenure_end_date
-      2024-08-01). Signal block is pre-configured for eventual historical
-      ingestion. Signal review date advanced.
-    by: "claude-code-session (PR 4 Tier C light pass)"
+- date: 2026-05-22
+  change: |
+    Created during Phase 2 batch 1 research. Tier 2 sources: Baltimore Sun,
+    MLB.com (406'd, cross-confirmed via ESPN), BaltimoreBaseball.com (Aug 1
+    2024 final closing), Nashville Scene (TN residence). Conservative
+    name_variants exclude "Angelos" alone and all first-initial-only forms.
+    negative_signals added at creation (atypical, but justified by the
+    unusually severe Peter-Angelos collision risk). strong_signals empty.
+    tenure_end_date 2024-08-01 (full ownership end; control-person role
+    ended 2024-03-27 per notes).
+  by: "claude-code-research (orchestrated by alex)"
+  references:
+  - "/tmp/angelos-john-p-research.md (session-local research file)"
+- date: 2026-05-25
+  change: |
+    Tier-C audit pass — no signal changes applied. Owner has 0 records
+    in DB (not yet ingested; status pilot with tenure_end_date
+    2024-08-01). Signal block is pre-configured for eventual historical
+    ingestion. Signal review date advanced.
+  by: "claude-code-session (PR 4 Tier C light pass)"
 
 audit:
   created: 2026-05-22
-  last_ingestion: null
+  last_ingestion: '2026-05-26'
   last_signal_review: 2026-05-25

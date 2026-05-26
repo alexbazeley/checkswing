@@ -11,17 +11,17 @@ team: Boston Red Sox
 role: Principal owner
 status: pilot
 tenure_start_date: 2002-02-27   # Sale completed (MLB-approved Jan 16, 2002)
-tenure_end_date: null
+tenure_end_date:
 
 name_variants:
-  - "John W. Henry"
-  - "John W Henry"
-  - "John William Henry"
-  - "John William Henry II"
-  - "John Henry"
-  - "Henry, John W"
-  - "Henry, John W."
-  - "Henry, John"
+- "John W. Henry"
+- "John W Henry"
+- "John William Henry"
+- "John William Henry II"
+- "John Henry"
+- "Henry, John W"
+- "Henry, John W."
+- "Henry, John"
 
 verifying_signals:
   cities:
@@ -32,12 +32,12 @@ verifying_signals:
     # "boston" added in calibration round 1 — audit found real Henry filings
     # at city=BOSTON with JWH employer + Boca Raton signal context (he files
     # from his Globe office sometimes).
-    - "boca raton"
-    - "brookline"
-    - "boston"
+  - "boca raton"
+  - "brookline"
+  - "boston"
   states:
-    - "FL"
-    - "MA"
+  - "FL"
+  - "MA"
   employers:
     # John W. Henry & Company variants — his original commodities trading
     # firm, founded 1981 in Boca Raton.
@@ -45,29 +45,29 @@ verifying_signals:
     # _norm), strings here will match record employers regardless of period
     # placement. "John W. Henry and Company" now matches "JOHN W HENRY AND
     # COMPANY INC".
-    - "John W. Henry & Company"
-    - "John W. Henry & Co"
-    - "John W. Henry and Company"
-    - "John W. Henry and Co"           # added 2026-05-22 — caught
-    - "John W. Henry Company"          # added 2026-05-22 — variant without "and"/&
-    - "J.W. Henry & Co"
+  - "John W. Henry & Company"
+  - "John W. Henry & Co"
+  - "John W. Henry and Company"
+  - "John W. Henry and Co"             # added 2026-05-22 — caught
+  - "John W. Henry Company"            # added 2026-05-22 — variant without "and"/&
+  - "J.W. Henry & Co"
     # Fenway Sports Group — current sports/media holding co.
-    - "Fenway Sports Group"
-    - "New England Sports Ventures"
+  - "Fenway Sports Group"
+  - "New England Sports Ventures"
     # Team / property names.
-    - "Boston Red Sox"
-    - "Boston Globe"
-    - "Liverpool Football Club"
+  - "Boston Red Sox"
+  - "Boston Globe"
+  - "Liverpool Football Club"
   occupations:
-    - "principal"
-    - "principal owner"
-    - "owner"
-    - "chairman"
-    - "founder"
-    - "investor"
-    - "investment manager"
-    - "publisher"
-    - "self-employed"
+  - "principal"
+  - "principal owner"
+  - "owner"
+  - "chairman"
+  - "founder"
+  - "investor"
+  - "investment manager"
+  - "publisher"
+  - "self-employed"
 
 strong_signals:
   # "John W. Henry & Company" and its short forms are literally named after
@@ -77,7 +77,7 @@ strong_signals:
   # Fenway Sports Group is NOT a strong signal — too many FSG employees could
   # file it. Same with Red Sox / Globe / Liverpool. Per Cohen precedent.
   employers:
-    - "JWH"
+  - "JWH"
   zip_codes:
     # 33496 = Le Lac gated community Boca Raton (documented Tier 2
     # residence). Added 2026-05-25 Tier-B calibration; narrow gated-
@@ -86,7 +86,7 @@ strong_signals:
     # "John Henry" which is one of the commonest American names, and
     # multiple non-Henry John Henrys could live in the broader 33431
     # cluster.
-    - "33496"
+  - "33496"
 
 negative_signals:
   # Boston-area tech employee John Henry at CarGurus (auto-shopping site,
@@ -95,7 +95,7 @@ negative_signals:
   # W. Henry the FSG owner. Added 2026-05-25 Tier-B calibration as defense-
   # in-depth against future CarGurus filings.
   employers:
-    - "CarGurus"
+  - "CarGurus"
 
 related_entities: []
 # Linda Pizzuti Henry (spouse, CEO Boston Globe Media; chair John W. Henry
@@ -104,34 +104,34 @@ related_entities: []
 # Source for future use: bostonglobemedia.com/people/linda-henry/.
 
 sources:
-  - description: "MLB.com Red Sox front office page for John W. Henry (current title: Principal Owner)"
-    url: "https://www.mlb.com/redsox/team/front-office/john-w-henry"
-    accessed: "2026-05-22"
-    archive_url: ""
-  - description: "Fenway Sports Group leadership page — confirms John W. Henry as Principal Owner & founder of FSG (2001), Chairman of John W. Henry & Company (1981)"
-    url: "https://fenwaysportsgroup.com/leadership/"
-    accessed: "2026-05-22"
-    archive_url: ""
-  - description: "MIT Sloan Sports Analytics Conference speaker bio — Principal Owner of FSG, Chairman of John W. Henry & Company (founded 1981, Boca Raton FL), Publisher of Boston Globe (since Jan 2014), MLB Business Board member"
-    url: "https://www.sloansportsconference.com/people/john-henry"
-    accessed: "2026-05-22"
-    archive_url: ""
-  - description: "ESPN — Henry's group completes Red Sox purchase (Feb 27, 2002) for $660M from Jean R. Yawkey Trust; NESV purchasing entity, Tom Werner and Larry Lucchino as partners"
-    url: "http://www.espn.com/mlb/news/2002/0227/1341320.html"
-    accessed: "2026-05-22"
-    archive_url: ""
-  - description: "FIA Futures Hall of Fame profile — John W. Henry & Company founder (1981), futures industry pioneer"
-    url: "https://www.fia.org/hall-fame/articles/john-w-henry"
-    accessed: "2026-05-22"
-    archive_url: ""
-  - description: "CommonWealth Beacon — establishes primary residence Boca Raton FL (FL driver's license, voter reg, homestead exemption); secondary Brookline MA mansion"
-    url: "https://commonwealthbeacon.org/politics/006-is-john-henry-a-local/"
-    accessed: "2026-05-22"
-    archive_url: ""
-  - description: "Boston.com profile (Aug 2013) — biographical detail, Brookline mansion purchase from Frank McCourt (2007), Florida Marlins (1999-2002), Yankees LP (1991-2003), Liverpool FC (2010)"
-    url: "https://www.boston.com/uncategorized/noprimarytagmatch/2013/08/03/john-w-henry-soft-spoken-businessman-with-an-appetite-for-risk/"
-    accessed: "2026-05-22"
-    archive_url: ""
+- description: "MLB.com Red Sox front office page for John W. Henry (current title: Principal Owner)"
+  url: "https://www.mlb.com/redsox/team/front-office/john-w-henry"
+  accessed: "2026-05-22"
+  archive_url: ""
+- description: "Fenway Sports Group leadership page — confirms John W. Henry as Principal Owner & founder of FSG (2001), Chairman of John W. Henry & Company (1981)"
+  url: "https://fenwaysportsgroup.com/leadership/"
+  accessed: "2026-05-22"
+  archive_url: ""
+- description: "MIT Sloan Sports Analytics Conference speaker bio — Principal Owner of FSG, Chairman of John W. Henry & Company (founded 1981, Boca Raton FL), Publisher of Boston Globe (since Jan 2014), MLB Business Board member"
+  url: "https://www.sloansportsconference.com/people/john-henry"
+  accessed: "2026-05-22"
+  archive_url: ""
+- description: "ESPN — Henry's group completes Red Sox purchase (Feb 27, 2002) for $660M from Jean R. Yawkey Trust; NESV purchasing entity, Tom Werner and Larry Lucchino as partners"
+  url: "http://www.espn.com/mlb/news/2002/0227/1341320.html"
+  accessed: "2026-05-22"
+  archive_url: ""
+- description: "FIA Futures Hall of Fame profile — John W. Henry & Company founder (1981), futures industry pioneer"
+  url: "https://www.fia.org/hall-fame/articles/john-w-henry"
+  accessed: "2026-05-22"
+  archive_url: ""
+- description: "CommonWealth Beacon — establishes primary residence Boca Raton FL (FL driver's license, voter reg, homestead exemption); secondary Brookline MA mansion"
+  url: "https://commonwealthbeacon.org/politics/006-is-john-henry-a-local/"
+  accessed: "2026-05-22"
+  archive_url: ""
+- description: "Boston.com profile (Aug 2013) — biographical detail, Brookline mansion purchase from Frank McCourt (2007), Florida Marlins (1999-2002), Yankees LP (1991-2003), Liverpool FC (2010)"
+  url: "https://www.boston.com/uncategorized/noprimarytagmatch/2013/08/03/john-w-henry-soft-spoken-businessman-with-an-appetite-for-risk/"
+  accessed: "2026-05-22"
+  archive_url: ""
 
 notes: |
   Henry's primary residence is Boca Raton, FL (FL driver's license, FL voter
@@ -158,89 +158,89 @@ notes: |
   negative_signals population to post-first-ingestion calibration audit.
 
 change_log:
-  - date: 2026-05-22
-    change: |
-      Created during Phase 1.5 research. Tier 2 sources: MLB.com front office,
-      Fenway Sports Group leadership page, MIT Sloan Sports Analytics speaker
-      bio, ESPN 2002 purchase article, FIA Futures Hall of Fame, CommonWealth
-      Beacon residence article, Boston.com 2013 profile.
+- date: 2026-05-22
+  change: |
+    Created during Phase 1.5 research. Tier 2 sources: MLB.com front office,
+    Fenway Sports Group leadership page, MIT Sloan Sports Analytics speaker
+    bio, ESPN 2002 purchase article, FIA Futures Hall of Fame, CommonWealth
+    Beacon residence article, Boston.com 2013 profile.
 
-      Architectural notes for calibration:
-        - cities = [boca raton, brookline] (NOT "boston"). Calibration may add.
-        - strong_signals = [JWH only]. The longer forms ("John W. Henry & Company"
-          etc.) stay in verifying_signals because Henry's firm did employ analysts
-          who might file the full firm name. JWH is the industry abbreviation
-          almost exclusively used in the small set of people closely associated
-          with the firm.
-        - Anticipate noisy PROBABLE bucket (common name, two states, multi-entity).
-    by: "claude-code-research (orchestrated by alex)"
-    references:
-      - "/tmp/henry-john-research.md (session-local research file)"
-  - date: 2026-05-22
-    change: |
-      Calibration round 1 (run_id dbcd04e1): the first ingestion produced
-      only 4 CONFIRMED — far below the expected ~$885K of historical giving.
-      Audit traced the gap to two issues:
+    Architectural notes for calibration:
+      - cities = [boca raton, brookline] (NOT "boston"). Calibration may add.
+      - strong_signals = [JWH only]. The longer forms ("John W. Henry & Company"
+        etc.) stay in verifying_signals because Henry's firm did employ analysts
+        who might file the full firm name. JWH is the industry abbreviation
+        almost exclusively used in the small set of people closely associated
+        with the firm.
+      - Anticipate noisy PROBABLE bucket (common name, two states, multi-entity).
+  by: "claude-code-research (orchestrated by alex)"
+  references:
+  - "/tmp/henry-john-research.md (session-local research file)"
+- date: 2026-05-22
+  change: |
+    Calibration round 1 (run_id dbcd04e1): the first ingestion produced
+    only 4 CONFIRMED — far below the expected ~$885K of historical giving.
+    Audit traced the gap to two issues:
 
-      (1) Classifier _norm() didn't strip periods, so signal "John W. Henry
-          and Company" did NOT substring-match record "JOHN W HENRY AND COMPANY
-          INC". This was fixed globally in scripts/resolve_entities.py (see
-          PROVENANCE_LOG SCHEMA_MIGRATION entry).
+    (1) Classifier _norm() didn't strip periods, so signal "John W. Henry
+        and Company" did NOT substring-match record "JOHN W HENRY AND COMPANY
+        INC". This was fixed globally in scripts/resolve_entities.py (see
+        PROVENANCE_LOG SCHEMA_MIGRATION entry).
 
-      (2) Two employer-string variants were missing from this YAML:
-          "John W. Henry and Co" (catches "JOHN W HENRY AND CO" filings,
-          common in early 2000s) and "John W. Henry Company" (catches
-          "JOHN W HENRY COMPANY" without "and"/&, also observed). Added.
+    (2) Two employer-string variants were missing from this YAML:
+        "John W. Henry and Co" (catches "JOHN W HENRY AND CO" filings,
+        common in early 2000s) and "John W. Henry Company" (catches
+        "JOHN W HENRY COMPANY" without "and"/&, also observed). Added.
 
-      (3) "boston" added to cities. Audit identified real Henry filings with
-          city=BOSTON (e.g., $50K to Boston Host Committee 2004 with JWH
-          employer). Adding "boston" lets these promote to CONFIRMED. Risk:
-          Boston is a populous city; other "John Henry"s there might
-          previously-UNCERTAIN now become PROBABLE. Mitigated because the
-          JWH strong_signal still requires that for CONFIRMED, and stand-alone
-          city_state will only get them to PROBABLE.
+    (3) "boston" added to cities. Audit identified real Henry filings with
+        city=BOSTON (e.g., $50K to Boston Host Committee 2004 with JWH
+        employer). Adding "boston" lets these promote to CONFIRMED. Risk:
+        Boston is a populous city; other "John Henry"s there might
+        previously-UNCERTAIN now become PROBABLE. Mitigated because the
+        JWH strong_signal still requires that for CONFIRMED, and stand-alone
+        city_state will only get them to PROBABLE.
 
-      Approved by alex.
-    by: "claude-code-session (calibration round 1)"
-  - date: 2026-05-25
-    change: |
-      Tier-B calibration round 2 — added strong_signals.zip_codes:
-      ["33496"] (Le Lac gated community per documented Tier 2) and a
-      new negative_signals.employers block with "CarGurus".
+    Approved by alex.
+  by: "claude-code-session (calibration round 1)"
+- date: 2026-05-25
+  change: |
+    Tier-B calibration round 2 — added strong_signals.zip_codes:
+    ["33496"] (Le Lac gated community per documented Tier 2) and a
+    new negative_signals.employers block with "CarGurus".
 
-      Audit (5 PROBABLE inspected, sample of 247 UNCERTAIN-open
-      reviewed):
+    Audit (5 PROBABLE inspected, sample of 247 UNCERTAIN-open
+    reviewed):
 
-      4 of 5 PROBABLE records at Boca Raton 33431/33496 are John W.
-      Henry with the John W. Henry & Co company name appearing in the
-      OCCUPATION field (instead of employer): "JOHN W HENRY COMPANIES",
-      "JOHN W HENRY & CO", "JOHN W HENRY AND CO". The classifier
-      matches occupation-field against vs_occupations only, so company
-      names in that field don't trigger employer matches. Adding 33496
-      promotes the 1 PROBABLE record there to CONFIRMED via strong-zip
-      (the 3 PROBABLE at 33431 stay PROBABLE — 33431 is broader and
-      name_variants include bare "John Henry" which over-confirms).
+    4 of 5 PROBABLE records at Boca Raton 33431/33496 are John W.
+    Henry with the John W. Henry & Co company name appearing in the
+    OCCUPATION field (instead of employer): "JOHN W HENRY COMPANIES",
+    "JOHN W HENRY & CO", "JOHN W HENRY AND CO". The classifier
+    matches occupation-field against vs_occupations only, so company
+    names in that field don't trigger employer matches. Adding 33496
+    promotes the 1 PROBABLE record there to CONFIRMED via strong-zip
+    (the 3 PROBABLE at 33431 stay PROBABLE — 33431 is broader and
+    name_variants include bare "John Henry" which over-confirms).
 
-      1 PROBABLE at Boston 02113 is a distinct doppelgänger: "HENRY,
-      JOHN / CARGURUS, INC. / SALES" $50 ActBlue. Added "CarGurus" to
-      a new negative_signals.employers block. Currently the record is
-      PROBABLE (Boston is in cities); the negative_signal demotes it
-      to UNCERTAIN.
+    1 PROBABLE at Boston 02113 is a distinct doppelgänger: "HENRY,
+    JOHN / CARGURUS, INC. / SALES" $50 ActBlue. Added "CarGurus" to
+    a new negative_signals.employers block. Currently the record is
+    PROBABLE (Boston is in cities); the negative_signal demotes it
+    to UNCERTAIN.
 
-      247 UNCERTAIN-open records (Holyoke / Weston / Milton MA, plus
-      Altamonte Springs / Naples / Pierson / Winter Park / Milton /
-      Venice FL) are left UNCERTAIN — most are different John Henrys
-      per the YAML's anticipated common-name doppelgänger pattern.
-      Adding city expansions would over-promote.
+    247 UNCERTAIN-open records (Holyoke / Weston / Milton MA, plus
+    Altamonte Springs / Naples / Pierson / Winter Park / Milton /
+    Venice FL) are left UNCERTAIN — most are different John Henrys
+    per the YAML's anticipated common-name doppelgänger pattern.
+    Adding city expansions would over-promote.
 
-      Pre-cal: 14 CONFIRMED / 5 PROBABLE / 247 UNCERTAIN-open. P/C 0.36.
-      Predicted post-cal: ~15 CONFIRMED / ~3 PROBABLE / ~247 UNCERTAIN
-      (1 CarGurus PROBABLE → UNCERTAIN). P/C ~0.20.
-    by: "claude-code-session (PR 4 Tier B, approved by alex)"
-    references:
-      - "data/master.db pre-calibration: 14 CONFIRMED / 5 PROBABLE / 247 UNCERTAIN-open"
+    Pre-cal: 14 CONFIRMED / 5 PROBABLE / 247 UNCERTAIN-open. P/C 0.36.
+    Predicted post-cal: ~15 CONFIRMED / ~3 PROBABLE / ~247 UNCERTAIN
+    (1 CarGurus PROBABLE → UNCERTAIN). P/C ~0.20.
+  by: "claude-code-session (PR 4 Tier B, approved by alex)"
+  references:
+  - "data/master.db pre-calibration: 14 CONFIRMED / 5 PROBABLE / 247 UNCERTAIN-open"
 
 audit:
   created: 2026-05-22
-  last_ingestion: null
+  last_ingestion: '2026-05-26'
   last_signal_review: 2026-05-25

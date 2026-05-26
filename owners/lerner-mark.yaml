@@ -12,58 +12,58 @@ team: Washington Nationals
 role: Principal owner
 status: pilot
 tenure_start_date: 2018-06-14    # MLB ownership meeting transition from father Ted
-tenure_end_date: null
+tenure_end_date:
 family_tenure_start_date: 2006-07-25    # Theodore N. Lerner family bought Nationals from MLB ($450M)
 
 name_variants:
-  - "Mark D Lerner"
-  - "Mark D. Lerner"
-  - "Mark Lerner"
-  - "Lerner, Mark"
-  - "Lerner, Mark D"
-  - "Lerner, Mark D."
+- "Mark D Lerner"
+- "Mark D. Lerner"
+- "Mark Lerner"
+- "Lerner, Mark"
+- "Lerner, Mark D"
+- "Lerner, Mark D."
 
 verifying_signals:
   cities:
-    - "chevy chase"
-    - "bethesda"
-    - "rockville"            # Lerner Enterprises HQ area
-    - "north bethesda"
+  - "chevy chase"
+  - "bethesda"
+  - "rockville"              # Lerner Enterprises HQ area
+  - "north bethesda"
     # Added 2026-05-25 Tier-B calibration. DC-area suburbs / weekend
     # spots where Mark D filed under his Lerner Enterprises strong signal:
     # Kensington MD (3 records), Stevensville MD Kent Island (2 records),
     # Potomac MD (1 record). NOT adding Baltimore / Pikesville — those
     # cluster around the "Mark Lerner at Chesapeake Partners" doppelgänger
     # (see negative_signals.employers below).
-    - "kensington"
-    - "stevensville"
-    - "potomac"
+  - "kensington"
+  - "stevensville"
+  - "potomac"
   states:
-    - "MD"
+  - "MD"
   employers:
     # NOTE: "Lerner Enterprises" and "Lerner Corporation" are in
     # strong_signals — not duplicated here per OWNER_SCHEMA.md rule 6.
-    - "Washington Nationals"
-    - "Nationals"
-    - "Lerner Family Foundation"
+  - "Washington Nationals"
+  - "Nationals"
+  - "Lerner Family Foundation"
     # Added 2026-05-25 — substring catches "LERNER CORP" / "THE LERNER
     # CORP" abbreviated form (strong-signal "Lerner Corporation" doesn't
     # substring-match the shortened form).
-    - "Lerner Corp"
+  - "Lerner Corp"
   occupations:
-    - "principal"
-    - "managing principal"
-    - "owner"
-    - "businessman"
-    - "real estate"
-    - "developer"
-    - "executive"
-    - "chairman"
+  - "principal"
+  - "managing principal"
+  - "owner"
+  - "businessman"
+  - "real estate"
+  - "developer"
+  - "executive"
+  - "chairman"
 
 strong_signals:
   employers:
-    - "Lerner Enterprises"    # near-uniquely associated with this family in DC
-    - "Lerner Corporation"
+  - "Lerner Enterprises"      # near-uniquely associated with this family in DC
+  - "Lerner Corporation"
   zip_codes: []
 
 negative_signals:
@@ -78,12 +78,12 @@ negative_signals:
   # Rockville / North Bethesda cities; they are now correctly demoted
   # to UNCERTAIN with explicit doppelgänger reason.
   employers:
-    - "Chesapeake Partners"
-    - "CP Management"
-    - "C.P. Management"
-    - "Chesepeake"               # observed typo of Chesapeake
-    - "Chesapeake Party"          # observed typo
-    - "CPMC"
+  - "Chesapeake Partners"
+  - "CP Management"
+  - "C.P. Management"
+  - "Chesepeake"                 # observed typo of Chesapeake
+  - "Chesapeake Party"            # observed typo
+  - "CPMC"
 
 related_entities: []
 # Future candidates (do NOT add without user approval per CLAUDE.md §1.7):
@@ -98,30 +98,30 @@ related_entities: []
 #     (Nationals Vice Chairman, separate individual with likely donor profile).
 
 sources:
-  - description: "Lerner Enterprises (corporate) — Mark D. Lerner Named Managing Principal Owner (June 14, 2018 MLB ownership meeting). Confirms full legal name and transition date"
-    url: "https://lerner.com/news/mark-d-lerner-named-managing-principal-owner/"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "MLB.com (Feb 19, 2024) — Lerner family no longer pursuing sale of Nationals. Sale process formally ended"
-    url: "https://www.mlb.com/news/lerner-family-not-selling-nationals-at-this-time"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "ESPN — 'Nationals no longer for sale, principal owner Mark Lerner says' (Feb 19, 2024). ~22 months on the market"
-    url: "https://www.espn.com/mlb/story/_/id/39558981/nationals-no-longer-sale-principal-owner-mark-lerner-says"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "ESPN (July 6, 2025) — Mark Lerner fires GM Mike Rizzo and manager Dave Martinez; statement under his name as Managing Principal Owner. Confirms operational control mid-2025"
-    url: "https://www.espn.com/mlb/story/_/id/45685308/washington-nationals-fire-dave-martinez-mike-rizzo"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "CNBC (March 13, 2026) — MLB valuations 2026 (Washington Nationals). Lerner family still ownership of record"
-    url: "https://www.cnbc.com/2026/03/13/mlb-valuations-2026-washington-nationals.html"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "GWU Alumni — Mark D. Lerner (BBA 1975). Full legal name and education"
-    url: "https://www.alumni.gwu.edu/mark-d-lerner"
-    accessed: "2026-05-23"
-    archive_url: ""
+- description: "Lerner Enterprises (corporate) — Mark D. Lerner Named Managing Principal Owner (June 14, 2018 MLB ownership meeting). Confirms full legal name and transition date"
+  url: "https://lerner.com/news/mark-d-lerner-named-managing-principal-owner/"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "MLB.com (Feb 19, 2024) — Lerner family no longer pursuing sale of Nationals. Sale process formally ended"
+  url: "https://www.mlb.com/news/lerner-family-not-selling-nationals-at-this-time"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "ESPN — 'Nationals no longer for sale, principal owner Mark Lerner says' (Feb 19, 2024). ~22 months on the market"
+  url: "https://www.espn.com/mlb/story/_/id/39558981/nationals-no-longer-sale-principal-owner-mark-lerner-says"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "ESPN (July 6, 2025) — Mark Lerner fires GM Mike Rizzo and manager Dave Martinez; statement under his name as Managing Principal Owner. Confirms operational control mid-2025"
+  url: "https://www.espn.com/mlb/story/_/id/45685308/washington-nationals-fire-dave-martinez-mike-rizzo"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "CNBC (March 13, 2026) — MLB valuations 2026 (Washington Nationals). Lerner family still ownership of record"
+  url: "https://www.cnbc.com/2026/03/13/mlb-valuations-2026-washington-nationals.html"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "GWU Alumni — Mark D. Lerner (BBA 1975). Full legal name and education"
+  url: "https://www.alumni.gwu.edu/mark-d-lerner"
+  accessed: "2026-05-23"
+  archive_url: ""
 
 notes: |
   Mark D. Lerner — Managing Principal Owner of the Washington Nationals
@@ -153,66 +153,66 @@ notes: |
   their giving into Mark's totals (CLAUDE.md §1.7).
 
 change_log:
-  - date: 2026-05-23
-    change: |
-      Created during Phase 2 batch 3. Tier 2 sources: Lerner Enterprises
-      (corporate), MLB.com, ESPN (multiple), CNBC, GWU Alumni.
-      tenure_start_date = 2018-06-14. Strong_signals: "Lerner Enterprises"
-      + "Lerner Corporation". NY-based Dr. Mark D. Lerner (psychologist)
-      doppelganger flagged — relying on address contradiction check;
-      calibrate negative_signals after first ingestion if needed.
-    by: "claude-code-research (orchestrated by alex)"
-    references:
-      - "/tmp/lerner-mark-research.md (session-local research file)"
-  - date: 2026-05-25
-    change: |
-      Tier-B calibration round 1 — identified the "Mark Lerner at
-      Chesapeake Partners" doppelgänger as the dominant feature of the
-      163 UNCERTAIN-open queue, added cities for legitimate Mark D
-      records previously caught by address-contradicts, and added a
-      negative_signals.employers block for the doppelgänger family.
+- date: 2026-05-23
+  change: |
+    Created during Phase 2 batch 3. Tier 2 sources: Lerner Enterprises
+    (corporate), MLB.com, ESPN (multiple), CNBC, GWU Alumni.
+    tenure_start_date = 2018-06-14. Strong_signals: "Lerner Enterprises"
+    + "Lerner Corporation". NY-based Dr. Mark D. Lerner (psychologist)
+    doppelganger flagged — relying on address contradiction check;
+    calibrate negative_signals after first ingestion if needed.
+  by: "claude-code-research (orchestrated by alex)"
+  references:
+  - "/tmp/lerner-mark-research.md (session-local research file)"
+- date: 2026-05-25
+  change: |
+    Tier-B calibration round 1 — identified the "Mark Lerner at
+    Chesapeake Partners" doppelgänger as the dominant feature of the
+    163 UNCERTAIN-open queue, added cities for legitimate Mark D
+    records previously caught by address-contradicts, and added a
+    negative_signals.employers block for the doppelgänger family.
 
-      Audit (raw-payload review of all 163 UNCERTAIN-open):
+    Audit (raw-payload review of all 163 UNCERTAIN-open):
 
-      Doppelgänger: 143 records (117 BALTIMORE + 26 PIKESVILLE MD) are
-      a distinct "Mark Lerner" at Chesapeake Partners / CP Management
-      LLC / C.P. Management L.L.C. / Chesepeake Partners (typo) /
-      Chesapeake Party (typo) / Chesapeake Partners Management / CPMC,
-      with occupations PARTNER / INVESTMENT MANAGER / INVESTOR / FINANCIAL
-      MANAGER. Baltimore investment-manager profile incompatible with
-      Mark D. Lerner of Lerner Enterprises. Three records were leaking
-      into Mark D's PROBABLE bucket: 2 Chesapeake Partners at Rockville
-      + 1 Chesapeake Partners Management at North Bethesda — these now
-      demote to UNCERTAIN with explicit "negative employer signal"
-      reason via the new negative_signals block.
+    Doppelgänger: 143 records (117 BALTIMORE + 26 PIKESVILLE MD) are
+    a distinct "Mark Lerner" at Chesapeake Partners / CP Management
+    LLC / C.P. Management L.L.C. / Chesepeake Partners (typo) /
+    Chesapeake Party (typo) / Chesapeake Partners Management / CPMC,
+    with occupations PARTNER / INVESTMENT MANAGER / INVESTOR / FINANCIAL
+    MANAGER. Baltimore investment-manager profile incompatible with
+    Mark D. Lerner of Lerner Enterprises. Three records were leaking
+    into Mark D's PROBABLE bucket: 2 Chesapeake Partners at Rockville
+    + 1 Chesapeake Partners Management at North Bethesda — these now
+    demote to UNCERTAIN with explicit "negative employer signal"
+    reason via the new negative_signals block.
 
-      Legitimate Mark D records previously UNCERTAIN-via-address:
-        - 3 KENSINGTON MD records, all "Mark Lerner" / Lerner
-          Enterprises / Owner. Kensington is a DC-Bethesda-adjacent
-          suburb. Added "kensington" to cities.
-        - 2 STEVENSVILLE MD records (Kent Island vacation area), one
-          Lerner Enterprises / Executive, one The Lerner Companies /
-          Investment Manager. Added "stevensville" to cities.
-        - 1 POTOMAC MD record, Lerner Enterprises / Real Estate
-          Developer. Added "potomac" to cities.
+    Legitimate Mark D records previously UNCERTAIN-via-address:
+      - 3 KENSINGTON MD records, all "Mark Lerner" / Lerner
+        Enterprises / Owner. Kensington is a DC-Bethesda-adjacent
+        suburb. Added "kensington" to cities.
+      - 2 STEVENSVILLE MD records (Kent Island vacation area), one
+        Lerner Enterprises / Executive, one The Lerner Companies /
+        Investment Manager. Added "stevensville" to cities.
+      - 1 POTOMAC MD record, Lerner Enterprises / Real Estate
+        Developer. Added "potomac" to cities.
 
-      The 1 Gaithersburg UNCERTAIN ("MARK LERNER" / employer "GOD" /
-      occupation "NONSECTARIAN BIBLICAL SPECIALIST" / $1 donation) is
-      clearly a distinct person — not adding "gaithersburg" to cities.
+    The 1 Gaithersburg UNCERTAIN ("MARK LERNER" / employer "GOD" /
+    occupation "NONSECTARIAN BIBLICAL SPECIALIST" / $1 donation) is
+    clearly a distinct person — not adding "gaithersburg" to cities.
 
-      Also added "Lerner Corp" to verifying_signals.employers — the
-      strong-signal "Lerner Corporation" doesn't substring-match the
-      observed shortened form "THE LERNER CORP" (1 PROBABLE record).
+    Also added "Lerner Corp" to verifying_signals.employers — the
+    strong-signal "Lerner Corporation" doesn't substring-match the
+    observed shortened form "THE LERNER CORP" (1 PROBABLE record).
 
-      Pre-cal: 62 CONFIRMED / 13 PROBABLE / 163 UNCERTAIN-open. P/C 0.21.
-      Predicted post-cal: ~68 CONFIRMED / ~9 PROBABLE / 163 UNCERTAIN
-      (composition changes: -3 leaking PROBABLE move to UNCERTAIN with
-      better tagging; +6 UNCERTAIN move to CONFIRMED). P/C ~0.13.
-    by: "claude-code-session (PR 4 Tier B, approved by alex)"
-    references:
-      - "data/master.db pre-calibration: 62 CONFIRMED / 13 PROBABLE / 163 UNCERTAIN-open"
+    Pre-cal: 62 CONFIRMED / 13 PROBABLE / 163 UNCERTAIN-open. P/C 0.21.
+    Predicted post-cal: ~68 CONFIRMED / ~9 PROBABLE / 163 UNCERTAIN
+    (composition changes: -3 leaking PROBABLE move to UNCERTAIN with
+    better tagging; +6 UNCERTAIN move to CONFIRMED). P/C ~0.13.
+  by: "claude-code-session (PR 4 Tier B, approved by alex)"
+  references:
+  - "data/master.db pre-calibration: 62 CONFIRMED / 13 PROBABLE / 163 UNCERTAIN-open"
 
 audit:
   created: 2026-05-23
-  last_ingestion: null
+  last_ingestion: '2026-05-26'
   last_signal_review: 2026-05-25

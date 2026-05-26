@@ -14,46 +14,46 @@ team: Colorado Rockies
 role: Principal owner
 status: pilot
 tenure_start_date: 2011-01-01    # Chairman/CEO; family control of franchise since 2005
-tenure_end_date: null
+tenure_end_date:
 family_tenure_start_date: 2005-01-01    # Monfort family acquired controlling stake from Jerry McMorris
 
 name_variants:
-  - "Richard L Monfort"
-  - "Richard L. Monfort"
-  - "Richard Monfort"
-  - "Dick Monfort"
-  - "Monfort, Richard"
-  - "Monfort, Richard L"
-  - "Monfort, Richard L."
-  - "Monfort, Dick"
+- "Richard L Monfort"
+- "Richard L. Monfort"
+- "Richard Monfort"
+- "Dick Monfort"
+- "Monfort, Richard"
+- "Monfort, Richard L"
+- "Monfort, Richard L."
+- "Monfort, Dick"
 
 verifying_signals:
   cities:
-    - "denver"
-    - "greeley"              # family base; brother Charlie's primary residence
-    - "eaton"                # ZIP 80615 spans Eaton/Greeley/Kersey; FEC clerks fill either city (audit 2026-05-25)
-    - "greenley"             # FEC clerk typo of "Greeley" (1 record observed)
+  - "denver"
+  - "greeley"                # family base; brother Charlie's primary residence
+  - "eaton"                  # ZIP 80615 spans Eaton/Greeley/Kersey; FEC clerks fill either city (audit 2026-05-25)
+  - "greenley"               # FEC clerk typo of "Greeley" (1 record observed)
   states:
-    - "CO"
+  - "CO"
   employers:
-    - "Colorado Rockies"
-    - "Colorado Rockies Baseball"
-    - "Monfort"              # generic family substring (caught via substring match)
-    - "Montera Cattle"       # co-founded 1996 post-ConAgra retirement
-    - "ConAgra"              # 1991-1995 ConAgra Red Meats CEO (historical)
-    - "Monfort of Colorado"  # pre-1987 (acquired by ConAgra 1987)
+  - "Colorado Rockies"
+  - "Colorado Rockies Baseball"
+  - "Monfort"                # generic family substring (caught via substring match)
+  - "Montera Cattle"         # co-founded 1996 post-ConAgra retirement
+  - "ConAgra"                # 1991-1995 ConAgra Red Meats CEO (historical)
+  - "Monfort of Colorado"    # pre-1987 (acquired by ConAgra 1987)
   occupations:
-    - "owner"
-    - "chairman"
-    - "ceo"
-    - "executive"
-    - "businessman"
-    - "rancher"
-    - "cattleman"
+  - "owner"
+  - "chairman"
+  - "ceo"
+  - "executive"
+  - "businessman"
+  - "rancher"
+  - "cattleman"
 
 strong_signals:
   employers:
-    - "West Lot LLC"          # Westword + Denver Gazette name Dick as principal; McGregor Square dev
+  - "West Lot LLC"            # Westword + Denver Gazette name Dick as principal; McGregor Square dev
   zip_codes:
     # Monfort family base ZIPs in NW Colorado. Promoted in Tier-B calibration
     # round 1 (2026-05-25) after the deceased-relative doppelgänger reference
@@ -65,9 +65,9 @@ strong_signals:
     # 80202 (Denver/McGregor Square) deliberately NOT added — heavy downtown
     # office ZIP; the employer signal already CONFIRMS the 7 Rockies-employer
     # records there.
-    - "80631"                 # Greeley (11 CONFIRMED + 26 PROBABLE pre-cal)
-    - "80632"                 # Greeley (25 CONFIRMED + 14 PROBABLE pre-cal)
-    - "80615"                 # Eaton/Greeley (ZIP spans both labels; 13 CONFIRMED + 1 PROBABLE pre-cal)
+  - "80631"                   # Greeley (11 CONFIRMED + 26 PROBABLE pre-cal)
+  - "80632"                   # Greeley (25 CONFIRMED + 14 PROBABLE pre-cal)
+  - "80615"                   # Eaton/Greeley (ZIP spans both labels; 13 CONFIRMED + 1 PROBABLE pre-cal)
   # "Colorado Rockies" stays in verifying — team employees would also report it.
 
 related_entities: []
@@ -83,30 +83,30 @@ related_entities: []
 #   - spouse: Karen Monfort — political activity not documented in Tier 2.
 
 sources:
-  - description: "MLB.com — Executive Bio: Richard L. Monfort (Colorado Rockies front office). Title and tenure"
-    url: "https://www.mlb.com/rockies/team/front-office/executive-bio/richard-monfort"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "UCHealth — Richard L. Monfort committee member. Full title, education, business holdings (Hyatt Regency Indian Wells, Montera Cattle Co.), children's names"
-    url: "https://www.uchealth.org/leadership/richard-l-monfort/"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "Denver Westword — 'Every Property Connected to the Monfort Family in Denver.' Documents McGregor Square as West Lot LLC with Dick Monfort as principal; clarifies Dick vs nephew Kenny's holdings"
-    url: "https://www.westword.com/news/every-property-connected-to-the-monfort-family-in-denver-24843171/"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "Front Office Sports (April 2026) — 'Billionaire Broncos Owners Buy 40% of Rockies.' Penner Sports Group acquisition; Dick Monfort remains Chairman/CEO"
-    url: "https://frontofficesports.com/billionaire-broncos-owners-buy-40-of-rockies/"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "Denver Gazette / Mark Kiszla column (April 2026) — Monfort brothers / 40% stake to Penners. Confirms post-deal control structure"
-    url: "https://www.denvergazette.com/2026/04/11/mark-kiszla-monfort-brothers-confronted-a-break-up-before-selling-40-stake-to-broncos-owners/"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "ESPN (June 2025) — Walker Monfort promotion confirms Dick as owner/chairman/CEO and Walker as son"
-    url: "https://www.espn.com/mlb/story/_/id/45590696/rockies-promote-owner-son-walker-monfort-leadership-role"
-    accessed: "2026-05-23"
-    archive_url: ""
+- description: "MLB.com — Executive Bio: Richard L. Monfort (Colorado Rockies front office). Title and tenure"
+  url: "https://www.mlb.com/rockies/team/front-office/executive-bio/richard-monfort"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "UCHealth — Richard L. Monfort committee member. Full title, education, business holdings (Hyatt Regency Indian Wells, Montera Cattle Co.), children's names"
+  url: "https://www.uchealth.org/leadership/richard-l-monfort/"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "Denver Westword — 'Every Property Connected to the Monfort Family in Denver.' Documents McGregor Square as West Lot LLC with Dick Monfort as principal; clarifies Dick vs nephew Kenny's holdings"
+  url: "https://www.westword.com/news/every-property-connected-to-the-monfort-family-in-denver-24843171/"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "Front Office Sports (April 2026) — 'Billionaire Broncos Owners Buy 40% of Rockies.' Penner Sports Group acquisition; Dick Monfort remains Chairman/CEO"
+  url: "https://frontofficesports.com/billionaire-broncos-owners-buy-40-of-rockies/"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "Denver Gazette / Mark Kiszla column (April 2026) — Monfort brothers / 40% stake to Penners. Confirms post-deal control structure"
+  url: "https://www.denvergazette.com/2026/04/11/mark-kiszla-monfort-brothers-confronted-a-break-up-before-selling-40-stake-to-broncos-owners/"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "ESPN (June 2025) — Walker Monfort promotion confirms Dick as owner/chairman/CEO and Walker as son"
+  url: "https://www.espn.com/mlb/story/_/id/45590696/rockies-promote-owner-son-walker-monfort-leadership-role"
+  accessed: "2026-05-23"
+  archive_url: ""
 
 notes: |
   Richard L. ("Dick") Monfort (b. 1954) — Owner / Managing General Partner /
@@ -145,110 +145,110 @@ notes: |
   all 16 EATON-labeled UNCERTAIN records and confirmed the pattern.
 
 change_log:
-  - date: 2026-05-23
-    change: |
-      Created during Phase 2 batch 3. Tier 2 sources: MLB.com bio, UCHealth
-      committee listing, Westword, Front Office Sports, Denver Gazette
-      (Kiszla), ESPN. tenure_start_date = 2011-01-01 (year-precision; specific
-      chairman/CEO transition day not documented). Strong_signal = "West Lot
-      LLC" (Westword + Denver Gazette both name Dick as principal).
-    by: "claude-code-research (orchestrated by alex)"
-    references:
-      - "/tmp/monfort-dick-research.md (session-local research file)"
-  - date: 2026-05-25
-    change: |
-      Tier-A calibration round 1. Two city additions plus a notes correction.
+- date: 2026-05-23
+  change: |
+    Created during Phase 2 batch 3. Tier 2 sources: MLB.com bio, UCHealth
+    committee listing, Westword, Front Office Sports, Denver Gazette
+    (Kiszla), ESPN. tenure_start_date = 2011-01-01 (year-precision; specific
+    chairman/CEO transition day not documented). Strong_signal = "West Lot
+    LLC" (Westword + Denver Gazette both name Dick as principal).
+  by: "claude-code-research (orchestrated by alex)"
+  references:
+  - "/tmp/monfort-dick-research.md (session-local research file)"
+- date: 2026-05-25
+  change: |
+    Tier-A calibration round 1. Two city additions plus a notes correction.
 
-      Audit traced the 17 UNCERTAIN records (16 EATON + 1 GREENLEY) and
-      inspected all 10 raw payloads recoverable from data/raw/monfort-dick/.
-      Every record was Dick Monfort: donor names "MONFORT, DICK", "MONFORT,
-      RICHARD", or variants; employers "COLORADO ROCKIES" / "COLORADO ROCKIES
-      BASEBALL" / "COLORADO ROCKIES/OWNER"; occupations "OWNER", "OWNER/CEO",
-      "OWNER & CEO", or "VICE CHAIRMAN" (2012-13 records — title transition
-      ambiguity). All went to Republican recipients (consistent with Dick's
-      filing history).
+    Audit traced the 17 UNCERTAIN records (16 EATON + 1 GREENLEY) and
+    inspected all 10 raw payloads recoverable from data/raw/monfort-dick/.
+    Every record was Dick Monfort: donor names "MONFORT, DICK", "MONFORT,
+    RICHARD", or variants; employers "COLORADO ROCKIES" / "COLORADO ROCKIES
+    BASEBALL" / "COLORADO ROCKIES/OWNER"; occupations "OWNER", "OWNER/CEO",
+    "OWNER & CEO", or "VICE CHAIRMAN" (2012-13 records — title transition
+    ambiguity). All went to Republican recipients (consistent with Dick's
+    filing history).
 
-      Root cause: ZIP 80615 spans both Greeley and Eaton labels in USPS; FEC
-      clerks fill either city for the same physical address. Without "eaton"
-      in verifying_signals.cities, those records hit the city/state-outside-
-      documented-residences UNCERTAIN rule despite having Colorado Rockies as
-      employer.
+    Root cause: ZIP 80615 spans both Greeley and Eaton labels in USPS; FEC
+    clerks fill either city for the same physical address. Without "eaton"
+    in verifying_signals.cities, those records hit the city/state-outside-
+    documented-residences UNCERTAIN rule despite having Colorado Rockies as
+    employer.
 
-      Changes:
-        1. Added "eaton" to verifying_signals.cities — 16 UNCERTAINs move out
-           of review queue (most should land in CONFIRMED via city+state +
-           employer:Colorado Rockies = 2 signals).
-        2. Added "greenley" (typo of Greeley) — 1 UNCERTAIN moves.
+    Changes:
+      1. Added "eaton" to verifying_signals.cities — 16 UNCERTAINs move out
+         of review queue (most should land in CONFIRMED via city+state +
+         employer:Colorado Rockies = 2 signals).
+      2. Added "greenley" (typo of Greeley) — 1 UNCERTAIN moves.
 
-      Notes correction: removed the "Other Dick Monfort doppelgänger" warning
-      from the notes block. Alex clarified that the Calf News reference is to
-      an older deceased relative (not a living/active doppelgänger), and is
-      not present in the FEC 2000+ window in any meaningful way.
+    Notes correction: removed the "Other Dick Monfort doppelgänger" warning
+    from the notes block. Alex clarified that the Calf News reference is to
+    an older deceased relative (not a living/active doppelgänger), and is
+    not present in the FEC 2000+ window in any meaningful way.
 
-      Pre-cal: 45 CONFIRMED / 40 PROBABLE / 17 UNCERTAIN-open.
+    Pre-cal: 45 CONFIRMED / 40 PROBABLE / 17 UNCERTAIN-open.
 
-      Follow-up consideration (NOT in this round; flagged for alex review):
-      with the doppelgänger concern removed, the Greeley ZIPs (80631 / 80632 /
-      80615) are candidates for strong_signals.zip_codes promotion — they
-      would CONFIRM ~36 PROBABLE Greeley records that currently have generic
-      SELF / SELF-EMPLOYED / INVESTOR employers but match donor name + city.
-    by: "claude-code-session (PR 4 Tier A, approved by alex)"
-    references:
-      - "data/master.db pre-calibration: 45 CONFIRMED / 40 PROBABLE / 17 UNCERTAIN-open"
-  - date: 2026-05-25
-    change: |
-      Tier-B calibration round 1 — promoted Greeley/Eaton ZIPs to
-      strong_signals.zip_codes, completing the follow-up flagged at the end
-      of the 2026-05-25 Tier-A entry above.
+    Follow-up consideration (NOT in this round; flagged for alex review):
+    with the doppelgänger concern removed, the Greeley ZIPs (80631 / 80632 /
+    80615) are candidates for strong_signals.zip_codes promotion — they
+    would CONFIRM ~36 PROBABLE Greeley records that currently have generic
+    SELF / SELF-EMPLOYED / INVESTOR employers but match donor name + city.
+  by: "claude-code-session (PR 4 Tier A, approved by alex)"
+  references:
+  - "data/master.db pre-calibration: 45 CONFIRMED / 40 PROBABLE / 17 UNCERTAIN-open"
+- date: 2026-05-25
+  change: |
+    Tier-B calibration round 1 — promoted Greeley/Eaton ZIPs to
+    strong_signals.zip_codes, completing the follow-up flagged at the end
+    of the 2026-05-25 Tier-A entry above.
 
-      Added strong_signals.zip_codes: ["80631", "80632", "80615"]. All three
-      are Monfort family base ZIPs in NW Colorado.
+    Added strong_signals.zip_codes: ["80631", "80632", "80615"]. All three
+    are Monfort family base ZIPs in NW Colorado.
 
-      Audit findings (read-only audit + raw payload inspection): all 42 pre-
-      cal PROBABLE records were inspected. 40 of 42 (95%) are at Greeley
-      ZIPs (80631: 26 records; 80632: 13 records; 80631-9-4-2-8 ZIP+4: 3
-      records, ZIP5 = 80631). 1 record at 80615 (Eaton), 1 record at 80202
-      (Denver), 1 record at 80632 (city-misspelled as "GREENLEY"). Every
-      Greeley/Eaton PROBABLE is a "MONFORT, RICHARD" / "MONFORT, DICK" /
-      "MONFORT, RICHARD L." filing with generic employer strings (SELF,
-      SELF-EMPLOYED, INVESTOR, INFO REQUESTED, BUSINESS OWNER, SELF/CATTLE
-      FEEDING, or blank). Recipient pattern matches the CONFIRMED records:
-      Bush-Cheney 2000/2004, RNC, NRSC, NRCC, Bedingfield, Musgrave, Allard,
-      Pete Coors, Conrad Burns, Dinsdale, Lazio — consistent Republican
-      filing history.
+    Audit findings (read-only audit + raw payload inspection): all 42 pre-
+    cal PROBABLE records were inspected. 40 of 42 (95%) are at Greeley
+    ZIPs (80631: 26 records; 80632: 13 records; 80631-9-4-2-8 ZIP+4: 3
+    records, ZIP5 = 80631). 1 record at 80615 (Eaton), 1 record at 80202
+    (Denver), 1 record at 80632 (city-misspelled as "GREENLEY"). Every
+    Greeley/Eaton PROBABLE is a "MONFORT, RICHARD" / "MONFORT, DICK" /
+    "MONFORT, RICHARD L." filing with generic employer strings (SELF,
+    SELF-EMPLOYED, INVESTOR, INFO REQUESTED, BUSINESS OWNER, SELF/CATTLE
+    FEEDING, or blank). Recipient pattern matches the CONFIRMED records:
+    Bush-Cheney 2000/2004, RNC, NRSC, NRCC, Bedingfield, Musgrave, Allard,
+    Pete Coors, Conrad Burns, Dinsdale, Lazio — consistent Republican
+    filing history.
 
-      Doppelgänger safety:
-        - notes block (updated 2026-05-25 Tier A) documents no active
-          doppelgänger. The Calf News "Other Dick Monfort" reference is a
-          deceased older relative, not a living/active filer.
-        - name_variants are tight: every variant requires "Richard" or
-          "Dick" as the full first name. Brother Charles K. ("Charlie")
-          Monfort has a distinct first name and is not picked up.
-        - Sons Walker, Sterling, and daughter Lyndsey have first-name
-          firewall.
+    Doppelgänger safety:
+      - notes block (updated 2026-05-25 Tier A) documents no active
+        doppelgänger. The Calf News "Other Dick Monfort" reference is a
+        deceased older relative, not a living/active filer.
+      - name_variants are tight: every variant requires "Richard" or
+        "Dick" as the full first name. Brother Charles K. ("Charlie")
+        Monfort has a distinct first name and is not picked up.
+      - Sons Walker, Sterling, and daughter Lyndsey have first-name
+        firewall.
 
-      80202 (Denver/McGregor Square) deliberately NOT promoted despite
-      being Dick's documented primary residence per the notes block. 80202
-      is heavy LoDo office ZIP territory and matches the system-prompt
-      footgun warning about office-building strong-signal ZIPs. The single
-      80202 PROBABLE record (Joe O'Dea for Senate, $1000, 2022) remains
-      PROBABLE; the 7 existing 80202 CONFIRMED records (all with employer
-      "Colorado Rockies") are unaffected.
+    80202 (Denver/McGregor Square) deliberately NOT promoted despite
+    being Dick's documented primary residence per the notes block. 80202
+    is heavy LoDo office ZIP territory and matches the system-prompt
+    footgun warning about office-building strong-signal ZIPs. The single
+    80202 PROBABLE record (Joe O'Dea for Senate, $1000, 2022) remains
+    PROBABLE; the 7 existing 80202 CONFIRMED records (all with employer
+    "Colorado Rockies") are unaffected.
 
-      "INFO REQUESTED" employer (2 PROBABLE records) audit-suggested as
-      candidate negative_signal — investigated and rejected. It is FEC
-      clerk shorthand for missing/requested info, not a real employer
-      string; the records are Dick (Greeley, Republican recipients).
+    "INFO REQUESTED" employer (2 PROBABLE records) audit-suggested as
+    candidate negative_signal — investigated and rejected. It is FEC
+    clerk shorthand for missing/requested info, not a real employer
+    string; the records are Dick (Greeley, Republican recipients).
 
-      Pre-cal: 60 CONFIRMED / 42 PROBABLE / 0 UNCERTAIN-open. P/C ratio 0.70.
-      Predicted post-cal: ~98 CONFIRMED / ~4 PROBABLE / 0 UNCERTAIN-open.
-      P/C ratio drops to ~0.04. CONFIRMED count goes up (positive swing
-      only) so no >5% CONFIRMED-drop alarm risk.
-    by: "claude-code-session (PR 4 Tier B, approved by alex)"
-    references:
-      - "data/master.db pre-calibration: 60 CONFIRMED / 42 PROBABLE / 0 UNCERTAIN-open"
+    Pre-cal: 60 CONFIRMED / 42 PROBABLE / 0 UNCERTAIN-open. P/C ratio 0.70.
+    Predicted post-cal: ~98 CONFIRMED / ~4 PROBABLE / 0 UNCERTAIN-open.
+    P/C ratio drops to ~0.04. CONFIRMED count goes up (positive swing
+    only) so no >5% CONFIRMED-drop alarm risk.
+  by: "claude-code-session (PR 4 Tier B, approved by alex)"
+  references:
+  - "data/master.db pre-calibration: 60 CONFIRMED / 42 PROBABLE / 0 UNCERTAIN-open"
 
 audit:
   created: 2026-05-23
-  last_ingestion: null
+  last_ingestion: '2026-05-26'
   last_signal_review: 2026-05-25
