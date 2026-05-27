@@ -21,53 +21,53 @@ team: Atlanta Braves
 role: Principal shareholder (largest economic + voting interest)
 status: pilot
 tenure_start_date: 2007-05-16    # Liberty Media completed Braves acquisition from Time Warner via swap
-tenure_end_date: null
+tenure_end_date:
 
 name_variants:
-  - "John C Malone"
-  - "John C. Malone"
-  - "John Malone"
-  - "John Carl Malone"
-  - "Malone, John"
-  - "Malone, John C"
-  - "Malone, John C."
+- "John C Malone"
+- "John C. Malone"
+- "John Malone"
+- "John Carl Malone"
+- "Malone, John"
+- "Malone, John C"
+- "Malone, John C."
 
 verifying_signals:
   cities:
-    - "elizabeth"           # Elizabeth, CO (Elbert County) primary residence
-    - "englewood"           # Liberty Media office; some filings may use office address
+  - "elizabeth"             # Elizabeth, CO (Elbert County) primary residence
+  - "englewood"             # Liberty Media office; some filings may use office address
   states:
-    - "CO"
+  - "CO"
   employers:
     # Liberty Media is his dominant employer string but is shared with many
     # Liberty employees; combination of Liberty + Elizabeth CO is the
     # disambiguator.
-    - "Liberty Media"
-    - "Liberty Media Corporation"
-    - "Liberty Media Corp"
-    - "Liberty Broadband"
-    - "Liberty Broadband Corporation"
-    - "Liberty Global"
-    - "Liberty Global PLC"
-    - "Liberty Latin America"
-    - "Liberty TripAdvisor"
-    - "Atlanta Braves Holdings"
-    - "QVC Group"
-    - "Qurate Retail"
-    - "Charter Communications"     # director until July 2018; director emeritus
-    - "Discovery"
-    - "Warner Bros Discovery"
-    - "Tele-Communications Inc"     # TCI; historical (1973-1996)
-    - "TCI"                         # historical
+  - "Liberty Media"
+  - "Liberty Media Corporation"
+  - "Liberty Media Corp"
+  - "Liberty Broadband"
+  - "Liberty Broadband Corporation"
+  - "Liberty Global"
+  - "Liberty Global PLC"
+  - "Liberty Latin America"
+  - "Liberty TripAdvisor"
+  - "Atlanta Braves Holdings"
+  - "QVC Group"
+  - "Qurate Retail"
+  - "Charter Communications"       # director until July 2018; director emeritus
+  - "Discovery"
+  - "Warner Bros Discovery"
+  - "Tele-Communications Inc"       # TCI; historical (1973-1996)
+  - "TCI"                           # historical
   occupations:
-    - "chairman"
-    - "chairman emeritus"
-    - "ceo"
-    - "executive"
-    - "investor"
-    - "businessman"
-    - "self-employed"
-    - "retired"
+  - "chairman"
+  - "chairman emeritus"
+  - "ceo"
+  - "executive"
+  - "investor"
+  - "businessman"
+  - "self-employed"
+  - "retired"
 
 strong_signals:
   employers: []
@@ -80,8 +80,8 @@ strong_signals:
     # mega-donor pattern 2003-2023) promote to CONFIRMED.
     # 80112 caveat: Liberty Media office cluster — name_variants ("John C."
     # middle initial required) is the firewall. Approved by alex.
-    - "80107"
-    - "80112"
+  - "80107"
+  - "80112"
 
 related_entities: []
 # Future candidates (do NOT add without user approval per CLAUDE.md §1.7):
@@ -94,26 +94,26 @@ related_entities: []
 #     signals.employers strings.
 
 sources:
-  - description: "Atlanta Braves Holdings IR — Board of Directors. Confirms John Malone NOT on the ABH board as of May 2026 (board: McGuirk, Deevy, Lucas, Murphy)"
-    url: "https://www.bravesholdings.com/about/board-of-directors"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "Atlanta Braves Holdings SC 13D (2023 split-off) — Malone beneficial ownership"
-    url: "https://www.sec.gov/Archives/edgar/data/0001958140/000110465923082463/tm2321313d2_sc13d.htm"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "Liberty Media press release — John C. Malone to transition to Chairman Emeritus of Liberty Media (effective Jan 1, 2026; Robert R. 'Dob' Bennett assumes chairmanship)"
-    url: "https://www.libertymedia.com/news/detail/570/john-c-malone-to-transition-to-chairman-emeritus-of"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "Atlanta Journal-Constitution (Nov 7, 2024) — Malone grants McGuirk proxy to vote 887,079 Series B shares (~44% voting power) on routine matters"
-    url: "https://www.ajc.com/sports/atlanta-braves/john-malone-gives-terry-mcguirk-more-power-with-atlanta-braves/B3HXGRCMVZBGNLSY3LXBQCV6UM/"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "Bloomberg Billionaires Index — John C. Malone profile. Confirms Elizabeth CO residence; major holdings across Liberty entities"
-    url: "https://www.bloomberg.com/billionaires/profiles/john-c-malone/"
-    accessed: "2026-05-23"
-    archive_url: ""
+- description: "Atlanta Braves Holdings IR — Board of Directors. Confirms John Malone NOT on the ABH board as of May 2026 (board: McGuirk, Deevy, Lucas, Murphy)"
+  url: "https://www.bravesholdings.com/about/board-of-directors"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "Atlanta Braves Holdings SC 13D (2023 split-off) — Malone beneficial ownership"
+  url: "https://www.sec.gov/Archives/edgar/data/0001958140/000110465923082463/tm2321313d2_sc13d.htm"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "Liberty Media press release — John C. Malone to transition to Chairman Emeritus of Liberty Media (effective Jan 1, 2026; Robert R. 'Dob' Bennett assumes chairmanship)"
+  url: "https://www.libertymedia.com/news/detail/570/john-c-malone-to-transition-to-chairman-emeritus-of"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "Atlanta Journal-Constitution (Nov 7, 2024) — Malone grants McGuirk proxy to vote 887,079 Series B shares (~44% voting power) on routine matters"
+  url: "https://www.ajc.com/sports/atlanta-braves/john-malone-gives-terry-mcguirk-more-power-with-atlanta-braves/B3HXGRCMVZBGNLSY3LXBQCV6UM/"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "Bloomberg Billionaires Index — John C. Malone profile. Confirms Elizabeth CO residence; major holdings across Liberty entities"
+  url: "https://www.bloomberg.com/billionaires/profiles/john-c-malone/"
+  accessed: "2026-05-23"
+  archive_url: ""
 
 notes: |
   John Carl Malone, Ph.D. (b. 1941-03-07). Cable / media mogul; longtime
@@ -163,53 +163,53 @@ notes: |
   Malone the individual.
 
 change_log:
-  - date: 2026-05-23
-    change: |
-      Created during Phase 2 special-case batch. Per user direction (Davis-
-      Simpson-style separate slugs for Braves co-principals), tracking
-      Malone as the major-shareholder co-principal alongside Terry McGuirk
-      (mcguirk-terry.yaml). Tier 2 sources: ABH IR; ABH SC 13D 2023;
-      Liberty Media press release on Malone Chairman-Emeritus transition;
-      AJC Nov 2024; Bloomberg Billionaires Index. tenure_start_date =
-      2007-05-16 (Liberty Media completed Braves acquisition from Time
-      Warner). strong_signals empty at creation — calibrate via post-
-      ingestion audit (Elizabeth CO ZIP cluster expected).
-    by: "claude-code-research (orchestrated by alex)"
-    references:
-      - "/tmp/braves-ownership-research.md (session-local research file)"
-  - date: 2026-05-25
-    change: |
-      Tier-B calibration round 1 — added strong_signals.zip_codes:
-      ["80107", "80112"] (his Elizabeth CO private ranch and Liberty
-      Media Englewood office).
+- date: 2026-05-23
+  change: |
+    Created during Phase 2 special-case batch. Per user direction (Davis-
+    Simpson-style separate slugs for Braves co-principals), tracking
+    Malone as the major-shareholder co-principal alongside Terry McGuirk
+    (mcguirk-terry.yaml). Tier 2 sources: ABH IR; ABH SC 13D 2023;
+    Liberty Media press release on Malone Chairman-Emeritus transition;
+    AJC Nov 2024; Bloomberg Billionaires Index. tenure_start_date =
+    2007-05-16 (Liberty Media completed Braves acquisition from Time
+    Warner). strong_signals empty at creation — calibrate via post-
+    ingestion audit (Elizabeth CO ZIP cluster expected).
+  by: "claude-code-research (orchestrated by alex)"
+  references:
+  - "/tmp/braves-ownership-research.md (session-local research file)"
+- date: 2026-05-25
+  change: |
+    Tier-B calibration round 1 — added strong_signals.zip_codes:
+    ["80107", "80112"] (his Elizabeth CO private ranch and Liberty
+    Media Englewood office).
 
-      Audit findings: All 7 PROBABLE records are "MALONE, JOHN C." at
-      80107 ELIZABETH (3 records) or 80112 ENGLEWOOD (4 records) with
-      empty or INFORMATION REQUESTED employer fields. Donations are
-      $1,000-$28,500 to Republican causes (Colorado Republican Federal,
-      RNC, Republican Party of Wisconsin, Friends of Kelly Ayotte, Mast
-      for Congress) — consistent Malone pattern 2003-2023.
+    Audit findings: All 7 PROBABLE records are "MALONE, JOHN C." at
+    80107 ELIZABETH (3 records) or 80112 ENGLEWOOD (4 records) with
+    empty or INFORMATION REQUESTED employer fields. Donations are
+    $1,000-$28,500 to Republican causes (Colorado Republican Federal,
+    RNC, Republican Party of Wisconsin, Friends of Kelly Ayotte, Mast
+    for Congress) — consistent Malone pattern 2003-2023.
 
-      80107 (Elizabeth CO, Malone's documented private ranch — Tier 2
-      sources confirm) is narrow rural ZIP, low doppelgänger risk.
-      80112 (Englewood CO, Liberty Media office cluster) carries some
-      doppelgänger risk per system-prompt office-ZIP warning; the
-      "John C." middle-initial name_variants firewall is what guards
-      against a hypothetical Liberty employee with same name. Approved
-      by alex with this caveat.
+    80107 (Elizabeth CO, Malone's documented private ranch — Tier 2
+    sources confirm) is narrow rural ZIP, low doppelgänger risk.
+    80112 (Englewood CO, Liberty Media office cluster) carries some
+    doppelgänger risk per system-prompt office-ZIP warning; the
+    "John C." middle-initial name_variants firewall is what guards
+    against a hypothetical Liberty employee with same name. Approved
+    by alex with this caveat.
 
-      UNCERTAIN-open records (6 Broomfield + 1 Parker CO) not
-      investigated in this round — different Denver-metro John Malones,
-      likely distinct individuals.
+    UNCERTAIN-open records (6 Broomfield + 1 Parker CO) not
+    investigated in this round — different Denver-metro John Malones,
+    likely distinct individuals.
 
-      Pre-cal: 40 CONFIRMED / 7 PROBABLE / 7 UNCERTAIN-open. P/C 0.17.
-      Predicted post-cal: ~47 CONFIRMED / ~0 PROBABLE / ~7 UNCERTAIN.
-      P/C ~0.0.
-    by: "claude-code-session (PR 4 Tier B, approved by alex batch)"
-    references:
-      - "data/master.db pre-calibration: 40 CONFIRMED / 7 PROBABLE / 7 UNCERTAIN-open"
+    Pre-cal: 40 CONFIRMED / 7 PROBABLE / 7 UNCERTAIN-open. P/C 0.17.
+    Predicted post-cal: ~47 CONFIRMED / ~0 PROBABLE / ~7 UNCERTAIN.
+    P/C ~0.0.
+  by: "claude-code-session (PR 4 Tier B, approved by alex batch)"
+  references:
+  - "data/master.db pre-calibration: 40 CONFIRMED / 7 PROBABLE / 7 UNCERTAIN-open"
 
 audit:
   created: 2026-05-23
-  last_ingestion: null
+  last_ingestion: '2026-05-27'
   last_signal_review: 2026-05-25

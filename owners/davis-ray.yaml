@@ -17,44 +17,44 @@ team: Texas Rangers
 role: Managing Partner / Majority Owner / Chairman
 status: pilot
 tenure_start_date: 2010-08-12    # Rangers Baseball Express closing (approximate; press universally "August 2010")
-tenure_end_date: null
+tenure_end_date:
 
 name_variants:
-  - "Ray C Davis"
-  - "Ray C. Davis"
-  - "Ray Davis"
-  - "Davis, Ray"
-  - "Davis, Ray C"
-  - "Davis, Ray C."
+- "Ray C Davis"
+- "Ray C. Davis"
+- "Ray Davis"
+- "Davis, Ray"
+- "Davis, Ray C"
+- "Davis, Ray C."
 
 verifying_signals:
   cities:
-    - "dallas"           # Avatar Investments LP is Dallas-based (Sherry Lane offices per D Magazine)
+  - "dallas"             # Avatar Investments LP is Dallas-based (Sherry Lane offices per D Magazine)
   states:
-    - "TX"
+  - "TX"
   employers:
-    - "Energy Transfer Partners"
-    - "Energy Transfer Equity"
-    - "Energy Transfer"
-    - "Energy Transfer LP"
-    - "ETP"
-    - "ETE"
-    - "Texas Rangers"
-    - "Rangers Baseball Express"
+  - "Energy Transfer Partners"
+  - "Energy Transfer Equity"
+  - "Energy Transfer"
+  - "Energy Transfer LP"
+  - "ETP"
+  - "ETE"
+  - "Texas Rangers"
+  - "Rangers Baseball Express"
   occupations:
-    - "chairman"
-    - "ceo"
-    - "executive"
-    - "investor"
-    - "businessman"
-    - "managing partner"
-    - "oil and gas"
-    - "pipeline"
+  - "chairman"
+  - "ceo"
+  - "executive"
+  - "investor"
+  - "businessman"
+  - "managing partner"
+  - "oil and gas"
+  - "pipeline"
 
 strong_signals:
   employers:
-    - "Avatar Investments"        # uniquely-named Dallas family investment firm
-    - "Avatar Investments LP"
+  - "Avatar Investments"          # uniquely-named Dallas family investment firm
+  - "Avatar Investments LP"
   zip_codes:
     # Highland Park / Preston Center Dallas — Avatar Investments LP's Sherry
     # Lane office (per D Magazine). Promoted to strong-signal in Tier-B
@@ -71,7 +71,7 @@ strong_signals:
     # doppelgänger risk).
     # 75232 (Oak Cliff) deliberately NOT promoted — different "Ray Davis"
     # doppelgänger files small-dollar ActBlue/Beto donations from that ZIP.
-    - "75225"
+  - "75225"
 
 related_entities: []
 # Future candidates (do NOT add without user approval per CLAUDE.md §1.7):
@@ -81,22 +81,22 @@ related_entities: []
 #     entity; co-chairman with own donor profile).
 
 sources:
-  - description: "ESPN — Bud Selig says Ray Davis to become Texas Rangers controlling owner (Oct 24, 2013 announcement; Nov 14 2013 MLB owners formal approval)"
-    url: "https://www.espn.com/dallas/mlb/story/_/id/9874933/bud-selig-says-ray-davis-become-texas-rangers-controlling-owner"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "MLB.com — Ray C. Davis front office page. Official team-published bio"
-    url: "https://www.mlb.com/rangers/team/front-office/ray-davis"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "D Magazine (Oct 2012) — 'Ray C. Davis: The Undercover Billionaire.' Dallas business profile; Avatar Investments LP and Dallas/Sherry Lane offices"
-    url: "https://www.dmagazine.com/publications/d-ceo/2012/october/ray-c-davis-the-undercover-billionaire/"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "Energy Transfer Investor Relations — Ray Davis Board Member. Confirms ETP board role and corporate biography"
-    url: "https://ir.energytransfer.com/board-member/ray-davis-0"
-    accessed: "2026-05-23"
-    archive_url: ""
+- description: "ESPN — Bud Selig says Ray Davis to become Texas Rangers controlling owner (Oct 24, 2013 announcement; Nov 14 2013 MLB owners formal approval)"
+  url: "https://www.espn.com/dallas/mlb/story/_/id/9874933/bud-selig-says-ray-davis-become-texas-rangers-controlling-owner"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "MLB.com — Ray C. Davis front office page. Official team-published bio"
+  url: "https://www.mlb.com/rangers/team/front-office/ray-davis"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "D Magazine (Oct 2012) — 'Ray C. Davis: The Undercover Billionaire.' Dallas business profile; Avatar Investments LP and Dallas/Sherry Lane offices"
+  url: "https://www.dmagazine.com/publications/d-ceo/2012/october/ray-c-davis-the-undercover-billionaire/"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "Energy Transfer Investor Relations — Ray Davis Board Member. Confirms ETP board role and corporate biography"
+  url: "https://ir.energytransfer.com/board-member/ray-davis-0"
+  accessed: "2026-05-23"
+  archive_url: ""
 
 notes: |
   Ray C. Davis (b. 1941-10-15) — Managing Partner, Majority Owner, Chairman
@@ -157,70 +157,70 @@ notes: |
   Middle name behind "C." not publicly disclosed.
 
 change_log:
-  - date: 2026-05-23
-    change: |
-      Created during Phase 2 batch 4. Replaces misnamed `simpson-ray`
-      registry slug (which combined Davis and Simpson). Tier 2 sources:
-      ESPN, MLB.com, D Magazine, Energy Transfer IR. tenure_start_date =
-      2010-08-12 (Rangers Baseball Express closing; exact day approximate).
-      Strong_signal = "Avatar Investments" / "Avatar Investments LP".
-    by: "claude-code-research (orchestrated by alex)"
-    references:
-      - "/tmp/rangers-ownership-research.md (session-local research file)"
-  - date: 2026-05-25
-    change: |
-      Tier-B calibration round 1 — added strong_signals.zip_codes: ["75225"]
-      and documented three distinct living "Ray Davis" doppelgängers in the
-      notes block.
+- date: 2026-05-23
+  change: |
+    Created during Phase 2 batch 4. Replaces misnamed `simpson-ray`
+    registry slug (which combined Davis and Simpson). Tier 2 sources:
+    ESPN, MLB.com, D Magazine, Energy Transfer IR. tenure_start_date =
+    2010-08-12 (Rangers Baseball Express closing; exact day approximate).
+    Strong_signal = "Avatar Investments" / "Avatar Investments LP".
+  by: "claude-code-research (orchestrated by alex)"
+  references:
+  - "/tmp/rangers-ownership-research.md (session-local research file)"
+- date: 2026-05-25
+  change: |
+    Tier-B calibration round 1 — added strong_signals.zip_codes: ["75225"]
+    and documented three distinct living "Ray Davis" doppelgängers in the
+    notes block.
 
-      Audit findings (read-only audit + raw payload inspection of all 29
-      PROBABLE and all 13 UNCERTAIN-open records):
+    Audit findings (read-only audit + raw payload inspection of all 29
+    PROBABLE and all 13 UNCERTAIN-open records):
 
-      75225 promotion rationale: 19 of 29 PROBABLE records share ZIP5
-      75225 (or its ZIP+4 752256535). Every one is "DAVIS, RAY C." /
-      "DAVIS, RAY C. MR." / "DAVIS, RAY" with Dallas city, filing big
-      Republican donations: Right to Rise USA ($100k), Jeb 2016 ($2700),
-      Roger Williams for U.S. Congress ($2500-$2800), Ryan for Congress
-      / Team Ryan ($2700-$10000), McConnell Senate Committee, Burgess 4
-      Utah, Chip Roy, Common Values PAC, Barrasso Victory, Friends of
-      John Barrasso. Employers are "RETIRED" (matches Davis's documented
-      2007 retirement from Energy Transfer operations), "SELF-EMPLOYED"
-      with occupation "INVESTMENTS" (matches Avatar Investments framing),
-      "INFORMATION REQUESTED", or blank — none in the YAML's verifying
-      employer list, hence one-signal PROBABLE pre-cal. ZIP 75225 is
-      Highland Park / Preston Center where Avatar's Sherry Lane office
-      is documented per D Magazine.
+    75225 promotion rationale: 19 of 29 PROBABLE records share ZIP5
+    75225 (or its ZIP+4 752256535). Every one is "DAVIS, RAY C." /
+    "DAVIS, RAY C. MR." / "DAVIS, RAY" with Dallas city, filing big
+    Republican donations: Right to Rise USA ($100k), Jeb 2016 ($2700),
+    Roger Williams for U.S. Congress ($2500-$2800), Ryan for Congress
+    / Team Ryan ($2700-$10000), McConnell Senate Committee, Burgess 4
+    Utah, Chip Roy, Common Values PAC, Barrasso Victory, Friends of
+    John Barrasso. Employers are "RETIRED" (matches Davis's documented
+    2007 retirement from Energy Transfer operations), "SELF-EMPLOYED"
+    with occupation "INVESTMENTS" (matches Avatar Investments framing),
+    "INFORMATION REQUESTED", or blank — none in the YAML's verifying
+    employer list, hence one-signal PROBABLE pre-cal. ZIP 75225 is
+    Highland Park / Preston Center where Avatar's Sherry Lane office
+    is documented per D Magazine.
 
-      Doppelgängers explicitly NOT promoted:
-        - 75232 (Oak Cliff SW Dallas): 8 PROBABLE records "DAVIS, RAY"
-          (no middle initial) NOT EMPLOYED / NONE, $1-$500 ActBlue /
-          Beto for Texas. Party/scale/employer profile makes this clearly
-          a distinct person. Stays PROBABLE.
-        - 76034 (Colleyville/Grapevine): 11 CONFIRMED records all share
-          employer "TEXAS RANGERS" + occupation "CHAIRMAN" — already
-          confirmed via two-signal rule. Not promoting to strong-zip
-          because Colleyville is near Globe Life Field and a team-
-          employee "Ray Davis" doppelgänger at the same ZIP would
-          falsely CONFIRM with strong-zip alone.
-        - DOSS / SPRING / HOUSTON / GEORGETOWN UNCERTAIN-open records
-          (13 total): all distinct Texas Ray Davis doppelgängers in
-          different metros; correctly caught by city/state-outside rule.
+    Doppelgängers explicitly NOT promoted:
+      - 75232 (Oak Cliff SW Dallas): 8 PROBABLE records "DAVIS, RAY"
+        (no middle initial) NOT EMPLOYED / NONE, $1-$500 ActBlue /
+        Beto for Texas. Party/scale/employer profile makes this clearly
+        a distinct person. Stays PROBABLE.
+      - 76034 (Colleyville/Grapevine): 11 CONFIRMED records all share
+        employer "TEXAS RANGERS" + occupation "CHAIRMAN" — already
+        confirmed via two-signal rule. Not promoting to strong-zip
+        because Colleyville is near Globe Life Field and a team-
+        employee "Ray Davis" doppelgänger at the same ZIP would
+        falsely CONFIRM with strong-zip alone.
+      - DOSS / SPRING / HOUSTON / GEORGETOWN UNCERTAIN-open records
+        (13 total): all distinct Texas Ray Davis doppelgängers in
+        different metros; correctly caught by city/state-outside rule.
 
-      Behavioral Recognition Inc (1 UNCERTAIN Spring TX record) audit-
-      suggested as candidate negative-signal — investigated and skipped.
-      It would have zero current impact (the record is already UNCERTAIN
-      via city firewall) and only 1 record exists. Documented in notes
-      so a future calibration can revisit if a 75225-area Behavioral
-      Recognition Inc filing appears.
+    Behavioral Recognition Inc (1 UNCERTAIN Spring TX record) audit-
+    suggested as candidate negative-signal — investigated and skipped.
+    It would have zero current impact (the record is already UNCERTAIN
+    via city firewall) and only 1 record exists. Documented in notes
+    so a future calibration can revisit if a 75225-area Behavioral
+    Recognition Inc filing appears.
 
-      Pre-cal: 52 CONFIRMED / 29 PROBABLE / 13 UNCERTAIN-open. P/C 0.56.
-      Predicted post-cal: ~71 CONFIRMED / ~10 PROBABLE / 13 UNCERTAIN.
-      P/C ~0.14. CONFIRMED count goes up — no >5% drop alarm risk.
-    by: "claude-code-session (PR 4 Tier B, approved by alex)"
-    references:
-      - "data/master.db pre-calibration: 52 CONFIRMED / 29 PROBABLE / 13 UNCERTAIN-open"
+    Pre-cal: 52 CONFIRMED / 29 PROBABLE / 13 UNCERTAIN-open. P/C 0.56.
+    Predicted post-cal: ~71 CONFIRMED / ~10 PROBABLE / 13 UNCERTAIN.
+    P/C ~0.14. CONFIRMED count goes up — no >5% drop alarm risk.
+  by: "claude-code-session (PR 4 Tier B, approved by alex)"
+  references:
+  - "data/master.db pre-calibration: 52 CONFIRMED / 29 PROBABLE / 13 UNCERTAIN-open"
 
 audit:
   created: 2026-05-23
-  last_ingestion: null
+  last_ingestion: '2026-05-27'
   last_signal_review: 2026-05-25

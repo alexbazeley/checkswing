@@ -24,33 +24,33 @@ tenure_end_date: 2025-12-17      # replaced by brother Tom Pohlad
 family_tenure_start_date: 1984-09-07    # Carl Pohlad acquired Twins from Calvin Griffith (Joe's grandfather)
 
 name_variants:
-  - "Joseph C Pohlad"
-  - "Joseph C. Pohlad"
-  - "Joseph Pohlad"
-  - "Joe Pohlad"
-  - "Pohlad, Joseph"
-  - "Pohlad, Joseph C"
-  - "Pohlad, Joseph C."
-  - "Pohlad, Joe"
+- "Joseph C Pohlad"
+- "Joseph C. Pohlad"
+- "Joseph Pohlad"
+- "Joe Pohlad"
+- "Pohlad, Joseph"
+- "Pohlad, Joseph C"
+- "Pohlad, Joseph C."
+- "Pohlad, Joe"
 
 verifying_signals:
   cities:
-    - "minneapolis"
-    - "edina"            # candidate suburb (needs-confirmation per Tier 2)
-    - "wayzata"
-    - "saint paul"
+  - "minneapolis"
+  - "edina"              # candidate suburb (needs-confirmation per Tier 2)
+  - "wayzata"
+  - "saint paul"
     # Added 2026-05-25 Tier-B calibration — observed FEC clerk typo of
     # Edina in 1 UNCERTAIN-open record.
-    - "edna"
+  - "edna"
   states:
-    - "MN"
+  - "MN"
   employers:
-    - "Minnesota Twins"
-    - "Twins"
-    - "Pohlad Companies"       # SHARED with multiple relatives — verifying only
-    - "Go Media"                # CEO since 2015 (Minneapolis FM radio Go 96.3 / 95.3)
-    - "Go Radio"
-    - "Pohlad Family Foundation"
+  - "Minnesota Twins"
+  - "Twins"
+  - "Pohlad Companies"         # SHARED with multiple relatives — verifying only
+  - "Go Media"                  # CEO since 2015 (Minneapolis FM radio Go 96.3 / 95.3)
+  - "Go Radio"
+  - "Pohlad Family Foundation"
     # Added 2026-05-25 Tier-B calibration. "Mail Holdings" observed in 5
     # 2009-2016 PROBABLE records under "POHLAD, JOSEPH C" at Minneapolis
     # with occupation PRESIDENT or EMPLOYEE, donations $1k-$30,800 to
@@ -59,15 +59,15 @@ verifying_signals:
     # (POHLAD, JOSEPH C + Minneapolis + Democratic mega-donor) and the
     # name+city signal already routes these to PROBABLE. Substring catches
     # MAIL HOLDINGS INC, MAIL HOLDINGS INC., MAIL HOLDINGS INC variants.
-    - "Mail Holdings"
+  - "Mail Holdings"
   occupations:
-    - "executive chair"
-    - "executive chairman"
-    - "vice president"
-    - "ceo"
-    - "executive"
-    - "businessman"
-    - "owner"
+  - "executive chair"
+  - "executive chairman"
+  - "vice president"
+  - "ceo"
+  - "executive"
+  - "businessman"
+  - "owner"
 
 strong_signals:
   employers: []
@@ -77,8 +77,8 @@ strong_signals:
     # 55424 = adjacent Edina ZIP (7 CONFIRMED + 7 PROBABLE — the
     # PROBABLE-7 are "EMPLOYEED" employer typo + GO MEDIA occupation
     # 2018 Democratic donations, clearly Joe).
-    - "55436"
-    - "55424"
+  - "55436"
+  - "55424"
   # "Minnesota Twins" + "executive chair" would work as a strong combo
   # but brother Tom now holds that title (since 2025-12-17); relying on
   # city + occupation combo + name-variant strictness for current. "Go
@@ -100,30 +100,30 @@ related_entities: []
 #     adults as of 2026).
 
 sources:
-  - description: "ESPN (Dec 2025) — Twins finalize sales, name Tom Pohlad new controlling owner. Confirms Joe replaced by Tom as control person"
-    url: "https://www.espn.com/mlb/story/_/id/47336092/twins-finalize-sales-name-tom-pohlad-new-controlling-owner"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "ESPN (mid-2025) — Twins no longer for sale as Pohlad family eyes new investors. Sale process halted; minority partners added"
-    url: "https://www.espn.com/mlb/story/_/id/45965947/twins-no-longer-sale-pohlad-family-eyes-new-investors"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "Twin Cities Business — 'The Twins Reset' (Tom Pohlad replaces brother Joe in leading the team organization, Dec 2025)"
-    url: "https://tcbmag.com/the-twins-tom-pohlad-to-replace-brother-joe-in-leading-team-organization/"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "Twin Cities Business (April 2023) — 'TCB Q&A: The Twins' Joe Pohlad.' Wife Sara, sons Sam/Noah/Isaac; Stonehill 2004; age 41 at publication"
-    url: "https://tcbmag.com/tcb-qa-the-twins-joe-pohlad/"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "Sports Illustrated / Onsi — 'We've lost trust: Tom Pohlad on replacing brother Joe atop the Twins'"
-    url: "https://www.si.com/mlb/twins/onsi/minnesota-twins-news/we-have-lost-trust-tom-pohlad-on-replacing-brother-joe-atop-the-twins"
-    accessed: "2026-05-23"
-    archive_url: ""
-  - description: "Pohlad Foundation — Joe Pohlad team page (owner's own family-foundation profile)"
-    url: "https://pohladfoundation.org/joe-pohlad/"
-    accessed: "2026-05-23"
-    archive_url: ""
+- description: "ESPN (Dec 2025) — Twins finalize sales, name Tom Pohlad new controlling owner. Confirms Joe replaced by Tom as control person"
+  url: "https://www.espn.com/mlb/story/_/id/47336092/twins-finalize-sales-name-tom-pohlad-new-controlling-owner"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "ESPN (mid-2025) — Twins no longer for sale as Pohlad family eyes new investors. Sale process halted; minority partners added"
+  url: "https://www.espn.com/mlb/story/_/id/45965947/twins-no-longer-sale-pohlad-family-eyes-new-investors"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "Twin Cities Business — 'The Twins Reset' (Tom Pohlad replaces brother Joe in leading the team organization, Dec 2025)"
+  url: "https://tcbmag.com/the-twins-tom-pohlad-to-replace-brother-joe-in-leading-team-organization/"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "Twin Cities Business (April 2023) — 'TCB Q&A: The Twins' Joe Pohlad.' Wife Sara, sons Sam/Noah/Isaac; Stonehill 2004; age 41 at publication"
+  url: "https://tcbmag.com/tcb-qa-the-twins-joe-pohlad/"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "Sports Illustrated / Onsi — 'We've lost trust: Tom Pohlad on replacing brother Joe atop the Twins'"
+  url: "https://www.si.com/mlb/twins/onsi/minnesota-twins-news/we-have-lost-trust-tom-pohlad-on-replacing-brother-joe-atop-the-twins"
+  accessed: "2026-05-23"
+  archive_url: ""
+- description: "Pohlad Foundation — Joe Pohlad team page (owner's own family-foundation profile)"
+  url: "https://pohladfoundation.org/joe-pohlad/"
+  accessed: "2026-05-23"
+  archive_url: ""
 
 notes: |
   Joseph C. ("Joe") Pohlad — former Twins executive chair / controlling
@@ -158,53 +158,53 @@ notes: |
   saint paul listed conservatively in verifying_signals.cities.
 
 change_log:
-  - date: 2026-05-23
-    change: |
-      Created during Phase 2 batch 3. Castellini-precedent (per user
-      direction): Joe stepped down as control person 2025-12-17 (replaced by
-      brother Tom Pohlad after family called off sale and brought in minority
-      partners). NOT a sale closure — family retains control. tenure_end_date
-      set; continue tracking Joe's full historical giving. Tier 2 sources:
-      ESPN (multiple), Twin Cities Business (multiple), SI/Onsi, Pohlad
-      Foundation. HIGH family-collision risk noted; strict name_variants
-      exclude bare "J. Pohlad". Tom Pohlad flagged for separate future slug.
-    by: "claude-code-research (orchestrated by alex)"
-    references:
-      - "/tmp/pohlad-joe-research.md (session-local research file)"
-  - date: 2026-05-25
-    change: |
-      Tier-B calibration round 1 — three coordinated changes:
+- date: 2026-05-23
+  change: |
+    Created during Phase 2 batch 3. Castellini-precedent (per user
+    direction): Joe stepped down as control person 2025-12-17 (replaced by
+    brother Tom Pohlad after family called off sale and brought in minority
+    partners). NOT a sale closure — family retains control. tenure_end_date
+    set; continue tracking Joe's full historical giving. Tier 2 sources:
+    ESPN (multiple), Twin Cities Business (multiple), SI/Onsi, Pohlad
+    Foundation. HIGH family-collision risk noted; strict name_variants
+    exclude bare "J. Pohlad". Tom Pohlad flagged for separate future slug.
+  by: "claude-code-research (orchestrated by alex)"
+  references:
+  - "/tmp/pohlad-joe-research.md (session-local research file)"
+- date: 2026-05-25
+  change: |
+    Tier-B calibration round 1 — three coordinated changes:
 
-      (1) Added strong_signals.zip_codes: ["55436", "55424"] (Joe's
-      documented Edina MN residence cluster). 30 pre-cal CONFIRMED at
-      55436 + 7 at 55424. Promotes 9 of 14 PROBABLE records (7 at 55424
-      with EMPLOYEED-typo employer + 2 generic at 554362047 = ZIP+4
-      55436) to CONFIRMED.
+    (1) Added strong_signals.zip_codes: ["55436", "55424"] (Joe's
+    documented Edina MN residence cluster). 30 pre-cal CONFIRMED at
+    55436 + 7 at 55424. Promotes 9 of 14 PROBABLE records (7 at 55424
+    with EMPLOYEED-typo employer + 2 generic at 554362047 = ZIP+4
+    55436) to CONFIRMED.
 
-      (2) Added verifying_signals.employers: ["Mail Holdings"]. Substring
-      catches MAIL HOLDINGS INC / MAIL HOLDINGS INC. variants observed in
-      5 PROBABLE records under "POHLAD, JOSEPH C" at Minneapolis 2009-2016
-      with occupations PRESIDENT or EMPLOYEE, donations $1k-$30,800 to
-      Democratic causes (Patrick J. Kennedy, DNC Services Corp). Mail
-      Holdings is not in Tier 2 sources as a documented Joe employer, but
-      pattern (name + Minneapolis + Democratic mega-donor + middle initial
-      C) is consistent with Joe; PROBABLE-tier promotion accepted by alex.
+    (2) Added verifying_signals.employers: ["Mail Holdings"]. Substring
+    catches MAIL HOLDINGS INC / MAIL HOLDINGS INC. variants observed in
+    5 PROBABLE records under "POHLAD, JOSEPH C" at Minneapolis 2009-2016
+    with occupations PRESIDENT or EMPLOYEE, donations $1k-$30,800 to
+    Democratic causes (Patrick J. Kennedy, DNC Services Corp). Mail
+    Holdings is not in Tier 2 sources as a documented Joe employer, but
+    pattern (name + Minneapolis + Democratic mega-donor + middle initial
+    C) is consistent with Joe; PROBABLE-tier promotion accepted by alex.
 
-      (3) Added verifying_signals.cities: ["edna"] (observed FEC clerk
-      misspelling of Edina in 1 UNCERTAIN-open record).
+    (3) Added verifying_signals.cities: ["edna"] (observed FEC clerk
+    misspelling of Edina in 1 UNCERTAIN-open record).
 
-      Pre-cal: 92 CONFIRMED / 14 PROBABLE / 1 UNCERTAIN-open. P/C 0.15.
-      Predicted post-cal: ~105 CONFIRMED / ~0 PROBABLE / ~0 UNCERTAIN.
-      P/C ~0.0.
+    Pre-cal: 92 CONFIRMED / 14 PROBABLE / 1 UNCERTAIN-open. P/C 0.15.
+    Predicted post-cal: ~105 CONFIRMED / ~0 PROBABLE / ~0 UNCERTAIN.
+    P/C ~0.0.
 
-      Family-collision firewall (strict "Joseph C." or "Joe" first name)
-      holds — brother Tom (now Twins exec chair) has middle initial "O"
-      and would not name-match this slug.
-    by: "claude-code-session (PR 4 Tier B, approved by alex batch)"
-    references:
-      - "data/master.db pre-calibration: 92 CONFIRMED / 14 PROBABLE / 1 UNCERTAIN-open"
+    Family-collision firewall (strict "Joseph C." or "Joe" first name)
+    holds — brother Tom (now Twins exec chair) has middle initial "O"
+    and would not name-match this slug.
+  by: "claude-code-session (PR 4 Tier B, approved by alex batch)"
+  references:
+  - "data/master.db pre-calibration: 92 CONFIRMED / 14 PROBABLE / 1 UNCERTAIN-open"
 
 audit:
   created: 2026-05-23
-  last_ingestion: null
+  last_ingestion: '2026-05-27'
   last_signal_review: 2026-05-25

@@ -11,42 +11,42 @@ team: Philadelphia Phillies
 role: Managing partner / Principal owner
 status: pilot
 tenure_start_date: 2016-11-17    # MLB owners' meeting designation as control person
-tenure_end_date: null
+tenure_end_date:
 
 # "John Middleton" is a common name. Strict variants + verifying_signals
 # narrow the cluster. Middle initial "S." for Staubus included.
 name_variants:
-  - "John Middleton"
-  - "John S. Middleton"
-  - "John S Middleton"
-  - "John Staubus Middleton"
-  - "Middleton, John"
-  - "Middleton, John S"
-  - "Middleton, John S."
+- "John Middleton"
+- "John S. Middleton"
+- "John S Middleton"
+- "John Staubus Middleton"
+- "Middleton, John"
+- "Middleton, John S"
+- "Middleton, John S."
 
 verifying_signals:
   cities:
-    - "bryn mawr"
-    - "philadelphia"
+  - "bryn mawr"
+  - "philadelphia"
   states:
-    - "PA"
+  - "PA"
   employers:
-    - "Philadelphia Phillies"
-    - "Phillies"
-    - "John Middleton Inc"
-    - "John Middleton, Inc"
-    - "John Middleton Co"
-    - "John Middleton Company"
-    - "McIntosh Inns"
-    - "Mc Intosh Inns"            # FEC-typo variant of McIntosh Inns (with space)
-    - "Branford Holdings"         # FEC-typo variant of Bradford Holdings — added 2026-05-25
+  - "Philadelphia Phillies"
+  - "Phillies"
+  - "John Middleton Inc"
+  - "John Middleton, Inc"
+  - "John Middleton Co"
+  - "John Middleton Company"
+  - "McIntosh Inns"
+  - "Mc Intosh Inns"              # FEC-typo variant of McIntosh Inns (with space)
+  - "Branford Holdings"           # FEC-typo variant of Bradford Holdings — added 2026-05-25
   occupations:
-    - "managing partner"
-    - "partner"
-    - "owner"
-    - "principal"
-    - "chairman"
-    - "ceo"
+  - "managing partner"
+  - "partner"
+  - "owner"
+  - "principal"
+  - "chairman"
+  - "ceo"
 
 strong_signals:
   # Bradford Holdings is Middleton's parent holding company — Tier 2 confirms
@@ -54,9 +54,9 @@ strong_signals:
   # Phillies stake specifically and would virtually only be filed by Middleton
   # personally (it's the legal vehicle of his ownership stake).
   employers:
-    - "Bradford Holdings"
-    - "Double Play Inc"
-    - "Double Play, Inc"
+  - "Bradford Holdings"
+  - "Double Play Inc"
+  - "Double Play, Inc"
   zip_codes: []
 
 # Anti-pattern: John P. Middleton (John S.'s son, confirmed by alex during
@@ -73,8 +73,8 @@ strong_signals:
 # land in UNCERTAIN rather than misattributing to John S.
 negative_signals:
   employers:
-    - "Vertigo Entertainment"
-    - "Vertigo"
+  - "Vertigo Entertainment"
+  - "Vertigo"
 
 related_entities: []
 # Documented future candidates (do NOT add without approval):
@@ -85,22 +85,22 @@ related_entities: []
 #     researched. NOT added per CLAUDE.md §1.7.
 
 sources:
-  - description: "MLB.com Philadelphia Phillies (current ownership)"
-    url: "https://www.mlb.com/phillies"
-    accessed: "2026-05-22"
-    archive_url: ""
-  - description: "Phillies.com / MLB.com — John S. Middleton named control person at owners meeting (Nov 2016)"
-    url: "https://www.mlb.com/news/john-middleton-named-phillies-control-person-c209072104"
-    accessed: "2026-05-22"
-    archive_url: ""
-  - description: "WSJ / Bloomberg — John Middleton Co. sold to Altria for $2.9B (2007)"
-    url: "https://www.wsj.com/articles/altria-buys-john-middleton-2007"
-    accessed: "2026-05-22"
-    archive_url: ""
-  - description: "Phillies 2024 ownership expansion — Mitchell Morgan, Guntram Weissenberger Jr., +1 anonymous LP added"
-    url: "https://www.mlb.com/phillies/news/phillies-ownership-expansion-2024"
-    accessed: "2026-05-22"
-    archive_url: ""
+- description: "MLB.com Philadelphia Phillies (current ownership)"
+  url: "https://www.mlb.com/phillies"
+  accessed: "2026-05-22"
+  archive_url: ""
+- description: "Phillies.com / MLB.com — John S. Middleton named control person at owners meeting (Nov 2016)"
+  url: "https://www.mlb.com/news/john-middleton-named-phillies-control-person-c209072104"
+  accessed: "2026-05-22"
+  archive_url: ""
+- description: "WSJ / Bloomberg — John Middleton Co. sold to Altria for $2.9B (2007)"
+  url: "https://www.wsj.com/articles/altria-buys-john-middleton-2007"
+  accessed: "2026-05-22"
+  archive_url: ""
+- description: "Phillies 2024 ownership expansion — Mitchell Morgan, Guntram Weissenberger Jr., +1 anonymous LP added"
+  url: "https://www.mlb.com/phillies/news/phillies-ownership-expansion-2024"
+  accessed: "2026-05-22"
+  archive_url: ""
 
 notes: |
   Full legal name John Staubus Middleton (b. 1955-03-02). Primary residence
@@ -143,71 +143,71 @@ notes: |
   records under that string promote to CONFIRMED.
 
 change_log:
-  - date: 2026-05-22
-    change: |
-      Created during Phase 2 batch 2 research. Tier 2 sources: MLB.com,
-      Phillies control-person designation (Nov 2016), WSJ 2007 cigar sale,
-      MLB.com 2024 ownership expansion.
+- date: 2026-05-22
+  change: |
+    Created during Phase 2 batch 2 research. Tier 2 sources: MLB.com,
+    Phillies control-person designation (Nov 2016), WSJ 2007 cigar sale,
+    MLB.com 2024 ownership expansion.
 
-      tenure_start_date 2016-11-17 (MLB-designated control person date).
-      Pre-2016 partial-ownership records will be ingested per project default;
-      reports can filter to post-tenure if needed.
+    tenure_start_date 2016-11-17 (MLB-designated control person date).
+    Pre-2016 partial-ownership records will be ingested per project default;
+    reports can filter to post-tenure if needed.
 
-      strong_signals.employers initialized with Bradford Holdings and
-      Double Play Inc — both his unique holding-company vehicles.
-      John Middleton Co. NOT in strong_signals (pre-2007 had thousands of
-      rank-and-file employees who could share the common name).
-    by: "claude-code-research (orchestrated by alex)"
-    references:
-      - "/tmp/middleton-john-research.md (session-local)"
-  - date: 2026-05-25
-    change: |
-      Tier-A calibration round 1. Three changes (one reverted).
+    strong_signals.employers initialized with Bradford Holdings and
+    Double Play Inc — both his unique holding-company vehicles.
+    John Middleton Co. NOT in strong_signals (pre-2007 had thousands of
+    rank-and-file employees who could share the common name).
+  by: "claude-code-research (orchestrated by alex)"
+  references:
+  - "/tmp/middleton-john-research.md (session-local)"
+- date: 2026-05-25
+  change: |
+    Tier-A calibration round 1. Three changes (one reverted).
 
-      ATTEMPTED + REVERTED: added a related_entity (kind: child)
-      middleton-john-p for John P. Middleton (Vertigo Entertainment film
-      producer, John S.'s son). Reclassify with --include-related produced
-      a catastrophic misattribution: ALL 53 CONFIRMED records were routed
-      to middleton-john-p, including obvious John S. records under
-      Bradford Holdings, Philadelphia Phillies, and McIntosh Inns. Root
-      cause: scripts/resolve_entities.normalize_name() drops single-char
-      middle-initial tokens, so "John P. Middleton" canonicalizes to
-      "john middleton" — making John P.'s variants indistinguishable from
-      John S.'s by name alone. The classifier checks related_entity FIRST,
-      so every name-matched record was attributed to the child entity.
+    ATTEMPTED + REVERTED: added a related_entity (kind: child)
+    middleton-john-p for John P. Middleton (Vertigo Entertainment film
+    producer, John S.'s son). Reclassify with --include-related produced
+    a catastrophic misattribution: ALL 53 CONFIRMED records were routed
+    to middleton-john-p, including obvious John S. records under
+    Bradford Holdings, Philadelphia Phillies, and McIntosh Inns. Root
+    cause: scripts/resolve_entities.normalize_name() drops single-char
+    middle-initial tokens, so "John P. Middleton" canonicalizes to
+    "john middleton" — making John P.'s variants indistinguishable from
+    John S.'s by name alone. The classifier checks related_entity FIRST,
+    so every name-matched record was attributed to the child entity.
 
-      The related_entity addition is the architecturally-correct approach
-      but blocked on a classifier improvement to preserve middle initials
-      during matching (separate PR). Reverted to the negative_signals
-      approach below as the interim fix.
+    The related_entity addition is the architecturally-correct approach
+    but blocked on a classifier improvement to preserve middle initials
+    during matching (separate PR). Reverted to the negative_signals
+    approach below as the interim fix.
 
-      APPLIED:
-      1. Added negative_signals.employers ["Vertigo Entertainment",
-         "Vertigo"]. John P.'s Vertigo records correctly land in
-         UNCERTAIN; John S.'s records are not affected (he never files
-         under Vertigo).
-      2. Added "Branford Holdings" to verifying_signals.employers —
-         assumed FEC clerk typo of his actual "Bradford Holdings" per
-         user research (no separate Branford Holdings entity documented).
-         3 PROBABLE records under that string promote to CONFIRMED.
-      3. Added "Mc Intosh Inns" (with space) to verifying_signals.employers
-         — typo variant of McIntosh Inns. 1 PROBABLE record promotes.
+    APPLIED:
+    1. Added negative_signals.employers ["Vertigo Entertainment",
+       "Vertigo"]. John P.'s Vertigo records correctly land in
+       UNCERTAIN; John S.'s records are not affected (he never files
+       under Vertigo).
+    2. Added "Branford Holdings" to verifying_signals.employers —
+       assumed FEC clerk typo of his actual "Bradford Holdings" per
+       user research (no separate Branford Holdings entity documented).
+       3 PROBABLE records under that string promote to CONFIRMED.
+    3. Added "Mc Intosh Inns" (with space) to verifying_signals.employers
+       — typo variant of McIntosh Inns. 1 PROBABLE record promotes.
 
-      Pre-calibration: 33 CONFIRMED / 38 PROBABLE / 19 UNCERTAIN-open.
-      Predicted post-calibration: ~32 CONFIRMED (–2 Vertigo +1 Mc Intosh
-      +3 Branford = +2 net relative to pre-cal; 33 → 35) / ~24 PROBABLE
-      (–11 Vertigo, –1 Mc Intosh, –3 Branford) / ~32 UNCERTAIN (+13
-      Vertigo records demoted).
+    Pre-calibration: 33 CONFIRMED / 38 PROBABLE / 19 UNCERTAIN-open.
+    Predicted post-calibration: ~32 CONFIRMED (–2 Vertigo +1 Mc Intosh
+    +3 Branford = +2 net relative to pre-cal; 33 → 35) / ~24 PROBABLE
+    (–11 Vertigo, –1 Mc Intosh, –3 Branford) / ~32 UNCERTAIN (+13
+    Vertigo records demoted).
 
-      Dock Street Capital records left as-is — user research could not
-      confirm a Middleton connection. John P. tracking as related_entity
-      flagged in notes as a future change pending classifier improvement.
-    by: "claude-code-session (PR 4 Tier A, approved by alex)"
-    references:
-      - "data/master.db pre-calibration: 33 CONFIRMED / 38 PROBABLE / 19 UNCERTAIN-open"
-      - "data/snapshots/2026-05-25T04-02-44Z__pre-reclassify-middleton-john.db (snapshot before the failed --include-related attempt)"
+    Dock Street Capital records left as-is — user research could not
+    confirm a Middleton connection. John P. tracking as related_entity
+    flagged in notes as a future change pending classifier improvement.
+  by: "claude-code-session (PR 4 Tier A, approved by alex)"
+  references:
+  - "data/master.db pre-calibration: 33 CONFIRMED / 38 PROBABLE / 19 UNCERTAIN-open"
+  - "data/snapshots/2026-05-25T04-02-44Z__pre-reclassify-middleton-john.db (snapshot before the failed --include-related attempt)"
 
 audit:
   created: 2026-05-22
-  last_ingestion: null
+  last_ingestion: '2026-05-27'
   last_signal_review: 2026-05-22

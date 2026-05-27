@@ -2561,3 +2561,546 @@ Coverage in `mockup/data.json` after rebuild: 2,864 from the DB, 1 via legacy ra
 To recover the 1,294 unrecoverable rows, run `cli ingest <slug> --full-refetch --chunk-by-cycle` locally per affected owner. The ingest will fetch fresh raw payloads (microsecond-resolution filenames, no collisions) and populate the v3 columns at insert time. Approximate scope: ~30 affected owners, ~3-4h of FEC API time. Separate session.
 
 Tests covering the migration, insert, backfill, build precedence: `tests/test_donation_image_fields.py` (10 cases). Total suite: 169 green.
+
+### 2026-05-27 — INGESTION
+
+- **run_id**: `edfd6703`
+- **entity_slug**: `angelos-john-p`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2026-03-10`
+- **name_variants_queried**: `["John P Angelos", "John P. Angelos", "John Angelos", "Angelos, John", "Angelos, John P", "Angelos, John P."]`
+- **api_calls_made**: `84`
+- **records_fetched**: `86`
+- **confirmed_count**: `51`
+- **probable_count**: `1`
+- **uncertain_count**: `8`
+- **snapshot_path**: `/home/runner/work/checkswing/checkswing/data/snapshots/2026-05-27T01-39-10Z__edfd6703.db`
+- **notes**: skipped(no-name-match)=26 · min_date=--full-refetch · states=['TN', 'MD'] · chunk-by-cycle
+
+### 2026-05-27 — INGESTION
+
+- **run_id**: `659c73e4`
+- **entity_slug**: `dolan-paul`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2025-05-19`
+- **name_variants_queried**: `["Paul J Dolan", "Paul J. Dolan", "Paul Dolan", "Paul Joseph Dolan", "Dolan, Paul", "Dolan, Paul J", "Dolan, Paul J."]`
+- **api_calls_made**: `136`
+- **records_fetched**: `68`
+- **confirmed_count**: `67`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `/home/runner/work/checkswing/checkswing/data/snapshots/2026-05-27T02-23-57Z__659c73e4.db`
+- **notes**: skipped(no-name-match)=1 · min_date=--full-refetch · states=['OH'] · chunk-by-cycle
+
+### 2026-05-27 — INGESTION
+
+- **run_id**: `526d2773`
+- **entity_slug**: `ilitch-chris`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2025-12-26`
+- **name_variants_queried**: `["Christopher P Ilitch", "Christopher P. Ilitch", "Christopher Ilitch", "Chris Ilitch", "Christopher Paul Ilitch", "Ilitch, Christopher", "Ilitch, Christopher P", "Ilitch, Christopher P.", "Ilitch, Chris"]`
+- **api_calls_made**: `132`
+- **records_fetched**: `30`
+- **confirmed_count**: `12`
+- **probable_count**: `0`
+- **uncertain_count**: `18`
+- **snapshot_path**: `/home/runner/work/checkswing/checkswing/data/snapshots/2026-05-27T03-20-06Z__526d2773.db`
+- **notes**: skipped(no-name-match)=0 · min_date=--full-refetch · states=['MI'] · chunk-by-cycle
+
+### 2026-05-27 — INGESTION
+
+- **run_id**: `68719827`
+- **entity_slug**: `malone-john`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2025-12-31`
+- **name_variants_queried**: `["John C Malone", "John C. Malone", "John Malone", "John Carl Malone", "Malone, John", "Malone, John C", "Malone, John C."]`
+- **api_calls_made**: `135`
+- **records_fetched**: `152`
+- **confirmed_count**: `102`
+- **probable_count**: `0`
+- **uncertain_count**: `23`
+- **snapshot_path**: `/home/runner/work/checkswing/checkswing/data/snapshots/2026-05-27T03-33-15Z__68719827.db`
+- **notes**: skipped(no-name-match)=27 · min_date=--full-refetch · states=['CO'] · chunk-by-cycle
+
+### 2026-05-27 — INGESTION
+
+- **run_id**: `3da9961f`
+- **entity_slug**: `moreno-arte`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2025-06-03`
+- **name_variants_queried**: `["Arturo Moreno", "Arte Moreno", "Arturo R. Moreno", "Arturo R Moreno", "Moreno, Arturo", "Moreno, Arte", "Moreno, Arturo R"]`
+- **api_calls_made**: `151`
+- **records_fetched**: `79`
+- **confirmed_count**: `73`
+- **probable_count**: `0`
+- **uncertain_count**: `6`
+- **snapshot_path**: `/home/runner/work/checkswing/checkswing/data/snapshots/2026-05-27T04-25-59Z__3da9961f.db`
+- **notes**: skipped(no-name-match)=0 · min_date=--full-refetch · states=['AZ', 'CA'] · chunk-by-cycle
+
+### 2026-05-27 — INGESTION
+
+- **run_id**: `266388b6`
+- **entity_slug**: `reinsdorf-jerry`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2026-02-04`
+- **name_variants_queried**: `["Jerry Reinsdorf", "Jerry M Reinsdorf", "Jerry M. Reinsdorf", "Jerry Michael Reinsdorf", "Reinsdorf, Jerry", "Reinsdorf, Jerry M", "Reinsdorf, Jerry M."]`
+- **api_calls_made**: `126`
+- **records_fetched**: `425`
+- **confirmed_count**: `422`
+- **probable_count**: `2`
+- **uncertain_count**: `0`
+- **snapshot_path**: `/home/runner/work/checkswing/checkswing/data/snapshots/2026-05-27T05-07-41Z__266388b6.db`
+- **notes**: skipped(no-name-match)=1 · min_date=--full-refetch · states=['IL'] · chunk-by-cycle
+
+### 2026-05-27 — INGESTION
+
+- **run_id**: `3a55273c`
+- **entity_slug**: `sherman-bruce`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2026-03-31`
+- **name_variants_queried**: `["Bruce S Sherman", "Bruce S. Sherman", "Bruce Sherman", "Sherman, Bruce", "Sherman, Bruce S", "Sherman, Bruce S."]`
+- **api_calls_made**: `104`
+- **records_fetched**: `196`
+- **confirmed_count**: `57`
+- **probable_count**: `19`
+- **uncertain_count**: `120`
+- **snapshot_path**: `/home/runner/work/checkswing/checkswing/data/snapshots/2026-05-27T05-27-24Z__3a55273c.db`
+- **notes**: skipped(no-name-match)=0 · min_date=--full-refetch · states=['FL'] · chunk-by-cycle
+
+### 2026-05-27 — INGESTION
+
+- **run_id**: `a07de4a1`
+- **entity_slug**: `steinbrenner-hal`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2025-12-22`
+- **name_variants_queried**: `["Harold Z Steinbrenner", "Harold Z. Steinbrenner", "Harold Steinbrenner", "Hal Steinbrenner", "Steinbrenner, Harold", "Steinbrenner, Harold Z", "Steinbrenner, Harold Z.", "Steinbrenner, Hal"]`
+- **api_calls_made**: `104`
+- **records_fetched**: `15`
+- **confirmed_count**: `13`
+- **probable_count**: `2`
+- **uncertain_count**: `0`
+- **snapshot_path**: `/home/runner/work/checkswing/checkswing/data/snapshots/2026-05-27T05-42-59Z__a07de4a1.db`
+- **notes**: skipped(no-name-match)=0 · min_date=--full-refetch · states=['FL'] · chunk-by-cycle
+
+### 2026-05-27 — REFRESH RUN d22b008a
+
+- **started_at**: `2026-05-27T01:39:10Z`
+- **completed_at**: `2026-05-27T05:51:54Z`
+- **dry_run**: `0`
+- **owners_attempted**: `9`
+- **owners_succeeded**: `8`
+- **owners_failed**: `1`
+- **total_records_fetched**: `1051`
+- **data_json_regenerated**: `False`
+- **failed_owners**: `['cohen-steven']`
+
+### 2026-05-27 — INGESTION
+
+- **run_id**: `5bbfd468`
+- **entity_slug**: `attanasio-mark`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2025-12-31`
+- **name_variants_queried**: `["Mark Attanasio", "Mark L Attanasio", "Mark L. Attanasio", "Attanasio, Mark", "Attanasio, Mark L", "Attanasio, Mark L."]`
+- **api_calls_made**: `96`
+- **records_fetched**: `58`
+- **confirmed_count**: `28`
+- **probable_count**: `2`
+- **uncertain_count**: `28`
+- **snapshot_path**: `/home/runner/work/checkswing/checkswing/data/snapshots/2026-05-27T01-39-14Z__5bbfd468.db`
+- **notes**: skipped(no-name-match)=0 · min_date=--full-refetch · states=['CA', 'WI'] · chunk-by-cycle
+
+### 2026-05-27 — INGESTION
+
+- **run_id**: `db180558`
+- **entity_slug**: `crane-jim`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2025-09-26`
+- **name_variants_queried**: `["James R Crane", "James R. Crane", "James Crane", "Jim Crane", "Crane, James", "Crane, James R", "Crane, James R."]`
+- **api_calls_made**: `118`
+- **records_fetched**: `51`
+- **confirmed_count**: `34`
+- **probable_count**: `2`
+- **uncertain_count**: `14`
+- **snapshot_path**: `/home/runner/work/checkswing/checkswing/data/snapshots/2026-05-27T01-47-59Z__db180558.db`
+- **notes**: skipped(no-name-match)=1 · min_date=--full-refetch · states=['TX'] · chunk-by-cycle
+
+### 2026-05-27 — INGESTION
+
+- **run_id**: `6498d2b4`
+- **entity_slug**: `feliciano-jose`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2026-03-22`
+- **name_variants_queried**: `["Jose E Feliciano", "Jose E. Feliciano", "Jose Feliciano", "Jos\u00e9 E. Feliciano", "Feliciano, Jose", "Feliciano, Jose E", "Feliciano, Jose E."]`
+- **api_calls_made**: `85`
+- **records_fetched**: `63`
+- **confirmed_count**: `23`
+- **probable_count**: `1`
+- **uncertain_count**: `15`
+- **snapshot_path**: `/home/runner/work/checkswing/checkswing/data/snapshots/2026-05-27T02-01-59Z__6498d2b4.db`
+- **notes**: skipped(no-name-match)=24 · min_date=--full-refetch · states=['CA'] · chunk-by-cycle
+
+### 2026-05-27 — INGESTION
+
+- **run_id**: `87d56dfa`
+- **entity_slug**: `mcguirk-terry`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2025-05-20`
+- **name_variants_queried**: `["Terence F McGuirk", "Terence F. McGuirk", "Terence McGuirk", "Terry McGuirk", "Terry F. McGuirk", "Terry F McGuirk", "McGuirk, Terence", "McGuirk, Terence F", "McGuirk, Terence F.", "McGuirk, Terry"]`
+- **api_calls_made**: `148`
+- **records_fetched**: `47`
+- **confirmed_count**: `43`
+- **probable_count**: `4`
+- **uncertain_count**: `0`
+- **snapshot_path**: `/home/runner/work/checkswing/checkswing/data/snapshots/2026-05-27T03-13-23Z__87d56dfa.db`
+- **notes**: skipped(no-name-match)=0 · min_date=--full-refetch · states=['GA'] · chunk-by-cycle
+
+### 2026-05-27 — INGESTION
+
+- **run_id**: `609a234f`
+- **entity_slug**: `nutting-bob`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2025-08-12`
+- **name_variants_queried**: `["Robert Nutting", "Bob Nutting", "Nutting, Robert", "Nutting, Bob"]`
+- **api_calls_made**: `88`
+- **records_fetched**: `24`
+- **confirmed_count**: `23`
+- **probable_count**: `1`
+- **uncertain_count**: `0`
+- **snapshot_path**: `/home/runner/work/checkswing/checkswing/data/snapshots/2026-05-27T03-34-03Z__609a234f.db`
+- **notes**: skipped(no-name-match)=0 · min_date=--full-refetch · states=['WV', 'PA'] · chunk-by-cycle
+
+### 2026-05-27 — INGESTION
+
+- **run_id**: `90d0f364`
+- **entity_slug**: `ricketts-tom`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2026-03-25`
+- **name_variants_queried**: `["Tom Ricketts", "Thomas Ricketts", "Thomas S Ricketts", "Thomas S. Ricketts", "Thomas Stuart Ricketts", "Ricketts, Tom", "Ricketts, Thomas", "Ricketts, Thomas S", "Ricketts, Thomas S."]`
+- **api_calls_made**: `143`
+- **records_fetched**: `63`
+- **confirmed_count**: `61`
+- **probable_count**: `1`
+- **uncertain_count**: `0`
+- **snapshot_path**: `/home/runner/work/checkswing/checkswing/data/snapshots/2026-05-27T03-55-21Z__90d0f364.db`
+- **notes**: skipped(no-name-match)=1 · min_date=--full-refetch · states=['IL'] · chunk-by-cycle
+
+### 2026-05-27 — INGESTION
+
+- **run_id**: `6f8a8c14`
+- **entity_slug**: `walter-mark`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2025-07-05`
+- **name_variants_queried**: `["Mark Walter", "Mark R. Walter", "Mark R Walter", "Mark Richard Walter", "Walter, Mark", "Walter, Mark R", "Walter, Mark R."]`
+- **api_calls_made**: `106`
+- **records_fetched**: `579`
+- **confirmed_count**: `20`
+- **probable_count**: `0`
+- **uncertain_count**: `41`
+- **snapshot_path**: `/home/runner/work/checkswing/checkswing/data/snapshots/2026-05-27T04-37-54Z__6f8a8c14.db`
+- **notes**: skipped(no-name-match)=518 · min_date=--full-refetch · states=['IL'] · chunk-by-cycle
+
+### 2026-05-27 — REFRESH RUN c3ab9707
+
+- **started_at**: `2026-05-27T01:39:13Z`
+- **completed_at**: `2026-05-27T05:07:35Z`
+- **dry_run**: `0`
+- **owners_attempted**: `9`
+- **owners_succeeded**: `7`
+- **owners_failed**: `2`
+- **total_records_fetched**: `885`
+- **data_json_regenerated**: `False`
+- **failed_owners**: `['johnson-greg', 'sherman-john']`
+
+### 2026-05-27 — INGESTION
+
+- **run_id**: `16355e46`
+- **entity_slug**: `castellini-bob`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2026-03-31`
+- **name_variants_queried**: `["Robert H Castellini", "Robert H. Castellini", "Robert Castellini", "Bob Castellini", "Castellini, Robert", "Castellini, Robert H", "Castellini, Robert H.", "Castellini, Bob"]`
+- **api_calls_made**: `148`
+- **records_fetched**: `461`
+- **confirmed_count**: `405`
+- **probable_count**: `34`
+- **uncertain_count**: `14`
+- **snapshot_path**: `/home/runner/work/checkswing/checkswing/data/snapshots/2026-05-27T01-39-11Z__16355e46.db`
+- **notes**: skipped(no-name-match)=8 · min_date=--full-refetch · states=['OH'] · chunk-by-cycle
+
+### 2026-05-27 — INGESTION
+
+- **run_id**: `605259cf`
+- **entity_slug**: `davis-ray`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2026-01-23`
+- **name_variants_queried**: `["Ray C Davis", "Ray C. Davis", "Ray Davis", "Davis, Ray", "Davis, Ray C", "Davis, Ray C."]`
+- **api_calls_made**: `106`
+- **records_fetched**: `318`
+- **confirmed_count**: `71`
+- **probable_count**: `10`
+- **uncertain_count**: `13`
+- **snapshot_path**: `/home/runner/work/checkswing/checkswing/data/snapshots/2026-05-27T02-02-33Z__605259cf.db`
+- **notes**: skipped(no-name-match)=224 · min_date=--full-refetch · states=['TX'] · chunk-by-cycle
+
+### 2026-05-27 — INGESTION
+
+- **run_id**: `e8212d10`
+- **entity_slug**: `fisher-john`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2026-03-30`
+- **name_variants_queried**: `["John Fisher", "John J. Fisher", "John J Fisher", "John Joseph Fisher", "Fisher, John", "Fisher, John J", "Fisher, John J."]`
+- **api_calls_made**: `280`
+- **records_fetched**: `3921`
+- **confirmed_count**: `569`
+- **probable_count**: `99`
+- **uncertain_count**: `3166`
+- **snapshot_path**: `/home/runner/work/checkswing/checkswing/data/snapshots/2026-05-27T02-34-41Z__e8212d10.db`
+- **notes**: skipped(no-name-match)=87 · min_date=--full-refetch · states=['CA'] · chunk-by-cycle
+
+### 2026-05-27 — INGESTION
+
+- **run_id**: `3c9a734c`
+- **entity_slug**: `kendrick-ken`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2025-12-31`
+- **name_variants_queried**: `["Ken Kendrick", "Earl G. Kendrick", "Earl G Kendrick", "Earl G. Kendrick Jr.", "Earl G. Kendrick, Jr.", "Earl Kendrick", "E. G. Kendrick", "E.G. Kendrick", "E G Kendrick", "Earl Gentry Kendrick", "Kendrick, Ken", "Kendrick, Earl G", "Kendrick, Earl G.", "Kendrick, Earl G., Jr."]`
+- **api_calls_made**: `296`
+- **records_fetched**: `3473`
+- **confirmed_count**: `639`
+- **probable_count**: `60`
+- **uncertain_count**: `9`
+- **snapshot_path**: `/home/runner/work/checkswing/checkswing/data/snapshots/2026-05-27T04-24-44Z__3c9a734c.db`
+- **notes**: skipped(no-name-match)=2765 · min_date=--full-refetch · states=['AZ'] · chunk-by-cycle
+
+### 2026-05-27 — INGESTION
+
+- **run_id**: `f9ae641a`
+- **entity_slug**: `middleton-john`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2025-12-29`
+- **name_variants_queried**: `["John Middleton", "John S. Middleton", "John S Middleton", "John Staubus Middleton", "Middleton, John", "Middleton, John S", "Middleton, John S."]`
+- **api_calls_made**: `108`
+- **records_fetched**: `100`
+- **confirmed_count**: `35`
+- **probable_count**: `23`
+- **uncertain_count**: `32`
+- **snapshot_path**: `/home/runner/work/checkswing/checkswing/data/snapshots/2026-05-27T05-28-22Z__f9ae641a.db`
+- **notes**: skipped(no-name-match)=10 · min_date=--full-refetch · states=['PA'] · chunk-by-cycle
+
+### 2026-05-27 — INGESTION
+
+- **run_id**: `fc6815d4`
+- **entity_slug**: `pohlad-joe`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2026-02-21`
+- **name_variants_queried**: `["Joseph C Pohlad", "Joseph C. Pohlad", "Joseph Pohlad", "Joe Pohlad", "Pohlad, Joseph", "Pohlad, Joseph C", "Pohlad, Joseph C.", "Pohlad, Joe"]`
+- **api_calls_made**: `122`
+- **records_fetched**: `171`
+- **confirmed_count**: `107`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `/home/runner/work/checkswing/checkswing/data/snapshots/2026-05-27T05-42-09Z__fc6815d4.db`
+- **notes**: skipped(no-name-match)=64 · min_date=--full-refetch · states=['MN'] · chunk-by-cycle
+
+### 2026-05-27 — INGESTION
+
+- **run_id**: `83217410`
+- **entity_slug**: `rubenstein-david`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2026-01-09`
+- **name_variants_queried**: `["David Rubenstein", "David M. Rubenstein", "David M Rubenstein", "Rubenstein, David", "Rubenstein, David M", "Rubenstein, David M."]`
+- **api_calls_made**: `72`
+- **records_fetched**: `31`
+- **confirmed_count**: `2`
+- **probable_count**: `5`
+- **uncertain_count**: `24`
+- **snapshot_path**: `/home/runner/work/checkswing/checkswing/data/snapshots/2026-05-27T06-00-06Z__83217410.db`
+- **notes**: skipped(no-name-match)=0 · min_date=--full-refetch · states=['MD', 'DC', 'MA'] · chunk-by-cycle
+
+### 2026-05-27 — INGESTION
+
+- **run_id**: `6665c032`
+- **entity_slug**: `simpson-bob`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2012-09-07`
+- **name_variants_queried**: `["Bob R Simpson", "Bob R. Simpson", "Simpson, Bob R", "Simpson, Bob R."]`
+- **api_calls_made**: `30`
+- **records_fetched**: `8`
+- **confirmed_count**: `8`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `/home/runner/work/checkswing/checkswing/data/snapshots/2026-05-27T06-10-50Z__6665c032.db`
+- **notes**: skipped(no-name-match)=0 · min_date=--full-refetch · states=['TX'] · chunk-by-cycle
+
+### 2026-05-27 — INGESTION
+
+- **run_id**: `2d792810`
+- **entity_slug**: `zalupski-patrick`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2025-12-22`
+- **name_variants_queried**: `["Patrick O Zalupski", "Patrick O. Zalupski", "Patrick Zalupski", "Zalupski, Patrick", "Zalupski, Patrick O", "Zalupski, Patrick O."]`
+- **api_calls_made**: `70`
+- **records_fetched**: `20`
+- **confirmed_count**: `15`
+- **probable_count**: `0`
+- **uncertain_count**: `5`
+- **snapshot_path**: `/home/runner/work/checkswing/checkswing/data/snapshots/2026-05-27T06-16-44Z__2d792810.db`
+- **notes**: skipped(no-name-match)=0 · min_date=--full-refetch · states=['FL'] · chunk-by-cycle
+
+### 2026-05-27 — REFRESH RUN f222c7a3
+
+- **started_at**: `2026-05-27T01:39:10Z`
+- **completed_at**: `2026-05-27T06:21:38Z`
+- **dry_run**: `0`
+- **owners_attempted**: `9`
+- **owners_succeeded**: `9`
+- **owners_failed**: `0`
+- **total_records_fetched**: `8503`
+- **data_json_regenerated**: `False`
+
+### 2026-05-27 — INGESTION
+
+- **run_id**: `96d84b1e`
+- **entity_slug**: `castellini-phil`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2020-10-20`
+- **name_variants_queried**: `["Phillip J Castellini", "Phillip J. Castellini", "Phillip Castellini", "Phil Castellini", "Phil J. Castellini", "Phil J Castellini", "Castellini, Phillip", "Castellini, Phillip J", "Castellini, Phillip J.", "Castellini, Phil"]`
+- **api_calls_made**: `158`
+- **records_fetched**: `49`
+- **confirmed_count**: `47`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `/home/runner/work/checkswing/checkswing/data/snapshots/2026-05-27T01-39-11Z__96d84b1e.db`
+- **notes**: skipped(no-name-match)=2 · min_date=--full-refetch · states=['OH', 'KY'] · chunk-by-cycle
+
+### 2026-05-27 — INGESTION
+
+- **run_id**: `11bcc25d`
+- **entity_slug**: `dewitt-bill`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2025-12-31`
+- **name_variants_queried**: `["William O DeWitt Jr", "William O. DeWitt Jr.", "William O. DeWitt Jr", "William DeWitt Jr", "William DeWitt Jr.", "Bill DeWitt Jr", "Bill DeWitt Jr.", "William DeWitt", "Bill DeWitt", "DeWitt, William", "DeWitt, William O", "DeWitt, William O Jr", "DeWitt, Bill"]`
+- **api_calls_made**: `230`
+- **records_fetched**: `359`
+- **confirmed_count**: `235`
+- **probable_count**: `6`
+- **uncertain_count**: `104`
+- **snapshot_path**: `/home/runner/work/checkswing/checkswing/data/snapshots/2026-05-27T01-52-49Z__11bcc25d.db`
+- **notes**: skipped(no-name-match)=14 · min_date=--full-refetch · states=['OH', 'MO'] · chunk-by-cycle
+
+### 2026-05-27 — INGESTION
+
+- **run_id**: `1c081980`
+- **entity_slug**: `lerner-mark`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2026-03-17`
+- **name_variants_queried**: `["Mark D Lerner", "Mark D. Lerner", "Mark Lerner", "Lerner, Mark", "Lerner, Mark D", "Lerner, Mark D."]`
+- **api_calls_made**: `112`
+- **records_fetched**: `240`
+- **confirmed_count**: `68`
+- **probable_count**: `10`
+- **uncertain_count**: `160`
+- **snapshot_path**: `/home/runner/work/checkswing/checkswing/data/snapshots/2026-05-27T03-17-03Z__1c081980.db`
+- **notes**: skipped(no-name-match)=2 · min_date=--full-refetch · states=['MD'] · chunk-by-cycle
+
+### 2026-05-27 — INGESTION
+
+- **run_id**: `da9d6d9f`
+- **entity_slug**: `monfort-dick`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2025-06-03`
+- **name_variants_queried**: `["Richard L Monfort", "Richard L. Monfort", "Richard Monfort", "Dick Monfort", "Monfort, Richard", "Monfort, Richard L", "Monfort, Richard L.", "Monfort, Dick"]`
+- **api_calls_made**: `158`
+- **records_fetched**: `106`
+- **confirmed_count**: `101`
+- **probable_count**: `1`
+- **uncertain_count**: `0`
+- **snapshot_path**: `/home/runner/work/checkswing/checkswing/data/snapshots/2026-05-27T03-29-41Z__da9d6d9f.db`
+- **notes**: skipped(no-name-match)=4 · min_date=--full-refetch · states=['CO'] · chunk-by-cycle
+
+### 2026-05-27 — INGESTION
+
+- **run_id**: `62a9659b`
+- **entity_slug**: `pohlad-tom`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2024-09-24`
+- **name_variants_queried**: `["Thomas Pohlad", "Tom Pohlad", "Pohlad, Thomas", "Pohlad, Tom"]`
+- **api_calls_made**: `85`
+- **records_fetched**: `152`
+- **confirmed_count**: `118`
+- **probable_count**: `1`
+- **uncertain_count**: `0`
+- **snapshot_path**: `/home/runner/work/checkswing/checkswing/data/snapshots/2026-05-27T04-06-19Z__62a9659b.db`
+- **notes**: skipped(no-name-match)=33 · min_date=--full-refetch · states=['MN'] · chunk-by-cycle
+
+### 2026-05-27 — INGESTION
+
+- **run_id**: `8b9f6700`
+- **entity_slug**: `seidler-john`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2025-05-11`
+- **name_variants_queried**: `["John Seidler", "Seidler, John"]`
+- **api_calls_made**: `30`
+- **records_fetched**: `1`
+- **confirmed_count**: `1`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `/home/runner/work/checkswing/checkswing/data/snapshots/2026-05-27T04-18-09Z__8b9f6700.db`
+- **notes**: skipped(no-name-match)=0 · min_date=--full-refetch · states=['CA'] · chunk-by-cycle
+
+### 2026-05-27 — INGESTION
+
+- **run_id**: `6b7c1b79`
+- **entity_slug**: `stanton-john`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2025-08-12`
+- **name_variants_queried**: `["John W Stanton", "John W. Stanton", "John Stanton", "Stanton, John", "Stanton, John W", "Stanton, John W."]`
+- **api_calls_made**: `116`
+- **records_fetched**: `326`
+- **confirmed_count**: `165`
+- **probable_count**: `14`
+- **uncertain_count**: `4`
+- **snapshot_path**: `/home/runner/work/checkswing/checkswing/data/snapshots/2026-05-27T04-21-00Z__6b7c1b79.db`
+- **notes**: skipped(no-name-match)=143 · min_date=--full-refetch · states=['WA'] · chunk-by-cycle
+
+### 2026-05-27 — REFRESH RUN 6a003969
+
+- **started_at**: `2026-05-27T01:39:11Z`
+- **completed_at**: `2026-05-27T05:00:16Z`
+- **dry_run**: `0`
+- **owners_attempted**: `8`
+- **owners_succeeded**: `7`
+- **owners_failed**: `1`
+- **total_records_fetched**: `1233`
+- **data_json_regenerated**: `False`
+- **failed_owners**: `['henry-john']`
