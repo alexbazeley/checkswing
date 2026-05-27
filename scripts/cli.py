@@ -12,6 +12,7 @@ from tabulate import tabulate
 from . import db
 from .apply_committee_external_links import apply_external_links
 from .audit import audit_slug
+from .backfill_donation_image_fields import backfill as backfill_donation_image_fields
 from .export import export_aggregate, export_entity
 from .ingest import ingest_entity, reclassify_entity
 from .ingest_committees import ingest_all_committees
@@ -176,6 +177,20 @@ def ingest_committees_cmd(only, force_refresh, max_count):
     click.echo(json.dumps(summary, indent=2, default=str))
     if summary.get("failed", 0) > 0:
         sys.exit(1)
+
+
+@cli.command(name="backfill-donation-image-fields")
+def backfill_donation_image_fields_cmd():
+    """One-shot: populate v3 image_number/pdf_url/etc. columns on existing donation rows.
+
+    Scans data/raw/<slug>/*.json for each owner whose donation rows still have
+    NULL image_number, and rehydrates the new columns from whatever payloads
+    are present locally. Idempotent. Rows whose raw payload was destroyed (e.g.,
+    via a runner-side GHA refresh whose data/raw didn't make it back) stay NULL
+    and need a full --full-refetch to recover.
+    """
+    summary = backfill_donation_image_fields()
+    click.echo(json.dumps(summary, indent=2, default=str))
 
 
 @cli.command(name="apply-committee-external-links")

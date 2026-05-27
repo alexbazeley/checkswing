@@ -2531,3 +2531,33 @@ Resulting `mockup/data.json`: 925/925 recipients enriched, 918 committee_scale b
 - **owners_failed**: `0`
 - **total_records_fetched**: `2375`
 - **data_json_regenerated**: `False`
+
+### 2026-05-26 — SCHEMA_MIGRATION — v2 → v3 (donations gets 6 per-transaction columns)
+
+Lifted six FEC per-transaction fields off the raw-payload lookup at build_data.py time and onto the `donations` row itself: `image_number`, `pdf_url`, `filing_form`, `line_number`, `receipt_type_full`, `recipient_committee_type`.
+
+#### Why
+
+Yesterday's matrix-validation refresh exposed a structural flaw: `data/raw/` is gitignored and not included in the bucket artifacts (size-prohibitive), so any donation ingested by a GHA matrix bucket has a `raw_payload_path` pointing at a file that lived only on the now-destroyed runner. The dashboard's donation card was reading per-transaction FEC fields via `mockup/build_data.py:load_raw_payload_index`, which walks `data/raw/<slug>/*.json` *locally* — and locally, those files no longer existed. Result: image-link coverage dropped from 79% (3618 donations baseline) → 69% (4158 donations, with the 540 new ones all NULL because their payloads were ephemeral).
+
+#### What changed
+
+- `scripts/db.py`: `SCHEMA_VERSION = 3`. `init()` runs `ALTER TABLE donations ADD COLUMN` gated by `PRAGMA table_info` (same pattern as the existing `family_tenure_start_date` migration on `entities`).
+- `scripts/ingest.py:_record_to_donation_row` extracts the six fields from each FEC record and includes them in the insert dict. New helper `_committee_type_of` resolves the recipient committee type with the prefer-top-level / fall-back-to-nested precedence.
+- `scripts/db.insert_donation` accepts the new columns; tolerant of legacy callers (defaults to NULL).
+- `mockup/build_data.py`: per-donation lookup is DB-first; the raw-payload index only loads for rows where `image_number IS NULL`. Legacy fallback path stays as a safety net for any pre-v3 row whose raw payload happens to still be on disk.
+- `scripts/backfill_donation_image_fields.py` + `cli backfill-donation-image-fields`: one-shot that scans local `data/raw/<slug>/*.json` per owner and UPDATEs rows missing the new columns. Idempotent. Snapshots master.db before writing.
+
+#### Backfill results
+
+- **rows updated**: 2,864 (rehydrated from local raw payloads)
+- **rows unrecoverable**: 1,294 (raw payload destroyed with the GHA runner; need a `cli ingest --full-refetch` per affected owner to recover from FEC)
+- **txn_index size scanned**: 15,077 transactions across 35 owner directories
+
+Coverage in `mockup/data.json` after rebuild: 2,864 from the DB, 1 via legacy raw-payload fallback, 1,293 still NULL. Same user-visible coverage as before the rebuild but **now persisted in the DB** — survives any future GHA matrix re-fetch, no longer depends on whether raw payloads happen to be locally present.
+
+#### Follow-up
+
+To recover the 1,294 unrecoverable rows, run `cli ingest <slug> --full-refetch --chunk-by-cycle` locally per affected owner. The ingest will fetch fresh raw payloads (microsecond-resolution filenames, no collisions) and populate the v3 columns at insert time. Approximate scope: ~30 affected owners, ~3-4h of FEC API time. Separate session.
+
+Tests covering the migration, insert, backfill, build precedence: `tests/test_donation_image_fields.py` (10 cases). Total suite: 169 green.

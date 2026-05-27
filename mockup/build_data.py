@@ -172,7 +172,11 @@ def main() -> None:
     for r in runs:
         runs_by_entity.setdefault(r["entity_slug"], []).append(r)
 
-    # Donations: CONFIRMED + PROBABLE only (matches export rule)
+    # Donations: CONFIRMED + PROBABLE only (matches export rule).
+    # v3 schema: image_number/pdf_url/filing_form/line_number/receipt_type_full/
+    # recipient_committee_type live on the row, populated at ingest time. The
+    # raw-payload lookup below is a legacy fallback for rows ingested before
+    # v3 landed.
     cur.execute(
         """
         SELECT transaction_id, entity_slug, entity_kind, parent_owner_slug,
@@ -184,7 +188,9 @@ def main() -> None:
                recipient_candidate_id, recipient_candidate_name,
                recipient_party, recipient_office,
                amount, date, election_cycle, report_type, filing_id,
-               raw_payload_path, ingested_at
+               raw_payload_path, ingested_at,
+               image_number, pdf_url, filing_form, line_number,
+               receipt_type_full, recipient_committee_type
         FROM donations
         WHERE status IN ('CONFIRMED', 'PROBABLE')
         ORDER BY date DESC
@@ -192,44 +198,25 @@ def main() -> None:
     )
     donations_raw = [dict(row) for row in cur.fetchall()]
 
-    # Index every raw FEC payload once, keyed by transaction_id. This is how
-    # we surface per-transaction FEC image links (pdf_url / image_number) and
-    # the FEC line item number, none of which live in the DB schema. We walk
-    # the full per-owner dir so transactions whose stamped page was clobbered
-    # by a same-second filename collision still get found in a sibling payload.
-    donation_slugs = {d["entity_slug"] for d in donations_raw if d["entity_slug"]}
-    raw_index = load_raw_payload_index(REPO_ROOT, donation_slugs)
-
-    # Recovery accounting: how many donations would have been "image link not
-    # available" under the old stamped-path-only index? Surface in stdout so
-    # PROVENANCE_LOG entries can cite a real number.
-    stamped_index_hits = 0
-    wide_index_hits = 0
-    for d in donations_raw:
-        txn = d["transaction_id"]
-        stamped = d["raw_payload_path"]
-        wide_hit = txn in raw_index
-        stamped_hit = False
-        if stamped:
-            stamped_path = REPO_ROOT / stamped
-            if stamped_path.exists():
-                try:
-                    sd = json.loads(stamped_path.read_text())
-                    stamped_hit = any(
-                        r.get("transaction_id") == txn
-                        for r in (sd.get("response") or {}).get("results") or []
-                    )
-                except (OSError, ValueError):
-                    stamped_hit = False
-        if stamped_hit:
-            stamped_index_hits += 1
-        if wide_hit:
-            wide_index_hits += 1
-    recovered = wide_index_hits - stamped_index_hits
-    print(
-        f"raw_payload_index: {wide_index_hits}/{len(donations_raw)} donations resolved "
-        f"(recovered {recovered} from sibling payloads after stamped-path miss)"
-    )
+    # Legacy fallback: rows that pre-date the v3 schema have NULL on the new
+    # columns. For those, fall back to scanning raw payloads on disk. This
+    # path is the only place we still cross from the DB into the raw archive,
+    # and it's a no-op once the one-shot backfill has populated existing rows.
+    needs_legacy_fallback = [
+        d for d in donations_raw if d.get("image_number") is None
+    ]
+    raw_index: dict[str, dict] = {}
+    if needs_legacy_fallback:
+        legacy_slugs = {d["entity_slug"] for d in needs_legacy_fallback if d["entity_slug"]}
+        raw_index = load_raw_payload_index(REPO_ROOT, legacy_slugs)
+        legacy_hits = sum(1 for d in needs_legacy_fallback if d["transaction_id"] in raw_index)
+        print(
+            f"image-fields: {len(donations_raw) - len(needs_legacy_fallback)}/{len(donations_raw)} "
+            f"resolved from DB; {legacy_hits}/{len(needs_legacy_fallback)} of remaining "
+            f"resolved via legacy raw-payload fallback"
+        )
+    else:
+        print(f"image-fields: {len(donations_raw)}/{len(donations_raw)} resolved from DB (no legacy fallback needed)")
 
     # Normalize, trim, and project to display shape.
     donations = []
@@ -240,7 +227,15 @@ def main() -> None:
                 signals = json.loads(d["signals_matched"])
             except (TypeError, ValueError):
                 signals = []
+        # FEC deep-link fields: prefer the DB columns (v3+), fall back to the
+        # raw-payload index for legacy rows that pre-date the schema bump.
         extra = raw_index.get(d["transaction_id"], {})
+        image_number = d.get("image_number") or extra.get("image_number")
+        pdf_url = d.get("pdf_url") or extra.get("pdf_url")
+        filing_form = d.get("filing_form") or extra.get("filing_form")
+        line_number = d.get("line_number") or extra.get("line_number")
+        receipt_type = d.get("receipt_type_full") or extra.get("receipt_type_full")
+        committee_type = d.get("recipient_committee_type") or extra.get("committee_type")
         donations.append(
             {
                 "id": d["transaction_id"],
@@ -273,14 +268,13 @@ def main() -> None:
                 "filing_id": d["filing_id"],
                 "raw_payload": d["raw_payload_path"],
                 "ingested_at": d["ingested_at"],
-                # FEC deep-link fields (sourced from raw payloads, not DB)
-                "image_number": extra.get("image_number"),
-                "pdf_url": extra.get("pdf_url"),
-                "filing_form": extra.get("filing_form"),
-                "line_number": extra.get("line_number"),
-                "receipt_type": extra.get("receipt_type_full"),
-                "committee_type": extra.get("committee_type"),
-                "recipient_type": committee_type_label(extra.get("committee_type")),
+                "image_number": image_number,
+                "pdf_url": pdf_url,
+                "filing_form": filing_form,
+                "line_number": line_number,
+                "receipt_type": receipt_type,
+                "committee_type": committee_type,
+                "recipient_type": committee_type_label(committee_type),
                 "filing_page_url": filing_page_url(d["filing_id"]),
             }
         )

@@ -139,7 +139,38 @@ def _record_to_donation_row(
         "filing_id": str(record.get("file_number") or record.get("report_id") or ""),
         "raw_payload_path": record.get("_raw_payload_path") or "",
         "ingested_at": ingested_at,
+        # v3 per-transaction FEC fields. Persisted at ingest time so the
+        # dashboard doesn't need to re-read raw payloads at build time, which
+        # broke when GHA runner-side payloads got destroyed. Recipient
+        # committee type can live top-level or nested under committee{}; prefer
+        # top-level (cleaner pull), fall back to committee.committee_type.
+        "image_number": (
+            str(record["image_number"]) if record.get("image_number") is not None else None
+        ),
+        "pdf_url": record.get("pdf_url") or None,
+        "filing_form": record.get("filing_form") or None,
+        "line_number": (
+            str(record["line_number"]) if record.get("line_number") is not None else None
+        ),
+        "receipt_type_full": record.get("receipt_type_full") or None,
+        "recipient_committee_type": _committee_type_of(record),
     }
+
+
+def _committee_type_of(record: dict) -> str | None:
+    """Resolve recipient_committee_type from a FEC record.
+
+    Some FEC responses have it top-level; others only under nested committee{}.
+    Prefer top-level; fall back to the nested struct's committee_type. Returns
+    None when neither is present.
+    """
+    top = record.get("recipient_committee_type")
+    if top:
+        return top
+    cmt = record.get("committee")
+    if isinstance(cmt, dict):
+        return cmt.get("committee_type")
+    return None
 
 
 def _record_to_review_row(

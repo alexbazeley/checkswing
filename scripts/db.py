@@ -163,7 +163,25 @@ CREATE TABLE IF NOT EXISTS committee_totals (
 CREATE INDEX IF NOT EXISTS idx_committee_totals_cycle ON committee_totals(cycle);
 """
 
-SCHEMA_VERSION = 2
+# v3 adds six per-transaction FEC fields (image_number, pdf_url, filing_form,
+# line_number, receipt_type_full, recipient_committee_type) to the donations
+# table. These used to be looked up from raw payloads at build_data.py time,
+# which broke whenever raw payloads were inaccessible (e.g., a GHA matrix
+# refresh writes raw payloads to an ephemeral runner that's then destroyed).
+# Now they're baked onto each row at ingest time. The columns are added via
+# ALTER TABLE in init() — CREATE TABLE IF NOT EXISTS doesn't add columns to
+# existing tables. The list is also kept in DONATION_EXTRA_COLS for use by
+# the migration runner and the insert helper.
+DONATION_EXTRA_COLS: list[tuple[str, str]] = [
+    ("image_number", "TEXT"),
+    ("pdf_url", "TEXT"),
+    ("filing_form", "TEXT"),
+    ("line_number", "TEXT"),
+    ("receipt_type_full", "TEXT"),
+    ("recipient_committee_type", "TEXT"),
+]
+
+SCHEMA_VERSION = 3
 
 
 def _utc_now_iso() -> str:
@@ -194,10 +212,21 @@ def connect(db_path: Path = MASTER_DB) -> Iterator[sqlite3.Connection]:
 def init(db_path: Path = MASTER_DB) -> None:
     """Create schema idempotently. Records a new schema_version row whenever
     SCHEMA_VERSION is bumped beyond the DB's current MAX(version), so the
-    migration trail is preserved."""
+    migration trail is preserved.
+
+    Column additions (ALTER TABLE) live alongside the CREATE statements
+    because SQLite's `CREATE TABLE IF NOT EXISTS` won't add columns to a
+    pre-existing table. PRAGMA table_info gates each ADD COLUMN so the
+    migration is idempotent.
+    """
     ensure_data_dirs()
     with connect(db_path) as conn:
         conn.executescript(SCHEMA_SQL)
+        # v3: per-transaction FEC fields on donations
+        existing_donation_cols = {r["name"] for r in conn.execute("PRAGMA table_info(donations)")}
+        for col_name, col_type in DONATION_EXTRA_COLS:
+            if col_name not in existing_donation_cols:
+                conn.execute(f"ALTER TABLE donations ADD COLUMN {col_name} {col_type}")
         existing = conn.execute("SELECT MAX(version) AS v FROM schema_version").fetchone()
         current = existing["v"] if existing else None
         if current is None or current < SCHEMA_VERSION:
@@ -290,6 +319,12 @@ def insert_donation(conn: sqlite3.Connection, row: dict) -> None:
     For simple idempotent re-runs (same FEC data), the INSERT OR IGNORE keeps
     things clean.
     """
+    # Fill in the v3 per-transaction FEC fields with None if the caller didn't
+    # provide them (e.g., legacy callers, or records where FEC omitted them).
+    # The columns are nullable; missing data shows "Image link not available"
+    # on the donation card, which is the honest fallback.
+    payload = {col: row.get(col) for col, _ in DONATION_EXTRA_COLS}
+    full_row = {**row, **payload}
     conn.execute(
         """
         INSERT OR IGNORE INTO donations (
@@ -301,7 +336,9 @@ def insert_donation(conn: sqlite3.Connection, row: dict) -> None:
             recipient_candidate_id, recipient_candidate_name,
             recipient_party, recipient_office,
             amount, date, election_cycle, report_type,
-            filing_id, raw_payload_path, ingested_at
+            filing_id, raw_payload_path, ingested_at,
+            image_number, pdf_url, filing_form, line_number,
+            receipt_type_full, recipient_committee_type
         ) VALUES (
             :transaction_id, :entity_slug, :entity_kind, :parent_owner_slug,
             :status, :status_reason, :signals_matched,
@@ -311,10 +348,12 @@ def insert_donation(conn: sqlite3.Connection, row: dict) -> None:
             :recipient_candidate_id, :recipient_candidate_name,
             :recipient_party, :recipient_office,
             :amount, :date, :election_cycle, :report_type,
-            :filing_id, :raw_payload_path, :ingested_at
+            :filing_id, :raw_payload_path, :ingested_at,
+            :image_number, :pdf_url, :filing_form, :line_number,
+            :receipt_type_full, :recipient_committee_type
         )
         """,
-        row,
+        full_row,
     )
 
 
