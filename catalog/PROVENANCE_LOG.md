@@ -3104,3 +3104,44 @@ Tests covering the migration, insert, backfill, build precedence: `tests/test_do
 - **total_records_fetched**: `1233`
 - **data_json_regenerated**: `False`
 - **failed_owners**: `['henry-john']`
+
+### 2026-05-27 — NOTE — overnight v3 image-fields recovery: partial
+
+Triggered the matrix workflow with `full_refetch=true` (workflow_dispatch run #26485532692) to recover the 1,294 NULL `image_number` rows the local backfill couldn't reach. The workflow ran cleanly end-to-end (all 4 buckets, consolidate, committees_refresh, 2 commits to main: ede9dae + 18d32e6). Per-bucket backfill step worked as designed.
+
+#### Outcome
+
+- **before**: 2,865 / 4,158 with `image_number` (68.9%)
+- **after**: 3,276 / 4,212 with `image_number` (**77.8%**)
+- **recovered**: 358 rows
+- **still NULL**: 936 rows
+- bucket 2 did the heaviest lifting (310 rows updated; mostly fisher-john +310), bucket 0 updated 48, buckets 1 and 3 updated 0 each
+
+#### Why partial — not an architecture bug
+
+Spot-checking the 155 still-NULL kendrick-ken rows: all from year 2000, donor names like `"KENDRICK, E G MR"` (note `E G` vs the modern `Earl G` we use in name variants), and **empty `filing_id`**. The `--full-refetch` fetched 3,473 unique records for kendrick (284 raw-payload files persisted on the bucket runner) — but the specific 155 transaction_ids didn't appear in the fresh fetch.
+
+Likely cause: FEC's contributor_name search tokenization or backend indexing has shifted for ancient records. Modern queries using current name variants don't return these specific transaction_ids. The donations themselves are correctly attributed (status=CONFIRMED, owner-side donor signals match) — but the per-transaction image-link payload field can't be rehydrated from current FEC.
+
+#### What this means going forward
+
+- 77.8% image-link coverage is the realistic ceiling without per-record FEC archeology (e.g., querying by image_number / transaction_id directly via /schedules/schedule_a/ search params). Not pursued here.
+- Architecture works: the v3 schema + ingest population + per-bucket backfill step does the right thing whenever FEC returns matching data. Next Monday's incremental refresh will continue to populate fields on new donations.
+- The 936 stuck rows render as "Image link not available in this payload" on the donation card — same UX as before, but now correctly persisted as NULL rather than failing build-time lookups.
+
+#### Worst-case remaining counts by owner
+
+```
+fisher-john:    177 NULL
+kendrick-ken:   155
+reinsdorf-jerry:133
+castellini-bob:  69
+dewitt-bill:     63
+cohen-steven:    50
+stanton-john:    47
+monfort-dick:    45
+johnson-greg:    27
+dolan-paul:      25
+```
+
+Open path forward if we ever revisit: an alternative recovery script that queries FEC's `/schedules/schedule_a/?contributor_id=<id>` or per-transaction lookups per affected row. Documented but not built.
