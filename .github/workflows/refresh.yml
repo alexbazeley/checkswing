@@ -26,6 +26,11 @@ on:
         description: 'Comma-separated bucket indexes to run (default: 0,1,2,3). Use a subset for dry-runs.'
         required: false
         default: '0,1,2,3'
+      full_refetch:
+        description: 'Pass --full-refetch to ingest: re-fetch every cycle from 2000-01-01 ignoring audit.last_ingestion. Use for one-off recovery runs (e.g., backfilling v3 image fields). Heavier than the weekly incremental.'
+        required: false
+        type: boolean
+        default: false
 
 # Queue overlapping runs rather than cancel — partial refresh state is
 # harder to recover from than a delayed full one.
@@ -85,7 +90,22 @@ jobs:
         continue-on-error: true
         env:
           FEC_API_KEY: ${{ secrets.FEC_API_KEY }}
-        run: python -m scripts.cli refresh --bucket ${{ matrix.bucket }}/4
+        run: |
+          extra_args=""
+          if [ "${{ github.event.inputs.full_refetch }}" = "true" ]; then
+            extra_args="--full-refetch --chunk-by-cycle"
+          fi
+          python -m scripts.cli refresh --bucket ${{ matrix.bucket }}/4 $extra_args
+
+      - name: Backfill v3 image fields from raw payloads
+        # After a full-refetch, fresh raw payloads sit on this runner with the
+        # per-transaction image fields. INSERT OR IGNORE in db.insert_donation
+        # leaves existing rows alone, so the v3 columns on previously-NULL
+        # rows stay NULL unless we explicitly rehydrate them. This step does
+        # that — runs per bucket so the populated DB rides into consolidate.
+        # Idempotent and cheap on incremental runs (no NULL rows to process).
+        if: always() && steps.gate.outputs.run == 'true'
+        run: python -m scripts.cli backfill-donation-image-fields
 
       - name: Upload bucket artifact
         # always(): upload whatever progress we made even if the refresh step
