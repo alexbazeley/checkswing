@@ -4957,7 +4957,8 @@ function downloadDonationsCSV(rows, filename) {
     "entity","entity_kind","parent",
     "donor_name","employer","occupation","city","state","zip",
     "committee_id","committee","candidate_id","candidate","party","party_raw","office",
-    "amount","report_type","filing_id","filing_form","line_number","image_number","pdf_url","filing_pdf_url",
+    "amount","report_type","filing_id","filing_form","line_number","image_number","pdf_url",
+    "filing_pdf_url","filing_page_url",
     "raw_payload","ingested_at",
   ];
   const escape = (v) => {
@@ -5111,7 +5112,14 @@ function openDrawer(id) {
               <div class="drawer-source-sub">Image link not available in this payload</div>
             </div>
           </div>`}
-        ${d.filing_page_url ? `
+        ${d.filing_pdf_url ? `
+          <a class="drawer-source-link" href="${d.filing_pdf_url}" target="_blank" rel="noopener">
+            <span class="drawer-source-icon">📑</span>
+            <div>
+              <div class="drawer-source-title">Full filing PDF</div>
+              <div class="drawer-source-sub">All transactions in filing #${escapeHtml(d.filing_id || "")}</div>
+            </div>
+          </a>` : d.filing_page_url ? `
           <a class="drawer-source-link" href="${d.filing_page_url}" target="_blank" rel="noopener">
             <span class="drawer-source-icon">📑</span>
             <div>

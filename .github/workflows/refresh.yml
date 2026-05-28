@@ -220,6 +220,14 @@ jobs:
       - name: Apply curated external links
         run: python -m scripts.cli apply-committee-external-links
 
+      - name: Ingest filings (real PDF URLs for donation cards)
+        env:
+          FEC_API_KEY: ${{ secrets.FEC_API_KEY }}
+        # Batches 50 file_numbers per FEC request. Steady-state ~10s — only
+        # filings outside the 30d freshness window get re-fetched, and the
+        # weekly cron typically adds ~50-100 new filings, well under the cap.
+        run: python -m scripts.cli ingest-filings
+
       - name: Rebuild mockup/data.json with enrichment
         run: python mockup/build_data.py
 

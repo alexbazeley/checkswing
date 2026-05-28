@@ -3145,3 +3145,64 @@ dolan-paul:      25
 ```
 
 Open path forward if we ever revisit: an alternative recovery script that queries FEC's `/schedules/schedule_a/?contributor_id=<id>` or per-transaction lookups per affected row. Documented but not built.
+
+### 2026-05-27 — SCHEMA_MIGRATION — v3 → v4 (filings table + real PDF links)
+
+Replaces the donation card's "Filing on FEC.gov" HTML-page stopgap with the
+real per-filing PDF, sourced from OpenFEC `/v1/filings/?file_number=<id>`.
+
+#### Background
+
+The previous fix (commit d2d7ee0) routed the donation card's filing link to
+`https://www.fec.gov/data/filings/?file_number=<id>` — a public HTML page,
+not a direct PDF. FEC's actual per-filing PDF lives at
+`https://docquery.fec.gov/pdf/<shard>/<image_number>/<image_number>.pdf`,
+where `image_number` is the filing's 18-digit image identifier (different
+from per-transaction image numbers). We didn't have that field locally, so
+we couldn't construct the URL.
+
+#### Schema
+
+New table `filings`:
+
+```
+file_number TEXT PRIMARY KEY,
+pdf_url, form_type, document_type, document_type_full,
+filed_date, receipt_date, coverage_start_date, coverage_end_date,
+committee_id, committee_name, is_amended, amendment_chain, cycle,
+raw_payload_path, fetched_at, refreshed_at
+```
+
+#### Implementation
+
+- `scripts/fetch_filings.py` — wraps FECClient with `/v1/filings/?file_number=<id>` calls, batching up to 50 file_numbers per request. FEC accepts multi-valued `file_number` query params; one request returns 50 filings on one page in the common case. Raw payloads at `data/raw/_filings/<UTC>__<batch>.json`.
+- `scripts/ingest_filings.py` — orchestrator with 30-day freshness gate. Walks `SELECT DISTINCT filing_id FROM donations`, filters to stale ids, batches the fetch. INSERT OR REPLACE keyed on `file_number`.
+- CLI: `cli ingest-filings [--only IDs --force-refresh --max N]`.
+- `mockup/build_data.py` reads the filings table; each donation gains a `filing_pdf_url` field when its filing has been enriched.
+- `mockup/index.html` (`renderDrawer`): donation card prefers `filing_pdf_url` (label "Full filing PDF" → real docquery PDF) over `filing_page_url` (label "Filing on FEC.gov" → HTML fallback). CSV export gains both columns.
+- `.github/workflows/refresh.yml` `committees_refresh` job grows an `ingest-filings` step. Steady-state cost: ~10s/week (only newly-stale filings get re-fetched).
+
+#### Backfill results
+
+```
+candidates:        2,581 distinct filing_ids
+stale_to_fetch:    2,581
+fetched:           2,576
+upserted:          2,576
+missing_from_fec:  5     (ancient filings the /v1/filings/ endpoint doesn't return)
+wall-clock:        ~8 min  (51 batches × 50 file_numbers × 4s throttle ≈ ~200s + FEC response time)
+```
+
+Coverage in `mockup/data.json`: 2,576/2,581 distinct filings have a real `pdf_url`. The 5 missing leave their donations with the HTML-page fallback (same UX as before this PR, just for a much smaller set). 259 donations have NULL `filing_id` and stay link-less either way.
+
+#### Verification
+
+Spot-checked one URL with curl: `https://docquery.fec.gov/pdf/193/202604159862338193/202604159862338193.pdf` returns `200 OK`, `content-type: application/pdf`, 164KB PDF. Donation card visually confirmed showing "Full filing PDF" with the correct link.
+
+Tests: 13 new cases across `test_fetch_filings.py` and `test_ingest_filings.py`. Total suite: 182 green.
+
+#### Status of the open queue, after this PR
+
+- ~Real PDF filing links~ — done (this entry)
+- Phase 2 (Beneficiary view: committee → recipients) — still queued
+- 936 NULL image_number rows on donations (year-2000 ancients) — accepted as the realistic ceiling; documented above

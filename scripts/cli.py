@@ -16,6 +16,7 @@ from .backfill_donation_image_fields import backfill as backfill_donation_image_
 from .export import export_aggregate, export_entity
 from .ingest import ingest_entity, reclassify_entity
 from .ingest_committees import ingest_all_committees
+from .ingest_filings import ingest_filings as ingest_filings_orchestrator
 from .paths import OWNERS_DIR
 from .refresh import refresh_all, select_bucket
 from .validate_owners import format_report, validate_all
@@ -190,6 +191,43 @@ def backfill_donation_image_fields_cmd():
     and need a full --full-refetch to recover.
     """
     summary = backfill_donation_image_fields()
+    click.echo(json.dumps(summary, indent=2, default=str))
+
+
+@cli.command(name="ingest-filings")
+@click.option(
+    "--only",
+    default=None,
+    help="Comma-separated file_numbers to refresh (default: every distinct filing_id on a CONFIRMED/PROBABLE donation).",
+)
+@click.option(
+    "--force-refresh",
+    is_flag=True,
+    help="Re-fetch even if the filings row was refreshed within the freshness window.",
+)
+@click.option(
+    "--max",
+    "max_count",
+    type=int,
+    default=None,
+    help="Cap the number of filings processed (for testing).",
+)
+def ingest_filings_cmd(only, force_refresh, max_count):
+    """Enrich the filings table from OpenFEC's /v1/filings/?file_number=... endpoint.
+
+    Backs the donation card's "Full filing PDF" link. Batches up to 50 file_numbers
+    per FEC request. Idempotent — re-runs within 30 days are no-ops unless
+    --force-refresh.
+    """
+    only_list: list[str] | None = None
+    if only:
+        only_list = [s.strip() for s in only.split(",") if s.strip()]
+    summary = ingest_filings_orchestrator(
+        only=only_list,
+        force_refresh=force_refresh,
+        max_count=max_count,
+    )
+    click.echo("")
     click.echo(json.dumps(summary, indent=2, default=str))
 
 

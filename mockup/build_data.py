@@ -218,6 +218,37 @@ def main() -> None:
     else:
         print(f"image-fields: {len(donations_raw)}/{len(donations_raw)} resolved from DB (no legacy fallback needed)")
 
+    # Per-filing real-PDF URL lookup, sourced from the v4 filings table.
+    # Tolerant of a pre-v4 DB: an empty dict just means the UI falls back to
+    # the older "Filing on FEC.gov" HTML page link (filing_page_url).
+    filing_pdf_by_id: dict[str, str] = {}
+    relevant_filing_ids = tuple(
+        {d["filing_id"] for d in donations_raw if d.get("filing_id")}
+    )
+    if relevant_filing_ids:
+        placeholders = ",".join(["?"] * len(relevant_filing_ids))
+        try:
+            cur.execute(
+                f"SELECT file_number, pdf_url FROM filings WHERE file_number IN ({placeholders})",
+                relevant_filing_ids,
+            )
+            for row in cur.fetchall():
+                if row["pdf_url"]:
+                    filing_pdf_by_id[row["file_number"]] = row["pdf_url"]
+        except sqlite3.OperationalError as e:
+            if "no such table" in str(e):
+                print(
+                    f"note: filings table not present yet ({e}). "
+                    f"Run `python -m scripts.cli init` and `cli ingest-filings`.",
+                    file=sys.stderr,
+                )
+            else:
+                raise
+    n_pdf_enriched = sum(1 for fid in relevant_filing_ids if fid in filing_pdf_by_id)
+    print(
+        f"filing PDFs: {n_pdf_enriched}/{len(relevant_filing_ids)} distinct filings have real pdf_url"
+    )
+
     # Normalize, trim, and project to display shape.
     donations = []
     for d in donations_raw:
@@ -275,6 +306,11 @@ def main() -> None:
                 "receipt_type": receipt_type,
                 "committee_type": committee_type,
                 "recipient_type": committee_type_label(committee_type),
+                # The donation card prefers the real PDF (filing_pdf_url) when
+                # we have it. filing_page_url is the public HTML fallback for
+                # filings the /v1/filings/ endpoint didn't return (e.g.
+                # ancient records / NULL filing_id donations).
+                "filing_pdf_url": filing_pdf_by_id.get(d["filing_id"]),
                 "filing_page_url": filing_page_url(d["filing_id"]),
             }
         )

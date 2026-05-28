@@ -161,6 +161,32 @@ CREATE TABLE IF NOT EXISTS committee_totals (
     PRIMARY KEY (committee_id, cycle)
 );
 CREATE INDEX IF NOT EXISTS idx_committee_totals_cycle ON committee_totals(cycle);
+
+-- v4: per-filing metadata for the donation card's "Full filing PDF" link.
+-- Sourced from OpenFEC /v1/filings/?file_number=<id>. The real PDF lives at
+-- pdf_url; the older HTML fec.gov page link (filing_page_url) stays as the
+-- fallback for filings we haven't enriched yet (e.g. ancient records FEC's
+-- batch endpoint doesn't return).
+CREATE TABLE IF NOT EXISTS filings (
+    file_number              TEXT PRIMARY KEY,
+    pdf_url                  TEXT,
+    form_type                TEXT,
+    document_type            TEXT,
+    document_type_full       TEXT,
+    filed_date               TEXT,
+    receipt_date             TEXT,
+    coverage_start_date      TEXT,
+    coverage_end_date        TEXT,
+    committee_id             TEXT,
+    committee_name           TEXT,
+    is_amended               INTEGER NOT NULL DEFAULT 0,
+    amendment_chain          TEXT,
+    cycle                    INTEGER,
+    raw_payload_path         TEXT NOT NULL,
+    fetched_at               TEXT NOT NULL,
+    refreshed_at             TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_filings_committee ON filings(committee_id);
 """
 
 # v3 adds six per-transaction FEC fields (image_number, pdf_url, filing_form,
@@ -181,7 +207,7 @@ DONATION_EXTRA_COLS: list[tuple[str, str]] = [
     ("recipient_committee_type", "TEXT"),
 ]
 
-SCHEMA_VERSION = 3
+SCHEMA_VERSION = 4
 
 
 def _utc_now_iso() -> str:
