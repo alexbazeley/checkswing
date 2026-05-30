@@ -3547,3 +3547,59 @@ Total suite: 209 green.
 - **outcome**: NOT APPLIED. After a full FEC re-fetch, attributed rows still lacked raw on disk (angelos: 48 missing; fisher: 310; kendrick: 1; malone: fetch timed out). FEC's current API no longer returns the specific historical transactions these rows were sourced from. `reclassify` was skipped for all four — the raw-coverage guard held, not `--force`, so no attributed rows were dropped.
 - **data effect**: none. The partial re-fetch writes were rolled back to the pre-B2b committed state; these four owners remain on their prior classification. A minority of raw payloads were restored to disk and are retained for future re-verification.
 - **implication**: these four cannot be cleanly reclassified until their raw is otherwise recovered. Of the four, only kendrick-ken has suffix name-variants (the only one whose classification the H4 fix would change); the others are non-suffix / non-cross-state, so the current classifier yields the same result as before.
+
+### 2026-05-30 — RESOLUTION — bulk-discard review-queue items
+
+- **reason_like**: `city/state outside documented residences%`
+- **scope**: `all owners`
+- **items_discarded**: `8411`
+- **per_owner**: cohen-steven=2683, fisher-john=2439, johnson-greg=2328, sherman-john=305, henry-john=241, dewitt-bill=97, sherman-bruce=77, walter-mark=41, attanasio-mark=28, malone-john=23, rubenstein-david=23, lerner-mark=23, ilitch-chris=18, feliciano-jose=15, middleton-john=15, crane-jim=14, davis-ray=13, angelos-john-p=8, moreno-arte=6, kendrick-ken=5, zalupski-patrick=5, stanton-john=4
+- **open_queue_remaining**: `1107`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T17-00-03Z__pre-bulk-discard.db`
+- **note**: Standing DISCARDED verdicts recorded in review_resolutions (survive reclassify). Attribution unaffected (GOVERNANCE.md §2.5). Reversible via `unresolve`.
+
+### 2026-05-30 — RESOLUTION — bulk-discard review-queue items
+
+- **reason_like**: `matches negative employer signal%`
+- **scope**: `all owners`
+- **items_discarded**: `1039`
+- **per_owner**: fisher-john=725, lerner-mark=137, cohen-steven=101, sherman-bruce=43, middleton-john=17, castellini-bob=14, rubenstein-david=1, henry-john=1
+- **open_queue_remaining**: `68`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T17-00-03Z__pre-bulk-discard.db`
+- **note**: Standing DISCARDED verdicts recorded in review_resolutions (survive reclassify). Attribution unaffected (GOVERNANCE.md §2.5). Reversible via `unresolve`.
+
+### 2026-05-30 — RESOLUTION — bulk-discard review-queue items
+
+- **reason_like**: `name match only%`
+- **scope**: `all owners`
+- **items_discarded**: `1`
+- **per_owner**: cohen-steven=1
+- **open_queue_remaining**: `67`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T17-00-03Z__pre-bulk-discard.db`
+- **note**: Standing DISCARDED verdicts recorded in review_resolutions (survive reclassify). Attribution unaffected (GOVERNANCE.md §2.5). Reversible via `unresolve`.
+
+### 2026-05-30 — DELETION — reclassify dewitt-bill
+
+- **entity_slug**: `dewitt-bill`
+- **reason**: probe: verify discard suppression survives reclassify
+- **rows_deleted_donations**: `230`
+- **rows_deleted_review_queue**: `126` (of which 97 had resolutions)
+- **include_related**: `False`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T17-00-03Z__pre-reclassify-dewitt-bill.db`
+- **note**: Rows are recoverable from the snapshot above and from data/raw/dewitt-bill/ payloads. Re-classification follows in the next INGESTION entry.
+
+### 2026-05-30 — INGESTION
+
+- **run_id**: `4c506293`
+- **entity_slug**: `dewitt-bill`
+- **dry_run**: `0`
+- **period_start**: `2024-11-23`
+- **period_end**: `2025-12-31`
+- **name_variants_queried**: `["William O DeWitt Jr", "William O. DeWitt Jr.", "William O. DeWitt Jr", "William DeWitt Jr", "William DeWitt Jr.", "Bill DeWitt Jr", "Bill DeWitt Jr.", "William DeWitt", "Bill DeWitt", "DeWitt, William", "DeWitt, William O", "DeWitt, William O Jr", "DeWitt, Bill"]`
+- **api_calls_made**: `0`
+- **records_fetched**: `359`
+- **confirmed_count**: `224`
+- **probable_count**: `6`
+- **uncertain_count**: `126`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T17-00-04Z__4c506293.db`
+- **notes**: skipped(no-name-match)=3 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
