@@ -3245,3 +3245,11 @@ The full ~1054-committee backfill runs via `workflow_dispatch beneficiaries=true
 - `tests/test_build_data_committees.py`: 3 new cases (beneficiary join, party normalization, pre-v5 fallback to empty map).
 
 Total suite: 209 green.
+
+### 2026-05-30 — BACKFILL — filing_id sentinel (H3)
+
+- **rows_updated**: `259`
+- **sentinel**: `FEC-PRE2006-NOID`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T03-25-45Z__pre-filing-id-sentinel.db`
+- **sample_txns**: `['1070820110006620625', '3061920110007582202', '3061920110009108639', '2072320041040551613', '3061920110008116721']`
+- **note**: Pre-2006 paper filings with no FEC file number; the sentinel makes the gap explicit (CLAUDE.md §1.3). Rows retain raw_payload_path.
