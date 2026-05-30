@@ -210,3 +210,86 @@ class TestFilingIdSentinelBackfill:
         # Idempotent: a second run finds nothing to change.
         with db.connect(db_path) as conn:
             assert _apply_sentinel(conn) == 0
+
+
+# ─── v6 review_resolutions: durable verdicts + sticky discard (audit M6) ──────
+
+def test_review_resolution_upsert_query_and_delete(db_path):
+    with db.connect(db_path) as conn:
+        db.upsert_review_resolution(
+            conn, transaction_id="T1", entity_slug="owner-a",
+            resolution="DISCARDED", resolution_reason="stranger",
+            resolved_at="2026-05-30T00:00:00Z",
+        )
+        # independent key per (txn, slug)
+        db.upsert_review_resolution(
+            conn, transaction_id="T1", entity_slug="owner-b",
+            resolution="DISCARDED", resolution_reason="other",
+            resolved_at="2026-05-30T00:00:00Z",
+        )
+        assert db.discarded_txns_for_slug(conn, "owner-a") == {"T1"}
+        assert db.discarded_txns_for_slug(conn, "owner-b") == {"T1"}
+        assert db.discarded_txns_for_slug(conn, "owner-c") == set()
+        # upsert overwrites
+        db.upsert_review_resolution(
+            conn, transaction_id="T1", entity_slug="owner-a",
+            resolution="DISCARDED", resolution_reason="v2",
+            resolved_at="2026-05-30T01:00:00Z",
+        )
+        rows = conn.execute(
+            "SELECT resolution_reason FROM review_resolutions "
+            "WHERE transaction_id='T1' AND entity_slug='owner-a'"
+        ).fetchall()
+        assert len(rows) == 1 and rows[0]["resolution_reason"] == "v2"
+        # delete (undo)
+        assert db.delete_review_resolution(conn, transaction_id="T1", entity_slug="owner-a") == 1
+        assert db.discarded_txns_for_slug(conn, "owner-a") == set()
+        assert db.delete_review_resolution(conn, transaction_id="T1", entity_slug="owner-a") == 0
+
+
+def test_review_resolution_survives_queue_wipe(db_path):
+    """The M6 guarantee: a DISCARDED verdict outlives a review_queue rebuild
+    (what reclassify does) and remains available to suppress re-queuing."""
+    with db.connect(db_path) as conn:
+        conn.execute(
+            "INSERT INTO review_queue (transaction_id, entity_slug, reason, raw_payload_path, queued_at) "
+            "VALUES ('T1','owner-a','name match only','data/raw/owner-a/x.json','2026-05-30T00:00:00Z')"
+        )
+        db.upsert_review_resolution(
+            conn, transaction_id="T1", entity_slug="owner-a",
+            resolution="DISCARDED", resolution_reason="stranger",
+            resolved_at="2026-05-30T00:00:00Z",
+        )
+        conn.execute("DELETE FROM review_queue WHERE entity_slug='owner-a'")  # reclassify wipes the projection
+        assert db.discarded_txns_for_slug(conn, "owner-a") == {"T1"}  # verdict persists
+
+
+# ─── v7 manual_attributions: transaction-level override (GOVERNANCE.md §1.1) ──
+
+def test_manual_attribution_upsert_query_and_delete(db_path):
+    with db.connect(db_path) as conn:
+        db.upsert_manual_attribution(
+            conn, transaction_id="T1", entity_slug="owner-a",
+            status="CONFIRMED", reason="misfiled suffix", source="zip+employer match",
+            attributed_at="2026-05-30T00:00:00Z",
+        )
+        assert db.manual_attributions_for_slug(conn, "owner-a") == {"T1": "CONFIRMED"}
+        assert db.manual_attributions_for_slug(conn, "owner-b") == {}
+        # upsert overwrites status
+        db.upsert_manual_attribution(
+            conn, transaction_id="T1", entity_slug="owner-a",
+            status="PROBABLE", reason="v2", source=None,
+            attributed_at="2026-05-30T01:00:00Z",
+        )
+        assert db.manual_attributions_for_slug(conn, "owner-a") == {"T1": "PROBABLE"}
+        # delete (undo)
+        assert db.delete_manual_attribution(conn, transaction_id="T1", entity_slug="owner-a") == 1
+        assert db.manual_attributions_for_slug(conn, "owner-a") == {}
+        assert db.delete_manual_attribution(conn, transaction_id="T1", entity_slug="owner-a") == 0
+
+
+def test_schema_v7_tables_present(db_path):
+    with db.connect(db_path) as conn:
+        names = {r["name"] for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")}
+    assert {"review_resolutions", "manual_attributions"} <= names
+    assert db.SCHEMA_VERSION >= 7
