@@ -467,3 +467,138 @@ class TestEdgeCases:
         # Round-trip ensures DB persistence works.
         s = json.dumps(result.signals_matched)
         assert json.loads(s) == result.signals_matched
+
+
+# ─── H4: comma + suffix normalization (the dominant FEC "Last, First Suffix") ─
+
+
+class TestCommaSuffixNormalization:
+    def test_comma_form_suffix_detected(self):
+        # "Last, First Middle Suffix" — the suffix lands mid-string after the
+        # comma-swap, so trailing-only detection used to miss it (suffix=None).
+        forms, suffix = normalize_name("DeWitt, William O Jr")
+        assert "william dewitt" in forms
+        assert suffix == "jr"
+
+    def test_comma_form_roman_numeral_suffix_detected(self):
+        forms, suffix = normalize_name("HENRY, JOHN WILLIAM II")
+        assert "john william henry" in forms
+        assert suffix == "ii"
+
+    def test_double_comma_suffix_detected(self):
+        # "Last, First M., Suffix" (Kendrick form).
+        _, suffix = normalize_name("Kendrick, Earl G., Jr.")
+        assert suffix == "jr"
+
+    def test_comma_record_matches_noncomma_suffixed_variant(self):
+        # FEC files "DEWITT, WILLIAM O JR"; the owner YAML carries the
+        # non-comma variant "William O DeWitt Jr". They must match WITH suffix
+        # agreement — previously this was a no-match (the owner's own donation
+        # silently skipped).
+        canon, suf, _ = names_match("DEWITT, WILLIAM O JR", ["William O DeWitt Jr"])
+        assert canon and suf
+
+    def test_dewitt_jr_vs_iii_disambiguation(self):
+        # The documented critical case: father (Jr.) vs son (III). Both
+        # canonically match, but the suffix differs → suffix_ok False → the
+        # son's filing is correctly demoted, not attributed to the father.
+        canon, suf, _ = names_match(
+            "DEWITT, WILLIAM O III", ["William O DeWitt Jr", "DeWitt, William O Jr"]
+        )
+        assert canon and not suf
+
+    def test_bare_v_midstring_is_initial_not_suffix(self):
+        # A single-letter "V" mid-string is a middle initial, not a Roman
+        # numeral suffix (it gets dropped as an initial).
+        _, suffix = normalize_name("John V Smith")
+        assert suffix is None
+
+    def test_bare_v_trailing_is_suffix(self):
+        _, suffix = normalize_name("John Smith V")
+        assert suffix == "v"
+
+
+# ─── M2: state-aware address contradiction ──────────────────────────────────
+
+
+class TestCrossStateContradiction:
+    def test_same_city_name_wrong_state_demotes(self, owner):
+        # Greenwich is a documented city and CT/NY documented states, but
+        # Greenwich, KS is a different place. Employer matches, yet the wrong
+        # state must demote to UNCERTAIN (city+state is the unit).
+        r = _record(
+            contributor_employer="Point72 Securities",
+            contributor_city="Greenwich",
+            contributor_state="KS",
+        )
+        result = classify(r, owner)
+        assert result is not None
+        assert result.status == UNCERTAIN
+        assert "city/state outside documented residences" in result.status_reason
+
+    def test_documented_city_state_pair_not_contradicted(self, owner):
+        # Greenwich, CT is a documented residence — employer + city/state → 2
+        # confirming signals → CONFIRMED (no contradiction).
+        r = _record(
+            contributor_employer="Point72 Securities",
+            contributor_city="Greenwich",
+            contributor_state="CT",
+        )
+        result = classify(r, owner)
+        assert result is not None
+        assert result.status == CONFIRMED
+
+
+# ─── H4b: related-entity routing requires suffix agreement ───────────────────
+
+
+@pytest.fixture
+def sr_owner():
+    """Owner 'John Smith Sr' with a related child 'John Smith Jr' — same
+    canonical name, differing suffix (the misrouting trigger)."""
+    return {
+        "slug": "smith-sr",
+        "name": "John Smith Sr",
+        "name_variants": ["John Smith Sr", "Smith, John Sr"],
+        "verifying_signals": {"employers": ["Acme"], "cities": [], "states": []},
+        "strong_signals": {},
+        "negative_signals": {},
+        "related_entities": [
+            {
+                "kind": "child",
+                "slug": "smith-jr",
+                "name": "John Smith Jr",
+                "name_variants": ["John Smith Jr", "Smith, John Jr"],
+                "verifying_signals": {"employers": ["Beta"]},
+                "strong_signals": {},
+                "negative_signals": {},
+            }
+        ],
+    }
+
+
+class TestRelatedEntitySuffixRouting:
+    def test_owner_record_routes_to_owner_not_jr_child(self, sr_owner):
+        # The owner's own filing ("...Sr") must NOT be misrouted to the Jr
+        # child just because the canonical names collide.
+        r = _record(contributor_name="Smith, John Sr", contributor_employer="Acme Inc")
+        result = classify(r, sr_owner, process_related_entities=True)
+        assert result is not None
+        assert result.entity_slug == "smith-sr"
+        assert result.entity_kind == "owner"
+
+    def test_child_record_routes_to_child_on_suffix_agreement(self, sr_owner):
+        r = _record(contributor_name="Smith, John Jr", contributor_employer="Beta LLC")
+        result = classify(r, sr_owner, process_related_entities=True)
+        assert result is not None
+        assert result.entity_slug == "smith-jr"
+        assert result.entity_kind == "child"
+        assert result.parent_owner_slug == "smith-sr"
+
+    def test_owner_record_principals_only_still_classifies_owner(self, sr_owner):
+        # Principals-only mode: the Sr record falls through the suffix-mismatched
+        # child and is classified as the owner (not dropped).
+        r = _record(contributor_name="John Smith Sr", contributor_employer="Acme Inc")
+        result = classify(r, sr_owner, process_related_entities=False)
+        assert result is not None
+        assert result.entity_slug == "smith-sr"
