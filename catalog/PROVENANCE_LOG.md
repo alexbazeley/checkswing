@@ -3850,3 +3850,63 @@ Total suite: 209 green.
 - **open_queue_remaining**: `17`
 - **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T19-13-14Z__pre-bulk-discard.db`
 - **note**: Standing DISCARDED verdicts recorded in review_resolutions (survive reclassify). Attribution unaffected (GOVERNANCE.md §2.5). Reversible via `unresolve`.
+
+### 2026-05-30 — DELETION — reclassify kendrick-ken
+
+- **entity_slug**: `kendrick-ken`
+- **reason**: Calibration round 3: add Ken/E.G.+Jr name_variants (heals 14 divergent stored Ken rows, confirms 3 queued Ken records, ATTORNEY->PROBABLE) and correct the Randy Kendrick misattribution (§1.10, §2.5a)
+- **rows_deleted_donations**: `701`
+- **rows_deleted_review_queue**: `9` (of which 5 had resolutions)
+- **include_related**: `False`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T22-07-12Z__pre-reclassify-kendrick-ken.db`
+- **note**: Rows are recoverable from the snapshot above and from data/raw/kendrick-ken/ payloads. Re-classification follows in the next INGESTION entry.
+
+### 2026-05-30 — INGESTION
+
+- **run_id**: `0c390333`
+- **entity_slug**: `kendrick-ken`
+- **dry_run**: `0`
+- **period_start**: `2024-11-23`
+- **period_end**: `2025-12-31`
+- **name_variants_queried**: `["Ken Kendrick", "Earl G. Kendrick", "Earl G Kendrick", "Earl G. Kendrick Jr.", "Earl G. Kendrick, Jr.", "Earl Kendrick", "E. G. Kendrick", "E.G. Kendrick", "E G Kendrick", "Earl Gentry Kendrick", "Kendrick, Ken", "Kendrick, Earl G", "Kendrick, Earl G.", "Kendrick, Earl G., Jr.", "Ken Kendrick Jr.", "Kendrick, Ken, Jr.", "Kendrick, Ken Jr.", "E.G. Kendrick Jr.", "E. G. Kendrick Jr.", "Kendrick, E.G., Jr.", "Kendrick, E. G., Jr."]`
+- **api_calls_made**: `0`
+- **records_fetched**: `3475`
+- **confirmed_count**: `663`
+- **probable_count**: `68`
+- **uncertain_count**: `7`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T22-07-12Z__0c390333.db`
+- **notes**: skipped(no-name-match)=2737 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-05-30 — DELETION — reclassify kendrick-ken
+
+- **entity_slug**: `kendrick-ken`
+- **reason**: Calibration round 3 (cont'd): add city variant 'paradise vly' to close the 2 residual E.G.-Jr/Diamondbacks items
+- **rows_deleted_donations**: `731`
+- **rows_deleted_review_queue**: `2` (of which 0 had resolutions)
+- **include_related**: `False`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T22-10-42Z__pre-reclassify-kendrick-ken.db`
+- **note**: Rows are recoverable from the snapshot above and from data/raw/kendrick-ken/ payloads. Re-classification follows in the next INGESTION entry.
+
+### 2026-05-30 — INGESTION
+
+- **run_id**: `bb72f4b5`
+- **entity_slug**: `kendrick-ken`
+- **dry_run**: `0`
+- **period_start**: `2024-11-23`
+- **period_end**: `2025-12-31`
+- **name_variants_queried**: `["Ken Kendrick", "Earl G. Kendrick", "Earl G Kendrick", "Earl G. Kendrick Jr.", "Earl G. Kendrick, Jr.", "Earl Kendrick", "E. G. Kendrick", "E.G. Kendrick", "E G Kendrick", "Earl Gentry Kendrick", "Kendrick, Ken", "Kendrick, Earl G", "Kendrick, Earl G.", "Kendrick, Earl G., Jr.", "Ken Kendrick Jr.", "Kendrick, Ken, Jr.", "Kendrick, Ken Jr.", "E.G. Kendrick Jr.", "E. G. Kendrick Jr.", "Kendrick, E.G., Jr.", "Kendrick, E. G., Jr."]`
+- **api_calls_made**: `0`
+- **records_fetched**: `3475`
+- **confirmed_count**: `665`
+- **probable_count**: `68`
+- **uncertain_count**: `5`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T22-10-42Z__bb72f4b5.db`
+- **notes**: skipped(no-name-match)=2737 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-05-30 — CORRECTION (§1.10 misattribution) — kendrick-ken
+
+- **transaction_id**: `SA11AI.4306`
+- **entity_slug**: `kendrick-ken`
+- **prior_status**: `CONFIRMED` (stale — predated the current classifier)
+- **action**: Removed from kendrick-ken during the calibration-round-3 reclassify above. The record is `KENDRICK, RANDY` / RETIRED / Paradise Valley AZ / $56,000 — **Randy Kendrick, the owner's wife**, an independent donor the owner YAML explicitly forbids attributing to Ken (she is name-no-match under his name_variants). The row was a latent misattribution carried over from an earlier classifier state and surfaced when the reclassify rebuilt kendrick-ken from raw.
+- **recoverable_from**: the pre-reclassify snapshots listed above + `data/raw/kendrick-ken/`. This corrects the owner attribution only; it is NOT a deletion of the underlying FEC fact. Randy remains a documented future `kendrick-randy.yaml` candidate (GOVERNANCE.md §1.7).

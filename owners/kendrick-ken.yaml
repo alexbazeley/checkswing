@@ -37,11 +37,31 @@ name_variants:
 - "Kendrick, Earl G"
 - "Kendrick, Earl G."
 - "Kendrick, Earl G., Jr."
+  # Calibration round 3 (2026-05-30): the "Jr." variants above are all under
+  # given-name "Earl", so FEC filings that use his nickname KEN or initials
+  # E.G. WITH the "Jr." suffix (e.g. "KENDRICK, KEN JR.", "KENDRICK, E.G. JR.",
+  # "KENDRICK JR., KEN") canonically matched a no-suffix variant and tripped
+  # "suffix mismatch" -> UNCERTAIN, even though employer (Diamondbacks/Datatel)
+  # + Paradise Valley confirm them. Adding the Ken/E.G.+Jr forms heals these.
+  # SAFE from same-household relatives: the son is Earl G. Kendrick *III*
+  # (suffix III, not Jr) and the wife files as "Randy"/"R." Kendrick — neither
+  # matches a "Ken"/"E.G." first-name + "Jr." variant.
+- "Ken Kendrick Jr."
+- "Kendrick, Ken, Jr."
+- "Kendrick, Ken Jr."
+- "E.G. Kendrick Jr."
+- "E. G. Kendrick Jr."
+- "Kendrick, E.G., Jr."
+- "Kendrick, E. G., Jr."
 
 verifying_signals:
   cities:
   - "paradise valley"
   - "phoenix"
+    # Calibration round 3 (2026-05-30): "PARADISE VLY" is the abbreviated
+    # filing form of Paradise Valley; without it, E.G.-Jr / Diamondbacks
+    # records filed from "PARADISE VLY" route to UNCERTAIN.
+  - "paradise vly"
   states:
   - "AZ"
   employers:
@@ -182,8 +202,53 @@ change_log:
     Leaving 60 PROBABLE as honest one-signal classification. Signal
     review date advanced.
   by: "automated pipeline (PR 4 Tier B audit pass)"
+- date: 2026-05-30
+  change: |
+    Calibration round 3 — review-queue triage + stored-data reconciliation.
+
+    Root cause found during triage of the 4 open "suffix mismatch" queue
+    items: kendrick-ken's stored CONFIRMED set was built by an earlier
+    classifier state and was NOT reproducible by the current classifier. A
+    from-raw reclassify diverged on 15 rows because the only "Jr." name_
+    variants were under given-name "Earl" — so genuine Ken donations filed as
+    "KENDRICK, KEN JR.", "KENDRICK, E.G. JR.", "KENDRICK JR., KEN", etc.
+    canonically matched a no-suffix variant and tripped suffix-mismatch ->
+    UNCERTAIN, despite employer (Arizona Diamondbacks / Datatel) + Paradise
+    Valley confirming them.
+
+    (1) Added 7 name_variants for the Ken/E.G. + "Jr." forms (§2.5(a) — add a
+        confirming variant and re-score), plus city "paradise vly" (abbreviated
+        Paradise Valley). The variant gap had been SILENTLY DROPPING Ken's
+        Jr-suffixed filings as name-no-match — not merely demoting the 15
+        divergent rows — so the fix recovered far more than first estimated:
+        +24 CONFIRMED and +8 PROBABLE, all verified to be Ken by profile
+        (E.G.=Earl Gentry / KEN + Jr, employer DATATEL / DATATEL INC /
+        ARIZONA DIAMONDBACKS, occupation CHAIRMAN / CEO / MANAGING [GENERAL]
+        PARTNER, Paradise Valley|Phoenix AZ). Examples: the 3 originally-queued
+        records (60817.C55943, 50418.C39536, 3061920110009616745) -> CONFIRMED;
+        the ATTORNEY-occupation record (SA11A1.5677, "E.G. MR. JR." / SELF /
+        ATTORNEY) -> PROBABLE (honest one-signal — E.G.+Jr points to Ken, the
+        son being Earl G. III). Confirmed read-only that NO non-Ken record was
+        swept in: the son is suffix III (not Jr) and the wife files as
+        "Randy"/"R." Kendrick — neither matches a Ken/E.G.+Jr variant.
+        Verified idempotent: a second from-raw reclassify loses 0 rows.
+
+    (2) §1.10 misattribution correction: one stored CONFIRMED row,
+        "KENDRICK, RANDY" / RETIRED / Paradise Valley ($56,000;
+        transaction_id SA11AI.4306), was his WIFE Randy Kendrick — an
+        independent donor the YAML explicitly forbids attributing to Ken.
+        She is name-no-match under Ken's variants, so the reclassify removes
+        her from kendrick-ken (recoverable from the pre-reclassify snapshot
+        and from data/raw/). She remains a future kendrick-randy.yaml
+        candidate; this is NOT a deletion of the underlying FEC fact, only a
+        correction of a wrong owner attribution.
+
+    Net: CONFIRMED 641 -> 665, PROBABLE 60 -> 68, open queue 4 -> 0, one
+    misattribution corrected (Randy removed), and kendrick-ken is now
+    idempotent under reclassify (no more silent row loss). Approved by alex.
+  by: "automated pipeline (calibration round 3, maintainer-approved)"
 
 audit:
   created: 2026-05-22
   last_ingestion: '2026-05-27'
-  last_signal_review: 2026-05-25
+  last_signal_review: 2026-05-30
