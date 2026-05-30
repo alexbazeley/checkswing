@@ -3253,3 +3253,289 @@ Total suite: 209 green.
 - **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T03-25-45Z__pre-filing-id-sentinel.db`
 - **sample_txns**: `['1070820110006620625', '3061920110007582202', '3061920110009108639', '2072320041040551613', '3061920110008116721']`
 - **note**: Pre-2006 paper filings with no FEC file number; the sentinel makes the gap explicit (CLAUDE.md §1.3). Rows retain raw_payload_path.
+
+### 2026-05-30 — DELETION — reclassify castellini-bob
+
+- **entity_slug**: `castellini-bob`
+- **reason**: B2a: apply H4 suffix + M2 city/state classifier fixes (audit remediation)
+- **rows_deleted_donations**: `439`
+- **rows_deleted_review_queue**: `14` (of which 0 had resolutions)
+- **include_related**: `False`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T03-55-55Z__pre-reclassify-castellini-bob.db`
+- **note**: Rows are recoverable from the snapshot above and from data/raw/castellini-bob/ payloads. Re-classification follows in the next INGESTION entry.
+
+### 2026-05-30 — INGESTION
+
+- **run_id**: `cb44cdd9`
+- **entity_slug**: `castellini-bob`
+- **dry_run**: `0`
+- **period_start**: `2024-11-23`
+- **period_end**: `2026-03-31`
+- **name_variants_queried**: `["Robert H Castellini", "Robert H. Castellini", "Robert Castellini", "Bob Castellini", "Castellini, Robert", "Castellini, Robert H", "Castellini, Robert H.", "Castellini, Bob"]`
+- **api_calls_made**: `0`
+- **records_fetched**: `461`
+- **confirmed_count**: `398`
+- **probable_count**: `31`
+- **uncertain_count**: `25`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T03-55-55Z__cb44cdd9.db`
+- **notes**: skipped(no-name-match)=7 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-05-30 — DELETION — reclassify castellini-phil
+
+- **entity_slug**: `castellini-phil`
+- **reason**: B2a: apply H4 suffix + M2 city/state classifier fixes (audit remediation)
+- **rows_deleted_donations**: `47`
+- **rows_deleted_review_queue**: `0` (of which 0 had resolutions)
+- **include_related**: `False`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T03-55-55Z__pre-reclassify-castellini-phil.db`
+- **note**: Rows are recoverable from the snapshot above and from data/raw/castellini-phil/ payloads. Re-classification follows in the next INGESTION entry.
+
+### 2026-05-30 — INGESTION
+
+- **run_id**: `4e89f818`
+- **entity_slug**: `castellini-phil`
+- **dry_run**: `0`
+- **period_start**: `2024-11-23`
+- **period_end**: `2020-10-20`
+- **name_variants_queried**: `["Phillip J Castellini", "Phillip J. Castellini", "Phillip Castellini", "Phil Castellini", "Phil J. Castellini", "Phil J Castellini", "Castellini, Phillip", "Castellini, Phillip J", "Castellini, Phillip J.", "Castellini, Phil"]`
+- **api_calls_made**: `0`
+- **records_fetched**: `49`
+- **confirmed_count**: `47`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T03-55-55Z__4e89f818.db`
+- **notes**: skipped(no-name-match)=2 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-05-30 — DELETION — reclassify dewitt-bill
+
+- **entity_slug**: `dewitt-bill`
+- **reason**: B2a: apply H4 suffix + M2 city/state classifier fixes (audit remediation)
+- **rows_deleted_donations**: `241`
+- **rows_deleted_review_queue**: `104` (of which 0 had resolutions)
+- **include_related**: `False`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T03-55-55Z__pre-reclassify-dewitt-bill.db`
+- **note**: Rows are recoverable from the snapshot above and from data/raw/dewitt-bill/ payloads. Re-classification follows in the next INGESTION entry.
+
+### 2026-05-30 — INGESTION
+
+- **run_id**: `710d3910`
+- **entity_slug**: `dewitt-bill`
+- **dry_run**: `0`
+- **period_start**: `2024-11-23`
+- **period_end**: `2025-12-31`
+- **name_variants_queried**: `["William O DeWitt Jr", "William O. DeWitt Jr.", "William O. DeWitt Jr", "William DeWitt Jr", "William DeWitt Jr.", "Bill DeWitt Jr", "Bill DeWitt Jr.", "William DeWitt", "Bill DeWitt", "DeWitt, William", "DeWitt, William O", "DeWitt, William O Jr", "DeWitt, Bill"]`
+- **api_calls_made**: `0`
+- **records_fetched**: `359`
+- **confirmed_count**: `224`
+- **probable_count**: `6`
+- **uncertain_count**: `126`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T03-55-55Z__710d3910.db`
+- **notes**: skipped(no-name-match)=3 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-05-30 — DELETION — reclassify henry-john
+
+- **entity_slug**: `henry-john`
+- **reason**: B2a: apply H4 suffix + M2 city/state classifier fixes (audit remediation)
+- **rows_deleted_donations**: `18`
+- **rows_deleted_review_queue**: `248` (of which 0 had resolutions)
+- **include_related**: `False`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T03-55-56Z__pre-reclassify-henry-john.db`
+- **note**: Rows are recoverable from the snapshot above and from data/raw/henry-john/ payloads. Re-classification follows in the next INGESTION entry.
+
+### 2026-05-30 — INGESTION
+
+- **run_id**: `37a4619d`
+- **entity_slug**: `henry-john`
+- **dry_run**: `0`
+- **period_start**: `2024-11-22`
+- **period_end**: `2026-03-31`
+- **name_variants_queried**: `["John W. Henry", "John W Henry", "John William Henry", "John William Henry II", "John Henry", "Henry, John W", "Henry, John W.", "Henry, John"]`
+- **api_calls_made**: `0`
+- **records_fetched**: `1142`
+- **confirmed_count**: `15`
+- **probable_count**: `3`
+- **uncertain_count**: `252`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T03-55-56Z__37a4619d.db`
+- **notes**: skipped(no-name-match)=872 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-05-30 — DELETION — reclassify ilitch-chris
+
+- **entity_slug**: `ilitch-chris`
+- **reason**: B2a: apply H4 suffix + M2 city/state classifier fixes (audit remediation)
+- **rows_deleted_donations**: `12`
+- **rows_deleted_review_queue**: `18` (of which 0 had resolutions)
+- **include_related**: `False`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T03-55-56Z__pre-reclassify-ilitch-chris.db`
+- **note**: Rows are recoverable from the snapshot above and from data/raw/ilitch-chris/ payloads. Re-classification follows in the next INGESTION entry.
+
+### 2026-05-30 — INGESTION
+
+- **run_id**: `f2c83a79`
+- **entity_slug**: `ilitch-chris`
+- **dry_run**: `0`
+- **period_start**: `2024-11-23`
+- **period_end**: `2025-12-26`
+- **name_variants_queried**: `["Christopher P Ilitch", "Christopher P. Ilitch", "Christopher Ilitch", "Chris Ilitch", "Christopher Paul Ilitch", "Ilitch, Christopher", "Ilitch, Christopher P", "Ilitch, Christopher P.", "Ilitch, Chris"]`
+- **api_calls_made**: `0`
+- **records_fetched**: `30`
+- **confirmed_count**: `12`
+- **probable_count**: `0`
+- **uncertain_count**: `18`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T03-55-56Z__f2c83a79.db`
+- **notes**: skipped(no-name-match)=0 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-05-30 — DELETION — reclassify johnson-greg
+
+- **entity_slug**: `johnson-greg`
+- **reason**: B2a: apply H4 suffix + M2 city/state classifier fixes (audit remediation)
+- **rows_deleted_donations**: `107`
+- **rows_deleted_review_queue**: `2328` (of which 0 had resolutions)
+- **include_related**: `False`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T03-55-56Z__pre-reclassify-johnson-greg.db`
+- **note**: Rows are recoverable from the snapshot above and from data/raw/johnson-greg/ payloads. Re-classification follows in the next INGESTION entry.
+
+### 2026-05-30 — INGESTION
+
+- **run_id**: `ee86cab1`
+- **entity_slug**: `johnson-greg`
+- **dry_run**: `0`
+- **period_start**: `2024-11-22`
+- **period_end**: `2026-04-17`
+- **name_variants_queried**: `["Gregory E Johnson", "Gregory E. Johnson", "Gregory Eugene Johnson", "Greg E Johnson", "Greg E. Johnson", "Greg Johnson", "Johnson, Gregory", "Johnson, Gregory E", "Johnson, Gregory E.", "Johnson, Greg"]`
+- **api_calls_made**: `0`
+- **records_fetched**: `2497`
+- **confirmed_count**: `104`
+- **probable_count**: `3`
+- **uncertain_count**: `2328`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T03-55-57Z__ee86cab1.db`
+- **notes**: skipped(no-name-match)=62 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-05-30 — DELETION — reclassify middleton-john
+
+- **entity_slug**: `middleton-john`
+- **reason**: B2a: apply H4 suffix + M2 city/state classifier fixes (audit remediation)
+- **rows_deleted_donations**: `58`
+- **rows_deleted_review_queue**: `32` (of which 0 had resolutions)
+- **include_related**: `False`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T03-55-57Z__pre-reclassify-middleton-john.db`
+- **note**: Rows are recoverable from the snapshot above and from data/raw/middleton-john/ payloads. Re-classification follows in the next INGESTION entry.
+
+### 2026-05-30 — INGESTION
+
+- **run_id**: `560a894f`
+- **entity_slug**: `middleton-john`
+- **dry_run**: `0`
+- **period_start**: `2024-11-23`
+- **period_end**: `2025-12-29`
+- **name_variants_queried**: `["John Middleton", "John S. Middleton", "John S Middleton", "John Staubus Middleton", "Middleton, John", "Middleton, John S", "Middleton, John S."]`
+- **api_calls_made**: `0`
+- **records_fetched**: `100`
+- **confirmed_count**: `33`
+- **probable_count**: `23`
+- **uncertain_count**: `44`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T03-55-57Z__560a894f.db`
+- **notes**: skipped(no-name-match)=0 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-05-30 — DELETION — reclassify rogers-edward-iii
+
+- **entity_slug**: `rogers-edward-iii`
+- **reason**: B2a: apply H4 suffix + M2 city/state classifier fixes (audit remediation)
+- **rows_deleted_donations**: `0`
+- **rows_deleted_review_queue**: `0` (of which 0 had resolutions)
+- **include_related**: `False`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T03-55-57Z__pre-reclassify-rogers-edward-iii.db`
+- **note**: Rows are recoverable from the snapshot above and from data/raw/rogers-edward-iii/ payloads. Re-classification follows in the next INGESTION entry.
+
+### 2026-05-30 — INGESTION
+
+- **run_id**: `57ccf096`
+- **entity_slug**: `rogers-edward-iii`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `None`
+- **name_variants_queried**: `["Edward S Rogers III", "Edward S. Rogers III", "Edward Rogers III", "Edward Samuel Rogers III", "Edward Rogers", "Ed Rogers", "Rogers, Edward", "Rogers, Edward S", "Rogers, Edward S.", "Rogers, Edward III"]`
+- **api_calls_made**: `0`
+- **records_fetched**: `0`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T03-55-57Z__57ccf096.db`
+- **notes**: skipped(no-name-match)=0 · min_date=default (no prior ingestion) · FROM-RAW
+
+### 2026-05-30 — DELETION — reclassify seidler-john
+
+- **entity_slug**: `seidler-john`
+- **reason**: B2a: apply H4 suffix + M2 city/state classifier fixes (audit remediation)
+- **rows_deleted_donations**: `1`
+- **rows_deleted_review_queue**: `0` (of which 0 had resolutions)
+- **include_related**: `False`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T03-55-57Z__pre-reclassify-seidler-john.db`
+- **note**: Rows are recoverable from the snapshot above and from data/raw/seidler-john/ payloads. Re-classification follows in the next INGESTION entry.
+
+### 2026-05-30 — INGESTION
+
+- **run_id**: `4094534e`
+- **entity_slug**: `seidler-john`
+- **dry_run**: `0`
+- **period_start**: `2024-11-23`
+- **period_end**: `2025-05-11`
+- **name_variants_queried**: `["John Seidler", "Seidler, John"]`
+- **api_calls_made**: `0`
+- **records_fetched**: `1`
+- **confirmed_count**: `1`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T03-55-58Z__4094534e.db`
+- **notes**: skipped(no-name-match)=0 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-05-30 — DELETION — reclassify sherman-john
+
+- **entity_slug**: `sherman-john`
+- **reason**: B2a: apply H4 suffix + M2 city/state classifier fixes (audit remediation)
+- **rows_deleted_donations**: `40`
+- **rows_deleted_review_queue**: `305` (of which 0 had resolutions)
+- **include_related**: `False`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T03-55-58Z__pre-reclassify-sherman-john.db`
+- **note**: Rows are recoverable from the snapshot above and from data/raw/sherman-john/ payloads. Re-classification follows in the next INGESTION entry.
+
+### 2026-05-30 — INGESTION
+
+- **run_id**: `23e1d179`
+- **entity_slug**: `sherman-john`
+- **dry_run**: `0`
+- **period_start**: `2024-11-22`
+- **period_end**: `2026-01-15`
+- **name_variants_queried**: `["John J Sherman", "John J. Sherman", "John Sherman", "Sherman, John", "Sherman, John J", "Sherman, John J."]`
+- **api_calls_made**: `0`
+- **records_fetched**: `526`
+- **confirmed_count**: `34`
+- **probable_count**: `6`
+- **uncertain_count**: `305`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T03-55-58Z__23e1d179.db`
+- **notes**: skipped(no-name-match)=181 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-05-30 — DELETION — reclassify steinbrenner-hal
+
+- **entity_slug**: `steinbrenner-hal`
+- **reason**: B2a: apply H4 suffix + M2 city/state classifier fixes (audit remediation)
+- **rows_deleted_donations**: `15`
+- **rows_deleted_review_queue**: `0` (of which 0 had resolutions)
+- **include_related**: `False`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T03-55-58Z__pre-reclassify-steinbrenner-hal.db`
+- **note**: Rows are recoverable from the snapshot above and from data/raw/steinbrenner-hal/ payloads. Re-classification follows in the next INGESTION entry.
+
+### 2026-05-30 — INGESTION
+
+- **run_id**: `b0906593`
+- **entity_slug**: `steinbrenner-hal`
+- **dry_run**: `0`
+- **period_start**: `2024-11-23`
+- **period_end**: `2025-12-22`
+- **name_variants_queried**: `["Harold Z Steinbrenner", "Harold Z. Steinbrenner", "Harold Steinbrenner", "Hal Steinbrenner", "Steinbrenner, Harold", "Steinbrenner, Harold Z", "Steinbrenner, Harold Z.", "Steinbrenner, Hal"]`
+- **api_calls_made**: `0`
+- **records_fetched**: `15`
+- **confirmed_count**: `13`
+- **probable_count**: `2`
+- **uncertain_count**: `0`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T03-55-58Z__b0906593.db`
+- **notes**: skipped(no-name-match)=0 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
