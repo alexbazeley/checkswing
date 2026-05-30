@@ -3910,3 +3910,13 @@ Total suite: 209 green.
 - **prior_status**: `CONFIRMED` (stale — predated the current classifier)
 - **action**: Removed from kendrick-ken during the calibration-round-3 reclassify above. The record is `KENDRICK, RANDY` / RETIRED / Paradise Valley AZ / $56,000 — **Randy Kendrick, the owner's wife**, an independent donor the owner YAML explicitly forbids attributing to Ken (she is name-no-match under his name_variants). The row was a latent misattribution carried over from an earlier classifier state and surfaced when the reclassify rebuilt kendrick-ken from raw.
 - **recoverable_from**: the pre-reclassify snapshots listed above + `data/raw/kendrick-ken/`. This corrects the owner attribution only; it is NOT a deletion of the underlying FEC fact. Randy remains a documented future `kendrick-randy.yaml` candidate (GOVERNANCE.md §1.7).
+
+### 2026-05-30 — RESOLUTION — bulk-discard review-queue items
+
+- **reason_like**: `suffix mismatch%`
+- **scope**: `fisher-john`
+- **items_discarded**: `1`
+- **per_owner**: fisher-john=1
+- **open_queue_remaining**: `12`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T22-26-51Z__pre-bulk-discard.db`
+- **note**: Standing DISCARDED verdicts recorded in review_resolutions (survive reclassify). Attribution unaffected (GOVERNANCE.md §2.5). Reversible via `unresolve`.
