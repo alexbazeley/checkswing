@@ -103,6 +103,27 @@ CREATE TABLE IF NOT EXISTS review_queue (
     resolved_by TEXT
 );
 
+-- v6: standing review-queue resolutions, keyed by (transaction_id, entity_slug).
+-- The review_queue table itself is rebuilt from raw on every reclassify (it is a
+-- derived projection of the current classifier output), so a resolution stored
+-- *there* is lost on the next reclassify (audit finding M6). This table is the
+-- durable record of a human verdict and is NEVER wiped by reclassify. A
+-- DISCARDED verdict suppresses the transaction from re-entering review_queue on
+-- future ingests/reclassifies (GOVERNANCE.md §2.5). It does NOT affect
+-- attribution: if a later signal change makes the donor CONFIRMED/PROBABLE, the
+-- record is attributed normally — discard only governs the UNCERTAIN queue.
+CREATE TABLE IF NOT EXISTS review_resolutions (
+    transaction_id    TEXT NOT NULL,
+    entity_slug       TEXT NOT NULL,
+    resolution        TEXT NOT NULL,   -- e.g. DISCARDED
+    resolution_reason TEXT,
+    resolved_at       TEXT NOT NULL,
+    resolved_by       TEXT,
+    PRIMARY KEY (transaction_id, entity_slug)
+);
+CREATE INDEX IF NOT EXISTS idx_review_resolutions_slug
+    ON review_resolutions(entity_slug);
+
 CREATE TABLE IF NOT EXISTS schema_version (
     version INTEGER PRIMARY KEY,
     applied_at TEXT NOT NULL
@@ -231,7 +252,7 @@ DONATION_EXTRA_COLS: list[tuple[str, str]] = [
     ("recipient_committee_type", "TEXT"),
 ]
 
-SCHEMA_VERSION = 5
+SCHEMA_VERSION = 6
 
 
 def _utc_now_iso() -> str:
@@ -488,6 +509,63 @@ def insert_review_queue(conn: sqlite3.Connection, row: dict) -> None:
         """,
         row,
     )
+
+
+def upsert_review_resolution(
+    conn: sqlite3.Connection,
+    *,
+    transaction_id: str,
+    entity_slug: str,
+    resolution: str,
+    resolution_reason: str | None,
+    resolved_at: str,
+    resolved_by: str | None = None,
+) -> None:
+    """Record (or overwrite) a standing resolution for one queue item.
+
+    Keyed by (transaction_id, entity_slug). Survives reclassify — this is the
+    durable verdict store, distinct from the rebuilt review_queue table.
+    """
+    conn.execute(
+        """
+        INSERT INTO review_resolutions (
+            transaction_id, entity_slug, resolution, resolution_reason,
+            resolved_at, resolved_by
+        ) VALUES (?, ?, ?, ?, ?, ?)
+        ON CONFLICT(transaction_id, entity_slug) DO UPDATE SET
+            resolution = excluded.resolution,
+            resolution_reason = excluded.resolution_reason,
+            resolved_at = excluded.resolved_at,
+            resolved_by = excluded.resolved_by
+        """,
+        (transaction_id, entity_slug, resolution, resolution_reason, resolved_at, resolved_by),
+    )
+
+
+def delete_review_resolution(
+    conn: sqlite3.Connection, *, transaction_id: str, entity_slug: str
+) -> int:
+    """Remove a standing resolution (undo). Returns rows deleted (0 or 1)."""
+    cur = conn.execute(
+        "DELETE FROM review_resolutions WHERE transaction_id = ? AND entity_slug = ?",
+        (transaction_id, entity_slug),
+    )
+    return cur.rowcount
+
+
+def discarded_txns_for_slug(conn: sqlite3.Connection, entity_slug: str) -> set[str]:
+    """Set of transaction_ids with a standing DISCARDED verdict for this entity.
+
+    Used at ingest time to suppress these from re-entering review_queue.
+    """
+    return {
+        r["transaction_id"]
+        for r in conn.execute(
+            "SELECT transaction_id FROM review_resolutions "
+            "WHERE entity_slug = ? AND resolution = 'DISCARDED'",
+            (entity_slug,),
+        )
+    }
 
 
 def insert_ingestion_run(conn: sqlite3.Connection, row: dict) -> None:

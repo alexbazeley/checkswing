@@ -481,9 +481,19 @@ def ingest_entity(
             action, reason = db.insert_donation(conn, row)
             if action == "superseded":
                 superseded_events.append((row["transaction_id"], row["entity_slug"], reason or ""))
+        # Standing DISCARDED verdicts (review_resolutions, schema v6) suppress a
+        # transaction from re-entering the review queue (GOVERNANCE.md §2.5).
+        # This is the queue-only effect: it does NOT touch the donations written
+        # above, so a record that now classifies CONFIRMED/PROBABLE is still
+        # attributed normally — discard only governs the UNCERTAIN queue.
+        discarded = db.discarded_txns_for_slug(conn, slug)
+        suppressed_by_resolution = 0
         for record, c in uncertain:
             review_row = _record_to_review_row(record, c, completed_at)
             if not review_row["transaction_id"]:
+                continue
+            if review_row["transaction_id"] in discarded:
+                suppressed_by_resolution += 1
                 continue
             db.insert_review_queue(conn, review_row)
         db.insert_ingestion_run(conn, summary)
@@ -499,6 +509,12 @@ def ingest_entity(
         print(
             f"[{slug}] WARNING: skipped {skipped_missing_provenance} row(s) "
             f"missing required provenance (filing_id/raw_payload_path/date — §1.3)."
+        )
+    if suppressed_by_resolution:
+        summary["suppressed_by_resolution"] = suppressed_by_resolution
+        print(
+            f"[{slug}] {suppressed_by_resolution} UNCERTAIN record(s) suppressed "
+            f"from the review queue by a standing DISCARDED verdict (§2.5)."
         )
 
     # ── Step 9: write audit.last_ingestion ─────────────────────────────────

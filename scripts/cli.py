@@ -447,6 +447,141 @@ def review():
     table = [[r["transaction_id"], r["entity_slug"], r["reason"][:60], r["queued_at"]] for r in rows]
     click.echo(tabulate(table, headers=["txn", "entity", "reason", "queued_at"]))
     click.echo(f"\n{len(rows)} open item(s).")
+    with db.connect() as conn:
+        n_res = conn.execute("SELECT COUNT(*) FROM review_resolutions WHERE resolution='DISCARDED'").fetchone()[0]
+    if n_res:
+        click.echo(f"{n_res} standing DISCARDED verdict(s) (suppressed from the queue).")
+
+
+@cli.command()
+@click.argument("transaction_id")
+@click.argument("entity_slug")
+@click.option("--reason", default="", help="Why this item is discarded (recorded in review_resolutions).")
+@click.option("--resolution", default="DISCARDED", show_default=True, help="Verdict to record.")
+def resolve(transaction_id, entity_slug, reason, resolution):
+    """Record a standing verdict for one review-queue item (TRANSACTION_ID ENTITY_SLUG).
+
+    A DISCARDED verdict permanently suppresses the transaction from re-entering
+    the review queue on future ingests/reclassifies (GOVERNANCE.md §2.5). It does
+    NOT affect attribution: if a later signal change makes the donor a real match,
+    the record is attributed normally. Undo with `unresolve`.
+    """
+    from datetime import datetime, timezone
+
+    ts = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    db.init()
+    with db.connect() as conn:
+        db.upsert_review_resolution(
+            conn,
+            transaction_id=transaction_id,
+            entity_slug=entity_slug,
+            resolution=resolution,
+            resolution_reason=reason or None,
+            resolved_at=ts,
+        )
+        conn.execute(
+            "UPDATE review_queue SET resolution=?, resolution_reason=?, resolution_at=? "
+            "WHERE transaction_id=? AND entity_slug=?",
+            (resolution, reason or None, ts, transaction_id, entity_slug),
+        )
+    click.echo(f"Recorded {resolution} for {transaction_id} ({entity_slug}).")
+
+
+@cli.command()
+@click.argument("transaction_id")
+@click.argument("entity_slug")
+def unresolve(transaction_id, entity_slug):
+    """Remove a standing verdict (undo a resolve). The item will re-queue on the
+    next ingest/reclassify if it still classifies UNCERTAIN."""
+    db.init()
+    with db.connect() as conn:
+        n = db.delete_review_resolution(
+            conn, transaction_id=transaction_id, entity_slug=entity_slug
+        )
+        conn.execute(
+            "UPDATE review_queue SET resolution=NULL, resolution_reason=NULL, resolution_at=NULL "
+            "WHERE transaction_id=? AND entity_slug=?",
+            (transaction_id, entity_slug),
+        )
+    click.echo(f"Removed {n} standing verdict(s) for {transaction_id} ({entity_slug}).")
+
+
+@cli.command(name="bulk-discard")
+@click.option("--reason-like", required=True, help="SQL LIKE pattern matched against review_queue.reason (e.g. 'city/state outside%').")
+@click.option("--only", default=None, help="Restrict to one entity_slug.")
+@click.option("--note", default="", help="Resolution note recorded on each item.")
+@click.option("--yes", is_flag=True, help="Skip confirmation.")
+def bulk_discard_cmd(reason_like, only, note, yes):
+    """Discard every OPEN review-queue item whose reason matches a LIKE pattern.
+
+    GATED DATA OPERATION — snapshots master.db first and appends a PROVENANCE_LOG
+    entry. Records a standing DISCARDED verdict per item (survives reclassify) and
+    suppresses each from re-queuing (GOVERNANCE.md §2.5). Attribution is never
+    affected — only the UNCERTAIN queue. Reversible per-item via `unresolve`.
+    """
+    from datetime import datetime, timezone
+
+    from .paths import PROVENANCE_LOG
+
+    db.init()
+    where = "resolution IS NULL AND reason LIKE ?"
+    params: list = [reason_like]
+    if only:
+        where += " AND entity_slug = ?"
+        params.append(only)
+    with db.connect() as conn:
+        rows = conn.execute(
+            f"SELECT transaction_id, entity_slug, reason FROM review_queue WHERE {where}",
+            params,
+        ).fetchall()
+    if not rows:
+        click.echo("No open items match. Nothing to do.")
+        return
+    by_slug: dict[str, int] = {}
+    for r in rows:
+        by_slug[r["entity_slug"]] = by_slug.get(r["entity_slug"], 0) + 1
+    click.echo(f"Will DISCARD {len(rows)} open item(s) matching reason LIKE {reason_like!r}"
+               + (f" for {only}" if only else "") + ".")
+    click.echo("Per owner: " + ", ".join(f"{k}={v}" for k, v in sorted(by_slug.items(), key=lambda x: -x[1])))
+    click.echo("master.db is snapshotted first; the change is logged to PROVENANCE_LOG.md.")
+    if not yes and not click.confirm("Continue?", default=False):
+        click.echo("Aborted.")
+        return
+
+    snap = db.snapshot("pre-bulk-discard")
+    ts = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    with db.connect() as conn:
+        for r in rows:
+            db.upsert_review_resolution(
+                conn,
+                transaction_id=r["transaction_id"],
+                entity_slug=r["entity_slug"],
+                resolution="DISCARDED",
+                resolution_reason=note or f"bulk-discard: reason LIKE {reason_like}",
+                resolved_at=ts,
+            )
+        conn.execute(
+            f"UPDATE review_queue SET resolution='DISCARDED', resolution_reason=?, resolution_at=? "
+            f"WHERE {where}",
+            [note or f"bulk-discard: reason LIKE {reason_like}", ts, *params],
+        )
+        remaining = conn.execute("SELECT COUNT(*) FROM review_queue WHERE resolution IS NULL").fetchone()[0]
+
+    block = [
+        f"\n### {ts[:10]} — RESOLUTION — bulk-discard review-queue items",
+        "",
+        f"- **reason_like**: `{reason_like}`",
+        f"- **scope**: `{only or 'all owners'}`",
+        f"- **items_discarded**: `{len(rows)}`",
+        f"- **per_owner**: {', '.join(f'{k}={v}' for k, v in sorted(by_slug.items(), key=lambda x: -x[1]))}",
+        f"- **open_queue_remaining**: `{remaining}`",
+        f"- **snapshot_path**: `{snap}`",
+        f"- **note**: Standing DISCARDED verdicts recorded in review_resolutions (survive reclassify). Attribution unaffected (GOVERNANCE.md §2.5). Reversible via `unresolve`.",
+        "",
+    ]
+    existing = PROVENANCE_LOG.read_text(encoding="utf-8") if PROVENANCE_LOG.exists() else ""
+    PROVENANCE_LOG.write_text(existing + "\n".join(block), encoding="utf-8")
+    click.echo(json.dumps({"discarded": len(rows), "open_queue_remaining": remaining, "snapshot_path": str(snap)}, indent=2, default=str))
 
 
 @cli.command(name="backfill-pre2006-filing-id")
