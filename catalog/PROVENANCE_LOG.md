@@ -3650,3 +3650,193 @@ Total suite: 209 green.
 - **uncertain_count**: `120`
 - **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T17-21-37Z__70eb5612.db`
 - **notes**: skipped(no-name-match)=3 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-05-30 — MANUAL_ATTRIBUTION — castellini-bob
+
+- **transaction_id**: `SA11A.29970534`
+- **entity_slug**: `castellini-bob`
+- **forced_status**: `CONFIRMED`
+- **reason**: Robert H. Castellini Sr. donation misfiled with stray suffix 'SR.' (name 'CASTELLINI, ROBERT H. MR. SR.') that no name_variant can capture without also matching same-named relatives. All signals match the principal owner: middle initial H, employer CASTELLINI COMPANY (strong_signal), occupation CHAIRMAN, Cincinnati OH, ZIP 452022728 (151 CONFIRMED records share this ZIP). Disambiguated from two JR doppelgangers in the same queue: Robert Castellini Jr (President & CEO, no middle H) and Bob S. Castellini Jr (Wells Fargo, Managing Partner — documented financial-advisor doppelganger).
+- **source**: FEC Schedule A raw payload data/raw/castellini-bob/2026-05-22T23-43-05Z__schedule_a.json vs owners/castellini-bob.yaml strong_signals.employers; SR. = father (owner), JR. variants are separate individuals.
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T18-24-14Z__pre-manual-attribute.db`
+- **note**: Override recorded in manual_attributions (survives reclassify). Bypasses the two-signal rule by documented human decision (GOVERNANCE.md §1.1). Reversible via `unattribute`. Reclassification follows below.
+
+### 2026-05-30 — DELETION — reclassify castellini-bob
+
+- **entity_slug**: `castellini-bob`
+- **reason**: apply manual attribution of SA11A.29970534
+- **rows_deleted_donations**: `429`
+- **rows_deleted_review_queue**: `25` (of which 14 had resolutions)
+- **include_related**: `False`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T18-24-14Z__pre-reclassify-castellini-bob.db`
+- **note**: Rows are recoverable from the snapshot above and from data/raw/castellini-bob/ payloads. Re-classification follows in the next INGESTION entry.
+
+### 2026-05-30 — INGESTION
+
+- **run_id**: `f9fe9778`
+- **entity_slug**: `castellini-bob`
+- **dry_run**: `0`
+- **period_start**: `2024-11-23`
+- **period_end**: `2026-03-31`
+- **name_variants_queried**: `["Robert H Castellini", "Robert H. Castellini", "Robert Castellini", "Bob Castellini", "Castellini, Robert", "Castellini, Robert H", "Castellini, Robert H.", "Castellini, Bob"]`
+- **api_calls_made**: `0`
+- **records_fetched**: `461`
+- **confirmed_count**: `399`
+- **probable_count**: `31`
+- **uncertain_count**: `24`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T18-24-14Z__f9fe9778.db`
+- **notes**: skipped(no-name-match)=7 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-05-30 — MANUAL_ATTRIBUTION — castellini-bob
+
+- **transaction_id**: `SA11A.33810`
+- **entity_slug**: `castellini-bob`
+- **forced_status**: `CONFIRMED`
+- **reason**: Robert H. Castellini Sr. donation misfiled with stray suffix 'SR.' (name 'CASTELLINI, ROBERT H. MR. SR.') that no name_variant can capture without also matching same-named relatives. All signals match the principal owner: middle initial H, employer CASTELLINI COMPANY (strong_signal), occupation CHAIRMAN, Cincinnati OH, ZIP 452022728/452022739 (both heavy CONFIRMED clusters for this owner). Disambiguated from two JR doppelgangers in the same queue: Robert Castellini Jr (President & CEO, no middle H) and Bob S. Castellini Jr (Wells Fargo, Managing Partner — documented financial-advisor doppelganger).
+- **source**: FEC Schedule A raw payload data/raw/castellini-bob/2026-05-22T23-43-05Z__schedule_a.json vs owners/castellini-bob.yaml strong_signals.employers; SR. = father (owner), JR. variants are separate individuals.
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T18-24-33Z__pre-manual-attribute.db`
+- **note**: Override recorded in manual_attributions (survives reclassify). Bypasses the two-signal rule by documented human decision (GOVERNANCE.md §1.1). Reversible via `unattribute`. Reclassification follows below.
+
+### 2026-05-30 — DELETION — reclassify castellini-bob
+
+- **entity_slug**: `castellini-bob`
+- **reason**: apply manual attribution of SA11A.33810
+- **rows_deleted_donations**: `430`
+- **rows_deleted_review_queue**: `10` (of which 0 had resolutions)
+- **include_related**: `False`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T18-24-33Z__pre-reclassify-castellini-bob.db`
+- **note**: Rows are recoverable from the snapshot above and from data/raw/castellini-bob/ payloads. Re-classification follows in the next INGESTION entry.
+
+### 2026-05-30 — INGESTION
+
+- **run_id**: `28b60b03`
+- **entity_slug**: `castellini-bob`
+- **dry_run**: `0`
+- **period_start**: `2024-11-23`
+- **period_end**: `2026-03-31`
+- **name_variants_queried**: `["Robert H Castellini", "Robert H. Castellini", "Robert Castellini", "Bob Castellini", "Castellini, Robert", "Castellini, Robert H", "Castellini, Robert H.", "Castellini, Bob"]`
+- **api_calls_made**: `0`
+- **records_fetched**: `461`
+- **confirmed_count**: `400`
+- **probable_count**: `31`
+- **uncertain_count**: `23`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T18-24-33Z__28b60b03.db`
+- **notes**: skipped(no-name-match)=7 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-05-30 — MANUAL_ATTRIBUTION — castellini-bob
+
+- **transaction_id**: `SA.33810.2.TM10`
+- **entity_slug**: `castellini-bob`
+- **forced_status**: `CONFIRMED`
+- **reason**: Robert H. Castellini Sr. donation misfiled with stray suffix 'SR.' (name 'CASTELLINI, ROBERT H. MR. SR.') that no name_variant can capture without also matching same-named relatives. All signals match the principal owner: middle initial H, employer CASTELLINI COMPANY (strong_signal), occupation CHAIRMAN, Cincinnati OH, ZIP 452022728/452022739 (both heavy CONFIRMED clusters for this owner). Disambiguated from two JR doppelgangers in the same queue: Robert Castellini Jr (President & CEO, no middle H) and Bob S. Castellini Jr (Wells Fargo, Managing Partner — documented financial-advisor doppelganger).
+- **source**: FEC Schedule A raw payload data/raw/castellini-bob/2026-05-22T23-43-05Z__schedule_a.json vs owners/castellini-bob.yaml strong_signals.employers; SR. = father (owner), JR. variants are separate individuals.
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T18-24-33Z__pre-manual-attribute.db`
+- **note**: Override recorded in manual_attributions (survives reclassify). Bypasses the two-signal rule by documented human decision (GOVERNANCE.md §1.1). Reversible via `unattribute`. Reclassification follows below.
+
+### 2026-05-30 — DELETION — reclassify castellini-bob
+
+- **entity_slug**: `castellini-bob`
+- **reason**: apply manual attribution of SA.33810.2.TM10
+- **rows_deleted_donations**: `431`
+- **rows_deleted_review_queue**: `9` (of which 0 had resolutions)
+- **include_related**: `False`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T18-24-33Z__pre-reclassify-castellini-bob.db`
+- **note**: Rows are recoverable from the snapshot above and from data/raw/castellini-bob/ payloads. Re-classification follows in the next INGESTION entry.
+
+### 2026-05-30 — INGESTION
+
+- **run_id**: `001f8c07`
+- **entity_slug**: `castellini-bob`
+- **dry_run**: `0`
+- **period_start**: `2024-11-23`
+- **period_end**: `2026-03-31`
+- **name_variants_queried**: `["Robert H Castellini", "Robert H. Castellini", "Robert Castellini", "Bob Castellini", "Castellini, Robert", "Castellini, Robert H", "Castellini, Robert H.", "Castellini, Bob"]`
+- **api_calls_made**: `0`
+- **records_fetched**: `461`
+- **confirmed_count**: `401`
+- **probable_count**: `31`
+- **uncertain_count**: `22`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T18-24-34Z__001f8c07.db`
+- **notes**: skipped(no-name-match)=7 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-05-30 — MANUAL_ATTRIBUTION — castellini-bob
+
+- **transaction_id**: `SA.33810.1.TM10`
+- **entity_slug**: `castellini-bob`
+- **forced_status**: `CONFIRMED`
+- **reason**: Robert H. Castellini Sr. donation misfiled with stray suffix 'SR.' (name 'CASTELLINI, ROBERT H. MR. SR.') that no name_variant can capture without also matching same-named relatives. All signals match the principal owner: middle initial H, employer CASTELLINI COMPANY (strong_signal), occupation CHAIRMAN, Cincinnati OH, ZIP 452022728/452022739 (both heavy CONFIRMED clusters for this owner). Disambiguated from two JR doppelgangers in the same queue: Robert Castellini Jr (President & CEO, no middle H) and Bob S. Castellini Jr (Wells Fargo, Managing Partner — documented financial-advisor doppelganger).
+- **source**: FEC Schedule A raw payload data/raw/castellini-bob/2026-05-22T23-43-05Z__schedule_a.json vs owners/castellini-bob.yaml strong_signals.employers; SR. = father (owner), JR. variants are separate individuals.
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T18-24-34Z__pre-manual-attribute.db`
+- **note**: Override recorded in manual_attributions (survives reclassify). Bypasses the two-signal rule by documented human decision (GOVERNANCE.md §1.1). Reversible via `unattribute`. Reclassification follows below.
+
+### 2026-05-30 — DELETION — reclassify castellini-bob
+
+- **entity_slug**: `castellini-bob`
+- **reason**: apply manual attribution of SA.33810.1.TM10
+- **rows_deleted_donations**: `432`
+- **rows_deleted_review_queue**: `8` (of which 0 had resolutions)
+- **include_related**: `False`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T18-24-34Z__pre-reclassify-castellini-bob.db`
+- **note**: Rows are recoverable from the snapshot above and from data/raw/castellini-bob/ payloads. Re-classification follows in the next INGESTION entry.
+
+### 2026-05-30 — INGESTION
+
+- **run_id**: `a66c1a33`
+- **entity_slug**: `castellini-bob`
+- **dry_run**: `0`
+- **period_start**: `2024-11-23`
+- **period_end**: `2026-03-31`
+- **name_variants_queried**: `["Robert H Castellini", "Robert H. Castellini", "Robert Castellini", "Bob Castellini", "Castellini, Robert", "Castellini, Robert H", "Castellini, Robert H.", "Castellini, Bob"]`
+- **api_calls_made**: `0`
+- **records_fetched**: `461`
+- **confirmed_count**: `402`
+- **probable_count**: `31`
+- **uncertain_count**: `21`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T18-24-34Z__a66c1a33.db`
+- **notes**: skipped(no-name-match)=7 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-05-30 — MANUAL_ATTRIBUTION — castellini-bob
+
+- **transaction_id**: `SA12.25708975`
+- **entity_slug**: `castellini-bob`
+- **forced_status**: `CONFIRMED`
+- **reason**: Robert H. Castellini Sr. donation misfiled with stray suffix 'SR.' (name 'CASTELLINI, ROBERT H. MR. SR.') that no name_variant can capture without also matching same-named relatives. All signals match the principal owner: middle initial H, employer CASTELLINI COMPANY (strong_signal), occupation CHAIRMAN, Cincinnati OH, ZIP 452022728/452022739 (both heavy CONFIRMED clusters for this owner). Disambiguated from two JR doppelgangers in the same queue: Robert Castellini Jr (President & CEO, no middle H) and Bob S. Castellini Jr (Wells Fargo, Managing Partner — documented financial-advisor doppelganger).
+- **source**: FEC Schedule A raw payload data/raw/castellini-bob/2026-05-22T23-43-05Z__schedule_a.json vs owners/castellini-bob.yaml strong_signals.employers; SR. = father (owner), JR. variants are separate individuals.
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T18-24-34Z__pre-manual-attribute.db`
+- **note**: Override recorded in manual_attributions (survives reclassify). Bypasses the two-signal rule by documented human decision (GOVERNANCE.md §1.1). Reversible via `unattribute`. Reclassification follows below.
+
+### 2026-05-30 — DELETION — reclassify castellini-bob
+
+- **entity_slug**: `castellini-bob`
+- **reason**: apply manual attribution of SA12.25708975
+- **rows_deleted_donations**: `433`
+- **rows_deleted_review_queue**: `7` (of which 0 had resolutions)
+- **include_related**: `False`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T18-24-34Z__pre-reclassify-castellini-bob.db`
+- **note**: Rows are recoverable from the snapshot above and from data/raw/castellini-bob/ payloads. Re-classification follows in the next INGESTION entry.
+
+### 2026-05-30 — INGESTION
+
+- **run_id**: `df3d1586`
+- **entity_slug**: `castellini-bob`
+- **dry_run**: `0`
+- **period_start**: `2024-11-23`
+- **period_end**: `2026-03-31`
+- **name_variants_queried**: `["Robert H Castellini", "Robert H. Castellini", "Robert Castellini", "Bob Castellini", "Castellini, Robert", "Castellini, Robert H", "Castellini, Robert H.", "Castellini, Bob"]`
+- **api_calls_made**: `0`
+- **records_fetched**: `461`
+- **confirmed_count**: `403`
+- **probable_count**: `31`
+- **uncertain_count**: `20`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T18-24-35Z__df3d1586.db`
+- **notes**: skipped(no-name-match)=7 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-05-30 — RESOLUTION — bulk-discard review-queue items
+
+- **reason_like**: `suffix mismatch%`
+- **scope**: `castellini-bob`
+- **items_discarded**: `6`
+- **per_owner**: castellini-bob=6
+- **open_queue_remaining**: `27`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T18-25-31Z__pre-bulk-discard.db`
+- **note**: Standing DISCARDED verdicts recorded in review_resolutions (survive reclassify). Attribution unaffected (GOVERNANCE.md §2.5). Reversible via `unresolve`.
