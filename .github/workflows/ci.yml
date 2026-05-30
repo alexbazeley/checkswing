@@ -1,0 +1,41 @@
+name: CI
+
+# The safety net under the auto-deploy. Cloudflare Pages auto-deploys every
+# push to main, and the weekly refresh job pushes to main directly — without
+# this gate a broken classifier change or malformed owner YAML would ship
+# unchecked. Runs the test suite and the owner-YAML validator on every PR and
+# every push to main. No secrets needed: `validate` reads YAMLs only, and the
+# tests mock the network (responses) and use temp DBs.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# A newer push to the same ref supersedes an in-flight run.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run tests
+        run: python -m pytest -q
+
+      - name: Validate owner YAMLs
+        run: python -m scripts.cli validate
