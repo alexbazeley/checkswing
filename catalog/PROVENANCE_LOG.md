@@ -3603,3 +3603,50 @@ Total suite: 209 green.
 - **uncertain_count**: `126`
 - **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T17-00-04Z__4c506293.db`
 - **notes**: skipped(no-name-match)=3 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-05-30 — RESOLUTION — bulk-discard review-queue items
+
+- **reason_like**: `suffix mismatch%`
+- **scope**: `dewitt-bill`
+- **items_discarded**: `29`
+- **per_owner**: dewitt-bill=29
+- **open_queue_remaining**: `38`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T17-12-52Z__pre-bulk-discard.db`
+- **note**: Standing DISCARDED verdicts recorded in review_resolutions (survive reclassify). Attribution unaffected (GOVERNANCE.md §2.5). Reversible via `unresolve`.
+
+### 2026-05-30 — MANUAL_ATTRIBUTION — dewitt-bill (Cluster A, 6 records)
+
+- **transaction_ids**: ['SA11AI.9241', 'SA11AI.9473', 'SA11AI.9745', 'SA11AI.9791', 'SA11AI.9980', 'SA11AI.10338']
+- **entity_slug**: dewitt-bill
+- **forced_status**: CONFIRMED
+- **count**: 6 · **total_amount**: $30,000 (6 × $5,000, 2019-2025)
+- **reason**: Bill DeWitt Jr donations misfiled under name "DEWITT III, WILLIAM O JR."; every signal matches the principal owner (zip 45243 = his documented residence, employer ST. LOUIS CARDINALS, occupation CHAIRMAN AND CEO). The literal III is a filer data-entry error, not the son: the son (William DeWitt III, Cardinals President) files from St. Louis MO as President/General Partner. Six annual $5,000 contributions 2019-2025.
+- **source**: FEC Schedule A raw payloads vs owners/dewitt-bill.yaml signal block; son disambiguated by city/title (St. Louis/President vs Cincinnati/Chairman&CEO).
+- **snapshot_path**: /Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T17-21-36Z__pre-manual-attribute-dewitt-clusterA.db
+- **note**: Override recorded in manual_attributions (survives reclassify), bypassing the two-signal rule by documented human decision (GOVERNANCE.md §1.1). The son's 23 same-named records remain out of scope (verified: 0 wrongly attributed). Reversible via unattribute. Reclassification applied below.
+
+### 2026-05-30 — DELETION — reclassify dewitt-bill
+
+- **entity_slug**: `dewitt-bill`
+- **reason**: apply 6 Cluster-A manual attributions
+- **rows_deleted_donations**: `230`
+- **rows_deleted_review_queue**: `29` (of which 29 had resolutions)
+- **include_related**: `False`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T17-21-36Z__pre-reclassify-dewitt-bill.db`
+- **note**: Rows are recoverable from the snapshot above and from data/raw/dewitt-bill/ payloads. Re-classification follows in the next INGESTION entry.
+
+### 2026-05-30 — INGESTION
+
+- **run_id**: `70eb5612`
+- **entity_slug**: `dewitt-bill`
+- **dry_run**: `0`
+- **period_start**: `2024-11-23`
+- **period_end**: `2025-12-31`
+- **name_variants_queried**: `["William O DeWitt Jr", "William O. DeWitt Jr.", "William O. DeWitt Jr", "William DeWitt Jr", "William DeWitt Jr.", "Bill DeWitt Jr", "Bill DeWitt Jr.", "William DeWitt", "Bill DeWitt", "DeWitt, William", "DeWitt, William O", "DeWitt, William O Jr", "DeWitt, Bill"]`
+- **api_calls_made**: `0`
+- **records_fetched**: `359`
+- **confirmed_count**: `230`
+- **probable_count**: `6`
+- **uncertain_count**: `120`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T17-21-37Z__70eb5612.db`
+- **notes**: skipped(no-name-match)=3 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
