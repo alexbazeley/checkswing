@@ -1,7 +1,7 @@
 """SQLite schema, migrations, and helpers.
 
 Schema is defined in DONATION_SCHEMA.md and this module is the implementation.
-The DB is a derivative — raw payloads in data/raw/ are the ground truth (CLAUDE.md §1.4).
+The DB is a derivative — raw payloads in data/raw/ are the ground truth (GOVERNANCE.md §1.4).
 """
 from __future__ import annotations
 
@@ -193,7 +193,7 @@ CREATE INDEX IF NOT EXISTS idx_filings_committee ON filings(committee_id);
 -- Each row is one recipient (a candidate or another committee) and the total
 -- the spending committee disbursed to them in that cycle. Schedule B aggregates
 -- transactions at the recipient level, so n_transactions is FEC's count, not
--- a join we compute. CLAUDE.md §6: names and amounts only; no editorial
+-- a join we compute. GOVERNANCE.md §6: names and amounts only; no editorial
 -- linkage to legislation or policy outcomes (Phase 3 if ever).
 CREATE TABLE IF NOT EXISTS committee_disbursements_by_recipient (
     committee_id      TEXT NOT NULL,

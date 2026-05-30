@@ -9,9 +9,9 @@ YAML shape:
     - committee_id: C00401224
       external_link: https://en.wikipedia.org/wiki/Senate_Majority_PAC
       external_link_label: Wikipedia
-      external_link_source: manual; added by alex 2026-05-25
+      external_link_source: manual; added by a maintainer 2026-05-25
 
-Per CLAUDE.md §3, external sources are pointers, never primary fact. This
+Per GOVERNANCE.md §3, external sources are pointers, never primary fact. This
 script only writes the URL+label+source — it never touches FEC-sourced fields.
 The UI labels these links as "Read more" cross-references, not authoritative
 data.

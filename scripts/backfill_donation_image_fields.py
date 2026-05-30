@@ -14,7 +14,7 @@ gone leave the columns NULL (same UX as today — "Image link not available").
 
 Idempotent: skips rows where image_number is already populated.
 
-CLAUDE.md §1.4 / §1.5: this script does not change the underlying truth, only
+GOVERNANCE.md §1.4 / §1.5: this script does not change the underlying truth, only
 rehydrates a derived view of fields that have always been authoritatively
 in raw payloads. Snapshots master.db before writing.
 """
@@ -87,7 +87,7 @@ def backfill(db_path: Path = MASTER_DB, raw_dir: Path = RAW_DIR) -> dict:
     }
 
     with db.connect(db_path) as conn:
-        # Snapshot before writes. CLAUDE.md §1.6.
+        # Snapshot before writes. GOVERNANCE.md §1.6.
         snap = db.snapshot("backfill_donation_image_fields", db_path)
         summary["snapshot_path"] = str(snap) if snap else None
 

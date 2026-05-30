@@ -1,7 +1,7 @@
 # Hand-curated external reference links for committees on the dashboard.
 #
 # These are "Read more →" pointers shown on the committee detail page. They are
-# CROSS-REFERENCES, not primary sources of fact. Per CLAUDE.md §3, OpenSecrets,
+# CROSS-REFERENCES, not primary sources of fact. Per GOVERNANCE.md §3, OpenSecrets,
 # news aggregators, and the like are pointers — never authority on donation
 # data. The UI surfaces them as a small follow-up link, never as a chip or
 # title.
@@ -28,4 +28,4 @@
 # - committee_id: C00401224
 #   external_link: https://en.wikipedia.org/wiki/Senate_Majority_PAC
 #   external_link_label: Wikipedia
-#   external_link_source: manual; added by alex 2026-05-25
+#   external_link_source: manual; added by a maintainer 2026-05-25

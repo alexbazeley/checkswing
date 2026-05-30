@@ -20,7 +20,7 @@ This file is the spec for that classification. Code in `scripts/resolve_entities
 ### UNCERTAIN
 - Name match.
 - **AND** zero confirming signals; or contradictory signals (e.g., employer matches but city is wrong by 2000 miles and there's no documented secondary residence).
-- Routed to `catalog/REVIEW_QUEUE.md`. **Not** in the canonical export.
+- Routed to the `review_queue` table in `master.db`. **Not** in the canonical export.
 
 ### SUPERSEDED
 - A previously-ingested record that FEC has restated or retracted.
@@ -61,7 +61,7 @@ Use `rapidfuzz` for fuzzy comparison only as a discovery aid for new name varian
 
 **Spouse-name collision.** If a record matches a name in the owner's `related_entities` (e.g., the spouse), it is attributed to the spouse entity, not to the owner. Spouse records carry the spouse's slug, not the owner's. Never silently fold spouse donations into the owner's totals.
 
-**Negative employer signal (anti-pattern).** If `owners/<slug>.yaml` has a `negative_signals.employers` block and a record's employer matches one of those strings (same case-insensitive substring rule as positive employer match), the record is automatically demoted to UNCERTAIN with reason "matches negative employer signal: <string>". This catches known same-name doppelgängers — e.g., a different Steven Cohen at Elliott Management who lives at overlapping Greenwich ZIPs but is a distinct individual from the owner. Adding a string to `negative_signals.employers` is a deliberate, change_log-traced decision (CLAUDE.md §1.7) made only after manual audit confirms the doppelgänger is a different person.
+**Negative employer signal (anti-pattern).** If `owners/<slug>.yaml` has a `negative_signals.employers` block and a record's employer matches one of those strings (same case-insensitive substring rule as positive employer match), the record is automatically demoted to UNCERTAIN with reason "matches negative employer signal: <string>". This catches known same-name doppelgängers — e.g., a different Steven Cohen at Elliott Management who lives at overlapping Greenwich ZIPs but is a distinct individual from the owner. Adding a string to `negative_signals.employers` is a deliberate, change_log-traced decision (GOVERNANCE.md §1.7) made only after manual audit confirms the doppelgänger is a different person.
 
 ## Scoring algorithm (pseudocode)
 
@@ -115,7 +115,7 @@ This calibration pass is a **prerequisite** for moving past Phase 1. Document th
 
 ## Review queue workflow
 
-`catalog/REVIEW_QUEUE.md` is a structured log of UNCERTAIN records awaiting human adjudication. Each entry contains:
+The `review_queue` table in `master.db` holds UNCERTAIN records awaiting human adjudication (list with `python -m scripts.cli review-queue`; export a Markdown snapshot with `export-review-queue`). Each entry contains:
 - Transaction ID
 - Full contributor block (name, employer, occupation, city, state, ZIP)
 - Recipient committee + candidate

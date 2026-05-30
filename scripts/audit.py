@@ -211,7 +211,7 @@ def _suggest(f: AuditFindings, owner: dict) -> list[str]:
     """Heuristic suggestions for tightening signals.
 
     These are framed as questions, not directives. The user makes the call.
-    CLAUDE.md §1.7 — every signal change is a deliberate YAML edit with
+    GOVERNANCE.md §1.7 — every signal change is a deliberate YAML edit with
     change_log entry. This tool only surfaces candidates.
     """
     suggestions: list[str] = []

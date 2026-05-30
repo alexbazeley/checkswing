@@ -6,7 +6,7 @@ table backs the donation card's "Full filing PDF" link — replacing the
 fec.gov HTML-page stopgap with a real PDF where available.
 
 Idempotent (30-day freshness). Snapshots master.db before writing per
-CLAUDE.md §1.6. Batches up to FILINGS_BATCH_SIZE file_numbers per FEC
+GOVERNANCE.md §1.6. Batches up to FILINGS_BATCH_SIZE file_numbers per FEC
 request to keep the wall-clock manageable.
 """
 from __future__ import annotations

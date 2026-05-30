@@ -124,7 +124,7 @@ def test_fetch_by_recipient_stops_when_no_results(patched_raw_dir, fec_client):
 
     rows, raw_paths = fetch_by_recipient(fec_client, cmte_id, 2024)
     assert rows == []
-    # Raw payload still persisted (CLAUDE.md §1.4 — empty FEC response is
+    # Raw payload still persisted (GOVERNANCE.md §1.4 — empty FEC response is
     # also ground truth for "we asked and they had nothing for that cycle").
     assert len(raw_paths) == 1
 
@@ -190,7 +190,7 @@ def test_parse_by_recipient_row_candidate_id_wins_over_committee_id():
 
 def test_parse_by_recipient_row_returns_none_when_no_recipient_id_or_name():
     """Without any recipient identifier we'd have no stable PK to insert under
-    — drop the row (CLAUDE.md §1.5)."""
+    — drop the row (GOVERNANCE.md §1.5)."""
     out = parse_by_recipient_row(
         "C00012345",
         2024,

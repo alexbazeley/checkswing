@@ -8,12 +8,12 @@ Schedule B disbursements. Upsert into committee_disbursements_by_recipient.
 Freshness gate is per (committee, cycle): if the row set for one cycle is
 < FRESHNESS_DAYS old, we skip that cycle. New cycles trigger a fetch.
 
-CLAUDE.md §1.4: raw payloads land under data/raw/_committee_disbursements/
+GOVERNANCE.md §1.4: raw payloads land under data/raw/_committee_disbursements/
 BEFORE parsing — see scripts/fetch_committee_disbursements.py.
-CLAUDE.md §1.5: idempotent (INSERT OR REPLACE keyed on the table's PK; FEC
+GOVERNANCE.md §1.5: idempotent (INSERT OR REPLACE keyed on the table's PK; FEC
 may amend a cycle's aggregates retroactively, so the fresh fetch wins).
-CLAUDE.md §1.6: master.db snapshotted before first row write.
-CLAUDE.md §6: this is names + amounts only. Never cross-referenced to
+GOVERNANCE.md §1.6: master.db snapshotted before first row write.
+GOVERNANCE.md §6: this is names + amounts only. Never cross-referenced to
 legislation, votes, or policy outcomes (Phase 3 territory if ever).
 """
 from __future__ import annotations
@@ -279,7 +279,7 @@ def ingest_all_committee_disbursements(
     """Walk every enriched committee and ingest beneficiaries for each cycle.
 
     Per-committee failures are caught and recorded; they do NOT abort the
-    run (CLAUDE.md §1.9 — prefer try-again-next-time). A single timed-out
+    run (GOVERNANCE.md §1.9 — prefer try-again-next-time). A single timed-out
     FEC request shouldn't lose the rest of the batch.
 
     Returns a summary dict suitable for emitting from the CLI.
@@ -305,7 +305,7 @@ def ingest_all_committee_disbursements(
         summary["completed_at"] = _utc_now_iso()
         return summary
 
-    # Snapshot before we touch any rows. CLAUDE.md §1.6.
+    # Snapshot before we touch any rows. GOVERNANCE.md §1.6.
     snap = db.snapshot(
         f"beneficiaries_ingest_{started_at.replace(':', '-')}",
         db_path,

@@ -8,10 +8,10 @@ donation, fetch:
 Upsert into the committees and committee_totals tables (schema v2). Idempotent:
 re-running within FRESHNESS_DAYS of the last refresh skips the FEC fetch.
 
-CLAUDE.md §1.4: raw payloads land under data/raw/_committees/<id>/ BEFORE
+GOVERNANCE.md §1.4: raw payloads land under data/raw/_committees/<id>/ BEFORE
 parsing — see scripts/fetch_committees.py:_persist_committee_raw.
-CLAUDE.md §1.5: idempotent (INSERT OR REPLACE on PKs).
-CLAUDE.md §1.6: master.db snapshotted before first row write.
+GOVERNANCE.md §1.5: idempotent (INSERT OR REPLACE on PKs).
+GOVERNANCE.md §1.6: master.db snapshotted before first row write.
 """
 from __future__ import annotations
 
@@ -231,7 +231,7 @@ def ingest_all_committees(
     """Ingest every committee referenced by donations.
 
     Returns a summary dict. Per-committee failures are caught and recorded;
-    they do NOT abort the run (CLAUDE.md §1.9 — prefer try-again-next-time).
+    they do NOT abort the run (GOVERNANCE.md §1.9 — prefer try-again-next-time).
     """
     started_at = _utc_now_iso()
     candidates = only or list_committees_from_donations(db_path)
@@ -254,7 +254,7 @@ def ingest_all_committees(
         summary["completed_at"] = _utc_now_iso()
         return summary
 
-    # Snapshot before we touch any rows. CLAUDE.md §1.6.
+    # Snapshot before we touch any rows. GOVERNANCE.md §1.6.
     snap = db.snapshot(f"committees_ingest_{started_at.replace(':', '-')}", db_path)
     summary["snapshot_path"] = str(snap) if snap else None
 

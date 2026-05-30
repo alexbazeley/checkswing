@@ -4,7 +4,7 @@ A self-contained, static, single-page prototype for **CheckSwing** —
 a public-facing dashboard layered over the MLB Owner FEC Donations Archive.
 
 This is a **presentation layer**, not canonical data — the database and
-per-owner CSV exports remain the source of truth (see CLAUDE.md §6).
+per-owner CSV exports remain the source of truth (see GOVERNANCE.md §6).
 
 ## What's here
 

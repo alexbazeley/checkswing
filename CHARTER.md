@@ -25,7 +25,7 @@ The conservative attribution standard is itself an editorial commitment: we'd ra
 - PACs directly affiliated with teams (rare — historically only one or two examples; document case by case).
 - PACs of corporate parent companies for corporate-owned teams (e.g., Liberty Media for the Braves). Attribution only when the team-ownership link is documented.
 - **Recipient committee enrichment.** For any committee that received an attributed donation: factual identity (designation, type, status, party, treasurer, connected organization, first/last filing dates) and lifetime per-cycle scale (receipts, disbursements, cash on hand). Sourced from OpenFEC `/committee/<id>/` and `/committee/<id>/totals/`. Optional hand-curated external-link pointers (Wikipedia / Ballotpedia) are surfaced as cross-references only, never as fact.
-  - **Beneficiaries (Phase 1b).** For any committee in scope, the top-N recipients per cycle as reported on Schedule B `by_recipient` — i.e. "who this committee in turn funded." Names and amounts only. Sourced from OpenFEC `/schedules/schedule_b/by_recipient/?committee_id=<id>&cycle=<c>`. This is factual recipient metadata; cross-referencing to specific legislation, votes, or policy outcomes remains Phase 3 (see CLAUDE.md §6 — committee-to-candidate names are factual, not editorial linkage). Schedule B aggregates both political and operational disbursements; the dashboard surfaces what FEC reports without filtering on purpose codes.
+  - **Beneficiaries (Phase 1b).** For any committee in scope, the top-N recipients per cycle as reported on Schedule B `by_recipient` — i.e. "who this committee in turn funded." Names and amounts only. Sourced from OpenFEC `/schedules/schedule_b/by_recipient/?committee_id=<id>&cycle=<c>`. This is factual recipient metadata; cross-referencing to specific legislation, votes, or policy outcomes remains Phase 3 (see GOVERNANCE.md §6 — committee-to-candidate names are factual, not editorial linkage). Schedule B aggregates both political and operational disbursements; the dashboard surfaces what FEC reports without filtering on purpose codes.
 
 ## Out of scope (explicit, not just "later")
 
@@ -41,7 +41,7 @@ The conservative attribution standard is itself an editorial commitment: we'd ra
 ## Phases
 
 ### Phase 0 — Setup
-- Create the directory structure and base files (CLAUDE.md, this file, schemas, registry).
+- Create the directory structure and base files (GOVERNANCE.md, this file, schemas, registry).
 - Obtain FEC API key (free, instant via api.data.gov).
 - Define Python environment and dependencies.
 - Initialize git.

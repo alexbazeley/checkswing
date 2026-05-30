@@ -1,6 +1,6 @@
 """Ingestion orchestrator.
 
-Per CLAUDE.md §2 workflow:
+Per GOVERNANCE.md §2 workflow:
   1. Validate owner YAMLs (validate_owners)
   2. Snapshot the master DB (db.snapshot)
   3. Refresh entities table from YAMLs
@@ -10,7 +10,7 @@ Per CLAUDE.md §2 workflow:
   7. Write UNCERTAIN → review_queue + REVIEW_QUEUE.md
   8. Log the run → ingestion_runs + PROVENANCE_LOG.md
 
-Dry-run mode: steps 1-5 run, raw payloads ARE still persisted (CLAUDE.md §1.4
+Dry-run mode: steps 1-5 run, raw payloads ARE still persisted (GOVERNANCE.md §1.4
 applies regardless of whether we write to the DB — raw is the ground truth),
 but steps 6-8 are skipped. The classifier output is returned for inspection.
 """
@@ -38,7 +38,7 @@ from .resolve_entities import (
 from .validate_owners import format_report, validate_all
 
 
-# CLAUDE.md §1.3: every row must trace to a specific FEC filing. Pre-2006 FEC
+# GOVERNANCE.md §1.3: every row must trace to a specific FEC filing. Pre-2006 FEC
 # records (paper filings) often have no file_number/report_id; rather than let a
 # blank filing_id slip in (or drop a legitimate donation), we stamp this
 # documented sentinel so the "no FEC file number" case is explicit and queryable.
@@ -51,7 +51,7 @@ def _utc_now_iso() -> str:
 
 
 def _row_has_required_provenance(row: dict) -> bool:
-    """CLAUDE.md §1.3 — a row must carry filing_id, raw_payload_path, and date.
+    """GOVERNANCE.md §1.3 — a row must carry filing_id, raw_payload_path, and date.
 
     filing_id is sentinel-backed (never blank) for legitimate pre-file-number
     records; a row still missing raw_payload_path or date is rejected outright
@@ -119,7 +119,7 @@ def _write_audit_last_ingestion(slug: str, date_iso: str) -> None:
 
     Uses ruamel.yaml round-trip to preserve comments and ordering. This is the
     only field refresh.py / ingest is allowed to mutate on the YAML — signal
-    blocks remain read-only (CLAUDE.md §1.7).
+    blocks remain read-only (GOVERNANCE.md §1.7).
     """
     path = OWNERS_DIR / f"{slug}.yaml"
     if not path.exists():
@@ -301,7 +301,7 @@ def _append_provenance_log(run_summary: dict) -> None:
 
 
 def _append_supersession_log(events: list[tuple[str, str, str]], run_id: str) -> None:
-    """Append a SUPERSESSION block to PROVENANCE_LOG per CLAUDE.md §1.10.
+    """Append a SUPERSESSION block to PROVENANCE_LOG per GOVERNANCE.md §1.10.
 
     Each event is (transaction_id, entity_slug, reason). The old row is archived
     (never deleted) in the DB; this records the restatement in the paper trail.
@@ -342,7 +342,7 @@ def ingest_entity(
 
     On successful (non-dry-run, non-from-raw) completion, owner's
     audit.last_ingestion is patched to today's UTC date so the next run
-    fetches incrementally. CLAUDE.md §1.7 — signal blocks are NOT touched.
+    fetches incrementally. GOVERNANCE.md §1.7 — signal blocks are NOT touched.
     """
     # ── Step 1: validate ───────────────────────────────────────────────────
     results = validate_all()
@@ -475,7 +475,7 @@ def ingest_entity(
             if not row["transaction_id"]:
                 continue
             if not _row_has_required_provenance(row):
-                # CLAUDE.md §1.3 — no provenance, no entry.
+                # GOVERNANCE.md §1.3 — no provenance, no entry.
                 skipped_missing_provenance += 1
                 continue
             action, reason = db.insert_donation(conn, row)
@@ -505,7 +505,7 @@ def ingest_entity(
     # Records today's UTC date as the freshness watermark so the NEXT ingest
     # fetches incrementally (B.5 reads this back). Skipped for `from_raw`
     # runs — those don't fetch from FEC, so they shouldn't move the watermark.
-    # CLAUDE.md §1.7 boundary: this only touches audit.last_ingestion;
+    # GOVERNANCE.md §1.7 boundary: this only touches audit.last_ingestion;
     # signal blocks remain untouched.
     if not from_raw:
         today_iso = _utc_today_iso()
@@ -556,7 +556,7 @@ def _reclassify_lost_txns(slug: str, *, db_path=None) -> tuple[set[str], set[str
 def raw_coverage_report(slug: str | None = None, *, db_path=None) -> dict:
     """Report live donation rows whose raw_payload_path is missing on disk.
 
-    master.db is the durable source of truth (CLAUDE.md §1.4); raw is best-effort
+    master.db is the durable source of truth (GOVERNANCE.md §1.4); raw is best-effort
     ground truth. This makes the coverage gap monitorable rather than silent —
     the same gap that gates `reclassify`.
     """
@@ -604,7 +604,7 @@ def reclassify_entity(
     Use after editing the owner YAML (signal additions, negative_signals,
     related_entity changes) to apply the new rules without re-hitting FEC.
 
-    CLAUDE.md §1.10 ("no deletion without record") is satisfied via:
+    GOVERNANCE.md §1.10 ("no deletion without record") is satisfied via:
       - the pre-wipe DB snapshot (rows are recoverable)
       - the DELETION log entry below
       - the raw payloads in data/raw/<slug>/ which are the ground truth.
@@ -614,13 +614,13 @@ def reclassify_entity(
     # ── C1 guard ───────────────────────────────────────────────────────────
     # reclassify DELETEs the entity's rows then reloads from raw; rows whose raw
     # payload is missing on disk would vanish. master.db is the source of truth
-    # (CLAUDE.md §1.4) — abort rather than lose attributed rows, unless forced.
+    # (GOVERNANCE.md §1.4) — abort rather than lose attributed rows, unless forced.
     live_txns, lost = _reclassify_lost_txns(slug)
     if lost and not force:
         raise RuntimeError(
             f"reclassify aborted for {slug!r}: {len(lost)} of {len(live_txns)} attributed "
             f"row(s) have no recoverable raw payload on disk and would be permanently lost. "
-            f"master.db is the source of truth (CLAUDE.md §1.4); raw is best-effort. "
+            f"master.db is the source of truth (GOVERNANCE.md §1.4); raw is best-effort. "
             f"Re-fetch from FEC first, or pass force=True / --force to proceed knowingly. "
             f"Examples: {sorted(lost)[:3]}"
         )

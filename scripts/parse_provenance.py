@@ -1,7 +1,7 @@
 """
 Parse catalog/PROVENANCE_LOG.md into structured entries for the dashboard.
 
-The log is the audit trail (see CLAUDE.md §1, PROVENANCE_LOG.md preamble).
+The log is the audit trail (see GOVERNANCE.md §1, PROVENANCE_LOG.md preamble).
 Each entry is a level-3 markdown heading followed by a body. The body uses
 a small subset of markdown: paragraphs (blank-line separated), bullet
 lists (- prefix), bold (**text**), inline code (`text`).

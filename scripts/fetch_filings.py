@@ -15,7 +15,7 @@ Raw payloads land at:
     data/raw/_filings/<UTC>__batch.json
 
 (Underscore prefix matches the committees convention; filings aren't per-owner.)
-CLAUDE.md §1.4: raw payloads are ground truth; the DB is a derivative.
+GOVERNANCE.md §1.4: raw payloads are ground truth; the DB is a derivative.
 """
 from __future__ import annotations
 

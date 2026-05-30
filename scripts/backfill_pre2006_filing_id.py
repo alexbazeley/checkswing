@@ -1,5 +1,5 @@
 """One-shot backfill: stamp the documented sentinel on rows whose filing_id is
-blank (CLAUDE.md §1.3, audit H3).
+blank (GOVERNANCE.md §1.3, audit H3).
 
 These are pre-2006 FEC paper filings that genuinely lack a file number. Rather
 than leave a silent empty string, set filing_id = FEC-PRE2006-NOID so the
@@ -68,7 +68,7 @@ def backfill(db_path=None) -> dict:
         f"- **snapshot_path**: `{snap}`",
         f"- **sample_txns**: `{sample}`",
         "- **note**: Pre-2006 paper filings with no FEC file number; the sentinel "
-        "makes the gap explicit (CLAUDE.md §1.3). Rows retain raw_payload_path.",
+        "makes the gap explicit (GOVERNANCE.md §1.3). Rows retain raw_payload_path.",
         "",
     ]
     existing = PROVENANCE_LOG.read_text(encoding="utf-8") if PROVENANCE_LOG.exists() else ""

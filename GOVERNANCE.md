@@ -1,0 +1,189 @@
+# GOVERNANCE.md — Data Integrity Rules for the MLB Owner FEC Donations Archive
+
+This document defines the data-integrity rules that govern all work in this
+repository. They apply to every contributor — human or automated agent — and to
+every change that touches the archive's data, classification logic, or
+provenance trail.
+
+The premise of this archive is that downstream research will cite individual
+donation records from it. The product is **trustworthy attribution** — every
+record correctly tied to a real owner with a verifiable signal trail back to a
+real FEC filing. Speed is a distant second priority. Where a tradeoff exists
+between "ingest more" and "get it right," choose "get it right."
+
+## 1. The non-negotiables
+
+These are hard rules, not preferences. Violating them is grounds for the work to
+be discarded.
+
+### 1.1 No attribution without two verifying signals
+A donor name matching an owner's name is **necessary but not sufficient**. A FEC
+record is attributed to an owner only when it matches the owner's
+`verifying_signals` block in `owners/<slug>.yaml`:
+
+- **Required**: normalized name match
+- **PLUS at least one of**: known employer string, known occupation, known city+state combination
+- **CONFIRMED status** requires two or more confirming signals OR one `strong_signal` match (e.g., a uniquely-identifying employer string).
+
+A name match alone is never enough. There are hundreds of John Smiths in the FEC
+database.
+
+### 1.2 Three-tier verification status, recorded on every record
+- **CONFIRMED** — Name match + two or more confirming signals (or one strong unique signal). Exported as canonical.
+- **PROBABLE** — Name match + one confirming signal. Included in exports, **always flagged with status**. Never described as "Owner X donated" without the qualifier.
+- **UNCERTAIN** — Name match alone, or contradicting signals. Lives in the review queue, **never** in the canonical export.
+
+Status can be demoted but not silently promoted. Promotions must be logged in
+`catalog/PROVENANCE_LOG.md`.
+
+### 1.3 Every record traces to a specific FEC filing
+Every donation row in the database must carry: `transaction_id`, `committee_id`
+(recipient), `filing_id` (source FEC filing), `date` (contribution date),
+`ingested_at`, `raw_payload_path` (link to the preserved JSON in `data/raw/`).
+This is **enforced at ingest** — a row missing `filing_id`, `raw_payload_path`,
+or `date` is rejected. Pre-2006 FEC records that genuinely lack a file number
+carry the documented sentinel `filing_id = FEC-PRE2006-NOID` (see
+DONATION_SCHEMA.md) rather than a blank, so the "no FEC file number" case is
+explicit and queryable — never a silent empty string.
+
+### 1.4 Raw FEC API responses are persisted before parsing; master.db is the source of truth
+Every API call's response is saved verbatim to
+`data/raw/<owner-slug>/<UTC-timestamp>__<endpoint>.json` **before any parsing**,
+on every fetch path. Raw payloads are the best-effort ground truth for
+re-verification and reclassification.
+
+The committed **`data/master.db` is the durable source of truth** for the archive
+and the dashboard. Raw payloads live outside git (`.gitignore`) and are **not
+guaranteed to be preserved** — they may exist only on the machine or CI runner
+that fetched them (a minority of historical rows reference raw files no longer on
+disk). Consequences that are load-bearing:
+
+- Do **not** assume the DB is fully reconstructible from `data/raw/` alone. master.db is authoritative; raw is a re-verification aid, not a guaranteed backup.
+- `reclassify` is **guarded**: it refuses to delete-and-reload an entity when any currently-attributed row's raw payload is missing on disk (those rows would be silently lost), unless `--force`. Run `python -m scripts.cli raw-coverage` to see the gap.
+- Human review-queue resolutions live only in master.db; that is consistent with master.db being the source of truth.
+
+### 1.5 Idempotent ingestion
+Re-running ingestion for the same period must not duplicate rows. FEC
+`transaction_id` is the primary key. If FEC restates a transaction, the new
+version is recorded and the old row is marked `status = SUPERSEDED` — the old row
+is never deleted.
+
+### 1.6 Snapshot before each ingestion run
+Before each ingestion, snapshot the current `data/master.db` to
+`data/snapshots/YYYY-MM-DDTHH-MM-SSZ.db`. This enables rollback and
+reproducibility of past states.
+
+### 1.7 No silent expansion of tracked entities
+Adding a spouse, family member, business entity, or PAC to an owner's tracked-set
+is a **deliberate, version-controlled change** to that owner's YAML, with a
+`change_log` entry inside the YAML explaining the justification and source. Never
+widen attribution scope inside an ingestion run. Widening scope is itself an
+editorial act and gets a paper trail.
+
+### 1.8 Editorial commentary is separated from the data
+The database stores donations and their FEC-given attributes. It does not store
+editorial framing, narrative angles, or interpretation. The `notes` field on
+records and the `notes` field on owner YAMLs are for narrow factual
+clarifications (e.g., "two donations on same day to same committee, possibly a
+reporting correction") — not interpretation.
+
+Any editorial analysis of donation patterns is built **on top of** the data and
+kept separate from it, clearly labeled as interpretation.
+
+### 1.9 Conservative tie-breaks
+When a match is ambiguous — partial signal overlap, contradicting employers
+across filings, unusual city — the record goes to UNCERTAIN and the review queue.
+Default to "don't attribute" rather than "probably them." The cost of a missed
+donation is far smaller than the cost of a misattribution that ends up published.
+
+### 1.10 No deletion without record
+If a donation is removed (FEC retracts, owner relationship reconsidered,
+misattribution discovered), the row is marked `SUPERSEDED` with a reason in
+`catalog/PROVENANCE_LOG.md`. Never hard-delete a record that has ever existed in
+the database.
+
+## 2. Workflow rules
+
+### 2.1 Before adding a new owner to the registry
+- Confirm they are a principal/majority owner per current public ownership records.
+- Document the ownership relationship in the owner YAML's `sources` block.
+- Populate `verifying_signals` from at least two independent public sources (e.g., a profile in major business press + an MLB-published ownership page + their corporate website).
+- Mark `status: queued` until the YAML is fully populated and reviewed, then move to `pilot` or `active`.
+
+### 2.2 Before each ingestion run
+- Read the owner YAML's `name_variants` and `verifying_signals` — they are the spec.
+- Confirm no pending review-queue items for this owner are unresolved that would change matching logic.
+- Snapshot the master DB (rule 1.6).
+
+### 2.3 During ingestion
+- Persist every API response raw before parsing (rule 1.4).
+- Score every record against the owner's signals.
+- Insert CONFIRMED + PROBABLE into the DB; route UNCERTAIN to the review queue with full raw payload.
+- Never modify the owner YAML mid-run.
+
+### 2.4 After ingestion
+- Append a run entry to `catalog/PROVENANCE_LOG.md` with: owner, period queried, raw API calls made, rows added per tier, anomalies.
+- If any UNCERTAIN entries were created, surface the count.
+- Refresh per-owner CSV exports in `data/donations/<slug>/`.
+
+### 2.5 Resolving a review-queue item
+- Inspect the raw payload.
+- Either: (a) add a new confirming signal to the owner YAML with a `change_log` entry and re-score, or (b) mark UNCERTAIN as DISCARDED with reason. Never promote without strengthened evidence.
+- Log the resolution in `catalog/PROVENANCE_LOG.md`.
+
+### 2.6 When a record is genuinely uncertain
+- Use `UNCERTAIN` status honestly.
+- Put a note in the owner YAML's `notes` field if a pattern is emerging.
+- Leave it in the `review_queue` table for a human pass (`python -m scripts.cli review-queue` to list, `export-review-queue` for a Markdown snapshot).
+
+## 3. Prohibited behaviors
+
+- Attributing a donation to an owner because the name matches and "it's probably them."
+- Inferring an owner's employer or city from outside knowledge instead of from the owner YAML's documented signals.
+- Adding new name variants, employer strings, or signals to an owner YAML mid-ingestion based on what the data "looks like."
+- Treating OpenSecrets, news summaries, or aggregator sites as a primary source of donation facts. They can be pointers to FEC records; they are never the record itself.
+- Auto-attributing donations from a PAC to an individual owner without an `ownership_link_documented` entry in the related_entities block.
+- Aggregated employer-based queries against FEC (e.g., "everyone reporting employer = New York Mets") without a named-individual anchor. That is a different project.
+- Smoothing or "cleaning" name variants in the canonical database. Store what FEC filed; normalize only at query time.
+- Filling required fields with plausible guesses. Use `unknown` or `null`.
+- Adding interpretive prose to the `notes` field of a donation or owner YAML.
+- Deleting rows or files without a `PROVENANCE_LOG.md` entry.
+
+## 4. Delegated and automated contributions
+
+When work is delegated to a separate session, contributor, or automated agent:
+- The work must be performed against this document and the relevant schema files (`OWNER_SCHEMA.md`, `DONATION_SCHEMA.md`, `VERIFICATION.md`).
+- It must return structured findings: what was fetched, what was classified at each tier, what landed in the review queue, what changed in the DB.
+- Responsibility for any signal-set expansion or status promotion stays with the maintainer reviewing the change, not the delegated worker. Delegated work proposes; the maintainer promotes.
+
+## 5. When in doubt
+
+Stop and escalate before proceeding. The archive is meant to outlast any single
+contribution or ingestion run. A clarifying question now is cheaper than purging
+contaminated data later. Open an issue or consult a maintainer.
+
+Specifically, **always** stop and confirm before:
+- Adding a new tracked entity (spouse, family member, business entity, PAC) to an owner profile.
+- Promoting an UNCERTAIN record to PROBABLE or CONFIRMED.
+- Adopting a new signal source (e.g., starting to use a state campaign-finance database — that's a scope expansion).
+- Re-classifying a previously CONFIRMED record.
+- Backfilling history beyond the period the owner held the team (whether to include pre-ownership giving is decided case by case).
+
+## 6. Scope guardrails
+
+The data pipeline is federal-only, FEC-only, principal-owners-only. The following
+are out of scope for the archive's data layer; treat work drifting into them as a
+signal to stop and reassess against CHARTER.md:
+
+- Cross-referencing donations with legislation, votes, or policy outcomes (Phase 3, not yet active).
+- Pulling state or local campaign finance (Phase 4, not yet active).
+- Looking up team-affiliated charitable foundations (a separate project — IRS 990s).
+- Writing narrative analysis of "what these donations mean" into the data layer.
+
+The public **CheckSwing dashboard** (`mockup/`) is an in-scope, maintained
+presentation layer built *on top of* the archive: it renders only data and
+provenance already in `master.db` (donations, committee enrichment, filing links,
+and committee beneficiary aggregates), never editorial interpretation. Changes to
+it must not alter the archive's attribution or provenance rules.
+
+When in doubt, return to CHARTER.md and verify the work is in scope.

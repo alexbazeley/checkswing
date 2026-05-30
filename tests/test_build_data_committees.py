@@ -71,7 +71,7 @@ def _seed_committee(db_path: Path, *, with_external_link=False) -> None:
             (
                 "https://en.wikipedia.org/wiki/ACME_PAC" if with_external_link else None,
                 "Wikipedia" if with_external_link else None,
-                "manual; added by alex 2025" if with_external_link else None,
+                "manual; added by a maintainer 2025" if with_external_link else None,
             ),
         )
         conn.execute(

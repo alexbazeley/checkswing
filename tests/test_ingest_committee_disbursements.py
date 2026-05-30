@@ -301,7 +301,7 @@ class TestIngestCommitteeDisbursements:
 
     def test_unknown_recipient_id_row_skipped(self, tmp_master, fec_responses):
         """Rows with neither candidate_id nor recipient_committee_id nor name
-        get dropped (no stable PK) — CLAUDE.md §1.5."""
+        get dropped (no stable PK) — GOVERNANCE.md §1.5."""
         _mock_by_recipient(fec_responses, {
             2022: [
                 {"total": 100.0},  # no id, no name — should be dropped
@@ -360,7 +360,7 @@ class TestIngestAllCommitteeDisbursements:
         assert summary["fetched"] == 2
         assert summary["failed"] == 0
         assert summary["rows_written"] == 3
-        # Snapshot was created (CLAUDE.md §1.6)
+        # Snapshot was created (GOVERNANCE.md §1.6)
         assert summary["snapshot_path"] is not None
 
     def test_only_subset_restricts_targets(self, tmp_master, fec_responses):

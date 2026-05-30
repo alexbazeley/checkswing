@@ -2,13 +2,13 @@
 
 Fetches /schedules/schedule_a/ records for each owner name variant.
 Every raw response is persisted to data/raw/<slug>/<UTC>__schedule_a.json
-BEFORE parsing (CLAUDE.md §1.4). The DB is reconstructible from raw alone.
+BEFORE parsing (GOVERNANCE.md §1.4). The DB is reconstructible from raw alone.
 
 Strategy: name-anchored fetch. By default, when the caller passes a `states`
 list (the owner's documented residence states from verifying_signals.states),
 the fetch passes those as `contributor_state` filters to FEC. This narrows
 the result set ~10-20x while remaining name-anchored — not a violation of
-CLAUDE.md §3's prohibition on employer-only aggregated queries.
+GOVERNANCE.md §3's prohibition on employer-only aggregated queries.
 
 For owners with multi-state residence (e.g., Henry, FL+MA), all states are
 passed in one call; FEC ORs them. Donations filed with an out-of-state
@@ -207,7 +207,7 @@ class FECClient:
     ) -> Path:
         """Write one page's response to data/raw/<slug>/<timestamp>__schedule_a.json.
 
-        CLAUDE.md §1.4 — raw payloads are written BEFORE parsing and are the
+        GOVERNANCE.md §1.4 — raw payloads are written BEFORE parsing and are the
         ground truth. The DB is rebuildable from raw alone.
         """
         raw_path = raw_dir_for(slug) / f"{_utc_now_filename()}__schedule_a.json"
@@ -475,7 +475,7 @@ class FECClient:
             key = r.get("transaction_id") or r.get("sub_id")
             if not key:
                 # Skip records FEC didn't give us a stable key for — they'd
-                # break idempotency (CLAUDE.md §1.5). They're still in the raw
+                # break idempotency (GOVERNANCE.md §1.5). They're still in the raw
                 # payload for forensic recovery if needed.
                 continue
             key = str(key)
@@ -492,7 +492,7 @@ def load_raw_payloads(slug: str, raw_dir: Path | None = None) -> tuple[list[dict
     """Read records straight from on-disk raw payloads — no network calls.
 
     Used when an earlier fetch wrote raw JSONs but the run aborted before
-    classification. Honors CLAUDE.md §1.4: the DB is reconstructible from raw
+    classification. Honors GOVERNANCE.md §1.4: the DB is reconstructible from raw
     alone, and this is the function that does the reconstruction.
 
     Returns (records, raw_paths). Records are deduped by transaction_id

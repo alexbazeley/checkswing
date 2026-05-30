@@ -3,7 +3,7 @@
 
 # Database transient files (journal/WAL/shm); the master.db file itself is
 # committed because the Cloudflare deploy regenerates mockup/data.json from
-# it at build time. master.db is the project's source of truth (CLAUDE.md
+# it at build time. master.db is the project's source of truth (GOVERNANCE.md
 # §1.4 — raw payloads are ground truth but live outside git; master.db is
 # the rebuildable derivative the static site depends on).
 data/master.db-journal

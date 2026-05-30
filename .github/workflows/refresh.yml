@@ -92,7 +92,7 @@ jobs:
 
       - name: Run refresh bucket ${{ matrix.bucket }}/4
         if: steps.gate.outputs.run == 'true'
-        # Per-owner failures are isolated in refresh_all (CLAUDE.md §1.9 — try
+        # Per-owner failures are isolated in refresh_all (GOVERNANCE.md §1.9 — try
         # again next time) and surfaced in the summary JSON. We don't want one
         # timed-out owner to throw away the work of the other 8 in this bucket
         # by skipping the artifact upload. continue-on-error lets the job keep
@@ -256,7 +256,7 @@ jobs:
         # × ~5-15 cycles takes 5-17 hours of FEC API time; triggered via
         # workflow_dispatch with beneficiaries=true. continue-on-error so per-
         # committee FEC timeouts don't kill the rest of the job — same
-        # CLAUDE.md §1.9 reasoning as the bucket refresh step.
+        # GOVERNANCE.md §1.9 reasoning as the bucket refresh step.
         continue-on-error: true
         env:
           FEC_API_KEY: ${{ secrets.FEC_API_KEY }}

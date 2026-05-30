@@ -11,11 +11,11 @@ amount the committee disbursed to that recipient in that cycle plus the
 transaction count. We persist the raw envelope per cycle, then project each
 row into the columns of committee_disbursements_by_recipient.
 
-CLAUDE.md §1.4: raw payloads land under data/raw/_committee_disbursements/
+GOVERNANCE.md §1.4: raw payloads land under data/raw/_committee_disbursements/
 BEFORE parsing. Underscore-prefixed dir matches the `_committees` and
 `_filings` conventions.
 
-CLAUDE.md §6: this is factual recipient metadata (name, amount). It is NEVER
+GOVERNANCE.md §6: this is factual recipient metadata (name, amount). It is NEVER
 editorial framing of what the committee's spending "means." Cross-referencing
 to legislation / votes / policy outcomes is Phase 3.
 """
@@ -161,7 +161,7 @@ def parse_by_recipient_row(
     """Project one FEC by_recipient row into a committee_disbursements_by_recipient row.
 
     Returns None when the row has no recipient identifier at all — we'd have
-    no stable PK to insert under. (CLAUDE.md §1.5 — idempotency requires a
+    no stable PK to insert under. (GOVERNANCE.md §1.5 — idempotency requires a
     stable key.)
     """
     rid, rkind = _classify_recipient(row)

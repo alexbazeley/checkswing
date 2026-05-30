@@ -15,7 +15,7 @@ These are the only sources that can populate a donation record's substantive fie
   - `/candidates/` — candidate metadata (for committee → candidate joins)
 - **Authentication**: free API key from api.data.gov
 - **Rate limit**: 1,000 requests/hour by default. Build a rate-limited client; do not hammer.
-- **Caching policy**: every response is persisted raw to `data/raw/` before parsing (CLAUDE.md §1.4). Never re-fetch a record we already have unless we have reason to believe FEC restated it.
+- **Caching policy**: every response is persisted raw to `data/raw/` before parsing (GOVERNANCE.md §1.4). Never re-fetch a record we already have unless we have reason to believe FEC restated it.
 
 ### FEC bulk data files (`https://www.fec.gov/data/browse-data/?tab=bulk-data`)
 - **Use for**: large historical backfills where API pagination would be slow.

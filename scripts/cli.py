@@ -272,7 +272,7 @@ def ingest_committee_beneficiaries_cmd(only, cycles, force_refresh, top_n, max_c
 
     For each Phase-1-enriched committee, fetches the top-N recipients it disbursed
     to per cycle. Names + amounts only — no editorial linkage to legislation or
-    policy outcomes (CLAUDE.md §6, that's Phase 3).
+    policy outcomes (GOVERNANCE.md §6, that's Phase 3).
     Idempotent — re-runs within 30 days per (committee, cycle) are no-ops
     unless --force-refresh.
     """
@@ -348,7 +348,7 @@ def ingest_all_pilot(dry_run, min_date, full_refetch, include_related):
 @click.option("--reason", default="", help="Reason for reclassification (recorded in PROVENANCE_LOG).")
 @click.option("--yes", is_flag=True, help="Skip confirmation prompt.")
 @click.option("--include-related", is_flag=True, help="Also classify against related_entities (spouses, children, business entities) declared in the YAML.")
-@click.option("--force", is_flag=True, help="Proceed even if some attributed rows have no recoverable raw payload on disk (they will be permanently lost). Default: abort to protect those rows (CLAUDE.md §1.4).")
+@click.option("--force", is_flag=True, help="Proceed even if some attributed rows have no recoverable raw payload on disk (they will be permanently lost). Default: abort to protect those rows (GOVERNANCE.md §1.4).")
 def reclassify(slug, reason, yes, include_related, force):
     """Wipe SLUG's rows and reclassify against existing raw payloads.
 
@@ -418,7 +418,7 @@ def export(slug):
 def raw_coverage_cmd(slug):
     """Report live donation rows whose raw payload is missing on disk.
 
-    master.db is the durable source of truth (CLAUDE.md §1.4); raw is best-effort
+    master.db is the durable source of truth (GOVERNANCE.md §1.4); raw is best-effort
     ground truth. This surfaces the coverage gap (and is the same gap that gates
     `reclassify`). Pass a SLUG to scope to one entity.
     """
@@ -559,7 +559,7 @@ def audit(slug):
     a heuristic suggestion checklist for tightening signals.
 
     Apply changes by editing the owner YAML with a change_log entry
-    (CLAUDE.md §1.7), then `reclassify --from-raw <slug>`.
+    (GOVERNANCE.md §1.7), then `reclassify --from-raw <slug>`.
     """
     db.init()
     click.echo(audit_slug(slug))

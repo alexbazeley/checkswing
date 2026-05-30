@@ -3,7 +3,7 @@
 Covers:
   - _resolve_min_date precedence (CLI > full_refetch > YAML > default)
   - _write_audit_last_ingestion round-trips and preserves comments/order
-  - The CLAUDE.md §1.7 boundary: signal blocks are untouched on YAML write
+  - The GOVERNANCE.md §1.7 boundary: signal blocks are untouched on YAML write
 """
 from __future__ import annotations
 
@@ -175,7 +175,7 @@ class TestWriteAuditLastIngestion:
         assert "# uniquely his" in text
 
     def test_signal_blocks_untouched(self, tmp_owner_yaml):
-        """CLAUDE.md §1.7 — the YAML write must not touch signal blocks."""
+        """GOVERNANCE.md §1.7 — the YAML write must not touch signal blocks."""
         slug, path = tmp_owner_yaml
         before = yaml.safe_load(path.read_text(encoding="utf-8"))
         _write_audit_last_ingestion(slug, "2026-05-24")

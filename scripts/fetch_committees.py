@@ -11,7 +11,7 @@ Raw payloads land at:
     data/raw/_committees/<committee_id>/<UTC>__<endpoint-suffix>.json
 
 Leading-underscore directory name distinguishes committee scope from per-owner
-slug directories under data/raw/. CLAUDE.md §1.4: raw payloads are ground
+slug directories under data/raw/. GOVERNANCE.md §1.4: raw payloads are ground
 truth; the DB is a derivative.
 """
 from __future__ import annotations

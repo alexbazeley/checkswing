@@ -173,10 +173,10 @@ Every change to this file that affects classification (signal additions, name va
 change_log:
   - date: 2026-05-22
     change: "Created."
-    by: "alex"
+    by: "maintainer"
   - date: 2026-05-23
     change: "Added 'Cohen Private Ventures' to strong_signals.employers based on confirmed filings."
-    by: "claude-code-session-XYZ"
+    by: "automated pipeline"
     references:
       - "data/raw/cohen-steven/2026-05-23T14-00-00Z__schedule_a.json"
 ```

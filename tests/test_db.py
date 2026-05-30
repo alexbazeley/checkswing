@@ -1,4 +1,4 @@
-"""Supersession + idempotency tests for db.insert_donation (CLAUDE.md §1.5, §1.10)."""
+"""Supersession + idempotency tests for db.insert_donation (GOVERNANCE.md §1.5, §1.10)."""
 from __future__ import annotations
 
 import pytest

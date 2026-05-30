@@ -4,11 +4,11 @@ CHARTER §Phase 5: loop every owner with status in {pilot, active}, fetch
 incrementally since their audit.last_ingestion, classify through the existing
 pipeline, and regenerate mockup/data.json once at the end.
 
-CLAUDE.md §1.7 boundary: this script is READ-ONLY on signal blocks. The only
+GOVERNANCE.md §1.7 boundary: this script is READ-ONLY on signal blocks. The only
 YAML field touched (indirectly, via ingest_entity) is `audit.last_ingestion`,
 and only on successful per-owner completion.
 
-CLAUDE.md §1.9 (conservative tie-breaks): a failed owner leaves
+GOVERNANCE.md §1.9 (conservative tie-breaks): a failed owner leaves
 `audit.last_ingestion` unchanged so the next refresh retries the same window.
 Per-owner failures DO NOT abort the run — every owner gets attempted.
 
@@ -318,7 +318,7 @@ def refresh_all(
                 if (run_summary.get("records_fetched") or 0) > 0 and not dry_run:
                     new_records_seen = True
             except Exception as e:
-                # Per-owner failure isolation. CLAUDE.md §1.9 — prefer "try
+                # Per-owner failure isolation. GOVERNANCE.md §1.9 — prefer "try
                 # again next time" (audit.last_ingestion stays put) over
                 # silently skipping data.
                 summary["owners_failed"] += 1
