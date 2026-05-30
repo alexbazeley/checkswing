@@ -25,10 +25,16 @@ A name match alone is never enough. Ever. There are hundreds of John Smiths in t
 Status can be demoted but not silently promoted. Promotions must be logged in `catalog/PROVENANCE_LOG.md`.
 
 ### 1.3 Every record traces to a specific FEC filing
-Every donation row in the database must carry: `transaction_id`, `committee_id` (recipient), `filing_id` (source FEC filing), `original_filing_date`, `ingested_at`, `raw_payload_path` (link to the preserved JSON in `data/raw/`). If any of these are missing, the row does not enter the database.
+Every donation row in the database must carry: `transaction_id`, `committee_id` (recipient), `filing_id` (source FEC filing), `date` (contribution date), `ingested_at`, `raw_payload_path` (link to the preserved JSON in `data/raw/`). This is **enforced at ingest** — a row missing `filing_id`, `raw_payload_path`, or `date` is rejected. Pre-2006 FEC records that genuinely lack a file number carry the documented sentinel `filing_id = FEC-PRE2006-NOID` (see DONATION_SCHEMA.md) rather than a blank, so the "no FEC file number" case is explicit and queryable — never a silent empty string.
 
-### 1.4 Raw FEC API responses are preserved forever
-Every API call's response is saved verbatim to `data/raw/<owner-slug>/<UTC-timestamp>__<endpoint>.json` before any parsing. The database is a derivative; the raw payloads are the ground truth. The project must be reconstructible from `data/raw/` alone.
+### 1.4 Raw FEC API responses are persisted before parsing; master.db is the source of truth
+Every API call's response is saved verbatim to `data/raw/<owner-slug>/<UTC-timestamp>__<endpoint>.json` **before any parsing**, on every fetch path. Raw payloads are the best-effort ground truth for re-verification and reclassification.
+
+The committed **`data/master.db` is the durable source of truth** for the archive and the dashboard. Raw payloads live outside git (`.gitignore`) and are **not guaranteed to be preserved** — they may exist only on the machine or CI runner that fetched them (as of 2026-05, ~14% of rows — 594 of 4,212 — reference raw files no longer on disk). Consequences that are now load-bearing:
+
+- Do **not** assume the DB is fully reconstructible from `data/raw/` alone. master.db is authoritative; raw is a re-verification aid, not a guaranteed backup.
+- `reclassify` is **guarded**: it refuses to delete-and-reload an entity when any currently-attributed row's raw payload is missing on disk (those rows would be silently lost), unless `--force`. Run `python -m scripts.cli raw-coverage` to see the gap.
+- Human review-queue resolutions live only in master.db; that is consistent with master.db being the source of truth.
 
 ### 1.5 Idempotent ingestion
 Re-running ingestion for the same period must not duplicate rows. FEC `transaction_id` is the primary key. If FEC restates a transaction, the new version is recorded with `status = superseded` on the old row — the old row is never deleted.

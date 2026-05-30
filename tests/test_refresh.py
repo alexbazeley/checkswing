@@ -124,6 +124,43 @@ class TestAcquireLock:
                 with _acquire_lock(lock):
                     pass
 
+    def test_acquire_reclaims_stale_lock(self, refresh_world):
+        # A crashed run leaves an ancient, pid-less lock — it must be reclaimed
+        # rather than wedging every later refresh.
+        lock = refresh_world["lock_path"]
+        lock.write_text("2000-01-01T00:00:00Z\n", encoding="utf-8")
+        with _acquire_lock(lock):
+            assert lock.exists()
+        assert not lock.exists()
+
+
+class TestLockStaleness:
+    def test_live_pid_not_stale(self):
+        import os
+        from scripts.refresh import _lock_is_stale
+        assert _lock_is_stale(f"2000-01-01T00:00:00Z · pid={os.getpid()}") is False
+
+    def test_dead_pid_is_stale(self):
+        import os
+        from scripts.refresh import _lock_is_stale
+        dead = 999999
+        try:
+            os.kill(dead, 0)
+            pytest.skip("pid 999999 unexpectedly exists on this host")
+        except ProcessLookupError:
+            pass
+        except PermissionError:
+            pytest.skip("pid 999999 exists (no permission) on this host")
+        assert _lock_is_stale(f"2026-01-01T00:00:00Z · pid={dead}") is True
+
+    def test_recent_pidless_lock_not_stale(self):
+        from scripts.refresh import _lock_is_stale, _utc_now_iso
+        assert _lock_is_stale(_utc_now_iso()) is False
+
+    def test_old_pidless_lock_is_stale(self):
+        from scripts.refresh import _lock_is_stale
+        assert _lock_is_stale("2000-01-01T00:00:00Z") is True
+
 
 # ─── _list_active_owners ─────────────────────────────────────────────────────
 

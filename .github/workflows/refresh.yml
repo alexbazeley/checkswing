@@ -18,8 +18,14 @@ name: Weekly FEC refresh
 # thresholds documented in the dashboard.
 
 on:
-  schedule:
-    - cron: '0 12 * * 1'
+  # PAUSED — the weekly cron is intentionally disabled until the deferred B2
+  # classifier reclassify lands. The H4/M2 classifier fixes changed canonical
+  # name/contradiction logic, so committed data was scored with the OLD logic.
+  # Running an incremental refresh on the cron would ingest NEW-logic rows
+  # alongside OLD-logic rows (mixed-logic data) until the full reclassify runs.
+  # Re-enable this schedule block only after the reclassify + calibration pass.
+  # schedule:
+  #   - cron: '0 12 * * 1'
   workflow_dispatch:
     inputs:
       buckets:
@@ -28,6 +34,11 @@ on:
         default: '0,1,2,3'
       full_refetch:
         description: 'Pass --full-refetch to ingest: re-fetch every cycle from 2000-01-01 ignoring audit.last_ingestion. Use for one-off recovery runs (e.g., backfilling v3 image fields). Heavier than the weekly incremental.'
+        required: false
+        type: boolean
+        default: false
+      beneficiaries:
+        description: 'Pass --force-refresh to ingest-committee-beneficiaries: re-fetch every committee/cycle ignoring the 30-day freshness gate. Use for the initial Phase 2 backfill (~1054 committees × ~5-15 cycles × FEC throttle). Steady-state weekly runs do not need this.'
         required: false
         type: boolean
         default: false
@@ -118,7 +129,6 @@ jobs:
             data/master.db
             owners/*.yaml
             catalog/PROVENANCE_LOG.md
-            catalog/REVIEW_QUEUE.md
           retention-days: 7
           if-no-files-found: warn
 
@@ -174,9 +184,10 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           # Stage only what the refresh layer is allowed to touch: master DB,
-          # the rebuilt data.json, owner YAMLs (audit.last_ingestion only),
-          # and the provenance / review logs.
-          git add data/master.db mockup/data.json owners/*.yaml catalog/PROVENANCE_LOG.md catalog/REVIEW_QUEUE.md 2>/dev/null || true
+          # the rebuilt data.json, owner YAMLs (audit.last_ingestion only), and
+          # the provenance log. REVIEW_QUEUE.md is no longer tracked — its data
+          # lives in the review_queue table inside master.db.
+          git add data/master.db mockup/data.json owners/*.yaml catalog/PROVENANCE_LOG.md 2>/dev/null || true
           if git diff --staged --quiet; then
             echo "No changes from refresh — nothing to commit."
           else
@@ -185,13 +196,23 @@ jobs:
           fi
 
   committees_refresh:
-    # Enrich the committees and committee_totals tables for any recipient
-    # newly seen or whose last refresh is > FRESHNESS_DAYS (30 days). Runs
-    # after consolidate so it sees the merged master.db. Steady-state ~30 min
-    # per week (only stale committees get re-fetched).
+    # Enrich committees + committee_totals + filings + committee_disbursements_by_recipient
+    # for any recipient newly seen or whose last refresh is > FRESHNESS_DAYS (30 days).
+    # Runs after consolidate so it sees the merged master.db.
+    #
+    # Steady-state weekly cost: ~30 min (only stale committees get re-fetched).
+    #
+    # Initial Phase 2 backfill (workflow_dispatch with beneficiaries=true):
+    # the beneficiaries step alone needs 5-17 hours of FEC API time for the
+    # full ~1054 committees × ~5-15 cycles. GitHub Actions caps a single job
+    # at 6 hours, so the backfill completes incrementally across multiple
+    # weekly runs — each subsequent run skips what's already in the 30d
+    # freshness window. The timeout-minutes cap matches the refresh job's
+    # cap (just under the 6h GHA ceiling) so we fail-fast with logs rather
+    # than getting silently killed.
     needs: consolidate
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 330
     permissions:
       contents: write
     steps:
@@ -227,6 +248,24 @@ jobs:
         # filings outside the 30d freshness window get re-fetched, and the
         # weekly cron typically adds ~50-100 new filings, well under the cap.
         run: python -m scripts.cli ingest-filings
+
+      - name: Ingest committee beneficiaries (Schedule B by_recipient)
+        # Phase 2 — "Who this committee funded" data. Steady-state weekly cost
+        # is ~30 min (only (committee, cycle) pairs outside the 30d freshness
+        # window are re-fetched). The initial backfill across ~1054 committees
+        # × ~5-15 cycles takes 5-17 hours of FEC API time; triggered via
+        # workflow_dispatch with beneficiaries=true. continue-on-error so per-
+        # committee FEC timeouts don't kill the rest of the job — same
+        # CLAUDE.md §1.9 reasoning as the bucket refresh step.
+        continue-on-error: true
+        env:
+          FEC_API_KEY: ${{ secrets.FEC_API_KEY }}
+        run: |
+          extra_args=""
+          if [ "${{ github.event.inputs.beneficiaries }}" = "true" ]; then
+            extra_args="--force-refresh"
+          fi
+          python -m scripts.cli ingest-committee-beneficiaries $extra_args
 
       - name: Rebuild mockup/data.json with enrichment
         run: python mockup/build_data.py

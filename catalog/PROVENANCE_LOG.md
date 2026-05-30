@@ -3206,3 +3206,42 @@ Tests: 13 new cases across `test_fetch_filings.py` and `test_ingest_filings.py`.
 - ~Real PDF filing links~ — done (this entry)
 - Phase 2 (Beneficiary view: committee → recipients) — still queued
 - 936 NULL image_number rows on donations (year-2000 ancients) — accepted as the realistic ceiling; documented above
+
+### 2026-05-28 — SCHEMA_MIGRATION — v4 → v5 (committee_disbursements_by_recipient)
+
+Adds Phase 2's "Who this committee funded" data layer. For any Phase-1-enriched committee, we now record the top-N (default 200) recipients per cycle as reported by OpenFEC Schedule B `by_recipient`. See `CHARTER.md` Phase 1b sub-bullet for the active-scope statement and CLAUDE.md §6 for the editorial guardrail (names + amounts only; no cross-referencing to votes/legislation/policy outcomes — that's Phase 3).
+
+#### What changed
+
+- `scripts/db.py`: `SCHEMA_VERSION = 5`. New `committee_disbursements_by_recipient` table — PK `(committee_id, cycle, recipient_id, recipient_kind)`, columns: recipient_name, recipient_party, recipient_office, total_amount, n_transactions, raw_payload_path, fetched_at. Index `idx_cdbr_committee_cycle`. Idempotent `CREATE TABLE IF NOT EXISTS`.
+- `scripts/fetch_committee_disbursements.py` — wraps `FECClient` for `/schedules/schedule_b/by_recipient/?committee_id=<id>&cycle=<c>`. Paginates up to a `top_n` cap (default 200). Persists raw payloads to `data/raw/_committee_disbursements/<id>/<UTC>__by_recipient_cycle_<N>_p<page>.json` (underscored dir matches the `_committees` and `_filings` conventions). Endpoint primary path validated via live smoke test.
+- `scripts/ingest_committee_disbursements.py` — orchestrator with 30-day freshness gate per `(committee, cycle)`. DELETE+INSERT per cycle so retracted/amended recipients don't ghost-survive a re-fetch. Snapshots `master.db` before first row write (§1.6). Lock at `data/.committee_disbursements_ingest.lock`. Per-committee failures recorded but don't abort the batch (§1.9).
+- CLI: `python -m scripts.cli ingest-committee-beneficiaries [--only IDS --cycles 2022,2024 --force-refresh --top 200 --max N]`.
+- `mockup/build_data.py`: new top-level `committee_beneficiaries: dict[committee_id, dict[cycle_str, list[recipient]]]`. Pre-sorted desc by amount, sliced to top 25 per cycle. Tolerant of a pre-v5 DB.
+- `mockup/index.html:renderCommittee`: new "Who this committee funded" section after the donations table — cycle selector (defaults to most-recent), table with rank / recipient (party chip + office for candidates) / total amount / # transactions. Plain-text recipients in Phase 2 (candidate-detail routing would be Phase 3).
+- `.github/workflows/refresh.yml`: new `beneficiaries: bool` workflow_dispatch input. `committees_refresh` job grows an `ingest-committee-beneficiaries` step after `ingest-filings` (with `continue-on-error: true`). `timeout-minutes` bumped from 90 → 330 to accommodate the initial backfill (which still completes incrementally across multiple weekly runs because the 30-day freshness gate skips already-fresh pairs).
+
+#### Live smoke test
+
+Two small committees, run locally to validate the endpoint + plumbing end-to-end:
+
+```
+committees:        2 (C00356279 CAMPBELL VICTORY COMMITTEE, C00457846 ROGER WILLIAMS FOR US SENATE)
+cycles_fetched:    5 total (2 + 3)
+rows_written:      203 (3 + 200 — top_n cap hit on the Roger Williams cycle)
+snapshot:          data/snapshots/2026-05-28T02-49-07Z__beneficiaries_ingest_2026-05-28T02-49-07Z.db
+```
+
+Spot-check: C00356279 cycle 2000 reports $804K to NRSC + $69K to CAMPBELL FOR SENATE = ~$873K of the $966K total disbursements recorded on `committee_totals` for that cycle. The remaining $93K is the long-tail Schedule B disbursements below the top 200.
+
+Re-running on the same committee inside the freshness window correctly returns `cycles_skipped_fresh=2, fetched=0` (no FEC calls).
+
+The full ~1054-committee backfill runs via `workflow_dispatch beneficiaries=true` against the new GHA step — not run locally (5-17h of FEC API time at the 4s throttle, completes incrementally over multiple weekly runs as each run skips already-fresh pairs).
+
+#### Tests
+
+- `tests/test_fetch_committee_disbursements.py`: 10 cases (endpoint URL, raw-payload envelope, pagination to `top_n`, candidate vs committee recipient routing, missing-id fallback, missing-total tolerance).
+- `tests/test_ingest_committee_disbursements.py`: 14 cases (cycle enumeration, freshness gate, idempotent retraction-aware re-runs, `--cycles` override, per-committee failure isolation, `--only`, `--max`, snapshot creation).
+- `tests/test_build_data_committees.py`: 3 new cases (beneficiary join, party normalization, pre-v5 fallback to empty map).
+
+Total suite: 209 green.

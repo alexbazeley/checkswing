@@ -18,7 +18,7 @@ from __future__ import annotations
 
 import json
 import uuid
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Iterable
 
@@ -27,7 +27,7 @@ from ruamel.yaml import YAML as _RoundTripYAML
 
 from . import db
 from .fetch_fec import DEFAULT_MIN_DATE, FECClient, load_raw_payloads
-from .paths import OWNERS_DIR, PROVENANCE_LOG, REVIEW_QUEUE_MD
+from .paths import OWNERS_DIR, PROVENANCE_LOG, REPO_ROOT, REVIEW_QUEUE_MD
 from .resolve_entities import (
     CONFIRMED,
     PROBABLE,
@@ -38,8 +38,26 @@ from .resolve_entities import (
 from .validate_owners import format_report, validate_all
 
 
+# CLAUDE.md §1.3: every row must trace to a specific FEC filing. Pre-2006 FEC
+# records (paper filings) often have no file_number/report_id; rather than let a
+# blank filing_id slip in (or drop a legitimate donation), we stamp this
+# documented sentinel so the "no FEC file number" case is explicit and queryable.
+# Documented in DONATION_SCHEMA.md.
+SENTINEL_FILING_ID = "FEC-PRE2006-NOID"
+
+
 def _utc_now_iso() -> str:
     return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def _row_has_required_provenance(row: dict) -> bool:
+    """CLAUDE.md §1.3 — a row must carry filing_id, raw_payload_path, and date.
+
+    filing_id is sentinel-backed (never blank) for legitimate pre-file-number
+    records; a row still missing raw_payload_path or date is rejected outright
+    so a provenance-less record never enters the DB.
+    """
+    return bool(row.get("filing_id")) and bool(row.get("raw_payload_path")) and bool(row.get("date"))
 
 
 def _utc_today_iso() -> str:
@@ -53,12 +71,34 @@ def _load_owner(slug: str) -> dict:
     return yaml.safe_load(path.read_text(encoding="utf-8"))
 
 
+# Late-filing safety window (H2). FEC filings land weeks-to-months after the
+# contribution date, but the incremental watermark (audit.last_ingestion)
+# advances on RUN date while the FEC filter is on CONTRIBUTION date. Without a
+# look-back, a contribution dated before the last run but filed afterward is
+# never picked up. So each incremental run re-fetches a trailing window before
+# the watermark; the existing transaction_id dedup + insert idempotency make the
+# overlap free. ~18 months ≈ one FEC two-year cycle of slack.
+INCREMENTAL_TRAILING_DAYS = 550
+
+
+def _subtract_days(date_iso: str, days: int) -> str:
+    """Return date_iso − days as YYYY-MM-DD, floored at DEFAULT_MIN_DATE."""
+    try:
+        d = date.fromisoformat(str(date_iso)[:10])
+    except ValueError:
+        return DEFAULT_MIN_DATE
+    floored = d - timedelta(days=days)
+    floor = date.fromisoformat(DEFAULT_MIN_DATE)
+    return DEFAULT_MIN_DATE if floored < floor else floored.isoformat()
+
+
 def _resolve_min_date(owner: dict, explicit_min_date: str | None, full_refetch: bool) -> tuple[str, str]:
     """Resolve the effective min_date for this ingestion.
 
     Returns (min_date, source) where source explains the choice for logging:
       - "user --min-date" — explicit CLI override
-      - "audit.last_ingestion" — incremental refresh from prior run
+      - "audit.last_ingestion (−trailing window)" — incremental refresh, with the
+        H2 late-filing look-back applied
       - "--full-refetch" — explicit override back to project floor
       - "default (no prior ingestion)" — first-run for this owner
     """
@@ -68,8 +108,9 @@ def _resolve_min_date(owner: dict, explicit_min_date: str | None, full_refetch: 
         return explicit_min_date, "user --min-date"
     last = (owner.get("audit") or {}).get("last_ingestion")
     if last:
-        # YAML may load this as a date object or a string.
-        return str(last), "audit.last_ingestion"
+        # YAML may load this as a date object or a string. Subtract the trailing
+        # window so late-filed older-dated contributions aren't missed (H2).
+        return _subtract_days(str(last), INCREMENTAL_TRAILING_DAYS), "audit.last_ingestion (−trailing window)"
     return DEFAULT_MIN_DATE, "default (no prior ingestion)"
 
 
@@ -136,7 +177,7 @@ def _record_to_donation_row(
         "date": str(record.get("contribution_receipt_date") or "")[:10],
         "election_cycle": record.get("two_year_transaction_period"),
         "report_type": record.get("report_type") or None,
-        "filing_id": str(record.get("file_number") or record.get("report_id") or ""),
+        "filing_id": str(record.get("file_number") or record.get("report_id") or SENTINEL_FILING_ID),
         "raw_payload_path": record.get("_raw_payload_path") or "",
         "ingested_at": ingested_at,
         # v3 per-transaction FEC fields. Persisted at ingest time so the
@@ -257,6 +298,24 @@ def _append_provenance_log(run_summary: dict) -> None:
     if run_summary.get("notes"):
         block.append(f"- **notes**: {run_summary['notes']}")
     PROVENANCE_LOG.write_text(existing + "\n".join(block) + "\n", encoding="utf-8")
+
+
+def _append_supersession_log(events: list[tuple[str, str, str]], run_id: str) -> None:
+    """Append a SUPERSESSION block to PROVENANCE_LOG per CLAUDE.md §1.10.
+
+    Each event is (transaction_id, entity_slug, reason). The old row is archived
+    (never deleted) in the DB; this records the restatement in the paper trail.
+    """
+    if not events:
+        return
+    PROVENANCE_LOG.parent.mkdir(parents=True, exist_ok=True)
+    existing = PROVENANCE_LOG.read_text(encoding="utf-8") if PROVENANCE_LOG.exists() else ""
+    ts = _utc_now_iso()
+    block = [f"\n### {ts[:10]} — SUPERSESSION — run {run_id}", ""]
+    for txn, slug, reason in events:
+        block.append(f"- `{txn}` ({slug}): {reason}")
+    block.append("")
+    PROVENANCE_LOG.write_text(existing + "\n".join(block), encoding="utf-8")
 
 
 def ingest_entity(
@@ -408,12 +467,20 @@ def ingest_entity(
         return summary
 
     # ── Steps 6-7: write donations + review queue ──────────────────────────
+    superseded_events: list[tuple[str, str, str]] = []  # (txn, entity_slug, reason)
+    skipped_missing_provenance = 0
     with db.connect() as conn:
         for record, c in confirmed + probable:
             row = _record_to_donation_row(record, c, completed_at)
             if not row["transaction_id"]:
                 continue
-            db.insert_donation(conn, row)
+            if not _row_has_required_provenance(row):
+                # CLAUDE.md §1.3 — no provenance, no entry.
+                skipped_missing_provenance += 1
+                continue
+            action, reason = db.insert_donation(conn, row)
+            if action == "superseded":
+                superseded_events.append((row["transaction_id"], row["entity_slug"], reason or ""))
         for record, c in uncertain:
             review_row = _record_to_review_row(record, c, completed_at)
             if not review_row["transaction_id"]:
@@ -424,6 +491,15 @@ def ingest_entity(
     # ── Step 8: append markdown logs ───────────────────────────────────────
     _append_review_queue_md(uncertain, run_id)
     _append_provenance_log(summary)
+    _append_supersession_log(superseded_events, run_id)
+    if superseded_events:
+        summary["superseded_count"] = len(superseded_events)
+    if skipped_missing_provenance:
+        summary["skipped_missing_provenance"] = skipped_missing_provenance
+        print(
+            f"[{slug}] WARNING: skipped {skipped_missing_provenance} row(s) "
+            f"missing required provenance (filing_id/raw_payload_path/date — §1.3)."
+        )
 
     # ── Step 9: write audit.last_ingestion ─────────────────────────────────
     # Records today's UTC date as the freshness watermark so the NEXT ingest
@@ -439,16 +515,90 @@ def ingest_entity(
     return summary
 
 
-def reclassify_entity(slug: str, *, reason: str = "", include_related: bool = False) -> dict:
+def _raw_payload_exists(rel_or_abs_path: str) -> bool:
+    """True if a raw_payload_path resolves to a file on disk.
+
+    Stored paths are repo-root-relative (paths.relpath); absolute paths (used by
+    tests) are honored as-is."""
+    if not rel_or_abs_path:
+        return False
+    p = Path(rel_or_abs_path)
+    if not p.is_absolute():
+        p = REPO_ROOT / rel_or_abs_path
+    return p.exists()
+
+
+def _reclassify_lost_txns(slug: str, *, db_path=None) -> tuple[set[str], set[str]]:
+    """Return (live_attributed_txns, lost_txns) for a reclassify of `slug`.
+
+    `lost` = live attributed transaction_ids with no recoverable raw payload on
+    disk — exactly the rows a reclassify (DELETE + reload-from-raw) would
+    silently drop, since load_raw_payloads only reads files that still exist (C1).
+    """
+    recoverable_records, _ = load_raw_payloads(slug)
+    recoverable = {
+        str(r.get("transaction_id") or r.get("sub_id"))
+        for r in recoverable_records
+        if (r.get("transaction_id") or r.get("sub_id"))
+    }
+    with db.connect(db_path or db.MASTER_DB) as conn:
+        live = {
+            row[0]
+            for row in conn.execute(
+                "SELECT transaction_id FROM donations "
+                "WHERE (entity_slug = ? OR parent_owner_slug = ?) AND superseded_by IS NULL",
+                (slug, slug),
+            ).fetchall()
+        }
+    return live, (live - recoverable)
+
+
+def raw_coverage_report(slug: str | None = None, *, db_path=None) -> dict:
+    """Report live donation rows whose raw_payload_path is missing on disk.
+
+    master.db is the durable source of truth (CLAUDE.md §1.4); raw is best-effort
+    ground truth. This makes the coverage gap monitorable rather than silent —
+    the same gap that gates `reclassify`.
+    """
+    with db.connect(db_path or db.MASTER_DB) as conn:
+        q = "SELECT entity_slug, raw_payload_path FROM donations WHERE superseded_by IS NULL"
+        params: tuple = ()
+        if slug:
+            q += " AND entity_slug = ?"
+            params = (slug,)
+        rows = conn.execute(q, params).fetchall()
+    by_slug: dict[str, dict] = {}
+    missing_files: set[str] = set()
+    for r in rows:
+        rp = r["raw_payload_path"] or ""
+        s = by_slug.setdefault(r["entity_slug"], {"total": 0, "missing_raw": 0})
+        s["total"] += 1
+        if not _raw_payload_exists(rp):
+            s["missing_raw"] += 1
+            if rp:
+                missing_files.add(rp)
+    return {
+        "rows_checked": sum(s["total"] for s in by_slug.values()),
+        "rows_missing_raw": sum(s["missing_raw"] for s in by_slug.values()),
+        "distinct_missing_files": len(missing_files),
+        "by_slug": {k: v for k, v in sorted(by_slug.items()) if v["missing_raw"]},
+    }
+
+
+def reclassify_entity(
+    slug: str, *, reason: str = "", include_related: bool = False, force: bool = False
+) -> dict:
     """Re-run classification for an entity against its existing raw payloads.
 
     Workflow:
-      1. Snapshot the master DB (audit safety net before any deletion).
-      2. Delete this entity's rows from `donations` and `review_queue`. If
+      1. C1 guard: refuse if any currently-attributed row's raw payload is
+         missing on disk (it would be silently dropped). Override with force.
+      2. Snapshot the master DB (audit safety net before any deletion).
+      3. Delete this entity's rows from `donations` and `review_queue`. If
          `include_related` is True, also delete rows whose `parent_owner_slug`
          is this entity (the related-entity rows roll up under the owner).
-      3. Run ingest_entity(slug, from_raw=True, process_related_entities=...).
-      4. Append a DELETION entry to PROVENANCE_LOG.md documenting the wipe.
+      4. Run ingest_entity(slug, from_raw=True, process_related_entities=...).
+      5. Append a DELETION entry to PROVENANCE_LOG.md documenting the wipe.
          The ingest itself appends its own INGESTION entry.
 
     Use after editing the owner YAML (signal additions, negative_signals,
@@ -460,6 +610,20 @@ def reclassify_entity(slug: str, *, reason: str = "", include_related: bool = Fa
       - the raw payloads in data/raw/<slug>/ which are the ground truth.
     """
     db.init()
+
+    # ── C1 guard ───────────────────────────────────────────────────────────
+    # reclassify DELETEs the entity's rows then reloads from raw; rows whose raw
+    # payload is missing on disk would vanish. master.db is the source of truth
+    # (CLAUDE.md §1.4) — abort rather than lose attributed rows, unless forced.
+    live_txns, lost = _reclassify_lost_txns(slug)
+    if lost and not force:
+        raise RuntimeError(
+            f"reclassify aborted for {slug!r}: {len(lost)} of {len(live_txns)} attributed "
+            f"row(s) have no recoverable raw payload on disk and would be permanently lost. "
+            f"master.db is the source of truth (CLAUDE.md §1.4); raw is best-effort. "
+            f"Re-fetch from FEC first, or pass force=True / --force to proceed knowingly. "
+            f"Examples: {sorted(lost)[:3]}"
+        )
 
     # Snapshot before deletion.
     snap_id = f"pre-reclassify-{slug}"

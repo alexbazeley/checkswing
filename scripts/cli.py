@@ -15,6 +15,9 @@ from .audit import audit_slug
 from .backfill_donation_image_fields import backfill as backfill_donation_image_fields
 from .export import export_aggregate, export_entity
 from .ingest import ingest_entity, reclassify_entity
+from .ingest_committee_disbursements import (
+    ingest_all_committee_disbursements,
+)
 from .ingest_committees import ingest_all_committees
 from .ingest_filings import ingest_filings as ingest_filings_orchestrator
 from .paths import OWNERS_DIR
@@ -231,6 +234,73 @@ def ingest_filings_cmd(only, force_refresh, max_count):
     click.echo(json.dumps(summary, indent=2, default=str))
 
 
+@cli.command(name="ingest-committee-beneficiaries")
+@click.option(
+    "--only",
+    default=None,
+    help="Comma-separated committee_ids to enrich (default: every committee with totals).",
+)
+@click.option(
+    "--cycles",
+    default=None,
+    help=(
+        "Comma-separated cycle years (e.g. 2022,2024) to restrict the fetch to. "
+        "Default: every cycle FEC has totals for on that committee."
+    ),
+)
+@click.option(
+    "--force-refresh",
+    is_flag=True,
+    help="Re-fetch even if the (committee, cycle) is within the freshness window.",
+)
+@click.option(
+    "--top",
+    "top_n",
+    type=int,
+    default=None,
+    help="Cap of top recipients per (committee, cycle). Default 200.",
+)
+@click.option(
+    "--max",
+    "max_count",
+    type=int,
+    default=None,
+    help="Cap the number of committees processed (for testing / smoke runs).",
+)
+def ingest_committee_beneficiaries_cmd(only, cycles, force_refresh, top_n, max_count):
+    """Enrich committee_disbursements_by_recipient from OpenFEC Schedule B by_recipient.
+
+    For each Phase-1-enriched committee, fetches the top-N recipients it disbursed
+    to per cycle. Names + amounts only — no editorial linkage to legislation or
+    policy outcomes (CLAUDE.md §6, that's Phase 3).
+    Idempotent — re-runs within 30 days per (committee, cycle) are no-ops
+    unless --force-refresh.
+    """
+    only_list: list[str] | None = None
+    if only:
+        only_list = [s.strip() for s in only.split(",") if s.strip()]
+    cycles_list: list[int] | None = None
+    if cycles:
+        try:
+            cycles_list = [int(s.strip()) for s in cycles.split(",") if s.strip()]
+        except ValueError:
+            click.echo(f"--cycles must be comma-separated integers, got {cycles!r}.", err=True)
+            sys.exit(2)
+    kwargs: dict = {
+        "only": only_list,
+        "cycles": cycles_list,
+        "force_refresh": force_refresh,
+        "max_count": max_count,
+    }
+    if top_n is not None:
+        kwargs["top_n"] = top_n
+    summary = ingest_all_committee_disbursements(**kwargs)
+    click.echo("")
+    click.echo(json.dumps(summary, indent=2, default=str))
+    if summary.get("failed", 0) > 0:
+        sys.exit(1)
+
+
 @cli.command(name="apply-committee-external-links")
 def apply_committee_external_links_cmd():
     """Apply curated external links from catalog/committee_external_links.yaml.
@@ -278,7 +348,8 @@ def ingest_all_pilot(dry_run, min_date, full_refetch, include_related):
 @click.option("--reason", default="", help="Reason for reclassification (recorded in PROVENANCE_LOG).")
 @click.option("--yes", is_flag=True, help="Skip confirmation prompt.")
 @click.option("--include-related", is_flag=True, help="Also classify against related_entities (spouses, children, business entities) declared in the YAML.")
-def reclassify(slug, reason, yes, include_related):
+@click.option("--force", is_flag=True, help="Proceed even if some attributed rows have no recoverable raw payload on disk (they will be permanently lost). Default: abort to protect those rows (CLAUDE.md §1.4).")
+def reclassify(slug, reason, yes, include_related, force):
     """Wipe SLUG's rows and reclassify against existing raw payloads.
 
     Use after editing the owner YAML (signal additions, negative_signals,
@@ -309,7 +380,13 @@ def reclassify(slug, reason, yes, include_related):
         if not yes and not click.confirm("Continue?", default=False):
             click.echo("Aborted.")
             return
-    summary = reclassify_entity(slug, reason=reason, include_related=include_related)
+    try:
+        summary = reclassify_entity(
+            slug, reason=reason, include_related=include_related, force=force
+        )
+    except RuntimeError as e:
+        click.echo(f"ERROR: {e}", err=True)
+        sys.exit(1)
     click.echo("")
     click.echo(json.dumps(summary, indent=2, default=str))
 
@@ -336,6 +413,21 @@ def export(slug):
     click.echo(json.dumps(agg, indent=2))
 
 
+@cli.command(name="raw-coverage")
+@click.argument("slug", required=False)
+def raw_coverage_cmd(slug):
+    """Report live donation rows whose raw payload is missing on disk.
+
+    master.db is the durable source of truth (CLAUDE.md §1.4); raw is best-effort
+    ground truth. This surfaces the coverage gap (and is the same gap that gates
+    `reclassify`). Pass a SLUG to scope to one entity.
+    """
+    from .ingest import raw_coverage_report
+
+    db.init()
+    click.echo(json.dumps(raw_coverage_report(slug), indent=2, default=str))
+
+
 @cli.command()
 def review():
     """List open review-queue items."""
@@ -355,6 +447,78 @@ def review():
     table = [[r["transaction_id"], r["entity_slug"], r["reason"][:60], r["queued_at"]] for r in rows]
     click.echo(tabulate(table, headers=["txn", "entity", "reason", "queued_at"]))
     click.echo(f"\n{len(rows)} open item(s).")
+
+
+@cli.command(name="backfill-pre2006-filing-id")
+@click.option("--yes", is_flag=True, help="Skip confirmation.")
+def backfill_pre2006_filing_id_cmd(yes):
+    """One-shot: stamp FEC-PRE2006-NOID on rows with a blank filing_id (H3).
+
+    GATED DATA OPERATION — mutates master.db (snapshots first, appends a
+    PROVENANCE_LOG entry). Run deliberately; it is not part of any automated
+    workflow. Idempotent.
+    """
+    from .backfill_pre2006_filing_id import backfill as _backfill
+
+    db.init()
+    with db.connect() as conn:
+        n = conn.execute("SELECT COUNT(*) FROM donations WHERE filing_id = ''").fetchone()[0]
+    if n == 0:
+        click.echo("No rows with a blank filing_id. Nothing to do.")
+        return
+    click.echo(
+        f"Will set filing_id = FEC-PRE2006-NOID on {n} row(s). "
+        f"master.db is snapshotted first and the change is logged to PROVENANCE_LOG.md."
+    )
+    if not yes and not click.confirm("Continue?", default=False):
+        click.echo("Aborted.")
+        return
+    summary = _backfill()
+    click.echo(json.dumps(summary, indent=2, default=str))
+
+
+@cli.command(name="export-review-queue")
+def export_review_queue_cmd():
+    """Regenerate catalog/REVIEW_QUEUE.md from the review_queue table.
+
+    The .md is a human-readable mirror and is no longer git-tracked (it grew
+    unbounded); the review_queue table in master.db is the source of truth. Full
+    contributor detail for an item lives in its raw payload (raw_payload_path).
+    """
+    from datetime import datetime, timezone
+
+    from .paths import REVIEW_QUEUE_MD
+
+    db.init()
+    with db.connect() as conn:
+        rows = conn.execute(
+            """
+            SELECT transaction_id, entity_slug, reason, queued_at, raw_payload_path,
+                   resolution, resolution_reason, resolution_at
+            FROM review_queue
+            ORDER BY entity_slug, queued_at
+            """
+        ).fetchall()
+    ts = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    lines = [
+        f"# Review queue — regenerated {ts} from the review_queue table",
+        f"# {len(rows)} item(s). Source of truth: review_queue in master.db.",
+        "",
+    ]
+    for r in rows:
+        status = r["resolution"] or "pending"
+        lines.append(f"### {r['transaction_id']} — {r['entity_slug']} — {status}")
+        lines.append(f"- Reason: {r['reason']}")
+        lines.append(f"- Queued at: {r['queued_at']}")
+        lines.append(f"- Raw payload: {r['raw_payload_path']}")
+        if r["resolution"]:
+            lines.append(
+                f"- Resolution: {r['resolution']} ({r['resolution_at']}) — {r['resolution_reason'] or ''}"
+            )
+        lines.append("")
+    REVIEW_QUEUE_MD.parent.mkdir(parents=True, exist_ok=True)
+    REVIEW_QUEUE_MD.write_text("\n".join(lines), encoding="utf-8")
+    click.echo(f"Wrote {REVIEW_QUEUE_MD} ({len(rows)} item(s)).")
 
 
 @cli.command()

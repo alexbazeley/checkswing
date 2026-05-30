@@ -33,11 +33,13 @@ The canonical record. One row per FEC transaction, attributed to one entity (own
 | `date` | TEXT NOT NULL | `contribution_receipt_date`, ISO 8601 |
 | `election_cycle` | INTEGER | Two-year cycle (e.g., 2026) |
 | `report_type` | TEXT | FEC report code (Q1 / Q2 / YE / 12P / 48H / etc.) |
-| `filing_id` | TEXT NOT NULL | FEC `report_id` or analogous |
+| `filing_id` | TEXT NOT NULL | FEC `file_number` / `report_id`, or the sentinel `FEC-PRE2006-NOID` when FEC returns no file number (pre-2006 paper filings). Never blank — a row with no usable filing reference is rejected at ingest (§1.3). |
 | `raw_payload_path` | TEXT NOT NULL | Relative path to JSON in `data/raw/` |
 | `ingested_at` | TEXT NOT NULL | ISO 8601 UTC timestamp |
-| `superseded_by` | TEXT | When status=SUPERSEDED, the `transaction_id` that replaces this row |
-| `superseded_reason` | TEXT | When status=SUPERSEDED, why |
+| `superseded_by` | TEXT | On an archived (status=SUPERSEDED) row, the canonical `transaction_id` of the live row that replaced it. NULL on live rows. |
+| `superseded_reason` | TEXT | On an archived row, which FEC-substance fields changed (e.g. "FEC restatement: amount"). |
+
+**Supersession (CLAUDE.md §1.5).** When FEC restates an already-ingested transaction (a change in amount, date, recipient, filing reference, or image), `insert_donation` archives the old row under a derived key (`<transaction_id>~superseded~<UTC>`) with `status=SUPERSEDED` and `superseded_by` pointing at the canonical id, then inserts the restated payload under the canonical `transaction_id`. The old row is never deleted (§1.10). Live queries filter `status IN ('CONFIRMED','PROBABLE')`, so archived rows never reach exports or the dashboard. Supersession compares FEC-sourced substance only, not our derived `status`/`signals_matched`, so a reclassification does not trip it.
 
 ### `ingestion_runs`
 
@@ -116,6 +118,4 @@ Top-level aggregate. One row per owner, totals by cycle, by party, by office. CO
 
 ## Provenance recoverability test
 
-The schema must satisfy: **given only `data/raw/` and the owner YAMLs, the entire DB can be reconstructed.** No information lives only in the DB. The DB is a queryable index over the raw payloads.
-
-A periodic reconstruction test (rebuild master.db from raw, diff against current) is a good sanity check.
+**Source of truth.** The committed `data/master.db` is the durable source of truth (CLAUDE.md §1.4). Raw payloads in `data/raw/` are best-effort ground truth: written before parsing on every fetch path and used for re-verification/reclassification, but git-ignored and not guaranteed to persist (some historical rows reference raw files no longer on disk). Reconstruction from raw is therefore a best-effort aid, **not** a guarantee — `reclassify` is guarded against silently dropping rows whose raw is missing (run `cli raw-coverage` to audit the gap). Some information (e.g. human review-queue resolutions) lives only in master.db.

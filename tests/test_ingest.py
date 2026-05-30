@@ -15,7 +15,14 @@ import yaml
 
 from scripts import ingest
 from scripts.fetch_fec import DEFAULT_MIN_DATE
-from scripts.ingest import _resolve_min_date, _write_audit_last_ingestion
+from scripts.ingest import (
+    SENTINEL_FILING_ID,
+    _record_to_donation_row,
+    _resolve_min_date,
+    _row_has_required_provenance,
+    _write_audit_last_ingestion,
+)
+from scripts.resolve_entities import Classification
 
 
 # ─── _resolve_min_date ───────────────────────────────────────────────────────
@@ -34,11 +41,25 @@ class TestResolveMinDate:
         assert date == "2020-06-01"
         assert "user" in source
 
-    def test_audit_last_ingestion_used_when_no_explicit(self):
+    def test_audit_last_ingestion_applies_trailing_window(self):
+        # H2: incremental runs re-fetch a trailing look-back window before the
+        # watermark so late-filed older-dated contributions aren't missed.
+        from datetime import date as _date, timedelta as _td
+
+        from scripts.ingest import INCREMENTAL_TRAILING_DAYS
+
         owner = {"audit": {"last_ingestion": "2026-05-22"}}
-        date, source = _resolve_min_date(owner, None, full_refetch=False)
-        assert date == "2026-05-22"
+        d, source = _resolve_min_date(owner, None, full_refetch=False)
+        assert d == (_date(2026, 5, 22) - _td(days=INCREMENTAL_TRAILING_DAYS)).isoformat()
+        assert d < "2026-05-22"
         assert "audit.last_ingestion" in source
+
+    def test_trailing_window_floored_at_default(self):
+        # A watermark close to the project floor must not produce a min_date
+        # before DEFAULT_MIN_DATE.
+        owner = {"audit": {"last_ingestion": "2000-06-01"}}
+        d, _ = _resolve_min_date(owner, None, full_refetch=False)
+        assert d == DEFAULT_MIN_DATE
 
     def test_default_when_audit_null(self):
         owner = {"audit": {"last_ingestion": None}}
@@ -53,11 +74,15 @@ class TestResolveMinDate:
         assert "default" in source
 
     def test_audit_last_ingestion_coerced_to_str(self):
-        """YAML may load 'last_ingestion: 2026-05-22' as a date object."""
-        from datetime import date as date_cls
+        """YAML may load 'last_ingestion: 2026-05-22' as a date object; the
+        trailing window is still applied."""
+        from datetime import date as date_cls, timedelta as _td
+
+        from scripts.ingest import INCREMENTAL_TRAILING_DAYS
+
         owner = {"audit": {"last_ingestion": date_cls(2026, 5, 22)}}
-        date, source = _resolve_min_date(owner, None, full_refetch=False)
-        assert date == "2026-05-22"
+        d, source = _resolve_min_date(owner, None, full_refetch=False)
+        assert d == (date_cls(2026, 5, 22) - _td(days=INCREMENTAL_TRAILING_DAYS)).isoformat()
 
 
 # ─── _write_audit_last_ingestion ─────────────────────────────────────────────
@@ -217,3 +242,67 @@ class TestRealOwnerYAMLRoundTrip:
         assert str(after["audit"]["last_ingestion"]) == "2026-05-24"
         assert before["audit"]["created"] == after["audit"]["created"]
         assert before["audit"]["last_signal_review"] == after["audit"]["last_signal_review"]
+
+
+# ─── H3: filing_id sentinel + required-provenance guard ──────────────────────
+
+
+def _classification() -> Classification:
+    return Classification(
+        status="CONFIRMED",
+        status_reason="two confirming signals",
+        signals_matched=[],
+        entity_slug="owner-x",
+        entity_kind="owner",
+    )
+
+
+class TestFilingIdSentinel:
+    def test_sentinel_when_no_file_number_or_report_id(self):
+        rec = {
+            "transaction_id": "T1",
+            "contribution_receipt_date": "2003-05-01",
+            "_raw_payload_path": "data/raw/owner-x/a.json",
+        }
+        row = _record_to_donation_row(rec, _classification(), "2026-05-28T00:00:00Z")
+        assert row["filing_id"] == SENTINEL_FILING_ID
+
+    def test_uses_file_number_when_present(self):
+        rec = {
+            "transaction_id": "T1",
+            "file_number": "12345",
+            "contribution_receipt_date": "2024-05-01",
+            "_raw_payload_path": "data/raw/owner-x/a.json",
+        }
+        row = _record_to_donation_row(rec, _classification(), "ts")
+        assert row["filing_id"] == "12345"
+
+    def test_falls_back_to_report_id(self):
+        rec = {
+            "transaction_id": "T1",
+            "report_id": "RPT-9",
+            "contribution_receipt_date": "2024-05-01",
+            "_raw_payload_path": "data/raw/owner-x/a.json",
+        }
+        row = _record_to_donation_row(rec, _classification(), "ts")
+        assert row["filing_id"] == "RPT-9"
+
+
+class TestRequiredProvenanceGuard:
+    def test_passes_with_sentinel_filing_id(self):
+        row = {"filing_id": SENTINEL_FILING_ID, "raw_payload_path": "p", "date": "2003-01-01"}
+        assert _row_has_required_provenance(row)
+
+    def test_fails_when_date_missing(self):
+        row = {"filing_id": "F1", "raw_payload_path": "p", "date": ""}
+        assert not _row_has_required_provenance(row)
+
+    def test_fails_when_raw_payload_path_missing(self):
+        row = {"filing_id": "F1", "raw_payload_path": "", "date": "2024-01-01"}
+        assert not _row_has_required_provenance(row)
+
+    def test_fails_when_filing_id_blank(self):
+        # Defense-in-depth: even though ingest now sentinel-backs filing_id, a
+        # blank one must never pass the guard.
+        row = {"filing_id": "", "raw_payload_path": "p", "date": "2024-01-01"}
+        assert not _row_has_required_provenance(row)
