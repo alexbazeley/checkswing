@@ -596,6 +596,55 @@ def _reclassify_lost_txns(slug: str, *, db_path=None) -> tuple[set[str], set[str
     return live, (live - recoverable)
 
 
+def _reclassify_divergent_txns(
+    slug: str, *, include_related: bool = False, db_path=None
+) -> set[str]:
+    """Return live attributed txns a reclassify would silently DEMOTE/DROP.
+
+    These rows ARE present in raw (so the raw-coverage guard
+    `_reclassify_lost_txns` does NOT catch them), but their record no longer
+    classifies as CONFIRMED/PROBABLE under the current owner YAML — e.g. a row
+    produced by an earlier classifier state, or a donor name carrying a suffix
+    token the current `name_variants` don't cover. A from-raw reclassify drops
+    such rows from the canonical table unless a `manual_attributions` override
+    re-forces them, so override-covered txns are excluded.
+
+    This is the classifier-divergence counterpart to the raw-coverage (C1)
+    guard. It is the failure mode that silently dropped 15 kendrick-ken rows on
+    2026-05-30 (the file-existence guard passed because the raw was present).
+    """
+    try:
+        owner = _load_owner(slug)
+    except FileNotFoundError:
+        # No YAML to classify against (e.g. a synthetic/test slug) — divergence
+        # cannot be assessed; the raw-coverage guard still applies.
+        return set()
+    records, _ = load_raw_payloads(slug)
+    by_txn = {
+        str(r.get("transaction_id") or r.get("sub_id")): r
+        for r in records
+        if (r.get("transaction_id") or r.get("sub_id"))
+    }
+    with db.connect(db_path or db.MASTER_DB) as conn:
+        manual = db.manual_attributions_for_slug(conn, slug)
+        live_rows = conn.execute(
+            "SELECT transaction_id FROM donations "
+            "WHERE (entity_slug = ? OR parent_owner_slug = ?) AND superseded_by IS NULL",
+            (slug, slug),
+        ).fetchall()
+    divergent: set[str] = set()
+    for (txn,) in live_rows:
+        if txn in manual:
+            continue  # override re-forces this txn on reclassify
+        rec = by_txn.get(txn)
+        if rec is None:
+            continue  # raw missing — handled by _reclassify_lost_txns
+        c = classify(rec, owner, process_related_entities=include_related)
+        if c is None or c.status not in (CONFIRMED, PROBABLE):
+            divergent.add(txn)
+    return divergent
+
+
 def raw_coverage_report(slug: str | None = None, *, db_path=None) -> dict:
     """Report live donation rows whose raw_payload_path is missing on disk.
 
@@ -634,8 +683,10 @@ def reclassify_entity(
     """Re-run classification for an entity against its existing raw payloads.
 
     Workflow:
-      1. C1 guard: refuse if any currently-attributed row's raw payload is
-         missing on disk (it would be silently dropped). Override with force.
+      1. C1 guard: refuse if any currently-attributed row would be silently
+         dropped — either its raw payload is missing on disk (raw-coverage), or
+         its raw is present but no longer classifies CONFIRMED/PROBABLE under
+         the current YAML (classifier-divergence). Override with force.
       2. Snapshot the master DB (audit safety net before any deletion).
       3. Delete this entity's rows from `donations` and `review_queue`. If
          `include_related` is True, also delete rows whose `parent_owner_slug`
@@ -654,18 +705,30 @@ def reclassify_entity(
     """
     db.init()
 
-    # ── C1 guard ───────────────────────────────────────────────────────────
-    # reclassify DELETEs the entity's rows then reloads from raw; rows whose raw
-    # payload is missing on disk would vanish. master.db is the source of truth
-    # (GOVERNANCE.md §1.4) — abort rather than lose attributed rows, unless forced.
-    live_txns, lost = _reclassify_lost_txns(slug)
-    if lost and not force:
+    # ── C1 guard: raw-coverage + classifier-divergence ──────────────────────
+    # reclassify DELETEs the entity's rows then reloads from raw. A currently-
+    # attributed row can silently vanish two ways:
+    #   (a) raw-missing — its raw payload is no longer on disk (load_raw_payloads
+    #       can't see it).
+    #   (b) classifier-divergence — its raw IS present, but the record no longer
+    #       classifies CONFIRMED/PROBABLE under the current YAML (a stale row
+    #       from an earlier classifier state, or an uncovered suffix token).
+    # master.db is the source of truth (GOVERNANCE.md §1.4) — abort rather than
+    # lose attributed rows, unless forced. manual_attributions overrides are
+    # safe (re-forced on reclassify) and excluded from both checks.
+    live_txns, lost_raw = _reclassify_lost_txns(slug)
+    divergent = _reclassify_divergent_txns(slug, include_related=include_related)
+    would_drop = lost_raw | divergent
+    if would_drop and not force:
         raise RuntimeError(
-            f"reclassify aborted for {slug!r}: {len(lost)} of {len(live_txns)} attributed "
-            f"row(s) have no recoverable raw payload on disk and would be permanently lost. "
-            f"master.db is the source of truth (GOVERNANCE.md §1.4); raw is best-effort. "
-            f"Re-fetch from FEC first, or pass force=True / --force to proceed knowingly. "
-            f"Examples: {sorted(lost)[:3]}"
+            f"reclassify aborted for {slug!r}: {len(would_drop)} of {len(live_txns)} attributed "
+            f"row(s) would be silently dropped — {len(lost_raw)} with no recoverable raw payload "
+            f"on disk, {len(divergent)} present in raw but no longer classifying as "
+            f"CONFIRMED/PROBABLE under the current YAML. master.db is the source of truth "
+            f"(GOVERNANCE.md §1.4). For raw-missing rows: re-fetch from FEC. For divergent rows: "
+            f"add the needed name_variant/signal (§2.5a) or a manual_attributions override, then "
+            f"retry. Or pass force=True / --force to proceed knowingly. "
+            f"raw-missing examples: {sorted(lost_raw)[:3]}; divergent examples: {sorted(divergent)[:3]}"
         )
 
     # Snapshot before deletion.
@@ -722,5 +785,9 @@ def reclassify_entity(
         "pre_wipe_snapshot": str(snap_path) if snap_path else None,
         "reason": reason,
         "include_related": include_related,
+        # Guard accounting (pre-wipe). Non-zero only when force=True was used to
+        # proceed past the C1 guard — surfaces exactly what was knowingly dropped.
+        "guard_dropped_raw_missing": len(lost_raw),
+        "guard_dropped_divergent": len(divergent),
     }
     return summary

@@ -170,6 +170,102 @@ class TestReclassifyGuard:
         assert lost == set()
 
 
+# ─── C1b: reclassify classifier-divergence guard ────────────────────────────
+
+
+def _stub_classification(status):
+    return type("_C", (), {"status": status})()
+
+
+class TestReclassifyDivergenceGuard:
+    """A row present in raw but no longer classifying CONFIRMED/PROBABLE under
+    the current YAML would be silently dropped by a reclassify. The divergence
+    guard catches these (the raw-coverage guard cannot — the raw is present)."""
+
+    def _patch(self, monkeypatch, raw_txns, verdicts):
+        from scripts import ingest
+
+        monkeypatch.setattr(ingest, "_load_owner", lambda slug: {"name_variants": []})
+        monkeypatch.setattr(
+            ingest,
+            "load_raw_payloads",
+            lambda slug: ([{"transaction_id": t} for t in raw_txns], []),
+        )
+        monkeypatch.setattr(
+            ingest,
+            "classify",
+            lambda rec, owner, **kw: verdicts[rec["transaction_id"]],
+        )
+
+    def test_demoted_row_flagged_divergent(self, db_path, monkeypatch):
+        from scripts import ingest
+
+        with db.connect(db_path) as conn:
+            db.insert_donation(conn, _row(txn="T1"))
+            db.insert_donation(conn, _row(txn="T2"))
+        # Both present in raw; T1 re-confirms, T2 now UNCERTAIN → divergent.
+        self._patch(
+            monkeypatch,
+            ["T1", "T2"],
+            {
+                "T1": _stub_classification("CONFIRMED"),
+                "T2": _stub_classification("UNCERTAIN"),
+            },
+        )
+        div = ingest._reclassify_divergent_txns("owner-x", db_path=db_path)
+        assert div == {"T2"}
+
+    def test_name_no_match_flagged_divergent(self, db_path, monkeypatch):
+        from scripts import ingest
+
+        with db.connect(db_path) as conn:
+            db.insert_donation(conn, _row(txn="T3"))
+        # classify returns None (name-no-match) → would drop entirely.
+        self._patch(monkeypatch, ["T3"], {"T3": None})
+        assert ingest._reclassify_divergent_txns("owner-x", db_path=db_path) == {"T3"}
+
+    def test_manual_override_excludes_divergent(self, db_path, monkeypatch):
+        from scripts import ingest
+
+        with db.connect(db_path) as conn:
+            db.insert_donation(conn, _row(txn="T2"))
+            db.upsert_manual_attribution(
+                conn,
+                transaction_id="T2",
+                entity_slug="owner-x",
+                status="CONFIRMED",
+                reason="documented human decision",
+                source=None,
+                attributed_at="2026-01-01T00:00:00Z",
+            )
+        # Even though classify would demote T2, the override re-forces it.
+        self._patch(monkeypatch, ["T2"], {"T2": _stub_classification("UNCERTAIN")})
+        assert ingest._reclassify_divergent_txns("owner-x", db_path=db_path) == set()
+
+    def test_raw_missing_not_counted_here(self, db_path, monkeypatch):
+        from scripts import ingest
+
+        with db.connect(db_path) as conn:
+            db.insert_donation(conn, _row(txn="T4"))
+        # T4 absent from raw → that's the raw-coverage guard's job, not divergence.
+        self._patch(monkeypatch, [], {})
+        assert ingest._reclassify_divergent_txns("owner-x", db_path=db_path) == set()
+
+    def test_no_yaml_returns_empty(self, db_path, monkeypatch):
+        from scripts import ingest
+
+        with db.connect(db_path) as conn:
+            db.insert_donation(conn, _row(txn="T5"))
+
+        def _raise(slug):
+            raise FileNotFoundError(slug)
+
+        monkeypatch.setattr(ingest, "_load_owner", _raise)
+        monkeypatch.setattr(ingest, "load_raw_payloads", lambda slug: ([], []))
+        # Can't assess divergence without a YAML → empty (raw guard still applies).
+        assert ingest._reclassify_divergent_txns("owner-x", db_path=db_path) == set()
+
+
 class TestRawCoverageReport:
     def test_counts_missing_raw_files(self, db_path, tmp_path):
         from scripts import ingest
