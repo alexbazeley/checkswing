@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import sys
 from dataclasses import dataclass, field
-from datetime import date, datetime
+from datetime import date, datetime, timezone
 from pathlib import Path
 from typing import Iterable
 
@@ -210,9 +210,11 @@ def validate_owner_file(path: Path) -> OwnerValidation:
                 continue
             res.errors.extend(_validate_related_entity(i, ent, res.slug or ""))
 
-    # Rule 9: change_log dates ≤ today
+    # Rule 9: change_log dates ≤ today. Use UTC (the rest of the pipeline
+    # stamps UTC) so a change_log entry dated "today" doesn't fail validation
+    # near the midnight boundary in a behind-UTC local timezone.
     cl = data.get("change_log")
-    today = date.today()
+    today = datetime.now(timezone.utc).date()
     if not isinstance(cl, list) or not cl:
         res.errors.append("change_log must have at least one entry")
     else:

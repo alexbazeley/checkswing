@@ -23,6 +23,7 @@ Operational notes:
 from __future__ import annotations
 
 import os
+import re
 import subprocess
 import sys
 import uuid
@@ -52,23 +53,74 @@ def _utc_now_iso() -> str:
 # ─── File lock ───────────────────────────────────────────────────────────────
 
 
+# A lock whose owning pid is dead, or that is older than this, is treated as
+# stale and reclaimed — so a crashed run doesn't wedge every later refresh.
+# 8h sits just above the 6h GitHub Actions job cap; mirrors the fetch
+# checkpoint's staleness rule (fetch_fec.CHECKPOINT_STALE_DAYS).
+REFRESH_LOCK_STALE_HOURS = 8
+
+
+def _lock_is_stale(content: str) -> bool:
+    """Heuristic for a reclaimable refresh lock.
+
+    Stale if the recorded pid is dead (the common case: a crashed run, or a lock
+    left by a now-gone CI runner) or — when no live pid can be confirmed — if the
+    lock is older than REFRESH_LOCK_STALE_HOURS. A confirmably-alive pid is never
+    stale, so a genuinely-running refresh is always respected.
+    """
+    pid_m = re.search(r"pid=(\d+)", content or "")
+    if pid_m:
+        pid = int(pid_m.group(1))
+        try:
+            os.kill(pid, 0)
+            return False  # alive — genuinely running
+        except ProcessLookupError:
+            return True   # dead pid — stale
+        except PermissionError:
+            return False  # alive but owned by another user — respect it
+    ts_m = re.search(r"(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z)", content or "")
+    if ts_m:
+        try:
+            ts = datetime.strptime(ts_m.group(1), "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
+            return (datetime.now(timezone.utc) - ts).total_seconds() / 3600 > REFRESH_LOCK_STALE_HOURS
+        except ValueError:
+            pass
+    return False  # unparseable — be conservative, don't reclaim
+
+
 @contextmanager
 def _acquire_lock(path: Path = REFRESH_LOCK) -> Iterator[None]:
     """Acquire an exclusive file lock; raise if another refresh is running.
 
     Uses O_EXCL — atomic on POSIX. The lock file content records the holder's
-    pid + start time so a stuck-process recovery is humanly debuggable.
+    pid + start time so a stuck-process recovery is humanly debuggable. A stale
+    lock (dead pid, or older than REFRESH_LOCK_STALE_HOURS) is reclaimed
+    automatically rather than wedging the run.
     """
     path.parent.mkdir(parents=True, exist_ok=True)
     try:
         fd = os.open(str(path), os.O_CREAT | os.O_EXCL | os.O_WRONLY)
     except FileExistsError:
-        existing = path.read_text(encoding="utf-8") if path.exists() else "(empty)"
-        raise RuntimeError(
-            f"Refresh already running (or stale lock at {path}). "
-            f"Lock contents: {existing.strip() or '(empty)'}. "
-            f"If you're sure no refresh is running, delete the lock file and retry."
-        )
+        existing = path.read_text(encoding="utf-8") if path.exists() else ""
+        if _lock_is_stale(existing):
+            print(f"[refresh] Reclaiming stale lock at {path} (contents: {existing.strip() or '(empty)'}).")
+            try:
+                path.unlink()
+            except OSError:
+                pass
+            try:
+                fd = os.open(str(path), os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+            except FileExistsError:
+                raise RuntimeError(
+                    f"Refresh lock at {path} reappeared after stale reclamation — "
+                    f"another run started concurrently. Retry."
+                )
+        else:
+            raise RuntimeError(
+                f"Refresh already running (lock at {path}). "
+                f"Lock contents: {existing.strip() or '(empty)'}. "
+                f"If you're sure no refresh is running, delete the lock file and retry."
+            )
     try:
         os.write(fd, f"{_utc_now_iso()} · pid={os.getpid()}\n".encode())
         os.close(fd)

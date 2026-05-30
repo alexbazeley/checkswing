@@ -30,15 +30,11 @@ from .fetch_committees import (
     parse_committee_totals_row,
 )
 from .fetch_fec import FECClient
+from .enrichment_base import fresh_within_days
 from .paths import DATA_DIR, MASTER_DB, relpath
 
 
 COMMITTEES_LOCK = DATA_DIR / ".committees_ingest.lock"
-
-# How long a committees row is considered fresh. Re-fetches inside this window
-# are skipped unless force_refresh=True. 30 days matches FEC's typical filing
-# cadence — leadership PACs file quarterly, super PACs monthly.
-FRESHNESS_DAYS = 30
 
 
 def _utc_now_iso() -> str:
@@ -85,14 +81,7 @@ def _committee_is_fresh(conn: sqlite3.Connection, committee_id: str) -> bool:
     row = conn.execute(
         "SELECT refreshed_at FROM committees WHERE committee_id = ?", (committee_id,)
     ).fetchone()
-    if row is None or row["refreshed_at"] is None:
-        return False
-    try:
-        refreshed = datetime.fromisoformat(row["refreshed_at"].replace("Z", "+00:00"))
-    except (TypeError, ValueError):
-        return False
-    age_days = (datetime.now(timezone.utc) - refreshed).total_seconds() / 86400
-    return age_days < FRESHNESS_DAYS
+    return row is not None and fresh_within_days(row["refreshed_at"])
 
 
 # ─── Per-committee ingest ────────────────────────────────────────────────────

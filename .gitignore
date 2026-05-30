@@ -22,6 +22,12 @@ data/raw/
 # CSV exports are derivative — regenerable
 data/donations/
 
+# REVIEW_QUEUE.md is a human-readable mirror of the review_queue table in
+# master.db (the queryable source of truth). It grew unbounded (~18 MB, never
+# pruned) and diffed poorly, so it is no longer tracked. Regenerate locally with
+# `python -m scripts.cli export-review-queue`.
+catalog/REVIEW_QUEUE.md
+
 # mockup/data.json and mockup/provenance.json are generated at Cloudflare build
 # time from data/master.db and catalog/PROVENANCE_LOG.md respectively.
 # Local previews regenerate them via `python mockup/build_data.py`.

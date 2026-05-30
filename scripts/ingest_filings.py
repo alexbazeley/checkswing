@@ -25,11 +25,11 @@ from .fetch_filings import (
     fetch_filings_batch,
     parse_filing_row,
 )
+from .enrichment_base import fresh_within_days
 from .paths import DATA_DIR, MASTER_DB, relpath
 
 
 FILINGS_LOCK = DATA_DIR / ".filings_ingest.lock"
-FRESHNESS_DAYS = 30
 
 
 def _utc_now_iso() -> str:
@@ -83,14 +83,7 @@ def _is_fresh(conn: sqlite3.Connection, file_number: str) -> bool:
     row = conn.execute(
         "SELECT refreshed_at FROM filings WHERE file_number = ?", (file_number,)
     ).fetchone()
-    if row is None or row["refreshed_at"] is None:
-        return False
-    try:
-        refreshed = datetime.fromisoformat(row["refreshed_at"].replace("Z", "+00:00"))
-    except (TypeError, ValueError):
-        return False
-    age_days = (datetime.now(timezone.utc) - refreshed).total_seconds() / 86400
-    return age_days < FRESHNESS_DAYS
+    return row is not None and fresh_within_days(row["refreshed_at"])
 
 
 def _filter_stale(conn: sqlite3.Connection, file_numbers: list[str]) -> list[str]:

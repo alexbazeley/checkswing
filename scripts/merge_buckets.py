@@ -31,6 +31,49 @@ def _existing_run_ids(conn: sqlite3.Connection) -> set[str]:
     return {r[0] for r in conn.execute("SELECT run_id FROM ingestion_runs")}
 
 
+def _bucket_touched_slugs(consolidated_db: Path, bucket_db: Path) -> set[str]:
+    """Owner slugs a bucket would adopt: entity_slugs of its ingestion_runs not
+    already present in the consolidated DB. Read-only — used for the pre-merge
+    disjointness check, computed against the same pre-merge baseline for every
+    bucket so overlap is detected before any mutation."""
+    cons = sqlite3.connect(consolidated_db)
+    cons.row_factory = sqlite3.Row
+    bucket = sqlite3.connect(bucket_db)
+    bucket.row_factory = sqlite3.Row
+    try:
+        pre = _existing_run_ids(cons)
+        rows = bucket.execute(
+            "SELECT DISTINCT entity_slug FROM ingestion_runs WHERE run_id NOT IN ({seq})".format(
+                seq=",".join(["?"] * len(pre)) or "''"
+            ),
+            tuple(pre) or (),
+        ).fetchall()
+        return {r["entity_slug"] for r in rows}
+    finally:
+        cons.close()
+        bucket.close()
+
+
+def _assert_disjoint(consolidated_db: Path, bucket_dbs: list[Path]) -> None:
+    """Verify no owner is touched by more than one bucket (the invariant that
+    select_bucket's round-robin guarantees). The per-slug merge is DELETE +
+    INSERT — last writer wins — so overlap would silently drop a bucket's rows.
+    Fail loudly BEFORE any merge instead. Raises RuntimeError on overlap."""
+    owner_to_bucket: dict[str, str] = {}
+    for bdb in bucket_dbs:
+        if not bdb.exists():
+            continue
+        for slug in _bucket_touched_slugs(consolidated_db, bdb):
+            prior = owner_to_bucket.get(slug)
+            if prior is not None:
+                raise RuntimeError(
+                    f"owner {slug!r} is touched by both {prior} and {bdb.name}; "
+                    f"buckets must be disjoint (per-slug merge is last-writer-wins, "
+                    f"so overlap would silently drop one bucket's rows)."
+                )
+            owner_to_bucket[slug] = bdb.name
+
+
 def _merge_one_bucket(consolidated_db: Path, bucket_db: Path) -> dict:
     """Apply one bucket's deltas to the consolidated DB. Returns a stats dict."""
     if not bucket_db.exists():
@@ -143,8 +186,22 @@ def main(argv: list[str] | None = None) -> int:
         print("no --bucket-db provided; nothing to merge", file=sys.stderr)
         return 2
 
+    # Pre-flight: buckets must be disjoint by owner. Checked against the
+    # pre-merge baseline so a future bucketing change that breaks the invariant
+    # aborts loudly here instead of silently losing rows during the merge.
+    try:
+        _assert_disjoint(args.consolidated, args.bucket_db)
+    except RuntimeError as e:
+        print(f"ERROR: {e}", file=sys.stderr)
+        return 3
+
     print(f"consolidated: {args.consolidated}")
     for bdb in args.bucket_db:
+        if not bdb.exists():
+            # The consolidate job tolerates a missing bucket DB (a bucket may
+            # have produced no artifact). Skip rather than abort.
+            print(f"  skipping {bdb} (not found)", file=sys.stderr)
+            continue
         stats = _merge_one_bucket(args.consolidated, bdb)
         print(
             f"  merged {bdb.name}: {stats['new_runs']} new run(s), "
