@@ -75,10 +75,23 @@ def normalize_name(raw: str) -> tuple[set[str], str | None]:
     if not tokens:
         return (set(), None)
 
+    # Detect a suffix token anywhere in the stream, not just trailing. The
+    # "Last, First Suffix" comma form (the dominant FEC format) becomes
+    # "First Suffix Last" after the comma-swap above, leaving the suffix
+    # mid-string (e.g. "william o jr dewitt"). Multi-char suffixes
+    # (jr/sr/ii/iii/iv) are unambiguous in any position; bare "v"/"i" are only
+    # treated as a suffix when trailing, since mid-string they are middle
+    # initials (and get dropped below). Without this, suffixed owners filing in
+    # comma form fail to match or lose the Jr./III disambiguator entirely.
     suffix: str | None = None
-    if tokens and tokens[-1] in SUFFIXES:
-        suffix = tokens[-1]
-        tokens = tokens[:-1]
+    kept: list[str] = []
+    last_idx = len(tokens) - 1
+    for i, t in enumerate(tokens):
+        if t in SUFFIXES and (i == last_idx or len(t) > 1):
+            suffix = t  # last suffix wins if (rarely) more than one appears
+            continue
+        kept.append(t)
+    tokens = kept
     if not tokens:
         return (set(), suffix)
 
@@ -226,18 +239,29 @@ def zip_match(record_zip: str | None, signal_zips: Sequence[str]) -> str | None:
 
 def address_contradicts(
     record_city: str | None,
+    record_state: str | None,
     signal_cities: Sequence[str],
+    signal_states: Sequence[str],
 ) -> bool:
-    """True iff the record has a non-empty city that is NOT in our city signal list.
+    """True iff the record's address contradicts our documented residences.
 
-    Per VERIFICATION.md: this catches family-name collisions where the employer
-    might still match but the donor is a relative in a different town. We don't
-    have a `secondary_residence` field — the YAML's `verifying_signals.cities`
-    IS the documented residence set. If we want to widen it, we widen the
-    signals deliberately (with a change_log entry), not silently here.
+    City+state is the unit (mirrors `city_state_match`): when the record has
+    BOTH a city and a state, the address contradicts unless that (city, state)
+    pair is a documented residence — so a same-named city in the wrong state
+    (e.g. Greenwich, KS for a Greenwich, CT owner) is correctly flagged rather
+    than slipping through on a generic employer match. When the record has a
+    city but no state, fall back to city-only membership (no regression).
+
+    Per VERIFICATION.md this catches family-name collisions where the employer
+    might still match but the donor is a relative elsewhere. The YAML's
+    `verifying_signals.cities`/`.states` ARE the documented residence set; widen
+    them deliberately (with a change_log entry), not silently here.
     """
     if not record_city:
         return False  # No city to contradict.
+    if record_state:
+        # Pair must be a documented residence, else contradiction.
+        return city_state_match(record_city, record_state, signal_cities, signal_states) is None
     city_lc = _norm(record_city)
     cities_lc = {_norm(c) for c in (signal_cities or [])}
     return city_lc not in cities_lc
@@ -256,7 +280,11 @@ def _get_record_fields(record: dict) -> dict:
     fn = (record.get("contributor_first_name") or "").strip()
     mn = (record.get("contributor_middle_name") or "").strip()
     ln = (record.get("contributor_last_name") or "").strip()
-    synthetic = " ".join(p for p in (fn, mn, ln) if p)
+    # Include contributor_suffix so the synthetic carries Jr./Sr./II–IV — without
+    # it, a suffixed record collapses to a no-suffix synthetic that trips the
+    # suffix-mismatch demotion against a suffix-bearing variant.
+    sfx = (record.get("contributor_suffix") or "").strip()
+    synthetic = " ".join(p for p in (fn, mn, ln, sfx) if p)
     return {
         "name": record.get("contributor_name") or "",
         "name_synthetic": synthetic,
@@ -312,7 +340,7 @@ def _classify_against_entity_signals(
     # Address contradiction: city is filled but not in our documented list.
     # Demotes to UNCERTAIN regardless of other signals (VERIFICATION.md
     # negative-signal rule). This catches family-name collisions.
-    if address_contradicts(rf["city"], vs_cities):
+    if address_contradicts(rf["city"], rf["state"], vs_cities, vs_states):
         all_signals = strong_signals_matched + confirming_signals_matched
         return (
             UNCERTAIN,
@@ -363,13 +391,14 @@ def classify(
         strong signal.
 
     Related-entity routing:
-      - If the record's name canonically matches a related_entity, and
-        process_related_entities=True, classify against that entity instead.
-      - If process_related_entities=False and the record matches a related
-        entity (not the owner), return None — out of scope this run.
-      - If a record name-matches BOTH the owner and a related entity (e.g.,
-        joint filing with overlapping names), route to the related entity
-        per VERIFICATION.md "spouse-name collision" rule.
+      - A record routes to a related_entity only on EXACT suffix agreement
+        (canonical name match AND matching suffix). With process_related_entities
+        =True it is classified against that entity; with =False it is dropped
+        (out of scope this run) per the spouse-collision rule.
+      - A canonical match with a DIFFERING suffix (e.g. owner "John Smith Sr"
+        vs related "John Smith Jr") is NOT that entity — it falls through to the
+        owner check, so the owner claims its own row instead of being misrouted
+        to a Jr/Sr relative.
     """
     rf = _get_record_fields(record)
     if not rf["name"]:
@@ -381,42 +410,35 @@ def classify(
         if not isinstance(ent, dict):
             continue
         ent_variants = ent.get("name_variants") or []
-        if ent_variants:
-            canon, suffix_ok, matched_v = names_match_with_fallback(rf["name"], rf.get("name_synthetic", ""), ent_variants)
-            if canon:
-                # Name canonically matches a related entity.
-                if not process_related_entities:
-                    # Principals-only mode — the record is out of scope for
-                    # this run, even if it also matches the owner. The spec
-                    # says spouse-name collision routes to spouse, not owner;
-                    # since we're not tracking spouse, we skip.
-                    return None
-                # Full mode: classify against this entity's signals.
-                if not suffix_ok:
-                    return Classification(
-                        status=UNCERTAIN,
-                        status_reason=f"suffix mismatch on related entity {ent.get('slug')!r}",
-                        signals_matched=[],
-                        entity_slug=ent.get("slug") or "",
-                        entity_kind=ent.get("kind") or "spouse",
-                        parent_owner_slug=owner.get("slug"),
-                        name_matched_variant=matched_v,
-                    )
-                status, reason, sigs = _classify_against_entity_signals(
-                    rf,
-                    ent.get("verifying_signals") or {},
-                    ent.get("strong_signals") or {},
-                    ent.get("negative_signals") or {},
-                )
-                return Classification(
-                    status=status,
-                    status_reason=reason,
-                    signals_matched=sigs,
-                    entity_slug=ent.get("slug") or "",
-                    entity_kind=ent.get("kind") or "spouse",
-                    parent_owner_slug=owner.get("slug"),
-                    name_matched_variant=matched_v,
-                )
+        if not ent_variants:
+            continue
+        canon, suffix_ok, matched_v = names_match_with_fallback(
+            rf["name"], rf.get("name_synthetic", ""), ent_variants
+        )
+        if not (canon and suffix_ok):
+            # No match, or canonical match with a different suffix — not this
+            # entity. Fall through to the owner check.
+            continue
+        # Name + suffix match this related entity.
+        if not process_related_entities:
+            # Principals-only mode — out of scope this run (we are not tracking
+            # the relative yet).
+            return None
+        status, reason, sigs = _classify_against_entity_signals(
+            rf,
+            ent.get("verifying_signals") or {},
+            ent.get("strong_signals") or {},
+            ent.get("negative_signals") or {},
+        )
+        return Classification(
+            status=status,
+            status_reason=reason,
+            signals_matched=sigs,
+            entity_slug=ent.get("slug") or "",
+            entity_kind=ent.get("kind") or "spouse",
+            parent_owner_slug=owner.get("slug"),
+            name_matched_variant=matched_v,
+        )
 
     # ── Owner name match ───────────────────────────────────────────────────
     owner_variants = owner.get("name_variants") or []

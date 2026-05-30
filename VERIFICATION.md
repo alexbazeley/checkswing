@@ -57,7 +57,7 @@ Use `rapidfuzz` for fuzzy comparison only as a discovery aid for new name varian
 
 **Suffix mismatch.** "John W. Henry" vs "John W. Henry Jr." are different people. Suffix mismatch is automatic UNCERTAIN regardless of other signals — log to review and inspect.
 
-**Address contradiction without secondary-residence documentation.** If a record has a city not in `verifying_signals.cities` and we have no documented secondary residence, the record drops to UNCERTAIN even if employer also matches. (Why: this catches family-name collisions where Owner X's signal employer is also held by a relative who lives elsewhere.)
+**Address contradiction without secondary-residence documentation.** City + state is the unit (mirroring the positive City+State signal). If a record carries both a city and a state and that pair is not a documented residence — city in `verifying_signals.cities` **and** state in `verifying_signals.states` — the record drops to UNCERTAIN even if employer also matches. A same-named city in the wrong state (e.g., Greenwich, KS for a Greenwich, CT owner) is therefore flagged rather than slipping through on a generic employer match. When the record has a city but no state, city-only membership is used. (Why: this catches family-name collisions where Owner X's signal employer is also held by a relative who lives elsewhere.)
 
 **Spouse-name collision.** If a record matches a name in the owner's `related_entities` (e.g., the spouse), it is attributed to the spouse entity, not to the owner. Spouse records carry the spouse's slug, not the owner's. Never silently fold spouse donations into the owner's totals.
 
@@ -70,7 +70,10 @@ def classify(record, owner):
     if not name_normalized_match(record.contributor_name, owner.name_variants):
         return None  # Not this owner's record; skip entirely
     
-    if matches_related_entity(record, owner.related_entities):
+    # Route to a related entity only on EXACT suffix agreement. A canonical
+    # match with a differing suffix (owner "Smith Sr" vs related "Smith Jr")
+    # is NOT that entity — it falls through to the owner check below.
+    if matches_related_entity(record, owner.related_entities) and suffix_agrees:
         return classify_for_related_entity(record, matched_entity)
     
     if suffix_mismatch(record, owner):
