@@ -3920,3 +3920,70 @@ Total suite: 209 green.
 - **open_queue_remaining**: `12`
 - **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T22-26-51Z__pre-bulk-discard.db`
 - **note**: Standing DISCARDED verdicts recorded in review_resolutions (survive reclassify). Attribution unaffected (GOVERNANCE.md §2.5). Reversible via `unresolve`.
+
+### 2026-05-30 — MANUAL_ATTRIBUTION (batch heal) — reinsdorf-jerry, mcguirk-terry
+
+- **records**: `1070520180036861433` + `1070520180036861432` (reinsdorf-jerry); `2072220141218266778` (mcguirk-terry)
+- **forced_status**: `CONFIRMED`
+- **why batched**: reinsdorf-jerry has 2 divergent rows; the divergence guard (PR #9) would block a one-at-a-time `attribute` (the 2nd row still divergent during the 1st's reclassify), so both overrides are inserted before reclassifying.
+- **reinsdorf reason**: Jerry M. Reinsdorf (principal owner, Chicago White Sox / Bulls) donation misfiled with the junk suffix token 'OTHER' (name 'REINSDORF, JERRY MR OTHER'), which breaks the canonical name-match entirely (name-no-match) so NO name_variant can capture it. All other signals match the owner: SELF EMPLOYED / BUSINESSMAN, Chicago IL, ZIP 606163621 (a documented strong_signal zip for this owner). Stored CONFIRMED in master.db; force-CONFIRM via override so a from-raw reclassify preserves it (it would otherwise be dropped as name-no-match). Two FEC transactions, same date/committee ($2,700 each, 2018-03-31, C00436386).
+- **mcguirk reason**: Terence F. 'Terry' McGuirk (principal owner / Chairman & CEO, Atlanta Braves) donation misfiled with the wrong generational suffix 'III' (name 'MCGUIRK, TERRY MR III'), routing to UNCERTAIN suffix-mismatch (owner is Terence F., not a III). All signals match the owner: employer ATLANTA BRAVES, occupation CHAIRMAN & CEO, Atlanta GA, ZIP 30327 (a documented strong_signal zip). Stored CONFIRMED in master.db; force-CONFIRM via override so a from-raw reclassify preserves it. $1,000, 2013-09-25, C00547570.
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T22-53-46Z__pre-heal-reinsdorf-mcguirk.db`
+- **note**: Overrides recorded in manual_attributions (survive reclassify; §1.1 documented human decision). These rows were CONFIRMED in master.db but not reproducible by the current classifier (the divergence the PR #9 guard now flags). Reversible via `unattribute`. Reclassify entries follow.
+
+### 2026-05-30 — DELETION — reclassify reinsdorf-jerry
+
+- **entity_slug**: `reinsdorf-jerry`
+- **reason**: apply manual attribution heal of misfiled-suffix owner record(s) for reinsdorf-jerry
+- **rows_deleted_donations**: `422`
+- **rows_deleted_review_queue**: `0` (of which 0 had resolutions)
+- **include_related**: `False`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T22-53-46Z__pre-reclassify-reinsdorf-jerry.db`
+- **note**: Rows are recoverable from the snapshot above and from data/raw/reinsdorf-jerry/ payloads. Re-classification follows in the next INGESTION entry.
+
+### 2026-05-30 — INGESTION
+
+- **run_id**: `cbdcdb40`
+- **entity_slug**: `reinsdorf-jerry`
+- **dry_run**: `0`
+- **period_start**: `2024-11-23`
+- **period_end**: `2026-02-04`
+- **name_variants_queried**: `["Jerry Reinsdorf", "Jerry M Reinsdorf", "Jerry M. Reinsdorf", "Jerry Michael Reinsdorf", "Reinsdorf, Jerry", "Reinsdorf, Jerry M", "Reinsdorf, Jerry M."]`
+- **api_calls_made**: `0`
+- **records_fetched**: `425`
+- **confirmed_count**: `422`
+- **probable_count**: `2`
+- **uncertain_count**: `0`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T22-53-46Z__cbdcdb40.db`
+- **notes**: skipped(no-name-match)=1 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-05-30 — SUPERSESSION — run cbdcdb40
+
+- `SA11AI.4319` (reinsdorf-jerry): FEC restatement: amount, date, recipient_committee_id, filing_id, image_number
+- `SA11AI.4164` (reinsdorf-jerry): FEC restatement: date, recipient_committee_id, filing_id, image_number
+
+### 2026-05-30 — DELETION — reclassify mcguirk-terry
+
+- **entity_slug**: `mcguirk-terry`
+- **reason**: apply manual attribution heal of misfiled-suffix owner record(s) for mcguirk-terry
+- **rows_deleted_donations**: `47`
+- **rows_deleted_review_queue**: `0` (of which 0 had resolutions)
+- **include_related**: `False`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T22-53-46Z__pre-reclassify-mcguirk-terry.db`
+- **note**: Rows are recoverable from the snapshot above and from data/raw/mcguirk-terry/ payloads. Re-classification follows in the next INGESTION entry.
+
+### 2026-05-30 — INGESTION
+
+- **run_id**: `c911f038`
+- **entity_slug**: `mcguirk-terry`
+- **dry_run**: `0`
+- **period_start**: `2024-11-23`
+- **period_end**: `2025-05-20`
+- **name_variants_queried**: `["Terence F McGuirk", "Terence F. McGuirk", "Terence McGuirk", "Terry McGuirk", "Terry F. McGuirk", "Terry F McGuirk", "McGuirk, Terence", "McGuirk, Terence F", "McGuirk, Terence F.", "McGuirk, Terry"]`
+- **api_calls_made**: `0`
+- **records_fetched**: `47`
+- **confirmed_count**: `43`
+- **probable_count**: `4`
+- **uncertain_count**: `0`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T22-53-46Z__c911f038.db`
+- **notes**: skipped(no-name-match)=0 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
