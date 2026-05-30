@@ -124,6 +124,29 @@ CREATE TABLE IF NOT EXISTS review_resolutions (
 CREATE INDEX IF NOT EXISTS idx_review_resolutions_slug
     ON review_resolutions(entity_slug);
 
+-- v7: manual attribution overrides, keyed by (transaction_id, entity_slug).
+-- The positive counterpart to review_resolutions: a documented human judgment
+-- that a specific transaction belongs to an owner even though the automated
+-- classifier could not confirm it (e.g. a record misfiled with the wrong
+-- generational suffix that no name_variant can safely capture without also
+-- matching a same-named relative). Applied at ingest/reclassify time to force
+-- the record to the recorded status, and NEVER wiped by reclassify. Every entry
+-- carries a reason + source so the override is itself auditable (GOVERNANCE.md
+-- §1.1, §2.5). Use sparingly and only with documented evidence — this bypasses
+-- the two-signal rule by explicit human decision.
+CREATE TABLE IF NOT EXISTS manual_attributions (
+    transaction_id  TEXT NOT NULL,
+    entity_slug     TEXT NOT NULL,
+    status          TEXT NOT NULL DEFAULT 'CONFIRMED',
+    reason          TEXT,
+    source          TEXT,
+    attributed_at   TEXT NOT NULL,
+    attributed_by   TEXT,
+    PRIMARY KEY (transaction_id, entity_slug)
+);
+CREATE INDEX IF NOT EXISTS idx_manual_attributions_slug
+    ON manual_attributions(entity_slug);
+
 CREATE TABLE IF NOT EXISTS schema_version (
     version INTEGER PRIMARY KEY,
     applied_at TEXT NOT NULL
@@ -252,7 +275,7 @@ DONATION_EXTRA_COLS: list[tuple[str, str]] = [
     ("recipient_committee_type", "TEXT"),
 ]
 
-SCHEMA_VERSION = 6
+SCHEMA_VERSION = 7
 
 
 def _utc_now_iso() -> str:
@@ -563,6 +586,66 @@ def discarded_txns_for_slug(conn: sqlite3.Connection, entity_slug: str) -> set[s
         for r in conn.execute(
             "SELECT transaction_id FROM review_resolutions "
             "WHERE entity_slug = ? AND resolution = 'DISCARDED'",
+            (entity_slug,),
+        )
+    }
+
+
+def upsert_manual_attribution(
+    conn: sqlite3.Connection,
+    *,
+    transaction_id: str,
+    entity_slug: str,
+    status: str = "CONFIRMED",
+    reason: str | None,
+    source: str | None,
+    attributed_at: str,
+    attributed_by: str | None = None,
+) -> None:
+    """Record (or overwrite) a manual attribution override for one transaction.
+
+    Keyed by (transaction_id, entity_slug). Survives reclassify — applied at
+    classify time to force the record to `status` for this owner regardless of
+    the automated classifier's verdict (GOVERNANCE.md §1.1: a documented human
+    decision, with reason + source, not an inference).
+    """
+    conn.execute(
+        """
+        INSERT INTO manual_attributions (
+            transaction_id, entity_slug, status, reason, source,
+            attributed_at, attributed_by
+        ) VALUES (?, ?, ?, ?, ?, ?, ?)
+        ON CONFLICT(transaction_id, entity_slug) DO UPDATE SET
+            status = excluded.status,
+            reason = excluded.reason,
+            source = excluded.source,
+            attributed_at = excluded.attributed_at,
+            attributed_by = excluded.attributed_by
+        """,
+        (transaction_id, entity_slug, status, reason, source, attributed_at, attributed_by),
+    )
+
+
+def delete_manual_attribution(
+    conn: sqlite3.Connection, *, transaction_id: str, entity_slug: str
+) -> int:
+    """Remove a manual attribution override (undo). Returns rows deleted (0/1)."""
+    cur = conn.execute(
+        "DELETE FROM manual_attributions WHERE transaction_id = ? AND entity_slug = ?",
+        (transaction_id, entity_slug),
+    )
+    return cur.rowcount
+
+
+def manual_attributions_for_slug(conn: sqlite3.Connection, entity_slug: str) -> dict[str, str]:
+    """Map of {transaction_id: status} of manual overrides for this entity.
+
+    Used at classify time to force these transactions to the recorded status.
+    """
+    return {
+        r["transaction_id"]: r["status"]
+        for r in conn.execute(
+            "SELECT transaction_id, status FROM manual_attributions WHERE entity_slug = ?",
             (entity_slug,),
         )
     }
