@@ -17,6 +17,19 @@ from pathlib import Path
 from . import db
 from .paths import DONATIONS_DIR, donations_dir_for
 
+
+def _csv_safe(v):
+    """Neutralize spreadsheet formula injection in exported CSVs.
+
+    A donor-filed cell beginning with = + - @ (or tab/CR) is evaluated as a
+    formula by Excel/Sheets; prefix it with a single quote so the cell is
+    treated as text. `csv` already handles delimiter quoting — this only guards
+    the leading-character formula trigger on free-text fields (employer,
+    occupation, names)."""
+    if isinstance(v, str) and v and v[0] in "=+-@\t\r":
+        return "'" + v
+    return v
+
 EXPORT_COLUMNS = [
     "transaction_id",
     "entity_slug",
@@ -69,7 +82,7 @@ def export_entity(slug: str) -> dict:
         writer = csv.DictWriter(f, fieldnames=EXPORT_COLUMNS)
         writer.writeheader()
         for r in rows:
-            d = {k: r[k] for k in EXPORT_COLUMNS if k in r.keys()}
+            d = {k: _csv_safe(r[k]) for k in EXPORT_COLUMNS if k in r.keys()}
             writer.writerow(d)
 
     # Partition by cycle.
@@ -78,7 +91,7 @@ def export_entity(slug: str) -> dict:
         cycle = r["election_cycle"]
         if cycle is None:
             continue
-        by_cycle[int(cycle)].append({k: r[k] for k in EXPORT_COLUMNS if k in r.keys()})
+        by_cycle[int(cycle)].append({k: _csv_safe(r[k]) for k in EXPORT_COLUMNS if k in r.keys()})
 
     cycle_dir = out_dir / "by_cycle"
     cycle_dir.mkdir(parents=True, exist_ok=True)
@@ -150,7 +163,7 @@ def export_aggregate() -> dict:
             writer = csv.writer(f)
             writer.writerow(cols)
             for r in rows:
-                writer.writerow([r[c] for c in cols])
+                writer.writerow([_csv_safe(r[c]) for c in cols])
 
     _write(
         confirmed_only,
