@@ -1,9 +1,13 @@
-requests>=2.31
-pyyaml>=6.0
-ruamel.yaml>=0.18
-python-dotenv>=1.0
-click>=8.1
-rapidfuzz>=3.5
-tabulate>=0.9
-pytest>=8.0
-responses>=0.25
+# Exact version pins for reproducible installs (Cloudflare deploy + weekly
+# GHA refresh both run `pip install -r requirements.txt`). Bump deliberately;
+# a floating major (e.g. click 9, requests 3) could break the unattended
+# weekly refresh with no warning. Verified against Python 3.11.
+requests==2.34.2
+pyyaml==6.0.3
+ruamel.yaml==0.19.1
+python-dotenv==1.2.2
+click==8.4.1
+rapidfuzz==3.14.5
+tabulate==0.10.0
+pytest==9.0.3
+responses==0.26.1
