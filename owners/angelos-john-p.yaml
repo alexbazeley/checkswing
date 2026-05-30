@@ -9,7 +9,7 @@
 # SEPARATE and NOT tracked under this slug. See `notes` for family-collision
 # audit work.
 #
-# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+# Read OWNER_SCHEMA.md before editing. Read GOVERNANCE.md §1.7 before adding entities.
 
 slug: angelos-john-p
 name: John P. Angelos
@@ -167,7 +167,7 @@ change_log:
     unusually severe Peter-Angelos collision risk). strong_signals empty.
     tenure_end_date 2024-08-01 (full ownership end; control-person role
     ended 2024-03-27 per notes).
-  by: "claude-code-research (orchestrated by alex)"
+  by: "automated research (maintainer-directed)"
   references:
   - "/tmp/angelos-john-p-research.md (session-local research file)"
 - date: 2026-05-25
@@ -176,7 +176,7 @@ change_log:
     in DB (not yet ingested; status pilot with tenure_end_date
     2024-08-01). Signal block is pre-configured for eventual historical
     ingestion. Signal review date advanced.
-  by: "claude-code-session (PR 4 Tier C light pass)"
+  by: "automated pipeline (PR 4 Tier C light pass)"
 
 audit:
   created: 2026-05-22

@@ -4,7 +4,7 @@
 # from MLB in 2006 ($450M). Family explored a sale Apr 2022 - Feb 2024 but
 # called it off; Mark remains managing principal owner as of May 2026.
 #
-# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+# Read OWNER_SCHEMA.md before editing. Read GOVERNANCE.md §1.7 before adding entities.
 
 slug: lerner-mark
 name: Mark D. Lerner
@@ -86,7 +86,7 @@ negative_signals:
   - "CPMC"
 
 related_entities: []
-# Future candidates (do NOT add without user approval per CLAUDE.md §1.7):
+# Future candidates (do NOT add without user approval per GOVERNANCE.md §1.7):
 #   - spouse: Judy Lenkin Lerner — listed as Nationals principal owner; no
 #     documented donor profile in Tier 2.
 #   - parent: Annette M. Lerner (mother) — listed as Nationals principal.
@@ -150,7 +150,7 @@ notes: |
   Edward L. Cohen, Robert K. Tanenbaum, Annette Lerner, Judy Lenkin Lerner,
   Marla Lerner Tanenbaum, Debra Lerner Cohen are each separate prominent
   individuals — each warrants its own slug if added. Do NOT silently fold
-  their giving into Mark's totals (CLAUDE.md §1.7).
+  their giving into Mark's totals (GOVERNANCE.md §1.7).
 
 change_log:
 - date: 2026-05-23
@@ -161,7 +161,7 @@ change_log:
     + "Lerner Corporation". NY-based Dr. Mark D. Lerner (psychologist)
     doppelganger flagged — relying on address contradiction check;
     calibrate negative_signals after first ingestion if needed.
-  by: "claude-code-research (orchestrated by alex)"
+  by: "automated research (maintainer-directed)"
   references:
   - "/tmp/lerner-mark-research.md (session-local research file)"
 - date: 2026-05-25
@@ -208,7 +208,7 @@ change_log:
     Predicted post-cal: ~68 CONFIRMED / ~9 PROBABLE / 163 UNCERTAIN
     (composition changes: -3 leaking PROBABLE move to UNCERTAIN with
     better tagging; +6 UNCERTAIN move to CONFIRMED). P/C ~0.13.
-  by: "claude-code-session (PR 4 Tier B, approved by alex)"
+  by: "automated pipeline (PR 4 Tier B, maintainer-approved)"
   references:
   - "data/master.db pre-calibration: 62 CONFIRMED / 13 PROBABLE / 163 UNCERTAIN-open"
 

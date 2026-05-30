@@ -3,7 +3,7 @@
 # 2013-01-10. Family bought the team in 2000 (father Larry Dolan); Paul has
 # been the sole operational control person since 2013. Larry died 2025-02-23.
 #
-# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+# Read OWNER_SCHEMA.md before editing. Read GOVERNANCE.md §1.7 before adding entities.
 # HIGH same-family collision risk: father Lawrence J. ("Larry") Dolan
 # (deceased 2025-02-23) and brother Matthew J. Dolan (OH State Senator
 # 2017-2024, 2x US Senate primary candidate) are both prolific FEC presences,
@@ -73,12 +73,12 @@ negative_signals:
   employers:
     # Paul E. Dolan (CA winemaker, d. 2023-07) — Fetzer Vineyards / Bonterra
     # Vineyards (Mendocino County). Same first name; pre-emptive negative
-    # per CLAUDE.md §1.7 (well-known doppelganger).
+    # per GOVERNANCE.md §1.7 (well-known doppelganger).
   - "Fetzer Vineyards"
   - "Bonterra Vineyards"
 
 related_entities: []
-# Future candidates (do NOT add without user approval per CLAUDE.md §1.7):
+# Future candidates (do NOT add without user approval per GOVERNANCE.md §1.7):
 #   - parent: Lawrence J. ("Larry") Dolan (d. 2025-02-23). Separate slug
 #     `dolan-larry` if added. Different first name; no name-variant collision.
 #   - sibling: Matthew J. Dolan — OH State Senator 2017-2024, 2x US Senate
@@ -148,7 +148,7 @@ change_log:
     Fetzer Vineyards / Bonterra Vineyards (Paul E. Dolan winemaker
     doppelganger). strong_signals empty at creation; calibrate after first
     ingestion.
-  by: "claude-code-research (orchestrated by alex)"
+  by: "automated research (maintainer-directed)"
   references:
   - "/tmp/dolan-paul-research.md (session-local research file)"
 - date: 2026-05-25
@@ -165,7 +165,7 @@ change_log:
 
     Pre-cal: 60 CONFIRMED / 7 PROBABLE / 0 UNCERTAIN-open. P/C 0.12.
     Predicted post-cal: ~67 CONFIRMED / ~0 PROBABLE. P/C ~0.0.
-  by: "claude-code-session (PR 4 Tier C light pass)"
+  by: "automated pipeline (PR 4 Tier C light pass)"
 
 audit:
   created: 2026-05-23

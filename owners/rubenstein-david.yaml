@@ -6,7 +6,7 @@
 # Initial closing 2024-03-27 (~40% stake + sole general partner interest at
 # $1.725B). Final closing 2024-08-01 (remaining 60% from Angelos family).
 #
-# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+# Read OWNER_SCHEMA.md before editing. Read GOVERNANCE.md §1.7 before adding entities.
 
 slug: rubenstein-david
 name: David M. Rubenstein
@@ -91,11 +91,11 @@ negative_signals:
   - "Georgetown University"
 
 related_entities: []
-# Documented candidates (do NOT add without explicit approval per CLAUDE.md §1.7):
+# Documented candidates (do NOT add without explicit approval per GOVERNANCE.md §1.7):
 #   - Alice Rogoff (ex-spouse, divorced 2017) — independent figure but unclear
 #     status as "related entity" post-divorce
 #   - Ellie / Gabrielle Rubenstein (adult daughter)
-#   - Carlyle Group Employee PAC — explicitly NOT a related_entity per CLAUDE.md
+#   - Carlyle Group Employee PAC — explicitly NOT a related_entity per GOVERNANCE.md
 #     §3 (partner of 1,800-employee firm isn't a controlling owner of the
 #     employee PAC)
 
@@ -186,7 +186,7 @@ change_log:
     strong_signals.employers initialized with Declaration Capital,
     Declaration Partners, Inner Harbor Sports — all virtually unique to
     him. Carlyle deliberately NOT in strong_signals.
-  by: "claude-code-research (orchestrated by alex)"
+  by: "automated research (maintainer-directed)"
   references:
   - "/tmp/rubenstein-david-research.md (session-local research file)"
 - date: 2026-05-24
@@ -213,7 +213,7 @@ change_log:
     city/state-outside-documented-residences rule; not adding Garrett Park
     / Chevy Chase / Westborough to verifying_signals.cities (would silently
     promote the doppelgänger to PROBABLE).
-  by: "claude-code-session (PR 4 Tier A, approved by alex)"
+  by: "automated pipeline (PR 4 Tier A, maintainer-approved)"
   references:
   - "data/master.db pre-calibration: 2 CONFIRMED / 6 PROBABLE / 23 UNCERTAIN-open"
 - date: 2026-05-25
@@ -223,7 +223,7 @@ change_log:
     PROBABLE) reflects the small sample size for this recently-added
     owner (Phase 2 batch 1; tenure since 2024-03-27). Signals are
     calibrated; calibration will reassess once volume increases.
-  by: "claude-code-session (PR 4 Tier C light pass)"
+  by: "automated pipeline (PR 4 Tier C light pass)"
 
 audit:
   created: 2026-05-22

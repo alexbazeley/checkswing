@@ -6,7 +6,7 @@
 # stake at ~$1.68B valuation; Dick remains Chairman/CEO; Charlie remains GP;
 # Walker Monfort (Dick's son) is team president since Jan 2026.
 #
-# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+# Read OWNER_SCHEMA.md before editing. Read GOVERNANCE.md §1.7 before adding entities.
 
 slug: monfort-dick
 name: Richard L. Monfort
@@ -71,7 +71,7 @@ strong_signals:
   # "Colorado Rockies" stays in verifying — team employees would also report it.
 
 related_entities: []
-# Future candidates (do NOT add without user approval per CLAUDE.md §1.7):
+# Future candidates (do NOT add without user approval per GOVERNANCE.md §1.7):
 #   - sibling: Charles K. ("Charlie") Monfort — co-owner / GP / Vice Chairman.
 #     Born 1959. Primary residence Greeley CO. Definite separate-slug
 #     candidate (`monfort-charlie`).
@@ -152,7 +152,7 @@ change_log:
     (Kiszla), ESPN. tenure_start_date = 2011-01-01 (year-precision; specific
     chairman/CEO transition day not documented). Strong_signal = "West Lot
     LLC" (Westword + Denver Gazette both name Dick as principal).
-  by: "claude-code-research (orchestrated by alex)"
+  by: "automated research (maintainer-directed)"
   references:
   - "/tmp/monfort-dick-research.md (session-local research file)"
 - date: 2026-05-25
@@ -192,7 +192,7 @@ change_log:
     80615) are candidates for strong_signals.zip_codes promotion — they
     would CONFIRM ~36 PROBABLE Greeley records that currently have generic
     SELF / SELF-EMPLOYED / INVESTOR employers but match donor name + city.
-  by: "claude-code-session (PR 4 Tier A, approved by alex)"
+  by: "automated pipeline (PR 4 Tier A, maintainer-approved)"
   references:
   - "data/master.db pre-calibration: 45 CONFIRMED / 40 PROBABLE / 17 UNCERTAIN-open"
 - date: 2026-05-25
@@ -244,7 +244,7 @@ change_log:
     Predicted post-cal: ~98 CONFIRMED / ~4 PROBABLE / 0 UNCERTAIN-open.
     P/C ratio drops to ~0.04. CONFIRMED count goes up (positive swing
     only) so no >5% CONFIRMED-drop alarm risk.
-  by: "claude-code-session (PR 4 Tier B, approved by alex)"
+  by: "automated pipeline (PR 4 Tier B, maintainer-approved)"
   references:
   - "data/master.db pre-calibration: 60 CONFIRMED / 42 PROBABLE / 0 UNCERTAIN-open"
 

@@ -6,7 +6,7 @@
 # valuation (publicly disclosed March 2026). Kendrick remains managing
 # general partner and controlling owner.
 #
-# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+# Read OWNER_SCHEMA.md before editing. Read GOVERNANCE.md §1.7 before adding entities.
 
 slug: kendrick-ken
 name: Earl G. Kendrick Jr.
@@ -90,7 +90,7 @@ related_entities: []
 #   - Kendrick Group, Inc. (SEC firm #114602) — verify it is his personal
 #     investment adviser firm before adding
 #   - Datatel Scholars Foundation, Arizona Diamondbacks Foundation —
-#     out of scope (CLAUDE.md §6, IRS 990s = separate project)
+#     out of scope (GOVERNANCE.md §6, IRS 990s = separate project)
 #   - Rob Walton's 10% minority stake — Walton is his own MLB-relevant
 #     principal (Broncos NFL owner) and not a Kendrick related_entity
 
@@ -131,7 +131,7 @@ notes: |
   must be classified against her own signals — see flagged item to create
   kendrick-randy.yaml in a future round. Records under "R. Kendrick" or
   "Randy Kendrick" must NOT be attributed to Ken in the absence of her own
-  slug; route to UNCERTAIN until the related_entity is added per CLAUDE.md §1.7.
+  slug; route to UNCERTAIN until the related_entity is added per GOVERNANCE.md §1.7.
 
   Datatel Inc. (his founded firm, 1968, higher-ed software) was sold in
   2005 and 2009. Filings pre-1990 may report Datatel as employer; later
@@ -153,7 +153,7 @@ change_log:
     Group, Inc. flagged for future promotion pending SEC ADV verification.
     Randy Kendrick flagged for future related_entity creation as her own
     slug (independent donor, same household — Cohen/Alexandra parallel).
-  by: "claude-code-research (orchestrated by alex)"
+  by: "automated research (maintainer-directed)"
   references:
   - "/tmp/kendrick-ken-research.md (session-local research file)"
 - date: 2026-05-25
@@ -175,13 +175,13 @@ change_log:
 
     Adding 85253 to strong-zip would over-confirm Randy + Earl III. The
     cleaner resolution is to create separate slugs for Randy (well-
-    documented major donor) and Earl III, but per CLAUDE.md §5 that
+    documented major donor) and Earl III, but per GOVERNANCE.md §5 that
     requires orchestrator approval and Tier 2 source population —
     out of scope for this Tier-B pass.
 
     Leaving 60 PROBABLE as honest one-signal classification. Signal
     review date advanced.
-  by: "claude-code-session (PR 4 Tier B audit pass)"
+  by: "automated pipeline (PR 4 Tier B audit pass)"
 
 audit:
   created: 2026-05-22

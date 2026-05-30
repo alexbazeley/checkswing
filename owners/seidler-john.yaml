@@ -10,7 +10,7 @@
 # should be updated to the close date; Feliciano then takes over as MLB
 # control person.
 #
-# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+# Read OWNER_SCHEMA.md before editing. Read GOVERNANCE.md §1.7 before adding entities.
 
 slug: seidler-john
 name: John Seidler
@@ -54,7 +54,7 @@ strong_signals:
   zip_codes: []
 
 related_entities: []
-# Future candidates (do NOT add without user approval per CLAUDE.md §1.7):
+# Future candidates (do NOT add without user approval per GOVERNANCE.md §1.7):
 #   - spouse: Laurie Seidler (married ~35 years per coverage; not Tier 2-confirmed
 #     as donor).
 #   - sibling: Peter Seidler (DECEASED 2023-11-14) — separate slug `seidler-peter`
@@ -139,7 +139,7 @@ change_log:
     "O'Malley Seidler Partners". Replaces interim Kutsenda-led seidler-
     family registry placeholder per user direction (track both Seidler
     and Feliciano as pilots during transition).
-  by: "claude-code-research (orchestrated by alex)"
+  by: "automated research (maintainer-directed)"
   references:
   - "/tmp/feliciano-jose-research.md (session-local research file; covered both Seidler and Feliciano)"
 - date: 2026-05-25
@@ -148,7 +148,7 @@ change_log:
     PROBABLE / 0 UNCERTAIN-open. Owner has minimal FEC footprint (only
     1 record post-Feb-2025 control-person transition); signal block is
     adequate for current volume. Signal review date advanced.
-  by: "claude-code-session (PR 4 Tier C light pass)"
+  by: "automated pipeline (PR 4 Tier C light pass)"
 
 audit:
   created: 2026-05-23

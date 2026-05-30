@@ -3,7 +3,7 @@
 # (Fenway Sports Group, John W. Henry & Company, Boston Globe, Liverpool FC).
 # Expect a noisier PROBABLE bucket than Cohen — see notes.
 #
-# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+# Read OWNER_SCHEMA.md before editing. Read GOVERNANCE.md §1.7 before adding entities.
 
 slug: henry-john
 name: John W. Henry
@@ -173,7 +173,7 @@ change_log:
         almost exclusively used in the small set of people closely associated
         with the firm.
       - Anticipate noisy PROBABLE bucket (common name, two states, multi-entity).
-  by: "claude-code-research (orchestrated by alex)"
+  by: "automated research (maintainer-directed)"
   references:
   - "/tmp/henry-john-research.md (session-local research file)"
 - date: 2026-05-22
@@ -201,7 +201,7 @@ change_log:
         city_state will only get them to PROBABLE.
 
     Approved by alex.
-  by: "claude-code-session (calibration round 1)"
+  by: "automated pipeline (calibration round 1)"
 - date: 2026-05-25
   change: |
     Tier-B calibration round 2 — added strong_signals.zip_codes:
@@ -236,7 +236,7 @@ change_log:
     Pre-cal: 14 CONFIRMED / 5 PROBABLE / 247 UNCERTAIN-open. P/C 0.36.
     Predicted post-cal: ~15 CONFIRMED / ~3 PROBABLE / ~247 UNCERTAIN
     (1 CarGurus PROBABLE → UNCERTAIN). P/C ~0.20.
-  by: "claude-code-session (PR 4 Tier B, approved by alex)"
+  by: "automated pipeline (PR 4 Tier B, maintainer-approved)"
   references:
   - "data/master.db pre-calibration: 14 CONFIRMED / 5 PROBABLE / 247 UNCERTAIN-open"
 

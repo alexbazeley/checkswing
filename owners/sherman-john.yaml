@@ -8,7 +8,7 @@
 # DIFFERENT PERSON from Bruce Sherman (Miami Marlins owner). Kept as separate
 # slugs.
 #
-# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+# Read OWNER_SCHEMA.md before editing. Read GOVERNANCE.md §1.7 before adding entities.
 # HIGH doppelganger risk: "John Sherman" is a common name; strict employer +
 # city signals required.
 
@@ -75,7 +75,7 @@ strong_signals:
   # verifying — team employees would also report it.
 
 related_entities: []
-# Future candidates (do NOT add without user approval per CLAUDE.md §1.7):
+# Future candidates (do NOT add without user approval per GOVERNANCE.md §1.7):
 #   - spouse: Marny Sherman — publicly active at Royals/political moments
 #     (April 2024 Jackson County stadium vote). Politically active in narrow
 #     sense; no FEC donation profile researched.
@@ -156,7 +156,7 @@ change_log:
     L.P." / "Inergy Midstream" + "Sherman Family Foundation". HIGH
     doppelganger risk; negative_signals to be calibrated after first
     ingestion.
-  by: "claude-code-research (orchestrated by alex)"
+  by: "automated research (maintainer-directed)"
   references:
   - "/tmp/sherman-john-research.md (session-local research file)"
 - date: 2026-05-25
@@ -169,7 +169,7 @@ change_log:
     filing oddly), the rest empty / INFORMATION REQUESTED. Milacron is
     not in Tier 2 as a documented Sherman employer; conservatively left
     PROBABLE pending Tier 2 research. Signal review date advanced.
-  by: "claude-code-session (PR 4 Tier C light pass)"
+  by: "automated pipeline (PR 4 Tier C light pass)"
 
 audit:
   created: 2026-05-23

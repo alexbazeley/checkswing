@@ -6,7 +6,7 @@
 # "John Fisher" is one of the commonest American names — expect noisy initial
 # fetch, strict name_variants required.
 #
-# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+# Read OWNER_SCHEMA.md before editing. Read GOVERNANCE.md §1.7 before adding entities.
 
 slug: fisher-john
 name: John J. Fisher
@@ -168,7 +168,7 @@ change_log:
     Conservative cities=[san francisco] (Marin not yet Tier 2-confirmed).
     strong_signals.employers initialized with Pisces Inc and Sansome
     Partners — Fisher's personal vehicles.
-  by: "claude-code-research (orchestrated by alex)"
+  by: "automated research (maintainer-directed)"
   references:
   - "/tmp/fisher-john-research.md (session-local)"
 - date: 2026-05-22
@@ -183,7 +183,7 @@ change_log:
 
     User-suggested approach (alex): "find Pisces, find addresses, look for
     others at those addresses."
-  by: "claude-code-session (alex-directed signal addition)"
+  by: "automated pipeline (alex-directed signal addition)"
 - date: 2026-05-24
   change: |
     Tier-A calibration round 1 — added negative_signals.employers for
@@ -229,7 +229,7 @@ change_log:
     cities would silently promote ~1,000 doppelgänger records to PROBABLE.
 
     Notes block updated with the doppelgänger landscape.
-  by: "claude-code-session (PR 4 Tier A, approved by alex)"
+  by: "automated pipeline (PR 4 Tier A, maintainer-approved)"
   references:
   - "data/master.db pre-calibration: 147 CONFIRMED / 246 PROBABLE / 1267 UNCERTAIN-open"
 - date: 2026-05-25
@@ -241,7 +241,7 @@ change_log:
     negative_signal additions; further calibration would require
     individual record-level adjudication (not scalable). Signal review
     date advanced.
-  by: "claude-code-session (PR 4 Tier C light pass)"
+  by: "automated pipeline (PR 4 Tier C light pass)"
 
 audit:
   created: 2026-05-22

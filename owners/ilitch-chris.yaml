@@ -6,7 +6,7 @@
 # role in the Tigers — MLB gambling rules require a firewall between the
 # Tigers and Marian's MotorCity Casino Hotel.
 #
-# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+# Read OWNER_SCHEMA.md before editing. Read GOVERNANCE.md §1.7 before adding entities.
 # Family-collision context: Ilitch is a rare surname concentrated in Metro
 # Detroit. Different first names protect Chris's name_variants from collision
 # with mother Marian, siblings (Denise, Mike Jr., Lisa, Atanas, Carole, late
@@ -63,7 +63,7 @@ strong_signals:
   zip_codes: []
 
 related_entities: []
-# Future candidates (do NOT add without user approval per CLAUDE.md §1.7):
+# Future candidates (do NOT add without user approval per GOVERNANCE.md §1.7):
 #   - parent: Marian Ilitch (b. 1933, age 93 in 2026). Chairwoman of Ilitch
 #     Holdings; principal/sole proprietor of MotorCity Casino Hotel.
 #     Documented major political donor. SEPARATE slug `ilitch-marian` —
@@ -137,7 +137,7 @@ change_log:
     Strong_signals = "Ilitch Holdings" + "Ilitch Sports + Entertainment".
     Marian Ilitch flagged as separate-slug candidate (different first
     name, no variant collision).
-  by: "claude-code-research (orchestrated by alex)"
+  by: "automated research (maintainer-directed)"
   references:
   - "/tmp/ilitch-chris-research.md (session-local research file)"
 - date: 2026-05-25
@@ -147,7 +147,7 @@ change_log:
     creation; the 12 CONFIRMED Chris Ilitch records match cleanly via
     his Ilitch Holdings / Ilitch Sports + Entertainment strong-signal
     employers. Signal review date advanced.
-  by: "claude-code-session (PR 4 Tier C light pass)"
+  by: "automated pipeline (PR 4 Tier C light pass)"
 
 audit:
   created: 2026-05-23

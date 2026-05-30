@@ -17,7 +17,7 @@
 # None of those siblings/parents are tracked under THIS slug. If/when added,
 # each gets its own owner slug.
 #
-# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+# Read OWNER_SCHEMA.md before editing. Read GOVERNANCE.md §1.7 before adding entities.
 
 slug: ricketts-tom
 name: Thomas S. Ricketts
@@ -187,7 +187,7 @@ change_log:
     Most disciplined name_variants set in the registry — no bare
     "Ricketts", no first-initial-only forms — to keep 4 siblings + 2
     parents out. strong_signals empty pending calibration audit.
-  by: "claude-code-research (orchestrated by alex)"
+  by: "automated research (maintainer-directed)"
   references:
   - "/tmp/ricketts-tom-research.md (session-local research file)"
 - date: 2026-05-25
@@ -229,7 +229,7 @@ change_log:
     Pre-cal: 47 CONFIRMED / 15 PROBABLE / 0 UNCERTAIN-open. P/C 0.32.
     Predicted post-cal: ~61 CONFIRMED / ~1 PROBABLE / 0 UNCERTAIN.
     P/C ~0.02. CONFIRMED count goes up — no >5% drop alarm risk.
-  by: "claude-code-session (PR 4 Tier B, approved by alex w/ address confirmation)"
+  by: "automated pipeline (PR 4 Tier B, maintainer-approved w/ address confirmation)"
   references:
   - "data/master.db pre-calibration: 47 CONFIRMED / 15 PROBABLE / 0 UNCERTAIN-open"
 

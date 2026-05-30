@@ -6,7 +6,7 @@
 # (~26%) and is a separately well-documented major Republican donor —
 # Charles is a SEPARATE future slug (`johnson-charles`), not folded here.
 #
-# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+# Read OWNER_SCHEMA.md before editing. Read GOVERNANCE.md §1.7 before adding entities.
 # HIGH-RISK doppelganger case: "Greg Johnson" / "Gregory Johnson" is one of
 # the most common name combinations in the US. Father Charles B., sister
 # Jennifer M., and uncle Rupert H. Jr. all share the Franklin employer
@@ -71,7 +71,7 @@ strong_signals:
   # if a unique pattern emerges.
 
 related_entities: []
-# Future candidates (do NOT add without user approval per CLAUDE.md §1.7):
+# Future candidates (do NOT add without user approval per GOVERNANCE.md §1.7):
 #   - parent: Charles B. Johnson (Charles Bartlett Johnson, b. 1933-01-06,
 #     Palm Beach FL). LARGEST individual Giants shareholder (~26%). Major
 #     Republican donor in his own right. DIFFERENT first name — no
@@ -146,7 +146,7 @@ change_log:
     signals empty at creation. Father Charles B. Johnson, sister Jennifer
     M. Johnson, uncle Rupert H. Johnson Jr. flagged as separate-slug
     candidates with different first names.
-  by: "claude-code-research (orchestrated by alex)"
+  by: "automated research (maintainer-directed)"
   references:
   - "/tmp/johnson-greg-research.md (session-local research file)"
 - date: 2026-05-25
@@ -165,7 +165,7 @@ change_log:
 
     Pre-cal: 98 CONFIRMED / 9 PROBABLE / 0 UNCERTAIN-open. P/C 0.09.
     Predicted post-cal: ~105 CONFIRMED / ~2 PROBABLE. P/C ~0.02.
-  by: "claude-code-session (PR 4 Tier C light pass)"
+  by: "automated pipeline (PR 4 Tier C light pass)"
 
 audit:
   created: 2026-05-23

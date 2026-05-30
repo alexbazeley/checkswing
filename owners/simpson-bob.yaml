@@ -10,7 +10,7 @@
 # is LOAD-BEARING for disambiguation from generic "Bob Simpson" / "Robert
 # Simpson" matches.
 #
-# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+# Read OWNER_SCHEMA.md before editing. Read GOVERNANCE.md §1.7 before adding entities.
 
 slug: simpson-bob
 name: Bob R. Simpson
@@ -74,7 +74,7 @@ strong_signals:
   - "76102"
 
 related_entities: []
-# Future candidates (do NOT add without user approval per CLAUDE.md §1.7):
+# Future candidates (do NOT add without user approval per GOVERNANCE.md §1.7):
 #   - spouse: Janice Simpson. Co-founded RayLynn Records 2012. Not
 #     documented as politically active in Tier 2.
 #   - children: names not publicly disclosed in Tier 2.
@@ -162,7 +162,7 @@ change_log:
     XTO Energy / TXO Partners / MorningStar Partners / Cross Timbers
     Oil. name_variants DELIBERATELY EXCLUDE bare "Bob Simpson" / "Robert
     Simpson" — "R." middle initial is load-bearing.
-  by: "claude-code-research (orchestrated by alex)"
+  by: "automated research (maintainer-directed)"
   references:
   - "/tmp/rangers-ownership-research.md (session-local research file)"
 - date: 2026-05-25
@@ -193,7 +193,7 @@ change_log:
     Pre-cal: 0 CONFIRMED / 8 PROBABLE / 0 UNCERTAIN-open.
     Predicted post-cal: ~8 CONFIRMED / ~0 PROBABLE / 0 UNCERTAIN.
     No CONFIRMED-drop alarm risk (positive swing only; was already 0).
-  by: "claude-code-session (PR 4 Tier B, approved by alex w/ office-ZIP caveat)"
+  by: "automated pipeline (PR 4 Tier B, maintainer-approved w/ office-ZIP caveat)"
   references:
   - "data/master.db pre-calibration: 0 CONFIRMED / 8 PROBABLE / 0 UNCERTAIN-open"
 

@@ -3,7 +3,7 @@
 # minority stake since 1994, 48% since 2014. Wealth from John Middleton Co.
 # (Black & Mild cigars, sold to Altria 2007 for $2.9B).
 #
-# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+# Read OWNER_SCHEMA.md before editing. Read GOVERNANCE.md §1.7 before adding entities.
 
 slug: middleton-john
 name: John S. Middleton
@@ -82,7 +82,7 @@ related_entities: []
 #     classifier improvement to preserve middle initials during matching.
 #     See the negative_signals block above for the interim handling.
 #   - Wife Leigh Middleton — no independent federal-donor profile yet
-#     researched. NOT added per CLAUDE.md §1.7.
+#     researched. NOT added per GOVERNANCE.md §1.7.
 
 sources:
 - description: "MLB.com Philadelphia Phillies (current ownership)"
@@ -157,7 +157,7 @@ change_log:
     Double Play Inc — both his unique holding-company vehicles.
     John Middleton Co. NOT in strong_signals (pre-2007 had thousands of
     rank-and-file employees who could share the common name).
-  by: "claude-code-research (orchestrated by alex)"
+  by: "automated research (maintainer-directed)"
   references:
   - "/tmp/middleton-john-research.md (session-local)"
 - date: 2026-05-25
@@ -202,7 +202,7 @@ change_log:
     Dock Street Capital records left as-is — user research could not
     confirm a Middleton connection. John P. tracking as related_entity
     flagged in notes as a future change pending classifier improvement.
-  by: "claude-code-session (PR 4 Tier A, approved by alex)"
+  by: "automated pipeline (PR 4 Tier A, maintainer-approved)"
   references:
   - "data/master.db pre-calibration: 33 CONFIRMED / 38 PROBABLE / 19 UNCERTAIN-open"
   - "data/snapshots/2026-05-25T04-02-44Z__pre-reclassify-middleton-john.db (snapshot before the failed --include-related attempt)"

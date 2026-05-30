@@ -7,7 +7,7 @@
 # DIFFERENT PERSON from John Sherman (Kansas City Royals owner). Kept as
 # separate slugs.
 #
-# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+# Read OWNER_SCHEMA.md before editing. Read GOVERNANCE.md §1.7 before adding entities.
 
 slug: sherman-bruce
 name: Bruce S. Sherman
@@ -79,7 +79,7 @@ negative_signals:
   - "PWC"
 
 related_entities: []
-# Future candidates (do NOT add without user approval per CLAUDE.md §1.7):
+# Future candidates (do NOT add without user approval per GOVERNANCE.md §1.7):
 #   - spouse: Cynthia Sherman (née Kahn). Naples FL. No documented political
 #     activity in Tier 2 sources.
 #   - children from prior marriage to Marlene Bluestein: Lori Sherman and
@@ -138,7 +138,7 @@ change_log:
     news; ESPN; Horatio Alger 2024 award; Gulfshore Life; MLB.com Feb 2026
     spring training. Strong_signal = "M4 Capital" / "M4 Capital LLC"
     (uniquely-named Naples FL family office).
-  by: "claude-code-research (orchestrated by alex)"
+  by: "automated research (maintainer-directed)"
   references:
   - "/tmp/sherman-bruce-research.md (session-local research file)"
 - date: 2026-05-25
@@ -185,7 +185,7 @@ change_log:
     P/C ~0.36 — RATIO GOES UP because we're surfacing more records
     honestly classified, not because of misattribution. The CONFIRMED-
     count alarm is for drops, not increases.
-  by: "claude-code-session (PR 4 Tier B, approved by alex w/ Boca yes)"
+  by: "automated pipeline (PR 4 Tier B, maintainer-approved w/ Boca yes)"
   references:
   - "data/master.db pre-calibration: 51 CONFIRMED / 14 PROBABLE / 131 UNCERTAIN-open"
 

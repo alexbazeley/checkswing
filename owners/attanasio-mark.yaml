@@ -3,7 +3,7 @@
 # from Bud Selig & family for $223M). Wall Street background — co-founded
 # Crescent Capital Group in 1991.
 #
-# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+# Read OWNER_SCHEMA.md before editing. Read GOVERNANCE.md §1.7 before adding entities.
 
 slug: attanasio-mark
 name: Mark L. Attanasio
@@ -74,7 +74,7 @@ strong_signals:
   zip_codes: []
 
 related_entities: []
-# Documented future candidates (do NOT add without approval per CLAUDE.md §1.7):
+# Documented future candidates (do NOT add without approval per GOVERNANCE.md §1.7):
 #   - Spouse Deborah "Debbie" Kaplan Attanasio (documented independent donor
 #     in derivative FEC data — would need her own slug)
 #   - Sons Dan and Mike Attanasio (succession candidates per Sportico but no
@@ -140,7 +140,7 @@ change_log:
     strong_signals.employers initialized with MLA Sports / MLA Sports LLC
     (his personal sports-holding entity). Crescent Capital Group and TCW
     deliberately NOT strong (large firms).
-  by: "claude-code-research (orchestrated by alex)"
+  by: "automated research (maintainer-directed)"
   references:
   - "/tmp/attanasio-mark-research.md (session-local research file)"
 - date: 2026-05-25
@@ -154,7 +154,7 @@ change_log:
     Pre-cal: 26 CONFIRMED / 4 PROBABLE / 0 UNCERTAIN-open. P/C 0.15.
     Predicted post-cal: ~28 CONFIRMED / ~2 PROBABLE. (The 2 empty-
     employer records at 90025 stay PROBABLE.)
-  by: "claude-code-session (PR 4 Tier C light pass)"
+  by: "automated pipeline (PR 4 Tier C light pass)"
 
 audit:
   created: 2026-05-22

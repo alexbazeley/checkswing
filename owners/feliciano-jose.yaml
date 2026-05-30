@@ -9,7 +9,7 @@
 # actual close date and add a change_log entry. John Seidler's tenure_end_date
 # should be set to the same close date in seidler-john.yaml.
 #
-# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+# Read OWNER_SCHEMA.md before editing. Read GOVERNANCE.md §1.7 before adding entities.
 # HIGH DOPPELGANGER RISK: the famous blind PR-born singer José Feliciano
 # (b. 1945, longtime Weston CT resident) is a separate person with a
 # substantial FEC footprint of his own. Pre-emptive negative_signals block
@@ -64,7 +64,7 @@ strong_signals:
 negative_signals:
   # Famous singer José Monserrate Feliciano García (b. 1945, "Feliz Navidad",
   # 1968 World Series anthem). Longtime Weston, CT resident. Substantial
-  # independent FEC footprint. Pre-emptive negative_signal per CLAUDE.md §1.7
+  # independent FEC footprint. Pre-emptive negative_signal per GOVERNANCE.md §1.7
   # (well-known doppelganger). Block musician/entertainment employer context.
   employers:
   - "Self-Employed Musician"
@@ -75,7 +75,7 @@ negative_signals:
   - "Polydor"                     # historic singer-affiliated label
 
 related_entities: []
-# Future candidates (do NOT add without user approval per CLAUDE.md §1.7):
+# Future candidates (do NOT add without user approval per GOVERNANCE.md §1.7):
 #   - spouse: Kwanza Jones — Princeton '93; JD Cardozo Law; Master of
 #     Dispute Resolution Pepperdine. Co-CEO Jones/Feliciano Initiative.
 #     Separate independent donor capacity. SEPARATE slug `jones-kwanza`
@@ -149,7 +149,7 @@ notes: |
 
   Spouse Kwanza Jones — independent professional / philanthropic identity;
   Co-CEO of the joint Kwanza Jones & José E. Feliciano Initiative.
-  SEPARATE-slug candidate (`jones-kwanza`); per CLAUDE.md §1.7, not added
+  SEPARATE-slug candidate (`jones-kwanza`); per GOVERNANCE.md §1.7, not added
   to Feliciano's tracked-set automatically.
 
   NEEDS-CONFIRMATION: Full middle name (only "E." documented). Date of
@@ -166,7 +166,7 @@ change_log:
     close date when settled. Strong_signal = "Clearlake Capital".
     Pre-emptive negative_signals.employers for the famous singer José
     Feliciano (musician / entertainer / Polydor / JF Recording).
-  by: "claude-code-research (orchestrated by alex)"
+  by: "automated research (maintainer-directed)"
   references:
   - "/tmp/feliciano-jose-research.md (session-local research file)"
 - date: 2026-05-25
@@ -177,7 +177,7 @@ change_log:
     Could be Jose Feliciano (the Padres-incoming owner) or could be
     the famous singer doppelgänger (Weston CT-based though). Left as
     PROBABLE pending Tier 2 confirmation. Signal review date advanced.
-  by: "claude-code-session (PR 4 Tier C light pass)"
+  by: "automated pipeline (PR 4 Tier C light pass)"
 
 audit:
   created: 2026-05-23

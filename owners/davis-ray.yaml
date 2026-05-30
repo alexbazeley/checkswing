@@ -9,7 +9,7 @@
 # two distinct billionaires under one entry). Davis and Simpson have
 # completely different signal stacks and must be tracked separately.
 #
-# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+# Read OWNER_SCHEMA.md before editing. Read GOVERNANCE.md §1.7 before adding entities.
 
 slug: davis-ray
 name: Ray C. Davis
@@ -74,7 +74,7 @@ strong_signals:
   - "75225"
 
 related_entities: []
-# Future candidates (do NOT add without user approval per CLAUDE.md §1.7):
+# Future candidates (do NOT add without user approval per GOVERNANCE.md §1.7):
 #   - spouse: Linda Davis. Not documented as politically active in Tier 2.
 #   - children: 3 children per Wikipedia; names not publicly disclosed.
 #   - co-owner: Bob R. Simpson — SEPARATE slug `simpson-bob` (not a related
@@ -164,7 +164,7 @@ change_log:
     ESPN, MLB.com, D Magazine, Energy Transfer IR. tenure_start_date =
     2010-08-12 (Rangers Baseball Express closing; exact day approximate).
     Strong_signal = "Avatar Investments" / "Avatar Investments LP".
-  by: "claude-code-research (orchestrated by alex)"
+  by: "automated research (maintainer-directed)"
   references:
   - "/tmp/rangers-ownership-research.md (session-local research file)"
 - date: 2026-05-25
@@ -216,7 +216,7 @@ change_log:
     Pre-cal: 52 CONFIRMED / 29 PROBABLE / 13 UNCERTAIN-open. P/C 0.56.
     Predicted post-cal: ~71 CONFIRMED / ~10 PROBABLE / 13 UNCERTAIN.
     P/C ~0.14. CONFIRMED count goes up — no >5% drop alarm risk.
-  by: "claude-code-session (PR 4 Tier B, approved by alex)"
+  by: "automated pipeline (PR 4 Tier B, maintainer-approved)"
   references:
   - "data/master.db pre-calibration: 52 CONFIRMED / 29 PROBABLE / 13 UNCERTAIN-open"
 

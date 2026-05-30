@@ -13,7 +13,7 @@
 # Malone's broader Liberty-Media-mogul identity rather than implying
 # Braves-driven political activity.
 #
-# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+# Read OWNER_SCHEMA.md before editing. Read GOVERNANCE.md §1.7 before adding entities.
 
 slug: malone-john
 name: John C. Malone
@@ -84,7 +84,7 @@ strong_signals:
   - "80112"
 
 related_entities: []
-# Future candidates (do NOT add without user approval per CLAUDE.md §1.7):
+# Future candidates (do NOT add without user approval per GOVERNANCE.md §1.7):
 #   - spouse: Leslie Malone — Elizabeth CO; no documented separate donor
 #     profile.
 #   - kind: pac — Liberty Media Corporation PAC (FEC C00508101) — TERMINATED;
@@ -174,7 +174,7 @@ change_log:
     2007-05-16 (Liberty Media completed Braves acquisition from Time
     Warner). strong_signals empty at creation — calibrate via post-
     ingestion audit (Elizabeth CO ZIP cluster expected).
-  by: "claude-code-research (orchestrated by alex)"
+  by: "automated research (maintainer-directed)"
   references:
   - "/tmp/braves-ownership-research.md (session-local research file)"
 - date: 2026-05-25
@@ -205,7 +205,7 @@ change_log:
     Pre-cal: 40 CONFIRMED / 7 PROBABLE / 7 UNCERTAIN-open. P/C 0.17.
     Predicted post-cal: ~47 CONFIRMED / ~0 PROBABLE / ~7 UNCERTAIN.
     P/C ~0.0.
-  by: "claude-code-session (PR 4 Tier B, approved by alex batch)"
+  by: "automated pipeline (PR 4 Tier B, maintainer-approved batch)"
   references:
   - "data/master.db pre-calibration: 40 CONFIRMED / 7 PROBABLE / 7 UNCERTAIN-open"
 

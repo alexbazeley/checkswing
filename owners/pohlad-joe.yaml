@@ -8,7 +8,7 @@
 # continue tracking Joe's full federal giving history through the project
 # scope window. Tom Pohlad becomes a separate future slug (`pohlad-tom`).
 #
-# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+# Read OWNER_SCHEMA.md before editing. Read GOVERNANCE.md §1.7 before adding entities.
 # HIGH family-collision risk: multiple Pohlad relatives are business-active
 # at the same employer ("Pohlad Companies") in the same Twin Cities metro.
 # Name_variants strictly require "Joe" or "Joseph" — bare "J. Pohlad" or
@@ -86,7 +86,7 @@ strong_signals:
   # filings observed.
 
 related_entities: []
-# Future candidates (do NOT add without user approval per CLAUDE.md §1.7):
+# Future candidates (do NOT add without user approval per GOVERNANCE.md §1.7):
 #   - sibling: Tom Pohlad — CURRENT Twins executive chair / controlling
 #     owner since 2025-12-17. Definite separate-slug `pohlad-tom`. Same Twin
 #     Cities metro + same employer set.
@@ -168,7 +168,7 @@ change_log:
     ESPN (multiple), Twin Cities Business (multiple), SI/Onsi, Pohlad
     Foundation. HIGH family-collision risk noted; strict name_variants
     exclude bare "J. Pohlad". Tom Pohlad flagged for separate future slug.
-  by: "claude-code-research (orchestrated by alex)"
+  by: "automated research (maintainer-directed)"
   references:
   - "/tmp/pohlad-joe-research.md (session-local research file)"
 - date: 2026-05-25
@@ -200,7 +200,7 @@ change_log:
     Family-collision firewall (strict "Joseph C." or "Joe" first name)
     holds — brother Tom (now Twins exec chair) has middle initial "O"
     and would not name-match this slug.
-  by: "claude-code-session (PR 4 Tier B, approved by alex batch)"
+  by: "automated pipeline (PR 4 Tier B, maintainer-approved batch)"
   references:
   - "data/master.db pre-calibration: 92 CONFIRMED / 14 PROBABLE / 1 UNCERTAIN-open"
 

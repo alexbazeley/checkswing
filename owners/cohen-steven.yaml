@@ -1,7 +1,7 @@
 # Steven A. Cohen — New York Mets
 # Phase 1 pilot owner. The worked example for verifying_signals construction.
 #
-# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+# Read OWNER_SCHEMA.md before editing. Read GOVERNANCE.md §1.7 before adding entities.
 
 slug: cohen-steven
 name: Steven A. Cohen
@@ -158,7 +158,7 @@ change_log:
   by: "alex (via scoping session)"
 - date: 2026-05-22
   change: "Schema-compliance fix per OWNER_SCHEMA.md rule 6: removed 'Cohen Private Ventures' and 'Point72 Asset Management' from verifying_signals.employers (they remain in strong_signals.employers). No semantic change — strong-signal matches still classify as CONFIRMED; the duplication was forbidden by the schema."
-  by: "claude-code-session (phase-1 build)"
+  by: "automated pipeline (phase-1 build)"
 - date: 2026-05-22
   change: |
     Calibration round 1 — four signal changes based on audit of first
@@ -194,7 +194,7 @@ change_log:
     Schema-extension note: OWNER_SCHEMA.md and VERIFICATION.md were
     extended to document the new negative_signals block. Classifier
     updated with 4 new tests (36 passing total).
-  by: "claude-code-session (calibration round 1, approved by alex)"
+  by: "automated pipeline (calibration round 1, maintainer-approved)"
   references:
   - "data/raw/cohen-steven/ — 77 payloads from run 3ea399e7"
   - "data/snapshots/2026-05-22T20-51-24Z__3ea399e7.db"
@@ -206,7 +206,7 @@ change_log:
     Current state: 126 CONFIRMED / 10 PROBABLE / 0 UNCERTAIN-open.
     P/C 0.08 — well-calibrated. The 10 PROBABLE are legitimate one-
     signal residual. Signal review date advanced.
-  by: "claude-code-session (PR 4 Tier C light pass)"
+  by: "automated pipeline (PR 4 Tier C light pass)"
 
 audit:
   created: 2026-05-22

@@ -23,7 +23,7 @@ Entry types:
 ### 2026-05-22 — SETUP
 
 Project skeleton created. Base files:
-- `CLAUDE.md`
+- `GOVERNANCE.md`
 - `CHARTER.md`
 - `SOURCES.md`
 - `VERIFICATION.md`
@@ -40,7 +40,7 @@ No ingestion yet. No code written yet. Phase 0 setup files only.
 
 ### 2026-05-22 — SETUP (Phase 1 build)
 
-Pipeline code written by claude-code-session:
+Pipeline code written by automated pipeline:
 - `scripts/{paths,db,validate_owners,fetch_fec,resolve_entities,ingest,export,cli}.py`
 - `tests/test_resolve_entities.py` — 32 tests, all passing.
 - `.env`, `.env.example`, `.gitignore`, `requirements.txt`, venv at `.venv/`
@@ -62,7 +62,7 @@ First Phase 1 ingestion attempt used `contributor_name`-only FEC queries (no sta
 
 After 240 raw API calls (mix of dry-run pages and real-run pages), the projected total was 1-2 hours of API calls and a review queue dominated by clearly-not-our-Cohen records that would all be classified UNCERTAIN.
 
-Decision (with user approval): abort the broad fetch and switch to a state-filtered fetch. When an owner YAML has `verifying_signals.states` populated, the fetch will pass those as `contributor_state` filters to FEC. Cohen's states (CT, NY) narrow the result set ~10-20x while remaining name-anchored (so it does NOT violate CLAUDE.md §3's prohibition on employer-only aggregated queries).
+Decision (with user approval): abort the broad fetch and switch to a state-filtered fetch. When an owner YAML has `verifying_signals.states` populated, the fetch will pass those as `contributor_state` filters to FEC. Cohen's states (CT, NY) narrow the result set ~10-20x while remaining name-anchored (so it does NOT violate GOVERNANCE.md §3's prohibition on employer-only aggregated queries).
 
 Tradeoff accepted: this may miss the rare donation Cohen filed with a non-CT/NY address. Risk considered acceptable given the conservative-attribution preference and the audit cost of a flooded review queue.
 
@@ -83,7 +83,7 @@ No DB writes happened during the broad-fetch attempt.
 - **confirmed_count**: `98`
 - **probable_count**: `936`
 - **uncertain_count**: `1774`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-22T20-51-24Z__3ea399e7.db`
+- **snapshot_path**: `data/snapshots/2026-05-22T20-51-24Z__3ea399e7.db`
 - **notes**: skipped(no-name-match)=153 · FROM-RAW
 
 ### 2026-05-22 — SCHEMA_MIGRATION — add negative_signals
@@ -140,7 +140,7 @@ Re-classify against existing raw payloads (no FEC calls) follows.
 - **confirmed_count**: `102`
 - **probable_count**: `10`
 - **uncertain_count**: `2696`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-22T21-06-20Z__cae911f9.db`
+- **snapshot_path**: `data/snapshots/2026-05-22T21-06-20Z__cae911f9.db`
 - **notes**: skipped(no-name-match)=153 · FROM-RAW
 
 ### 2026-05-22 — DELETION — reclassify cohen-steven
@@ -149,7 +149,7 @@ Re-classify against existing raw payloads (no FEC calls) follows.
 - **reason**: smoke test of new command — should be a no-op
 - **rows_deleted_donations**: `112`
 - **rows_deleted_review_queue**: `2696` (of which 0 had resolutions)
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-22T21-18-23Z__pre-reclassify-cohen-steven.db`
+- **snapshot_path**: `data/snapshots/2026-05-22T21-18-23Z__pre-reclassify-cohen-steven.db`
 - **note**: Rows are recoverable from the snapshot above and from data/raw/cohen-steven/ payloads. Re-classification follows in the next INGESTION entry.
 
 ### 2026-05-22 — INGESTION
@@ -165,7 +165,7 @@ Re-classify against existing raw payloads (no FEC calls) follows.
 - **confirmed_count**: `102`
 - **probable_count**: `10`
 - **uncertain_count**: `2696`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-22T21-18-23Z__9fb78c4b.db`
+- **snapshot_path**: `data/snapshots/2026-05-22T21-18-23Z__9fb78c4b.db`
 - **notes**: skipped(no-name-match)=153 · FROM-RAW
 
 ### 2026-05-22 — INGESTION
@@ -181,7 +181,7 @@ Re-classify against existing raw payloads (no FEC calls) follows.
 - **confirmed_count**: `24`
 - **probable_count**: `11`
 - **uncertain_count**: `14`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-22T21-52-51Z__1f5cbf21.db`
+- **snapshot_path**: `data/snapshots/2026-05-22T21-52-51Z__1f5cbf21.db`
 - **notes**: skipped(no-name-match)=2 · states=['TX']
 
 ### 2026-05-22 — INGESTION
@@ -197,7 +197,7 @@ Re-classify against existing raw payloads (no FEC calls) follows.
 - **confirmed_count**: `4`
 - **probable_count**: `8`
 - **uncertain_count**: `218`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-22T23-05-08Z__dbcd04e1.db`
+- **snapshot_path**: `data/snapshots/2026-05-22T23-05-08Z__dbcd04e1.db`
 - **notes**: skipped(no-name-match)=912 · states=['FL', 'MA']
 
 ### 2026-05-22 — INGESTION
@@ -213,7 +213,7 @@ Re-classify against existing raw payloads (no FEC calls) follows.
 - **confirmed_count**: `278`
 - **probable_count**: `24`
 - **uncertain_count**: `6`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-22T23-41-41Z__3b72871b.db`
+- **snapshot_path**: `data/snapshots/2026-05-22T23-41-41Z__3b72871b.db`
 - **notes**: skipped(no-name-match)=153 · states=['OH']
 
 ### 2026-05-22 — INGESTION
@@ -229,7 +229,7 @@ Re-classify against existing raw payloads (no FEC calls) follows.
 - **confirmed_count**: `11`
 - **probable_count**: `1`
 - **uncertain_count**: `0`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-22T23-55-13Z__8baaf48b.db`
+- **snapshot_path**: `data/snapshots/2026-05-22T23-55-13Z__8baaf48b.db`
 - **notes**: skipped(no-name-match)=3 · states=['FL']
 
 ### 2026-05-22 — SCHEMA_MIGRATION — _norm() strips periods and commas
@@ -285,7 +285,7 @@ gets re-run since the SCHEMA_MIGRATION may pull up additional CONFIRMs).
 - **reason**: Calibration round 1 (cross-pilot): _norm() period-strip + YAML signal additions
 - **rows_deleted_donations**: `112`
 - **rows_deleted_review_queue**: `2696` (of which 0 had resolutions)
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T00-04-55Z__pre-reclassify-cohen-steven.db`
+- **snapshot_path**: `data/snapshots/2026-05-23T00-04-55Z__pre-reclassify-cohen-steven.db`
 - **note**: Rows are recoverable from the snapshot above and from data/raw/cohen-steven/ payloads. Re-classification follows in the next INGESTION entry.
 
 ### 2026-05-23 — INGESTION
@@ -301,7 +301,7 @@ gets re-run since the SCHEMA_MIGRATION may pull up additional CONFIRMs).
 - **confirmed_count**: `102`
 - **probable_count**: `10`
 - **uncertain_count**: `2696`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T00-04-55Z__2ec4b4c2.db`
+- **snapshot_path**: `data/snapshots/2026-05-23T00-04-55Z__2ec4b4c2.db`
 - **notes**: skipped(no-name-match)=153 · FROM-RAW
 
 ### 2026-05-23 — DELETION — reclassify crane-jim
@@ -310,7 +310,7 @@ gets re-run since the SCHEMA_MIGRATION may pull up additional CONFIRMs).
 - **reason**: Calibration round 1 (cross-pilot): _norm() period-strip + YAML signal additions
 - **rows_deleted_donations**: `35`
 - **rows_deleted_review_queue**: `14` (of which 0 had resolutions)
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T00-04-56Z__pre-reclassify-crane-jim.db`
+- **snapshot_path**: `data/snapshots/2026-05-23T00-04-56Z__pre-reclassify-crane-jim.db`
 - **note**: Rows are recoverable from the snapshot above and from data/raw/crane-jim/ payloads. Re-classification follows in the next INGESTION entry.
 
 ### 2026-05-23 — INGESTION
@@ -326,7 +326,7 @@ gets re-run since the SCHEMA_MIGRATION may pull up additional CONFIRMs).
 - **confirmed_count**: `33`
 - **probable_count**: `2`
 - **uncertain_count**: `14`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T00-04-56Z__7408f814.db`
+- **snapshot_path**: `data/snapshots/2026-05-23T00-04-56Z__7408f814.db`
 - **notes**: skipped(no-name-match)=2 · FROM-RAW
 
 ### 2026-05-23 — DELETION — reclassify henry-john
@@ -335,7 +335,7 @@ gets re-run since the SCHEMA_MIGRATION may pull up additional CONFIRMs).
 - **reason**: Calibration round 1 (cross-pilot): _norm() period-strip + YAML signal additions
 - **rows_deleted_donations**: `12`
 - **rows_deleted_review_queue**: `218` (of which 0 had resolutions)
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T00-04-56Z__pre-reclassify-henry-john.db`
+- **snapshot_path**: `data/snapshots/2026-05-23T00-04-56Z__pre-reclassify-henry-john.db`
 - **note**: Rows are recoverable from the snapshot above and from data/raw/henry-john/ payloads. Re-classification follows in the next INGESTION entry.
 
 ### 2026-05-23 — INGESTION
@@ -351,7 +351,7 @@ gets re-run since the SCHEMA_MIGRATION may pull up additional CONFIRMs).
 - **confirmed_count**: `11`
 - **probable_count**: `5`
 - **uncertain_count**: `214`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T00-04-56Z__a8588d7b.db`
+- **snapshot_path**: `data/snapshots/2026-05-23T00-04-56Z__a8588d7b.db`
 - **notes**: skipped(no-name-match)=912 · FROM-RAW
 
 ### 2026-05-23 — DELETION — reclassify castellini-bob
@@ -360,7 +360,7 @@ gets re-run since the SCHEMA_MIGRATION may pull up additional CONFIRMs).
 - **reason**: Calibration round 1 (cross-pilot): _norm() period-strip + YAML signal additions
 - **rows_deleted_donations**: `302`
 - **rows_deleted_review_queue**: `6` (of which 0 had resolutions)
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T00-04-56Z__pre-reclassify-castellini-bob.db`
+- **snapshot_path**: `data/snapshots/2026-05-23T00-04-56Z__pre-reclassify-castellini-bob.db`
 - **note**: Rows are recoverable from the snapshot above and from data/raw/castellini-bob/ payloads. Re-classification follows in the next INGESTION entry.
 
 ### 2026-05-23 — INGESTION
@@ -376,7 +376,7 @@ gets re-run since the SCHEMA_MIGRATION may pull up additional CONFIRMs).
 - **confirmed_count**: `279`
 - **probable_count**: `21`
 - **uncertain_count**: `8`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T00-04-56Z__01937262.db`
+- **snapshot_path**: `data/snapshots/2026-05-23T00-04-56Z__01937262.db`
 - **notes**: skipped(no-name-match)=153 · FROM-RAW
 
 ### 2026-05-23 — DELETION — reclassify steinbrenner-hal
@@ -385,7 +385,7 @@ gets re-run since the SCHEMA_MIGRATION may pull up additional CONFIRMs).
 - **reason**: Calibration round 1 (cross-pilot): _norm() period-strip + YAML signal additions
 - **rows_deleted_donations**: `12`
 - **rows_deleted_review_queue**: `0` (of which 0 had resolutions)
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T00-04-56Z__pre-reclassify-steinbrenner-hal.db`
+- **snapshot_path**: `data/snapshots/2026-05-23T00-04-56Z__pre-reclassify-steinbrenner-hal.db`
 - **note**: Rows are recoverable from the snapshot above and from data/raw/steinbrenner-hal/ payloads. Re-classification follows in the next INGESTION entry.
 
 ### 2026-05-23 — INGESTION
@@ -401,7 +401,7 @@ gets re-run since the SCHEMA_MIGRATION may pull up additional CONFIRMs).
 - **confirmed_count**: `11`
 - **probable_count**: `1`
 - **uncertain_count**: `0`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T00-04-56Z__3c5fac88.db`
+- **snapshot_path**: `data/snapshots/2026-05-23T00-04-56Z__3c5fac88.db`
 - **notes**: skipped(no-name-match)=3 · FROM-RAW
 
 ### 2026-05-23 — DELETION — reclassify cohen-steven
@@ -410,7 +410,7 @@ gets re-run since the SCHEMA_MIGRATION may pull up additional CONFIRMs).
 - **reason**: Calibration round 1 (honorific strip + structured-fields fallback)
 - **rows_deleted_donations**: `112`
 - **rows_deleted_review_queue**: `2696` (of which 0 had resolutions)
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T00-08-30Z__pre-reclassify-cohen-steven.db`
+- **snapshot_path**: `data/snapshots/2026-05-23T00-08-30Z__pre-reclassify-cohen-steven.db`
 - **note**: Rows are recoverable from the snapshot above and from data/raw/cohen-steven/ payloads. Re-classification follows in the next INGESTION entry.
 
 ### 2026-05-23 — INGESTION
@@ -426,7 +426,7 @@ gets re-run since the SCHEMA_MIGRATION may pull up additional CONFIRMs).
 - **confirmed_count**: `126`
 - **probable_count**: `10`
 - **uncertain_count**: `2785`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T00-08-30Z__5af14960.db`
+- **snapshot_path**: `data/snapshots/2026-05-23T00-08-30Z__5af14960.db`
 - **notes**: skipped(no-name-match)=40 · FROM-RAW
 
 ### 2026-05-23 — DELETION — reclassify crane-jim
@@ -435,7 +435,7 @@ gets re-run since the SCHEMA_MIGRATION may pull up additional CONFIRMs).
 - **reason**: Calibration round 1 (honorific strip + structured-fields fallback)
 - **rows_deleted_donations**: `35`
 - **rows_deleted_review_queue**: `14` (of which 0 had resolutions)
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T00-08-31Z__pre-reclassify-crane-jim.db`
+- **snapshot_path**: `data/snapshots/2026-05-23T00-08-31Z__pre-reclassify-crane-jim.db`
 - **note**: Rows are recoverable from the snapshot above and from data/raw/crane-jim/ payloads. Re-classification follows in the next INGESTION entry.
 
 ### 2026-05-23 — INGESTION
@@ -451,7 +451,7 @@ gets re-run since the SCHEMA_MIGRATION may pull up additional CONFIRMs).
 - **confirmed_count**: `34`
 - **probable_count**: `2`
 - **uncertain_count**: `14`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T00-08-31Z__6ccf16dd.db`
+- **snapshot_path**: `data/snapshots/2026-05-23T00-08-31Z__6ccf16dd.db`
 - **notes**: skipped(no-name-match)=1 · FROM-RAW
 
 ### 2026-05-23 — DELETION — reclassify henry-john
@@ -460,7 +460,7 @@ gets re-run since the SCHEMA_MIGRATION may pull up additional CONFIRMs).
 - **reason**: Calibration round 1 (honorific strip + structured-fields fallback)
 - **rows_deleted_donations**: `16`
 - **rows_deleted_review_queue**: `214` (of which 0 had resolutions)
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T00-08-31Z__pre-reclassify-henry-john.db`
+- **snapshot_path**: `data/snapshots/2026-05-23T00-08-31Z__pre-reclassify-henry-john.db`
 - **note**: Rows are recoverable from the snapshot above and from data/raw/henry-john/ payloads. Re-classification follows in the next INGESTION entry.
 
 ### 2026-05-23 — INGESTION
@@ -476,7 +476,7 @@ gets re-run since the SCHEMA_MIGRATION may pull up additional CONFIRMs).
 - **confirmed_count**: `14`
 - **probable_count**: `5`
 - **uncertain_count**: `247`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T00-08-31Z__a11f0175.db`
+- **snapshot_path**: `data/snapshots/2026-05-23T00-08-31Z__a11f0175.db`
 - **notes**: skipped(no-name-match)=876 · FROM-RAW
 
 ### 2026-05-23 — DELETION — reclassify castellini-bob
@@ -485,7 +485,7 @@ gets re-run since the SCHEMA_MIGRATION may pull up additional CONFIRMs).
 - **reason**: Calibration round 1 (honorific strip + structured-fields fallback)
 - **rows_deleted_donations**: `300`
 - **rows_deleted_review_queue**: `8` (of which 0 had resolutions)
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T00-08-31Z__pre-reclassify-castellini-bob.db`
+- **snapshot_path**: `data/snapshots/2026-05-23T00-08-31Z__pre-reclassify-castellini-bob.db`
 - **note**: Rows are recoverable from the snapshot above and from data/raw/castellini-bob/ payloads. Re-classification follows in the next INGESTION entry.
 
 ### 2026-05-23 — INGESTION
@@ -501,7 +501,7 @@ gets re-run since the SCHEMA_MIGRATION may pull up additional CONFIRMs).
 - **confirmed_count**: `405`
 - **probable_count**: `34`
 - **uncertain_count**: `14`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T00-08-31Z__622b4090.db`
+- **snapshot_path**: `data/snapshots/2026-05-23T00-08-31Z__622b4090.db`
 - **notes**: skipped(no-name-match)=8 · FROM-RAW
 
 ### 2026-05-23 — DELETION — reclassify steinbrenner-hal
@@ -510,7 +510,7 @@ gets re-run since the SCHEMA_MIGRATION may pull up additional CONFIRMs).
 - **reason**: Calibration round 1 (honorific strip + structured-fields fallback)
 - **rows_deleted_donations**: `12`
 - **rows_deleted_review_queue**: `0` (of which 0 had resolutions)
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T00-08-32Z__pre-reclassify-steinbrenner-hal.db`
+- **snapshot_path**: `data/snapshots/2026-05-23T00-08-32Z__pre-reclassify-steinbrenner-hal.db`
 - **note**: Rows are recoverable from the snapshot above and from data/raw/steinbrenner-hal/ payloads. Re-classification follows in the next INGESTION entry.
 
 ### 2026-05-23 — INGESTION
@@ -526,7 +526,7 @@ gets re-run since the SCHEMA_MIGRATION may pull up additional CONFIRMs).
 - **confirmed_count**: `13`
 - **probable_count**: `2`
 - **uncertain_count**: `0`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T00-08-32Z__241dc1d0.db`
+- **snapshot_path**: `data/snapshots/2026-05-23T00-08-32Z__241dc1d0.db`
 - **notes**: skipped(no-name-match)=0 · FROM-RAW
 
 ### 2026-05-23 — INGESTION
@@ -542,7 +542,7 @@ gets re-run since the SCHEMA_MIGRATION may pull up additional CONFIRMs).
 - **confirmed_count**: `2`
 - **probable_count**: `6`
 - **uncertain_count**: `23`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T00-32-02Z__5f8213d7.db`
+- **snapshot_path**: `data/snapshots/2026-05-23T00-32-02Z__5f8213d7.db`
 - **notes**: skipped(no-name-match)=0 · states=['MD', 'DC', 'MA']
 
 ### 2026-05-23 — INGESTION
@@ -558,7 +558,7 @@ gets re-run since the SCHEMA_MIGRATION may pull up additional CONFIRMs).
 - **confirmed_count**: `47`
 - **probable_count**: `26`
 - **uncertain_count**: `6`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T00-52-44Z__8f092363.db`
+- **snapshot_path**: `data/snapshots/2026-05-23T00-52-44Z__8f092363.db`
 - **notes**: skipped(no-name-match)=0 · states=['AZ', 'CA']
 
 ### 2026-05-23 — INGESTION
@@ -574,7 +574,7 @@ gets re-run since the SCHEMA_MIGRATION may pull up additional CONFIRMs).
 - **confirmed_count**: `26`
 - **probable_count**: `4`
 - **uncertain_count**: `28`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T01-04-12Z__dc4e5575.db`
+- **snapshot_path**: `data/snapshots/2026-05-23T01-04-12Z__dc4e5575.db`
 - **notes**: skipped(no-name-match)=0 · states=['CA', 'WI']
 
 ### 2026-05-23 — INGESTION
@@ -590,7 +590,7 @@ gets re-run since the SCHEMA_MIGRATION may pull up additional CONFIRMs).
 - **confirmed_count**: `640`
 - **probable_count**: `60`
 - **uncertain_count**: `9`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T01-09-22Z__864d1936.db`
+- **snapshot_path**: `data/snapshots/2026-05-23T01-09-22Z__864d1936.db`
 - **notes**: skipped(no-name-match)=2764 · states=['AZ']
 
 ### 2026-05-23 — INGESTION
@@ -606,7 +606,7 @@ gets re-run since the SCHEMA_MIGRATION may pull up additional CONFIRMs).
 - **confirmed_count**: `47`
 - **probable_count**: `15`
 - **uncertain_count**: `0`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T02-35-43Z__8c8cbacc.db`
+- **snapshot_path**: `data/snapshots/2026-05-23T02-35-43Z__8c8cbacc.db`
 - **notes**: skipped(no-name-match)=1 · FROM-RAW
 
 ### 2026-05-23 — INGESTION
@@ -622,7 +622,7 @@ gets re-run since the SCHEMA_MIGRATION may pull up additional CONFIRMs).
 - **confirmed_count**: `20`
 - **probable_count**: `0`
 - **uncertain_count**: `41`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T03-08-31Z__ef2a7eae.db`
+- **snapshot_path**: `data/snapshots/2026-05-23T03-08-31Z__ef2a7eae.db`
 - **notes**: skipped(no-name-match)=518 · states=['IL']
 
 ### 2026-05-23 — INGESTION
@@ -638,7 +638,7 @@ gets re-run since the SCHEMA_MIGRATION may pull up additional CONFIRMs).
 - **confirmed_count**: `189`
 - **probable_count**: `32`
 - **uncertain_count**: `124`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T03-35-34Z__a5b90844.db`
+- **snapshot_path**: `data/snapshots/2026-05-23T03-35-34Z__a5b90844.db`
 - **notes**: skipped(no-name-match)=14 · states=['OH', 'MO']
 
 ### 2026-05-23 — INGESTION
@@ -654,7 +654,7 @@ gets re-run since the SCHEMA_MIGRATION may pull up additional CONFIRMs).
 - **confirmed_count**: `257`
 - **probable_count**: `167`
 - **uncertain_count**: `0`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T03-48-43Z__ad9d887a.db`
+- **snapshot_path**: `data/snapshots/2026-05-23T03-48-43Z__ad9d887a.db`
 - **notes**: skipped(no-name-match)=1 · FROM-RAW
 
 ### 2026-05-23 — INGESTION
@@ -670,7 +670,7 @@ gets re-run since the SCHEMA_MIGRATION may pull up additional CONFIRMs).
 - **confirmed_count**: `33`
 - **probable_count**: `38`
 - **uncertain_count**: `19`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T04-37-35Z__155dc60e.db`
+- **snapshot_path**: `data/snapshots/2026-05-23T04-37-35Z__155dc60e.db`
 - **notes**: skipped(no-name-match)=10 · FROM-RAW
 
 ### 2026-05-23 — INGESTION
@@ -686,7 +686,7 @@ gets re-run since the SCHEMA_MIGRATION may pull up additional CONFIRMs).
 - **confirmed_count**: `23`
 - **probable_count**: `1`
 - **uncertain_count**: `0`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T04-37-50Z__fe188090.db`
+- **snapshot_path**: `data/snapshots/2026-05-23T04-37-50Z__fe188090.db`
 - **notes**: skipped(no-name-match)=0 · states=['WV', 'PA']
 
 ### 2026-05-23 — INGESTION
@@ -702,7 +702,7 @@ gets re-run since the SCHEMA_MIGRATION may pull up additional CONFIRMs).
 - **confirmed_count**: `147`
 - **probable_count**: `246`
 - **uncertain_count**: `1267`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T05-04-41Z__9392b8c0.db`
+- **snapshot_path**: `data/snapshots/2026-05-23T05-04-41Z__9392b8c0.db`
 - **notes**: skipped(no-name-match)=38 · FROM-RAW
 
 ### 2026-05-23 — INGESTION
@@ -718,7 +718,7 @@ gets re-run since the SCHEMA_MIGRATION may pull up additional CONFIRMs).
 - **confirmed_count**: `12`
 - **probable_count**: `0`
 - **uncertain_count**: `18`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T16-57-53Z__aae57a83.db`
+- **snapshot_path**: `data/snapshots/2026-05-23T16-57-53Z__aae57a83.db`
 - **notes**: skipped(no-name-match)=0 · states=['MI']
 
 ### 2026-05-23 — INGESTION
@@ -734,7 +734,7 @@ gets re-run since the SCHEMA_MIGRATION may pull up additional CONFIRMs).
 - **confirmed_count**: `45`
 - **probable_count**: `40`
 - **uncertain_count**: `17`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T16-57-54Z__2252e059.db`
+- **snapshot_path**: `data/snapshots/2026-05-23T16-57-54Z__2252e059.db`
 - **notes**: skipped(no-name-match)=4 · states=['CO']
 
 ### 2026-05-23 — INGESTION
@@ -750,7 +750,7 @@ gets re-run since the SCHEMA_MIGRATION may pull up additional CONFIRMs).
 - **confirmed_count**: `60`
 - **probable_count**: `7`
 - **uncertain_count**: `0`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T17-25-42Z__ba257fa3.db`
+- **snapshot_path**: `data/snapshots/2026-05-23T17-25-42Z__ba257fa3.db`
 - **notes**: skipped(no-name-match)=1 · states=['OH']
 
 ### 2026-05-23 — INGESTION
@@ -766,7 +766,7 @@ gets re-run since the SCHEMA_MIGRATION may pull up additional CONFIRMs).
 - **confirmed_count**: `62`
 - **probable_count**: `13`
 - **uncertain_count**: `163`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T17-25-40Z__a0b17326.db`
+- **snapshot_path**: `data/snapshots/2026-05-23T17-25-40Z__a0b17326.db`
 - **notes**: skipped(no-name-match)=2 · states=['MD']
 
 ### 2026-05-23 — INGESTION
@@ -782,7 +782,7 @@ gets re-run since the SCHEMA_MIGRATION may pull up additional CONFIRMs).
 - **confirmed_count**: `68`
 - **probable_count**: `19`
 - **uncertain_count**: `96`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T17-37-10Z__ad15ab15.db`
+- **snapshot_path**: `data/snapshots/2026-05-23T17-37-10Z__ad15ab15.db`
 - **notes**: skipped(no-name-match)=143 · states=['WA']
 
 ### 2026-05-23 — INGESTION
@@ -798,7 +798,7 @@ gets re-run since the SCHEMA_MIGRATION may pull up additional CONFIRMs).
 - **confirmed_count**: `51`
 - **probable_count**: `14`
 - **uncertain_count**: `131`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T17-25-37Z__d87f0012.db`
+- **snapshot_path**: `data/snapshots/2026-05-23T17-25-37Z__d87f0012.db`
 - **notes**: skipped(no-name-match)=0 · states=['FL']
 
 ### 2026-05-23 — INGESTION
@@ -814,7 +814,7 @@ gets re-run since the SCHEMA_MIGRATION may pull up additional CONFIRMs).
 - **confirmed_count**: `92`
 - **probable_count**: `14`
 - **uncertain_count**: `1`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T18-01-50Z__2f7503b4.db`
+- **snapshot_path**: `data/snapshots/2026-05-23T18-01-50Z__2f7503b4.db`
 - **notes**: skipped(no-name-match)=64 · FROM-RAW
 
 ### 2026-05-23 — INGESTION
@@ -830,7 +830,7 @@ gets re-run since the SCHEMA_MIGRATION may pull up additional CONFIRMs).
 - **confirmed_count**: `34`
 - **probable_count**: `6`
 - **uncertain_count**: `305`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T17-37-08Z__cd0c46ce.db`
+- **snapshot_path**: `data/snapshots/2026-05-23T17-37-08Z__cd0c46ce.db`
 - **notes**: skipped(no-name-match)=181 · states=['MO', 'KS', 'FL']
 
 ### 2026-05-23 — INGESTION
@@ -846,7 +846,7 @@ gets re-run since the SCHEMA_MIGRATION may pull up additional CONFIRMs).
 - **confirmed_count**: `98`
 - **probable_count**: `9`
 - **uncertain_count**: `2328`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T17-44-31Z__7a4292ae.db`
+- **snapshot_path**: `data/snapshots/2026-05-23T17-44-31Z__7a4292ae.db`
 - **notes**: skipped(no-name-match)=62 · states=['CA']
 
 ### 2026-05-23 — NOTE — Phase 2 batch 3 summary
@@ -883,7 +883,7 @@ Top calibration targets (in order):
 5. `stanton-john` — 96 UNCERTAINs. Already has pre-emptive BuzzFeed/CongressDaily negative_signal; spot-check for other doppelgangers (e.g., St. Joseph's University food-marketing professor).
 6. `monfort-dick` — 40 PROBABLEs may include real Dick records with only one signal; check whether McGregor Square / West Lot LLC or specific occupation patterns can promote some via signal additions.
 
-Family / separate-slug candidates surfaced during this batch (not added, per CLAUDE.md §1.7; queued for future batches):
+Family / separate-slug candidates surfaced during this batch (not added, per GOVERNANCE.md §1.7; queued for future batches):
 - `dolan-larry` (Paul Dolan's father, d. 2025-02-23) — historical-only.
 - `dolan-matthew` (Paul Dolan's brother, OH State Senator, 2x US Senate primary candidate) — separate donor.
 - `monfort-charlie` (Dick Monfort's brother, co-owner Rockies).
@@ -911,7 +911,7 @@ What's next per the project briefing:
 - **confirmed_count**: `1`
 - **probable_count**: `0`
 - **uncertain_count**: `0`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T18-47-44Z__1d30f6d7.db`
+- **snapshot_path**: `data/snapshots/2026-05-23T18-47-44Z__1d30f6d7.db`
 - **notes**: skipped(no-name-match)=0 · states=['CA']
 
 ### 2026-05-23 — INGESTION
@@ -927,7 +927,7 @@ What's next per the project briefing:
 - **confirmed_count**: `15`
 - **probable_count**: `0`
 - **uncertain_count**: `5`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T18-47-42Z__3a271fed.db`
+- **snapshot_path**: `data/snapshots/2026-05-23T18-47-42Z__3a271fed.db`
 - **notes**: skipped(no-name-match)=0 · states=['FL']
 
 ### 2026-05-23 — INGESTION
@@ -943,7 +943,7 @@ What's next per the project briefing:
 - **confirmed_count**: `23`
 - **probable_count**: `1`
 - **uncertain_count**: `15`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T18-48-38Z__8181a08f.db`
+- **snapshot_path**: `data/snapshots/2026-05-23T18-48-38Z__8181a08f.db`
 - **notes**: skipped(no-name-match)=24 · states=['CA']
 
 ### 2026-05-23 — INGESTION
@@ -959,7 +959,7 @@ What's next per the project briefing:
 - **confirmed_count**: `0`
 - **probable_count**: `8`
 - **uncertain_count**: `0`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T18-48-39Z__54191a41.db`
+- **snapshot_path**: `data/snapshots/2026-05-23T18-48-39Z__54191a41.db`
 - **notes**: skipped(no-name-match)=0 · states=['TX']
 
 ### 2026-05-23 — INGESTION
@@ -975,7 +975,7 @@ What's next per the project briefing:
 - **confirmed_count**: `52`
 - **probable_count**: `29`
 - **uncertain_count**: `13`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T19-08-33Z__74728f10.db`
+- **snapshot_path**: `data/snapshots/2026-05-23T19-08-33Z__74728f10.db`
 - **notes**: skipped(no-name-match)=224 · FROM-RAW
 
 ### 2026-05-23 — NOTE — Phase 2 batch 4 summary
@@ -1028,7 +1028,7 @@ FEC `/schedules/schedule_a/` timed out again — this time on `davis-ray` varian
 2. **`feliciano-jose`** — 15 UNCERTAINs likely other Jose Felicianos in CA. Once MLB approves and the deal closes, can revisit with broader Tier 2 sources from the closing.
 3. **`davis-ray`** — 224 name-skipped (other Ray Davises in TX without our signals) is expected; spot-check 29 PROBABLEs for one-signal-only patterns.
 
-#### Family / separate-slug candidates surfaced (not added, per CLAUDE.md §1.7)
+#### Family / separate-slug candidates surfaced (not added, per GOVERNANCE.md §1.7)
 
 - `jones-kwanza` (Kwanza Jones — co-leader of the Feliciano Padres bid; Princeton '93; JD Cardozo Law; independent professional / philanthropic identity).
 - `seidler-peter` (Peter Seidler, deceased 2023-11-14) — historical record only.
@@ -1057,7 +1057,7 @@ The archive now covers 30 of 30 MLB principal owners (current or recent), with t
 - **confirmed_count**: `39`
 - **probable_count**: `8`
 - **uncertain_count**: `0`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T19-32-44Z__8d5ad9a6.db`
+- **snapshot_path**: `data/snapshots/2026-05-23T19-32-44Z__8d5ad9a6.db`
 - **notes**: skipped(no-name-match)=0 · states=['GA']
 
 ### 2026-05-23 — INGESTION
@@ -1073,7 +1073,7 @@ The archive now covers 30 of 30 MLB principal owners (current or recent), with t
 - **confirmed_count**: `71`
 - **probable_count**: `24`
 - **uncertain_count**: `24`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T19-56-15Z__2986bac0.db`
+- **snapshot_path**: `data/snapshots/2026-05-23T19-56-15Z__2986bac0.db`
 - **notes**: skipped(no-name-match)=33 · states=['MN']
 
 ### 2026-05-23 — INGESTION
@@ -1089,7 +1089,7 @@ The archive now covers 30 of 30 MLB principal owners (current or recent), with t
 - **confirmed_count**: `41`
 - **probable_count**: `7`
 - **uncertain_count**: `7`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T19-59-24Z__8efb714f.db`
+- **snapshot_path**: `data/snapshots/2026-05-23T19-59-24Z__8efb714f.db`
 - **notes**: skipped(no-name-match)=2 · FROM-RAW
 
 ### 2026-05-23 — INGESTION
@@ -1105,7 +1105,7 @@ The archive now covers 30 of 30 MLB principal owners (current or recent), with t
 - **confirmed_count**: `41`
 - **probable_count**: `6`
 - **uncertain_count**: `0`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-23T19-56-16Z__c68572b4.db`
+- **snapshot_path**: `data/snapshots/2026-05-23T19-56-16Z__c68572b4.db`
 - **notes**: skipped(no-name-match)=2 · states=['OH', 'KY']
 
 ### 2026-05-23 — NOTE — Phase 2 special-case batch + owner-roster completion
@@ -1184,7 +1184,7 @@ All 30 MLB teams have at least one tracked owner equivalent:
 5. `sherman-bruce` — 131 UNCERTAINs (other Bruce Shermans in FL).
 6. `malone-john` — partial fetch coverage; needs date-windowed fetch strategy for deep history.
 
-#### Family / separate-slug candidates surfaced (still queued, not added per CLAUDE.md §1.7)
+#### Family / separate-slug candidates surfaced (still queued, not added per GOVERNANCE.md §1.7)
 
 - `johnson-charles` (Greg Johnson's father, LARGEST Giants individual shareholder ~26%, Palm Beach FL; major Republican donor).
 - `ilitch-marian` (Chris Ilitch's mother; MotorCity Casino principal; documented major political donor).
@@ -1200,7 +1200,7 @@ All 30 MLB teams have at least one tracked owner equivalent:
 
 - **Calibration sweep** — johnson-greg first (worst UNCERTAIN pile); date-windowed fetch retry for malone-john.
 - **Historical-only YAMLs** — `sternberg-stuart` and optionally `seidler-peter` modeled on angelos-john-p.yaml.
-- **Family separate-slug expansions** — case-by-case, in priority order; each requires a deliberate scope-expansion decision per CLAUDE.md §1.7.
+- **Family separate-slug expansions** — case-by-case, in priority order; each requires a deliberate scope-expansion decision per GOVERNANCE.md §1.7.
 - **Pipeline durability** — implement date-window chunking for common-name owners to address the FEC timeout pattern.
 
 ### 2026-05-25 — DELETION — reclassify rubenstein-david
@@ -1209,7 +1209,7 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **reason**: Tier-A calibration round 1: added negative_signals.employers: Georgetown University to demote 1 doppelgänger PROBABLE record (2008 Giuliani filing under 'V.P. OF FINANCIAL PLANNING & ANALYSIS')
 - **rows_deleted_donations**: `8`
 - **rows_deleted_review_queue**: `23` (of which 0 had resolutions)
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T03-46-29Z__pre-reclassify-rubenstein-david.db`
+- **snapshot_path**: `data/snapshots/2026-05-25T03-46-29Z__pre-reclassify-rubenstein-david.db`
 - **note**: Rows are recoverable from the snapshot above and from data/raw/rubenstein-david/ payloads. Re-classification follows in the next INGESTION entry.
 
 ### 2026-05-25 — INGESTION
@@ -1225,7 +1225,7 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **confirmed_count**: `2`
 - **probable_count**: `5`
 - **uncertain_count**: `24`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T03-46-29Z__3989d9b9.db`
+- **snapshot_path**: `data/snapshots/2026-05-25T03-46-29Z__3989d9b9.db`
 - **notes**: skipped(no-name-match)=0 · min_date=default (no prior ingestion) · FROM-RAW
 
 ### 2026-05-25 — DELETION — reclassify fisher-john
@@ -1234,7 +1234,7 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **reason**: Tier-A round 1: 6 negative_signals.employers (WSP/Parsons/Sky Oak/SKS/DFJ/Draper Fisher Jurvetson) to demote 4 distinct doppelgänger clusters
 - **rows_deleted_donations**: `393`
 - **rows_deleted_review_queue**: `1267` (of which 0 had resolutions)
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T03-50-05Z__pre-reclassify-fisher-john.db`
+- **snapshot_path**: `data/snapshots/2026-05-25T03-50-05Z__pre-reclassify-fisher-john.db`
 - **note**: Rows are recoverable from the snapshot above and from data/raw/fisher-john/ payloads. Re-classification follows in the next INGESTION entry.
 
 ### 2026-05-25 — INGESTION
@@ -1250,7 +1250,7 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **confirmed_count**: `138`
 - **probable_count**: `43`
 - **uncertain_count**: `1479`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T03-50-05Z__6aa2f908.db`
+- **snapshot_path**: `data/snapshots/2026-05-25T03-50-05Z__6aa2f908.db`
 - **notes**: skipped(no-name-match)=38 · min_date=default (no prior ingestion) · FROM-RAW
 
 ### 2026-05-25 — DELETION — reclassify middleton-john
@@ -1260,7 +1260,7 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **rows_deleted_donations**: `71`
 - **rows_deleted_review_queue**: `19` (of which 0 had resolutions)
 - **include_related**: `True`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T04-02-44Z__pre-reclassify-middleton-john.db`
+- **snapshot_path**: `data/snapshots/2026-05-25T04-02-44Z__pre-reclassify-middleton-john.db`
 - **note**: Rows are recoverable from the snapshot above and from data/raw/middleton-john/ payloads. Re-classification follows in the next INGESTION entry.
 
 ### 2026-05-25 — INGESTION
@@ -1276,7 +1276,7 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **confirmed_count**: `53`
 - **probable_count**: `18`
 - **uncertain_count**: `19`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T04-02-44Z__d5bea8f9.db`
+- **snapshot_path**: `data/snapshots/2026-05-25T04-02-44Z__d5bea8f9.db`
 - **notes**: skipped(no-name-match)=10 · min_date=default (no prior ingestion) · FROM-RAW
 
 ### 2026-05-25 — DELETION — reclassify middleton-john
@@ -1286,7 +1286,7 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **rows_deleted_donations**: `71`
 - **rows_deleted_review_queue**: `0` (of which 0 had resolutions)
 - **include_related**: `True`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T04-05-04Z__pre-reclassify-middleton-john.db`
+- **snapshot_path**: `data/snapshots/2026-05-25T04-05-04Z__pre-reclassify-middleton-john.db`
 - **note**: Rows are recoverable from the snapshot above and from data/raw/middleton-john/ payloads. Re-classification follows in the next INGESTION entry.
 
 ### 2026-05-25 — INGESTION
@@ -1302,7 +1302,7 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **confirmed_count**: `35`
 - **probable_count**: `23`
 - **uncertain_count**: `32`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T04-05-04Z__e74158c2.db`
+- **snapshot_path**: `data/snapshots/2026-05-25T04-05-04Z__e74158c2.db`
 - **notes**: skipped(no-name-match)=10 · min_date=default (no prior ingestion) · FROM-RAW
 
 ### 2026-05-25 — DELETION — middleton-john-p (orphaned)
@@ -1319,7 +1319,7 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **rows_deleted_donations**: `85`
 - **rows_deleted_review_queue**: `17` (of which 0 had resolutions)
 - **include_related**: `False`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T04-12-40Z__pre-reclassify-monfort-dick.db`
+- **snapshot_path**: `data/snapshots/2026-05-25T04-12-40Z__pre-reclassify-monfort-dick.db`
 - **note**: Rows are recoverable from the snapshot above and from data/raw/monfort-dick/ payloads. Re-classification follows in the next INGESTION entry.
 
 ### 2026-05-25 — INGESTION
@@ -1335,7 +1335,7 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **confirmed_count**: `60`
 - **probable_count**: `42`
 - **uncertain_count**: `0`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T04-12-40Z__0d3086ad.db`
+- **snapshot_path**: `data/snapshots/2026-05-25T04-12-40Z__0d3086ad.db`
 - **notes**: skipped(no-name-match)=4 · min_date=default (no prior ingestion) · FROM-RAW
 
 ### 2026-05-25 — DELETION — reclassify reinsdorf-jerry
@@ -1345,7 +1345,7 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **rows_deleted_donations**: `422`
 - **rows_deleted_review_queue**: `0` (of which 0 had resolutions)
 - **include_related**: `False`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T04-15-04Z__pre-reclassify-reinsdorf-jerry.db`
+- **snapshot_path**: `data/snapshots/2026-05-25T04-15-04Z__pre-reclassify-reinsdorf-jerry.db`
 - **note**: Rows are recoverable from the snapshot above and from data/raw/reinsdorf-jerry/ payloads. Re-classification follows in the next INGESTION entry.
 
 ### 2026-05-25 — INGESTION
@@ -1361,7 +1361,7 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **confirmed_count**: `422`
 - **probable_count**: `2`
 - **uncertain_count**: `0`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T04-15-04Z__81b1167d.db`
+- **snapshot_path**: `data/snapshots/2026-05-25T04-15-04Z__81b1167d.db`
 - **notes**: skipped(no-name-match)=1 · min_date=default (no prior ingestion) · FROM-RAW
 
 ### 2026-05-25 — DELETION — reclassify monfort-dick
@@ -1371,7 +1371,7 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **rows_deleted_donations**: `102`
 - **rows_deleted_review_queue**: `0` (of which 0 had resolutions)
 - **include_related**: `False`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T04-27-50Z__pre-reclassify-monfort-dick.db`
+- **snapshot_path**: `data/snapshots/2026-05-25T04-27-50Z__pre-reclassify-monfort-dick.db`
 - **note**: Rows are recoverable from the snapshot above and from data/raw/monfort-dick/ payloads. Re-classification follows in the next INGESTION entry.
 
 ### 2026-05-25 — INGESTION
@@ -1387,7 +1387,7 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **confirmed_count**: `101`
 - **probable_count**: `1`
 - **uncertain_count**: `0`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T04-27-50Z__042a1431.db`
+- **snapshot_path**: `data/snapshots/2026-05-25T04-27-50Z__042a1431.db`
 - **notes**: skipped(no-name-match)=4 · min_date=default (no prior ingestion) · FROM-RAW
 
 ### 2026-05-25 — DELETION — reclassify davis-ray
@@ -1397,7 +1397,7 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **rows_deleted_donations**: `81`
 - **rows_deleted_review_queue**: `13` (of which 0 had resolutions)
 - **include_related**: `False`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T04-32-38Z__pre-reclassify-davis-ray.db`
+- **snapshot_path**: `data/snapshots/2026-05-25T04-32-38Z__pre-reclassify-davis-ray.db`
 - **note**: Rows are recoverable from the snapshot above and from data/raw/davis-ray/ payloads. Re-classification follows in the next INGESTION entry.
 
 ### 2026-05-25 — INGESTION
@@ -1413,7 +1413,7 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **confirmed_count**: `71`
 - **probable_count**: `10`
 - **uncertain_count**: `13`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T04-32-38Z__5cebeea6.db`
+- **snapshot_path**: `data/snapshots/2026-05-25T04-32-38Z__5cebeea6.db`
 - **notes**: skipped(no-name-match)=224 · min_date=default (no prior ingestion) · FROM-RAW
 
 ### 2026-05-25 — DELETION — reclassify moreno-arte
@@ -1423,7 +1423,7 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **rows_deleted_donations**: `73`
 - **rows_deleted_review_queue**: `6` (of which 0 had resolutions)
 - **include_related**: `False`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T04-38-53Z__pre-reclassify-moreno-arte.db`
+- **snapshot_path**: `data/snapshots/2026-05-25T04-38-53Z__pre-reclassify-moreno-arte.db`
 - **note**: Rows are recoverable from the snapshot above and from data/raw/moreno-arte/ payloads. Re-classification follows in the next INGESTION entry.
 
 ### 2026-05-25 — INGESTION
@@ -1439,7 +1439,7 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **confirmed_count**: `73`
 - **probable_count**: `0`
 - **uncertain_count**: `6`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T04-38-53Z__892671fc.db`
+- **snapshot_path**: `data/snapshots/2026-05-25T04-38-53Z__892671fc.db`
 - **notes**: skipped(no-name-match)=0 · min_date=default (no prior ingestion) · FROM-RAW
 
 ### 2026-05-25 — DELETION — reclassify pohlad-tom
@@ -1449,7 +1449,7 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **rows_deleted_donations**: `95`
 - **rows_deleted_review_queue**: `24` (of which 0 had resolutions)
 - **include_related**: `False`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T04-45-43Z__pre-reclassify-pohlad-tom.db`
+- **snapshot_path**: `data/snapshots/2026-05-25T04-45-43Z__pre-reclassify-pohlad-tom.db`
 - **note**: Rows are recoverable from the snapshot above and from data/raw/pohlad-tom/ payloads. Re-classification follows in the next INGESTION entry.
 
 ### 2026-05-25 — INGESTION
@@ -1465,7 +1465,7 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **confirmed_count**: `111`
 - **probable_count**: `8`
 - **uncertain_count**: `0`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T04-45-43Z__7afb021a.db`
+- **snapshot_path**: `data/snapshots/2026-05-25T04-45-43Z__7afb021a.db`
 - **notes**: skipped(no-name-match)=33 · min_date=default (no prior ingestion) · FROM-RAW
 
 ### 2026-05-25 — DELETION — reclassify pohlad-tom
@@ -1475,7 +1475,7 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **rows_deleted_donations**: `118`
 - **rows_deleted_review_queue**: `0` (of which 0 had resolutions)
 - **include_related**: `False`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T04-46-32Z__pre-reclassify-pohlad-tom.db`
+- **snapshot_path**: `data/snapshots/2026-05-25T04-46-32Z__pre-reclassify-pohlad-tom.db`
 - **note**: Rows are recoverable from the snapshot above and from data/raw/pohlad-tom/ payloads. Re-classification follows in the next INGESTION entry.
 
 ### 2026-05-25 — INGESTION
@@ -1491,7 +1491,7 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **confirmed_count**: `118`
 - **probable_count**: `1`
 - **uncertain_count**: `0`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T04-46-32Z__a04736c9.db`
+- **snapshot_path**: `data/snapshots/2026-05-25T04-46-32Z__a04736c9.db`
 - **notes**: skipped(no-name-match)=33 · min_date=default (no prior ingestion) · FROM-RAW
 
 ### 2026-05-25 — DELETION — reclassify ricketts-tom
@@ -1501,7 +1501,7 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **rows_deleted_donations**: `62`
 - **rows_deleted_review_queue**: `0` (of which 0 had resolutions)
 - **include_related**: `False`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-02-45Z__pre-reclassify-ricketts-tom.db`
+- **snapshot_path**: `data/snapshots/2026-05-25T05-02-45Z__pre-reclassify-ricketts-tom.db`
 - **note**: Rows are recoverable from the snapshot above and from data/raw/ricketts-tom/ payloads. Re-classification follows in the next INGESTION entry.
 
 ### 2026-05-25 — INGESTION
@@ -1517,7 +1517,7 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **confirmed_count**: `61`
 - **probable_count**: `1`
 - **uncertain_count**: `0`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-02-45Z__a9d60a8c.db`
+- **snapshot_path**: `data/snapshots/2026-05-25T05-02-45Z__a9d60a8c.db`
 - **notes**: skipped(no-name-match)=1 · min_date=default (no prior ingestion) · FROM-RAW
 
 ### 2026-05-25 — DELETION — reclassify stanton-john
@@ -1527,7 +1527,7 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **rows_deleted_donations**: `87`
 - **rows_deleted_review_queue**: `96` (of which 0 had resolutions)
 - **include_related**: `False`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-07-37Z__pre-reclassify-stanton-john.db`
+- **snapshot_path**: `data/snapshots/2026-05-25T05-07-37Z__pre-reclassify-stanton-john.db`
 - **note**: Rows are recoverable from the snapshot above and from data/raw/stanton-john/ payloads. Re-classification follows in the next INGESTION entry.
 
 ### 2026-05-25 — INGESTION
@@ -1543,7 +1543,7 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **confirmed_count**: `159`
 - **probable_count**: `20`
 - **uncertain_count**: `4`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-07-37Z__a1f9711f.db`
+- **snapshot_path**: `data/snapshots/2026-05-25T05-07-37Z__a1f9711f.db`
 - **notes**: skipped(no-name-match)=143 · min_date=default (no prior ingestion) · FROM-RAW
 
 ### 2026-05-25 — DELETION — reclassify stanton-john
@@ -1553,7 +1553,7 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **rows_deleted_donations**: `179`
 - **rows_deleted_review_queue**: `4` (of which 0 had resolutions)
 - **include_related**: `False`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-08-25Z__pre-reclassify-stanton-john.db`
+- **snapshot_path**: `data/snapshots/2026-05-25T05-08-25Z__pre-reclassify-stanton-john.db`
 - **note**: Rows are recoverable from the snapshot above and from data/raw/stanton-john/ payloads. Re-classification follows in the next INGESTION entry.
 
 ### 2026-05-25 — INGESTION
@@ -1569,7 +1569,7 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **confirmed_count**: `165`
 - **probable_count**: `14`
 - **uncertain_count**: `4`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-08-25Z__d7c136ab.db`
+- **snapshot_path**: `data/snapshots/2026-05-25T05-08-25Z__d7c136ab.db`
 - **notes**: skipped(no-name-match)=143 · min_date=default (no prior ingestion) · FROM-RAW
 
 ### 2026-05-25 — DELETION — reclassify sherman-bruce
@@ -1579,7 +1579,7 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **rows_deleted_donations**: `65`
 - **rows_deleted_review_queue**: `131` (of which 0 had resolutions)
 - **include_related**: `False`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-13-44Z__pre-reclassify-sherman-bruce.db`
+- **snapshot_path**: `data/snapshots/2026-05-25T05-13-44Z__pre-reclassify-sherman-bruce.db`
 - **note**: Rows are recoverable from the snapshot above and from data/raw/sherman-bruce/ payloads. Re-classification follows in the next INGESTION entry.
 
 ### 2026-05-25 — INGESTION
@@ -1595,7 +1595,7 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **confirmed_count**: `57`
 - **probable_count**: `19`
 - **uncertain_count**: `120`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-13-44Z__a7911b4c.db`
+- **snapshot_path**: `data/snapshots/2026-05-25T05-13-44Z__a7911b4c.db`
 - **notes**: skipped(no-name-match)=0 · min_date=default (no prior ingestion) · FROM-RAW
 
 ### 2026-05-25 — DELETION — reclassify lerner-mark
@@ -1605,7 +1605,7 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **rows_deleted_donations**: `75`
 - **rows_deleted_review_queue**: `163` (of which 0 had resolutions)
 - **include_related**: `False`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-18-21Z__pre-reclassify-lerner-mark.db`
+- **snapshot_path**: `data/snapshots/2026-05-25T05-18-21Z__pre-reclassify-lerner-mark.db`
 - **note**: Rows are recoverable from the snapshot above and from data/raw/lerner-mark/ payloads. Re-classification follows in the next INGESTION entry.
 
 ### 2026-05-25 — INGESTION
@@ -1621,7 +1621,7 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **confirmed_count**: `68`
 - **probable_count**: `10`
 - **uncertain_count**: `160`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-18-21Z__20b98f28.db`
+- **snapshot_path**: `data/snapshots/2026-05-25T05-18-21Z__20b98f28.db`
 - **notes**: skipped(no-name-match)=2 · min_date=default (no prior ingestion) · FROM-RAW
 
 ### 2026-05-25 — DELETION — reclassify mcguirk-terry
@@ -1631,7 +1631,7 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **rows_deleted_donations**: `47`
 - **rows_deleted_review_queue**: `0` (of which 0 had resolutions)
 - **include_related**: `False`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-22-40Z__pre-reclassify-mcguirk-terry.db`
+- **snapshot_path**: `data/snapshots/2026-05-25T05-22-40Z__pre-reclassify-mcguirk-terry.db`
 - **note**: Rows are recoverable from the snapshot above and from data/raw/mcguirk-terry/ payloads. Re-classification follows in the next INGESTION entry.
 
 ### 2026-05-25 — INGESTION
@@ -1647,7 +1647,7 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **confirmed_count**: `43`
 - **probable_count**: `4`
 - **uncertain_count**: `0`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-22-40Z__f57b26d0.db`
+- **snapshot_path**: `data/snapshots/2026-05-25T05-22-40Z__f57b26d0.db`
 - **notes**: skipped(no-name-match)=0 · min_date=default (no prior ingestion) · FROM-RAW
 
 ### 2026-05-25 — DELETION — reclassify simpson-bob
@@ -1657,7 +1657,7 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **rows_deleted_donations**: `8`
 - **rows_deleted_review_queue**: `0` (of which 0 had resolutions)
 - **include_related**: `False`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-30-56Z__pre-reclassify-simpson-bob.db`
+- **snapshot_path**: `data/snapshots/2026-05-25T05-30-56Z__pre-reclassify-simpson-bob.db`
 - **note**: Rows are recoverable from the snapshot above and from data/raw/simpson-bob/ payloads. Re-classification follows in the next INGESTION entry.
 
 ### 2026-05-25 — INGESTION
@@ -1673,7 +1673,7 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **confirmed_count**: `8`
 - **probable_count**: `0`
 - **uncertain_count**: `0`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-30-56Z__e1a2bec9.db`
+- **snapshot_path**: `data/snapshots/2026-05-25T05-30-56Z__e1a2bec9.db`
 - **notes**: skipped(no-name-match)=0 · min_date=default (no prior ingestion) · FROM-RAW
 
 ### 2026-05-25 — DELETION — reclassify henry-john
@@ -1683,7 +1683,7 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **rows_deleted_donations**: `19`
 - **rows_deleted_review_queue**: `247` (of which 0 had resolutions)
 - **include_related**: `False`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-34-30Z__pre-reclassify-henry-john.db`
+- **snapshot_path**: `data/snapshots/2026-05-25T05-34-30Z__pre-reclassify-henry-john.db`
 - **note**: Rows are recoverable from the snapshot above and from data/raw/henry-john/ payloads. Re-classification follows in the next INGESTION entry.
 
 ### 2026-05-25 — INGESTION
@@ -1699,7 +1699,7 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **confirmed_count**: `15`
 - **probable_count**: `3`
 - **uncertain_count**: `248`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-34-30Z__93a2a0eb.db`
+- **snapshot_path**: `data/snapshots/2026-05-25T05-34-30Z__93a2a0eb.db`
 - **notes**: skipped(no-name-match)=876 · min_date=default (no prior ingestion) · FROM-RAW
 
 ### 2026-05-25 — DELETION — reclassify dewitt-bill
@@ -1709,7 +1709,7 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **rows_deleted_donations**: `221`
 - **rows_deleted_review_queue**: `124` (of which 0 had resolutions)
 - **include_related**: `False`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-40-11Z__pre-reclassify-dewitt-bill.db`
+- **snapshot_path**: `data/snapshots/2026-05-25T05-40-11Z__pre-reclassify-dewitt-bill.db`
 - **note**: Rows are recoverable from the snapshot above and from data/raw/dewitt-bill/ payloads. Re-classification follows in the next INGESTION entry.
 
 ### 2026-05-25 — INGESTION
@@ -1725,7 +1725,7 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **confirmed_count**: `235`
 - **probable_count**: `6`
 - **uncertain_count**: `104`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-40-11Z__598ab7b9.db`
+- **snapshot_path**: `data/snapshots/2026-05-25T05-40-11Z__598ab7b9.db`
 - **notes**: skipped(no-name-match)=14 · min_date=default (no prior ingestion) · FROM-RAW
 
 ### 2026-05-25 — DELETION — reclassify malone-john
@@ -1735,7 +1735,7 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **rows_deleted_donations**: `47`
 - **rows_deleted_review_queue**: `7` (of which 0 had resolutions)
 - **include_related**: `False`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-40-12Z__pre-reclassify-malone-john.db`
+- **snapshot_path**: `data/snapshots/2026-05-25T05-40-12Z__pre-reclassify-malone-john.db`
 - **note**: Rows are recoverable from the snapshot above and from data/raw/malone-john/ payloads. Re-classification follows in the next INGESTION entry.
 
 ### 2026-05-25 — INGESTION
@@ -1751,7 +1751,7 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **confirmed_count**: `48`
 - **probable_count**: `0`
 - **uncertain_count**: `7`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-40-12Z__54b0ee9a.db`
+- **snapshot_path**: `data/snapshots/2026-05-25T05-40-12Z__54b0ee9a.db`
 - **notes**: skipped(no-name-match)=2 · min_date=default (no prior ingestion) · FROM-RAW
 
 ### 2026-05-25 — DELETION — reclassify pohlad-joe
@@ -1761,7 +1761,7 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **rows_deleted_donations**: `106`
 - **rows_deleted_review_queue**: `1` (of which 0 had resolutions)
 - **include_related**: `False`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-40-12Z__pre-reclassify-pohlad-joe.db`
+- **snapshot_path**: `data/snapshots/2026-05-25T05-40-12Z__pre-reclassify-pohlad-joe.db`
 - **note**: Rows are recoverable from the snapshot above and from data/raw/pohlad-joe/ payloads. Re-classification follows in the next INGESTION entry.
 
 ### 2026-05-25 — INGESTION
@@ -1777,7 +1777,7 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **confirmed_count**: `107`
 - **probable_count**: `0`
 - **uncertain_count**: `0`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-40-12Z__9531c521.db`
+- **snapshot_path**: `data/snapshots/2026-05-25T05-40-12Z__9531c521.db`
 - **notes**: skipped(no-name-match)=64 · min_date=default (no prior ingestion) · FROM-RAW
 
 ### 2026-05-25 — DELETION — reclassify attanasio-mark
@@ -1787,7 +1787,7 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **rows_deleted_donations**: `30`
 - **rows_deleted_review_queue**: `28` (of which 0 had resolutions)
 - **include_related**: `False`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-51-33Z__pre-reclassify-attanasio-mark.db`
+- **snapshot_path**: `data/snapshots/2026-05-25T05-51-33Z__pre-reclassify-attanasio-mark.db`
 - **note**: Rows are recoverable from the snapshot above and from data/raw/attanasio-mark/ payloads. Re-classification follows in the next INGESTION entry.
 
 ### 2026-05-25 — INGESTION
@@ -1803,7 +1803,7 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **confirmed_count**: `28`
 - **probable_count**: `2`
 - **uncertain_count**: `28`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-51-33Z__c5743e13.db`
+- **snapshot_path**: `data/snapshots/2026-05-25T05-51-33Z__c5743e13.db`
 - **notes**: skipped(no-name-match)=0 · min_date=default (no prior ingestion) · FROM-RAW
 
 ### 2026-05-25 — DELETION — reclassify dolan-paul
@@ -1813,7 +1813,7 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **rows_deleted_donations**: `67`
 - **rows_deleted_review_queue**: `0` (of which 0 had resolutions)
 - **include_related**: `False`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-51-33Z__pre-reclassify-dolan-paul.db`
+- **snapshot_path**: `data/snapshots/2026-05-25T05-51-33Z__pre-reclassify-dolan-paul.db`
 - **note**: Rows are recoverable from the snapshot above and from data/raw/dolan-paul/ payloads. Re-classification follows in the next INGESTION entry.
 
 ### 2026-05-25 — INGESTION
@@ -1829,7 +1829,7 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **confirmed_count**: `67`
 - **probable_count**: `0`
 - **uncertain_count**: `0`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-51-33Z__925776a3.db`
+- **snapshot_path**: `data/snapshots/2026-05-25T05-51-33Z__925776a3.db`
 - **notes**: skipped(no-name-match)=1 · min_date=default (no prior ingestion) · FROM-RAW
 
 ### 2026-05-25 — DELETION — reclassify johnson-greg
@@ -1839,7 +1839,7 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **rows_deleted_donations**: `107`
 - **rows_deleted_review_queue**: `2328` (of which 0 had resolutions)
 - **include_related**: `False`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-51-34Z__pre-reclassify-johnson-greg.db`
+- **snapshot_path**: `data/snapshots/2026-05-25T05-51-34Z__pre-reclassify-johnson-greg.db`
 - **note**: Rows are recoverable from the snapshot above and from data/raw/johnson-greg/ payloads. Re-classification follows in the next INGESTION entry.
 
 ### 2026-05-25 — INGESTION
@@ -1855,7 +1855,7 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **confirmed_count**: `104`
 - **probable_count**: `3`
 - **uncertain_count**: `2328`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-51-34Z__01d82f45.db`
+- **snapshot_path**: `data/snapshots/2026-05-25T05-51-34Z__01d82f45.db`
 - **notes**: skipped(no-name-match)=62 · min_date=default (no prior ingestion) · FROM-RAW
 
 ### 2026-05-25 — DELETION — reclassify castellini-phil
@@ -1865,7 +1865,7 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **rows_deleted_donations**: `47`
 - **rows_deleted_review_queue**: `0` (of which 0 had resolutions)
 - **include_related**: `False`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-51-34Z__pre-reclassify-castellini-phil.db`
+- **snapshot_path**: `data/snapshots/2026-05-25T05-51-34Z__pre-reclassify-castellini-phil.db`
 - **note**: Rows are recoverable from the snapshot above and from data/raw/castellini-phil/ payloads. Re-classification follows in the next INGESTION entry.
 
 ### 2026-05-25 — INGESTION
@@ -1881,10 +1881,10 @@ All 30 MLB teams have at least one tracked owner equivalent:
 - **confirmed_count**: `47`
 - **probable_count**: `0`
 - **uncertain_count**: `0`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-25T05-51-34Z__4dee96e5.db`
+- **snapshot_path**: `data/snapshots/2026-05-25T05-51-34Z__4dee96e5.db`
 - **notes**: skipped(no-name-match)=2 · min_date=default (no prior ingestion) · FROM-RAW
 
-### 2026-05-25 — NOTE — raw-payload integrity event (CLAUDE.md §1.4)
+### 2026-05-25 — NOTE — raw-payload integrity event (GOVERNANCE.md §1.4)
 
 While triaging broken donation-card links on the dashboard, discovered that **755 of 3,618 CONFIRMED+PROBABLE donations** have a `raw_payload_path` pointing at an on-disk JSON file that does not contain their `transaction_id`. The transactions are correctly recorded in `data/master.db` — but the raw FEC payloads that produced those rows have been silently overwritten and are gone from `data/raw/`.
 
@@ -1908,7 +1908,7 @@ While triaging broken donation-card links on the dashboard, discovered that **75
 
 `scripts/fetch_fec.py:_utc_now_filename` produced raw-payload filenames with **second-level resolution** (`%Y-%m-%dT%H-%M-%SZ`). When two `_persist_raw` calls happened within the same second — common when FEC returned warm cache hits at the start of a paginate session, or when two name variants ran back-to-back — the second `write_text()` silently clobbered the first file. The DB rows extracted from the first page had already been stamped with that filename and live on as forensic references to a file that holds different content.
 
-This is a **CLAUDE.md §1.4 violation** (raw payloads must be preserved forever; the project must be reconstructible from `data/raw/` alone). For these 755 transactions, reconstruction from raw is no longer possible without a re-fetch.
+This is a **GOVERNANCE.md §1.4 violation** (raw payloads must be preserved forever; the project must be reconstructible from `data/raw/` alone). For these 755 transactions, reconstruction from raw is no longer possible without a re-fetch.
 
 #### Mitigation applied
 
@@ -1958,7 +1958,7 @@ Direct-PDF support is queued behind a data-enrichment task: extend the schema wi
 
 ### 2026-05-25 — SCHEMA_MIGRATION — v1 → v2 (committees + committee_totals)
 
-Added two tables to back the recipient-page Identity + Scale enrichment. See `CHARTER.md` Phase 1 scope addition for what these surfaces are for, and the design constraints (FEC primary-source, never editorial — CLAUDE.md §1.4 / §3 / §6).
+Added two tables to back the recipient-page Identity + Scale enrichment. See `CHARTER.md` Phase 1 scope addition for what these surfaces are for, and the design constraints (FEC primary-source, never editorial — GOVERNANCE.md §1.4 / §3 / §6).
 
 - **committees** — one row per FEC committee_id that received an attributed donation. Identity fields: designation, committee_type, party, organization_type, affiliated_committee_name, treasurer, address, filing dates, termination flag. Optional `external_link*` columns for hand-curated Wikipedia/Ballotpedia pointers (catalog/committee_external_links.yaml). Indices on `party` and `committee_type`.
 - **committee_totals** — composite PK `(committee_id, cycle)`. Per-cycle scale: receipts, disbursements, cash_on_hand_end_period, individual_contributions, other_political_committee_contributions, independent_expenditures, coverage start/end dates. Indexed on `cycle`.
@@ -1979,7 +1979,7 @@ The first full backfill across all ~925 distinct recipient committees runs after
 
 While validating the Phase 1 committee enrichment via a `workflow_dispatch` bucket-0 dry run (run #26413887828), discovered that a single FEC `Read timed out` failure in `refresh_all` would: cause `scripts/cli.py refresh` to exit 1 → cause the GHA step to fail → skip the artifact upload → block the consolidate job → throw away the 7 (of 9) successfully-fetched owners' work.
 
-Per CLAUDE.md §1.9, per-owner failures are isolated and already surface in the run summary JSON. Treating them as catastrophic in the workflow contradicts that design.
+Per GOVERNANCE.md §1.9, per-owner failures are isolated and already surface in the run summary JSON. Treating them as catastrophic in the workflow contradicts that design.
 
 Patch in this PR's `.github/workflows/refresh.yml`:
 - `Run refresh bucket` step now has `continue-on-error: true` — the bucket job's overall conclusion isn't dragged down by a per-owner timeout.
@@ -2002,7 +2002,7 @@ Initial local backfill across every recipient committee in the donations table.
 - **first-pass failures**: `6` — all six were `UNIQUE constraint failed: committee_totals.committee_id, committee_totals.cycle` on candidate committees where FEC's `/totals/` returns one row per election round per cycle (primary + general). Fixed by switching the INSERT to `INSERT OR REPLACE` keyed on `(committee_id, cycle)`. Last row per cycle survives. Re-ran the 6 affected committees clean. Regression test added in `tests/test_ingest_committees.py::TestIngestCommittee::test_duplicate_cycle_rows_dont_blow_up`.
 - **committee_totals rows written**: `5,660`
 - **snapshots**: `data/snapshots/2026-05-25T20-08-46Z__committees_ingest_2026-05-25T20-08-46Z.db` (pre-backfill) and `data/snapshots/2026-05-25T23-57-05Z__committees_ingest_2026-05-25T23-57-05Z.db` (pre-recovery).
-- **raw payloads**: persisted under `data/raw/_committees/<committee_id>/` (gitignored per usual). Project remains rebuildable from raw per CLAUDE.md §1.4.
+- **raw payloads**: persisted under `data/raw/_committees/<committee_id>/` (gitignored per usual). Project remains rebuildable from raw per GOVERNANCE.md §1.4.
 
 Resulting `mockup/data.json`: 925/925 recipients enriched, 918 committee_scale blocks (7 committees have no FEC-reported financial activity, e.g. nonfederal-only accounts).
 
@@ -3209,7 +3209,7 @@ Tests: 13 new cases across `test_fetch_filings.py` and `test_ingest_filings.py`.
 
 ### 2026-05-28 — SCHEMA_MIGRATION — v4 → v5 (committee_disbursements_by_recipient)
 
-Adds Phase 2's "Who this committee funded" data layer. For any Phase-1-enriched committee, we now record the top-N (default 200) recipients per cycle as reported by OpenFEC Schedule B `by_recipient`. See `CHARTER.md` Phase 1b sub-bullet for the active-scope statement and CLAUDE.md §6 for the editorial guardrail (names + amounts only; no cross-referencing to votes/legislation/policy outcomes — that's Phase 3).
+Adds Phase 2's "Who this committee funded" data layer. For any Phase-1-enriched committee, we now record the top-N (default 200) recipients per cycle as reported by OpenFEC Schedule B `by_recipient`. See `CHARTER.md` Phase 1b sub-bullet for the active-scope statement and GOVERNANCE.md §6 for the editorial guardrail (names + amounts only; no cross-referencing to votes/legislation/policy outcomes — that's Phase 3).
 
 #### What changed
 
@@ -3250,9 +3250,9 @@ Total suite: 209 green.
 
 - **rows_updated**: `259`
 - **sentinel**: `FEC-PRE2006-NOID`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T03-25-45Z__pre-filing-id-sentinel.db`
+- **snapshot_path**: `data/snapshots/2026-05-30T03-25-45Z__pre-filing-id-sentinel.db`
 - **sample_txns**: `['1070820110006620625', '3061920110007582202', '3061920110009108639', '2072320041040551613', '3061920110008116721']`
-- **note**: Pre-2006 paper filings with no FEC file number; the sentinel makes the gap explicit (CLAUDE.md §1.3). Rows retain raw_payload_path.
+- **note**: Pre-2006 paper filings with no FEC file number; the sentinel makes the gap explicit (GOVERNANCE.md §1.3). Rows retain raw_payload_path.
 
 ### 2026-05-30 — DELETION — reclassify castellini-bob
 
@@ -3261,7 +3261,7 @@ Total suite: 209 green.
 - **rows_deleted_donations**: `439`
 - **rows_deleted_review_queue**: `14` (of which 0 had resolutions)
 - **include_related**: `False`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T03-55-55Z__pre-reclassify-castellini-bob.db`
+- **snapshot_path**: `data/snapshots/2026-05-30T03-55-55Z__pre-reclassify-castellini-bob.db`
 - **note**: Rows are recoverable from the snapshot above and from data/raw/castellini-bob/ payloads. Re-classification follows in the next INGESTION entry.
 
 ### 2026-05-30 — INGESTION
@@ -3277,7 +3277,7 @@ Total suite: 209 green.
 - **confirmed_count**: `398`
 - **probable_count**: `31`
 - **uncertain_count**: `25`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T03-55-55Z__cb44cdd9.db`
+- **snapshot_path**: `data/snapshots/2026-05-30T03-55-55Z__cb44cdd9.db`
 - **notes**: skipped(no-name-match)=7 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
 
 ### 2026-05-30 — DELETION — reclassify castellini-phil
@@ -3287,7 +3287,7 @@ Total suite: 209 green.
 - **rows_deleted_donations**: `47`
 - **rows_deleted_review_queue**: `0` (of which 0 had resolutions)
 - **include_related**: `False`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T03-55-55Z__pre-reclassify-castellini-phil.db`
+- **snapshot_path**: `data/snapshots/2026-05-30T03-55-55Z__pre-reclassify-castellini-phil.db`
 - **note**: Rows are recoverable from the snapshot above and from data/raw/castellini-phil/ payloads. Re-classification follows in the next INGESTION entry.
 
 ### 2026-05-30 — INGESTION
@@ -3303,7 +3303,7 @@ Total suite: 209 green.
 - **confirmed_count**: `47`
 - **probable_count**: `0`
 - **uncertain_count**: `0`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T03-55-55Z__4e89f818.db`
+- **snapshot_path**: `data/snapshots/2026-05-30T03-55-55Z__4e89f818.db`
 - **notes**: skipped(no-name-match)=2 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
 
 ### 2026-05-30 — DELETION — reclassify dewitt-bill
@@ -3313,7 +3313,7 @@ Total suite: 209 green.
 - **rows_deleted_donations**: `241`
 - **rows_deleted_review_queue**: `104` (of which 0 had resolutions)
 - **include_related**: `False`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T03-55-55Z__pre-reclassify-dewitt-bill.db`
+- **snapshot_path**: `data/snapshots/2026-05-30T03-55-55Z__pre-reclassify-dewitt-bill.db`
 - **note**: Rows are recoverable from the snapshot above and from data/raw/dewitt-bill/ payloads. Re-classification follows in the next INGESTION entry.
 
 ### 2026-05-30 — INGESTION
@@ -3329,7 +3329,7 @@ Total suite: 209 green.
 - **confirmed_count**: `224`
 - **probable_count**: `6`
 - **uncertain_count**: `126`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T03-55-55Z__710d3910.db`
+- **snapshot_path**: `data/snapshots/2026-05-30T03-55-55Z__710d3910.db`
 - **notes**: skipped(no-name-match)=3 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
 
 ### 2026-05-30 — DELETION — reclassify henry-john
@@ -3339,7 +3339,7 @@ Total suite: 209 green.
 - **rows_deleted_donations**: `18`
 - **rows_deleted_review_queue**: `248` (of which 0 had resolutions)
 - **include_related**: `False`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T03-55-56Z__pre-reclassify-henry-john.db`
+- **snapshot_path**: `data/snapshots/2026-05-30T03-55-56Z__pre-reclassify-henry-john.db`
 - **note**: Rows are recoverable from the snapshot above and from data/raw/henry-john/ payloads. Re-classification follows in the next INGESTION entry.
 
 ### 2026-05-30 — INGESTION
@@ -3355,7 +3355,7 @@ Total suite: 209 green.
 - **confirmed_count**: `15`
 - **probable_count**: `3`
 - **uncertain_count**: `252`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T03-55-56Z__37a4619d.db`
+- **snapshot_path**: `data/snapshots/2026-05-30T03-55-56Z__37a4619d.db`
 - **notes**: skipped(no-name-match)=872 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
 
 ### 2026-05-30 — DELETION — reclassify ilitch-chris
@@ -3365,7 +3365,7 @@ Total suite: 209 green.
 - **rows_deleted_donations**: `12`
 - **rows_deleted_review_queue**: `18` (of which 0 had resolutions)
 - **include_related**: `False`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T03-55-56Z__pre-reclassify-ilitch-chris.db`
+- **snapshot_path**: `data/snapshots/2026-05-30T03-55-56Z__pre-reclassify-ilitch-chris.db`
 - **note**: Rows are recoverable from the snapshot above and from data/raw/ilitch-chris/ payloads. Re-classification follows in the next INGESTION entry.
 
 ### 2026-05-30 — INGESTION
@@ -3381,7 +3381,7 @@ Total suite: 209 green.
 - **confirmed_count**: `12`
 - **probable_count**: `0`
 - **uncertain_count**: `18`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T03-55-56Z__f2c83a79.db`
+- **snapshot_path**: `data/snapshots/2026-05-30T03-55-56Z__f2c83a79.db`
 - **notes**: skipped(no-name-match)=0 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
 
 ### 2026-05-30 — DELETION — reclassify johnson-greg
@@ -3391,7 +3391,7 @@ Total suite: 209 green.
 - **rows_deleted_donations**: `107`
 - **rows_deleted_review_queue**: `2328` (of which 0 had resolutions)
 - **include_related**: `False`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T03-55-56Z__pre-reclassify-johnson-greg.db`
+- **snapshot_path**: `data/snapshots/2026-05-30T03-55-56Z__pre-reclassify-johnson-greg.db`
 - **note**: Rows are recoverable from the snapshot above and from data/raw/johnson-greg/ payloads. Re-classification follows in the next INGESTION entry.
 
 ### 2026-05-30 — INGESTION
@@ -3407,7 +3407,7 @@ Total suite: 209 green.
 - **confirmed_count**: `104`
 - **probable_count**: `3`
 - **uncertain_count**: `2328`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T03-55-57Z__ee86cab1.db`
+- **snapshot_path**: `data/snapshots/2026-05-30T03-55-57Z__ee86cab1.db`
 - **notes**: skipped(no-name-match)=62 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
 
 ### 2026-05-30 — DELETION — reclassify middleton-john
@@ -3417,7 +3417,7 @@ Total suite: 209 green.
 - **rows_deleted_donations**: `58`
 - **rows_deleted_review_queue**: `32` (of which 0 had resolutions)
 - **include_related**: `False`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T03-55-57Z__pre-reclassify-middleton-john.db`
+- **snapshot_path**: `data/snapshots/2026-05-30T03-55-57Z__pre-reclassify-middleton-john.db`
 - **note**: Rows are recoverable from the snapshot above and from data/raw/middleton-john/ payloads. Re-classification follows in the next INGESTION entry.
 
 ### 2026-05-30 — INGESTION
@@ -3433,7 +3433,7 @@ Total suite: 209 green.
 - **confirmed_count**: `33`
 - **probable_count**: `23`
 - **uncertain_count**: `44`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T03-55-57Z__560a894f.db`
+- **snapshot_path**: `data/snapshots/2026-05-30T03-55-57Z__560a894f.db`
 - **notes**: skipped(no-name-match)=0 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
 
 ### 2026-05-30 — DELETION — reclassify rogers-edward-iii
@@ -3443,7 +3443,7 @@ Total suite: 209 green.
 - **rows_deleted_donations**: `0`
 - **rows_deleted_review_queue**: `0` (of which 0 had resolutions)
 - **include_related**: `False`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T03-55-57Z__pre-reclassify-rogers-edward-iii.db`
+- **snapshot_path**: `data/snapshots/2026-05-30T03-55-57Z__pre-reclassify-rogers-edward-iii.db`
 - **note**: Rows are recoverable from the snapshot above and from data/raw/rogers-edward-iii/ payloads. Re-classification follows in the next INGESTION entry.
 
 ### 2026-05-30 — INGESTION
@@ -3459,7 +3459,7 @@ Total suite: 209 green.
 - **confirmed_count**: `0`
 - **probable_count**: `0`
 - **uncertain_count**: `0`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T03-55-57Z__57ccf096.db`
+- **snapshot_path**: `data/snapshots/2026-05-30T03-55-57Z__57ccf096.db`
 - **notes**: skipped(no-name-match)=0 · min_date=default (no prior ingestion) · FROM-RAW
 
 ### 2026-05-30 — DELETION — reclassify seidler-john
@@ -3469,7 +3469,7 @@ Total suite: 209 green.
 - **rows_deleted_donations**: `1`
 - **rows_deleted_review_queue**: `0` (of which 0 had resolutions)
 - **include_related**: `False`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T03-55-57Z__pre-reclassify-seidler-john.db`
+- **snapshot_path**: `data/snapshots/2026-05-30T03-55-57Z__pre-reclassify-seidler-john.db`
 - **note**: Rows are recoverable from the snapshot above and from data/raw/seidler-john/ payloads. Re-classification follows in the next INGESTION entry.
 
 ### 2026-05-30 — INGESTION
@@ -3485,7 +3485,7 @@ Total suite: 209 green.
 - **confirmed_count**: `1`
 - **probable_count**: `0`
 - **uncertain_count**: `0`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T03-55-58Z__4094534e.db`
+- **snapshot_path**: `data/snapshots/2026-05-30T03-55-58Z__4094534e.db`
 - **notes**: skipped(no-name-match)=0 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
 
 ### 2026-05-30 — DELETION — reclassify sherman-john
@@ -3495,7 +3495,7 @@ Total suite: 209 green.
 - **rows_deleted_donations**: `40`
 - **rows_deleted_review_queue**: `305` (of which 0 had resolutions)
 - **include_related**: `False`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T03-55-58Z__pre-reclassify-sherman-john.db`
+- **snapshot_path**: `data/snapshots/2026-05-30T03-55-58Z__pre-reclassify-sherman-john.db`
 - **note**: Rows are recoverable from the snapshot above and from data/raw/sherman-john/ payloads. Re-classification follows in the next INGESTION entry.
 
 ### 2026-05-30 — INGESTION
@@ -3511,7 +3511,7 @@ Total suite: 209 green.
 - **confirmed_count**: `34`
 - **probable_count**: `6`
 - **uncertain_count**: `305`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T03-55-58Z__23e1d179.db`
+- **snapshot_path**: `data/snapshots/2026-05-30T03-55-58Z__23e1d179.db`
 - **notes**: skipped(no-name-match)=181 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
 
 ### 2026-05-30 — DELETION — reclassify steinbrenner-hal
@@ -3521,7 +3521,7 @@ Total suite: 209 green.
 - **rows_deleted_donations**: `15`
 - **rows_deleted_review_queue**: `0` (of which 0 had resolutions)
 - **include_related**: `False`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T03-55-58Z__pre-reclassify-steinbrenner-hal.db`
+- **snapshot_path**: `data/snapshots/2026-05-30T03-55-58Z__pre-reclassify-steinbrenner-hal.db`
 - **note**: Rows are recoverable from the snapshot above and from data/raw/steinbrenner-hal/ payloads. Re-classification follows in the next INGESTION entry.
 
 ### 2026-05-30 — INGESTION
@@ -3537,5 +3537,13 @@ Total suite: 209 green.
 - **confirmed_count**: `13`
 - **probable_count**: `2`
 - **uncertain_count**: `0`
-- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T03-55-58Z__b0906593.db`
+- **snapshot_path**: `data/snapshots/2026-05-30T03-55-58Z__b0906593.db`
 - **notes**: skipped(no-name-match)=0 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-05-30 — NOTE — B2b re-fetch attempt for raw-blocked owners (no change applied)
+
+- **owners**: angelos-john-p, malone-john, fisher-john, kendrick-ken
+- **goal**: restore missing raw payloads from FEC, then reclassify under the H4 suffix / M2 city+state fixes (the four owners the raw-coverage guard blocked from the B2a pass).
+- **outcome**: NOT APPLIED. After a full FEC re-fetch, attributed rows still lacked raw on disk (angelos: 48 missing; fisher: 310; kendrick: 1; malone: fetch timed out). FEC's current API no longer returns the specific historical transactions these rows were sourced from. `reclassify` was skipped for all four — the raw-coverage guard held, not `--force`, so no attributed rows were dropped.
+- **data effect**: none. The partial re-fetch writes were rolled back to the pre-B2b committed state; these four owners remain on their prior classification. A minority of raw payloads were restored to disk and are retained for future re-verification.
+- **implication**: these four cannot be cleanly reclassified until their raw is otherwise recovered. Of the four, only kendrick-ken has suffix name-variants (the only one whose classification the H4 fix would change); the others are non-suffix / non-cross-state, so the current classifier yields the same result as before.

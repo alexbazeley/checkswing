@@ -3,7 +3,7 @@
 # ESPN sale announcement, Sportico long-form. See /tmp/crane-jim-research.md for
 # full source trail (kept as session-local note, not version-controlled).
 #
-# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+# Read OWNER_SCHEMA.md before editing. Read GOVERNANCE.md §1.7 before adding entities.
 
 slug: crane-jim
 name: James R. Crane
@@ -72,13 +72,13 @@ strong_signals:
 
 related_entities: []
 # Documented future candidates (do NOT add without user approval per
-# CLAUDE.md §1.7):
+# GOVERNANCE.md §1.7):
 #   - spouse: Whitney Wheeler Crane (m. 2017) — PaperCity Magazine wedding coverage
 #   - child: Jared Crane — CEO of Crane Worldwide Logistics, VP Crane Family
 #     Foundation (craneww.com leadership + ProPublica nonprofits)
 #   - child: Krystal Crane Thompson — VP Crane Family Foundation (ProPublica)
 #   - Crane Family Foundation (EIN 47-3980494) — OUT OF SCOPE for FEC archive
-#     (IRS 990 territory per CLAUDE.md §6).
+#     (IRS 990 territory per GOVERNANCE.md §6).
 
 sources:
 - description: "Crane Worldwide Logistics — Jim Crane executive profile (corporate site)"
@@ -137,7 +137,7 @@ change_log:
     announcement, Sportico 2022 long-form. Initial signal set is conservative;
     first ingestion + calibration will validate (esp. whether ZIP 77006 is
     consistently Crane's filing ZIP and warrants promotion to strong_signals).
-  by: "claude-code-research (orchestrated by alex)"
+  by: "automated research (maintainer-directed)"
   references:
   - "/tmp/crane-jim-research.md (session-local research file)"
 - date: 2026-05-22
@@ -149,7 +149,7 @@ change_log:
     President / DNC — these were almost certainly real Crane filings stuck at
     PROBABLE on city_state alone. The addition promotes them to CONFIRMED.
     Approved by alex.
-  by: "claude-code-session (calibration round 1)"
+  by: "automated pipeline (calibration round 1)"
 - date: 2026-05-25
   change: |
     Tier-C audit pass — no signal changes applied. 34 CONFIRMED / 2
@@ -159,7 +159,7 @@ change_log:
     Tier 2 as a Crane vehicle — possibly subsidiary of Crane Worldwide
     Logistics but conservatively left PROBABLE). Signal review date
     advanced.
-  by: "claude-code-session (PR 4 Tier C light pass)"
+  by: "automated pipeline (PR 4 Tier C light pass)"
 
 audit:
   created: 2026-05-22

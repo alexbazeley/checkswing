@@ -9,7 +9,7 @@
 # `castellini-bob` (FORMER; tenure_end_date 2026-02-12 per Castellini
 # precedent — Bob's full giving history captured).
 #
-# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+# Read OWNER_SCHEMA.md before editing. Read GOVERNANCE.md §1.7 before adding entities.
 
 slug: castellini-phil
 name: Phillip J. Castellini
@@ -88,7 +88,7 @@ negative_signals:
   - "Wells Fargo Advisors"
 
 related_entities: []
-# Future candidates (do NOT add without user approval per CLAUDE.md §1.7):
+# Future candidates (do NOT add without user approval per GOVERNANCE.md §1.7):
 #   - spouse: Britt Castellini. DOCUMENTED politically active (co-hosted
 #     Oct 2022 KY-04 Democratic fundraiser per research). Separate-slug
 #     candidate `castellini-britt` if added — requires deliberate scope
@@ -149,7 +149,7 @@ notes: |
 
   SPOUSE FLAG: Britt Castellini is publicly documented as politically
   active (co-hosted Oct 2022 KY-04 Democratic fundraiser per research).
-  She is NOT added as related_entity here per CLAUDE.md §1.7 — orchestrator-
+  She is NOT added as related_entity here per GOVERNANCE.md §1.7 — orchestrator-
   level decision needed before adding as `castellini-britt` slug.
 
   NEEDS-CONFIRMATION: Phil's birth date, children's names, sibling names,
@@ -168,7 +168,7 @@ change_log:
     Castellini Company. Pre-emptive negative_signals mirroring Bob's
     financial-advisor doppelganger blocks. Spouse Britt flagged for
     future scope decision (politically active per Tier 2).
-  by: "claude-code-research (orchestrated by alex)"
+  by: "automated research (maintainer-directed)"
   references:
   - "/tmp/castellini-phil-research.md (session-local research file)"
 - date: 2026-05-25
@@ -184,7 +184,7 @@ change_log:
 
     Pre-cal: 41 CONFIRMED / 6 PROBABLE / 0 UNCERTAIN-open. P/C 0.15.
     Predicted post-cal: ~47 CONFIRMED / ~0 PROBABLE. P/C ~0.0.
-  by: "claude-code-session (PR 4 Tier C light pass)"
+  by: "automated pipeline (PR 4 Tier C light pass)"
 
 audit:
   created: 2026-05-23

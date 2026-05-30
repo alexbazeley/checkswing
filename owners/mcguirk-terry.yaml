@@ -13,7 +13,7 @@
 # Stock (~44% of company voting power) on director elections and other
 # routine matters, plus a right of first refusal on Malone's share transfers.
 #
-# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+# Read OWNER_SCHEMA.md before editing. Read GOVERNANCE.md §1.7 before adding entities.
 
 slug: mcguirk-terry
 name: Terence F. McGuirk
@@ -80,7 +80,7 @@ strong_signals:
   # uniquely-McGuirk pattern emerges.
 
 related_entities: []
-# Future candidates (do NOT add without user approval per CLAUDE.md §1.7):
+# Future candidates (do NOT add without user approval per GOVERNANCE.md §1.7):
 #   - spouse: Nancy McGuirk. Atlanta-based; no documented donor profile.
 #   - children: 4 children per profiles; names not publicly enumerated.
 
@@ -156,7 +156,7 @@ change_log:
     Braves under Liberty Media). strong_signals empty at creation —
     calibrate after first ingestion. Replaces the original
     `liberty-media-group` registry placeholder.
-  by: "claude-code-research (orchestrated by alex)"
+  by: "automated research (maintainer-directed)"
   references:
   - "/tmp/braves-ownership-research.md (session-local research file)"
 - date: 2026-05-25
@@ -191,7 +191,7 @@ change_log:
     Pre-cal: 39 CONFIRMED / 8 PROBABLE / 0 UNCERTAIN-open. P/C 0.21.
     Predicted post-cal: ~43 CONFIRMED / ~4 PROBABLE / 0 UNCERTAIN.
     P/C ~0.09.
-  by: "claude-code-session (PR 4 Tier B, approved by alex)"
+  by: "automated pipeline (PR 4 Tier B, maintainer-approved)"
   references:
   - "data/master.db pre-calibration: 39 CONFIRMED / 8 PROBABLE / 0 UNCERTAIN-open"
 

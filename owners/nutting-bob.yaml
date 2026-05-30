@@ -9,7 +9,7 @@
 # employer collision risk — name_variants strictly exclude bare "Nutting"
 # and first-initial-only forms.
 #
-# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+# Read OWNER_SCHEMA.md before editing. Read GOVERNANCE.md §1.7 before adding entities.
 
 slug: nutting-bob
 name: Robert Nutting
@@ -61,7 +61,7 @@ strong_signals:
   zip_codes: []
 
 related_entities: []
-# Documented future candidates (do NOT add without approval per CLAUDE.md §1.7):
+# Documented future candidates (do NOT add without approval per GOVERNANCE.md §1.7):
 #   - Father G. Ogden Nutting (deceased 2023-08-25) — was Pirates majority
 #     owner pre-2007; separate slug if pre-tenure backfill desired
 #   - Brother William "Bill" Nutting (VP Ogden Newspapers) — separate slug
@@ -127,7 +127,7 @@ change_log:
     first-initial-only forms) to keep father Ogden, brother Bill,
     niece Cameron out. Pre-2007 records of "Ogden Nutting" → father,
     separate slug if added.
-  by: "claude-code-research (orchestrated by alex)"
+  by: "automated research (maintainer-directed)"
   references:
   - "/tmp/nutting-bob-research.md (session-local)"
 - date: 2026-05-25
@@ -140,7 +140,7 @@ change_log:
     (brother Bill / niece Cameron at same Ogden Newspapers in
     Wheeling) is non-trivial — name_variants firewall holds (Bob =
     Robert specifically). Signal review date advanced.
-  by: "claude-code-session (PR 4 Tier C light pass)"
+  by: "automated pipeline (PR 4 Tier C light pass)"
 
 audit:
   created: 2026-05-22

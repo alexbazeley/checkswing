@@ -3,7 +3,7 @@
 # Reynolds, DeWitt & Co. (Cincinnati). Active son Bill DeWitt III is current
 # Cardinals team president — separate person, separate slug if added.
 #
-# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+# Read OWNER_SCHEMA.md before editing. Read GOVERNANCE.md §1.7 before adding entities.
 
 slug: dewitt-bill
 name: William O. DeWitt Jr.
@@ -148,7 +148,7 @@ change_log:
     sometimes cited).
 
     Son Bill DeWitt III flagged as critical separate-slug candidate.
-  by: "claude-code-research (orchestrated by alex)"
+  by: "automated research (maintainer-directed)"
   references:
   - "/tmp/dewitt-bill-research.md (session-local)"
 - date: 2026-05-25
@@ -173,7 +173,7 @@ change_log:
     Pre-cal: 189 CONFIRMED / 32 PROBABLE / 124 UNCERTAIN-open. P/C 0.17.
     Predicted post-cal: ~210 CONFIRMED / ~10 PROBABLE / ~104 UNCERTAIN.
     P/C ~0.05.
-  by: "claude-code-session (PR 4 Tier B, approved by alex batch)"
+  by: "automated pipeline (PR 4 Tier B, maintainer-approved batch)"
   references:
   - "data/master.db pre-calibration: 189 CONFIRMED / 32 PROBABLE / 124 UNCERTAIN-open"
 

@@ -5,7 +5,7 @@
 # Finders Homes (NYSE: DFH), the publicly traded Jacksonville-based homebuilder
 # he founded in 2008.
 #
-# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+# Read OWNER_SCHEMA.md before editing. Read GOVERNANCE.md §1.7 before adding entities.
 
 slug: zalupski-patrick
 name: Patrick O. Zalupski
@@ -55,7 +55,7 @@ strong_signals:
   zip_codes: []
 
 related_entities: []
-# Future candidates (do NOT add without user approval per CLAUDE.md §1.7):
+# Future candidates (do NOT add without user approval per GOVERNANCE.md §1.7):
 #   - spouse: Leah Zalupski. Joint deed-holder on property transactions
 #     (Jacksonville Daily Record 2025-12-12). No documented donor profile.
 #   - children: 3 children reported; names not disclosed.
@@ -130,7 +130,7 @@ change_log:
     Strong_signals = Dream Finders Homes / DFH / DF Capital. Replaces
     sternberg-stuart as Rays principal owner per project policy (NOT
     outgoing owners after sale closes).
-  by: "claude-code-research (orchestrated by alex)"
+  by: "automated research (maintainer-directed)"
   references:
   - "/tmp/zalupski-patrick-research.md (session-local research file)"
 - date: 2026-05-25
@@ -139,7 +139,7 @@ change_log:
     PROBABLE / 0 UNCERTAIN-open. Signal block calibrated correctly via
     Dream Finders Homes / DFH / DF Capital strong-signal employers.
     Signal review date advanced.
-  by: "claude-code-session (PR 4 Tier C light pass)"
+  by: "automated pipeline (PR 4 Tier C light pass)"
 
 audit:
   created: 2026-05-23

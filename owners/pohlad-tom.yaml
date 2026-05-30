@@ -9,7 +9,7 @@
 # Joe Pohlad tracked separately under `pohlad-joe` (FORMER; tenure_end_date
 # 2025-12-17 per Castellini precedent).
 #
-# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+# Read OWNER_SCHEMA.md before editing. Read GOVERNANCE.md §1.7 before adding entities.
 # HIGH family-collision risk: multiple Pohlad relatives are business-active
 # at the same employer ("Pohlad Companies") in the same Twin Cities metro.
 # Name_variants strictly require "Tom" or "Thomas" — bare "T. Pohlad" or
@@ -78,7 +78,7 @@ strong_signals:
   zip_codes: []
 
 related_entities: []
-# Future candidates (do NOT add without user approval per CLAUDE.md §1.7):
+# Future candidates (do NOT add without user approval per GOVERNANCE.md §1.7):
 #   - spouse: Lindsay Pohlad. Three minor sons: Jack, Luke, Alex.
 #   - sibling: Joe Pohlad — FORMER Twins exec chair (tracked under
 #     pohlad-joe; Castellini-precedent historical with full giving captured).
@@ -155,7 +155,7 @@ change_log:
     Pohlad's tenure_end_date). Strong_signals: PaR Systems + Carousel
     Motor Group (both tenure-specific uniquely-identifying small private
     employers). HIGH family-collision risk noted; strict name_variants.
-  by: "claude-code-research (orchestrated by alex)"
+  by: "automated research (maintainer-directed)"
   references:
   - "/tmp/pohlad-tom-research.md (session-local research file)"
 - date: 2026-05-25
@@ -203,7 +203,7 @@ change_log:
     Predicted post-cal: ~119 CONFIRMED / ~0 PROBABLE / ~0 UNCERTAIN.
     P/C ~0.0. CONFIRMED count goes up substantially — no >5% drop
     alarm risk; reverse swing should be celebrated.
-  by: "claude-code-session (PR 4 Tier B, approved by alex full-sweep)"
+  by: "automated pipeline (PR 4 Tier B, maintainer-approved full-sweep)"
   references:
   - "data/master.db pre-calibration: 71 CONFIRMED / 24 PROBABLE / 24 UNCERTAIN-open"
 

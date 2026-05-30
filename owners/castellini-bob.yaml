@@ -4,7 +4,7 @@
 # 2026-02-12 as the tenure_end_date and continue tracking Bob's giving across
 # the full 2000-onwards window. Phil is a candidate for his own future YAML.
 #
-# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+# Read OWNER_SCHEMA.md before editing. Read GOVERNANCE.md §1.7 before adding entities.
 
 slug: castellini-bob
 name: Robert H. Castellini
@@ -85,7 +85,7 @@ negative_signals:
   - "Wells Fargo Advisors"
 
 related_entities: []
-# Future candidates (do NOT add without user approval per CLAUDE.md §1.7):
+# Future candidates (do NOT add without user approval per GOVERNANCE.md §1.7):
 #   - spouse: Susie Castellini (Chamber bio mentions her; no donation history
 #     research yet)
 #   - child: Phil Castellini — now Reds principal (took control 2026-02-12).
@@ -146,7 +146,7 @@ change_log:
     control-transfer, theSnack.net produce trade. tenure_end_date =
     2026-02-12 per user direction (control transferred to Phil; we keep
     tracking Bob's federal giving regardless).
-  by: "claude-code-research (orchestrated by alex)"
+  by: "automated research (maintainer-directed)"
   references:
   - "/tmp/castellini-bob-research.md (session-local research file)"
 - date: 2026-05-22
@@ -167,7 +167,7 @@ change_log:
         'S' on some; same first/last as our Bob) had been polluting PROBABLE.
 
     Approved by alex.
-  by: "claude-code-session (calibration round 1)"
+  by: "automated pipeline (calibration round 1)"
 - date: 2026-05-25
   change: |
     Tier-B audit pass — no signal changes applied. P/C 0.08 is already
@@ -187,12 +187,12 @@ change_log:
     some records correctly UNCERTAIN via existing negative_signals, but
     Wells Fargo (no Advisors suffix) records bypass the negative-employer
     check. Resolving cleanly requires a proper related_entities split
-    with Bob Jr as a separate slug (CLAUDE.md §1.7 — orchestrator-only
+    with Bob Jr as a separate slug (GOVERNANCE.md §1.7 — orchestrator-only
     promotion).
 
     Leaving 34 PROBABLE as honest one-signal classification. Signal
     review date advanced.
-  by: "claude-code-session (PR 4 Tier B audit pass)"
+  by: "automated pipeline (PR 4 Tier B audit pass)"
 
 audit:
   created: 2026-05-22

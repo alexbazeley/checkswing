@@ -9,7 +9,7 @@
 # Washington Bureau Chief; DC/New Orleans-based) is a distinct person and is
 # blocked via negative_signals.employers.
 #
-# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+# Read OWNER_SCHEMA.md before editing. Read GOVERNANCE.md §1.7 before adding entities.
 
 slug: stanton-john
 name: John W. Stanton
@@ -90,14 +90,14 @@ strong_signals:
 negative_signals:
   # John Stanton (journalist, formerly BuzzFeed Washington Bureau Chief;
   # DC/New Orleans-based). Same first/last name; distinct person. Pre-emptive
-  # block per CLAUDE.md §1.7 (well-known doppelganger).
+  # block per GOVERNANCE.md §1.7 (well-known doppelganger).
   employers:
   - "BuzzFeed"
   - "BuzzFeed News"
   - "CongressDaily"
 
 related_entities: []
-# Future candidates (do NOT add without user approval per CLAUDE.md §1.7):
+# Future candidates (do NOT add without user approval per GOVERNANCE.md §1.7):
 #   - spouse: Theresa E. ("Terry") Gillespie — co-founder/managing director
 #     of Trilogy International Partners; former CFO/Vice Chairman of
 #     Western Wireless. Likely own donor profile.
@@ -164,7 +164,7 @@ change_log:
     Entertainment + Trilogy entities + Western Wireless + VoiceStream
     Wireless. Pre-emptive negative_signals.employers = BuzzFeed / BuzzFeed
     News / CongressDaily (journalist John Stanton, DC/New Orleans).
-  by: "claude-code-research (orchestrated by alex)"
+  by: "automated research (maintainer-directed)"
   references:
   - "/tmp/stanton-john-research.md (session-local research file)"
 - date: 2026-05-25
@@ -207,7 +207,7 @@ change_log:
     Predicted post-cal: ~150 CONFIRMED / ~5 PROBABLE / 4 UNCERTAIN.
     P/C ~0.03. CONFIRMED count goes up substantially — no >5% drop
     alarm risk.
-  by: "claude-code-session (PR 4 Tier B, approved by alex)"
+  by: "automated pipeline (PR 4 Tier B, maintainer-approved)"
   references:
   - "data/master.db pre-calibration: 68 CONFIRMED / 19 PROBABLE / 96 UNCERTAIN-open"
 

@@ -8,7 +8,7 @@
 # Steinbrenner) file their own donations separately and are NOT tracked under
 # this slug — see notes for the anticipated family-collision audit work.
 #
-# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+# Read OWNER_SCHEMA.md before editing. Read GOVERNANCE.md §1.7 before adding entities.
 
 slug: steinbrenner-hal
 name: Harold Z. Steinbrenner
@@ -156,7 +156,7 @@ change_log:
     residence. Tampa-only / FL-only at creation. strong_signals empty
     pending calibration. Name variants explicitly exclude "Steinbrenner"
     alone and "H. Steinbrenner" to keep sibling/parent records out.
-  by: "claude-code-research (orchestrated by alex)"
+  by: "automated research (maintainer-directed)"
   references:
   - "/tmp/steinbrenner-hal-research.md (session-local research file)"
 - date: 2026-05-25
@@ -170,7 +170,7 @@ change_log:
     Steinbrenner Family Foundation are his documented vehicles).
     Conservatively left PROBABLE pending Tier 2 research. Signal review
     date advanced.
-  by: "claude-code-session (PR 4 Tier C light pass)"
+  by: "automated pipeline (PR 4 Tier C light pass)"
 
 audit:
   created: 2026-05-22

@@ -3,7 +3,7 @@
 # Dodgers from Frank McCourt). CEO of Guggenheim Partners; also recently
 # acquired controlling stake in the LA Lakers (Oct 2025) — NBA, separate scope.
 #
-# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+# Read OWNER_SCHEMA.md before editing. Read GOVERNANCE.md §1.7 before adding entities.
 
 slug: walter-mark
 name: Mark R. Walter
@@ -112,7 +112,7 @@ change_log:
 
     strong_signals.employers initialized with TWG Global / TWG Global
     Holdings (Walter's family holding company, uniquely his).
-  by: "claude-code-research (orchestrated by alex)"
+  by: "automated research (maintainer-directed)"
   references:
   - "/tmp/walter-mark-research.md (session-local)"
 - date: 2026-05-25
@@ -121,7 +121,7 @@ change_log:
     PROBABLE / 0 UNCERTAIN-open. Signal block calibrated correctly via
     TWG Global / TWG Global Holdings strong-signal employers. Signal
     review date advanced.
-  by: "claude-code-session (PR 4 Tier C light pass)"
+  by: "automated pipeline (PR 4 Tier C light pass)"
 
 audit:
   created: 2026-05-22

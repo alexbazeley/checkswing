@@ -3,7 +3,7 @@
 # Mexican-American principal owner in major US pro sports.
 # Verified current as of May 2026 — pulled sale exploration Jan 23, 2023.
 #
-# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+# Read OWNER_SCHEMA.md before editing. Read GOVERNANCE.md §1.7 before adding entities.
 
 slug: moreno-arte
 name: Arturo R. Moreno
@@ -110,7 +110,7 @@ notes: |
   use Outdoor Systems as employer; post-2003 likely team-name variants.
 
   Foundations (Moreno Family Foundation, Angels Baseball Foundation) are
-  explicitly out of scope per CLAUDE.md §6 (IRS 990s = separate project).
+  explicitly out of scope per GOVERNANCE.md §6 (IRS 990s = separate project).
 
   Doppelgänger landscape (audit 2026-05-25): UNCERTAIN-open records are
   distinct Morenos in different metros — Bonita CA (R.J. Donovan
@@ -132,7 +132,7 @@ change_log:
     states=[AZ, CA] (CA secondary for Angels-HQ filings).
     strong_signals.employers includes SRB Management and Angels Baseball LP;
     both are conservative-but-promotable per Cohen precedent.
-  by: "claude-code-research (orchestrated by alex)"
+  by: "automated research (maintainer-directed)"
   references:
   - "/tmp/moreno-arte-research.md (session-local research file)"
 - date: 2026-05-25
@@ -176,7 +176,7 @@ change_log:
     Pre-cal: 47 CONFIRMED / 26 PROBABLE / 6 UNCERTAIN-open. P/C 0.55.
     Predicted post-cal: ~73 CONFIRMED / ~0 PROBABLE / 6 UNCERTAIN.
     P/C ~0.0. CONFIRMED count goes up — no >5% drop alarm risk.
-  by: "claude-code-session (PR 4 Tier B, approved by alex)"
+  by: "automated pipeline (PR 4 Tier B, maintainer-approved)"
   references:
   - "data/master.db pre-calibration: 47 CONFIRMED / 26 PROBABLE / 6 UNCERTAIN-open"
 

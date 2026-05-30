@@ -28,7 +28,7 @@
 # members surface), re-activate by changing status to pilot and running
 # ingestion.
 #
-# Read OWNER_SCHEMA.md before editing. Read CLAUDE.md §1.7 before adding entities.
+# Read OWNER_SCHEMA.md before editing. Read GOVERNANCE.md §1.7 before adding entities.
 
 slug: rogers-edward-iii
 name: Edward S. Rogers III
@@ -94,7 +94,7 @@ negative_signals:
     - "Barbour Griffith"
 
 related_entities: []
-# Future candidates (do NOT add without user approval per CLAUDE.md §1.7):
+# Future candidates (do NOT add without user approval per GOVERNANCE.md §1.7):
 #   - kind: business_entity — Rogers Communications Inc. (Canadian
 #     publicly-traded parent; no FEC PAC).
 #   - kind: business_entity — Rogers Control Trust (Canadian private trust;
@@ -195,7 +195,7 @@ change_log:
       Pre-emptive negative_signals.employers for BGR Group / Barbour
       Griffith Rogers (DC lobbyist Ed Rogers doppelganger). Full signal
       block populated for future re-activation if circumstances change.
-    by: "claude-code-research (orchestrated by alex)"
+    by: "automated research (maintainer-directed)"
     references:
       - "/tmp/bluejays-ownership-research.md (session-local research file)"
 
