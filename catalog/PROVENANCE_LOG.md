@@ -3840,3 +3840,13 @@ Total suite: 209 green.
 - **open_queue_remaining**: `27`
 - **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T18-25-31Z__pre-bulk-discard.db`
 - **note**: Standing DISCARDED verdicts recorded in review_resolutions (survive reclassify). Attribution unaffected (GOVERNANCE.md §2.5). Reversible via `unresolve`.
+
+### 2026-05-30 — RESOLUTION — bulk-discard review-queue items
+
+- **reason_like**: `suffix mismatch%`
+- **scope**: `henry-john`
+- **items_discarded**: `10`
+- **per_owner**: henry-john=10
+- **open_queue_remaining**: `17`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T19-13-14Z__pre-bulk-discard.db`
+- **note**: Standing DISCARDED verdicts recorded in review_resolutions (survive reclassify). Attribution unaffected (GOVERNANCE.md §2.5). Reversible via `unresolve`.
