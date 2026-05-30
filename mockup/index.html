@@ -1909,6 +1909,8 @@ const state = {
   cycleFilters: { q: "", party: "", status: "", owner: "", showAll: false },
   /* per-committee filters */
   committeeFilters: { q: "", cycle: "", status: "", showAll: false },
+  /* per-committee BENEFICIARIES filters (Phase 2 — "Who this committee funded"). */
+  committeeBeneficiariesFilters: { cycle: "" },
   /* per-team filters */
   teamFilters: { q: "", cycle: "", party: "", status: "", owner: "", showAll: false },
   /* changelog (audit-log) filters — lazy-loaded with provenance.json */
@@ -4495,7 +4497,119 @@ function renderCommittee(committeeId) {
         ${renderCommitteeDonationsTable(donations)}
       </div>
     </section>
+
+    ${renderCommitteeBeneficiariesSection(decoded)}
   </div>`;
+}
+
+/* ────────────────────────────────────────────────────────────────────────
+   "Who this committee funded" — Phase 2 beneficiary view.
+   Renders the top recipients FEC's Schedule B by_recipient endpoint
+   reports per cycle. Names + amounts only — no editorial linkage to
+   legislation or policy outcomes (CLAUDE.md §6, that's Phase 3).
+   ──────────────────────────────────────────────────────────────────── */
+function renderCommitteeBeneficiariesSection(committeeId) {
+  const byCycle = (state.data.committee_beneficiaries || {})[committeeId];
+  if (!byCycle || Object.keys(byCycle).length === 0) {
+    return ""; // Pre-v5 DB, or no beneficiary rows yet for this committee.
+  }
+  const cycles = Object.keys(byCycle).map(Number).sort((a, b) => b - a);
+  const selected = state.committeeBeneficiariesFilters.cycle
+    ? Number(state.committeeBeneficiariesFilters.cycle)
+    : cycles[0];
+  return `
+    <section class="block">
+      <div class="block-head-row">
+        <div>
+          <span class="eyebrow">Who this committee funded</span>
+          <h2 style="margin-top:6px">Top recipients of this committee's Schedule B disbursements</h2>
+          <p class="caption">FEC <code>/schedules/schedule_b/by_recipient/</code> — every recipient the committee disbursed funds to in the selected cycle, ordered by total amount. Includes operational disbursements as well as political ones, since Schedule B aggregates both.</p>
+        </div>
+      </div>
+
+      <div class="filters">
+        <span class="filter-label">Cycle</span>
+        <select id="cb-cycle">
+          ${cycles.map((c) => `<option value="${c}"${c === selected ? " selected" : ""}>${c}</option>`).join("")}
+        </select>
+        <span class="filter-spacer"></span>
+        <span class="filter-result" id="cb-result"></span>
+      </div>
+
+      <div id="cb-table-wrap">
+        ${renderCommitteeBeneficiariesTable(byCycle, selected)}
+      </div>
+    </section>`;
+}
+
+function renderCommitteeBeneficiariesTable(byCycle, cycle) {
+  const recipients = (byCycle[String(cycle)] || []).slice();
+  setTimeout(() => {
+    const r = document.getElementById("cb-result");
+    if (r) r.textContent = `${recipients.length} recipient${recipients.length === 1 ? "" : "s"} in ${cycle}`;
+  }, 0);
+  if (recipients.length === 0) {
+    return emptyState(
+      "No recipients reported",
+      `FEC has no Schedule B by_recipient rows for this committee in ${cycle}.`
+    );
+  }
+  return `
+    <table class="donations-table">
+      <thead>
+        <tr>
+          <th style="width:48px">Rank</th>
+          <th>Recipient</th>
+          <th class="num">Total amount</th>
+          <th class="num">Transactions</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${recipients.map((r, i) => {
+          const partyClass = r.recipient_party === "DEM" ? "dem"
+                          : r.recipient_party === "REP" ? "rep" : "oth";
+          const isCandidate = r.recipient_kind === "candidate";
+          const partyChip = (isCandidate && r.recipient_party && r.recipient_party !== "OTH")
+            ? ` <span class="chip-party ${partyClass}" style="margin-left:6px">${escapeHtml(r.recipient_party)}</span>`
+            : "";
+          const officeLabel = isCandidate && r.recipient_office
+            ? ` · ${escapeHtml(officeName(r.recipient_office))}`
+            : "";
+          const kindLabel = isCandidate ? "candidate" : "committee";
+          return `
+            <tr>
+              <td class="num">${(i + 1).toString().padStart(2, "0")}</td>
+              <td>
+                <div style="font-weight:500">${escapeHtml(r.recipient_name || r.recipient_id)}${partyChip}</div>
+                <div class="muted" style="font-size:12px;font-weight:400">${kindLabel}${officeLabel}</div>
+              </td>
+              <td class="num col-amount">${fmtMoneyExact(r.total_amount)}</td>
+              <td class="num">${r.n_transactions == null ? "—" : fmtInt(r.n_transactions)}</td>
+            </tr>`;
+        }).join("")}
+      </tbody>
+    </table>`;
+}
+
+function officeName(code) {
+  if (!code) return "";
+  const c = String(code).toUpperCase();
+  if (c === "H") return "House";
+  if (c === "S") return "Senate";
+  if (c === "P") return "President";
+  return c;
+}
+
+function rerenderCommitteeBeneficiariesTable() {
+  if (state.view.name !== "committee") return;
+  const decoded = decodeURIComponent(state.view.id);
+  const byCycle = (state.data.committee_beneficiaries || {})[decoded];
+  if (!byCycle) return;
+  const wrap = document.getElementById("cb-table-wrap");
+  if (!wrap) return;
+  const cycle = Number(state.committeeBeneficiariesFilters.cycle) ||
+    Math.max(...Object.keys(byCycle).map(Number));
+  wrap.innerHTML = renderCommitteeBeneficiariesTable(byCycle, cycle);
 }
 
 function renderCommitteeDonationsTable(allDonations) {
@@ -4592,6 +4706,16 @@ function bindCommitteeHandlers() {
       downloadDonationsCSV(rows, `committee-${decoded}.csv`);
     });
   });
+
+  // Beneficiaries cycle picker (Phase 2). Defaults to most-recent cycle on
+  // first render; persists across re-renders via state.committeeBeneficiariesFilters.
+  const cbSel = document.getElementById("cb-cycle");
+  if (cbSel) {
+    cbSel.addEventListener("change", (e) => {
+      state.committeeBeneficiariesFilters.cycle = e.target.value;
+      rerenderCommitteeBeneficiariesTable();
+    });
+  }
 }
 
 function rerenderCommitteeTable() {
@@ -4963,7 +5087,11 @@ function downloadDonationsCSV(rows, filename) {
   ];
   const escape = (v) => {
     if (v == null) return "";
-    const s = String(v);
+    let s = String(v);
+    // Neutralize spreadsheet formula injection: a leading = + - @ (or tab/CR)
+    // makes Excel/Sheets evaluate a donor-filed cell (e.g. employer
+    // "=HYPERLINK(...)"). Prefix with ' to force the cell to be treated as text.
+    if (/^[=+\-@\t\r]/.test(s)) s = "'" + s;
     if (s.includes('"') || s.includes(",") || s.includes("\n")) {
       return '"' + s.replace(/"/g, '""') + '"';
     }
@@ -5023,8 +5151,14 @@ function openDrawer(id) {
   const ownerName = ent ? ent.name : (d.entity || "—");
 
   const fecLink = d.committee_id
-    ? `https://www.fec.gov/data/committee/${d.committee_id}/`
+    ? `https://www.fec.gov/data/committee/${encodeURIComponent(d.committee_id)}/`
     : null;
+  /* FEC-provided URLs: validate scheme (https-only) before they reach an href;
+     escapeAttr is still applied at the interpolation site. Non-https values
+     fall back to the disabled state. (M1) */
+  const pdfUrl = safeHttpsUrl(d.pdf_url);
+  const filingPdfUrl = safeHttpsUrl(d.filing_pdf_url);
+  const filingPageUrl = safeHttpsUrl(d.filing_page_url);
   const fecTxnLink = `https://www.fec.gov/data/receipts/?two_year_transaction_period=${d.cycle}&data_type=processed&min_date=${d.date}&max_date=${d.date}&contributor_name=${encodeURIComponent(d.donor_name || "")}`;
 
   /* Owner page exists for any donation whose entity resolves to a known owner.
@@ -5097,8 +5231,8 @@ function openDrawer(id) {
     <div class="drawer-section">
       <h3>FEC source documents</h3>
       <div class="drawer-source-links">
-        ${d.pdf_url ? `
-          <a class="drawer-source-link primary" href="${d.pdf_url}" target="_blank" rel="noopener">
+        ${pdfUrl ? `
+          <a class="drawer-source-link primary" href="${escapeAttr(pdfUrl)}" target="_blank" rel="noopener">
             <span class="drawer-source-icon">📄</span>
             <div>
               <div class="drawer-source-title">Transaction image</div>
@@ -5112,15 +5246,15 @@ function openDrawer(id) {
               <div class="drawer-source-sub">Image link not available in this payload</div>
             </div>
           </div>`}
-        ${d.filing_pdf_url ? `
-          <a class="drawer-source-link" href="${d.filing_pdf_url}" target="_blank" rel="noopener">
+        ${filingPdfUrl ? `
+          <a class="drawer-source-link" href="${escapeAttr(filingPdfUrl)}" target="_blank" rel="noopener">
             <span class="drawer-source-icon">📑</span>
             <div>
               <div class="drawer-source-title">Full filing PDF</div>
               <div class="drawer-source-sub">All transactions in filing #${escapeHtml(d.filing_id || "")}</div>
             </div>
-          </a>` : d.filing_page_url ? `
-          <a class="drawer-source-link" href="${d.filing_page_url}" target="_blank" rel="noopener">
+          </a>` : filingPageUrl ? `
+          <a class="drawer-source-link" href="${escapeAttr(filingPageUrl)}" target="_blank" rel="noopener">
             <span class="drawer-source-icon">📑</span>
             <div>
               <div class="drawer-source-title">Filing on FEC.gov</div>
@@ -5128,7 +5262,7 @@ function openDrawer(id) {
             </div>
           </a>` : ""}
         ${fecLink ? `
-          <a class="drawer-source-link" href="${fecLink}" target="_blank" rel="noopener">
+          <a class="drawer-source-link" href="${escapeAttr(fecLink)}" target="_blank" rel="noopener">
             <span class="drawer-source-icon">🏛︎</span>
             <div>
               <div class="drawer-source-title">Committee on FEC.gov</div>
@@ -6154,6 +6288,16 @@ function escapeHtml(s) {
   }[c]));
 }
 function escapeAttr(s) { return escapeHtml(s); }
+/* Only allow absolute https: URLs into an href. FEC-provided URL fields
+   (pdf_url, filing_pdf_url, filing_page_url) are interpolated into links;
+   validating the scheme blocks javascript:/data: injection, and callers still
+   escapeAttr the result so the value can't break out of the attribute. Returns
+   null for anything that isn't a plain https URL — render the disabled state. */
+function safeHttpsUrl(u) {
+  if (typeof u !== "string") return null;
+  const s = u.trim();
+  return /^https:\/\//i.test(s) ? s : null;
+}
 
 /* ════════════════════════════════════════════════════════════════════════
    CMD-K SEARCH PALETTE — open/close, search, keyboard nav

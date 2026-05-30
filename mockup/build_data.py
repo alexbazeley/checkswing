@@ -15,11 +15,25 @@ import json
 import sqlite3
 import sys
 from collections import defaultdict
+from datetime import datetime, timezone
 from pathlib import Path
+
+
+def _utc_now_iso() -> str:
+    # timezone-aware UTC (datetime.utcnow() is deprecated in 3.12+).
+    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 DB_PATH = REPO_ROOT / "data" / "master.db"
 OUT_PATH = REPO_ROOT / "mockup" / "data.json"
+
+# The SPA fetches all of data.json on load. Cloudflare gzips it on the wire
+# (~1/5th this size), but the uncompressed payload is the user-facing cost and
+# grows sharply once the Phase-2 committee-beneficiaries backfill lands. This
+# budget is a tripwire (warning, not a hard failure): if exceeded, split the
+# payload into lazy-loaded per-owner / per-committee chunks before enabling the
+# backfill. Current baseline ≈ 7.6 MB.
+DATA_JSON_BUDGET_MB = 12.0
 PROVENANCE_SRC = REPO_ROOT / "catalog" / "PROVENANCE_LOG.md"
 PROVENANCE_OUT = REPO_ROOT / "mockup" / "provenance.json"
 
@@ -643,6 +657,57 @@ def main() -> None:
     # is per-render, not per-row.
     committee_scale = {cid: cycles for cid, cycles in scale_by_cid.items() if cycles}
 
+    # ── Per-committee beneficiaries (v5: who this committee funded) ──────────
+    # Shape: { committee_id: { "<cycle>": [ {recipient}, ... top 25 desc ], ... } }
+    # FEC sorts the by_recipient endpoint by amount desc; we cap at 25 per cycle
+    # so the dashboard renders fast and matches the "scannable top-of-pile" UX of
+    # the other recipient lists. Tolerant of a pre-v5 DB — empty dict means the
+    # UI just doesn't render the "Who this committee funded" section.
+    committee_beneficiaries: dict[str, dict[str, list[dict]]] = {}
+    if relevant_cids:
+        placeholders = ",".join(["?"] * len(relevant_cids))
+        try:
+            cur.execute(
+                f"""
+                SELECT committee_id, cycle, recipient_id, recipient_kind,
+                       recipient_name, recipient_party, recipient_office,
+                       total_amount, n_transactions
+                  FROM committee_disbursements_by_recipient
+                 WHERE committee_id IN ({placeholders})
+                 ORDER BY committee_id, cycle, total_amount DESC
+                """,
+                relevant_cids,
+            )
+            grouped: dict[str, dict[int, list[dict]]] = {}
+            for row in cur.fetchall():
+                cid = row["committee_id"]
+                cycle = int(row["cycle"])
+                grouped.setdefault(cid, {}).setdefault(cycle, []).append({
+                    "recipient_id": row["recipient_id"],
+                    "recipient_kind": row["recipient_kind"],
+                    "recipient_name": row["recipient_name"],
+                    "recipient_party": normalize_party(row["recipient_party"]),
+                    "recipient_office": row["recipient_office"],
+                    "total_amount": row["total_amount"],
+                    "n_transactions": row["n_transactions"],
+                })
+            # Slice each (committee, cycle) array to top 25. JSON keys are strings
+            # — match the existing committee_scale / cycle_dollars convention.
+            for cid, by_cycle in grouped.items():
+                committee_beneficiaries[cid] = {
+                    str(cycle): recipients[:25]
+                    for cycle, recipients in by_cycle.items()
+                }
+        except sqlite3.OperationalError as e:
+            if "no such table" in str(e):
+                print(
+                    f"note: committee_disbursements_by_recipient table not present yet ({e}). "
+                    f"Run `python -m scripts.cli init` to migrate.",
+                    file=sys.stderr,
+                )
+            else:
+                raise
+
     # Pipeline summary for the runs page
     completed_runs = [r for r in runs if r["completed_at"]]
     pipeline = {
@@ -655,7 +720,7 @@ def main() -> None:
     }
 
     out = {
-        "generated_at": __import__("datetime").datetime.utcnow().isoformat() + "Z",
+        "generated_at": _utc_now_iso(),
         "cpi": {
             "table": {str(y): v for y, v in CPI_TABLE.items()},
             "base_year": CPI_BASE_YEAR,
@@ -666,6 +731,7 @@ def main() -> None:
         "donations": donations,
         "recipients": recipients,
         "committee_scale": committee_scale,
+        "committee_beneficiaries": committee_beneficiaries,
         "runs": runs,
         "pipeline": pipeline,
     }
@@ -674,10 +740,20 @@ def main() -> None:
     size_mb = OUT_PATH.stat().st_size / 1024 / 1024
     n_enriched = sum(1 for r in recipients if r.get("designation_label"))
     n_with_scale = len(committee_scale)
+    n_with_beneficiaries = len(committee_beneficiaries)
     print(f"wrote {OUT_PATH} ({size_mb:.2f} MB, {len(donations)} donations, "
           f"{len(owners_summary)} owners, {len(runs)} ingestion runs, "
           f"{n_enriched}/{len(recipients)} recipients enriched, "
-          f"{n_with_scale} committee scale blocks)")
+          f"{n_with_scale} committee scale blocks, "
+          f"{n_with_beneficiaries} committee beneficiary blocks)")
+    if size_mb > DATA_JSON_BUDGET_MB:
+        print(
+            f"WARNING: data.json is {size_mb:.2f} MB, over the {DATA_JSON_BUDGET_MB:.0f} MB "
+            f"budget. The SPA fetches it whole on load — split into lazy-loaded "
+            f"per-owner/per-committee chunks before this grows further (e.g. before "
+            f"the Phase-2 beneficiaries backfill).",
+            file=sys.stderr,
+        )
 
     write_provenance()
 
@@ -694,7 +770,7 @@ def write_provenance() -> None:
         return
     entries = parse_provenance_file(PROVENANCE_SRC)
     out = {
-        "generated_at": __import__("datetime").datetime.utcnow().isoformat() + "Z",
+        "generated_at": _utc_now_iso(),
         "source": "catalog/PROVENANCE_LOG.md",
         "n_entries": len(entries),
         "entries": entries,

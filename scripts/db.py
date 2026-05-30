@@ -187,6 +187,30 @@ CREATE TABLE IF NOT EXISTS filings (
     refreshed_at             TEXT NOT NULL
 );
 CREATE INDEX IF NOT EXISTS idx_filings_committee ON filings(committee_id);
+
+-- v5: per-committee, per-cycle beneficiaries — "who did this committee fund".
+-- Sourced from OpenFEC /schedules/schedule_b/by_recipient/?committee_id=<id>.
+-- Each row is one recipient (a candidate or another committee) and the total
+-- the spending committee disbursed to them in that cycle. Schedule B aggregates
+-- transactions at the recipient level, so n_transactions is FEC's count, not
+-- a join we compute. CLAUDE.md §6: names and amounts only; no editorial
+-- linkage to legislation or policy outcomes (Phase 3 if ever).
+CREATE TABLE IF NOT EXISTS committee_disbursements_by_recipient (
+    committee_id      TEXT NOT NULL,
+    cycle             INTEGER NOT NULL,
+    recipient_id      TEXT NOT NULL,
+    recipient_kind    TEXT NOT NULL,
+    recipient_name    TEXT,
+    recipient_party   TEXT,
+    recipient_office  TEXT,
+    total_amount      REAL NOT NULL,
+    n_transactions    INTEGER,
+    raw_payload_path  TEXT NOT NULL,
+    fetched_at        TEXT NOT NULL,
+    PRIMARY KEY (committee_id, cycle, recipient_id, recipient_kind)
+);
+CREATE INDEX IF NOT EXISTS idx_cdbr_committee_cycle
+    ON committee_disbursements_by_recipient(committee_id, cycle);
 """
 
 # v3 adds six per-transaction FEC fields (image_number, pdf_url, filing_form,
@@ -207,7 +231,7 @@ DONATION_EXTRA_COLS: list[tuple[str, str]] = [
     ("recipient_committee_type", "TEXT"),
 ]
 
-SCHEMA_VERSION = 4
+SCHEMA_VERSION = 5
 
 
 def _utc_now_iso() -> str:
@@ -335,25 +359,39 @@ def refresh_entities(db_path: Path = MASTER_DB) -> int:
     return rows
 
 
-def insert_donation(conn: sqlite3.Connection, row: dict) -> None:
-    """Insert or upsert a donation row keyed on transaction_id.
+# FEC-sourced fields that define the substance of a contribution. A change in
+# any of these across re-fetches means FEC restated the transaction (amended
+# amount, corrected recipient, re-filed under a new file number, etc.) and
+# triggers supersession. Our DERIVED columns (status, signals_matched) are
+# deliberately excluded so a reclassification never looks like a restatement.
+DONATION_SUBSTANCE_COLS = (
+    "amount",
+    "date",
+    "recipient_committee_id",
+    "recipient_candidate_id",
+    "filing_id",
+    "image_number",
+)
 
-    Idempotency: if the same transaction_id exists with the same payload-hash
-    proxy (same amount + date + recipient + status), we leave it alone.
-    Otherwise we mark the existing row SUPERSEDED and insert a new row.
 
-    For simple idempotent re-runs (same FEC data), the INSERT OR IGNORE keeps
-    things clean.
+def _donation_values_equal(a, b) -> bool:
+    """Substance-equality for one donation field (stored value vs incoming).
+
+    Amounts are compared to the cent (REAL round-trip vs float of the incoming
+    value); everything else is compared as strings with None treated as "".
     """
-    # Fill in the v3 per-transaction FEC fields with None if the caller didn't
-    # provide them (e.g., legacy callers, or records where FEC omitted them).
-    # The columns are nullable; missing data shows "Image link not available"
-    # on the donation card, which is the honest fallback.
-    payload = {col: row.get(col) for col, _ in DONATION_EXTRA_COLS}
-    full_row = {**row, **payload}
+    if isinstance(a, (int, float)) or isinstance(b, (int, float)):
+        try:
+            return round(float(a or 0), 2) == round(float(b or 0), 2)
+        except (TypeError, ValueError):
+            pass
+    return (str(a) if a is not None else "") == (str(b) if b is not None else "")
+
+
+def _insert_donation_row(conn: sqlite3.Connection, full_row: dict) -> None:
     conn.execute(
         """
-        INSERT OR IGNORE INTO donations (
+        INSERT INTO donations (
             transaction_id, entity_slug, entity_kind, parent_owner_slug,
             status, status_reason, signals_matched,
             contributor_name_raw, contributor_employer_raw, contributor_occupation_raw,
@@ -381,6 +419,64 @@ def insert_donation(conn: sqlite3.Connection, row: dict) -> None:
         """,
         full_row,
     )
+
+
+def insert_donation(conn: sqlite3.Connection, row: dict) -> tuple[str, str | None]:
+    """Insert, dedup, or supersede a donation row keyed on transaction_id.
+
+    Returns (action, reason):
+      - ("inserted", None)   — no prior row; the payload was inserted.
+      - ("unchanged", None)  — a row with identical FEC substance already
+                               exists; idempotent re-fetch, left alone (§1.5).
+      - ("superseded", <reason>) — a live row existed whose FEC substance
+                               differs (FEC restated the transaction). The old
+                               row is archived under a derived transaction_id
+                               with status='SUPERSEDED' and superseded_by set to
+                               the canonical id; the restated payload is then
+                               inserted under the canonical id. The old row is
+                               never deleted (§1.10), and citations to
+                               transaction_id resolve to the current version.
+
+    Supersession compares only DONATION_SUBSTANCE_COLS (FEC-sourced fields), so
+    a future reclassification — which changes our derived status/signals but not
+    FEC substance — does not spuriously trip it.
+    """
+    # Fill in the v3 per-transaction FEC fields with None if the caller didn't
+    # provide them. The columns are nullable; missing data shows "Image link not
+    # available" on the donation card, which is the honest fallback.
+    payload = {col: row.get(col) for col, _ in DONATION_EXTRA_COLS}
+    full_row = {**row, **payload}
+    txn = full_row["transaction_id"]
+
+    existing = conn.execute(
+        "SELECT * FROM donations WHERE transaction_id = ?", (txn,)
+    ).fetchone()
+    if existing is None:
+        _insert_donation_row(conn, full_row)
+        return ("inserted", None)
+
+    existing_d = dict(existing)
+    changed = [
+        f
+        for f in DONATION_SUBSTANCE_COLS
+        if not _donation_values_equal(existing_d.get(f), full_row.get(f))
+    ]
+    if not changed:
+        return ("unchanged", None)
+
+    # FEC restated this transaction — archive the old row, insert the new one.
+    reason = f"FEC restatement: {', '.join(changed)}"
+    archived_key = f"{txn}~superseded~{_utc_now_filename()}"
+    conn.execute(
+        """
+        UPDATE donations
+           SET transaction_id = ?, status = ?, superseded_by = ?, superseded_reason = ?
+         WHERE transaction_id = ?
+        """,
+        (archived_key, "SUPERSEDED", txn, reason, txn),
+    )
+    _insert_donation_row(conn, full_row)
+    return ("superseded", reason)
 
 
 def insert_review_queue(conn: sqlite3.Connection, row: dict) -> None:

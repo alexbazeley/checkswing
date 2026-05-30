@@ -199,3 +199,95 @@ def test_legacy_render_when_committees_empty(patched_build):
     assert "treasurer_name" not in r
     # Scale block is empty
     assert data["committee_scale"] == {}
+    # Beneficiaries map is also empty
+    assert data["committee_beneficiaries"] == {}
+
+
+def _seed_beneficiaries(db_path: Path) -> None:
+    """Seed beneficiaries for the same C00000001 committee across 2 cycles."""
+    from scripts import db
+    with db.connect(db_path) as conn:
+        conn.executemany(
+            """
+            INSERT INTO committee_disbursements_by_recipient
+              (committee_id, cycle, recipient_id, recipient_kind,
+               recipient_name, recipient_party, recipient_office,
+               total_amount, n_transactions,
+               raw_payload_path, fetched_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'x', '2024-10-15T00:00:00Z')
+            """,
+            [
+                ("C00000001", 2024, "H24A", "candidate", "JANE CANDIDATE",
+                 "REP", "S", 50000.0, 3),
+                ("C00000001", 2024, "C00099999", "committee", "ALLY SUPER PAC",
+                 "REP", None, 25000.0, 1),
+                ("C00000001", 2022, "H22A", "candidate", "JOE CANDIDATE",
+                 "DEM", "H", 10000.0, 2),
+            ],
+        )
+
+
+def test_committee_beneficiaries_map_emitted_with_cycles_and_top_25(patched_build):
+    _seed_donations(patched_build["db_path"])
+    _seed_committee(patched_build["db_path"])
+    _seed_beneficiaries(patched_build["db_path"])
+
+    from mockup import build_data
+    build_data.main()
+
+    data = json.loads(patched_build["out_path"].read_text())
+    bene = data["committee_beneficiaries"]
+    assert "C00000001" in bene
+    by_cycle = bene["C00000001"]
+    # JSON keys are strings (matches committee_scale / cycle_dollars convention).
+    assert set(by_cycle.keys()) == {"2024", "2022"}
+    cycle_2024 = by_cycle["2024"]
+    assert len(cycle_2024) == 2
+    # Sorted desc by total_amount.
+    assert cycle_2024[0]["recipient_id"] == "H24A"
+    assert cycle_2024[0]["total_amount"] == 50000.0
+    assert cycle_2024[0]["recipient_kind"] == "candidate"
+    assert cycle_2024[0]["recipient_party"] == "REP"
+    assert cycle_2024[1]["recipient_id"] == "C00099999"
+    assert cycle_2024[1]["recipient_kind"] == "committee"
+
+
+def test_committee_beneficiaries_normalizes_party_codes(patched_build):
+    """FEC's party strings are inconsistent — DEM/DEMOCRAT/DEMOCRATIC all
+    represent the same thing. build_data normalizes them so the UI's chip
+    rendering doesn't have to."""
+    _seed_donations(patched_build["db_path"])
+    _seed_committee(patched_build["db_path"])
+    from scripts import db
+    with db.connect(patched_build["db_path"]) as conn:
+        conn.execute(
+            """
+            INSERT INTO committee_disbursements_by_recipient
+              (committee_id, cycle, recipient_id, recipient_kind,
+               recipient_name, recipient_party, total_amount,
+               raw_payload_path, fetched_at)
+            VALUES ('C00000001', 2024, 'H24A', 'candidate', 'X',
+                    'DEMOCRAT', 100.0, 'x', '2024-10-15T00:00:00Z')
+            """
+        )
+
+    from mockup import build_data
+    build_data.main()
+
+    data = json.loads(patched_build["out_path"].read_text())
+    b = data["committee_beneficiaries"]["C00000001"]["2024"][0]
+    assert b["recipient_party"] == "DEM"
+
+
+def test_committee_beneficiaries_empty_when_pre_v5_db(patched_build):
+    """An archive that's not yet been ingested for beneficiaries should still
+    render — the map is just empty."""
+    _seed_donations(patched_build["db_path"])
+    _seed_committee(patched_build["db_path"])
+    # Intentionally do NOT call _seed_beneficiaries.
+
+    from mockup import build_data
+    build_data.main()
+
+    data = json.loads(patched_build["out_path"].read_text())
+    assert data["committee_beneficiaries"] == {}

@@ -75,7 +75,7 @@ The public dashboard ships as a static site on **Cloudflare Pages**, using their
 - Cloudflare watches `main` for any push. On push, it runs the build command above (`pip install` + `build_data.py`), then deploys the contents of `mockup/` to the Pages project.
 - `mockup/_headers` sets CSP (allows Google Fonts + inline JS/CSS), cache controls (5min for `data.json`, immutable for `assets/*`), and `X-Frame-Options: DENY`.
 
-**Why `data/master.db` is committed:** it's the project's source of truth for the dashboard. `mockup/data.json` is regenerated at every Cloudflare build from `master.db`, so committing it would just thrash the diff. Raw FEC payloads (`data/raw/`) stay out of git — they're large and recoverable via re-ingestion if ever needed.
+**Why `data/master.db` is committed:** it is the project's **durable source of truth** (CLAUDE.md §1.4) for the archive and the dashboard. `mockup/data.json` is regenerated at every Cloudflare build from `master.db`, so committing it would just thrash the diff. Raw FEC payloads (`data/raw/`) stay out of git — they are large and best-effort ground truth (persisted before parsing for re-verification), but **not** a guaranteed backup: some historical rows reference raw files no longer on disk. The DB is therefore not assumed reconstructible from raw alone; `reclassify` is guarded against silently dropping rows whose raw is missing (`python -m scripts.cli raw-coverage` audits the gap).
 
 ## Refresh cadence
 
