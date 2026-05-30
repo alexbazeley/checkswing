@@ -506,6 +506,128 @@ def unresolve(transaction_id, entity_slug):
     click.echo(f"Removed {n} standing verdict(s) for {transaction_id} ({entity_slug}).")
 
 
+@cli.command()
+@click.argument("transaction_id")
+@click.argument("entity_slug")
+@click.option("--reason", required=True, help="Documented justification for the override (recorded in manual_attributions).")
+@click.option("--source", default="", help="Evidence/source supporting the attribution.")
+@click.option("--status", default="CONFIRMED", show_default=True, help="Status to force (CONFIRMED or PROBABLE).")
+@click.option("--yes", is_flag=True, help="Skip confirmation.")
+def attribute(transaction_id, entity_slug, reason, source, status, yes):
+    """Manually attribute one transaction to an owner (TRANSACTION_ID ENTITY_SLUG).
+
+    GATED DATA OPERATION — records a manual override in manual_attributions (snapshot
+    + PROVENANCE_LOG), then reclassifies the owner so the override takes effect.
+
+    This bypasses the two-signal rule by explicit, documented human decision
+    (GOVERNANCE.md §1.1). Use only for records the classifier cannot safely confirm
+    via signals/name_variants — e.g. a donation misfiled with the wrong generational
+    suffix that no name_variant can capture without also matching a same-named
+    relative. Always supply --reason (and --source where possible). Survives
+    reclassify; undo with `unattribute`.
+    """
+    from datetime import datetime, timezone
+
+    from .paths import PROVENANCE_LOG
+
+    status = status.upper()
+    if status not in ("CONFIRMED", "PROBABLE"):
+        click.echo("--status must be CONFIRMED or PROBABLE.", err=True)
+        raise SystemExit(1)
+    ts = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    db.init()
+    click.echo(
+        f"Will manually attribute {transaction_id} to {entity_slug} as {status}.\n"
+        f"  reason: {reason}\n  source: {source or '(none)'}\n"
+        f"master.db is snapshotted first; the change is logged to PROVENANCE_LOG.md, "
+        f"then {entity_slug} is reclassified."
+    )
+    if not yes and not click.confirm("Continue?", default=False):
+        click.echo("Aborted.")
+        return
+
+    snap = db.snapshot("pre-manual-attribute")
+    with db.connect() as conn:
+        db.upsert_manual_attribution(
+            conn,
+            transaction_id=transaction_id,
+            entity_slug=entity_slug,
+            status=status,
+            reason=reason,
+            source=source or None,
+            attributed_at=ts,
+        )
+        # A manually-attributed txn must not also carry a standing DISCARDED
+        # verdict (it would be contradictory state). Clear any prior discard.
+        db.delete_review_resolution(conn, transaction_id=transaction_id, entity_slug=entity_slug)
+    block = [
+        f"\n### {ts[:10]} — MANUAL_ATTRIBUTION — {entity_slug}",
+        "",
+        f"- **transaction_id**: `{transaction_id}`",
+        f"- **entity_slug**: `{entity_slug}`",
+        f"- **forced_status**: `{status}`",
+        f"- **reason**: {reason}",
+        f"- **source**: {source or '(none)'}",
+        f"- **snapshot_path**: `{snap}`",
+        f"- **note**: Override recorded in manual_attributions (survives reclassify). Bypasses the two-signal rule by documented human decision (GOVERNANCE.md §1.1). Reversible via `unattribute`. Reclassification follows below.",
+        "",
+    ]
+    existing = PROVENANCE_LOG.read_text(encoding="utf-8") if PROVENANCE_LOG.exists() else ""
+    PROVENANCE_LOG.write_text(existing + "\n".join(block), encoding="utf-8")
+
+    summary = reclassify_entity(entity_slug, reason=f"apply manual attribution of {transaction_id}")
+    click.echo(json.dumps({
+        "transaction_id": transaction_id,
+        "entity_slug": entity_slug,
+        "forced_status": status,
+        "manual_overrides_applied": summary.get("manual_overrides_applied"),
+        "snapshot_path": str(snap),
+    }, indent=2, default=str))
+
+
+@cli.command()
+@click.argument("transaction_id")
+@click.argument("entity_slug")
+@click.option("--yes", is_flag=True, help="Skip confirmation.")
+def unattribute(transaction_id, entity_slug, yes):
+    """Remove a manual attribution override and reclassify (undo an attribute).
+
+    GATED DATA OPERATION — snapshots master.db, removes the override, logs to
+    PROVENANCE_LOG, then reclassifies so the record reverts to its automated verdict.
+    """
+    from datetime import datetime, timezone
+
+    from .paths import PROVENANCE_LOG
+
+    ts = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    db.init()
+    if not yes and not click.confirm(
+        f"Remove manual attribution of {transaction_id} from {entity_slug} and reclassify?",
+        default=False,
+    ):
+        click.echo("Aborted.")
+        return
+    snap = db.snapshot("pre-unattribute")
+    with db.connect() as conn:
+        n = db.delete_manual_attribution(conn, transaction_id=transaction_id, entity_slug=entity_slug)
+    if n == 0:
+        click.echo(f"No manual attribution found for {transaction_id} ({entity_slug}). Nothing to do.")
+        return
+    block = [
+        f"\n### {ts[:10]} — MANUAL_ATTRIBUTION_REMOVED — {entity_slug}",
+        "",
+        f"- **transaction_id**: `{transaction_id}`",
+        f"- **entity_slug**: `{entity_slug}`",
+        f"- **snapshot_path**: `{snap}`",
+        f"- **note**: Override removed; record reverts to its automated classification on the reclassify below.",
+        "",
+    ]
+    existing = PROVENANCE_LOG.read_text(encoding="utf-8") if PROVENANCE_LOG.exists() else ""
+    PROVENANCE_LOG.write_text(existing + "\n".join(block), encoding="utf-8")
+    reclassify_entity(entity_slug, reason=f"remove manual attribution of {transaction_id}")
+    click.echo(f"Removed manual attribution for {transaction_id} ({entity_slug}) and reclassified.")
+
+
 @cli.command(name="bulk-discard")
 @click.option("--reason-like", required=True, help="SQL LIKE pattern matched against review_queue.reason (e.g. 'city/state outside%').")
 @click.option("--only", default=None, help="Restrict to one entity_slug.")

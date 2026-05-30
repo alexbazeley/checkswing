@@ -409,14 +409,37 @@ def ingest_entity(
         print(f"[{slug}] Raw payloads persisted to {len(raw_paths)} file(s) in data/raw/{slug}/")
 
     # ── Step 5: classify ───────────────────────────────────────────────────
+    # Manual attribution overrides (manual_attributions, schema v7) force a
+    # specific transaction to a recorded status for this owner, regardless of the
+    # automated verdict (GOVERNANCE.md §1.1 — a documented human decision, with
+    # reason + source recorded in the table, not an inference). Used for records
+    # the classifier cannot safely confirm via signals/name_variants — e.g. a
+    # donation misfiled with the wrong generational suffix that no name_variant
+    # can capture without also matching a same-named relative. Survives reclassify.
+    with db.connect() as _conn:
+        manual = db.manual_attributions_for_slug(_conn, slug)
+
     confirmed: list[tuple[dict, Classification]] = []
     probable: list[tuple[dict, Classification]] = []
     uncertain: list[tuple[dict, Classification]] = []
     skipped_no_name_match = 0
+    manual_overrides_applied = 0
 
     for r in records:
+        txn = str(r.get("transaction_id") or r.get("sub_id") or "")
         c = classify(r, owner, process_related_entities=process_related_entities)
-        if c is None:
+        if txn and txn in manual:
+            forced_status = manual[txn]
+            c = Classification(
+                status=forced_status,
+                status_reason=f"manual attribution ({forced_status}) — see manual_attributions table",
+                signals_matched=["manual_attribution"],
+                entity_slug=slug,
+                entity_kind="owner",
+                parent_owner_slug=None,
+            )
+            manual_overrides_applied += 1
+        elif c is None:
             skipped_no_name_match += 1
             continue
         if c.status == CONFIRMED:
@@ -427,6 +450,8 @@ def ingest_entity(
             uncertain.append((r, c))
 
     print(f"[{slug}] Classification: CONFIRMED={len(confirmed)} · PROBABLE={len(probable)} · UNCERTAIN={len(uncertain)} · skipped(name no-match)={skipped_no_name_match}")
+    if manual_overrides_applied:
+        print(f"[{slug}] {manual_overrides_applied} manual attribution override(s) applied (§1.1).")
 
     completed_at = _utc_now_iso()
     # period_end = latest contribution date among all classified records in
@@ -516,6 +541,8 @@ def ingest_entity(
             f"[{slug}] {suppressed_by_resolution} UNCERTAIN record(s) suppressed "
             f"from the review queue by a standing DISCARDED verdict (§2.5)."
         )
+    if manual_overrides_applied:
+        summary["manual_overrides_applied"] = manual_overrides_applied
 
     # ── Step 9: write audit.last_ingestion ─────────────────────────────────
     # Records today's UTC date as the freshness watermark so the NEXT ingest
