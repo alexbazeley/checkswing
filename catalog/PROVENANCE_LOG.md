@@ -4136,3 +4136,27 @@ donation as influence over office-Y votes; deferred deliberately.
 - **errors**: `[]`
 - **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-31T21-14-10Z__pre-ingest-bills.db`
 - **note**: Curated fields (mlb_issue_area, relevance_basis, carried_by_bill_id) sourced from legislation/bills/*.yaml; identity/sponsors/action from Congress.gov (Tier-1). Raw payloads under data/raw/legislation/.
+
+### 2026-05-31 — INGESTION (legislators crosswalk)
+
+- **source**: `unitedstates/congress-legislators` (https://unitedstates.github.io/congress-legislators/legislators-current.yaml + https://unitedstates.github.io/congress-legislators/legislators-historical.yaml)
+- **fetched_at**: `2026-05-31T21:23:27Z`
+- **legislators**: `1529`
+- **fec_id_links**: `1713`
+- **terms**: `9048`
+- **only_with_fec**: `True`
+- **include_historical**: `True`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-31T21-23-27Z__pre-ingest-legislators.db`
+- **note**: Tier-2 entity identification (SOURCES.md Phase-3 addendum). Crosswalk tables are a pure projection of the upstream source — idempotent wipe-and-rebuild. Raw payloads persisted under data/raw/legislation/.
+
+### 2026-05-31 — INGESTION (votes)
+
+- **source**: `clerk.house.gov` (EVS XML) + `senate.gov` (LIS XML) — Tier-1 source of record
+- **fetched_at**: `2026-05-31T21:23:47Z`
+- **roll_calls_in_set**: `2`
+- **votes_ingested**: `2`
+- **vote_positions**: `530`
+- **senate_unmapped (no FEC-crosswalk lis_id)**: `0`
+- **errors**: `[]`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-31T21-23-47Z__pre-ingest-votes.db`
+- **note**: Vote positions are FEC-neutral facts (who voted Yea/Nay). Senate LIS ids mapped to Bioguide via legislators.lis_id. Raw XML under data/raw/legislation/.

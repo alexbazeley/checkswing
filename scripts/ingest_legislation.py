@@ -57,11 +57,11 @@ def ingest_legislators(
         conn.executemany(
             """
             INSERT INTO legislators (
-                bioguide_id, icpsr_id, govtrack_id, opensecrets_id,
+                bioguide_id, icpsr_id, govtrack_id, opensecrets_id, lis_id,
                 full_name, first_name, last_name, current_party, current_state,
                 source, raw_payload_path, fetched_at, refreshed_at
             ) VALUES (
-                :bioguide_id, :icpsr_id, :govtrack_id, :opensecrets_id,
+                :bioguide_id, :icpsr_id, :govtrack_id, :opensecrets_id, :lis_id,
                 :full_name, :first_name, :last_name, :current_party, :current_state,
                 :source, :raw_payload_path, :fetched_at, :refreshed_at
             )
@@ -200,6 +200,144 @@ def ingest_bills(specs: list[dict], client, *, db_path: Path = LEGISLATION_DB) -
             n_sponsors += len(sponsors)
 
     return {"bills": n_bills, "sponsors": n_sponsors, "errors": errors}
+
+
+def load_curated_roll_calls(bills_dir: Path = LEGISLATION_BILLS_DIR) -> list[dict]:
+    """Load the roll-call specs declared under each bill YAML's `roll_calls` block.
+
+    Each returned spec carries its parent bill_id so the vote can be linked.
+    """
+    specs: list[dict] = []
+    for path in sorted(bills_dir.glob("*.yaml")):
+        if path.name.startswith("_"):
+            continue
+        data = yaml.safe_load(path.read_text(encoding="utf-8"))
+        if not isinstance(data, dict):
+            continue
+        for rc in data.get("roll_calls") or []:
+            if isinstance(rc, dict):
+                specs.append({"bill_id": data.get("bill_id"), **rc})
+    return specs
+
+
+def ingest_votes(specs: list[dict], fetcher, *, db_path: Path = LEGISLATION_DB) -> dict:
+    """Fetch + parse roll-call votes and write votes + vote_positions.
+
+    `fetcher` exposes fetch_house_vote(year, roll) and
+    fetch_senate_vote(congress, session, roll), each returning (xml_text, raw_path).
+    House positions key on Bioguide directly; Senate positions key on LIS id and
+    are mapped to Bioguide via legislators.lis_id (a senator who voted but is
+    absent from the FEC-filtered crosswalk is counted as unmapped and skipped —
+    they are not a donation recipient our join could reach anyway).
+
+    Upsert keyed by vote_id; vote_positions replaced per vote. Returns counts.
+    """
+    from .fetch_votes import HOUSE_URL, SENATE_URL, parse_house_vote, parse_senate_vote
+    from .paths import relpath
+
+    legislation_db.init(db_path)
+    now = _utc_now_iso()
+    n_votes = 0
+    n_positions = 0
+    n_unmapped = 0
+    errors: list[dict] = []
+
+    with legislation_db.connect(db_path) as conn:
+        lis_to_bioguide = {
+            r["lis_id"]: r["bioguide_id"]
+            for r in conn.execute(
+                "SELECT lis_id, bioguide_id FROM legislators WHERE lis_id IS NOT NULL"
+            )
+        }
+
+        for spec in specs:
+            chamber = spec.get("chamber")
+            congress = spec.get("congress")
+            session_no = spec.get("session")
+            roll = spec.get("roll")
+            try:
+                if chamber == "house":
+                    text, raw_path = fetcher.fetch_house_vote(spec["year"], roll)
+                    meta, raw_positions = parse_house_vote(text)
+                    positions = raw_positions  # already bioguide-keyed
+                elif chamber == "senate":
+                    text, raw_path = fetcher.fetch_senate_vote(congress, session_no, roll)
+                    meta, raw_positions = parse_senate_vote(text)
+                    positions = []
+                    for p in raw_positions:
+                        bid = lis_to_bioguide.get(p["lis_member_id"])
+                        if bid is None:
+                            n_unmapped += 1
+                            continue
+                        positions.append({"bioguide_id": bid, "position": p["position"]})
+                else:
+                    errors.append({"spec": spec, "error": f"unknown chamber {chamber!r}"})
+                    continue
+            except Exception as e:  # noqa: BLE001
+                errors.append({"spec": spec, "error": str(e)})
+                continue
+
+            vote_id = f"{chamber}-{congress}-{session_no}-{roll}"
+            try:
+                raw_rel = relpath(raw_path)
+            except ValueError:
+                raw_rel = raw_path.as_posix()
+
+            conn.execute(
+                """
+                INSERT INTO votes (
+                    vote_id, bill_id, chamber, congress, session, roll_number,
+                    vote_date, question, description, result, source, source_url,
+                    raw_payload_path, fetched_at, refreshed_at
+                ) VALUES (
+                    :vote_id, :bill_id, :chamber, :congress, :session, :roll_number,
+                    :vote_date, :question, :description, :result, :source, :source_url,
+                    :raw_payload_path, :fetched_at, :refreshed_at
+                )
+                ON CONFLICT(vote_id) DO UPDATE SET
+                    bill_id=excluded.bill_id, vote_date=excluded.vote_date,
+                    question=excluded.question, description=excluded.description,
+                    result=excluded.result, source_url=excluded.source_url,
+                    raw_payload_path=excluded.raw_payload_path,
+                    refreshed_at=excluded.refreshed_at
+                """,
+                {
+                    "vote_id": vote_id,
+                    "bill_id": spec.get("bill_id"),
+                    "chamber": chamber,
+                    "congress": congress,
+                    "session": session_no,
+                    "roll_number": roll,
+                    "vote_date": meta.get("vote_date"),
+                    "question": spec.get("question") or meta.get("question"),
+                    "description": meta.get("description"),
+                    "result": meta.get("result"),
+                    "source": "clerk.house.gov" if chamber == "house" else "senate.gov",
+                    "source_url": (
+                        HOUSE_URL.format(year=spec.get("year"), roll=roll)
+                        if chamber == "house"
+                        else SENATE_URL.format(congress=congress, session=session_no, roll=roll)
+                    ),
+                    "raw_payload_path": raw_rel,
+                    "fetched_at": now,
+                    "refreshed_at": now,
+                },
+            )
+            conn.execute("DELETE FROM vote_positions WHERE vote_id = ?", (vote_id,))
+            conn.executemany(
+                "INSERT OR IGNORE INTO vote_positions (vote_id, bioguide_id, position) "
+                "VALUES (?, ?, ?)",
+                [(vote_id, p["bioguide_id"], p["position"]) for p in positions],
+            )
+            n_votes += 1
+            n_positions += len(positions)
+
+    return {
+        "votes": n_votes,
+        "positions": n_positions,
+        "senate_unmapped": n_unmapped,
+        "errors": errors,
+    }
 
 
 def donation_legislator_coverage(
