@@ -46,6 +46,7 @@ CREATE TABLE IF NOT EXISTS legislators (
     icpsr_id         TEXT,
     govtrack_id      TEXT,
     opensecrets_id   TEXT,
+    lis_id           TEXT,   -- Senate LIS id (e.g. S307); maps Senate roll-call XML → bioguide
     full_name        TEXT NOT NULL,
     first_name       TEXT,
     last_name        TEXT,
@@ -179,7 +180,10 @@ CREATE TABLE IF NOT EXISTS leg_schema_version (
 );
 """
 
-LEG_SCHEMA_VERSION = 1
+# v2 adds legislators.lis_id (Senate LIS member id) so Senate roll-call XML —
+# which keys members by lis_member_id, not Bioguide — can be mapped into the
+# index. Added via ALTER TABLE in init() for pre-existing DBs.
+LEG_SCHEMA_VERSION = 2
 
 
 def _utc_now_iso() -> str:
@@ -211,6 +215,11 @@ def init(db_path: Path = LEGISLATION_DB) -> None:
     ensure_data_dirs()
     with connect(db_path) as conn:
         conn.executescript(SCHEMA_SQL)
+        # v2: legislators.lis_id (CREATE TABLE IF NOT EXISTS won't add it to a
+        # pre-existing table). PRAGMA gate keeps the migration idempotent.
+        existing_cols = {r["name"] for r in conn.execute("PRAGMA table_info(legislators)")}
+        if "lis_id" not in existing_cols:
+            conn.execute("ALTER TABLE legislators ADD COLUMN lis_id TEXT")
         existing = conn.execute(
             "SELECT MAX(version) AS v FROM leg_schema_version"
         ).fetchone()

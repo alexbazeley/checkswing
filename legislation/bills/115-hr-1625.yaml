@@ -11,6 +11,20 @@ relevance_basis: >-
   final-passage roll calls in the House and Senate are the joinable votes for the
   minor-league-pay story.
 relevance_source_url: "https://www.congress.gov/bill/115th-congress/house-bill/1625"
+# The final-passage roll calls to ingest (Tier-1: Clerk EVS / Senate LIS). These
+# are the joinable votes for the minor-league-pay story.
+roll_calls:
+  - chamber: house
+    congress: 115
+    session: 2
+    roll: 127
+    year: 2018
+    question: "On Passage"
+  - chamber: senate
+    congress: 115
+    session: 2
+    roll: 63
+    question: "On Passage of the Bill"
 sources:
   - description: "Congress.gov bill page — Consolidated Appropriations Act, 2018, H.R.1625 (115th)"
     url: "https://www.congress.gov/bill/115th-congress/house-bill/1625"

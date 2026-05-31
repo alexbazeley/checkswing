@@ -186,6 +186,49 @@ def ingest_bills_cmd():
     click.echo(json.dumps(counts, indent=2))
 
 
+@cli.command(name="ingest-votes")
+def ingest_votes_cmd():
+    """Fetch the curated roll-call votes (bills' roll_calls blocks) from Clerk/Senate XML.
+
+    GATED DATA OPERATION — snapshots legislation.db first and appends a
+    PROVENANCE_LOG entry. House positions key on Bioguide directly; Senate
+    positions are mapped LIS→Bioguide via the crosswalk.
+    """
+    from datetime import datetime, timezone
+
+    from . import fetch_votes, legislation_db
+    from .ingest_legislation import ingest_votes, load_curated_roll_calls
+    from .paths import PROVENANCE_LOG
+
+    ts = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    specs = load_curated_roll_calls()
+    if not specs:
+        click.echo("No roll_calls declared in legislation/bills/. Nothing to do.")
+        return
+    snap = legislation_db.snapshot("pre-ingest-votes")
+    click.echo(f"Fetching {len(specs)} roll-call vote(s) from Clerk/Senate XML…")
+    counts = ingest_votes(specs, fetch_votes)
+
+    block = [
+        f"\n### {ts[:10]} — INGESTION (votes)",
+        "",
+        "- **source**: `clerk.house.gov` (EVS XML) + `senate.gov` (LIS XML) — Tier-1 source of record",
+        f"- **fetched_at**: `{ts}`",
+        f"- **roll_calls_in_set**: `{len(specs)}`",
+        f"- **votes_ingested**: `{counts['votes']}`",
+        f"- **vote_positions**: `{counts['positions']}`",
+        f"- **senate_unmapped (no FEC-crosswalk lis_id)**: `{counts['senate_unmapped']}`",
+        f"- **errors**: `{counts['errors']}`",
+        f"- **snapshot_path**: `{snap}`",
+        "- **note**: Vote positions are FEC-neutral facts (who voted Yea/Nay). Senate LIS ids mapped to Bioguide via legislators.lis_id. Raw XML under data/raw/legislation/.",
+        "",
+    ]
+    existing = PROVENANCE_LOG.read_text(encoding="utf-8") if PROVENANCE_LOG.exists() else ""
+    PROVENANCE_LOG.write_text(existing + "\n".join(block), encoding="utf-8")
+
+    click.echo(json.dumps(counts, indent=2))
+
+
 @cli.command()
 @click.argument("slug")
 @click.option("--dry-run", is_flag=True, help="Fetch + classify but do not write to DB.")

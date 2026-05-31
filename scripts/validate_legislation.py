@@ -142,6 +142,25 @@ def validate_bill_file(path: Path, issue_keys: set[str], known_bill_ids: set[str
             if not _is_nonempty_str(s.get("url")):
                 res.warnings.append(f"sources[{i}].url is empty")
 
+    # roll_calls is optional; when present, each entry must be well-formed so
+    # ingest-votes can fetch it.
+    rcs = data.get("roll_calls")
+    if rcs is not None:
+        if not isinstance(rcs, list):
+            res.errors.append("roll_calls must be a list")
+        else:
+            for i, rc in enumerate(rcs):
+                if not isinstance(rc, dict):
+                    res.errors.append(f"roll_calls[{i}] is not a mapping")
+                    continue
+                if rc.get("chamber") not in {"house", "senate"}:
+                    res.errors.append(f"roll_calls[{i}].chamber must be house|senate")
+                for k in ("congress", "session", "roll"):
+                    if not isinstance(rc.get(k), int):
+                        res.errors.append(f"roll_calls[{i}].{k} must be an integer")
+                if rc.get("chamber") == "house" and not isinstance(rc.get("year"), int):
+                    res.errors.append(f"roll_calls[{i}].year required (integer) for House votes")
+
     cl = data.get("change_log")
     today = datetime.now(timezone.utc).date()
     if not isinstance(cl, list) or not cl:

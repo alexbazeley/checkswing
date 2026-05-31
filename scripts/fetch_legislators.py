@@ -138,6 +138,7 @@ def parse_legislators(
                 "icpsr_id": str(ids["icpsr"]) if ids.get("icpsr") is not None else None,
                 "govtrack_id": str(ids["govtrack"]) if ids.get("govtrack") is not None else None,
                 "opensecrets_id": ids.get("opensecrets"),
+                "lis_id": ids.get("lis"),
                 "full_name": full or bioguide,
                 "first_name": first,
                 "last_name": last,
