@@ -4022,3 +4022,16 @@ Total suite: 209 green.
 - **uncertain_count**: `32`
 - **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-31T01-02-28Z__f23a17e3.db`
 - **notes**: skipped(no-name-match)=0 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-05-31 — BENEFICIARY-INGEST (full backfill) — committee_disbursements_by_recipient
+
+- **operation**: `ingest-committee-beneficiaries` (full backfill, top-200 recipients per committee per cycle from OpenFEC Schedule B by_recipient)
+- **scope**: every committee with totals — `attempted=1047`, `fetched=1024`, `skipped_no_fresh_cycles=23` (already fresh from the 2026-05-28 smoke run), `failed=0`
+- **rows_written**: `350044` this run; table total now `395509` recipient-rows across `6237` (committee, cycle) pairs and `1047` committees
+- **empty_cycles**: `~308` (committee, cycle) pairs in committee_totals returned zero by_recipient rows from FEC — legitimately empty, not failures
+- **run_window**: `2026-05-31T03:48:26Z → 2026-05-31T10:49:08Z` (~7h, single worker at MIN_REQUEST_INTERVAL_S=4.0)
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-31T03-48-26Z__beneficiaries_ingest_2026-05-31T03-48-26Z.db`
+- **raw_payloads**: `data/raw/_committee_disbursements/<committee_id>/` (gitignored; one envelope per cycle/page, GOVERNANCE.md §1.4)
+- **idempotency**: per-(committee, cycle) 30-day freshness gate; DELETE-then-INSERT per cycle so FEC retroactive amendments supersede (§1.5)
+- **data notes**: all rows `recipient_kind=committee` (FEC's by_recipient response is committee-keyed; no candidate_id populated) · `2780` negative `total_amount` rows = refunds/returned disbursements (legitimate FEC net aggregates), retained as-is · names + amounts only, NO editorial/legislative linkage (GOVERNANCE.md §6 — that is Phase 3)
+- **provenance note**: the backfill ran via a local self-healing wrapper (`caffeinate` + auto-lock-clear + retry); completed in 1 clean pass (rc=0). The wrapper is an operational helper, not part of the committed pipeline.
