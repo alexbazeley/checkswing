@@ -1,0 +1,5 @@
+owner_slug,owner_name,owner_team,transaction_id,amount,donation_date,donation_status,recipient_committee_name,recipient_candidate_name,bill_id,sponsor_role,legislator_bioguide,legislator_name,legislator_party,legislator_state
+fisher-john,John J. Fisher,Athletics,17845018,3300.0,2024-09-26,CONFIRMED,NEW DEMOCRAT COALITION ACTION FUND,,115-hr-1625,cosponsor,S001190,Bradley Scott Schneider,Democrat,IL
+fisher-john,John J. Fisher,Athletics,17845017,3300.0,2024-09-26,CONFIRMED,NEW DEMOCRAT COALITION ACTION FUND,,115-hr-1625,cosponsor,S001190,Bradley Scott Schneider,Democrat,IL
+angelos-john-p,John P. Angelos,Baltimore Orioles,SA11AI_517151148,2500.0,2023-02-04,CONFIRMED,ACTBLUE,,115-hr-1625,cosponsor,S001150,Adam B. Schiff,Democrat,CA
+fisher-john,John J. Fisher,Athletics,19005168,2000.0,2025-06-13,CONFIRMED,NEW DEMOCRAT COALITION ACTION FUND,,115-hr-1625,cosponsor,S001190,Bradley Scott Schneider,Democrat,IL

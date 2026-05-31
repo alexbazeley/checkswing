@@ -1,0 +1,82 @@
+{
+  "_meta": {
+    "generated_at": "2026-05-31T21:31:23Z",
+    "n_rows": 4,
+    "neutrality_note": "Neutral sourced facts only (GOVERNANCE.md \u00a76). days_before_vote is arithmetic, not a causal claim. Interpretation lives in the brief.",
+    "join": "donations_to_sponsors",
+    "bill_ids": [
+      "114-hr-5580",
+      "115-hr-1625"
+    ]
+  },
+  "rows": [
+    {
+      "owner_slug": "fisher-john",
+      "owner_name": "John J. Fisher",
+      "owner_team": "Athletics",
+      "transaction_id": "17845018",
+      "amount": 3300.0,
+      "donation_date": "2024-09-26",
+      "donation_status": "CONFIRMED",
+      "recipient_committee_name": "NEW DEMOCRAT COALITION ACTION FUND",
+      "recipient_candidate_name": "",
+      "bill_id": "115-hr-1625",
+      "sponsor_role": "cosponsor",
+      "legislator_bioguide": "S001190",
+      "legislator_name": "Bradley Scott Schneider",
+      "legislator_party": "Democrat",
+      "legislator_state": "IL"
+    },
+    {
+      "owner_slug": "fisher-john",
+      "owner_name": "John J. Fisher",
+      "owner_team": "Athletics",
+      "transaction_id": "17845017",
+      "amount": 3300.0,
+      "donation_date": "2024-09-26",
+      "donation_status": "CONFIRMED",
+      "recipient_committee_name": "NEW DEMOCRAT COALITION ACTION FUND",
+      "recipient_candidate_name": "",
+      "bill_id": "115-hr-1625",
+      "sponsor_role": "cosponsor",
+      "legislator_bioguide": "S001190",
+      "legislator_name": "Bradley Scott Schneider",
+      "legislator_party": "Democrat",
+      "legislator_state": "IL"
+    },
+    {
+      "owner_slug": "angelos-john-p",
+      "owner_name": "John P. Angelos",
+      "owner_team": "Baltimore Orioles",
+      "transaction_id": "SA11AI_517151148",
+      "amount": 2500.0,
+      "donation_date": "2023-02-04",
+      "donation_status": "CONFIRMED",
+      "recipient_committee_name": "ACTBLUE",
+      "recipient_candidate_name": "",
+      "bill_id": "115-hr-1625",
+      "sponsor_role": "cosponsor",
+      "legislator_bioguide": "S001150",
+      "legislator_name": "Adam B. Schiff",
+      "legislator_party": "Democrat",
+      "legislator_state": "CA"
+    },
+    {
+      "owner_slug": "fisher-john",
+      "owner_name": "John J. Fisher",
+      "owner_team": "Athletics",
+      "transaction_id": "19005168",
+      "amount": 2000.0,
+      "donation_date": "2025-06-13",
+      "donation_status": "CONFIRMED",
+      "recipient_committee_name": "NEW DEMOCRAT COALITION ACTION FUND",
+      "recipient_candidate_name": "",
+      "bill_id": "115-hr-1625",
+      "sponsor_role": "cosponsor",
+      "legislator_bioguide": "S001190",
+      "legislator_name": "Bradley Scott Schneider",
+      "legislator_party": "Democrat",
+      "legislator_state": "IL"
+    }
+  ]
+}
