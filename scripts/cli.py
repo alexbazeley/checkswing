@@ -229,6 +229,54 @@ def ingest_votes_cmd():
     click.echo(json.dumps(counts, indent=2))
 
 
+@cli.command(name="policy-join")
+@click.option("--bill", "bills", multiple=True, help="Vote-bearing bill_id(s): join donations→legislators who voted on these.")
+@click.option("--sponsors-of", "sponsor_bills", multiple=True, help="Bill_id(s): also join donations→sponsors/cosponsors of these.")
+@click.option("--out", "basename", required=True, help="Output basename written under reports/data/.")
+def policy_join_cmd(bills, sponsor_bills, basename):
+    """Read-only: write the neutral owner→donation→legislator→vote join to reports/data/.
+
+    Produces a reproducible CSV + JSON of neutral facts (donation, legislator,
+    position, days_before_vote). NO interpretation — that lives in the brief.
+    """
+    from .policy_join import (
+        sponsor_donation_rows,
+        summarize_by_owner,
+        vote_donation_rows,
+        write_outputs,
+    )
+
+    if not bills and not sponsor_bills:
+        click.echo("Pass at least one --bill or --sponsors-of.")
+        return
+
+    written = {}
+    vote_rows = vote_donation_rows(bill_ids=list(bills)) if bills else []
+    if bills:
+        written["votes"] = write_outputs(
+            vote_rows,
+            basename=basename,
+            meta={"join": "donations_to_votes", "bill_ids": list(bills)},
+        )
+    if sponsor_bills:
+        sp_rows = sponsor_donation_rows(bill_ids=list(sponsor_bills))
+        written["sponsors"] = write_outputs(
+            sp_rows,
+            basename=f"{basename}-sponsors",
+            meta={"join": "donations_to_sponsors", "bill_ids": list(sponsor_bills)},
+        )
+
+    if vote_rows:
+        summary = summarize_by_owner(vote_rows)
+        rows = [
+            [s["owner_name"] or s["owner_slug"], s["owner_team"] or "", s["n_donations"],
+             f"${s['total_amount']:,.0f}", s["n_legislators"], f"${s['to_yea_amount']:,.0f}"]
+            for s in summary
+        ]
+        click.echo(tabulate(rows, headers=["owner", "team", "n", "total", "legis", "to Yea"]))
+    click.echo("\n" + json.dumps(written, indent=2))
+
+
 @cli.command()
 @click.argument("slug")
 @click.option("--dry-run", is_flag=True, help="Fetch + classify but do not write to DB.")
