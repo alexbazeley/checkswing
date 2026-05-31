@@ -628,6 +628,125 @@ def unattribute(transaction_id, entity_slug, yes):
     click.echo(f"Removed manual attribution for {transaction_id} ({entity_slug}) and reclassified.")
 
 
+@cli.command()
+@click.argument("transaction_id")
+@click.argument("entity_slug")
+@click.option("--reason", required=True, help="Documented justification for the exclusion (recorded in manual_attributions).")
+@click.option("--source", default="", help="Evidence/source supporting the exclusion.")
+@click.option("--yes", is_flag=True, help="Skip confirmation.")
+def exclude(transaction_id, entity_slug, reason, source, yes):
+    """Manually EXCLUDE one transaction from an owner (TRANSACTION_ID ENTITY_SLUG).
+
+    GATED DATA OPERATION — records an EXCLUDED override in manual_attributions
+    (snapshot + PROVENANCE_LOG), then reclassifies so the record is dropped from
+    this owner.
+
+    The negative counterpart to `attribute`: use when the automated classifier
+    WOULD attribute a record to this owner (CONFIRMED/PROBABLE) but a documented
+    human decision is that it is NOT this owner and no signal can separate them —
+    e.g. a same-named relative (son/parent) at the same address whose middle
+    initial the classifier cannot distinguish (GOVERNANCE.md §1.1, §1.9). The txn
+    is dropped from this owner's classification entirely — it is NOT routed to the
+    review queue. Survives reclassify; undo with `unexclude`.
+    """
+    from datetime import datetime, timezone
+
+    from .paths import PROVENANCE_LOG
+
+    ts = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    db.init()
+    click.echo(
+        f"Will manually EXCLUDE {transaction_id} from {entity_slug} (dropped as not-this-owner).\n"
+        f"  reason: {reason}\n  source: {source or '(none)'}\n"
+        f"master.db is snapshotted first; the change is logged to PROVENANCE_LOG.md, "
+        f"then {entity_slug} is reclassified."
+    )
+    if not yes and not click.confirm("Continue?", default=False):
+        click.echo("Aborted.")
+        return
+
+    snap = db.snapshot("pre-manual-exclude")
+    with db.connect() as conn:
+        db.upsert_manual_attribution(
+            conn,
+            transaction_id=transaction_id,
+            entity_slug=entity_slug,
+            status="EXCLUDED",
+            reason=reason,
+            source=source or None,
+            attributed_at=ts,
+        )
+        # An EXCLUDED txn must not also carry a standing DISCARDED verdict — both
+        # keep it out, but the EXCLUDED override is the authoritative record.
+        db.delete_review_resolution(conn, transaction_id=transaction_id, entity_slug=entity_slug)
+    block = [
+        f"\n### {ts[:10]} — MANUAL_EXCLUSION — {entity_slug}",
+        "",
+        f"- **transaction_id**: `{transaction_id}`",
+        f"- **entity_slug**: `{entity_slug}`",
+        f"- **forced_status**: `EXCLUDED`",
+        f"- **reason**: {reason}",
+        f"- **source**: {source or '(none)'}",
+        f"- **snapshot_path**: `{snap}`",
+        f"- **note**: Documented human decision that this txn is NOT this owner (GOVERNANCE.md §1.1/§1.9). Dropped from classification (not queued). Survives reclassify. Reversible via `unexclude`. Reclassification follows below.",
+        "",
+    ]
+    existing = PROVENANCE_LOG.read_text(encoding="utf-8") if PROVENANCE_LOG.exists() else ""
+    PROVENANCE_LOG.write_text(existing + "\n".join(block), encoding="utf-8")
+
+    summary = reclassify_entity(entity_slug, reason=f"apply manual exclusion of {transaction_id}")
+    click.echo(json.dumps({
+        "transaction_id": transaction_id,
+        "entity_slug": entity_slug,
+        "forced_status": "EXCLUDED",
+        "manual_exclusions_applied": summary.get("manual_exclusions_applied"),
+        "snapshot_path": str(snap),
+    }, indent=2, default=str))
+
+
+@cli.command()
+@click.argument("transaction_id")
+@click.argument("entity_slug")
+@click.option("--yes", is_flag=True, help="Skip confirmation.")
+def unexclude(transaction_id, entity_slug, yes):
+    """Remove a manual EXCLUDED override and reclassify (undo an exclude).
+
+    GATED DATA OPERATION — snapshots master.db, removes the override, logs to
+    PROVENANCE_LOG, then reclassifies so the record reverts to its automated verdict.
+    """
+    from datetime import datetime, timezone
+
+    from .paths import PROVENANCE_LOG
+
+    ts = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    db.init()
+    if not yes and not click.confirm(
+        f"Remove manual exclusion of {transaction_id} from {entity_slug} and reclassify?",
+        default=False,
+    ):
+        click.echo("Aborted.")
+        return
+    snap = db.snapshot("pre-unexclude")
+    with db.connect() as conn:
+        n = db.delete_manual_attribution(conn, transaction_id=transaction_id, entity_slug=entity_slug)
+    if n == 0:
+        click.echo(f"No manual override found for {transaction_id} ({entity_slug}). Nothing to do.")
+        return
+    block = [
+        f"\n### {ts[:10]} — MANUAL_EXCLUSION_REMOVED — {entity_slug}",
+        "",
+        f"- **transaction_id**: `{transaction_id}`",
+        f"- **entity_slug**: `{entity_slug}`",
+        f"- **snapshot_path**: `{snap}`",
+        f"- **note**: EXCLUDED override removed; record reverts to its automated classification on the reclassify below.",
+        "",
+    ]
+    existing = PROVENANCE_LOG.read_text(encoding="utf-8") if PROVENANCE_LOG.exists() else ""
+    PROVENANCE_LOG.write_text(existing + "\n".join(block), encoding="utf-8")
+    reclassify_entity(entity_slug, reason=f"remove manual exclusion of {transaction_id}")
+    click.echo(f"Removed manual exclusion for {transaction_id} ({entity_slug}) and reclassified.")
+
+
 @cli.command(name="bulk-discard")
 @click.option("--reason-like", required=True, help="SQL LIKE pattern matched against review_queue.reason (e.g. 'city/state outside%').")
 @click.option("--only", default=None, help="Restrict to one entity_slug.")

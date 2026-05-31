@@ -134,6 +134,11 @@ CREATE INDEX IF NOT EXISTS idx_review_resolutions_slug
 -- carries a reason + source so the override is itself auditable (GOVERNANCE.md
 -- §1.1, §2.5). Use sparingly and only with documented evidence — this bypasses
 -- the two-signal rule by explicit human decision.
+-- status values: 'CONFIRMED' / 'PROBABLE' force-attribute the txn (the `attribute`
+-- CLI); 'EXCLUDED' (the `exclude` CLI) is the negative — it DROPS the txn from
+-- this owner's classification entirely (not even to the review queue), for a
+-- documented "this is NOT this owner" decision where no signal can separate a
+-- same-named relative. No CHECK constraint: status is validated by the CLI layer.
 CREATE TABLE IF NOT EXISTS manual_attributions (
     transaction_id  TEXT NOT NULL,
     entity_slug     TEXT NOT NULL,

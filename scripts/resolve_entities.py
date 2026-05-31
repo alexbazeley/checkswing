@@ -16,6 +16,12 @@ from typing import Iterable, Sequence
 CONFIRMED = "CONFIRMED"
 PROBABLE = "PROBABLE"
 UNCERTAIN = "UNCERTAIN"
+# Not a classifier verdict — a manual_attributions override value (schema v7).
+# A txn carrying an EXCLUDED override is dropped from an owner's classification
+# entirely (the documented-human-decision negative of a CONFIRMED override): the
+# record is NOT this owner and no signal can separate them from a same-named
+# relative. Handled in ingest.classify loop; never produced by classify().
+EXCLUDED = "EXCLUDED"
 
 SUFFIXES = {"jr", "sr", "ii", "iii", "iv", "v"}
 HONORIFICS = {"mr", "mrs", "ms", "miss", "dr", "prof", "rev", "hon"}

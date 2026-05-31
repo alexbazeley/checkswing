@@ -30,6 +30,7 @@ from .fetch_fec import DEFAULT_MIN_DATE, FECClient, load_raw_payloads
 from .paths import OWNERS_DIR, PROVENANCE_LOG, REPO_ROOT, REVIEW_QUEUE_MD
 from .resolve_entities import (
     CONFIRMED,
+    EXCLUDED,
     PROBABLE,
     UNCERTAIN,
     Classification,
@@ -424,12 +425,20 @@ def ingest_entity(
     uncertain: list[tuple[dict, Classification]] = []
     skipped_no_name_match = 0
     manual_overrides_applied = 0
+    manual_exclusions_applied = 0
 
     for r in records:
         txn = str(r.get("transaction_id") or r.get("sub_id") or "")
         c = classify(r, owner, process_related_entities=process_related_entities)
         if txn and txn in manual:
             forced_status = manual[txn]
+            if forced_status == EXCLUDED:
+                # Documented human decision (manual_attributions, status EXCLUDED):
+                # this txn is NOT this owner and no signal can separate it from a
+                # same-named relative. Drop it entirely — not even to the review
+                # queue (GOVERNANCE.md §1.1 / §1.9). Survives reclassify.
+                manual_exclusions_applied += 1
+                continue
             c = Classification(
                 status=forced_status,
                 status_reason=f"manual attribution ({forced_status}) — see manual_attributions table",
@@ -452,6 +461,8 @@ def ingest_entity(
     print(f"[{slug}] Classification: CONFIRMED={len(confirmed)} · PROBABLE={len(probable)} · UNCERTAIN={len(uncertain)} · skipped(name no-match)={skipped_no_name_match}")
     if manual_overrides_applied:
         print(f"[{slug}] {manual_overrides_applied} manual attribution override(s) applied (§1.1).")
+    if manual_exclusions_applied:
+        print(f"[{slug}] {manual_exclusions_applied} manual exclusion(s) applied — txn(s) dropped as not-this-owner (§1.1/§1.9).")
 
     completed_at = _utc_now_iso()
     # period_end = latest contribution date among all classified records in
@@ -543,6 +554,8 @@ def ingest_entity(
         )
     if manual_overrides_applied:
         summary["manual_overrides_applied"] = manual_overrides_applied
+    if manual_exclusions_applied:
+        summary["manual_exclusions_applied"] = manual_exclusions_applied
 
     # ── Step 9: write audit.last_ingestion ─────────────────────────────────
     # Records today's UTC date as the freshness watermark so the NEXT ingest
