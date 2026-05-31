@@ -4035,3 +4035,29 @@ Total suite: 209 green.
 - **idempotency**: per-(committee, cycle) 30-day freshness gate; DELETE-then-INSERT per cycle so FEC retroactive amendments supersede (§1.5)
 - **data notes**: all rows `recipient_kind=committee` (FEC's by_recipient response is committee-keyed; no candidate_id populated) · `2780` negative `total_amount` rows = refunds/returned disbursements (legitimate FEC net aggregates), retained as-is · names + amounts only, NO editorial/legislative linkage (GOVERNANCE.md §6 — that is Phase 3)
 - **provenance note**: the backfill ran via a local self-healing wrapper (`caffeinate` + auto-lock-clear + retry); completed in 1 clean pass (rc=0). The wrapper is an operational helper, not part of the committed pipeline.
+
+### 2026-05-31 — DELETION — reclassify middleton-john
+
+- **entity_slug**: `middleton-john`
+- **reason**: Dock Street residue: confirm John S. Middleton donations via Dock Street Capital (his family office) + King of Prussia signals
+- **rows_deleted_donations**: `54`
+- **rows_deleted_review_queue**: `0` (of which 0 had resolutions)
+- **include_related**: `False`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-31T16-43-16Z__pre-reclassify-middleton-john.db`
+- **note**: Rows are recoverable from the snapshot above and from data/raw/middleton-john/ payloads. Re-classification follows in the next INGESTION entry.
+
+### 2026-05-31 — INGESTION
+
+- **run_id**: `438126ab`
+- **entity_slug**: `middleton-john`
+- **dry_run**: `0`
+- **period_start**: `2024-11-23`
+- **period_end**: `2025-12-29`
+- **name_variants_queried**: `["John Middleton", "John S. Middleton", "John S Middleton", "John Staubus Middleton", "Middleton, John", "Middleton, John S", "Middleton, John S."]`
+- **api_calls_made**: `0`
+- **records_fetched**: `100`
+- **confirmed_count**: `51`
+- **probable_count**: `9`
+- **uncertain_count**: `26`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-31T16-43-16Z__438126ab.db`
+- **notes**: skipped(no-name-match)=0 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
