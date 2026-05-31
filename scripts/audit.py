@@ -10,7 +10,7 @@ Used by the `audit <slug>` CLI command. Surfaces:
 
 Nothing here writes. The output is meant to inform a human's YAML edit
 decisions per the Cohen-playbook calibration loop in
-docs/CALIBRATION_PLAYBOOK.md (TODO — to be written as part of PR 4 wrap).
+docs/CALIBRATION_PLAYBOOK.md.
 """
 from __future__ import annotations
 
@@ -405,7 +405,8 @@ def format_findings(f: AuditFindings) -> str:
         parts.append(f"  → {s}")
     parts.append("")
     parts.append("(audit is read-only — apply changes by editing the owner YAML")
-    parts.append(" with a change_log entry, then `reclassify --from-raw <slug>`.)")
+    parts.append(" with a change_log entry, then `reclassify <slug>`. See")
+    parts.append(" docs/CALIBRATION_PLAYBOOK.md for the full loop.)")
     return "\n".join(parts)
 
 

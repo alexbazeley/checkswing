@@ -935,7 +935,8 @@ def audit(slug):
     a heuristic suggestion checklist for tightening signals.
 
     Apply changes by editing the owner YAML with a change_log entry
-    (GOVERNANCE.md §1.7), then `reclassify --from-raw <slug>`.
+    (GOVERNANCE.md §1.7), then `reclassify <slug>`. See
+    docs/CALIBRATION_PLAYBOOK.md for the full calibration loop.
     """
     db.init()
     click.echo(audit_slug(slug))
