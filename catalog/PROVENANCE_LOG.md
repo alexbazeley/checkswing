@@ -4160,3 +4160,21 @@ donation as influence over office-Y votes; deferred deliberately.
 - **errors**: `[]`
 - **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-31T21-23-47Z__pre-ingest-votes.db`
 - **note**: Vote positions are FEC-neutral facts (who voted Yea/Nay). Senate LIS ids mapped to Bioguide via legislators.lis_id. Raw XML under data/raw/legislation/.
+
+### 2026-05-31 — NOTE — Phase 3 exit criterion met (first published brief)
+
+The Phase 3 exit criterion (CHARTER.md §Phase 3: "at least one publishable brief
+generated end-to-end from the joined data") is satisfied.
+
+- **Brief**: `reports/2026-05-31_save-americas-pastime-act.md` — MLB owner donations
+  joined to the 2018 roll-call votes that carried the Save America's Pastime Act.
+- **Built end-to-end from the join**: owners→donations (master.db) → FEC→Bioguide
+  crosswalk → bills+sponsors (Congress.gov) → roll-call positions (Clerk/Senate XML)
+  → the neutral query output in `reports/data/save-americas-pastime-act{,-sponsors}.{csv,json}`
+  (`policy-join`, read-only).
+- **Neutrality preserved**: the brief is labeled interpretation and lives only in
+  `reports/`; the data layer carries no framing (GOVERNANCE.md §6). The brief
+  reports the honest finding — the join does NOT show a quid-pro-quo (1 of 41
+  donations predates the 2018 vote; owner money splits ~50/50 Yea/Nay; zero owner
+  donations to SAPA's authors Guthrie/Bustos) — rather than overclaiming.
+- master.db untouched throughout Phase 3; legislation.db is a separate non-LFS DB.
