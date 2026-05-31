@@ -1,0 +1,36 @@
+# reports/
+
+This directory holds **interpretation** — editorial analysis built on top of the
+archive's neutral data. It is the one place in this repository where framing,
+narrative, and a point of view are allowed (CHARTER.md §Editorial framing,
+GOVERNANCE.md §1.8 and §6).
+
+The boundary, restated:
+
+- **The data layer never editorializes.** `data/master.db`, `data/legislation.db`,
+  and the dashboard store neutral, sourced facts in a law-librarian's tone.
+- **`reports/` is where the show's voice lives.** Briefs here interpret the joined
+  data, make arguments, and connect dots — clearly labeled as interpretation, and
+  always traceable back to the neutral evidence.
+
+## Contents
+
+- **`2026-05-31_save-americas-pastime-act.md`** — the first donations × legislation
+  brief (Phase 3 exit criterion): MLB owner donations joined to the 2018 vote that
+  carried the Save America's Pastime Act.
+- **`data/`** — the *neutral* machine-generated join outputs the briefs are built
+  on (CSV + JSON), produced by `python -m scripts.cli policy-join`. These carry no
+  interpretation; they are the reproducible evidence layer. Regenerate them to
+  refresh a brief's numbers.
+
+## Reproducing a brief's numbers
+
+Every figure in a brief traces to a `reports/data/` file. To regenerate the
+Save America's Pastime Act evidence:
+
+```
+python -m scripts.cli policy-join \
+  --bill 115-hr-1625 \
+  --sponsors-of 114-hr-5580 --sponsors-of 115-hr-1625 \
+  --out save-americas-pastime-act
+```
