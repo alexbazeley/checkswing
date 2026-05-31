@@ -658,11 +658,21 @@ def main() -> None:
     committee_scale = {cid: cycles for cid, cycles in scale_by_cid.items() if cycles}
 
     # ── Per-committee beneficiaries (v5: who this committee funded) ──────────
-    # Shape: { committee_id: { "<cycle>": [ {recipient}, ... top 25 desc ], ... } }
-    # FEC sorts the by_recipient endpoint by amount desc; we cap at 25 per cycle
-    # so the dashboard renders fast and matches the "scannable top-of-pile" UX of
-    # the other recipient lists. Tolerant of a pre-v5 DB — empty dict means the
-    # UI just doesn't render the "Who this committee funded" section.
+    # Shape: { committee_id: { "<cycle>": [ {recipient}, ... top N desc ], ... } }
+    # FEC sorts the by_recipient endpoint by amount desc.
+    #
+    # INTERIM CAP (DASHBOARD_BENEFICIARY_CAP): after the Phase-2 beneficiary
+    # backfill (395K rows across 1,044 committees), embedding the full top-25
+    # per cycle pushed this single-file data.json to ~36 MB — over Cloudflare
+    # Pages' 25 MB per-asset hard limit (and well over the 12 MB SPA budget).
+    # The full data lives in master.db (committee_disbursements_by_recipient);
+    # the SPA can't load it all at once. Until data.json is split into
+    # lazy-loaded per-committee chunks (the follow-up this file's size warning
+    # has long called for), we embed only the top-5 per cycle (~15 MB total,
+    # safely under the Cloudflare limit). Raise/remove the cap when chunking
+    # lands. Tolerant of a pre-v5 DB — empty dict means the UI just doesn't
+    # render the "Who this committee funded" section.
+    DASHBOARD_BENEFICIARY_CAP = 5
     committee_beneficiaries: dict[str, dict[str, list[dict]]] = {}
     if relevant_cids:
         placeholders = ",".join(["?"] * len(relevant_cids))
@@ -691,11 +701,12 @@ def main() -> None:
                     "total_amount": row["total_amount"],
                     "n_transactions": row["n_transactions"],
                 })
-            # Slice each (committee, cycle) array to top 25. JSON keys are strings
-            # — match the existing committee_scale / cycle_dollars convention.
+            # Slice each (committee, cycle) array to the interim cap. JSON keys
+            # are strings — match the existing committee_scale / cycle_dollars
+            # convention.
             for cid, by_cycle in grouped.items():
                 committee_beneficiaries[cid] = {
-                    str(cycle): recipients[:25]
+                    str(cycle): recipients[:DASHBOARD_BENEFICIARY_CAP]
                     for cycle, recipients in by_cycle.items()
                 }
         except sqlite3.OperationalError as e:
