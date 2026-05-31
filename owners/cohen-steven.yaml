@@ -131,10 +131,10 @@ related_entities:
   #     accessed: ""
 
 sources:
-- description: "MLB Mets ownership announcement (Nov 2020)"
-  url: ""      # TODO: populate during Phase 1
-  accessed: "2026-05-22"
-  archive_url: ""
+- description: "MLB.com — MLB owners approve Mets sale to Steve Cohen (Oct 30, 2020)"
+  url: "https://www.mlb.com/news/mets-sale-to-steve-cohen-approved-by-mlb"
+  accessed: "2026-05-30"
+  archive_url: "http://web.archive.org/web/20250213005104/https://www.mlb.com/news/mets-sale-to-steve-cohen-approved-by-mlb"
 - description: "Point72 firm leadership page"
   url: "https://www.point72.com"
   accessed: "2026-05-22"
@@ -207,6 +207,16 @@ change_log:
     P/C 0.08 — well-calibrated. The 10 PROBABLE are legitimate one-
     signal residual. Signal review date advanced.
   by: "automated pipeline (PR 4 Tier C light pass)"
+- date: 2026-05-30
+  change: |
+    Provenance backfill — populated the empty sources[0] URL (the
+    long-standing "TODO: populate during Phase 1" placeholder that
+    `validate` warned on). The entity-identification source for Cohen as
+    tracked Mets principal owner is now the official MLB.com announcement
+    of MLB owners approving the sale (Oct 30, 2020), with a Wayback
+    snapshot as archive_url. Tier-2 source per SOURCES.md; no signal,
+    classification, or donation-data change.
+  by: "automated pipeline (calibration-playbook session, source backfill)"
 
 audit:
   created: 2026-05-22
