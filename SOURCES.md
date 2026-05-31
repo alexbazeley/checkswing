@@ -79,3 +79,58 @@ Every owner YAML's `sources` block must record:
 - The source for each `verifying_signals` value that isn't trivially derivable (e.g., a known city is fine without a citation; a less-obvious employer string should cite where we got it).
 
 Each source entry records: `description`, `url`, `accessed` (YYYY-MM-DD), and where applicable `archive_url` (Wayback Machine snapshot).
+
+## Phase 3 addendum — legislation, votes, legislators
+
+Phase 3 (CHARTER.md §Phase 3) builds a neutral index of MLB-relevant federal
+legislation, roll-call votes, and the legislator crosswalk, then joins it to the
+donation data. That requires sources beyond FEC. Adopting them is a deliberate,
+documented scope expansion (GOVERNANCE.md §5); they are held to the same tiering
+discipline as donation data. The legislation index stores neutral, sourced facts
+only — interpretation lives in `reports/`, never in a row (project CLAUDE.md §2,
+GOVERNANCE.md §6).
+
+### Tier 1: Primary, authoritative (populate substantive legislation fields)
+
+- **Congress.gov API** (`api.congress.gov`) — official Library of Congress / GPO.
+  Use for bill identity, title, sponsors, cosponsors, actions, and enacted status.
+  Fronted by **api.data.gov**, so the same key system as FEC (`CONGRESS_API_KEY`,
+  falls back to `FEC_API_KEY`).
+- **House Clerk roll-call XML** (`clerk.house.gov`) and **Senate roll-call XML**
+  (`senate.gov/legislative/LIS/roll_call_lists`) — the source of record for vote
+  positions (who voted Yea/Nay on a given roll call). Congress.gov vote data is a
+  cross-check, not the cited origin.
+- **OpenFEC `/candidate/<id>/`** (already in use) — to cross-check that the FEC
+  candidate ids appearing in our donation set map to the legislators the crosswalk
+  claims, before any join is trusted.
+
+### Tier 2: Authoritative for entity identification (NOT for vote/donation facts)
+
+- **`unitedstates/congress-legislators`** (public-domain `legislators-current.yaml`
+  + `legislators-historical.yaml`). The canonical open crosswalk: each legislator
+  carries `id.bioguide`, `id.icpsr`, `id.govtrack`, `id.opensecrets`, and an
+  `id.fec` **array** (one legislator → many FEC candidate ids), plus `terms`
+  (chamber / state / district / party / dates). This is the **FEC-id → Bioguide**
+  map that makes the donation↔vote join possible. Treated like owner-identity
+  Tier-2 data: it tells us *who* a candidate id is, never *what* they voted or
+  *whether* a donation occurred. The subset of FEC ids present in our donations is
+  cross-checked against OpenFEC (Tier 1) before use.
+
+### Tier 3: Cross-reference only
+
+- **GovTrack** (`govtrack.us`) — a derived mirror of official congressional data.
+  Useful to sanity-check a vote tally or a bill's status; never the source of record.
+- **OpenSecrets**, **Wikipedia**, **Ballotpedia** — biographical / contextual
+  starting points, confirmed via Tier 1/2 before anything is recorded.
+
+### Explicitly OUT for Phase 3
+
+- **ProPublica Congress API** — sunset in 2024; not used.
+- **Editorial relevance framing inside the index.** *Which* bills are MLB-relevant
+  is a curatorial selection, but each indexed bill records a **sourced, factual**
+  `relevance_basis` (e.g. "amends 15 U.S.C. §26b, MLB's antitrust exemption";
+  "exempts MiLB players from FLSA §13(a); text inserted as a division of H.R.1625"),
+  not a characterization of motive or wrongdoing. Spin lives in `reports/`.
+- **Inferring intent from temporal proximity.** A computed "donation N days before
+  vote Z" is a neutral arithmetic fact stored/queried as such. The claim that the
+  donation *caused* the vote is interpretation and belongs only in `reports/`.

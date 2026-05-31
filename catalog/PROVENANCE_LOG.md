@@ -4061,3 +4061,30 @@ Total suite: 209 green.
 - **uncertain_count**: `26`
 - **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-31T16-43-16Z__438126ab.db`
 - **notes**: skipped(no-name-match)=0 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-05-31 — SETUP (Phase 3 scaffolding)
+
+Phase 3 (CHARTER.md §Phase 3 — cross-referencing donations to MLB-relevant
+federal legislation, votes, and regulatory actions) is now active. This entry
+records the scaffolding only; no donation data in `master.db` was read or
+mutated.
+
+- **New DB**: `data/legislation.db` (`scripts/legislation_db.py`, leg schema v1) —
+  a SEPARATE SQLite database from `master.db`, deliberately committed as a normal
+  (non-LFS) git blob (`.gitattributes` LFS-tracks only `master.db`). Verified
+  `git check-attr filter data/legislation.db` → `unspecified`. Holds the neutral,
+  sourced index: `legislators` + `legislator_fec_ids` + `legislator_terms`
+  (the FEC-candidate-id → Bioguide crosswalk), `bills` + `bill_sponsors`,
+  `votes` + `vote_positions`, `policy_events`.
+- **Neutrality boundary (GOVERNANCE.md §6, project CLAUDE.md §2)**: the index
+  stores neutral facts in a law-librarian's tone; `bills.relevance_basis` is a
+  sourced factual reason a bill is indexed, never editorial framing. Interpretation
+  lives only in `reports/`.
+- **Sources adopted** (SOURCES.md Phase-3 addendum): Tier-1 Congress.gov API +
+  House Clerk / Senate roll-call XML + OpenFEC `/candidate/`; Tier-2
+  `unitedstates/congress-legislators` crosswalk; Tier-3 GovTrack/OpenSecrets.
+  ProPublica Congress API (sunset 2024) not used.
+- **Files**: `scripts/legislation_db.py`, `scripts/paths.py` (legislation paths),
+  `scripts/cli.py` (`init-legislation`), `.env.example` (`CONGRESS_API_KEY`),
+  `.gitignore` (legislation.db journal/WAL), `tests/test_legislation_db.py` (+8).
+- **Gates**: `validate` 36 OK / 0 failed / 0 warnings; `pytest` 283 passed.

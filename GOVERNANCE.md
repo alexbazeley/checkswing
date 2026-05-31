@@ -171,11 +171,10 @@ Specifically, **always** stop and confirm before:
 
 ## 6. Scope guardrails
 
-The data pipeline is federal-only, FEC-only, principal-owners-only. The following
-are out of scope for the archive's data layer; treat work drifting into them as a
-signal to stop and reassess against CHARTER.md:
+The donation data pipeline is federal-only, FEC-only, principal-owners-only. The
+following are out of scope for the **donation** data layer; treat work drifting
+into them as a signal to stop and reassess against CHARTER.md:
 
-- Cross-referencing donations with legislation, votes, or policy outcomes (Phase 3, not yet active).
 - Pulling state or local campaign finance (Phase 4, not yet active).
 - Looking up team-affiliated charitable foundations (a separate project — IRS 990s).
 - Writing narrative analysis of "what these donations mean" into the data layer.
@@ -185,5 +184,17 @@ presentation layer built *on top of* the archive: it renders only data and
 provenance already in `master.db` (donations, committee enrichment, filing links,
 and committee beneficiary aggregates), never editorial interpretation. Changes to
 it must not alter the archive's attribution or provenance rules.
+
+The **Phase 3 legislation index** (`data/legislation.db`, sourced from
+`legislation/` YAML — CHARTER.md §Phase 3) is now active. It is a *separate*
+database from `master.db` and is held to the same neutrality and provenance
+discipline as the donation data: it stores neutral, sourced facts only — a bill's
+identity, its sponsors, a roll call's date and result, a legislator's recorded
+position, and a sourced `relevance_basis` for why a bill is indexed. It does **not**
+store editorial framing, motive, or any claim that a donation influenced a vote.
+The owner→donation→legislator→vote join is computed at query time (ATTACH); a
+"donation N days before vote Z" figure is neutral arithmetic. All interpretation —
+including the publishable brief that is Phase 3's exit criterion — lives in
+`reports/`, never in a row, and never on the public dashboard.
 
 When in doubt, return to CHARTER.md and verify the work is in scope.
