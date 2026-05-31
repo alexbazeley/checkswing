@@ -3987,3 +3987,38 @@ Total suite: 209 green.
 - **uncertain_count**: `0`
 - **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-30T22-53-46Z__c911f038.db`
 - **notes**: skipped(no-name-match)=0 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-05-31 — MANUAL_ATTRIBUTION + MANUAL_EXCLUSION (batch) — middleton-john
+
+- **attributed (CONFIRMED, John S. Staubus = owner)**: 6 txns — `MIDDLETON, JOHN S. MR. SR.` / Bradford Holdings (strong signal); queued only on the SR suffix. ['2011YEL11AI08426', '1121520090002805373', 'SA11.1653083', '49428662', 'SA18.1294499', 'SA11.1294499']
+- **excluded (John P. Powers = son)**: 14 txns — `MIDDLETON, JOHN P. ...` (1 was CONFIRMED, 7 PROBABLE, 6 queued). Dropped from john-s. ['2011M03L11AI01333', 'SA11AI.6390', '1020220110005296882', '2009M12L11AI08886', '1010720100003825407', '1010720100003825406', '1010720100003825405', '2009M02L11AI01711', '1121520090003627754', 'SA11.1142039', 'SA11.1004545', 'SA17A.880045', 'SA17.804881', 'SA17.804880']
+- **attribute reason**: John S. (Staubus) Middleton — principal owner / managing partner of the Philadelphia Phillies — donation misfiled with the 'SR.' suffix ('MIDDLETON, JOHN S. MR. SR.') that no name_variant captures. Employer BRADFORD HOLDINGS INC. is his strong_signal holding company; queued only on the suffix. Middle initial S (Staubus) distinguishes him from his son John Powers Middleton (P).
+- **exclude reason**: John Powers Middleton (middle initial P), SON of owner John S. Middleton — a film producer (Vertigo Entertainment; Manchester by the Sea) AND a documented independent major federal political donor (Wikipedia 'John Powers Middleton'; Media Matters reporting on his political giving). He lives at the same Bryn Mawr address, and the classifier drops middle initials, so 'John P.' cannot be separated from 'John S.' by name. These records carry middle initial P (Powers) — they are the SON's donations, NOT the owner's — regardless of employer (some list 'PHILADELPHIA PHILLIES' loosely). EXCLUDED from john-s by documented human decision (GOVERNANCE.md §1.1/§1.9). John P. is a future separate slug (middleton-john-p) pending a classifier middle-initial fix.
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-31T01-02-28Z__pre-middleton-triage.db`
+- **note**: Disambiguated by middle initial (S=Staubus owner, P=Powers son). The classifier drops middle initials so name alone can't separate father/son at the shared Bryn Mawr address; the Vertigo negative_signal only caught Vertigo-employer records. These txn-keyed overrides survive reclassify. John P. (son) is a documented independent major donor and a future middleton-john-p slug. Reversible via unattribute/unexclude. Reclassify follows.
+
+### 2026-05-31 — DELETION — reclassify middleton-john
+
+- **entity_slug**: `middleton-john`
+- **reason**: round-2 triage: attribute 6 John S Sr/Bradford queued records; exclude 14 John P (Powers, son) records via new EXCLUDE feature
+- **rows_deleted_donations**: `56`
+- **rows_deleted_review_queue**: `44` (of which 32 had resolutions)
+- **include_related**: `False`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-31T01-02-28Z__pre-reclassify-middleton-john.db`
+- **note**: Rows are recoverable from the snapshot above and from data/raw/middleton-john/ payloads. Re-classification follows in the next INGESTION entry.
+
+### 2026-05-31 — INGESTION
+
+- **run_id**: `f23a17e3`
+- **entity_slug**: `middleton-john`
+- **dry_run**: `0`
+- **period_start**: `2024-11-23`
+- **period_end**: `2025-12-29`
+- **name_variants_queried**: `["John Middleton", "John S. Middleton", "John S Middleton", "John Staubus Middleton", "Middleton, John", "Middleton, John S", "Middleton, John S."]`
+- **api_calls_made**: `0`
+- **records_fetched**: `100`
+- **confirmed_count**: `38`
+- **probable_count**: `16`
+- **uncertain_count**: `32`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-31T01-02-28Z__f23a17e3.db`
+- **notes**: skipped(no-name-match)=0 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
