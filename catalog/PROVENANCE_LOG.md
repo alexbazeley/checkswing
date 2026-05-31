@@ -4088,3 +4088,40 @@ mutated.
   `scripts/cli.py` (`init-legislation`), `.env.example` (`CONGRESS_API_KEY`),
   `.gitignore` (legislation.db journal/WAL), `tests/test_legislation_db.py` (+8).
 - **Gates**: `validate` 36 OK / 0 failed / 0 warnings; `pytest` 283 passed.
+
+### 2026-05-31 — INGESTION (legislators crosswalk)
+
+- **source**: `unitedstates/congress-legislators` (https://unitedstates.github.io/congress-legislators/legislators-current.yaml + https://unitedstates.github.io/congress-legislators/legislators-historical.yaml)
+- **fetched_at**: `2026-05-31T21:04:02Z`
+- **legislators**: `1529`
+- **fec_id_links**: `1713`
+- **terms**: `9048`
+- **only_with_fec**: `True`
+- **include_historical**: `True`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-31T21-04-02Z__pre-ingest-legislators.db`
+- **note**: Tier-2 entity identification (SOURCES.md Phase-3 addendum). Crosswalk tables are a pure projection of the upstream source — idempotent wipe-and-rebuild. Raw payloads persisted under data/raw/legislation/.
+
+### 2026-05-31 — NOTE — legislator crosswalk coverage (de-risking probe)
+
+Read-only `legislation-coverage` against the freshly-ingested crosswalk. Of **76**
+distinct `recipient_candidate_id`s on CONFIRMED+PROBABLE donations in master.db,
+**39 (51.3%)** resolve to a legislator via `legislator_fec_ids`; 37 do not.
+
+The unresolved set was Tier-1 cross-checked against OpenFEC `/candidate/<id>/` and
+is expected, not a defect — it is dominated by recipients who never cast a
+congressional vote our index could join to:
+
+- **Never-seated candidates** (e.g. H8MN08068 Radinovich, H8MN01279 Feehan,
+  S2NV00324 Laxalt, H6NY10176 Lander) — lost their races; no Bioguide id, no votes.
+- **Presidential committees** (e.g. P80000722 Biden) — no congressional roll calls.
+- **Sitting members' campaigns for a *different* office** (e.g. S8TX00285 O'Rourke's
+  2018 Senate run, S6MN00499 Craig's 2026 Senate run) — the person served, but this
+  candidate id funded a race for an office where they cast no votes. Conservatively
+  left unresolved (donation→legislator is matched only on the candidate id actually
+  filed, not by person-across-all-ids).
+
+The resolved 39 are exactly the donations to people who held office and could vote —
+the joinable universe Phase 3 needs. **Known limitation (documented, not yet acted
+on):** person-level resolution across a legislator's multiple FEC ids (House id vs.
+Senate-run id) would lift coverage but risks attributing a campaign-for-office-X
+donation as influence over office-Y votes; deferred deliberately.

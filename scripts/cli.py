@@ -56,6 +56,82 @@ def init_legislation_cmd():
     click.echo(f"Initialized {LEGISLATION_DB} (leg schema v{legislation_db.LEG_SCHEMA_VERSION})")
 
 
+@cli.command(name="ingest-legislators")
+@click.option("--no-historical", is_flag=True, help="Fetch only legislators-current.yaml (skip the larger historical file).")
+@click.option("--all-legislators", is_flag=True, help="Keep legislators with no FEC id too (default: only the FEC-joinable universe).")
+def ingest_legislators_cmd(no_historical, all_legislators):
+    """Fetch the congress-legislators crosswalk and rebuild the FEC→Bioguide map.
+
+    GATED DATA OPERATION — snapshots legislation.db first and appends a
+    PROVENANCE_LOG entry. The crosswalk tables are a pure projection of the
+    upstream source, so this is an idempotent wipe-and-rebuild.
+    """
+    from datetime import datetime, timezone
+
+    from . import legislation_db
+    from .fetch_legislators import CURRENT_URL, HISTORICAL_URL, SOURCE_LABEL, fetch_and_parse
+    from .ingest_legislation import ingest_legislators
+    from .paths import PROVENANCE_LOG
+
+    ts = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    snap = legislation_db.snapshot("pre-ingest-legislators")
+    click.echo("Fetching congress-legislators crosswalk…")
+    legislators, fec_ids, terms = fetch_and_parse(
+        include_historical=not no_historical,
+        only_with_fec=not all_legislators,
+    )
+    counts = ingest_legislators(legislators, fec_ids, terms)
+
+    urls = CURRENT_URL if no_historical else f"{CURRENT_URL} + {HISTORICAL_URL}"
+    block = [
+        f"\n### {ts[:10]} — INGESTION (legislators crosswalk)",
+        "",
+        f"- **source**: `{SOURCE_LABEL}` ({urls})",
+        f"- **fetched_at**: `{ts}`",
+        f"- **legislators**: `{counts['legislators']}`",
+        f"- **fec_id_links**: `{counts['fec_ids']}`",
+        f"- **terms**: `{counts['terms']}`",
+        f"- **only_with_fec**: `{not all_legislators}`",
+        f"- **include_historical**: `{not no_historical}`",
+        f"- **snapshot_path**: `{snap}`",
+        "- **note**: Tier-2 entity identification (SOURCES.md Phase-3 addendum). Crosswalk tables are a pure projection of the upstream source — idempotent wipe-and-rebuild. Raw payloads persisted under data/raw/legislation/.",
+        "",
+    ]
+    existing = PROVENANCE_LOG.read_text(encoding="utf-8") if PROVENANCE_LOG.exists() else ""
+    PROVENANCE_LOG.write_text(existing + "\n".join(block), encoding="utf-8")
+
+    click.echo(json.dumps(counts, indent=2))
+
+
+@cli.command(name="legislation-coverage")
+@click.option("--json", "as_json", is_flag=True, help="Emit raw JSON instead of a table.")
+def legislation_coverage_cmd(as_json):
+    """Read-only: how many donation recipient candidates resolve to a legislator?
+
+    De-risking probe for the phase. Joins master.db donations to the crosswalk and
+    reports resolved/unresolved coverage plus the largest unresolved recipients.
+    """
+    from .ingest_legislation import donation_legislator_coverage
+
+    cov = donation_legislator_coverage()
+    if as_json:
+        click.echo(json.dumps(cov, indent=2))
+        return
+    click.echo(
+        f"Donation recipient candidates: {cov['n_candidate_ids']} distinct "
+        f"({cov['statuses']})\n"
+        f"  resolved to a legislator: {cov['n_resolved']} ({cov['pct_resolved']}%)\n"
+        f"  unresolved:               {cov['n_unresolved']}"
+    )
+    if cov["top_unresolved"]:
+        rows = [
+            [r["cid"], (r["name"] or "")[:40], r["n_donations"], f"${(r['total_amount'] or 0):,.0f}"]
+            for r in cov["top_unresolved"]
+        ]
+        click.echo("\nLargest unresolved recipients:")
+        click.echo(tabulate(rows, headers=["fec_cand_id", "name", "n", "total"]))
+
+
 @cli.command()
 @click.argument("slug")
 @click.option("--dry-run", is_flag=True, help="Fetch + classify but do not write to DB.")
