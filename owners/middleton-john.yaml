@@ -28,6 +28,7 @@ verifying_signals:
   cities:
   - "bryn mawr"
   - "philadelphia"
+  - "king of prussia"            # location of Dock Street Capital (his family office), 510 Feheley Dr, 19406 — added 2026-05-31
   states:
   - "PA"
   employers:
@@ -57,6 +58,7 @@ strong_signals:
   - "Bradford Holdings"
   - "Double Play Inc"
   - "Double Play, Inc"
+  - "Dock Street Capital"         # Middleton is chairman & CEO of Dock Street Capital Management (his structured-credit family office, King of Prussia) — diagnostic of him. Added 2026-05-31.
   zip_codes: []
 
 # Anti-pattern: John P. Middleton (John S.'s son, confirmed by alex during
@@ -143,6 +145,30 @@ notes: |
   records under that string promote to CONFIRMED.
 
 change_log:
+- date: 2026-05-31
+  change: |
+    Resolved the "Dock Street Capital connection" flagged out-of-scope in the
+    2026-05-30 round-2 triage. Research (Wikipedia, Bloomberg Billionaires,
+    company records) confirms John S. Middleton is chairman & CEO of Dock
+    Street Capital Management — his structured-credit family office at 510
+    Feheley Dr, King of Prussia, PA 19406. The FEC residue of "MIDDLETON,
+    JOHN S." records with employer DOCK STREET CAPITAL / "REQUESTED" /
+    "INFORMATION REQUESTED" at King of Prussia 19406 are therefore his own
+    donations (middle initial S, his firm, his office ZIP), not a doppelgänger.
+
+    Two deliberate signal additions (§2.5a):
+    - strong_signals.employers += "Dock Street Capital" — diagnostic of him;
+      CONFIRMS the Dock Street records (~$55k).
+    - verifying_signals.cities += "king of prussia" — his documented office
+      location; gives the employer-"Requested" records a city+state signal
+      (→ PROBABLE; ~$36k). These sit at his Dock Street ZIP on the same JFC
+      filing date as the confirmed $50k Dock Street donation.
+
+    Safe: the Vertigo negative_signal still fires BEFORE signal scoring, so the
+    "JOHN S. / VERTIGO / King of Prussia" records (the son's company, mis-keyed
+    initial or otherwise) stay UNCERTAIN; no son record is swept in. Bradford
+    "SR."-suffixed records stay handled by their existing manual_attributions.
+  by: "automated pipeline (Dock Street residue resolution, maintainer-approved)"
 - date: 2026-05-22
   change: |
     Created during Phase 2 batch 2 research. Tier 2 sources: MLB.com,
