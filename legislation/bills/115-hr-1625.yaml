@@ -1,0 +1,20 @@
+bill_id: 115-hr-1625
+congress: 115
+bill_type: hr
+number: 1625
+mlb_issue_area: minor_league_pay
+relevance_basis: >-
+  Consolidated Appropriations Act, 2018 (Public Law 115-141). The legislative
+  vehicle that enacted the Save America's Pastime Act: its text was included as a
+  provision amending the Fair Labor Standards Act to exempt minor-league baseball
+  players from federal minimum-wage and overtime requirements. The bill's
+  final-passage roll calls in the House and Senate are the joinable votes for the
+  minor-league-pay story.
+relevance_source_url: "https://www.congress.gov/bill/115th-congress/house-bill/1625"
+sources:
+  - description: "Congress.gov bill page — Consolidated Appropriations Act, 2018, H.R.1625 (115th)"
+    url: "https://www.congress.gov/bill/115th-congress/house-bill/1625"
+    accessed: 2026-05-31
+change_log:
+  - date: 2026-05-31
+    change: "Indexed as a Phase 3 curated bill (minor_league_pay) — carrier vehicle for the Save America's Pastime Act."

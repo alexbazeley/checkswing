@@ -32,10 +32,19 @@ def cli():
 
 @cli.command()
 def validate():
-    """Validate every owner YAML against OWNER_SCHEMA.md rules."""
-    results = validate_all()
-    click.echo(format_report(results))
-    sys.exit(0 if all(r.ok for r in results) else 1)
+    """Validate owner YAMLs (OWNER_SCHEMA.md) and the legislation index YAMLs."""
+    from .validate_legislation import format_report as format_leg_report
+    from .validate_legislation import validate_all as validate_leg_all
+
+    owner_results = validate_all()
+    click.echo(format_report(owner_results))
+
+    leg_results = validate_leg_all()
+    click.echo("\n--- legislation ---")
+    click.echo(format_leg_report(leg_results))
+
+    ok = all(r.ok for r in owner_results) and all(r.ok for r in leg_results)
+    sys.exit(0 if ok else 1)
 
 
 @cli.command()
@@ -130,6 +139,51 @@ def legislation_coverage_cmd(as_json):
         ]
         click.echo("\nLargest unresolved recipients:")
         click.echo(tabulate(rows, headers=["fec_cand_id", "name", "n", "total"]))
+
+
+@cli.command(name="ingest-bills")
+def ingest_bills_cmd():
+    """Enrich the curated bill set (legislation/bills/*.yaml) from Congress.gov.
+
+    GATED DATA OPERATION — snapshots legislation.db first and appends a
+    PROVENANCE_LOG entry. Upserts bills + bill_sponsors keyed by bill_id; the
+    curated fields (mlb_issue_area, relevance_basis, …) always come from the YAML,
+    never the API.
+    """
+    from datetime import datetime, timezone
+
+    from . import legislation_db
+    from .fetch_congress import CongressClient
+    from .ingest_legislation import ingest_bills, load_curated_bills
+    from .paths import PROVENANCE_LOG
+
+    ts = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    specs = load_curated_bills()
+    if not specs:
+        click.echo("No curated bills in legislation/bills/. Nothing to do.")
+        return
+    snap = legislation_db.snapshot("pre-ingest-bills")
+    client = CongressClient()
+    click.echo(f"Enriching {len(specs)} curated bill(s) from Congress.gov…")
+    counts = ingest_bills(specs, client)
+
+    block = [
+        f"\n### {ts[:10]} — INGESTION (bills)",
+        "",
+        f"- **source**: `congress.gov` (api.congress.gov v3)",
+        f"- **fetched_at**: `{ts}`",
+        f"- **curated_bills_in_set**: `{len(specs)}`",
+        f"- **bills_enriched**: `{counts['bills']}`",
+        f"- **sponsor_rows**: `{counts['sponsors']}`",
+        f"- **errors**: `{counts['errors']}`",
+        f"- **snapshot_path**: `{snap}`",
+        "- **note**: Curated fields (mlb_issue_area, relevance_basis, carried_by_bill_id) sourced from legislation/bills/*.yaml; identity/sponsors/action from Congress.gov (Tier-1). Raw payloads under data/raw/legislation/.",
+        "",
+    ]
+    existing = PROVENANCE_LOG.read_text(encoding="utf-8") if PROVENANCE_LOG.exists() else ""
+    PROVENANCE_LOG.write_text(existing + "\n".join(block), encoding="utf-8")
+
+    click.echo(json.dumps(counts, indent=2))
 
 
 @cli.command()
