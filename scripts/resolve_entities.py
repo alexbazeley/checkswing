@@ -46,8 +46,8 @@ def _strip_diacritics_simple(s: str) -> str:
     return s
 
 
-def normalize_name(raw: str) -> tuple[set[str], str | None]:
-    """Return (canonical_forms, suffix).
+def normalize_name(raw: str) -> tuple[set[str], str | None, frozenset[str]]:
+    """Return (canonical_forms, suffix, middle_initials).
 
     Sequence:
       - Detect "Last, First" form (comma present) and rewrite to "First Last".
@@ -55,14 +55,24 @@ def normalize_name(raw: str) -> tuple[set[str], str | None]:
       - Strip honorifics (mr/mrs/ms/miss/dr/prof/rev/hon) from any token position.
       - Identify trailing suffix (jr/sr/ii/iii/iv/v) and return separately.
       - Drop middle-initial tokens (single-char tokens between first and last)
-        so "Steven A Cohen" and "Steven Cohen" share a canonical form.
+        from the canonical forms so "Steven A Cohen" and "Steven Cohen" share a
+        form — but ALSO return those initials separately as `middle_initials`
+        so callers can use them as a discriminator (see `names_match`).
       - For hyphenated last names, generate both orderings.
 
-    Returns a SET of canonical forms (to handle hyphenated swaps) and the
-    suffix (or None).
+    Returns:
+      - `forms`: a SET of canonical first+last forms (to handle hyphenated
+        swaps). Middle initials are stripped from these so matching stays
+        suffix- and middle-agnostic at the form level.
+      - `suffix`: the suffix token (jr/sr/ii/iii/iv/v) or None.
+      - `middle_initials`: a frozenset of the single-char middle tokens. Empty
+        when the name carries no middle initial. These are NOT in `forms`; they
+        let `names_match` distinguish "John P." from "John S." while still
+        treating a bare "John" as compatible with either (the VERIFICATION.md
+        optional-middle rule).
     """
     if not raw:
-        return (set(), None)
+        return (set(), None, frozenset())
     name = raw.strip()
     had_comma = "," in name
     if had_comma:
@@ -72,14 +82,14 @@ def normalize_name(raw: str) -> tuple[set[str], str | None]:
     name = name.replace(".", " ").replace(",", " ")
     name = re.sub(r"\s+", " ", name).strip()
     if not name:
-        return (set(), None)
+        return (set(), None, frozenset())
     tokens = name.split()
 
     # Strip honorifics from any position. People file "Mr." inconsistently
     # (sometimes leading, sometimes after the last name in Last-First form).
     tokens = [t for t in tokens if t not in HONORIFICS]
     if not tokens:
-        return (set(), None)
+        return (set(), None, frozenset())
 
     # Detect a suffix token anywhere in the stream, not just trailing. The
     # "Last, First Suffix" comma form (the dominant FEC format) becomes
@@ -99,12 +109,18 @@ def normalize_name(raw: str) -> tuple[set[str], str | None]:
         kept.append(t)
     tokens = kept
     if not tokens:
-        return (set(), suffix)
+        return (set(), suffix, frozenset())
 
-    # Drop single-char middle tokens (initials), preserve first and last.
+    # Separate single-char middle tokens (initials) from the canonical form:
+    # they are dropped from `forms` (so "Steven A Cohen" and "Steven Cohen"
+    # share a form) but captured in `middle_initials` so callers can use them
+    # as a discriminator. Multi-char middle NAMES stay in the form (they
+    # already discriminate by not sharing a form) and are not initials.
+    middle_initials: frozenset[str] = frozenset()
     if len(tokens) > 2:
         first = tokens[0]
         last = tokens[-1]
+        middle_initials = frozenset(t for t in tokens[1:-1] if len(t) == 1)
         middle = [t for t in tokens[1:-1] if len(t) > 1]
         tokens = [first] + middle + [last]
 
@@ -119,7 +135,23 @@ def normalize_name(raw: str) -> tuple[set[str], str | None]:
             forms.add(" ".join(tokens[:-1] + parts))
             forms.add(" ".join(tokens[:-1] + list(reversed(parts))))
 
-    return (forms, suffix)
+    return (forms, suffix, middle_initials)
+
+
+def _middle_initials_compatible(rec_mid: frozenset[str], v_mid: frozenset[str]) -> bool:
+    """Optional-but-discriminating middle-initial rule (VERIFICATION.md).
+
+    A record and a variant are middle-initial compatible UNLESS both carry a
+    single-char middle initial and those initials are disjoint:
+      - either side empty  → compatible (a bare "John" matches "John P." and
+        "John S." alike; this preserves the optional-middle behavior).
+      - both present + share an initial → compatible ("John P" vs "John P Q").
+      - both present + disjoint → INCOMPATIBLE ("John P" vs "John S" — a
+        father/son or doppelgänger split the name alone cannot separate).
+    """
+    if not rec_mid or not v_mid:
+        return True
+    return bool(rec_mid & v_mid)
 
 
 def names_match(record_name: str, variants: Sequence[str]) -> tuple[bool, bool, str | None]:
@@ -127,21 +159,29 @@ def names_match(record_name: str, variants: Sequence[str]) -> tuple[bool, bool, 
 
     Returns (canonical_match, suffix_match, matched_variant).
       canonical_match: True if any variant shares a canonical form (suffix-agnostic)
+                       AND has compatible middle initials (see
+                       `_middle_initials_compatible`)
       suffix_match:    True if at least one matching variant ALSO shares the suffix
       matched_variant: the first variant whose canonical form matched (None if no match)
 
     The two-flag return lets callers distinguish "no match → skip" from "name
     canonically matches but suffix differs → UNCERTAIN per VERIFICATION.md".
+
+    A variant whose middle initial CONFLICTS with the record's (e.g. variant
+    "John S." vs record "John P.") is skipped as if it did not match — this is
+    what lets a same-named relative be routed to their own entity rather than
+    misattributed. A bare variant ("John") with no middle initial still matches
+    a record that carries one, so the optional-middle rule is preserved.
     """
-    rec_forms, rec_suffix = normalize_name(record_name)
+    rec_forms, rec_suffix, rec_mid = normalize_name(record_name)
     if not rec_forms:
         return (False, False, None)
 
     canonical_hit: str | None = None
     suffix_hit = False
     for v in variants:
-        v_forms, v_suffix = normalize_name(v)
-        if rec_forms & v_forms:
+        v_forms, v_suffix, v_mid = normalize_name(v)
+        if rec_forms & v_forms and _middle_initials_compatible(rec_mid, v_mid):
             if canonical_hit is None:
                 canonical_hit = v
             if rec_suffix == v_suffix:

@@ -76,42 +76,52 @@ def owner():
 
 class TestNormalization:
     def test_lowercase_and_strip_periods(self):
-        forms, suffix = normalize_name("Steven A. Cohen")
+        forms, suffix, mids = normalize_name("Steven A. Cohen")
         assert "steven cohen" in forms
         assert suffix is None
+        assert mids == frozenset({"a"})  # initial captured, not in forms
 
     def test_strip_middle_initial(self):
-        forms_with, _ = normalize_name("Steven A Cohen")
-        forms_no, _ = normalize_name("Steven Cohen")
+        forms_with, _, mids_with = normalize_name("Steven A Cohen")
+        forms_no, _, mids_no = normalize_name("Steven Cohen")
         assert forms_with & forms_no  # share a canonical form
+        assert mids_with == frozenset({"a"})  # initial surfaced separately
+        assert mids_no == frozenset()  # no middle initial
 
     def test_last_comma_first_format(self):
-        forms_lf, _ = normalize_name("Cohen, Steven A")
-        forms_fl, _ = normalize_name("Steven A Cohen")
+        forms_lf, _, _ = normalize_name("Cohen, Steven A")
+        forms_fl, _, _ = normalize_name("Steven A Cohen")
         assert forms_lf & forms_fl
 
     def test_suffix_extracted(self):
-        _, suffix = normalize_name("John W. Henry Jr.")
+        _, suffix, _ = normalize_name("John W. Henry Jr.")
         assert suffix == "jr"
-        _, suffix2 = normalize_name("John W. Henry")
+        _, suffix2, _ = normalize_name("John W. Henry")
         assert suffix2 is None
 
     def test_suffix_makes_canon_match_but_distinct(self):
-        forms_jr, suf_jr = normalize_name("John Henry Jr")
-        forms_no, suf_no = normalize_name("John Henry")
+        forms_jr, suf_jr, _ = normalize_name("John Henry Jr")
+        forms_no, suf_no, _ = normalize_name("John Henry")
         # Same canonical form, but suffixes differ.
         assert forms_jr & forms_no
         assert suf_jr != suf_no
 
     def test_hyphenated_last_name_swap(self):
-        forms_a, _ = normalize_name("Mary Smith-Jones")
-        forms_b, _ = normalize_name("Mary Jones-Smith")
+        forms_a, _, _ = normalize_name("Mary Smith-Jones")
+        forms_b, _, _ = normalize_name("Mary Jones-Smith")
         assert forms_a & forms_b
 
     def test_hyphenated_last_name_unhyphenated(self):
-        forms_hyp, _ = normalize_name("Mary Smith-Jones")
-        forms_two, _ = normalize_name("Mary Smith Jones")
+        forms_hyp, _, _ = normalize_name("Mary Smith-Jones")
+        forms_two, _, _ = normalize_name("Mary Smith Jones")
         assert forms_hyp & forms_two
+
+    def test_multi_char_middle_name_is_not_an_initial(self):
+        # A spelled-out middle name stays in the form and is NOT a middle
+        # initial — it already discriminates by not sharing a bare form.
+        forms, _, mids = normalize_name("John Powers Middleton")
+        assert "john powers middleton" in forms
+        assert mids == frozenset()
 
 
 class TestNamesMatch:
@@ -146,6 +156,47 @@ class TestNamesMatch:
     def test_honorific_mrs_stripped(self):
         canon, _, _ = names_match("Mrs. Mary Smith", ["Mary Smith"])
         assert canon
+
+
+class TestMiddleInitialDiscrimination:
+    """The middle-initial rule: optional when either side lacks one, but a
+    discriminator when both are present (VERIFICATION.md)."""
+
+    def test_conflicting_middle_initials_do_not_match(self):
+        # The motivating case: father John S. vs son John P. — same first+last,
+        # different middle initial → NOT a match. This is what lets the son be
+        # routed to his own entity instead of misattributed to the father.
+        canon, suf, _ = names_match("MIDDLETON, JOHN P", ["John S Middleton"])
+        assert not canon
+
+    def test_shared_middle_initial_matches(self):
+        canon, suf, _ = names_match("MIDDLETON, JOHN S", ["John S Middleton"])
+        assert canon and suf
+
+    def test_bare_record_matches_middle_initial_variant(self):
+        # Optional rule, one direction: a record with no middle initial still
+        # matches a variant that has one.
+        canon, _, _ = names_match("John Middleton", ["John S Middleton"])
+        assert canon
+
+    def test_middle_initial_record_matches_bare_variant(self):
+        # Optional rule, other direction: "Steven A Cohen" still matches the
+        # bare "Steven Cohen" variant (preserves the pre-change behavior).
+        canon, _, _ = names_match("Steven A Cohen", ["Steven Cohen"])
+        assert canon
+
+    def test_conflicting_middle_falls_through_to_bare_variant(self):
+        # Safety mechanism: an owner with BOTH a middle-initial variant and a
+        # bare variant still claims a record whose initial conflicts with the
+        # specific variant — it matches via the bare one. This is why owners
+        # carrying a bare variant lose nothing under the new rule.
+        canon, _, v = names_match("Steven B Cohen", ["Steven A Cohen", "Steven Cohen"])
+        assert canon
+        assert v == "Steven Cohen"  # matched via the bare variant, not "A"
+
+    def test_disjoint_when_only_variant_has_initial_is_compatible(self):
+        canon, _, _ = names_match("John Smith", ["John Q Smith"])
+        assert canon  # variant initial, record none → optional → match
 
 
 # ─── employer_match (substring rule) ────────────────────────────────────────
@@ -476,18 +527,19 @@ class TestCommaSuffixNormalization:
     def test_comma_form_suffix_detected(self):
         # "Last, First Middle Suffix" — the suffix lands mid-string after the
         # comma-swap, so trailing-only detection used to miss it (suffix=None).
-        forms, suffix = normalize_name("DeWitt, William O Jr")
+        forms, suffix, mids = normalize_name("DeWitt, William O Jr")
         assert "william dewitt" in forms
         assert suffix == "jr"
+        assert mids == frozenset({"o"})
 
     def test_comma_form_roman_numeral_suffix_detected(self):
-        forms, suffix = normalize_name("HENRY, JOHN WILLIAM II")
+        forms, suffix, _ = normalize_name("HENRY, JOHN WILLIAM II")
         assert "john william henry" in forms
         assert suffix == "ii"
 
     def test_double_comma_suffix_detected(self):
         # "Last, First M., Suffix" (Kendrick form).
-        _, suffix = normalize_name("Kendrick, Earl G., Jr.")
+        _, suffix, _ = normalize_name("Kendrick, Earl G., Jr.")
         assert suffix == "jr"
 
     def test_comma_record_matches_noncomma_suffixed_variant(self):
@@ -509,13 +561,15 @@ class TestCommaSuffixNormalization:
 
     def test_bare_v_midstring_is_initial_not_suffix(self):
         # A single-letter "V" mid-string is a middle initial, not a Roman
-        # numeral suffix (it gets dropped as an initial).
-        _, suffix = normalize_name("John V Smith")
+        # numeral suffix (it is captured as a middle initial, not a suffix).
+        _, suffix, mids = normalize_name("John V Smith")
         assert suffix is None
+        assert mids == frozenset({"v"})
 
     def test_bare_v_trailing_is_suffix(self):
-        _, suffix = normalize_name("John Smith V")
+        _, suffix, mids = normalize_name("John Smith V")
         assert suffix == "v"
+        assert mids == frozenset()
 
 
 # ─── M2: state-aware address contradiction ──────────────────────────────────
@@ -602,3 +656,72 @@ class TestRelatedEntitySuffixRouting:
         result = classify(r, sr_owner, process_related_entities=False)
         assert result is not None
         assert result.entity_slug == "smith-sr"
+
+
+@pytest.fixture
+def mid_owner():
+    """Middleton-shaped owner: father 'John S. Middleton' with a related child
+    'John P. Middleton'. Same first+last, no suffix difference — separable ONLY
+    by middle initial. This is the case the middle-initial rule unlocks:
+    before it, the son's records collapsed onto the father and had to be
+    handled with an EXCLUDE override; now they route to his own entity."""
+    return {
+        "slug": "middleton-john",
+        "name": "John S. Middleton",
+        "name_variants": ["John Middleton", "John S Middleton", "Middleton, John S"],
+        "verifying_signals": {"employers": [], "cities": [], "states": []},
+        "strong_signals": {"employers": ["Bradford Holdings"], "zip_codes": []},
+        "negative_signals": {},
+        "related_entities": [
+            {
+                "kind": "child",
+                "slug": "middleton-john-p",
+                "name": "John P. Middleton",
+                "name_variants": ["John P Middleton", "Middleton, John P"],
+                "verifying_signals": {},
+                "strong_signals": {"employers": ["Vertigo Entertainment"]},
+                "negative_signals": {},
+            }
+        ],
+    }
+
+
+class TestRelatedEntityMiddleInitialRouting:
+    """The payoff of the middle-initial rule: a same-named relative who differs
+    only by middle initial routes to their own entity instead of being
+    misattributed to the principal (or needing an EXCLUDE workaround)."""
+
+    def test_son_record_routes_to_son_by_middle_initial(self, mid_owner):
+        r = _record(
+            contributor_name="MIDDLETON, JOHN P",
+            contributor_employer="Vertigo Entertainment",
+        )
+        result = classify(r, mid_owner, process_related_entities=True)
+        assert result is not None
+        assert result.entity_slug == "middleton-john-p"
+        assert result.entity_kind == "child"
+        assert result.parent_owner_slug == "middleton-john"
+        assert result.status == CONFIRMED  # son's strong-signal employer
+
+    def test_father_record_routes_to_owner_not_son(self, mid_owner):
+        # The father's filing must NOT be swept onto the son just because the
+        # bare canonical name collides — the son's "P" conflicts with "S".
+        r = _record(
+            contributor_name="MIDDLETON, JOHN S",
+            contributor_employer="Bradford Holdings",
+        )
+        result = classify(r, mid_owner, process_related_entities=True)
+        assert result is not None
+        assert result.entity_slug == "middleton-john"
+        assert result.entity_kind == "owner"
+        assert result.status == CONFIRMED
+
+    def test_son_record_principals_only_dropped_not_misattributed(self, mid_owner):
+        # Principals-only mode: the son's record is dropped (out of scope), NOT
+        # folded into the father's totals.
+        r = _record(
+            contributor_name="MIDDLETON, JOHN P",
+            contributor_employer="Vertigo Entertainment",
+        )
+        result = classify(r, mid_owner, process_related_entities=False)
+        assert result is None
