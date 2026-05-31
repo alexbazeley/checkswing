@@ -242,6 +242,27 @@ class TestReclassifyDivergenceGuard:
         self._patch(monkeypatch, ["T2"], {"T2": _stub_classification("UNCERTAIN")})
         assert ingest._reclassify_divergent_txns("owner-x", db_path=db_path) == set()
 
+    def test_excluded_override_not_flagged_divergent(self, db_path, monkeypatch):
+        # An EXCLUDED override intentionally drops its txn on reclassify; the
+        # guard must NOT flag that as accidental loss (it's in `manual`).
+        from scripts import ingest
+
+        with db.connect(db_path) as conn:
+            db.insert_donation(conn, _row(txn="T2"))
+            db.upsert_manual_attribution(
+                conn,
+                transaction_id="T2",
+                entity_slug="owner-x",
+                status="EXCLUDED",
+                reason="same-named relative, not the owner",
+                source=None,
+                attributed_at="2026-01-01T00:00:00Z",
+            )
+        # classify would even CONFIRM T2, but the EXCLUDED override drops it on
+        # purpose — not an accidental divergence loss.
+        self._patch(monkeypatch, ["T2"], {"T2": _stub_classification("CONFIRMED")})
+        assert ingest._reclassify_divergent_txns("owner-x", db_path=db_path) == set()
+
     def test_raw_missing_not_counted_here(self, db_path, monkeypatch):
         from scripts import ingest
 
@@ -382,6 +403,20 @@ def test_manual_attribution_upsert_query_and_delete(db_path):
         assert db.delete_manual_attribution(conn, transaction_id="T1", entity_slug="owner-a") == 1
         assert db.manual_attributions_for_slug(conn, "owner-a") == {}
         assert db.delete_manual_attribution(conn, transaction_id="T1", entity_slug="owner-a") == 0
+
+
+def test_manual_attribution_excluded_status_roundtrip(db_path):
+    # The EXCLUDED override (negative of CONFIRMED) stores/queries/deletes the
+    # same way — no schema change, status is free-text.
+    with db.connect(db_path) as conn:
+        db.upsert_manual_attribution(
+            conn, transaction_id="T9", entity_slug="owner-a",
+            status="EXCLUDED", reason="same-named son, not the owner", source="middle initial P",
+            attributed_at="2026-05-30T00:00:00Z",
+        )
+        assert db.manual_attributions_for_slug(conn, "owner-a") == {"T9": "EXCLUDED"}
+        assert db.delete_manual_attribution(conn, transaction_id="T9", entity_slug="owner-a") == 1
+        assert db.manual_attributions_for_slug(conn, "owner-a") == {}
 
 
 def test_schema_v7_tables_present(db_path):
