@@ -52,3 +52,7 @@ venv/
 .idea/
 *.swp
 .DS_Store
+
+# Per-committee beneficiary chunks — generated at build time from master.db
+# alongside data.json (which carries only the lightweight index).
+mockup/beneficiaries/
