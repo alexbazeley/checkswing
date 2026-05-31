@@ -206,8 +206,42 @@ change_log:
   references:
   - "data/master.db pre-calibration: 33 CONFIRMED / 38 PROBABLE / 19 UNCERTAIN-open"
   - "data/snapshots/2026-05-25T04-02-44Z__pre-reclassify-middleton-john.db (snapshot before the failed --include-related attempt)"
+- date: 2026-05-31
+  change: |
+    Round-2 review-queue triage, using the new txn-keyed EXCLUDE override
+    (manual_attributions status=EXCLUDED) — the father/son split that the
+    reverted related_entity approach and the interim Vertigo negative_signal
+    could not fully resolve.
+
+    Disambiguated by MIDDLE INITIAL (reliable; the records carry it, the
+    classifier just strips it): S = John Staubus (the owner); P = John Powers
+    (the son). Research confirmed John Powers Middleton is the son AND a
+    documented independent major federal donor (film producer at Vertigo;
+    Wikipedia + Media Matters on his political giving), so every "John P."
+    record is his — not the owner's — even those loosely listing PHILADELPHIA
+    PHILLIES as employer.
+
+    APPLIED (txn-keyed manual_attributions, survive reclassify; gated):
+    - ATTRIBUTED 6 queued "MIDDLETON, JOHN S. MR. SR." / Bradford Holdings
+      records to John S. (owner; strong signal, queued only on the SR suffix).
+    - EXCLUDED 14 "MIDDLETON, JOHN P." records (1 was CONFIRMED, 7 PROBABLE,
+      6 queued) — the son. Dropped from john-s entirely.
+
+    Result: open review queue 12 -> 0; CONFIRMED 33 -> 38; PROBABLE 23 -> 16.
+    middleton-john is idempotent under reclassify (guard would_drop=0). The
+    Vertigo negative_signal is retained as defense-in-depth. John P. remains a
+    future middleton-john-p slug pending a classifier middle-initial fix.
+
+    OUT OF SCOPE / flagged for later: bare-"JOHN" (no middle initial) records;
+    ~10 "JOHN S." currently-UNCERTAIN records (~$105k; odd employers Dock Street
+    Capital / Vertigo / "Requested" — possible missed owner donations or mis-
+    keyed); the "John J" / Becica Associates donor (a different person, correctly
+    unattributed); and the unresolved Dock Street Capital connection.
+  by: "automated pipeline (round-2 triage, maintainer-approved)"
+  references:
+  - "data/snapshots/2026-05-31T01-02-28Z__pre-middleton-triage.db"
 
 audit:
   created: 2026-05-22
   last_ingestion: '2026-05-27'
-  last_signal_review: 2026-05-22
+  last_signal_review: 2026-05-31
