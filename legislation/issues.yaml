@@ -1,0 +1,33 @@
+# MLB-relevant federal issue taxonomy (Phase 3 curated core set).
+#
+# Each indexed bill declares one mlb_issue_area, which must be a key below. This
+# is the curated scope of "MLB-relevant" for Phase 3 (CHARTER.md §Phase 3): the
+# fights that actually bear on the sport as political economy. The taxonomy is a
+# neutral classification; the editorial reading of any of it lives in reports/.
+issues:
+  antitrust_exemption:
+    label: "Antitrust exemption / Curt Flood Act"
+    description: >-
+      MLB's judicially-created exemption from federal antitrust law
+      (Federal Baseball Club v. National League, 1922) and the statutory
+      carve-outs and challenges to it, including the Curt Flood Act of 1998.
+
+  minor_league_pay:
+    label: "Minor-league pay"
+    description: >-
+      Federal wage-and-hour treatment of minor-league players under the Fair
+      Labor Standards Act, including the Save America's Pastime Act, which
+      exempted them from FLSA minimum-wage and overtime requirements.
+
+  stadium_financing:
+    label: "Stadium financing"
+    description: >-
+      Federal tax treatment of professional sports stadium construction, chiefly
+      the federal tax exemption for state/local private-activity bonds used to
+      finance stadiums.
+
+  broadcast_ip_blackout:
+    label: "Broadcast / IP / blackout"
+    description: >-
+      Federal law on sports broadcasting, territorial blackouts, and
+      streaming/intellectual-property questions affecting how baseball is carried.

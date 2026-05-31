@@ -1,0 +1,19 @@
+bill_id: 105-s-53
+congress: 105
+bill_type: s
+number: 53
+mlb_issue_area: antitrust_exemption
+relevance_basis: >-
+  The Curt Flood Act of 1998 (Public Law 105-297). Amends the Clayton Act to make
+  the antitrust laws apply to the employment of major-league baseball players to
+  the same extent they apply to other professional athletes, while leaving MLB's
+  broader antitrust exemption otherwise intact. The single statutory labor
+  carve-out to baseball's exemption.
+relevance_source_url: "https://www.congress.gov/bill/105th-congress/senate-bill/53"
+sources:
+  - description: "Congress.gov bill page — Curt Flood Act of 1998, S.53 (105th)"
+    url: "https://www.congress.gov/bill/105th-congress/senate-bill/53"
+    accessed: 2026-05-31
+change_log:
+  - date: 2026-05-31
+    change: "Indexed as a Phase 3 curated bill (antitrust_exemption)."

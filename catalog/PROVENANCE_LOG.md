@@ -4125,3 +4125,14 @@ the joinable universe Phase 3 needs. **Known limitation (documented, not yet act
 on):** person-level resolution across a legislator's multiple FEC ids (House id vs.
 Senate-run id) would lift coverage but risks attributing a campaign-for-office-X
 donation as influence over office-Y votes; deferred deliberately.
+
+### 2026-05-31 — INGESTION (bills)
+
+- **source**: `congress.gov` (api.congress.gov v3)
+- **fetched_at**: `2026-05-31T21:14:10Z`
+- **curated_bills_in_set**: `3`
+- **bills_enriched**: `3`
+- **sponsor_rows**: `47`
+- **errors**: `[]`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-05-31T21-14-10Z__pre-ingest-bills.db`
+- **note**: Curated fields (mlb_issue_area, relevance_basis, carried_by_bill_id) sourced from legislation/bills/*.yaml; identity/sponsors/action from Congress.gov (Tier-1). Raw payloads under data/raw/legislation/.
