@@ -37,6 +37,18 @@ DATA_JSON_BUDGET_MB = 12.0
 PROVENANCE_SRC = REPO_ROOT / "catalog" / "PROVENANCE_LOG.md"
 PROVENANCE_OUT = REPO_ROOT / "mockup" / "provenance.json"
 
+# Per-committee beneficiary chunks. After the Phase-2 backfill the full
+# "who this committee funded" data (top-25/cycle across 1,044 committees) is
+# ~27 MB — too big to bake into data.json (Cloudflare's 25 MB per-asset limit,
+# and the SPA loads data.json whole). Instead data.json carries only a tiny
+# index ({committee_id: [cycles]}), and each committee's recipients live in
+# their own file fetched lazily when that committee page is opened. Gitignored
+# and rebuilt at deploy time, same as data.json.
+BENEFICIARIES_OUT_DIR = REPO_ROOT / "mockup" / "beneficiaries"
+# Recipients per (committee, cycle) surfaced in the dashboard chunk — the
+# "scannable top-of-pile" view. The full set stays queryable in master.db.
+DASHBOARD_BENEFICIARY_CAP = 25
+
 # Allow `from scripts.* import …` when this script is run directly
 # (Cloudflare invokes it as `python mockup/build_data.py`).
 sys.path.insert(0, str(REPO_ROOT))
@@ -658,22 +670,18 @@ def main() -> None:
     committee_scale = {cid: cycles for cid, cycles in scale_by_cid.items() if cycles}
 
     # ── Per-committee beneficiaries (v5: who this committee funded) ──────────
-    # Shape: { committee_id: { "<cycle>": [ {recipient}, ... top N desc ], ... } }
-    # FEC sorts the by_recipient endpoint by amount desc.
-    #
-    # INTERIM CAP (DASHBOARD_BENEFICIARY_CAP): after the Phase-2 beneficiary
-    # backfill (395K rows across 1,044 committees), embedding the full top-25
-    # per cycle pushed this single-file data.json to ~36 MB — over Cloudflare
-    # Pages' 25 MB per-asset hard limit (and well over the 12 MB SPA budget).
-    # The full data lives in master.db (committee_disbursements_by_recipient);
-    # the SPA can't load it all at once. Until data.json is split into
-    # lazy-loaded per-committee chunks (the follow-up this file's size warning
-    # has long called for), we embed only the top-5 per cycle (~15 MB total,
-    # safely under the Cloudflare limit). Raise/remove the cap when chunking
-    # lands. Tolerant of a pre-v5 DB — empty dict means the UI just doesn't
-    # render the "Who this committee funded" section.
-    DASHBOARD_BENEFICIARY_CAP = 5
-    committee_beneficiaries: dict[str, dict[str, list[dict]]] = {}
+    # After the Phase-2 backfill this is ~27 MB of data — too big for data.json.
+    # We split it: data.json carries only `committee_beneficiary_index`
+    # ({committee_id: [cycles desc]}) so the SPA can render the section header
+    # and cycle picker synchronously, and each committee's recipients are
+    # written to mockup/beneficiaries/<committee_id>.json, fetched lazily when
+    # that committee page is opened (see write_beneficiary_chunks).
+    # Shape of a chunk: { "<cycle>": [ {recipient}, ... top-N desc ], ... }
+    # FEC sorts by_recipient by amount desc. Tolerant of a pre-v5 DB — an empty
+    # index means the UI just doesn't render the "Who this committee funded"
+    # section.
+    committee_beneficiary_index: dict[str, list[int]] = {}
+    committee_beneficiary_chunks: dict[str, dict[str, list[dict]]] = {}
     if relevant_cids:
         placeholders = ",".join(["?"] * len(relevant_cids))
         try:
@@ -701,11 +709,12 @@ def main() -> None:
                     "total_amount": row["total_amount"],
                     "n_transactions": row["n_transactions"],
                 })
-            # Slice each (committee, cycle) array to the interim cap. JSON keys
-            # are strings — match the existing committee_scale / cycle_dollars
+            # Build the lazy-load index + the per-committee chunk payloads.
+            # JSON keys are strings — match the committee_scale / cycle_dollars
             # convention.
             for cid, by_cycle in grouped.items():
-                committee_beneficiaries[cid] = {
+                committee_beneficiary_index[cid] = sorted(by_cycle.keys(), reverse=True)
+                committee_beneficiary_chunks[cid] = {
                     str(cycle): recipients[:DASHBOARD_BENEFICIARY_CAP]
                     for cycle, recipients in by_cycle.items()
                 }
@@ -742,7 +751,7 @@ def main() -> None:
         "donations": donations,
         "recipients": recipients,
         "committee_scale": committee_scale,
-        "committee_beneficiaries": committee_beneficiaries,
+        "committee_beneficiary_index": committee_beneficiary_index,
         "runs": runs,
         "pipeline": pipeline,
     }
@@ -751,12 +760,13 @@ def main() -> None:
     size_mb = OUT_PATH.stat().st_size / 1024 / 1024
     n_enriched = sum(1 for r in recipients if r.get("designation_label"))
     n_with_scale = len(committee_scale)
-    n_with_beneficiaries = len(committee_beneficiaries)
+    n_chunks = write_beneficiary_chunks(committee_beneficiary_chunks)
     print(f"wrote {OUT_PATH} ({size_mb:.2f} MB, {len(donations)} donations, "
           f"{len(owners_summary)} owners, {len(runs)} ingestion runs, "
           f"{n_enriched}/{len(recipients)} recipients enriched, "
           f"{n_with_scale} committee scale blocks, "
-          f"{n_with_beneficiaries} committee beneficiary blocks)")
+          f"{len(committee_beneficiary_index)} committee beneficiary index entries, "
+          f"{n_chunks} beneficiary chunk files)")
     if size_mb > DATA_JSON_BUDGET_MB:
         print(
             f"WARNING: data.json is {size_mb:.2f} MB, over the {DATA_JSON_BUDGET_MB:.0f} MB "
@@ -767,6 +777,27 @@ def main() -> None:
         )
 
     write_provenance()
+
+
+def write_beneficiary_chunks(chunks: dict[str, dict[str, list[dict]]]) -> int:
+    """Write one mockup/beneficiaries/<committee_id>.json per committee.
+
+    Each file is the committee's recipients keyed by cycle — the lazy-loaded
+    counterpart to the committee_beneficiary_index in data.json. The directory
+    is wiped and rebuilt each run so a committee that drops out of the archive
+    doesn't leave an orphan chunk. Gitignored; regenerated at deploy time.
+    """
+    if BENEFICIARIES_OUT_DIR.exists():
+        for stale in BENEFICIARIES_OUT_DIR.glob("*.json"):
+            stale.unlink()
+    BENEFICIARIES_OUT_DIR.mkdir(parents=True, exist_ok=True)
+    n = 0
+    for cid, by_cycle in chunks.items():
+        # committee_id is always a clean FEC id (C00...), safe as a filename.
+        path = BENEFICIARIES_OUT_DIR / f"{cid}.json"
+        path.write_text(json.dumps(by_cycle, indent=None, separators=(",", ":")))
+        n += 1
+    return n
 
 
 def write_provenance() -> None:

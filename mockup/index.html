@@ -1911,6 +1911,12 @@ const state = {
   committeeFilters: { q: "", cycle: "", status: "", showAll: false },
   /* per-committee BENEFICIARIES filters (Phase 2 — "Who this committee funded"). */
   committeeBeneficiariesFilters: { cycle: "" },
+  /* Lazy-loaded per-committee beneficiary chunks (mockup/beneficiaries/<cid>.json),
+     keyed by committee_id. data.json only carries committee_beneficiary_index;
+     a committee's recipient rows are fetched on demand when its page opens. */
+  beneficiaries: {},
+  beneficiariesLoading: {},
+  beneficiariesError: {},
   /* per-team filters */
   teamFilters: { q: "", cycle: "", party: "", status: "", owner: "", showAll: false },
   /* changelog (audit-log) filters — lazy-loaded with provenance.json */
@@ -4508,12 +4514,35 @@ function renderCommittee(committeeId) {
    reports per cycle. Names + amounts only — no editorial linkage to
    legislation or policy outcomes (GOVERNANCE.md §6, that's Phase 3).
    ──────────────────────────────────────────────────────────────────── */
-function renderCommitteeBeneficiariesSection(committeeId) {
-  const byCycle = (state.data.committee_beneficiaries || {})[committeeId];
-  if (!byCycle || Object.keys(byCycle).length === 0) {
-    return ""; // Pre-v5 DB, or no beneficiary rows yet for this committee.
+/* Lazy-load one committee's beneficiary chunk. Mirrors loadProvenance():
+   cached/loading guards, then re-render the table in place when it lands. */
+async function loadCommitteeBeneficiaries(committeeId) {
+  if (state.beneficiaries[committeeId] || state.beneficiariesLoading[committeeId]) return;
+  state.beneficiariesLoading[committeeId] = true;
+  try {
+    const res = await fetch(`./beneficiaries/${encodeURIComponent(committeeId)}.json`, { cache: "no-cache" });
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    state.beneficiaries[committeeId] = await res.json();
+  } catch (e) {
+    state.beneficiariesError[committeeId] = String(e);
+    state.beneficiaries[committeeId] = {}; // mark loaded-but-empty; don't refetch-loop
+  } finally {
+    state.beneficiariesLoading[committeeId] = false;
+    if (state.view.name === "committee" && decodeURIComponent(state.view.id) === committeeId) {
+      rerenderCommitteeBeneficiariesTable();
+    }
   }
-  const cycles = Object.keys(byCycle).map(Number).sort((a, b) => b - a);
+}
+
+function renderCommitteeBeneficiariesSection(committeeId) {
+  // The cycle list comes from the lightweight index in data.json, so the
+  // section header + cycle picker render synchronously; the recipient rows
+  // are fetched lazily (see renderCommitteeBeneficiariesBody).
+  const cycleIndex = (state.data.committee_beneficiary_index || {})[committeeId];
+  if (!cycleIndex || cycleIndex.length === 0) {
+    return ""; // Pre-v5 DB, or no beneficiary rows for this committee.
+  }
+  const cycles = cycleIndex.map(Number).sort((a, b) => b - a);
   const selected = state.committeeBeneficiariesFilters.cycle
     ? Number(state.committeeBeneficiariesFilters.cycle)
     : cycles[0];
@@ -4537,9 +4566,26 @@ function renderCommitteeBeneficiariesSection(committeeId) {
       </div>
 
       <div id="cb-table-wrap">
-        ${renderCommitteeBeneficiariesTable(byCycle, selected)}
+        ${renderCommitteeBeneficiariesBody(committeeId, selected)}
       </div>
     </section>`;
+}
+
+/* Returns the table if the chunk is loaded, else a loading placeholder while
+   kicking off the fetch. */
+function renderCommitteeBeneficiariesBody(committeeId, cycle) {
+  const byCycle = state.beneficiaries[committeeId];
+  if (!byCycle) {
+    loadCommitteeBeneficiaries(committeeId); // fire-and-forget; re-renders on land
+    return `<div class="muted" style="padding:18px 4px">Loading recipients…</div>`;
+  }
+  if (state.beneficiariesError[committeeId]) {
+    return emptyState(
+      "Couldn't load recipients",
+      `The beneficiary data for this committee failed to load (${escapeHtml(state.beneficiariesError[committeeId])}).`
+    );
+  }
+  return renderCommitteeBeneficiariesTable(byCycle, cycle);
 }
 
 function renderCommitteeBeneficiariesTable(byCycle, cycle) {
@@ -4603,13 +4649,15 @@ function officeName(code) {
 function rerenderCommitteeBeneficiariesTable() {
   if (state.view.name !== "committee") return;
   const decoded = decodeURIComponent(state.view.id);
-  const byCycle = (state.data.committee_beneficiaries || {})[decoded];
-  if (!byCycle) return;
   const wrap = document.getElementById("cb-table-wrap");
   if (!wrap) return;
+  // Available cycles come from the index (always present); the row data comes
+  // from the lazily-loaded chunk via renderCommitteeBeneficiariesBody.
+  const cycleIndex = (state.data.committee_beneficiary_index || {})[decoded];
+  if (!cycleIndex || cycleIndex.length === 0) return;
   const cycle = Number(state.committeeBeneficiariesFilters.cycle) ||
-    Math.max(...Object.keys(byCycle).map(Number));
-  wrap.innerHTML = renderCommitteeBeneficiariesTable(byCycle, cycle);
+    Math.max(...cycleIndex.map(Number));
+  wrap.innerHTML = renderCommitteeBeneficiariesBody(decoded, cycle);
 }
 
 function renderCommitteeDonationsTable(allDonations) {
