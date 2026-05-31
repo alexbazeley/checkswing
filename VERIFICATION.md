@@ -33,7 +33,7 @@ Compare against `name_variants` after the following normalization:
 - Lowercase.
 - Strip punctuation (`.`, `,`).
 - Collapse whitespace.
-- Treat middle initials as optional matches when the variant lacks one (e.g., "Steven A Cohen" matches "Steven Cohen" with a half-strength bonus, not a guarantee).
+- **Middle initials are optional but discriminating.** A single-char middle initial is stripped from the canonical first+last form (so "Steven A Cohen" and "Steven Cohen" share a form), but it is also retained separately and used as a discriminator: a record and a variant match only if their middle initials are *compatible* — compatible when either side has no initial (so a bare "John Middleton" matches "John S. Middleton"), but **incompatible when both carry an initial and they differ** ("John P. Middleton" does not match "John S. Middleton"). This is what lets a same-named relative who differs only by middle initial (a father/son like John S. vs John P.) be routed to their own `related_entity` instead of collapsing onto the principal. A spelled-out middle *name* ("John Powers Middleton") stays in the form and discriminates by not sharing a bare form; it is not treated as an initial. Implemented by `normalize_name` (returns the initials) + `names_match` (`_middle_initials_compatible`) in `scripts/resolve_entities.py`.
 - Suffixes (Jr., Sr., II, III) are part of the name and matter — "John Smith Jr." does not match "John Smith".
 - Hyphenated last names are matched both ways ("Smith-Jones" matches "Smith Jones" and "Jones-Smith").
 
