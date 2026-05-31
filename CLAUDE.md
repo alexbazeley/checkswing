@@ -10,6 +10,7 @@ Before changing anything that touches data, classification, or provenance, read:
 - **[CHARTER.md](CHARTER.md)** — scope and project phases.
 - **[VERIFICATION.md](VERIFICATION.md)** — the three-tier classification spec.
 - **[OWNER_SCHEMA.md](OWNER_SCHEMA.md)** / **[DONATION_SCHEMA.md](DONATION_SCHEMA.md)** — data schemas.
+- **[docs/CALIBRATION_PLAYBOOK.md](docs/CALIBRATION_PLAYBOOK.md)** — how to tune an owner's signal block (the `audit` → `reclassify` loop).
 
 Conventions:
 

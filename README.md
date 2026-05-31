@@ -62,7 +62,9 @@ Key documents: [GOVERNANCE.md](GOVERNANCE.md) (data-integrity rules),
 [CHARTER.md](CHARTER.md) (scope and phases), [VERIFICATION.md](VERIFICATION.md)
 (classification spec), [OWNER_SCHEMA.md](OWNER_SCHEMA.md) and
 [DONATION_SCHEMA.md](DONATION_SCHEMA.md) (data schemas),
-[SOURCES.md](SOURCES.md) (what counts as an authoritative source).
+[SOURCES.md](SOURCES.md) (what counts as an authoritative source), and
+[docs/CALIBRATION_PLAYBOOK.md](docs/CALIBRATION_PLAYBOOK.md) (how to tune an
+owner's signal block).
 
 ## Setup
 
