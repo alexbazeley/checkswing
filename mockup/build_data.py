@@ -43,8 +43,10 @@ PROVENANCE_OUT = REPO_ROOT / "mockup" / "provenance.json"
 # and the SPA loads data.json whole). Instead data.json carries only a tiny
 # index ({committee_id: [cycles]}), and each committee's recipients live in
 # their own file fetched lazily when that committee page is opened. Gitignored
-# and rebuilt at deploy time, same as data.json.
-BENEFICIARIES_OUT_DIR = REPO_ROOT / "mockup" / "beneficiaries"
+# and rebuilt at deploy time, same as data.json. The directory is resolved from
+# OUT_PATH at write time (not a module constant) so it follows OUT_PATH when
+# tests monkeypatch the output location.
+BENEFICIARIES_DIR_NAME = "beneficiaries"
 # Recipients per (committee, cycle) surfaced in the dashboard chunk — the
 # "scannable top-of-pile" view. The full set stays queryable in master.db.
 DASHBOARD_BENEFICIARY_CAP = 25
@@ -787,14 +789,15 @@ def write_beneficiary_chunks(chunks: dict[str, dict[str, list[dict]]]) -> int:
     is wiped and rebuilt each run so a committee that drops out of the archive
     doesn't leave an orphan chunk. Gitignored; regenerated at deploy time.
     """
-    if BENEFICIARIES_OUT_DIR.exists():
-        for stale in BENEFICIARIES_OUT_DIR.glob("*.json"):
+    out_dir = OUT_PATH.parent / BENEFICIARIES_DIR_NAME
+    if out_dir.exists():
+        for stale in out_dir.glob("*.json"):
             stale.unlink()
-    BENEFICIARIES_OUT_DIR.mkdir(parents=True, exist_ok=True)
+    out_dir.mkdir(parents=True, exist_ok=True)
     n = 0
     for cid, by_cycle in chunks.items():
         # committee_id is always a clean FEC id (C00...), safe as a filename.
-        path = BENEFICIARIES_OUT_DIR / f"{cid}.json"
+        path = out_dir / f"{cid}.json"
         path.write_text(json.dumps(by_cycle, indent=None, separators=(",", ":")))
         n += 1
     return n

@@ -199,8 +199,8 @@ def test_legacy_render_when_committees_empty(patched_build):
     assert "treasurer_name" not in r
     # Scale block is empty
     assert data["committee_scale"] == {}
-    # Beneficiaries map is also empty
-    assert data["committee_beneficiaries"] == {}
+    # Beneficiary index is also empty
+    assert data["committee_beneficiary_index"] == {}
 
 
 def _seed_beneficiaries(db_path: Path) -> None:
@@ -227,7 +227,13 @@ def _seed_beneficiaries(db_path: Path) -> None:
         )
 
 
-def test_committee_beneficiaries_map_emitted_with_cycles_and_top_25(patched_build):
+def _read_beneficiary_chunk(out_path: Path, committee_id: str) -> dict:
+    """Load a lazy-loaded per-committee beneficiary chunk written next to data.json."""
+    chunk_path = out_path.parent / "beneficiaries" / f"{committee_id}.json"
+    return json.loads(chunk_path.read_text())
+
+
+def test_committee_beneficiaries_index_and_chunk_emitted(patched_build):
     _seed_donations(patched_build["db_path"])
     _seed_committee(patched_build["db_path"])
     _seed_beneficiaries(patched_build["db_path"])
@@ -236,9 +242,11 @@ def test_committee_beneficiaries_map_emitted_with_cycles_and_top_25(patched_buil
     build_data.main()
 
     data = json.loads(patched_build["out_path"].read_text())
-    bene = data["committee_beneficiaries"]
-    assert "C00000001" in bene
-    by_cycle = bene["C00000001"]
+    # data.json carries only the lightweight index: {committee_id: [cycles desc]}.
+    index = data["committee_beneficiary_index"]
+    assert index["C00000001"] == [2024, 2022]
+    # The full recipients live in a per-committee chunk fetched lazily.
+    by_cycle = _read_beneficiary_chunk(patched_build["out_path"], "C00000001")
     # JSON keys are strings (matches committee_scale / cycle_dollars convention).
     assert set(by_cycle.keys()) == {"2024", "2022"}
     cycle_2024 = by_cycle["2024"]
@@ -274,8 +282,8 @@ def test_committee_beneficiaries_normalizes_party_codes(patched_build):
     from mockup import build_data
     build_data.main()
 
-    data = json.loads(patched_build["out_path"].read_text())
-    b = data["committee_beneficiaries"]["C00000001"]["2024"][0]
+    by_cycle = _read_beneficiary_chunk(patched_build["out_path"], "C00000001")
+    b = by_cycle["2024"][0]
     assert b["recipient_party"] == "DEM"
 
 
@@ -290,4 +298,4 @@ def test_committee_beneficiaries_empty_when_pre_v5_db(patched_build):
     build_data.main()
 
     data = json.loads(patched_build["out_path"].read_text())
-    assert data["committee_beneficiaries"] == {}
+    assert data["committee_beneficiary_index"] == {}
