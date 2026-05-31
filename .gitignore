@@ -10,6 +10,13 @@ data/master.db-journal
 data/master.db-wal
 data/master.db-shm
 
+# Phase 3 legislation.db transient files. The legislation.db file itself IS
+# committed (a normal, non-LFS git blob — see .gitattributes; small enough to
+# diff and deploy without LFS), so only its journal/WAL/shm are ignored.
+data/legislation.db-journal
+data/legislation.db-wal
+data/legislation.db-shm
+
 # Runtime lock files; released on clean exit, but a killed/crashed run can
 # leave them behind. Treated the same as the master.db journal/WAL/shm.
 data/.refresh.lock

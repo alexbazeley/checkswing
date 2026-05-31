@@ -46,6 +46,16 @@ def init():
     click.echo(f"Initialized {db.MASTER_DB}")
 
 
+@cli.command(name="init-legislation")
+def init_legislation_cmd():
+    """Create the Phase 3 legislation index schema in data/legislation.db (idempotent)."""
+    from . import legislation_db
+    from .paths import LEGISLATION_DB
+
+    legislation_db.init()
+    click.echo(f"Initialized {LEGISLATION_DB} (leg schema v{legislation_db.LEG_SCHEMA_VERSION})")
+
+
 @cli.command()
 @click.argument("slug")
 @click.option("--dry-run", is_flag=True, help="Fetch + classify but do not write to DB.")
