@@ -201,6 +201,11 @@ jobs:
             echo "No changes from refresh — nothing to commit."
           else
             git commit -m "weekly refresh ($(date -u +%Y-%m-%d))"
+            # Rebase onto any commits that landed on main since checkout (e.g. a
+            # manual push, or a re-run of an older run) so the push fast-forwards
+            # instead of being rejected non-ff. The refresh only touches data
+            # files, so this replays cleanly over unrelated code/brief commits.
+            git pull --rebase origin main
             git push
           fi
 
@@ -290,5 +295,9 @@ jobs:
             echo "No committee enrichment deltas — nothing to commit."
           else
             git commit -m "committees: weekly enrichment ($(date -u +%Y-%m-%d))"
+            # See note in the consolidate job: rebase onto any commits that
+            # landed since checkout (the consolidate push just above is the
+            # common case) so this push fast-forwards.
+            git pull --rebase origin main
             git push
           fi
