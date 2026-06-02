@@ -359,12 +359,13 @@ def refresh_entities(db_path: Path = MASTER_DB) -> int:
 
     Returns the number of entity rows written.
 
-    Reads the owner YAML and writes one row per owner. (Related entities are
-    recorded under the owner's row indirectly — the entities table reflects the
-    YAML registry, not the related_entities sub-structure. We expand related
-    entities only when classification asks for them, never as their own row in
-    the entities table for now. If/when related-entity ingestion is enabled the
-    pipeline will populate them via a separate path.)
+    Reads the owner YAML and writes one row per owner, PLUS one row per declared
+    `related_entity` (spouse/child/parent/sibling/pac/business_entity) with
+    `kind` from the YAML and `parent_slug` set to the owner's slug. This keeps the
+    entities mirror honest once related-entity ingestion is enabled: the dashboard
+    builder and any per-entity query can see the household members the donations
+    table now references via `parent_owner_slug`. Related rows carry the owner's
+    `yaml_path`/`yaml_sha256` (they live in the same file) and no team/tenure.
     """
     init(db_path)
     rows = 0
@@ -382,6 +383,9 @@ def refresh_entities(db_path: Path = MASTER_DB) -> int:
             data = yaml.safe_load(yaml_path.read_text(encoding="utf-8"))
             if not isinstance(data, dict):
                 continue
+            owner_slug = data.get("slug")
+            yaml_rel = relpath(yaml_path)
+            yaml_hash = _sha256_file(yaml_path)
             conn.execute(
                 """
                 INSERT INTO entities
@@ -391,7 +395,7 @@ def refresh_entities(db_path: Path = MASTER_DB) -> int:
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
-                    data.get("slug"),
+                    owner_slug,
                     "owner",
                     None,
                     data.get("name"),
@@ -399,12 +403,44 @@ def refresh_entities(db_path: Path = MASTER_DB) -> int:
                     str(data.get("tenure_start_date")) if data.get("tenure_start_date") else None,
                     str(data.get("tenure_end_date")) if data.get("tenure_end_date") else None,
                     str(data.get("family_tenure_start_date")) if data.get("family_tenure_start_date") else None,
-                    relpath(yaml_path),
-                    _sha256_file(yaml_path),
+                    yaml_rel,
+                    yaml_hash,
                     now,
                 ),
             )
             rows += 1
+            # Related entities (households) — one mirror row each, parented to the
+            # owner. Skipped silently if malformed/unnamed (validate_owners is the
+            # gate for YAML correctness; refresh is not the place to fail).
+            for ent in (data.get("related_entities") or []):
+                if not isinstance(ent, dict):
+                    continue
+                ent_slug = ent.get("slug")
+                if not ent_slug:
+                    continue
+                conn.execute(
+                    """
+                    INSERT INTO entities
+                      (slug, kind, parent_slug, name, team, tenure_start_date,
+                       tenure_end_date, family_tenure_start_date,
+                       yaml_path, yaml_sha256, refreshed_at)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """,
+                    (
+                        ent_slug,
+                        ent.get("kind") or "spouse",
+                        owner_slug,
+                        ent.get("name") or ent_slug,
+                        None,
+                        None,
+                        None,
+                        None,
+                        yaml_rel,
+                        yaml_hash,
+                        now,
+                    ),
+                )
+                rows += 1
     return rows
 
 

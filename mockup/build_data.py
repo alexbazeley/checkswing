@@ -364,6 +364,40 @@ def main() -> None:
         n_confirmed = sum(1 for d in my_donations if d["status"] == "CONFIRMED")
         n_probable = sum(1 for d in my_donations if d["status"] == "PROBABLE")
 
+        # Household decomposition (VERIFICATION.md anti-pattern: never silently
+        # fold a spouse's giving into the owner's number). `total_amount` above is
+        # the household rollup (owner + related); these fields let the UI show the
+        # owner's OWN total alongside it and label each related member, so the
+        # merge is always explicit. For an owner with no related entities,
+        # owner_only == total and household_members == [].
+        owner_only = [d for d in my_donations if d["entity"] == slug]
+        related_donations = [d for d in my_donations if d["entity"] != slug]
+        owner_only_amount = sum(d["amount"] for d in owner_only)
+        owner_only_amount_2026 = sum(d["amount_2026"] for d in owner_only)
+        members_acc: dict[str, dict] = {}
+        for d in related_donations:
+            m = members_acc.setdefault(
+                d["entity"],
+                {
+                    "slug": d["entity"],
+                    "name": (entities.get(d["entity"], {}) or {}).get("name") or d["entity"],
+                    "kind": d["entity_kind"],
+                    "amount": 0.0,
+                    "amount_2026": 0.0,
+                    "n_total": 0,
+                    "n_confirmed": 0,
+                    "n_probable": 0,
+                },
+            )
+            m["amount"] += d["amount"]
+            m["amount_2026"] += d["amount_2026"]
+            m["n_total"] += 1
+            m["n_confirmed"] += 1 if d["status"] == "CONFIRMED" else 0
+            m["n_probable"] += 1 if d["status"] == "PROBABLE" else 0
+        household_members = sorted(
+            members_acc.values(), key=lambda m: m["amount"], reverse=True
+        )
+
         # Party split by dollars (both currencies)
         party_dollars = defaultdict(float)
         party_dollars_2026 = defaultdict(float)
@@ -451,6 +485,14 @@ def main() -> None:
             "n_total": n_total,
             "n_confirmed": n_confirmed,
             "n_probable": n_probable,
+            # Household split (see VERIFICATION.md anti-pattern). total_amount is
+            # the household rollup; owner_only_* is this owner's own giving, and
+            # household_members itemizes each related entity (spouse/family).
+            "owner_only_amount": owner_only_amount,
+            "owner_only_amount_2026": owner_only_amount_2026,
+            "n_owner_only": len(owner_only),
+            "household_members": household_members,
+            "has_household": bool(household_members),
             "party_dollars": dict(party_dollars),
             "party_dollars_2026": dict(party_dollars_2026),
             "cycle_dollars": dict(cycle_dollars),

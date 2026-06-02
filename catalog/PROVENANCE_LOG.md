@@ -4178,3 +4178,72 @@ generated end-to-end from the joined data") is satisfied.
   donations predates the 2018 vote; owner money splits ~50/50 Yea/Nay; zero owner
   donations to SAPA's authors Guthrie/Bustos) — rather than overclaiming.
 - master.db untouched throughout Phase 3; legislation.db is a separate non-LFS DB.
+
+### 2026-06-02 — INGESTION
+
+- **run_id**: `2c45b2d7`
+- **entity_slug**: `cohen-steven`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2026-03-29`
+- **name_variants_queried**: `["Steven A Cohen", "Steven A. Cohen", "Steven Cohen", "Steve Cohen", "Cohen, Steven", "Cohen, Steven A", "Cohen, Steven A."]`
+- **api_calls_made**: `169`
+- **records_fetched**: `3877`
+- **confirmed_count**: `162`
+- **probable_count**: `107`
+- **uncertain_count**: `3176`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-06-02T05-04-09Z__2c45b2d7.db`
+- **notes**: skipped(no-name-match)=432 · min_date=--full-refetch · states=['CT', 'NY'] · +related: cohen-alexandra
+
+### 2026-06-02 — SUPERSESSION — run 2c45b2d7
+
+- `2080620181582691347` (cohen-steven): FEC restatement: image_number
+- `2080620181582691247` (cohen-steven): FEC restatement: image_number
+- `2080220181582330133` (cohen-steven): FEC restatement: image_number
+- `2080220181582329984` (cohen-steven): FEC restatement: image_number
+- `2071920171426271773` (cohen-steven): FEC restatement: image_number
+- `2071920171426271772` (cohen-steven): FEC restatement: image_number
+- `1071720170035539494` (cohen-steven): FEC restatement: image_number
+- `1071720170035539493` (cohen-steven): FEC restatement: image_number
+- `2032120171380377295` (cohen-steven): FEC restatement: image_number
+- `2102120161344533816` (cohen-steven): FEC restatement: image_number
+- `1060320130014126299` (cohen-steven): FEC restatement: image_number
+- `2021520111135948933` (cohen-steven): FEC restatement: image_number
+- `2103020091120290700` (cohen-steven): FEC restatement: image_number
+- `1020220110005290047` (cohen-steven): FEC restatement: image_number
+- `1020220110005289916` (cohen-steven): FEC restatement: image_number
+- `1010720100003821393` (cohen-steven): FEC restatement: image_number
+- `1032520100004029807` (cohen-steven): FEC restatement: image_number
+- `1032520100004029806` (cohen-steven): FEC restatement: image_number
+- `1032520100004029805` (cohen-steven): FEC restatement: image_number
+- `1101620090001116398` (cohen-steven): FEC restatement: image_number
+- `1121520090001236709` (cohen-steven): FEC restatement: image_number
+- `1121520090001236708` (cohen-steven): FEC restatement: image_number
+- `1121520090001320996` (cohen-steven): FEC restatement: image_number
+- `2042620071077009230` (cohen-steven): FEC restatement: image_number
+- `1070820110006432343` (cohen-steven): FEC restatement: image_number
+- `1070820110007809029` (cohen-steven): FEC restatement: image_number
+- `1070820110007809028` (cohen-steven): FEC restatement: image_number
+- `1070820110007815281` (cohen-steven): FEC restatement: image_number
+- `1070820110007325861` (cohen-steven): FEC restatement: image_number
+- `1070820110007327750` (cohen-steven): FEC restatement: image_number
+- `1070820110007325224` (cohen-steven): FEC restatement: image_number
+- `1070820110006591363` (cohen-steven): FEC restatement: image_number
+- `1070820110006591362` (cohen-steven): FEC restatement: image_number
+- `2020920091107172203` (cohen-steven): FEC restatement: image_number
+- `1121520090002048676` (cohen-steven): FEC restatement: image_number
+- `2020920091107173453` (cohen-steven): FEC restatement: image_number
+- `2102820081099632611` (cohen-steven): FEC restatement: image_number
+- `1121520090001664748` (cohen-steven): FEC restatement: image_number
+- `2111920101131638956` (cohen-steven): FEC restatement: image_number
+- `2111920101131638985` (cohen-steven): FEC restatement: image_number
+- `1061520110005862295` (cohen-steven): FEC restatement: image_number
+- `2040720111138004370` (cohen-steven): FEC restatement: image_number
+- `2040720111138004369` (cohen-steven): FEC restatement: image_number
+- `2040720111138004368` (cohen-steven): FEC restatement: image_number
+- `2110420091120490830` (cohen-steven): FEC restatement: image_number
+- `1070820110006620625` (cohen-steven): FEC restatement: image_number
+- `2042320091114167651` (cohen-steven): FEC restatement: image_number
+- `2120920081102147522` (cohen-steven): FEC restatement: image_number
+- `2120920081102147521` (cohen-steven): FEC restatement: image_number
+- `2072920091116762311` (cohen-steven): FEC restatement: image_number

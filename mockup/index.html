@@ -860,6 +860,22 @@ section.block:last-child { border-bottom: 0; }
 .chip-confirmed::before { content: "●"; font-size: 10px; }
 .chip-probable  { background: var(--warn-bg); color: var(--warn-fg); }
 .chip-probable::before  { content: "◐"; font-size: 10px; }
+/* Household member tag — marks a donation/row attributed to a spouse/family
+   member tracked as their own entity, never silently merged into the owner. */
+.chip-kin { background: var(--bg-sunk); color: var(--ink-3); border: 1px solid var(--rule); }
+
+/* Household panel on the owner profile (spouse/family rollup). */
+.household-grid { margin-top: 18px; border-top: 1px solid var(--rule); }
+.household-row {
+  display: grid; grid-template-columns: 1fr auto auto; gap: 16px; align-items: baseline;
+  padding: 12px 0; border-bottom: 1px solid var(--rule);
+}
+.household-row .household-who { font-family: var(--serif); font-size: 15px; }
+.household-row .household-who .chip { margin-left: 8px; }
+.household-row .household-amt { font-family: var(--mono); font-size: 15px; text-align: right; }
+.household-row .household-n { color: var(--ink-3); font-size: 12px; text-align: right; min-width: 92px; }
+.household-row.household-total { border-bottom: 0; font-weight: 600; }
+.household-row.household-total .household-who { font-family: var(--sans); text-transform: uppercase; letter-spacing: 0.06em; font-size: 12px; color: var(--ink-3); }
 
 /* 48-hour notice flag — high-urgency FEC report type, filed within 48 hours
    of a $1K+ contribution received in the final 20 days before an election. */
@@ -3633,9 +3649,9 @@ function renderOwner(slug) {
 
     <div class="kpis" style="border-top:0;border-bottom:1px solid var(--rule);">
       <div class="kpi">
-        <div class="kpi-label">Total tracked</div>
+        <div class="kpi-label">${o.has_household ? "Household total" : "Total tracked"}</div>
         <div class="kpi-value">${fmtMoney(aggAmt(o, "total_amount"))}</div>
-        <div class="kpi-foot">${fmtMoneyExact(aggAmt(o, "total_amount"))}</div>
+        <div class="kpi-foot">${fmtMoneyExact(aggAmt(o, "total_amount"))}${o.has_household ? ` · incl. ${fmtMoney(aggAmt(o, "owner_only_amount"))} from ${escapeHtml(o.name.split(" ").slice(-1)[0])}` : ""}</div>
       </div>
       <div class="kpi">
         <div class="kpi-label">Donations</div>
@@ -3653,6 +3669,8 @@ function renderOwner(slug) {
         <div class="kpi-foot">Committees, candidates, PACs</div>
       </div>
     </div>
+
+    ${o.has_household ? renderHouseholdPanel(o) : ""}
 
     <section class="block">
       <div class="block-head">
@@ -4056,11 +4074,50 @@ function renderDonationsTable(allDonations) {
   `;
 }
 
+/* Human label for a related-entity kind (DONATION_SCHEMA entity_kind). */
+function kinLabel(kind) {
+  return ({
+    spouse: "Spouse", child: "Child", parent: "Parent", sibling: "Sibling",
+    pac: "PAC", business_entity: "Business",
+  })[kind] || (kind ? kind.replace(/_/g, " ") : "Related");
+}
+
+/* Household rollup panel: the owner's own giving + each documented related
+   entity (spouse/family), joined explicitly. Mirrors the VERIFICATION.md rule
+   that "the Cohens gave $X" must JOIN the entities, never silently merge. */
+function renderHouseholdPanel(o) {
+  const ownerLast = (o.name || "").split(" ").filter(Boolean).slice(-1)[0] || "the owner";
+  const members = o.household_members || [];
+  const row = (who, kindChip, amount, n, cls) => `
+    <div class="household-row${cls ? " " + cls : ""}">
+      <span class="household-who">${who}${kindChip ? ` <span class="chip chip-kin">${kindChip}</span>` : ""}</span>
+      <span class="household-amt">${fmtMoney(amount)}</span>
+      <span class="household-n">${fmtInt(n)} donation${n === 1 ? "" : "s"}</span>
+    </div>`;
+  return `
+    <section class="block">
+      <div class="block-head">
+        <span class="eyebrow">Household</span>
+        <h2 style="margin-top:6px">The ${escapeHtml(ownerLast)} household</h2>
+        <p class="caption">FEC giving by ${escapeHtml(o.name)} and documented household members. Each member is tracked as their own entity with its own verifying signals; their donations are attributed to them and shown here joined — never silently folded into ${escapeHtml(ownerLast)}'s own total above.</p>
+      </div>
+      <div class="household-grid">
+        ${row(escapeHtml(o.name), "Principal", aggAmt(o, "owner_only_amount"), o.n_owner_only)}
+        ${members.map((m) => row(escapeHtml(m.name), escapeHtml(kinLabel(m.kind)), aggAmt(m, "amount"), m.n_total)).join("")}
+        ${row("Household combined", "", aggAmt(o, "total_amount"), o.n_total, "household-total")}
+      </div>
+    </section>`;
+}
+
 function renderDonationRow(d) {
   const partyClass = d.party === "DEM" ? "dem" : d.party === "REP" ? "rep" : "oth";
   const statusChip = d.status === "CONFIRMED"
     ? `<span class="chip chip-confirmed">Confirmed</span>`
     : `<span class="chip chip-probable">Probable</span>`;
+  // Flag a row attributed to a household member rather than the principal owner.
+  const kinChip = (d.entity_kind && d.entity_kind !== "owner")
+    ? `<span class="chip chip-kin" title="Attributed to a household member, not the principal owner">${escapeHtml(kinLabel(d.entity_kind))}</span>`
+    : "";
   return `
     <tr data-id="${escapeAttr(d.id)}">
       <td class="col-date">${escapeHtml(d.date || "—")}</td>
@@ -4068,6 +4125,7 @@ function renderDonationRow(d) {
       <td class="col-recipient">
         ${escapeHtml(d.committee || "—")}
         ${d.candidate ? `<span class="candidate">→ ${escapeHtml(d.candidate)}</span>` : ""}
+        ${kinChip}
       </td>
       <td><span class="chip-party ${partyClass}">${d.party}</span></td>
       <td style="white-space:nowrap">${statusChip} ${chip48H(d)}</td>
