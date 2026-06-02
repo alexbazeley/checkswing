@@ -17,9 +17,12 @@ from scripts import ingest
 from scripts.fetch_fec import DEFAULT_MIN_DATE
 from scripts.ingest import (
     SENTINEL_FILING_ID,
+    _dedupe_records_by_txn,
     _record_to_donation_row,
+    _related_fetch_targets,
     _resolve_min_date,
     _row_has_required_provenance,
+    _signal_states,
     _write_audit_last_ingestion,
 )
 from scripts.resolve_entities import Classification
@@ -306,3 +309,199 @@ class TestRequiredProvenanceGuard:
         # blank one must never pass the guard.
         row = {"filing_id": "", "raw_payload_path": "p", "date": "2024-01-01"}
         assert not _row_has_required_provenance(row)
+
+
+# ─── Household (related-entity) fetch derivation — Phase A ───────────────────
+
+
+class TestSignalStates:
+    def test_none_when_filter_disabled(self):
+        assert _signal_states({"states": ["CT"]}, state_filter=False) is None
+
+    def test_returns_states_when_present(self):
+        assert _signal_states({"states": ["CT", "NY"]}, state_filter=True) == ["CT", "NY"]
+
+    def test_none_when_no_states_declared(self):
+        # A related entity may file from a different documented residence than the
+        # owner; absent states means "search by name only", not "fail".
+        assert _signal_states({}, state_filter=True) is None
+        assert _signal_states({"states": []}, state_filter=True) is None
+        assert _signal_states(None, state_filter=True) is None
+
+
+class TestRelatedFetchTargets:
+    def _owner(self):
+        return {
+            "slug": "cohen-steven",
+            "name_variants": ["Steven Cohen"],
+            "verifying_signals": {"states": ["CT"]},
+            "related_entities": [
+                {
+                    "kind": "spouse",
+                    "slug": "cohen-alexandra",
+                    "name_variants": ["Alexandra Cohen", "Alex Cohen"],
+                    "verifying_signals": {"states": ["CT", "NY"]},
+                }
+            ],
+        }
+
+    def test_emits_target_per_related_entity(self):
+        targets = _related_fetch_targets(self._owner(), state_filter=True)
+        assert targets == [("cohen-alexandra", ["Alexandra Cohen", "Alex Cohen"], ["CT", "NY"])]
+
+    def test_uses_entity_states_not_owner_states(self):
+        # NY is the spouse's state, not the owner's — proves per-entity states.
+        _slug, _variants, states = _related_fetch_targets(self._owner(), state_filter=True)[0]
+        assert states == ["CT", "NY"]
+
+    def test_state_filter_disabled_yields_none_states(self):
+        _slug, _variants, states = _related_fetch_targets(self._owner(), state_filter=False)[0]
+        assert states is None
+
+    def test_empty_when_no_related_entities(self):
+        assert _related_fetch_targets({"slug": "x"}, state_filter=True) == []
+
+    def test_skips_entities_without_variants_or_slug(self):
+        owner = {
+            "related_entities": [
+                {"kind": "spouse", "slug": "no-variants"},          # no name_variants
+                {"kind": "child", "name_variants": ["Kid X"]},      # no slug
+                "garbage",                                          # not a mapping
+                {"kind": "spouse", "slug": "ok", "name_variants": ["A B"]},
+            ]
+        }
+        targets = _related_fetch_targets(owner, state_filter=True)
+        assert [t[0] for t in targets] == ["ok"]
+
+
+class TestDedupeRecordsByTxn:
+    def test_keeps_first_occurrence(self):
+        recs = [
+            {"transaction_id": "T1", "_raw_payload_path": "owner/a.json"},
+            {"transaction_id": "T1", "_raw_payload_path": "spouse/b.json"},  # dup across fetches
+            {"transaction_id": "T2", "_raw_payload_path": "spouse/b.json"},
+        ]
+        out = _dedupe_records_by_txn(recs)
+        assert [r["transaction_id"] for r in out] == ["T1", "T2"]
+        # First (owner-side) copy wins.
+        assert out[0]["_raw_payload_path"] == "owner/a.json"
+
+    def test_sub_id_fallback_key(self):
+        recs = [{"sub_id": "S1"}, {"sub_id": "S1"}, {"sub_id": "S2"}]
+        out = _dedupe_records_by_txn(recs)
+        assert [r["sub_id"] for r in out] == ["S1", "S2"]
+
+    def test_keyless_records_are_kept(self):
+        # No txn/sub_id key → can't dedupe; keep (dropped later at the §1.3 gate).
+        recs = [{"x": 1}, {"x": 2}]
+        assert _dedupe_records_by_txn(recs) == recs
+
+
+# ─── ingest_entity from_raw: household merge integration — Phase A ───────────
+
+
+class TestIngestEntityRelatedFromRaw:
+    """Prove the from_raw path fetches/merges related-entity raw and routes each
+    record to the right slug. Uses dry_run so no DB writes happen; the classifier
+    is the real one (records carry FEC-shaped fields)."""
+
+    def _owner(self):
+        return {
+            "slug": "owner-h",
+            "name_variants": ["Owner H"],
+            "verifying_signals": {
+                "cities": ["townsville"], "states": ["TT"],
+                "employers": ["Owner H LLC"], "occupations": [],
+            },
+            "strong_signals": {"employers": [], "zip_codes": []},
+            "related_entities": [
+                {
+                    "kind": "spouse", "slug": "spouse-h", "name_variants": ["Spouse H"],
+                    "verifying_signals": {
+                        "cities": ["townsville"], "states": ["TT"],
+                        "employers": [], "occupations": [],
+                    },
+                    "strong_signals": {"employers": [], "zip_codes": []},
+                }
+            ],
+        }
+
+    def _patch(self, monkeypatch, owner_records, spouse_records):
+        from contextlib import contextmanager
+
+        from scripts import db
+
+        monkeypatch.setattr(ingest, "validate_all", lambda: [])
+        monkeypatch.setattr(ingest, "_load_owner", lambda slug: self._owner())
+
+        def _fake_load(slug, raw_dir=None):
+            if slug == "owner-h":
+                return (list(owner_records), [Path("data/raw/owner-h/a.json")])
+            if slug == "spouse-h":
+                return (list(spouse_records), [Path("data/raw/spouse-h/b.json")])
+            return ([], [])
+
+        monkeypatch.setattr(ingest, "load_raw_payloads", _fake_load)
+
+        @contextmanager
+        def _fake_connect(*a, **k):
+            yield None
+
+        monkeypatch.setattr(db, "connect", _fake_connect)
+        monkeypatch.setattr(db, "manual_attributions_for_slug", lambda conn, slug: {})
+
+    def _rec(self, txn, name, **fields):
+        base = {
+            "transaction_id": txn,
+            "contributor_name": name,
+            "contributor_city": "townsville",
+            "contributor_state": "TT",
+            "contribution_receipt_date": "2024-03-01",
+            "contribution_receipt_amount": 1000,
+            "filing_id": "F1",
+            "_raw_payload_path": "data/raw/x/a.json",
+        }
+        base.update(fields)
+        return base
+
+    def test_related_raw_is_merged_and_routed(self, monkeypatch):
+        owner_rec = self._rec("T_OWN", "Owner H", contributor_employer="Owner H LLC")
+        spouse_rec = self._rec("T_SP", "Spouse H")
+        self._patch(monkeypatch, [owner_rec], [spouse_rec])
+
+        summary = ingest.ingest_entity(
+            "owner-h", dry_run=True, from_raw=True, process_related_entities=True
+        )
+
+        assert summary["records_fetched"] == 2
+        assert summary["confirmed_count"] == 1   # Owner H: employer + city/state
+        assert summary["probable_count"] == 1    # Spouse H: city/state only
+        assert summary["related_breakdown"] == {
+            "spouse-h": {"CONFIRMED": 0, "PROBABLE": 1, "UNCERTAIN": 0}
+        }
+
+    def test_dedupes_txn_seen_in_both_fetches(self, monkeypatch):
+        owner_rec = self._rec("T_OWN", "Owner H", contributor_employer="Owner H LLC")
+        spouse_rec = self._rec("T_SP", "Spouse H")
+        # Spouse fetch ALSO returns the owner's txn (e.g. a joint filing). Dedupe
+        # must collapse it to one, keeping the owner-side copy.
+        dup_owner = self._rec("T_OWN", "Owner H", contributor_employer="Owner H LLC",
+                              _raw_payload_path="data/raw/spouse-h/b.json")
+        self._patch(monkeypatch, [owner_rec], [spouse_rec, dup_owner])
+
+        summary = ingest.ingest_entity(
+            "owner-h", dry_run=True, from_raw=True, process_related_entities=True
+        )
+        assert summary["records_fetched"] == 2  # T_OWN + T_SP, not 3
+
+    def test_related_not_fetched_without_flag(self, monkeypatch):
+        owner_rec = self._rec("T_OWN", "Owner H", contributor_employer="Owner H LLC")
+        spouse_rec = self._rec("T_SP", "Spouse H")
+        self._patch(monkeypatch, [owner_rec], [spouse_rec])
+
+        summary = ingest.ingest_entity(
+            "owner-h", dry_run=True, from_raw=True, process_related_entities=False
+        )
+        # Spouse raw never loaded; only the owner's record is present.
+        assert summary["records_fetched"] == 1
+        assert "related_breakdown" not in summary

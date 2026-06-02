@@ -1,6 +1,8 @@
 """Supersession + idempotency tests for db.insert_donation (GOVERNANCE.md §1.5, §1.10)."""
 from __future__ import annotations
 
+from pathlib import Path
+
 import pytest
 
 from scripts import db
@@ -424,3 +426,127 @@ def test_schema_v7_tables_present(db_path):
         names = {r["name"] for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")}
     assert {"review_resolutions", "manual_attributions"} <= names
     assert db.SCHEMA_VERSION >= 7
+
+
+# ─── refresh_entities: household (related-entity) mirror — Phase A ───────────
+
+_OWNER_WITH_SPOUSE_YAML = """\
+slug: owner-h
+name: Owner H
+team: Test Team
+role: Principal owner
+status: pilot
+tenure_start_date: 2020-01-01
+tenure_end_date: null
+name_variants: ["Owner H", "O. H."]
+verifying_signals:
+  cities: ["townsville"]
+  states: ["TT"]
+  employers: ["Owner H LLC"]
+  occupations: ["investor"]
+strong_signals: {employers: [], zip_codes: []}
+related_entities:
+  - kind: spouse
+    slug: spouse-h
+    name: Spouse H
+    name_variants: ["Spouse H"]
+    verifying_signals: {cities: ["townsville"], states: ["TT"], employers: [], occupations: []}
+    strong_signals: {employers: [], zip_codes: []}
+  - kind: child
+    slug: child-h
+    name: Child H
+    name_variants: ["Child H"]
+    verifying_signals: {cities: ["townsville"], states: ["TT"], employers: [], occupations: []}
+    strong_signals: {employers: [], zip_codes: []}
+sources:
+  - description: "ownership page"
+    url: ""
+    accessed: "2026-06-02"
+"""
+
+_PLAIN_OWNER_YAML = """\
+slug: owner-p
+name: Owner P
+team: Plain Team
+role: Principal owner
+status: pilot
+tenure_start_date: 2019-01-01
+tenure_end_date: null
+name_variants: ["Owner P"]
+verifying_signals:
+  cities: ["plainville"]
+  states: ["PP"]
+  employers: ["Owner P Inc"]
+  occupations: ["owner"]
+strong_signals: {employers: [], zip_codes: []}
+sources:
+  - description: "ownership page"
+    url: ""
+    accessed: "2026-06-02"
+"""
+
+
+@pytest.fixture
+def owners_dir(tmp_path, monkeypatch):
+    d = tmp_path / "owners"
+    d.mkdir()
+    (d / "owner-h.yaml").write_text(_OWNER_WITH_SPOUSE_YAML, encoding="utf-8")
+    (d / "owner-p.yaml").write_text(_PLAIN_OWNER_YAML, encoding="utf-8")
+    (d / "_registry.yaml").write_text("owners: []\n", encoding="utf-8")  # underscore-skipped
+    monkeypatch.setattr(db, "OWNERS_DIR", d)
+    # relpath() is repo-root-relative; tmp paths live outside the repo, so stub
+    # it (same pattern as the fetch/ingest tests).
+    monkeypatch.setattr(db, "relpath", lambda p: Path(p).name)
+    return d
+
+
+class TestRefreshEntitiesHouseholds:
+    def _rows(self, db_path):
+        with db.connect(db_path) as conn:
+            return {
+                r["slug"]: dict(r)
+                for r in conn.execute("SELECT * FROM entities")
+            }
+
+    def test_writes_owner_and_related_rows(self, db_path, owners_dir):
+        n = db.refresh_entities(db_path)
+        rows = self._rows(db_path)
+        # 2 owners + 1 spouse + 1 child = 4 (registry underscore file skipped).
+        assert n == 4
+        assert set(rows) == {"owner-h", "spouse-h", "child-h", "owner-p"}
+
+    def test_related_rows_carry_kind_and_parent(self, db_path, owners_dir):
+        db.refresh_entities(db_path)
+        rows = self._rows(db_path)
+        assert rows["spouse-h"]["kind"] == "spouse"
+        assert rows["spouse-h"]["parent_slug"] == "owner-h"
+        assert rows["child-h"]["kind"] == "child"
+        assert rows["child-h"]["parent_slug"] == "owner-h"
+        assert rows["spouse-h"]["name"] == "Spouse H"
+
+    def test_owner_rows_have_no_parent(self, db_path, owners_dir):
+        db.refresh_entities(db_path)
+        rows = self._rows(db_path)
+        assert rows["owner-h"]["kind"] == "owner"
+        assert rows["owner-h"]["parent_slug"] is None
+        assert rows["owner-h"]["team"] == "Test Team"
+
+    def test_related_rows_share_owner_yaml_provenance(self, db_path, owners_dir):
+        db.refresh_entities(db_path)
+        rows = self._rows(db_path)
+        # Related entity lives in the owner's file → same yaml_path + hash.
+        assert rows["spouse-h"]["yaml_path"] == rows["owner-h"]["yaml_path"]
+        assert rows["spouse-h"]["yaml_sha256"] == rows["owner-h"]["yaml_sha256"]
+
+    def test_idempotent(self, db_path, owners_dir):
+        db.refresh_entities(db_path)
+        n2 = db.refresh_entities(db_path)
+        rows = self._rows(db_path)
+        assert n2 == 4
+        assert len(rows) == 4  # DELETE-then-reinsert, no duplication
+
+    def test_plain_owner_emits_single_row(self, db_path, owners_dir):
+        db.refresh_entities(db_path)
+        rows = self._rows(db_path)
+        assert rows["owner-p"]["kind"] == "owner"
+        assert "spouse" not in {rows[s]["kind"] for s in rows if rows[s]["parent_slug"] == "owner-p"}

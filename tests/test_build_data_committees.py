@@ -299,3 +299,80 @@ def test_committee_beneficiaries_empty_when_pre_v5_db(patched_build):
 
     data = json.loads(patched_build["out_path"].read_text())
     assert data["committee_beneficiary_index"] == {}
+
+
+# ─── Household rollup in owners_summary (Phase C) ────────────────────────────
+
+
+def _seed_household(db_path: Path) -> None:
+    """Owner with a spouse (CONFIRMED+PROBABLE) + a solo owner with no relatives."""
+    from scripts import db
+    db.init(db_path)
+    with db.connect(db_path) as conn:
+        conn.execute(
+            "INSERT INTO entities (slug, kind, parent_slug, name, team, yaml_path, yaml_sha256, refreshed_at) "
+            "VALUES ('cohen-steven','owner',NULL,'Steven A. Cohen','New York Mets','owners/cohen-steven.yaml','h','t')"
+        )
+        conn.execute(
+            "INSERT INTO entities (slug, kind, parent_slug, name, team, yaml_path, yaml_sha256, refreshed_at) "
+            "VALUES ('cohen-alexandra','spouse','cohen-steven','Alexandra M. Cohen',NULL,'owners/cohen-steven.yaml','h','t')"
+        )
+        conn.execute(
+            "INSERT INTO entities (slug, kind, parent_slug, name, team, yaml_path, yaml_sha256, refreshed_at) "
+            "VALUES ('crane-jim','owner',NULL,'Jim Crane','Houston Astros','owners/crane-jim.yaml','h','t')"
+        )
+
+        def ins(txn, slug, kind, parent, status, amount):
+            conn.execute(
+                """
+                INSERT INTO donations
+                  (transaction_id, entity_slug, entity_kind, parent_owner_slug, status,
+                   status_reason, signals_matched, contributor_name_raw,
+                   recipient_committee_id, recipient_committee_name, recipient_party,
+                   amount, date, election_cycle, filing_id, raw_payload_path, ingested_at)
+                VALUES (?,?,?,?,?,'','[]','X','C1','Cmte','DEM',?, '2024-01-15', 2024, 'F1',
+                        'data/raw/x/x.json','2024-01-15T00:00:00Z')
+                """,
+                (txn, slug, kind, parent, status, amount),
+            )
+
+        ins("O1", "cohen-steven", "owner", None, "CONFIRMED", 1000)
+        ins("O2", "cohen-steven", "owner", None, "PROBABLE", 500)
+        ins("S1", "cohen-alexandra", "spouse", "cohen-steven", "CONFIRMED", 2000)
+        ins("S2", "cohen-alexandra", "spouse", "cohen-steven", "PROBABLE", 250)
+        ins("D1", "crane-jim", "owner", None, "CONFIRMED", 300)
+
+
+def test_owner_summary_carries_household_split(patched_build):
+    _seed_household(patched_build["db_path"])
+
+    from mockup import build_data
+    build_data.main()
+
+    owners = json.loads(patched_build["out_path"].read_text())["owners"]
+    cohen = owners["cohen-steven"]
+
+    assert cohen["has_household"] is True
+    # Owner-only vs household are reported separately (no silent merge).
+    assert cohen["owner_only_amount"] == 1500.0
+    assert cohen["total_amount"] == 3750.0          # owner + spouse
+    assert cohen["n_owner_only"] == 2
+    assert cohen["n_total"] == 4
+    members = cohen["household_members"]
+    assert len(members) == 1
+    assert members[0]["slug"] == "cohen-alexandra"
+    assert members[0]["kind"] == "spouse"
+    assert members[0]["amount"] == 2250.0
+    assert members[0]["n_confirmed"] == 1 and members[0]["n_probable"] == 1
+
+
+def test_solo_owner_has_no_household(patched_build):
+    _seed_household(patched_build["db_path"])
+
+    from mockup import build_data
+    build_data.main()
+
+    crane = json.loads(patched_build["out_path"].read_text())["owners"]["crane-jim"]
+    assert crane["has_household"] is False
+    assert crane["household_members"] == []
+    assert crane["owner_only_amount"] == crane["total_amount"] == 300.0

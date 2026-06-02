@@ -51,6 +51,67 @@ def _utc_now_iso() -> str:
     return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
+def _dedupe_records_by_txn(records: list[dict]) -> list[dict]:
+    """Dedupe a merged record list by FEC transaction_id (sub_id fallback).
+
+    Used after combining an owner's fetch with its related entities' fetches: a
+    single FEC transaction can surface in more than one name search (e.g. a joint
+    filing returned for both spouses). First occurrence wins, mirroring the dedupe
+    in fetch_all_name_variants / load_raw_payloads. The classifier routes each
+    surviving record by its filed contributor_name, not by which fetch found it,
+    so keeping the owner-first copy is safe. Records without a usable key are kept
+    as-is (they are dropped later at the provenance gate, §1.3)."""
+    seen: set[str] = set()
+    out: list[dict] = []
+    for r in records:
+        key = r.get("transaction_id") or r.get("sub_id")
+        if not key:
+            out.append(r)
+            continue
+        key = str(key)
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append(r)
+    return out
+
+
+def _signal_states(signals: dict | None, state_filter: bool) -> list[str] | None:
+    """The state pre-filter for a fetch: the entity's documented states, or None.
+
+    None means "search FEC by name only" (no state filter) — used when the
+    caller disabled state filtering, or when an entity declares no states (a
+    related entity may file from a different documented residence than the owner)."""
+    if not state_filter:
+        return None
+    return list((signals or {}).get("states") or []) or None
+
+
+def _related_fetch_targets(
+    owner: dict, *, state_filter: bool
+) -> list[tuple[str, list[str], list[str] | None]]:
+    """Fetch targets for an owner's declared related entities (households).
+
+    Returns (slug, name_variants, states) per related entity that has both a slug
+    and ≥1 name_variant. Each is fetched under its OWN slug/variants/states
+    because its name never appears in the owner's FEC result set (GOVERNANCE.md
+    §1.7 — these are fetched only because the YAML declares them as tracked).
+    Malformed or variant-less entries are skipped (validate_owners is the gate
+    for YAML correctness; this is a derivation, not a validator)."""
+    targets: list[tuple[str, list[str], list[str] | None]] = []
+    for ent in (owner.get("related_entities") or []):
+        if not isinstance(ent, dict):
+            continue
+        ent_slug = ent.get("slug")
+        ent_variants = ent.get("name_variants") or []
+        if not ent_slug or not ent_variants:
+            continue
+        targets.append(
+            (ent_slug, ent_variants, _signal_states(ent.get("verifying_signals") or {}, state_filter))
+        )
+    return targets
+
+
 def _row_has_required_provenance(row: dict) -> bool:
     """GOVERNANCE.md §1.3 — a row must carry filing_id, raw_payload_path, and date.
 
@@ -377,14 +438,32 @@ def ingest_entity(
     if not name_variants:
         raise RuntimeError(f"owner {slug} has no name_variants")
 
-    states: list[str] | None = None
-    if state_filter:
-        states = list((owner.get("verifying_signals") or {}).get("states") or []) or None
+    states = _signal_states(owner.get("verifying_signals") or {}, state_filter)
+
+    # Related entities (spouses, family, business entities) are fetched under
+    # their OWN slug + name_variants + states when --include-related is set. A
+    # related entity's name does not appear in the owner's FEC result set (a
+    # spouse files under her own name), so without a dedicated fetch her
+    # donations are never seen. They are fetched only because the owner YAML
+    # declares them as tracked entities (GOVERNANCE.md §1.7), and each lands in
+    # its own data/raw/<ent_slug>/ tree and its own entity_slug on the row.
+    related_targets = (
+        _related_fetch_targets(owner, state_filter=state_filter)
+        if process_related_entities
+        else []
+    )
 
     api_calls_made = 0
     if from_raw:
         print(f"[{slug}] Reading records from existing raw payloads (no FEC calls)…")
         records, raw_paths = load_raw_payloads(slug)
+        for ent_slug, _ev, _es in related_targets:
+            ent_records, ent_paths = load_raw_payloads(ent_slug)
+            print(f"[{slug}]   ↳ related {ent_slug}: {len(ent_records)} record(s) from {len(ent_paths)} raw file(s).")
+            records.extend(ent_records)
+            raw_paths.extend(ent_paths)
+        if related_targets:
+            records = _dedupe_records_by_txn(records)
         print(f"[{slug}] Loaded {len(records)} unique records from {len(raw_paths)} raw file(s).")
     else:
         client = FECClient()
@@ -405,6 +484,23 @@ def ingest_entity(
             chunk_by_cycle=chunk_by_cycle,
             force_resume=force_resume,
         )
+        for ent_slug, ent_variants, ent_states in related_targets:
+            es_label = f" states={ent_states}" if ent_states else " (no state filter)"
+            print(f"[{slug}]   ↳ fetching related entity {ent_slug} ({len(ent_variants)} variants){es_label}…")
+            ent_records, ent_paths = client.fetch_all_name_variants(
+                ent_slug,
+                ent_variants,
+                min_date=effective_min_date,
+                max_pages=max_pages,
+                states=ent_states,
+                chunk_by_cycle=chunk_by_cycle,
+                force_resume=force_resume,
+            )
+            print(f"[{slug}]   ↳ related {ent_slug}: fetched {len(ent_records)} record(s).")
+            records.extend(ent_records)
+            raw_paths.extend(ent_paths)
+        if related_targets:
+            records = _dedupe_records_by_txn(records)
         api_calls_made = client.calls_made
         print(f"[{slug}] Fetched {len(records)} unique records ({api_calls_made} API calls).")
         print(f"[{slug}] Raw payloads persisted to {len(raw_paths)} file(s) in data/raw/{slug}/")
@@ -464,6 +560,25 @@ def ingest_entity(
     if manual_exclusions_applied:
         print(f"[{slug}] {manual_exclusions_applied} manual exclusion(s) applied — txn(s) dropped as not-this-owner (§1.1/§1.9).")
 
+    # Per-related-entity tier breakdown (households): the counts above are the
+    # owner+related aggregate; this itemizes what landed under each related slug
+    # so a Phase-B review can see, e.g., the spouse's CONFIRMED/PROBABLE split.
+    related_breakdown: dict[str, dict[str, int]] = {}
+    if related_targets:
+        rel_slugs = {t[0] for t in related_targets}
+        for _r, _c in confirmed + probable + uncertain:
+            if _c.entity_slug in rel_slugs:
+                tier = related_breakdown.setdefault(
+                    _c.entity_slug, {CONFIRMED: 0, PROBABLE: 0, UNCERTAIN: 0}
+                )
+                tier[_c.status] = tier.get(_c.status, 0) + 1
+        for es in sorted(related_breakdown):
+            t = related_breakdown[es]
+            print(
+                f"[{slug}]   ↳ related {es}: "
+                f"CONFIRMED={t[CONFIRMED]} · PROBABLE={t[PROBABLE]} · UNCERTAIN={t[UNCERTAIN]}"
+            )
+
     completed_at = _utc_now_iso()
     # period_end = latest contribution date among all classified records in
     # this run; falls back to None if nothing matched at all.
@@ -493,10 +608,13 @@ def ingest_entity(
             + f" · min_date={min_date_source}"
             + (" · FROM-RAW" if from_raw else (f" · states={states}" if states else " · NO STATE FILTER"))
             + (" · chunk-by-cycle" if chunk_by_cycle else "")
+            + (f" · +related: {','.join(t[0] for t in related_targets)}" if related_targets else "")
             + (" · DRY RUN" if dry_run else "")
         ),
         "dry_run": 1 if dry_run else 0,
     }
+    if related_breakdown:
+        summary["related_breakdown"] = related_breakdown
 
     if dry_run:
         print(f"[{slug}] DRY RUN — no DB writes. Raw payloads were still persisted.")

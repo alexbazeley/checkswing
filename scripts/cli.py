@@ -13,7 +13,7 @@ from . import db
 from .apply_committee_external_links import apply_external_links
 from .audit import audit_slug
 from .backfill_donation_image_fields import backfill as backfill_donation_image_fields
-from .export import export_aggregate, export_entity
+from .export import export_aggregate, export_entity, export_household
 from .ingest import ingest_entity, reclassify_entity
 from .ingest_committee_disbursements import (
     ingest_all_committee_disbursements,
@@ -641,7 +641,96 @@ def export(slug):
         click.echo(f"Exporting {s}…")
         export_entity(s)
     agg = export_aggregate()
-    click.echo(json.dumps(agg, indent=2))
+    household = export_household()
+    click.echo(json.dumps({**agg, "household": household}, indent=2))
+
+
+@cli.command()
+@click.argument("slug")
+@click.option("--json", "as_json", is_flag=True, help="Emit machine-readable JSON instead of a table.")
+def household(slug, as_json):
+    """Read-only household view for an owner: own total vs. owner+related total.
+
+    Rolls the owner together with its declared related entities (spouse/family),
+    itemized by entity, kind, and tier. PROBABLE is shown as its own line and
+    never folded into a single 'donated' figure — the owner total and the
+    household total are reported separately so a citation can say "Steven Cohen
+    gave $X; the Cohen household gave $Y" without silently merging the two
+    (VERIFICATION.md anti-pattern). SLUG must be an OWNER slug.
+    """
+    with db.connect() as conn:
+        is_owner = conn.execute(
+            "SELECT 1 FROM entities WHERE slug = ? AND kind = 'owner'", (slug,)
+        ).fetchone()
+        rows = conn.execute(
+            """
+            SELECT entity_slug, entity_kind, status,
+                   COUNT(*) AS donations, SUM(amount) AS total_amount
+            FROM donations
+            WHERE (entity_slug = ? OR parent_owner_slug = ?)
+              AND status IN ('CONFIRMED', 'PROBABLE')
+            GROUP BY entity_slug, entity_kind, status
+            ORDER BY (entity_kind = 'owner') DESC, entity_kind, entity_slug, status
+            """,
+            (slug, slug),
+        ).fetchall()
+
+    if not is_owner:
+        click.echo(f"'{slug}' is not a known owner slug (run `validate` / check owners/). "
+                   f"Household view expects an owner.", err=True)
+        sys.exit(1)
+
+    items = [
+        {
+            "entity_slug": r["entity_slug"],
+            "entity_kind": r["entity_kind"],
+            "status": r["status"],
+            "donations": r["donations"],
+            "total_amount": round(r["total_amount"] or 0, 2),
+        }
+        for r in rows
+    ]
+    owner_total = sum(i["total_amount"] for i in items if i["entity_kind"] == "owner")
+    owner_n = sum(i["donations"] for i in items if i["entity_kind"] == "owner")
+    related_total = sum(i["total_amount"] for i in items if i["entity_kind"] != "owner")
+    related_n = sum(i["donations"] for i in items if i["entity_kind"] != "owner")
+    household_total = owner_total + related_total
+    household_n = owner_n + related_n
+    summary = {
+        "household_slug": slug,
+        "owner_total": round(owner_total, 2),
+        "owner_donations": owner_n,
+        "related_total": round(related_total, 2),
+        "related_donations": related_n,
+        "household_total": round(household_total, 2),
+        "household_donations": household_n,
+        "by_entity": items,
+    }
+
+    if as_json:
+        click.echo(json.dumps(summary, indent=2))
+        return
+
+    if not items:
+        click.echo(f"No CONFIRMED/PROBABLE donations attributed to household '{slug}'.")
+        return
+
+    table = [
+        [i["entity_slug"], i["entity_kind"], i["status"], i["donations"], f"${i['total_amount']:,.0f}"]
+        for i in items
+    ]
+    click.echo(f"Household: {slug}")
+    click.echo(tabulate(table, headers=["entity", "kind", "tier", "n", "amount"]))
+    click.echo("")
+    def _line(label, amount, n):
+        return f"  {label:<30}${amount:>14,.0f}  ({n} donations)"
+    click.echo(_line(f"Owner ({slug}):", owner_total, owner_n))
+    if related_total or related_n:
+        click.echo(_line("Related (spouse/family):", related_total, related_n))
+    click.echo(_line("Household (owner + related):", household_total, household_n))
+    if any(i["status"] == "PROBABLE" for i in items):
+        click.echo("\n  Note: includes PROBABLE records (one confirming signal) — cite as "
+                   "\"probable\", never as confirmed.")
 
 
 @cli.command(name="raw-coverage")

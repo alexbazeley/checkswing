@@ -92,10 +92,10 @@ related_entities:
   - "Cohen, Alexandra"
   - "Cohen, Alexandra M"
   relationship_source:
-    description: "Multiple major-press profiles establish Alexandra as Steven Cohen's spouse and an independent philanthropist."
-    url: ""      # TODO: populate during Phase 1 with a specific WSJ or NYT profile URL
-    accessed: ""
-    archive_url: ""
+    description: "Steven & Alexandra Cohen Foundation official biography — establishes Alexandra as Steven Cohen's spouse (married 1992) and an independent philanthropist (foundation co-founder and president). Tier 2 (SOURCES.md): entity identification, never a donation-fact source."
+    url: "https://www.steveandalex.org/team/alexandra-cohen/"
+    accessed: "2026-06-02"
+    archive_url: "http://web.archive.org/web/20260311135147/https://www.steveandalex.org/team/alexandra-cohen/"
   verifying_signals:
     cities:
     - "greenwich"
@@ -217,8 +217,22 @@ change_log:
     snapshot as archive_url. Tier-2 source per SOURCES.md; no signal,
     classification, or donation-data change.
   by: "automated pipeline (calibration-playbook session, source backfill)"
+- date: 2026-06-02
+  change: |
+    Household pilot — populated the related_entities[cohen-alexandra]
+    relationship_source, which had carried an empty "TODO: populate during
+    Phase 1 with a specific WSJ or NYT profile URL" placeholder since
+    creation. Source is the Steven & Alexandra Cohen Foundation official
+    biography (steveandalex.org/team/alexandra-cohen/), which establishes the
+    spousal relationship (married 1992) and her independent philanthropic role
+    (foundation co-founder/president), with a Wayback snapshot as archive_url.
+    Tier-2 entity-identification source per SOURCES.md (Wikipedia deliberately
+    NOT used — §Wikipedia: "Never cited in our YAMLs"). No signal,
+    classification, or donation-data change; this enables her first ingestion
+    under the new --include-related fetch path.
+  by: "automated pipeline (household-tracking session)"
 
 audit:
   created: 2026-05-22
-  last_ingestion: '2026-05-26'
+  last_ingestion: '2026-06-02'
   last_signal_review: 2026-05-25

@@ -7,6 +7,11 @@ Per-cycle: data/donations/<slug>/by_cycle/<cycle>.csv (same schema).
 
 Aggregate: data/donations/_aggregate/by_owner.csv (CONFIRMED only) and
 by_owner_with_probable.csv (both tiers, status preserved).
+
+Household: data/donations/_aggregate/by_household.csv — owner + related entities
+(spouse/family) rolled up under the owner, with an explicit entity_kind column on
+every row so a consumer can total "the household" while always seeing which dollars
+came from the owner vs. a spouse. Never a silent merge (VERIFICATION.md anti-pattern).
 """
 from __future__ import annotations
 
@@ -183,3 +188,43 @@ def export_aggregate() -> dict:
         "confirmed_rows": len(rows_conf),
         "with_probable_rows": len(rows_with),
     }
+
+
+def export_household() -> dict:
+    """Write data/donations/_aggregate/by_household.csv.
+
+    One row per (household, entity, entity_kind, status) — both CONFIRMED and
+    PROBABLE, status preserved. The household key rolls related entities up under
+    their owner (COALESCE(parent_owner_slug, entity_slug)); the explicit
+    entity_slug/entity_kind columns mean a household total is always decomposable
+    into owner vs. spouse/family dollars, never a silent merge
+    (VERIFICATION.md anti-pattern). An owner with no related entities simply
+    appears as its own single-entity household."""
+    agg_dir = DONATIONS_DIR / "_aggregate"
+    agg_dir.mkdir(parents=True, exist_ok=True)
+    out_path = agg_dir / "by_household.csv"
+
+    with db.connect() as conn:
+        rows = conn.execute(
+            """
+            SELECT COALESCE(parent_owner_slug, entity_slug) AS household_slug,
+                   entity_slug,
+                   entity_kind,
+                   status,
+                   COUNT(*) AS donations,
+                   SUM(amount) AS total_amount
+            FROM donations
+            WHERE status IN ('CONFIRMED', 'PROBABLE')
+            GROUP BY household_slug, entity_slug, entity_kind, status
+            ORDER BY household_slug, (entity_kind = 'owner') DESC, entity_kind, entity_slug, status
+            """
+        ).fetchall()
+
+    cols = ["household_slug", "entity_slug", "entity_kind", "status", "donations", "total_amount"]
+    with out_path.open("w", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        writer.writerow(cols)
+        for r in rows:
+            writer.writerow([_csv_safe(r[c]) for c in cols])
+
+    return {"path": str(out_path), "rows": len(rows)}
