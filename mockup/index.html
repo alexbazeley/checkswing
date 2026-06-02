@@ -365,6 +365,13 @@ section.block:last-child { border-bottom: 0; }
   padding: 18px 0 4px;
   border-bottom: 1px solid var(--rule);
   position: relative;
+  /* Contain tooltip spill past the chart's left/right edges so it never
+     reaches the document and spawns a page-wide horizontal scrollbar.
+     overflow-x:clip clips horizontally while overflow-y:visible keeps the
+     tooltips (which sit *above* the bars) fully visible. Edge-bar tooltips are
+     anchored inward (below) so the first/last aren't clipped. */
+  overflow-x: clip;
+  overflow-y: visible;
 }
 .cycle-bar {
   flex: 1;
@@ -401,6 +408,15 @@ section.block:last-child { border-bottom: 0; }
   content: ""; position: absolute; top: 100%; left: 50%; margin-left: -6px;
   border: 6px solid transparent; border-top-color: #15130F;
 }
+/* Edge bars: a 200px tooltip centered over the first/last bar spills past the
+   chart — and the viewport — creating a page-wide horizontal scrollbar at most
+   widths. Anchor the edge tooltips inward (arrow stays over the bar). */
+.cycle-bar:first-child .cycle-bar-tooltip { left: 0; transform: translate(0, 4px); }
+.cycle-bar:first-child:hover .cycle-bar-tooltip { transform: translate(0, 0); }
+.cycle-bar:first-child .cycle-bar-tooltip::after { left: 14px; margin-left: 0; }
+.cycle-bar:last-child .cycle-bar-tooltip { left: auto; right: 0; transform: translate(0, 4px); }
+.cycle-bar:last-child:hover .cycle-bar-tooltip { transform: translate(0, 0); }
+.cycle-bar:last-child .cycle-bar-tooltip::after { left: auto; right: 14px; margin-left: 0; }
 .cycle-bar-tooltip .tt-head {
   font-family: var(--serif); font-size: 16px; font-weight: 600;
   line-height: 1.15; margin-bottom: 8px;
@@ -1761,6 +1777,150 @@ button.drawer-source-link {
 .gap-3 { gap: 12px; }
 .mt-2 { margin-top: 8px; } .mt-3 { margin-top: 12px; } .mt-4 { margin-top: 16px; }
 
+/* ════════════════════════════════════════════════════════════════════════
+   RESPONSIVE — MOBILE PASS v2
+   Appended LAST on purpose. The original mobile block (~line 200) targeted
+   several components — .kpis, .kpi, section.block, .hero, .search-btn — whose
+   *base* rules are defined later in this stylesheet. At equal specificity the
+   later (base) rule wins on source order, so those mobile overrides were
+   silently dead and the KPI strip never collapsed. Re-asserting them here,
+   after every base rule, makes them take effect. New mobile overrides go here.
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* ── Hamburger button (hidden on desktop; the @media rule below reveals it) ── */
+.nav-burger {
+  display: none;
+  align-items: center; justify-content: center;
+  width: 42px; height: 42px;
+  padding: 0;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  background: var(--bg-sunk);
+  color: var(--ink);
+  flex-shrink: 0;
+}
+.nav-burger:hover { border-color: var(--accent); color: var(--accent); }
+.nav-burger-bars,
+.nav-burger-bars::before,
+.nav-burger-bars::after {
+  content: "";
+  display: block;
+  width: 18px; height: 2px;
+  background: currentColor;
+  border-radius: 2px;
+  transition: transform 160ms ease, opacity 120ms ease;
+}
+.nav-burger-bars { position: relative; }
+.nav-burger-bars::before { position: absolute; top: -6px; left: 0; }
+.nav-burger-bars::after  { position: absolute; top:  6px; left: 0; }
+/* Animate into an "×" when the menu is open. */
+.masthead.menu-open .nav-burger-bars { background: transparent; }
+.masthead.menu-open .nav-burger-bars::before { transform: translateY(6px) rotate(45deg); }
+.masthead.menu-open .nav-burger-bars::after  { transform: translateY(-6px) rotate(-45deg); }
+
+@media (max-width: 1100px) {
+  /* Wide data tables overrun the content column between 880px and ~1080px too,
+     but the original scroll wrapper only engaged ≤880px — leaving a band where
+     the page itself overflowed horizontally. Extend the scroll wrapper up to
+     1100px. (Kept ≤1100, not always-on, because overflow-x:auto forces a
+     vertical scroll container too, which would break the desktop sticky table
+     headers above this band.) */
+  .table-scroll,
+  #od-table-wrap, #cy-table-wrap, #cm-table-wrap, #tm-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+@media (max-width: 880px) {
+  /* KPI strip: 2-up on tablet (the original override was dead — see header). */
+  .kpis { grid-template-columns: repeat(2, 1fr); padding: 22px 0; }
+  .kpi  { padding: 14px 16px; border-right: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+  .kpi:nth-child(2n) { border-right: 0; }
+  .kpi:nth-last-child(-n+2) { border-bottom: 0; }
+  .kpi-value { font-size: 30px; }
+  section.block { padding: 34px 0; }
+}
+
+@media (max-width: 760px) {
+  /* ── Masthead → tap-to-open menu ── */
+  .masthead-inner { position: relative; flex-wrap: nowrap; gap: 12px; }
+  .nav-burger { display: inline-flex; }
+  .nav {
+    display: none;
+    position: absolute;
+    top: calc(100% + 1px); left: 0; right: 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 2px;
+    flex-wrap: nowrap;
+    background: var(--bg-elev);
+    border-bottom: 1px solid var(--rule);
+    box-shadow: var(--shadow-md);
+    padding: 8px;
+    z-index: 40;
+  }
+  .masthead.menu-open .nav { display: flex; }
+  .nav a {
+    padding: 12px 12px;
+    font-size: 15px;
+    border-radius: 6px;
+  }
+  /* Utilities drop to the foot of the open menu, above a thin divider. */
+  .nav .dollars-toggle,
+  .nav .search-btn { margin: 0; }
+  .nav .dollars-toggle {
+    align-self: flex-start;
+    margin-top: 8px;
+  }
+  .nav .search-btn {
+    width: 100%;
+    justify-content: flex-start;
+    padding: 12px 12px;
+    font-size: 14px;
+    margin-top: 8px;
+    border-top: 1px solid var(--rule);
+    border-radius: 0 0 6px 6px;
+  }
+  /* In the menu, re-show the "Search" label (the 880px rule hid all non-icon
+     spans). Re-show only the bare label — leave the ⌘K hint hidden, since the
+     880px rule already hides it and there's no keyboard shortcut on touch. */
+  .nav .search-btn span:not(.search-btn-icon):not(.search-btn-kbd) { display: inline; }
+
+  /* Long unbroken code tokens (file paths, IDs) overflow on narrow screens —
+     let them wrap. overflow-wrap:anywhere only breaks when it would overflow. */
+  code { overflow-wrap: anywhere; }
+
+  /* The CSS-only hover tooltip on the cycle chart bars (min-width 200px,
+     absolutely positioned) is unreachable on touch and the rightmost one
+     spills past the viewport, forcing a horizontal scroll. Drop it on mobile. */
+  .cycle-bar-tooltip { display: none; }
+
+  /* Meta strips (hero on the league index; .owner-meta on owner/cycle/
+     committee/team pages): the inline "·"-separated row crams into cramped
+     shrunk columns at phone width. Stack as a clean vertical list, drop dots. */
+  .hero .meta, .hero-photo .meta, .owner-meta {
+    flex-direction: column; align-items: flex-start; gap: 5px;
+  }
+  .hero .meta-dot, .hero-photo .meta-dot, .owner-meta .dot { display: none; }
+}
+
+@media (max-width: 760px) {
+  /* Methodology tier cards: the 3-up grid overflows the viewport at phone
+     width (the original collapse rule was in the dead cascade zone too). */
+  .method-tiers { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 560px) {
+  .kpis { grid-template-columns: 1fr; padding: 6px 0; }
+  .kpi  { padding: 16px 2px; border-right: 0; border-bottom: 1px solid var(--rule); }
+  .kpi:last-child { border-bottom: 0; }
+  .kpi-value { font-size: 32px; }
+  /* These grids share the same dead-override bug as .kpis — re-assert. */
+  .method-scope { grid-template-columns: 1fr; gap: 18px; }
+  .site-footer .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+}
+
 </style>
 </head>
 
@@ -1797,7 +1957,11 @@ button.drawer-source-link {
         <div class="brand-title">CheckSwing</div>
       </div>
     </a>
-    <nav class="nav" role="navigation" aria-label="Primary">
+    <button class="nav-burger" id="nav-burger" type="button"
+            aria-label="Menu" aria-expanded="false" aria-controls="primary-nav">
+      <span class="nav-burger-bars" aria-hidden="true"></span>
+    </button>
+    <nav class="nav" id="primary-nav" role="navigation" aria-label="Primary">
       <a href="#/" data-nav="league">League</a>
       <a href="#/whats-new" data-nav="whats-new">What's new</a>
       <a href="#/recipients" data-nav="recipients">Recipients</a>
@@ -2473,6 +2637,39 @@ window.addEventListener("hashchange", () => {
   }
   route();
 });
+
+/* ════════════════════════════════════════════════════════════════════════
+   MOBILE MENU
+   The masthead nav collapses into a tap-to-open panel below 760px (see the
+   "MOBILE PASS v2" CSS). This wires the hamburger and the dismissal paths:
+   link tap, search open, outside click, Escape, and route change.
+   ══════════════════════════════════════════════════════════════════════ */
+(function initMobileMenu() {
+  const masthead = document.querySelector(".masthead");
+  const burger = document.getElementById("nav-burger");
+  const nav = document.getElementById("primary-nav");
+  if (!masthead || !burger || !nav) return;
+
+  const close = () => {
+    if (!masthead.classList.contains("menu-open")) return;
+    masthead.classList.remove("menu-open");
+    burger.setAttribute("aria-expanded", "false");
+  };
+  burger.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const open = masthead.classList.toggle("menu-open");
+    burger.setAttribute("aria-expanded", open ? "true" : "false");
+  });
+  /* A nav link or the search button means the user is moving on — close up. */
+  nav.addEventListener("click", (e) => {
+    if (e.target.closest("a, #search-btn")) close();
+  });
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest(".masthead")) close();
+  });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") close(); });
+  window.addEventListener("hashchange", close);
+})();
 
 /* ════════════════════════════════════════════════════════════════════════
    RENDER DISPATCH
