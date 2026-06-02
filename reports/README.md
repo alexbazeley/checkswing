@@ -13,6 +13,19 @@ The boundary, restated:
   data, make arguments, and connect dots — clearly labeled as interpretation, and
   always traceable back to the neutral evidence.
 
+## Brief format (the standing convention)
+
+Briefs here are **straight reports on the documented links** — what the joined
+data shows about owner money and the legislation it touches. They are **not**
+show-prep sheets:
+
+- **No "Talking points" section** and **no "Discussion questions" section.** Those
+  belong to episode prep in the editorial workspace, not to an archive report.
+- A brief leads with the finding, lays out what the data does and does not support,
+  and ends with methodology/provenance so every figure is traceable.
+- The honest-finding discipline still applies: where the data undercuts a tempting
+  narrative, the brief says so plainly.
+
 ## Contents
 
 - **`2026-05-31_save-americas-pastime-act.md`** — the first donations × legislation
