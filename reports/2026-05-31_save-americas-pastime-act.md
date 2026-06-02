@@ -120,37 +120,6 @@ a standing arrangement.
 
 ---
 
-## Talking points (for the show)
-
-- **Lead with the name.** "The Save America's Pastime Act" stripped minor leaguers
-  of minimum wage. Read the name twice. Let it sit.
-- **The midnight-omnibus move.** It never got its own vote — it was slipped into a
-  2,232-page must-pass spending bill. That's not an accident; that's the mechanism.
-- **The Fisher line.** The owner most famous for paying for nothing is the biggest
-  owner-donor in this set — $31,900 — though notably all of it to a handful of
-  California Democrats and one Illinois cosponsor, not to SAPA's authors.
-- **The honest twist (this is the rigorous-CheckSwing beat).** We looked for the
-  bribe and didn't find it. The money mostly came *after* the vote and split
-  evenly across Yea and Nay. The scarier truth: nobody had to be bought, because
-  the carve-out is bipartisan and permanent.
-- **Tie to the CBA.** This is the template for December 2026. The owners' federal
-  strategy isn't buying single votes — it's maintaining a bipartisan consensus that
-  treats baseball's labor costs as a settled question. Watch for the same move.
-
-## Discussion questions
-
-1. If SAPA had to get its own up-or-down vote, would it have passed? What does it
-   say that it didn't get one?
-2. Is a standing donor relationship that never has to ask for a specific vote more
-   or less corrupting than a one-time quid pro quo?
-3. Owner money here leaned Democratic. Does that complicate the "owners are just
-   Republican megadonors" shorthand — or is access bipartisan by design?
-4. *Senne v. MLB* was winding through the courts when Congress mooted it. When does
-   lobbying to change the law stop being lobbying and start being a thumb on the
-   scale of an active lawsuit?
-
----
-
 ## Methodology & provenance
 
 - **Donations:** CONFIRMED + PROBABLE attributions to MLB principal owners in the
