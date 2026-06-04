@@ -1,0 +1,84 @@
+name: Monthly CA state refresh
+
+# Phase-4 California (CAL-ACCESS) refresh. Pulls the CA Secretary of State's daily
+# bulk export, re-runs the state ingest, and commits any changes to data/state.db +
+# the provenance log. Cloudflare's deploy regenerates mockup/state_data.json from the
+# updated DB (build_data.py invokes build_state_data).
+#
+# Deliberately SEPARATE from the federal refresh.yml and LFS-FREE:
+#   * It never reads or writes master.db (the LFS object), so the checkout uses
+#     lfs: false — no LFS bandwidth is consumed, sidestepping the federal job's
+#     LFS-quota constraint entirely. state.db is a normal, non-LFS git blob.
+#   * The 3.7 GB RCPT_CD table is STREAMED from the downloaded zip (never extracted),
+#     so the runner's disk is never stressed.
+#
+# Cadence: 2nd of the month, 12:00 UTC — staggered one day after the federal refresh
+# (1st) so the two never push concurrently; the rebase-before-push below absorbs any
+# residual race (same hardening as refresh.yml, per the June-1 fix).
+
+on:
+  schedule:
+    - cron: '0 12 2 * *'
+  workflow_dispatch:
+
+concurrency:
+  group: refresh-state
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  state-refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          # state.db is a normal git blob; this job never touches master.db (LFS).
+          lfs: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Download CAL-ACCESS bulk export (~1.5 GB)
+        run: |
+          mkdir -p data/raw/state/ca
+          curl -fSL --retry 3 --retry-delay 15 \
+            -o data/raw/state/ca/dbwebexport.zip \
+            https://campaignfinance.cdn.sos.ca.gov/dbwebexport.zip
+          ls -lh data/raw/state/ca/dbwebexport.zip
+
+      - name: Ingest California state contributions
+        # Streams RCPT_CD from the zip; idempotent upsert (new filings inserted,
+        # amendments superseded). One pass over all pilot/active owners.
+        run: python -m scripts.cli ingest-state-ca --zip data/raw/state/ca/dbwebexport.zip
+
+      - name: Validate
+        run: python -m scripts.cli validate
+
+      - name: Commit + push refreshed state data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # The state layer is only allowed to touch state.db + the provenance log.
+          # The raw zip is gitignored; state_data.json is rebuilt at deploy time.
+          git add data/state.db catalog/PROVENANCE_LOG.md 2>/dev/null || true
+          if git diff --staged --quiet; then
+            echo "No changes from state refresh — nothing to commit."
+          else
+            git commit -m "CA state refresh ($(date -u +%Y-%m-%d))"
+            # Rebase onto anything that landed on main since checkout (e.g. the
+            # federal refresh) so the push fast-forwards. State touches only its
+            # own data files, so this replays cleanly over unrelated commits.
+            git pull --rebase origin main
+            git push
+          fi

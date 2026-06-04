@@ -338,32 +338,25 @@ def bucket_rows_by_owner(
 
 
 def download_latest(
-    dest_dir: Path | None = None, url: str = SOS_DBWEBEXPORT_URL
+    dest: Path | None = None, url: str = SOS_DBWEBEXPORT_URL
 ) -> Path:  # pragma: no cover - network
-    """Download + extract the CA Secretary of State CAL-ACCESS bulk export.
+    """Download the CA Secretary of State CAL-ACCESS bulk export zip; return its path.
 
-    NETWORK STEP — not unit-tested (the live archive is ~1.5 GB zipped / ~6 GB
-    extracted, refreshed daily). Streams the zip to a UTC-stamped path under
-    data/raw/state/ca/ (persisting the raw archive before parsing, GOVERNANCE.md
-    §1.4), extracts it, and returns the directory that contains the CAL-ACCESS
-    .TSV tables (RCPT_CD.TSV, FILERNAME_CD.TSV, …, typically nested under
-    CalAccess/DATA/). `iter_rcpt_rows` + `_find_tsv` locate them regardless of
-    nesting. Kept off the tested surface: only HTTP/zip plumbing lives here; data
-    correctness lives in the parsing functions above.
+    NETWORK STEP — not unit-tested (the live archive is ~1.5 GB, refreshed daily).
+    Streams the zip to data/raw/state/ca/dbwebexport.zip (persisting the raw archive
+    before parsing, GOVERNANCE.md §1.4) and returns the ZIP path. It is deliberately
+    NOT extracted: the ingest pipeline streams RCPT_CD / CVR / FILERNAME straight
+    from the zip member (iter_rcpt_rows_from_zip etc.), so the 3.7 GB receipts table
+    never has to land on disk. Only HTTP plumbing lives here; data correctness lives
+    in the parsing functions above.
     """
     import shutil
-    import zipfile
-    from datetime import datetime, timezone
     from urllib.request import urlopen
 
-    dest = dest_dir or state_raw_dir("ca")
-    stamp = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H-%M-%SZ")
-    target_dir = dest / f"{stamp}__sos-dbwebexport"
-    target_dir.mkdir(parents=True, exist_ok=True)
-    zip_path = target_dir / "dbwebexport.zip"
-    # Stream to disk (do NOT buffer 1.5 GB in memory).
+    out_dir = dest or state_raw_dir("ca")
+    out_dir.mkdir(parents=True, exist_ok=True)
+    zip_path = out_dir / "dbwebexport.zip"
+    # Stream to disk (do NOT buffer 1.5 GB in memory; do NOT extract ~6 GB).
     with urlopen(url) as resp, zip_path.open("wb") as out:  # noqa: S310 (trusted gov source)
         shutil.copyfileobj(resp, out, length=1024 * 1024)
-    with zipfile.ZipFile(zip_path) as zf:
-        zf.extractall(target_dir)
-    return target_dir
+    return zip_path
