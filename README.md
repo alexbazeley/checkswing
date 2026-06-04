@@ -115,7 +115,8 @@ workflow. It never appears in the Cloudflare environment.
 ## Continuous integration & refresh
 
 - **CI** ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) runs `pytest` and `validate` on every pull request and push to `main`.
-- **Refresh** ([`.github/workflows/refresh.yml`](.github/workflows/refresh.yml)) runs the self-maintaining refresh layer on a weekly schedule (and on-demand via `workflow_dispatch`): incremental fetch per owner → classify → rebuild `data.json` → push, which triggers a redeploy.
+- **Refresh** ([`.github/workflows/refresh.yml`](.github/workflows/refresh.yml)) runs the self-maintaining federal refresh layer monthly (1st, and on-demand via `workflow_dispatch`): incremental fetch per owner → classify → rebuild `data.json` → push, which triggers a redeploy.
+- **State refresh** ([`.github/workflows/refresh-state.yml`](.github/workflows/refresh-state.yml)) runs the Phase-4 California (CAL-ACCESS) refresh monthly (2nd, staggered after the federal run; and on-demand): download the SoS bulk export → stream + re-ingest → commit `data/state.db`. LFS-free (it never touches `master.db`), so it consumes no LFS bandwidth.
 
 ## Why `master.db` is committed
 
