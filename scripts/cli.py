@@ -206,6 +206,97 @@ def review_state_cmd(slug):
     click.echo(tabulate(table, headers=["owner", "juris", "state_txn_id", "reason"]))
 
 
+@cli.command(name="ingest-state-ca")
+@click.option("--zip", "zip_path", required=True, type=click.Path(exists=True, path_type=Path),
+              help="Path to the SoS CAL-ACCESS dbwebexport.zip (RCPT_CD streamed, not extracted).")
+@click.option("--slugs", default=None,
+              help="Comma-separated owner slugs (default: every pilot/active owner).")
+@click.option("--dry-run", is_flag=True, help="Classify + report counts but write nothing.")
+def ingest_state_ca_cmd(zip_path, slugs, dry_run):
+    """Ingest CA state contributions for MANY owners in ONE streaming pass over the zip.
+
+    Streams RCPT_CD straight from dbwebexport.zip (no 3.7 GB extraction), buckets
+    candidate rows across all selected owners by surname, then runs the SAME
+    three-tier classifier per owner. The zip is the persisted raw source
+    (GOVERNANCE.md §1.4); CONFIRMED/PROBABLE → data/state.db, UNCERTAIN → review.
+    """
+    import yaml as _yaml
+
+    from . import fetch_calaccess, ingest_state
+    from .paths import OWNERS_DIR, REPO_ROOT, relpath
+
+    # Resolve owner set.
+    if slugs:
+        want = [s.strip() for s in slugs.split(",") if s.strip()]
+        owner_paths = [OWNERS_DIR / f"{s}.yaml" for s in want]
+    else:
+        owner_paths = [
+            p for p in sorted(OWNERS_DIR.glob("*.yaml")) if not p.name.startswith("_")
+        ]
+    owners: list[tuple[str, dict]] = []
+    for p in owner_paths:
+        if not p.exists():
+            click.echo(f"WARNING: {p.name} not found — skipping", err=True)
+            continue
+        data = _yaml.safe_load(p.read_text(encoding="utf-8"))
+        if not isinstance(data, dict):
+            continue
+        if slugs or (data.get("status") in ("pilot", "active")):
+            owners.append((data["slug"], data))
+    if not owners:
+        click.echo("No owners selected.", err=True)
+        sys.exit(1)
+
+    try:
+        raw_path = relpath(zip_path)
+    except ValueError:
+        raw_path = str(zip_path.resolve())
+
+    click.echo(f"Building recipient index from {zip_path.name} (CVR cover pages)…")
+    recipient_index = fetch_calaccess.build_recipient_index_from_zip(zip_path)
+    resolver = fetch_calaccess.make_recipient_resolver_by_filing(recipient_index)
+    click.echo(f"  {len(recipient_index):,} filings indexed.")
+
+    click.echo(f"Streaming RCPT_CD and bucketing across {len(owners)} owner(s)… (one pass over 3.7 GB)")
+    buckets = fetch_calaccess.bucket_rows_by_owner(
+        fetch_calaccess.iter_rcpt_rows_from_zip(zip_path), owners
+    )
+    total_candidates = sum(len(v) for v in buckets.values())
+    click.echo(f"  {total_candidates:,} candidate receipt(s) across all owners (pre-dedupe).")
+
+    results = []
+    for slug, _owner in owners:
+        rows = fetch_calaccess.dedupe_receipts(buckets.get(slug, []))
+        if not rows:
+            continue
+        res = ingest_state.ingest_state_entity(
+            slug,
+            rcpt_rows=rows,
+            recipient_resolver=resolver,
+            raw_payload_path=raw_path,
+            extract_label=zip_path.name,
+            jurisdiction="CA",
+            source="CAL-ACCESS",
+            dry_run=dry_run,
+        )
+        results.append(res)
+
+    tag = "[dry-run] " if dry_run else ""
+    table = [
+        [r.slug, r.records_scanned, r.confirmed, r.probable, r.uncertain,
+         (r.excluded or ""), (r.skipped_no_date or ""), (r.superseded or "")]
+        for r in sorted(results, key=lambda r: (-(r.confirmed + r.probable), r.slug))
+    ]
+    if table:
+        click.echo(f"\n{tag}CA ingest results:")
+        click.echo(tabulate(
+            table,
+            headers=["owner", "cand", "CONF", "PROB", "UNCERT", "excl", "no-date", "superseded"],
+        ))
+    else:
+        click.echo(f"{tag}No candidate receipts matched any selected owner.")
+
+
 @cli.command(name="ingest-legislators")
 @click.option("--no-historical", is_flag=True, help="Fetch only legislators-current.yaml (skip the larger historical file).")
 @click.option("--all-legislators", is_flag=True, help="Keep legislators with no FEC id too (default: only the FEC-joinable universe).")
