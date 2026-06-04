@@ -1965,6 +1965,7 @@ button.drawer-source-link {
       <a href="#/" data-nav="league">League</a>
       <a href="#/whats-new" data-nav="whats-new">What's new</a>
       <a href="#/recipients" data-nav="recipients">Recipients</a>
+      <a href="#/states" data-nav="states">States</a>
       <a href="#/methodology" data-nav="methodology">Methodology</a>
       <a href="#/about" data-nav="about">About</a>
       <a href="#/runs" data-nav="runs">Pipeline</a>
@@ -2165,6 +2166,12 @@ function cycleAmt(obj, baseKey, cycle) {
   const key = state.dollars === "real" ? baseKey + "_2026" : baseKey;
   const m = obj[key] || obj[baseKey] || {};
   return m[cycle] ?? m[String(cycle)] ?? 0;
+}
+/* Phase-4: group state_data.json donations by owner slug for the per-owner panel. */
+function indexStateByOwner(sd) {
+  const idx = {};
+  for (const d of sd.donations || []) (idx[d.entity] = idx[d.entity] || []).push(d);
+  return idx;
 }
 /* Read a party-map from an owner's party_dollars{,_2026}. */
 function aggParty(obj, party) {
@@ -2506,6 +2513,17 @@ async function loadData() {
     state.data = await res.json();
     state.teams = buildTeamsIndex();
     state.searchIndex = buildSearchIndex();
+    /* Phase-4 state campaign-finance payload (separate, small). Non-fatal if
+       absent — the federal dashboard works without it; the States section and
+       the per-owner state panel simply don't appear. */
+    try {
+      const sres = await fetch("./state_data.json", { cache: "no-cache" });
+      if (sres.ok) {
+        const sd = await sres.json();
+        state.stateData = sd && !sd.empty ? sd : null;
+        if (state.stateData) state.stateByOwner = indexStateByOwner(state.stateData);
+      }
+    } catch (_) { state.stateData = null; }
     /* Hydrate the inflation footnote text from the CPI metadata. */
     if (state.data.cpi) {
       const cpi = state.data.cpi;
@@ -2573,6 +2591,8 @@ function route() {
     state.view = { name: "whats-new" };
   } else if (hash === "#/recipients") {
     state.view = { name: "recipients" };
+  } else if (hash === "#/states") {
+    state.view = { name: "states" };
   } else {
     state.view = { name: "league" };
   }
@@ -2601,7 +2621,8 @@ function route() {
                 || (t === "about" && v === "about")
                 || (t === "runs" && (v === "runs" || v === "changelog"))
                 || (t === "whats-new" && v === "whats-new")
-                || (t === "recipients" && v === "recipients");
+                || (t === "recipients" && v === "recipients")
+                || (t === "states" && v === "states");
     a.classList.toggle("active", active);
   });
 
@@ -2688,6 +2709,7 @@ function render() {
   else if (state.view.name === "changelog") app.innerHTML = renderChangelog();
   else if (state.view.name === "whats-new") app.innerHTML = renderWhatsNew();
   else if (state.view.name === "recipients") app.innerHTML = renderRecipients();
+  else if (state.view.name === "states") app.innerHTML = renderStates();
 
   /* Re-bind */
   bindIndexHandlers();
@@ -3653,6 +3675,8 @@ function renderOwner(slug) {
         <div class="kpi-foot">Committees, candidates, PACs</div>
       </div>
     </div>
+
+    ${renderOwnerStatePanel(slug)}
 
     <section class="block">
       <div class="block-head">
@@ -6022,6 +6046,178 @@ function bindChangelogHandlers() {
     f.visibleN += 50;
     render();
   });
+}
+
+/* ──────────── /#/states (Phase-4 state campaign finance) ──────────── */
+
+function stateStatusBadge(status) {
+  const conf = status === "CONFIRMED";
+  const bg = conf ? "var(--dem-bg, #e8f0fe)" : "#fdf0e3";
+  const fg = conf ? "var(--dem, #1a56b3)" : "#9a5b1b";
+  const label = conf ? "Confirmed" : "Probable";
+  return `<span style="display:inline-block;font:600 10px/1.4 var(--sans);letter-spacing:.04em;text-transform:uppercase;color:${fg};background:${bg};border-radius:3px;padding:1px 6px">${label}</span>`;
+}
+
+function renderStates() {
+  const sd = state.stateData;
+  if (!sd || !(sd.donations || []).length) {
+    return `
+    <div class="container" style="padding:48px 0">
+      <section class="hero" style="padding-bottom:18px">
+        <span class="eyebrow">State campaign finance</span>
+        <h1 style="margin-top:14px;max-width:22ch">State data isn't loaded.</h1>
+        <p class="deck">The Phase-4 state layer (<code>state_data.json</code>) wasn't found.
+        It's generated from <code>data/state.db</code> by <code>mockup/build_state_data.py</code>.</p>
+      </section>
+    </div>`;
+  }
+
+  const owners = Object.values(sd.owners)
+    .sort((a, b) => aggAmt(b, "total_amount") - aggAmt(a, "total_amount"));
+  const totalDollars = owners.reduce((s, o) => s + aggAmt(o, "total_amount"), 0);
+  const nConf = sd.donations.filter((d) => d.status === "CONFIRMED").length;
+  const nProb = sd.donations.length - nConf;
+
+  const chips = sd.jurisdictions.map((j) =>
+    `<span class="re-chip" style="display:inline-block;font:600 11px/1.5 var(--sans);border:1px solid var(--rule);border-radius:999px;padding:2px 10px;margin-right:6px;color:var(--ink-2)">${escapeHtml(j.code)} · ${escapeHtml(j.source)}</span>`
+  ).join("");
+
+  const ownerRows = owners.map((o) => {
+    const top = o.top_recipients && o.top_recipients[0]
+      ? `${escapeHtml(o.top_recipients[0].recipient)}` : "—";
+    return `
+      <tr class="state-owner-row">
+        <td><a href="#/owner/${escapeAttr(o.slug)}" style="color:inherit;font-family:var(--serif);font-weight:500">${escapeHtml(o.name)}</a></td>
+        <td class="muted" style="font-size:13px">${escapeHtml(o.team || "")}</td>
+        <td class="num">${fmtInt(o.n_confirmed)}</td>
+        <td class="num">${fmtInt(o.n_probable)}</td>
+        <td class="num" style="font-variant-numeric:tabular-nums;font-weight:600">${fmtMoney(aggAmt(o, "total_amount"))}</td>
+        <td class="muted" style="font-size:13px;max-width:22ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${top}</td>
+      </tr>`;
+  }).join("");
+
+  const donRows = sd.donations
+    .slice()
+    .sort((a, b) => amt(b) - amt(a))
+    .map((d) => `
+      <tr>
+        <td>${stateStatusBadge(d.status)}</td>
+        <td><a href="#/owner/${escapeAttr(d.entity)}" style="color:inherit;font-family:var(--serif)">${escapeHtml(d.owner_name)}</a></td>
+        <td class="muted" style="font-size:12px">${escapeHtml(d.employer || "")}</td>
+        <td class="muted" style="font-size:12px">${escapeHtml([d.city, d.state].filter(Boolean).join(", "))}</td>
+        <td class="num" style="font-variant-numeric:tabular-nums;font-weight:600">${fmtMoney(amt(d))}</td>
+        <td class="muted" style="font-size:12px">${escapeHtml((d.date || "").slice(0, 10))}</td>
+        <td style="font-size:13px">${escapeHtml(d.recipient || "")}</td>
+      </tr>`).join("");
+
+  return `
+  <div class="container">
+    <section class="hero" style="padding-bottom:18px">
+      <span class="eyebrow">State campaign finance · pilot</span>
+      <h1 style="margin-top:14px;max-width:24ch">The money owners spend in <em>state</em> politics.</h1>
+      <p class="deck">
+        Federal filings are only half the picture — the fights over stadium
+        subsidies, ballot measures, and statehouse power play out in state
+        campaign-finance systems. This is a pilot: <strong>California only</strong>
+        for now, sourced from the Secretary of State's official
+        <strong>CAL-ACCESS</strong> disclosure database, held to the same
+        three-tier verification standard as the federal archive.
+      </p>
+      <div style="margin-top:12px">${chips}</div>
+    </section>
+
+    <div class="kpis" style="border-top:0;border-bottom:1px solid var(--rule);">
+      <div class="kpi">
+        <div class="kpi-label">Verified state donations</div>
+        <div class="kpi-value">${fmtInt(sd.donations.length)}</div>
+        <div class="kpi-foot">${fmtInt(nConf)} confirmed · ${fmtInt(nProb)} probable</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Total state giving</div>
+        <div class="kpi-value">${fmtMoney(totalDollars)}</div>
+        <div class="kpi-foot">${fmtMoneyExact(totalDollars)}</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Owners with state activity</div>
+        <div class="kpi-value">${fmtInt(owners.length)}</div>
+        <div class="kpi-foot">of 30 principal owners</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Jurisdictions covered</div>
+        <div class="kpi-value">${fmtInt(sd.jurisdictions.length)}</div>
+        <div class="kpi-foot">California pilot — more to come</div>
+      </div>
+    </div>
+
+    <section style="margin:26px 0 8px">
+      <h2 style="font-family:var(--serif);font-size:22px;margin:0 0 4px">By owner</h2>
+      <p class="muted" style="font-size:13px;margin:0 0 12px">Click an owner for their full (federal) giving record.</p>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr>
+            <th>Owner</th><th>Team</th><th class="num">Conf.</th><th class="num">Prob.</th>
+            <th class="num">State total</th><th>Top recipient</th>
+          </tr></thead>
+          <tbody>${ownerRows}</tbody>
+        </table>
+      </div>
+    </section>
+
+    <section style="margin:30px 0 8px">
+      <h2 style="font-family:var(--serif);font-size:22px;margin:0 0 12px">All state contributions</h2>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr>
+            <th>Status</th><th>Owner</th><th>Employer (as filed)</th><th>From</th>
+            <th class="num">Amount</th><th>Date</th><th>Recipient</th>
+          </tr></thead>
+          <tbody>${donRows}</tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="methodology-note" style="margin:30px 0;padding:18px 20px;border:1px solid var(--rule);border-radius:8px;background:var(--paper-2, #faf8f4)">
+      <h3 style="font-family:var(--serif);font-size:16px;margin:0 0 8px">How this is sourced — and what it doesn't cover yet</h3>
+      <p class="muted" style="font-size:13px;line-height:1.6;margin:0 0 8px">
+        State rows live in a separate database from the federal archive and never mix with it.
+        California's official <strong>CAL-ACCESS</strong> filings are the system of record:
+        every confirmed or probable row traces to a specific CAL-ACCESS filing. Aggregators are
+        used only to discover candidate records — never as the source of a fact.
+        Verification is identical to the federal data: a name match plus at least one corroborating
+        signal (employer, occupation, or city) — two for <em>confirmed</em>.
+      </p>
+      <p class="muted" style="font-size:13px;line-height:1.6;margin:0">
+        <strong>Coverage is deliberately partial.</strong> This is a California-only pilot; other
+        states are added one at a time as their disclosure data becomes machine-readable. A "$0" for
+        an owner means no California state contributions matched our verification bar — not that none
+        exist elsewhere. Amounts are as filed (the $/$↑ toggle adjusts to current dollars).
+      </p>
+    </section>
+  </div>`;
+}
+
+/* Compact per-owner state-finance panel, shown on an owner page when that owner
+   has Phase-4 state data. Federal KPIs above it never include state dollars. */
+function renderOwnerStatePanel(slug) {
+  const rows = state.stateByOwner && state.stateByOwner[slug];
+  if (!rows || !rows.length) return "";
+  const o = state.stateData.owners[slug];
+  const total = aggAmt(o, "total_amount");
+  const tops = (o.top_recipients || []).slice(0, 3);
+  const topList = tops.map((t) =>
+    `<li style="margin:0 0 4px"><span style="font-variant-numeric:tabular-nums;font-weight:600">${fmtMoney(t.amount)}</span> <span class="muted">→ ${escapeHtml(t.recipient)}</span></li>`
+  ).join("");
+  return `
+    <section class="block" style="border:1px solid var(--rule);border-radius:8px;padding:18px 20px;background:var(--paper-2,#faf8f4);margin-top:22px">
+      <span class="eyebrow">State campaign finance · California</span>
+      <h2 style="margin:6px 0 4px;font-size:21px">${escapeHtml(o.name)} gave ${fmtMoney(total)} in California state politics</h2>
+      <p class="caption" style="margin:0 0 10px">
+        ${fmtInt(o.n_confirmed)} confirmed · ${fmtInt(o.n_probable)} probable, from California's official CAL-ACCESS
+        disclosure database — <strong>separate from, and not included in, the federal totals above</strong>.
+      </p>
+      ${topList ? `<ul style="list-style:none;padding:0;margin:0 0 10px;font-size:14px">${topList}</ul>` : ""}
+      <a href="#/states" style="font-weight:600">See the full state-finance section →</a>
+    </section>`;
 }
 
 /* ──────────── /#/recipients ──────────── */

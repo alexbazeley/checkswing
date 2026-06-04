@@ -51,6 +51,10 @@ catalog/REVIEW_QUEUE.md
 mockup/data.json
 mockup/provenance.json
 
+# mockup/state_data.json — Phase-4 state payload, generated from data/state.db by
+# mockup/build_state_data.py (invoked by build_data.py at build time).
+mockup/state_data.json
+
 # Session-local state: handoff briefs, scratch notes, editor launch configs.
 .claude/
 
