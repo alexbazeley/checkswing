@@ -780,6 +780,16 @@ def main() -> None:
 
     write_provenance()
 
+    # Phase 4: also build the state campaign-finance payload (separate, small) so
+    # the single Cloudflare build command produces both. Non-fatal — a state-build
+    # failure must never block the federal data.json deploy.
+    try:
+        import build_state_data  # same dir; sys.path has REPO_ROOT, this file's dir is cwd
+        build_state_data.main()
+    except Exception as e:  # noqa: BLE001
+        print(f"WARNING: build_state_data failed ({e}); state_data.json not refreshed.",
+              file=sys.stderr)
+
 
 def write_beneficiary_chunks(chunks: dict[str, dict[str, list[dict]]]) -> int:
     """Write one mockup/beneficiaries/<committee_id>.json per committee.
