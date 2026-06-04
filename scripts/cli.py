@@ -65,6 +65,147 @@ def init_legislation_cmd():
     click.echo(f"Initialized {LEGISLATION_DB} (leg schema v{legislation_db.LEG_SCHEMA_VERSION})")
 
 
+# ── Phase 4 — state campaign finance (CA pilot) ─────────────────────────────
+
+
+@cli.command(name="init-state")
+def init_state_cmd():
+    """Create the Phase 4 state campaign-finance schema in data/state.db (idempotent)."""
+    from . import state_db
+
+    state_db.init()
+    click.echo(f"Initialized {state_db.STATE_DB} (state schema v{state_db.STATE_SCHEMA_VERSION})")
+
+
+def _find_tsv(extract_dir: Path, stem: str) -> Path | None:
+    """Locate a CAL-ACCESS table file (e.g. RCPT_CD) under extract_dir, case-insensitively."""
+    for p in extract_dir.rglob("*"):
+        if p.is_file() and p.stem.upper() == stem.upper() and p.suffix.upper() in (".TSV", ".CSV"):
+            return p
+    return None
+
+
+@cli.command(name="ingest-state")
+@click.argument("slug")
+@click.option("--extract-dir", required=True, type=click.Path(exists=True, path_type=Path),
+              help="Directory holding the CAL-ACCESS extract (RCPT_CD.TSV + FILERNAME_CD.TSV).")
+@click.option("--jurisdiction", default="CA", help="State code (default: CA).")
+@click.option("--source", default="CAL-ACCESS", help="Official portal source label (default: CAL-ACCESS).")
+@click.option("--dry-run", is_flag=True, help="Classify + report counts but write nothing.")
+def ingest_state_cmd(slug, extract_dir, jurisdiction, source, dry_run):
+    """Ingest one owner's state contributions from a CAL-ACCESS extract dir.
+
+    Pre-filters the receipts to the owner's surname candidates, runs the SAME
+    three-tier classifier as the federal pipeline, and writes CONFIRMED/PROBABLE
+    to state.db (UNCERTAIN → state review queue). The official portal extract is
+    the primary source (GOVERNANCE.md §3 / CHARTER.md §Phase 4).
+    """
+    from . import fetch_calaccess, ingest_state
+    from .paths import REPO_ROOT, relpath
+
+    rcpt_tsv = _find_tsv(extract_dir, "RCPT_CD")
+    if rcpt_tsv is None:
+        click.echo("ERROR: RCPT_CD.TSV not found under --extract-dir", err=True)
+        sys.exit(1)
+    filer_tsv = _find_tsv(extract_dir, "FILERNAME_CD")
+
+    owner = ingest_state._load_owner(slug)
+    rows = fetch_calaccess.candidate_rows_for_owner(rcpt_tsv, owner)
+    filer_index = fetch_calaccess.build_filer_index(filer_tsv) if filer_tsv else {}
+    resolver = fetch_calaccess.make_recipient_resolver(filer_index)
+
+    # Prefer a repo-relative provenance path (the extract normally lives under
+    # data/raw/state/ca/); fall back to the absolute path for out-of-repo extracts.
+    try:
+        raw_path = relpath(rcpt_tsv)
+    except ValueError:
+        raw_path = str(rcpt_tsv.resolve())
+
+    res = ingest_state.ingest_state_entity(
+        slug,
+        rcpt_rows=rows,
+        recipient_resolver=resolver,
+        raw_payload_path=raw_path,
+        extract_label=extract_dir.name,
+        jurisdiction=jurisdiction,
+        source=source,
+        dry_run=dry_run,
+    )
+    tag = "[dry-run] " if dry_run else ""
+    click.echo(
+        f"{tag}{slug} [{jurisdiction}/{source}]: scanned {res.records_scanned} candidate(s) → "
+        f"{res.confirmed} CONFIRMED, {res.probable} PROBABLE, {res.uncertain} UNCERTAIN"
+        + (f", {res.excluded} excluded" if res.excluded else "")
+        + (f", {res.skipped_no_date} no-date→review" if res.skipped_no_date else "")
+        + (f", {res.superseded} superseded" if res.superseded else "")
+    )
+
+
+@cli.command(name="status-state")
+def status_state_cmd():
+    """Per-owner state-contribution counts from data/state.db."""
+    from . import state_db
+    from .paths import STATE_DB
+
+    if not STATE_DB.exists():
+        click.echo("No data/state.db yet — run `init-state` then `ingest-state`.")
+        return
+    with state_db.connect() as conn:
+        rows = conn.execute(
+            """
+            SELECT entity_slug, jurisdiction,
+                   SUM(status='CONFIRMED') AS confirmed,
+                   SUM(status='PROBABLE')  AS probable,
+                   ROUND(SUM(CASE WHEN status IN ('CONFIRMED','PROBABLE') THEN amount ELSE 0 END), 2) AS total
+              FROM state_donations
+             WHERE status IN ('CONFIRMED','PROBABLE')
+             GROUP BY entity_slug, jurisdiction
+             ORDER BY total DESC
+            """
+        ).fetchall()
+        queue = {
+            r["entity_slug"]: r["n"]
+            for r in conn.execute(
+                "SELECT entity_slug, COUNT(*) AS n FROM state_review_queue "
+                "WHERE resolution IS NULL GROUP BY entity_slug"
+            )
+        }
+    if not rows:
+        click.echo("No state donations yet.")
+        return
+    table = [
+        [r["entity_slug"], r["jurisdiction"], r["confirmed"], r["probable"],
+         f"${r['total']:,.0f}", queue.get(r["entity_slug"], 0)]
+        for r in rows
+    ]
+    click.echo(tabulate(table, headers=["owner", "juris", "CONF", "PROB", "total", "review"]))
+
+
+@cli.command(name="review-state")
+@click.option("--slug", default=None, help="Limit to one owner.")
+def review_state_cmd(slug):
+    """List open state review-queue items (UNCERTAIN awaiting adjudication)."""
+    from . import state_db
+    from .paths import STATE_DB
+
+    if not STATE_DB.exists():
+        click.echo("No data/state.db yet.")
+        return
+    q = ("SELECT state_txn_id, entity_slug, jurisdiction, reason FROM state_review_queue "
+         "WHERE resolution IS NULL")
+    params: tuple = ()
+    if slug:
+        q += " AND entity_slug = ?"
+        params = (slug,)
+    with state_db.connect() as conn:
+        rows = conn.execute(q + " ORDER BY entity_slug", params).fetchall()
+    if not rows:
+        click.echo("State review queue empty.")
+        return
+    table = [[r["entity_slug"], r["jurisdiction"], r["state_txn_id"], r["reason"]] for r in rows]
+    click.echo(tabulate(table, headers=["owner", "juris", "state_txn_id", "reason"]))
+
+
 @cli.command(name="ingest-legislators")
 @click.option("--no-historical", is_flag=True, help="Fetch only legislators-current.yaml (skip the larger historical file).")
 @click.option("--all-legislators", is_flag=True, help="Keep legislators with no FEC id too (default: only the FEC-joinable universe).")

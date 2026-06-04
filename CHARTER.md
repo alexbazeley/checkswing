@@ -29,7 +29,7 @@ The conservative attribution standard is itself an editorial commitment: we'd ra
 
 ## Out of scope (explicit, not just "later")
 
-- **State and local campaign finance.** Different sources per state, often paper-only. Phase 4 territory. Until then, the database covers federal only and any report explicitly says so.
+- **State and local campaign finance.** Different sources per state, often paper-only. Phase 4 territory — **now active as a California pilot** in a *separate* `data/state.db` (see Phase 4 below); the federal `master.db` remains FEC-only and any report says which layer a figure comes from.
 - **501(c)(4) "dark money."** Not in FEC data. Tracked elsewhere if at all.
 - **Federal lobbying disclosures.** A different LD-1 / LD-2 system. Worth a sibling project; not this one.
 - **Cross-referencing donations to specific legislation, votes, or regulatory outcomes.** Phase 3.
@@ -71,12 +71,34 @@ The conservative attribution standard is itself an editorial commitment: we'd ra
 - Enable queries like "donations from owner X to legislator Y in the 90 days before vote Z."
 - **Exit criteria:** at least one publishable per-episode brief generated end-to-end from the joined data.
 
-### Phase 4 — State and local
+### Phase 4 — State and local — **ACTIVE (California pilot)**
 - Identify each owner's primary state/local political exposure (team's home state, owner's residence state, stadium-deal jurisdictions).
 - Connect to that state's campaign finance database.
 - Pull stadium-relevant state and local donations.
 - Merge under the same entity model and verification standard.
 - **Exit criteria:** at minimum, every team's home state covered.
+
+**Sourcing policy (approved 2026-06-03).** State data is **hybrid-sourced**: an
+aggregator may *discover* candidate records, but the **official state portal is the
+primary source** and every CONFIRMED/PROBABLE row traces to an official filing — the
+state-level analog of the FEC rule (GOVERNANCE.md §1.1, §1.3, §3). No aggregator
+stands in as the record.
+
+**Architecture.** State contributions live in a *separate* `data/state.db`
+(mirroring the Phase-3 `legislation.db` split) so `master.db` stays federal-clean.
+The same three-tier classifier (`scripts/resolve_entities.py`) is reused verbatim;
+only a per-portal input adapter differs. Coverage is **state-by-state and honestly
+partial** — some states are paper-only and stay out until machine-readable.
+
+**Pilot — California (CAL-ACCESS).** California first: 5 of 30 teams, and the
+gold-standard open-data portal (CAL-ACCESS, via the California Civic Data Coalition
+mirror) whose receipts carry employer + occupation + city, so the two-signal
+CONFIRMED bar is reachable.
+- **Pilot exit criteria (mirrors the Phase-1 Cohen bar):** CA-team owners have a
+  complete `state.db` export with provenance; the state review queue is non-empty
+  (conservative proof); zero misattributions on a manual audit of a CONFIRMED sample.
+- The CA pilot proves the pattern; a `StateAdapter` runbook then makes state #2
+  (NY or TX, by team count) a new adapter + source-tiering, not a rewrite.
 
 ### Phase 5 — Maintenance and automation
 - Scheduled quarterly pulls (FEC quarterly reporting cycle).

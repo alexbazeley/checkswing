@@ -134,3 +134,49 @@ GOVERNANCE.md §6).
 - **Inferring intent from temporal proximity.** A computed "donation N days before
   vote Z" is a neutral arithmetic fact stored/queried as such. The claim that the
   donation *caused* the vote is interpretation and belongs only in `reports/`.
+
+## Phase 4 addendum — state campaign finance (California pilot)
+
+Phase 4 (CHARTER.md §Phase 4) extends the archive to state campaign-finance
+contributions, stored in the *separate* `data/state.db` and held to the same
+attribution + verification + provenance discipline as the federal data
+(GOVERNANCE.md §1.11). The official state portal is the **record**; an aggregator is
+only a **discovery pointer**. State sources are adopted one state at a time — each is
+a documented scope expansion (GOVERNANCE.md §5). California (CAL-ACCESS) is approved
+as of 2026-06-03; other states still require sign-off.
+
+### Tier 1: Primary, authoritative (the cited source of every state row)
+
+- **CAL-ACCESS** (California Secretary of State / FPPC) — California's official
+  disclosure system and the source of record for CA state contributions. Each
+  CONFIRMED/PROBABLE `state_donations` row cites a CAL-ACCESS filing
+  (`source = "CAL-ACCESS"`, `source_filing_id`, `source_tran_id`, `raw_payload_path`).
+- **California Civic Data Coalition (CCDC) mirror**
+  (`calaccess.californiacivicdata.org/downloads/latest/`) — a daily-refreshed,
+  documented, tab-delimited republication of the raw CAL-ACCESS files (`RCPT_CD`
+  receipts, `FILERNAME_CD` filer lookup). A faithful *convenience copy* of the Tier-1
+  filings, not a separate analytical source; used because the SoS bulk download is
+  the same data in a harder shape. Field docs:
+  `calaccess.californiacivicdata.org/documentation/raw-files/rcpt-cd/`.
+
+### Tier 2: Discovery only (NOT a source of donation facts)
+
+- **The Accountability Project** (`publicaccountability.org`, Investigative Reporting
+  Workshop) — normalized, donor-name-searchable state contributions across ~35
+  states. May be used to **discover** that a candidate record exists (recorded in
+  `state_donations.discovery_source`); the fact itself must then be confirmed against
+  the CAL-ACCESS extract. An aggregator-only hit not found in the portal goes to the
+  state review queue, never the canonical export.
+- **FollowTheMoney / NIMP** (`followthemoney.org`, now part of OpenSecrets) — same
+  discovery-only role. Note: unmaintained, coverage only through 2024; preferred
+  second to TAP, and — because it is discovery-only — a dead aggregator degrades
+  gracefully (CAL-ACCESS remains the Tier-1 spine).
+
+### Explicitly OUT for Phase 4 (for now)
+
+- **Blending state rows into `master.db`.** State data lives only in `data/state.db`.
+- **Paper-only / non-machine-readable state portals.** A state stays out until its
+  disclosure data is available in a machine-readable Tier-1 form; coverage is
+  honestly partial and reports say so.
+- **Treating any aggregator as the record.** Per GOVERNANCE.md §1.11/§3, aggregators
+  are pointers, never the cited origin of a contribution fact.
