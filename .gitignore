@@ -17,6 +17,16 @@ data/legislation.db-journal
 data/legislation.db-wal
 data/legislation.db-shm
 
+# Phase 4 state.db transient files. Like legislation.db, the state.db file itself
+# is committed (normal non-LFS git blob — owner-matched rows only, a few MB) once
+# it carries real data; only its journal/WAL/shm are ignored.
+data/state.db-journal
+data/state.db-wal
+data/state.db-shm
+
+# State-portal CSV exports are derivative — regenerable (cf. data/donations/).
+data/state/donations/
+
 # Runtime lock files; released on clean exit, but a killed/crashed run can
 # leave them behind. Treated the same as the master.db journal/WAL/shm.
 data/.refresh.lock

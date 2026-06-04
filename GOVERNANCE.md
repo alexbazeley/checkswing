@@ -102,6 +102,21 @@ misattribution discovered), the row is marked `SUPERSEDED` with a reason in
 `catalog/PROVENANCE_LOG.md`. Never hard-delete a record that has ever existed in
 the database.
 
+### 1.11 State data: the official portal is the record (Phase 4)
+For state campaign-finance data (`data/state.db`, CHARTER.md §Phase 4), the
+**official state disclosure portal is the primary source** — the state-level analog
+of the FEC. Every CONFIRMED/PROBABLE state row traces to an official filing
+(`source` = the portal, e.g. `CAL-ACCESS`; `source_filing_id` + `raw_payload_path`),
+exactly as a federal row traces to a `filing_id`. An aggregator (e.g. The
+Accountability Project, FollowTheMoney) may only **discover** candidate records — it
+is recorded in `discovery_source`, never as the source of the fact, and an
+aggregator-only hit not found in the official portal extract goes to the state
+review queue, never to the canonical export. Rules §1.1, §1.2, §1.5, §1.6, §1.9 and
+§1.10 apply unchanged to state rows; the classifier and verification tiers are the
+same. State election cycles vary by office, so `state_donations.election_cycle`
+stores the contribution's **calendar year** (not FEC's even-year two-year cycle) —
+an honest field, documented in STATE_DONATION_SCHEMA.md.
+
 ## 2. Workflow rules
 
 ### 2.1 Before adding a new owner to the registry
@@ -165,7 +180,7 @@ contaminated data later. Open an issue or consult a maintainer.
 Specifically, **always** stop and confirm before:
 - Adding a new tracked entity (spouse, family member, business entity, PAC) to an owner profile.
 - Promoting an UNCERTAIN record to PROBABLE or CONFIRMED.
-- Adopting a new signal source (e.g., starting to use a state campaign-finance database — that's a scope expansion).
+- Adopting a new signal source. **California's CAL-ACCESS portal is approved** as of 2026-06-03 (CHARTER.md §Phase 4) under the hybrid policy in §1.11; adopting **any other** state's source (or an aggregator as more than a discovery pointer) remains a scope expansion that requires sign-off.
 - Re-classifying a previously CONFIRMED record.
 - Backfilling history beyond the period the owner held the team (whether to include pre-ownership giving is decided case by case).
 
@@ -175,7 +190,7 @@ The donation data pipeline is federal-only, FEC-only, principal-owners-only. The
 following are out of scope for the **donation** data layer; treat work drifting
 into them as a signal to stop and reassess against CHARTER.md:
 
-- Pulling state or local campaign finance (Phase 4, not yet active).
+- Pulling state or local campaign finance **into `master.db`** — that data belongs in the *separate* `data/state.db` (Phase 4; see below), never blended into the FEC layer.
 - Looking up team-affiliated charitable foundations (a separate project — IRS 990s).
 - Writing narrative analysis of "what these donations mean" into the data layer.
 
@@ -196,5 +211,12 @@ The owner→donation→legislator→vote join is computed at query time (ATTACH)
 "donation N days before vote Z" figure is neutral arithmetic. All interpretation —
 including the publishable brief that is Phase 3's exit criterion — lives in
 `reports/`, never in a row, and never on the public dashboard.
+
+The **Phase 4 state campaign-finance layer** (`data/state.db`, sourced from official
+state portals — CHARTER.md §Phase 4, currently the California / CAL-ACCESS pilot) is
+likewise a *separate* database from `master.db`, held to the same attribution,
+verification, and provenance discipline (§1.1–§1.11). It stores neutral, sourced
+contribution facts only; the official portal is the record and any aggregator is a
+discovery pointer (§1.11). Interpretation lives in `reports/`, never in a row.
 
 When in doubt, return to CHARTER.md and verify the work is in scope.

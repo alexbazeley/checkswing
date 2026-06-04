@@ -9,8 +9,9 @@ Before changing anything that touches data, classification, or provenance, read:
 - **[GOVERNANCE.md](GOVERNANCE.md)** — the data-integrity rules (non-negotiable).
 - **[CHARTER.md](CHARTER.md)** — scope and project phases.
 - **[VERIFICATION.md](VERIFICATION.md)** — the three-tier classification spec.
-- **[OWNER_SCHEMA.md](OWNER_SCHEMA.md)** / **[DONATION_SCHEMA.md](DONATION_SCHEMA.md)** — data schemas.
-- **[docs/CALIBRATION_PLAYBOOK.md](docs/CALIBRATION_PLAYBOOK.md)** — how to tune an owner's signal block (the `audit` → `reclassify` loop).
+- **[OWNER_SCHEMA.md](OWNER_SCHEMA.md)** / **[DONATION_SCHEMA.md](DONATION_SCHEMA.md)** — data schemas (federal/FEC, `master.db`).
+- **[STATE_DONATION_SCHEMA.md](STATE_DONATION_SCHEMA.md)** — Phase 4 state campaign-finance schema (`data/state.db`, CA/CAL-ACCESS pilot; separate from `master.db`).
+- **[docs/CALIBRATION_PLAYBOOK.md](docs/CALIBRATION_PLAYBOOK.md)** — how to tune an owner's signal block (the `audit` → `reclassify` loop; applies to state data too).
 
 Conventions:
 
