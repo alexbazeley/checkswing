@@ -4654,3 +4654,17 @@ generated end-to-end from the joined data") is satisfied.
 - **uncertain_count**: `1`
 - **snapshot_path**: `data/snapshots/2026-06-04T02-17-23Z__a6aa57dd.db`
 - **notes**: scanned=7377
+
+### 2026-06-04 — STATE_INGESTION
+
+- **run_id**: `987631f6`
+- **entity_slug**: `feliciano-jose`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `reclassify: Phase-4 CA calibration: added Tennenbaum/Special Value employer signals`
+- **records_scanned**: `467`
+- **confirmed_count**: `5`
+- **probable_count**: `0`
+- **uncertain_count**: `5`
+- **snapshot_path**: `data/snapshots/2026-06-04T03-39-16Z__987631f6.db`
+- **notes**: scanned=467
