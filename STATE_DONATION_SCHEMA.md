@@ -89,3 +89,21 @@ Run log (counts, snapshot path, extract label) and the migration trail.
 - `status IN ('CONFIRMED','PROBABLE')` is the canonical export; `UNCERTAIN` and
   `SUPERSEDED` are excluded from it.
 - The federal `master.db` is never written by the state pipeline, and vice versa.
+
+## Known limitations (CA pilot)
+
+- **CAL-ACCESS double-reporting.** A single real contribution can be filed more than
+  once. `fetch_calaccess.dedupe_receipts` folds the two safe cases — amendments
+  (same `FILING_ID`, higher `AMEND_ID` wins) and a filer re-reporting the same
+  `TRAN_ID` across overlapping reporting periods (different `FILING_ID`, same
+  TRAN_ID/amount/date/donor) — keyed on `(TRAN_ID, amount, date, contributor)`.
+  Genuinely separate same-day, same-amount gifts are preserved (distinct TRAN_IDs
+  within a filing). **Not** folded: donor-side (Form 461) vs recipient-side
+  (Form 460) cross-filing, where each filer assigns its own TRAN_ID — collapsing
+  those safely needs fuzzy matching and is deferred, so a small residue of
+  cross-form duplicate dollars may remain. Dollar totals are "as filed, de-duped to
+  the high-confidence degree"; attribution (which owner) is unaffected.
+- **Recipient party/office** are usually NULL — CAL-ACCESS receipts don't carry
+  them; only the filer name/type is resolved (from the cover page).
+- **Coverage is California-only** and, within CA, only contributions itemized in
+  `RCPT_CD`. Other states are out until added one at a time (SOURCES.md §Phase 4).

@@ -4178,3 +4178,479 @@ generated end-to-end from the joined data") is satisfied.
   donations predates the 2018 vote; owner money splits ~50/50 Yea/Nay; zero owner
   donations to SAPA's authors Guthrie/Bustos) — rather than overclaiming.
 - master.db untouched throughout Phase 3; legislation.db is a separate non-LFS DB.
+
+### 2026-06-04 — STATE_INGESTION
+
+- **run_id**: `377dcaee`
+- **entity_slug**: `angelos-john-p`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `153`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `3`
+- **snapshot_path**: `data/snapshots/2026-06-04T02-17-10Z__377dcaee.db`
+- **notes**: scanned=153
+
+### 2026-06-04 — STATE_INGESTION
+
+- **run_id**: `0d9c32cc`
+- **entity_slug**: `attanasio-mark`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `65`
+- **confirmed_count**: `7`
+- **probable_count**: `0`
+- **uncertain_count**: `1`
+- **snapshot_path**: `data/snapshots/2026-06-04T02-17-10Z__0d9c32cc.db`
+- **notes**: scanned=65
+
+### 2026-06-04 — STATE_INGESTION
+
+- **run_id**: `6d7d3ed1`
+- **entity_slug**: `castellini-bob`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `50`
+- **confirmed_count**: `1`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-04T02-17-10Z__6d7d3ed1.db`
+- **notes**: scanned=50
+
+### 2026-06-04 — STATE_INGESTION
+
+- **run_id**: `f61821e2`
+- **entity_slug**: `castellini-phil`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `50`
+- **confirmed_count**: `1`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-04T02-17-10Z__f61821e2.db`
+- **notes**: scanned=50
+
+### 2026-06-04 — STATE_INGESTION
+
+- **run_id**: `6bebb459`
+- **entity_slug**: `cohen-steven`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `9343`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `127`
+- **snapshot_path**: `data/snapshots/2026-06-04T02-17-10Z__6bebb459.db`
+- **notes**: scanned=9343
+
+### 2026-06-04 — STATE_INGESTION
+
+- **run_id**: `793b24a8`
+- **entity_slug**: `crane-jim`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `3615`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `24`
+- **snapshot_path**: `data/snapshots/2026-06-04T02-17-11Z__793b24a8.db`
+- **notes**: scanned=3615
+
+### 2026-06-04 — STATE_INGESTION
+
+- **run_id**: `efd7a735`
+- **entity_slug**: `davis-ray`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `30921`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-04T02-17-11Z__efd7a735.db`
+- **notes**: scanned=30921
+
+### 2026-06-04 — STATE_INGESTION
+
+- **run_id**: `e01de070`
+- **entity_slug**: `dewitt-bill`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `76067`
+- **confirmed_count**: `2`
+- **probable_count**: `0`
+- **uncertain_count**: `2`
+- **snapshot_path**: `data/snapshots/2026-06-04T02-17-12Z__e01de070.db`
+- **notes**: scanned=76067
+
+### 2026-06-04 — STATE_INGESTION
+
+- **run_id**: `76a92da0`
+- **entity_slug**: `dolan-paul`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `2329`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `20`
+- **snapshot_path**: `data/snapshots/2026-06-04T02-17-16Z__76a92da0.db`
+- **notes**: scanned=2329
+
+### 2026-06-04 — STATE_INGESTION
+
+- **run_id**: `785b0dfd`
+- **entity_slug**: `feliciano-jose`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `467`
+- **confirmed_count**: `0`
+- **probable_count**: `5`
+- **uncertain_count**: `5`
+- **snapshot_path**: `data/snapshots/2026-06-04T02-17-16Z__785b0dfd.db`
+- **notes**: scanned=467
+
+### 2026-06-04 — STATE_INGESTION
+
+- **run_id**: `3e754b6c`
+- **entity_slug**: `fisher-john`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `10688`
+- **confirmed_count**: `259`
+- **probable_count**: `6`
+- **uncertain_count**: `151`
+- **snapshot_path**: `data/snapshots/2026-06-04T02-17-16Z__3e754b6c.db`
+- **notes**: scanned=10688
+
+### 2026-06-04 — STATE_INGESTION
+
+- **run_id**: `0e78995f`
+- **entity_slug**: `henry-john`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `39138`
+- **confirmed_count**: `2`
+- **probable_count**: `0`
+- **uncertain_count**: `131`
+- **snapshot_path**: `data/snapshots/2026-06-04T02-17-16Z__0e78995f.db`
+- **notes**: scanned=39138
+
+### 2026-06-04 — STATE_INGESTION
+
+- **run_id**: `84516695`
+- **entity_slug**: `ilitch-chris`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `16`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-04T02-17-17Z__84516695.db`
+- **notes**: scanned=16
+
+### 2026-06-04 — STATE_INGESTION
+
+- **run_id**: `065cee7b`
+- **entity_slug**: `johnson-greg`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `57853`
+- **confirmed_count**: `8`
+- **probable_count**: `0`
+- **uncertain_count**: `467`
+- **snapshot_path**: `data/snapshots/2026-06-04T02-17-18Z__065cee7b.db`
+- **notes**: scanned=57853
+
+### 2026-06-04 — STATE_INGESTION
+
+- **run_id**: `737363c1`
+- **entity_slug**: `kendrick-ken`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `30120`
+- **confirmed_count**: `1`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-04T02-17-20Z__737363c1.db`
+- **notes**: scanned=30120
+
+### 2026-06-04 — STATE_INGESTION
+
+- **run_id**: `f5bc1dae`
+- **entity_slug**: `lerner-mark`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `1029`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `28`
+- **snapshot_path**: `data/snapshots/2026-06-04T02-17-22Z__f5bc1dae.db`
+- **notes**: scanned=1029
+
+### 2026-06-04 — STATE_INGESTION
+
+- **run_id**: `4e6c453b`
+- **entity_slug**: `malone-john`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `3211`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `9`
+- **snapshot_path**: `data/snapshots/2026-06-04T02-17-22Z__4e6c453b.db`
+- **notes**: scanned=3211
+
+### 2026-06-04 — STATE_INGESTION
+
+- **run_id**: `a53474f8`
+- **entity_slug**: `mcguirk-terry`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `21`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-04T02-17-22Z__a53474f8.db`
+- **notes**: scanned=21
+
+### 2026-06-04 — STATE_INGESTION
+
+- **run_id**: `51a6023a`
+- **entity_slug**: `middleton-john`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `1918`
+- **confirmed_count**: `1`
+- **probable_count**: `1`
+- **uncertain_count**: `14`
+- **snapshot_path**: `data/snapshots/2026-06-04T02-17-22Z__51a6023a.db`
+- **notes**: scanned=1918
+
+### 2026-06-04 — STATE_INGESTION
+
+- **run_id**: `9e6f7341`
+- **entity_slug**: `monfort-dick`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `189`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-04T02-17-22Z__9e6f7341.db`
+- **notes**: scanned=189
+
+### 2026-06-04 — STATE_INGESTION
+
+- **run_id**: `18e92112`
+- **entity_slug**: `moreno-arte`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `9146`
+- **confirmed_count**: `2`
+- **probable_count**: `0`
+- **uncertain_count**: `48`
+- **snapshot_path**: `data/snapshots/2026-06-04T02-17-23Z__18e92112.db`
+- **notes**: scanned=9146
+
+### 2026-06-04 — STATE_INGESTION
+
+- **run_id**: `ddf58ece`
+- **entity_slug**: `nutting-bob`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `123`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `31`
+- **snapshot_path**: `data/snapshots/2026-06-04T02-17-23Z__ddf58ece.db`
+- **notes**: scanned=123
+
+### 2026-06-04 — STATE_INGESTION
+
+- **run_id**: `c1a7724a`
+- **entity_slug**: `pohlad-joe`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `2`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-04T02-17-23Z__c1a7724a.db`
+- **notes**: scanned=2
+
+### 2026-06-04 — STATE_INGESTION
+
+- **run_id**: `e65dce04`
+- **entity_slug**: `pohlad-tom`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `2`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-04T02-17-23Z__e65dce04.db`
+- **notes**: scanned=2
+
+### 2026-06-04 — STATE_INGESTION
+
+- **run_id**: `417da937`
+- **entity_slug**: `reinsdorf-jerry`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `3`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-04T02-17-23Z__417da937.db`
+- **notes**: scanned=3
+
+### 2026-06-04 — STATE_INGESTION
+
+- **run_id**: `960e50cd`
+- **entity_slug**: `ricketts-tom`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `163`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `3`
+- **snapshot_path**: `data/snapshots/2026-06-04T02-17-23Z__960e50cd.db`
+- **notes**: scanned=163
+
+### 2026-06-04 — STATE_INGESTION
+
+- **run_id**: `df31fbd7`
+- **entity_slug**: `rubenstein-david`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `551`
+- **confirmed_count**: `1`
+- **probable_count**: `0`
+- **uncertain_count**: `4`
+- **snapshot_path**: `data/snapshots/2026-06-04T02-17-23Z__df31fbd7.db`
+- **notes**: scanned=551
+
+### 2026-06-04 — STATE_INGESTION
+
+- **run_id**: `af42fefd`
+- **entity_slug**: `seidler-john`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `100`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-04T02-17-23Z__af42fefd.db`
+- **notes**: scanned=100
+
+### 2026-06-04 — STATE_INGESTION
+
+- **run_id**: `1dfc1a1d`
+- **entity_slug**: `sherman-bruce`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `4301`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `2`
+- **snapshot_path**: `data/snapshots/2026-06-04T02-17-23Z__1dfc1a1d.db`
+- **notes**: scanned=4301
+
+### 2026-06-04 — STATE_INGESTION
+
+- **run_id**: `7894c098`
+- **entity_slug**: `sherman-john`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `4301`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `76`
+- **snapshot_path**: `data/snapshots/2026-06-04T02-17-23Z__7894c098.db`
+- **notes**: scanned=4301
+
+### 2026-06-04 — STATE_INGESTION
+
+- **run_id**: `47d6249f`
+- **entity_slug**: `simpson-bob`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `5998`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-04T02-17-23Z__47d6249f.db`
+- **notes**: scanned=5998
+
+### 2026-06-04 — STATE_INGESTION
+
+- **run_id**: `601ca75c`
+- **entity_slug**: `stanton-john`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `1656`
+- **confirmed_count**: `2`
+- **probable_count**: `0`
+- **uncertain_count**: `62`
+- **snapshot_path**: `data/snapshots/2026-06-04T02-17-23Z__601ca75c.db`
+- **notes**: scanned=1656
+
+### 2026-06-04 — STATE_INGESTION
+
+- **run_id**: `1f6af79c`
+- **entity_slug**: `steinbrenner-hal`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `19`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-04T02-17-23Z__1f6af79c.db`
+- **notes**: scanned=19
+
+### 2026-06-04 — STATE_INGESTION
+
+- **run_id**: `a6aa57dd`
+- **entity_slug**: `walter-mark`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `7377`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `1`
+- **snapshot_path**: `data/snapshots/2026-06-04T02-17-23Z__a6aa57dd.db`
+- **notes**: scanned=7377
