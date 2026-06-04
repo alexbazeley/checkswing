@@ -297,6 +297,50 @@ def ingest_state_ca_cmd(zip_path, slugs, dry_run):
         click.echo(f"{tag}No candidate receipts matched any selected owner.")
 
 
+@cli.command(name="reclassify-state")
+@click.argument("slug")
+@click.option("--zip", "zip_path", required=True, type=click.Path(exists=True, path_type=Path),
+              help="Path to the CAL-ACCESS dbwebexport.zip.")
+@click.option("--reason", default="", help="Reason (recorded in PROVENANCE_LOG).")
+def reclassify_state_cmd(slug, zip_path, reason):
+    """Wipe one owner's CA state rows and re-classify from the portal extract.
+
+    For applying an owner-YAML signal change (calibration): a status change is
+    invisible to the idempotent ingest upsert, so reclassify (delete + re-insert)
+    is required. Streams the zip once; touches only this owner's rows + appends one
+    provenance entry — the other owners' data is untouched.
+    """
+    from . import fetch_calaccess, ingest_state
+    from .paths import relpath
+
+    owner = ingest_state._load_owner(slug)
+    try:
+        raw_path = relpath(zip_path)
+    except ValueError:
+        raw_path = str(zip_path.resolve())
+
+    click.echo(f"Building recipient index from {zip_path.name}…")
+    resolver = fetch_calaccess.make_recipient_resolver_by_filing(
+        fetch_calaccess.build_recipient_index_from_zip(zip_path)
+    )
+    click.echo(f"Streaming RCPT_CD for {slug}… (one pass)")
+    buckets = fetch_calaccess.bucket_rows_by_owner(
+        fetch_calaccess.iter_rcpt_rows_from_zip(zip_path), [(slug, owner)]
+    )
+    rows = fetch_calaccess.dedupe_receipts(buckets.get(slug, []))
+    res = ingest_state.reclassify_state_entity(
+        slug,
+        rcpt_rows=rows,
+        recipient_resolver=resolver,
+        reason=reason or "calibration",
+        raw_payload_path=raw_path,
+    )
+    click.echo(
+        f"{slug}: {res.confirmed} CONFIRMED, {res.probable} PROBABLE, "
+        f"{res.uncertain} UNCERTAIN (scanned {res.records_scanned})"
+    )
+
+
 @cli.command(name="ingest-legislators")
 @click.option("--no-historical", is_flag=True, help="Fetch only legislators-current.yaml (skip the larger historical file).")
 @click.option("--all-legislators", is_flag=True, help="Keep legislators with no FEC id too (default: only the FEC-joinable universe).")

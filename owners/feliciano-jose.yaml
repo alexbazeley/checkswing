@@ -44,6 +44,13 @@ verifying_signals:
     # NOTE: "Clearlake Capital" and "Clearlake Capital Group" are in
     # strong_signals — not duplicated here per OWNER_SCHEMA.md rule 6.
   - "Clearlake"                  # shorter form; distinct exact string from strong forms
+  # Pre-Clearlake employer (2000–2006): Partner & investment-committee member at
+  # Tennenbaum Capital Partners (LA/Santa Monica), per his documented bio
+  # (Wikipedia / Bloomberg / Clearlake exec bio). His 2001–2006 CA state
+  # donations file this employer or its "Special Value" fund-management entity.
+  # Added in Phase-4 CA calibration (maintainer-approved 2026-06-04).
+  - "Tennenbaum Capital"         # matches "Tennenbaum Capital Partners" / "...P"
+  - "Special Value Mgmt"         # Tennenbaum's Special Value funds mgmt entity (as filed)
   - "Kwanza Jones and Jose E Feliciano Initiative"
   - "Kwanza Jones & José E. Feliciano Initiative"
   - "Jones Feliciano Initiative"
@@ -135,12 +142,17 @@ notes: |
      (CT, not CA). Different employer context (musician/entertainer).
    - Other generic "Jose Feliciano" individuals in Latino communities
      nationwide.
-  Mitigation: require middle initial "E." OR strong Clearlake-tied employer
-  signal for CONFIRMED attribution. LA/Santa Monica/Pacific Palisades
+  Mitigation: require middle initial "E." OR a documented-employer signal
+  (Clearlake, or his pre-Clearlake firm Tennenbaum Capital / Special Value)
+  for CONFIRMED attribution. LA/Santa Monica/Pacific Palisades/Marina del Rey
   city + investor occupation is the strong combination. CT-residence
   records or musician-occupation records auto-route to UNCERTAIN (and
   the negative_signals.employers block catches "Self-Employed Musician"
   / "Musician" / "Singer" / "Entertainer" outright).
+  NOTE (2026-06-04): a contributor filing "Tennenbaum Capital" with no/other
+  middle initial (e.g. "Jose F.") in the 2001–2006 window is treated as him —
+  Tennenbaum was a small LA PE firm and a second Jose Feliciano principal there
+  is implausible; the employer + LA-area city is the discriminator.
 
   Other business / sports holdings (context only): Co-financed Chelsea FC
   acquisition (2022) via Clearlake — principal of Chelsea ownership group.
@@ -178,8 +190,28 @@ change_log:
     the famous singer doppelgänger (Weston CT-based though). Left as
     PROBABLE pending Tier 2 confirmation. Signal review date advanced.
   by: "automated pipeline (PR 4 Tier C light pass)"
+- date: 2026-06-04
+  change: |
+    Phase-4 CA calibration — added verifying_signals.employers
+    "Tennenbaum Capital" + "Special Value Mgmt". CAL-ACCESS calibration
+    surfaced 2001–2006 CA-state donations filing his pre-Clearlake employer
+    (Partner & investment-committee member at Tennenbaum Capital Partners,
+    LA/Santa Monica, before co-founding Clearlake in 2006). These were
+    one-signal PROBABLE (city only); the sourced employer makes them
+    two-signal CONFIRMED. Recipients are CA state/local Democrats
+    (Villaraigosa, Andres Irlando, Andrei Cherny) consistent with his
+    profile. Mitigation note updated to accept the Tennenbaum-era employer
+    alongside Clearlake; a "Jose F."-initial Tennenbaum record in this window
+    is treated as him (implausible second Jose Feliciano principal at a small
+    LA PE firm; employer + LA-area city discriminate). NOTE: this signal also
+    affects FEDERAL classification on the next master.db refresh — intended,
+    Tennenbaum is genuinely his employer.
+  by: "Phase-4 CA calibration (maintainer-approved)"
+  references:
+  - "https://en.wikipedia.org/wiki/Jos%C3%A9_E._Feliciano"
+  - "https://www.bloomberg.com/profile/person/7083529"
 
 audit:
   created: 2026-05-23
   last_ingestion: '2026-05-27'
-  last_signal_review: 2026-05-25
+  last_signal_review: 2026-06-04
