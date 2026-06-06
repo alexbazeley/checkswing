@@ -306,3 +306,85 @@ class TestRequiredProvenanceGuard:
         # blank one must never pass the guard.
         row = {"filing_id": "", "raw_payload_path": "p", "date": "2024-01-01"}
         assert not _row_has_required_provenance(row)
+
+
+class TestReclassifyInPlace:
+    """In-place reclassify from stored DB fields (no raw read, no delete-rebuild).
+    Used to back-apply a signal/flag change when raw is unrecoverable."""
+
+    def _setup(self, tmp_path, monkeypatch):
+        from scripts import db, ingest
+        owners_dir = tmp_path / "owners"
+        owners_dir.mkdir()
+        owner_yaml = {
+            "slug": "fisher-x", "name": "John Fisher",
+            "name_variants": ["John Fisher", "Fisher, John"],
+            "city_state_alone_insufficient": True,
+            "verifying_signals": {"cities": ["san francisco"], "states": ["CA"],
+                                  "employers": ["Gap"], "occupations": ["owner"]},
+            "strong_signals": {"employers": ["Pisces Inc"], "zip_codes": ["94111"]},
+            "negative_signals": {},
+        }
+        import yaml as _y
+        (owners_dir / "fisher-x.yaml").write_text(_y.safe_dump(owner_yaml), encoding="utf-8")
+        monkeypatch.setattr(ingest, "OWNERS_DIR", owners_dir)
+        monkeypatch.setattr(ingest, "PROVENANCE_LOG", tmp_path / "PROV.md")
+        monkeypatch.setattr(db, "SNAPSHOTS_DIR", tmp_path / "snaps")
+        (tmp_path / "snaps").mkdir()
+        p = tmp_path / "m.db"
+        db.init(p)
+        return p
+
+    def _don(self, txn="TXN1", **over):
+        from tests.test_db import _row
+        base = _row(txn, entity_slug="fisher-x", contributor_name_raw="John Fisher",
+                    contributor_city="San Francisco", contributor_state="CA")
+        base.update(over)
+        return base
+
+    def test_demotes_lone_city_state_but_keeps_strong(self, tmp_path, monkeypatch):
+        from scripts import db, ingest
+        p = self._setup(tmp_path, monkeypatch)
+        with db.connect(p) as conn:
+            # Strong-signal CONFIRMED (Pisces + 94111) — must survive.
+            db.insert_donation(conn, self._don(
+                txn="STRONG", status="CONFIRMED",
+                status_reason="strong signal: strong_employer:Pisces Inc, strong_zip:94111",
+                contributor_employer_raw="Pisces Inc", contributor_zip="94111",
+                contributor_city="San Francisco", contributor_state="CA"))
+            # Lone city_state PROBABLE (the leak) — must demote to the queue.
+            db.insert_donation(conn, self._don(
+                txn="CITYONLY", status="PROBABLE",
+                status_reason="one confirming signal: city_state:san francisco/CA",
+                contributor_employer_raw="", contributor_occupation_raw="", contributor_zip="",
+                contributor_city="San Francisco", contributor_state="CA"))
+
+        res = ingest.reclassify_in_place("fisher-x", reason="test", db_path=p)
+        assert res["demoted"] == 1
+        with db.connect(p) as conn:
+            statuses = dict(conn.execute(
+                "SELECT transaction_id, status FROM donations WHERE entity_slug='fisher-x'").fetchall())
+            queued = [r[0] for r in conn.execute(
+                "SELECT transaction_id FROM review_queue WHERE entity_slug='fisher-x'").fetchall()]
+        assert statuses.get("STRONG") == "CONFIRMED"   # strong signal preserved
+        assert "CITYONLY" not in statuses              # demoted out of donations
+        assert "CITYONLY" in queued                    # …into the review queue
+
+    def test_never_loses_rows_when_raw_absent(self, tmp_path, monkeypatch):
+        # No raw files exist at all; in-place must still re-score (count conserved).
+        from scripts import db, ingest
+        p = self._setup(tmp_path, monkeypatch)
+        with db.connect(p) as conn:
+            db.insert_donation(conn, self._don(
+                txn="STRONG", status="CONFIRMED",
+                status_reason="strong signal: strong_employer:Pisces Inc",
+                contributor_employer_raw="Pisces Inc", contributor_zip="94111",
+                raw_payload_path="data/raw/fisher-x/GONE.json"))
+        res = ingest.reclassify_in_place("fisher-x", reason="test", db_path=p)
+        with db.connect(p) as conn:
+            total = conn.execute(
+                "SELECT COUNT(*) FROM donations WHERE entity_slug='fisher-x'").fetchone()[0]
+            queued = conn.execute(
+                "SELECT COUNT(*) FROM review_queue WHERE entity_slug='fisher-x'").fetchone()[0]
+        assert total + queued == 1  # row conserved (kept or demoted), never lost
+        assert res["demoted"] == 0  # strong signal keeps it CONFIRMED despite missing raw

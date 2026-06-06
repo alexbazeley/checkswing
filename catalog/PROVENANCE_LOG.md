@@ -6806,3 +6806,12 @@ generated end-to-end from the joined data") is satisfied.
 - `2022220171372036337` (fisher-john): FEC restatement: image_number
 - `IA13` (fisher-john): FEC restatement: image_number
 - `IA19456` (fisher-john): FEC restatement: image_number
+
+### 2026-06-06 — RECLASSIFY-IN-PLACE — fisher-john
+
+- **entity_slug**: `fisher-john`
+- **reason**: apply city_state_alone_insufficient flag (back-apply; raw incomplete so from-raw reclassify unsafe)
+- **rows_scored**: `668`
+- **updated**: `0` · **demoted→queue**: `99` · **forced**: `0` · **excluded**: `0` · **unchanged**: `569`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-06-06T23-01-26Z__pre-reclassify-inplace-fisher-john.db`
+- **note**: in-place re-score from stored donations columns (no raw read, no delete-rebuild); rows recoverable from the snapshot above.

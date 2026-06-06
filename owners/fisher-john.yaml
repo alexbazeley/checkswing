@@ -275,13 +275,15 @@ change_log:
     and still prevents contradiction.
 
     Measured impact (flag on, signals otherwise unchanged):
-      - Federal master.db: PROBABLE 99 → 2 (the 97 city-only rows → UNCERTAIN; the
-        2 residual are occupation:owner/investor one-signal rows — occupations were
-        intentionally KEPT). CONFIRMED 567 (strong-signal rows untouched).
-        [required a full FEC --full-refetch first to restore 487 rows of missing
-        raw before reclassify could run under the C1 guard.]
-      - CA state.db: PROBABLE 6 → 0; CONFIRMED 257 (254 strong + 3 two-signal; the
-        2 occupation:investor+city rows demote to PROBABLE).
+      - Federal master.db: PROBABLE 99 → 0 (all 99 were lone city_state:san
+        francisco/CA), CONFIRMED 569 UNCHANGED ($3.62M; 567 strong + 2
+        occupation+city two-signal, which the flag leaves CONFIRMED). The 99 moved
+        to the review queue; zero rows lost. APPLIED via the new in-place reclassify
+        (`cli reclassify-inplace`, re-scores from the fields stored on each donations
+        row) — NOT a from-raw reclassify: a full `--full-refetch` still left 316/668
+        rows raw-missing (incl. 260 strong-signal CONFIRMEDs FEC no longer returns),
+        so a from-raw rebuild would have destroyed them (C1 guard correctly blocks).
+      - CA state.db: PROBABLE 6 → 0; CONFIRMED 258 preserved ($3.71M).
       - TX state.db: unaffected (no SF dependency; 1 occupation:owner PROBABLE
         survives by design — occupations kept).
 
