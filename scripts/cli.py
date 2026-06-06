@@ -341,6 +341,72 @@ def reclassify_state_cmd(slug, zip_path, reason):
     )
 
 
+def _load_state_owners(slugs: str | None):
+    """[(slug, owner_dict)] for the given --slugs, or every pilot/active owner."""
+    import yaml as _yaml
+
+    from .paths import OWNERS_DIR
+
+    if slugs:
+        want = [s.strip() for s in slugs.split(",") if s.strip()]
+        paths = [OWNERS_DIR / f"{s}.yaml" for s in want]
+    else:
+        paths = [p for p in sorted(OWNERS_DIR.glob("*.yaml")) if not p.name.startswith("_")]
+    owners = []
+    for p in paths:
+        if not p.exists():
+            click.echo(f"WARNING: {p.name} not found — skipping", err=True)
+            continue
+        d = _yaml.safe_load(p.read_text(encoding="utf-8"))
+        if isinstance(d, dict) and (slugs or d.get("status") in ("pilot", "active")):
+            owners.append((d["slug"], d))
+    return owners
+
+
+@cli.command(name="ingest-state-bulk")
+@click.argument("state")
+@click.option("--input", "input_path", default=None, type=click.Path(exists=True, path_type=Path),
+              help="File-based sources only: CA→dbwebexport.zip; PA→extracted export dir. "
+                   "Omit for API sources (NY).")
+@click.option("--slugs", default=None, help="Comma-separated owner slugs (default: every pilot/active owner).")
+@click.option("--dry-run", is_flag=True, help="Classify + report counts but write nothing.")
+def ingest_state_bulk_cmd(state, input_path, slugs, dry_run):
+    """Ingest a registered state's contributions for many owners in one pass.
+
+    Generic over the StateSource registry (CA, PA, NY, …). The official portal is the
+    primary source (GOVERNANCE.md §3); CONFIRMED/PROBABLE → data/state.db, UNCERTAIN
+    → the state review queue. Same three-tier classifier as the federal pipeline —
+    only the per-portal input adapter differs. File sources need --input; API sources
+    (NY) fetch live.
+    """
+    from . import ingest_state
+    from .state_sources import get_source
+
+    src = get_source(state)
+    if src.requires_input and input_path is None:
+        click.echo(f"ERROR: {src.code} is a file-based source — pass --input.", err=True)
+        sys.exit(1)
+    owners = _load_state_owners(slugs)
+    if not owners:
+        click.echo("No owners selected.", err=True)
+        sys.exit(1)
+    origin = input_path.name if input_path else src.raw_ref
+    click.echo(f"[{src.code}/{src.source}] ingesting {len(owners)} owner(s) from {origin}…")
+    results = ingest_state.ingest_state_bulk(src.code, input_path, owners, dry_run=dry_run)
+
+    tag = "[dry-run] " if dry_run else ""
+    table = [
+        [r.slug, r.records_scanned, r.confirmed, r.probable, r.uncertain,
+         (r.excluded or ""), (r.skipped_no_date or ""), (r.superseded or "")]
+        for r in sorted(results, key=lambda r: (-(r.confirmed + r.probable), r.slug))
+    ]
+    if table:
+        click.echo(f"\n{tag}{src.code} ingest results:")
+        click.echo(tabulate(table, headers=["owner", "cand", "CONF", "PROB", "UNCERT", "excl", "no-date", "superseded"]))
+    else:
+        click.echo(f"{tag}No candidate contributions matched any selected owner.")
+
+
 @cli.command(name="ingest-legislators")
 @click.option("--no-historical", is_flag=True, help="Fetch only legislators-current.yaml (skip the larger historical file).")
 @click.option("--all-legislators", is_flag=True, help="Keep legislators with no FEC id too (default: only the FEC-joinable universe).")
