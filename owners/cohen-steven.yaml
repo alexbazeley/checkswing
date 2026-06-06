@@ -64,6 +64,15 @@ strong_signals:
     # while keeping random NYC same-name donors out (since "new york" no longer
     # in verifying_signals.cities — they hit address contradiction → UNCERTAIN).
   - "10001"
+    # 06831 (Greenwich, CT residence) + 06902 (Stamford, CT — Point72 HQ). Both
+    # already documented in verifying_signals.cities. Added 2026-06-04 during the
+    # NY/NYSBOE state pilot: NY's data carries no contributor STATE, so the
+    # federal city_state path can't fire there — these documented ZIPs are how his
+    # NY-state mega-donations confirm (e.g. $1.7M to "New Yorkers For A Balanced
+    # Albany" filed from Stamford 06902; $250k from Greenwich 06831). Also benign
+    # for federal (those records already confirm via greenwich/stamford city_state).
+  - "06831"
+  - "06902"
 
 # Anti-pattern: a DIFFERENT Steven Cohen works at Elliott Management
 # (Paul Singer's hedge fund) and lives at overlapping Greenwich ZIPs
@@ -217,8 +226,23 @@ change_log:
     snapshot as archive_url. Tier-2 source per SOURCES.md; no signal,
     classification, or donation-data change.
   by: "automated pipeline (calibration-playbook session, source backfill)"
+- date: 2026-06-04
+  change: |
+    Phase-4 NY/NYSBOE state pilot calibration — added strong_signals.zip_codes
+    "06831" (Greenwich, CT residence) and "06902" (Stamford, CT — Point72 HQ),
+    both already in verifying_signals.cities. NY's data.ny.gov contributions
+    dataset carries no contributor STATE field, so the federal city_state path
+    cannot fire for NY rows; these documented ZIPs are how Cohen's NY-state
+    giving confirms. Unlocks his large NY PAC contributions filed from those
+    addresses (e.g. ~$1.7M to "New Yorkers For A Balanced Albany" from Stamford
+    06902; $250k to a NY labor PAC from Greenwich 06831) alongside the $1.5M to
+    "Strong Leadership NYC" already confirmed via 10001. Benign for the federal
+    layer (those records already confirm via the greenwich/stamford city_state
+    signal); the negative_signals.employers (Elliott Management) still demote a
+    different Steven Cohen ahead of any strong-ZIP match.
+  by: "Phase-4 NY pilot calibration (maintainer-approved)"
 
 audit:
   created: 2026-05-22
   last_ingestion: '2026-05-26'
-  last_signal_review: 2026-05-25
+  last_signal_review: 2026-06-04

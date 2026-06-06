@@ -5144,3 +5144,31 @@ generated end-to-end from the joined data") is satisfied.
 - **uncertain_count**: `1`
 - **snapshot_path**: `data/snapshots/2026-06-04T04-15-34Z__bf8db5a5.db`
 - **notes**: scanned=7377
+
+### 2026-06-06 — STATE_INGESTION
+
+- **run_id**: `ceebd5ab`
+- **entity_slug**: `cohen-steven`
+- **jurisdiction**: `NY`
+- **source**: `NYSBOE`
+- **extract_label**: `https://data.ny.gov/resource/4j2b-6a2j.json`
+- **records_scanned**: `583`
+- **confirmed_count**: `42`
+- **probable_count**: `0`
+- **uncertain_count**: `541`
+- **snapshot_path**: `data/snapshots/2026-06-06T18-39-37Z__ceebd5ab.db`
+- **notes**: scanned=583
+
+### 2026-06-06 — STATE_INGESTION
+
+- **run_id**: `b3c29881`
+- **entity_slug**: `steinbrenner-hal`
+- **jurisdiction**: `NY`
+- **source**: `NYSBOE`
+- **extract_label**: `https://data.ny.gov/resource/4j2b-6a2j.json`
+- **records_scanned**: `3`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `3`
+- **snapshot_path**: `data/snapshots/2026-06-06T18-39-37Z__b3c29881.db`
+- **notes**: scanned=3

@@ -6089,6 +6089,7 @@ function renderStates() {
       <tr class="state-owner-row">
         <td><a href="#/owner/${escapeAttr(o.slug)}" style="color:inherit;font-family:var(--serif);font-weight:500">${escapeHtml(o.name)}</a></td>
         <td class="muted" style="font-size:13px">${escapeHtml(o.team || "")}</td>
+        <td class="muted" style="font-size:12px;letter-spacing:.03em">${escapeHtml((o.jurisdictions || []).join(", "))}</td>
         <td class="num">${fmtInt(o.n_confirmed)}</td>
         <td class="num">${fmtInt(o.n_probable)}</td>
         <td class="num" style="font-variant-numeric:tabular-nums;font-weight:600">${fmtMoney(aggAmt(o, "total_amount"))}</td>
@@ -6102,6 +6103,7 @@ function renderStates() {
     .map((d) => `
       <tr>
         <td>${stateStatusBadge(d.status)}</td>
+        <td class="muted" style="font-size:12px;letter-spacing:.03em">${escapeHtml(d.jurisdiction || "")}</td>
         <td><a href="#/owner/${escapeAttr(d.entity)}" style="color:inherit;font-family:var(--serif)">${escapeHtml(d.owner_name)}</a></td>
         <td class="muted" style="font-size:12px">${escapeHtml(d.employer || "")}</td>
         <td class="muted" style="font-size:12px">${escapeHtml([d.city, d.state].filter(Boolean).join(", "))}</td>
@@ -6109,6 +6111,32 @@ function renderStates() {
         <td class="muted" style="font-size:12px">${escapeHtml((d.date || "").slice(0, 10))}</td>
         <td style="font-size:13px">${escapeHtml(d.recipient || "")}</td>
       </tr>`).join("");
+
+  // Jurisdiction display names + a natural-language list for the deck.
+  const JNAME = { CA: "California", NY: "New York", PA: "Pennsylvania", TX: "Texas", WA: "Washington", FL: "Florida", OH: "Ohio", IL: "Illinois" };
+  const jname = (c) => JNAME[c] || c;
+  const jNames = sd.jurisdictions.map((j) => jname(j.code));
+  const jurisList = jNames.length <= 1 ? (jNames[0] || "")
+    : jNames.slice(0, -1).join(", ") + " and " + jNames[jNames.length - 1];
+
+  // Per-jurisdiction breakdown cards (the multi-state dimension, first-class).
+  const jurisCards = sd.jurisdictions
+    .slice()
+    .sort((a, b) => aggAmt(b, "total_amount") - aggAmt(a, "total_amount"))
+    .map((j) => {
+      const topR = (j.top_recipients || []).slice(0, 3).map((t) =>
+        `<li style="margin:0 0 3px"><span style="font-variant-numeric:tabular-nums;font-weight:600">${fmtMoney(t.amount)}</span> <span class="muted">→ ${escapeHtml(t.recipient)}</span></li>`).join("");
+      return `
+        <div style="flex:1 1 280px;border:1px solid var(--rule);border-radius:8px;padding:16px 18px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline">
+            <h3 style="font-family:var(--serif);font-size:18px;margin:0">${escapeHtml(jname(j.code))}</h3>
+            <span class="muted" style="font-size:11px;letter-spacing:.04em;text-transform:uppercase">${escapeHtml(j.source)}</span>
+          </div>
+          <div style="font-size:24px;font-weight:600;font-variant-numeric:tabular-nums;margin:6px 0 2px">${fmtMoney(aggAmt(j, "total_amount"))}</div>
+          <div class="muted" style="font-size:12px;margin-bottom:10px">${fmtInt(j.n_confirmed)} confirmed · ${fmtInt(j.n_probable)} probable · ${fmtInt(j.n_owners)} owner${j.n_owners === 1 ? "" : "s"}</div>
+          ${topR ? `<ul style="list-style:none;padding:0;margin:0;font-size:13px">${topR}</ul>` : ""}
+        </div>`;
+    }).join("");
 
   return `
   <div class="container">
@@ -6118,10 +6146,10 @@ function renderStates() {
       <p class="deck">
         Federal filings are only half the picture — the fights over stadium
         subsidies, ballot measures, and statehouse power play out in state
-        campaign-finance systems. This is a pilot: <strong>California only</strong>
-        for now, sourced from the Secretary of State's official
-        <strong>CAL-ACCESS</strong> disclosure database, held to the same
-        three-tier verification standard as the federal archive.
+        campaign-finance systems. This pilot covers <strong>${escapeHtml(jurisList)}</strong>,
+        sourced from each state's official disclosure system and held to the same
+        three-tier verification standard as the federal archive. Coverage grows one
+        state at a time.
       </p>
       <div style="margin-top:12px">${chips}</div>
     </section>
@@ -6145,9 +6173,15 @@ function renderStates() {
       <div class="kpi">
         <div class="kpi-label">Jurisdictions covered</div>
         <div class="kpi-value">${fmtInt(sd.jurisdictions.length)}</div>
-        <div class="kpi-foot">California pilot — more to come</div>
+        <div class="kpi-foot">${escapeHtml(jNames.join(" · "))} — more to come</div>
       </div>
     </div>
+
+    ${sd.jurisdictions.length > 1 ? `
+    <section style="margin:26px 0 8px">
+      <h2 style="font-family:var(--serif);font-size:22px;margin:0 0 12px">By jurisdiction</h2>
+      <div style="display:flex;flex-wrap:wrap;gap:14px">${jurisCards}</div>
+    </section>` : ""}
 
     <section style="margin:26px 0 8px">
       <h2 style="font-family:var(--serif);font-size:22px;margin:0 0 4px">By owner</h2>
@@ -6155,7 +6189,7 @@ function renderStates() {
       <div class="table-wrap">
         <table class="data-table">
           <thead><tr>
-            <th>Owner</th><th>Team</th><th class="num">Conf.</th><th class="num">Prob.</th>
+            <th>Owner</th><th>Team</th><th>State(s)</th><th class="num">Conf.</th><th class="num">Prob.</th>
             <th class="num">State total</th><th>Top recipient</th>
           </tr></thead>
           <tbody>${ownerRows}</tbody>
@@ -6168,7 +6202,7 @@ function renderStates() {
       <div class="table-wrap">
         <table class="data-table">
           <thead><tr>
-            <th>Status</th><th>Owner</th><th>Employer (as filed)</th><th>From</th>
+            <th>Status</th><th>State</th><th>Owner</th><th>Employer (as filed)</th><th>From</th>
             <th class="num">Amount</th><th>Date</th><th>Recipient</th>
           </tr></thead>
           <tbody>${donRows}</tbody>
@@ -6179,18 +6213,24 @@ function renderStates() {
     <section class="methodology-note" style="margin:30px 0;padding:18px 20px;border:1px solid var(--rule);border-radius:8px;background:var(--paper-2, #faf8f4)">
       <h3 style="font-family:var(--serif);font-size:16px;margin:0 0 8px">How this is sourced — and what it doesn't cover yet</h3>
       <p class="muted" style="font-size:13px;line-height:1.6;margin:0 0 8px">
-        State rows live in a separate database from the federal archive and never mix with it.
-        California's official <strong>CAL-ACCESS</strong> filings are the system of record:
-        every confirmed or probable row traces to a specific CAL-ACCESS filing. Aggregators are
-        used only to discover candidate records — never as the source of a fact.
-        Verification is identical to the federal data: a name match plus at least one corroborating
-        signal (employer, occupation, or city) — two for <em>confirmed</em>.
+        State rows live in a separate database from the federal archive and never mix with it. Each
+        state's <strong>official disclosure system</strong> is the system of record (California's
+        CAL-ACCESS, New York's NYSBOE, …) — every confirmed or probable row traces to a specific
+        official filing; aggregators are used only to discover candidates, never as the source of a
+        fact. Verification is the same three-tier standard as the federal data.
+      </p>
+      <p class="muted" style="font-size:13px;line-height:1.6;margin:0 0 8px">
+        <strong>Disclosure differs by state, so confidence does too — honestly.</strong> California
+        collects employer + occupation, so contributions reach <em>confirmed</em> on two signals.
+        New York collects neither employer nor a contributor state, so a NY row is confirmed only when
+        it carries a donor's <em>documented</em> ZIP (e.g. a known residence/office) — otherwise it
+        stays uncertain rather than guessing. We never infer a signal a state didn't disclose.
       </p>
       <p class="muted" style="font-size:13px;line-height:1.6;margin:0">
-        <strong>Coverage is deliberately partial.</strong> This is a California-only pilot; other
-        states are added one at a time as their disclosure data becomes machine-readable. A "$0" for
-        an owner means no California state contributions matched our verification bar — not that none
-        exist elsewhere. Amounts are as filed (the $/$↑ toggle adjusts to current dollars).
+        <strong>Coverage is deliberately partial</strong> and grows one state at a time as disclosure
+        data becomes machine-readable. A "$0" for an owner means no matching state contributions
+        cleared our bar in a covered state — not that none exist. Amounts are as filed (the $/$↑
+        toggle adjusts to current dollars).
       </p>
     </section>
   </div>`;
@@ -6207,13 +6247,16 @@ function renderOwnerStatePanel(slug) {
   const topList = tops.map((t) =>
     `<li style="margin:0 0 4px"><span style="font-variant-numeric:tabular-nums;font-weight:600">${fmtMoney(t.amount)}</span> <span class="muted">→ ${escapeHtml(t.recipient)}</span></li>`
   ).join("");
+  const JN = { CA: "California", NY: "New York", PA: "Pennsylvania", TX: "Texas", WA: "Washington", FL: "Florida", OH: "Ohio", IL: "Illinois" };
+  const js = (o.jurisdictions || []).map((c) => JN[c] || c);
+  const where = js.length <= 1 ? (js[0] || "state") : js.slice(0, -1).join(", ") + " and " + js[js.length - 1];
   return `
     <section class="block" style="border:1px solid var(--rule);border-radius:8px;padding:18px 20px;background:var(--paper-2,#faf8f4);margin-top:22px">
-      <span class="eyebrow">State campaign finance · California</span>
-      <h2 style="margin:6px 0 4px;font-size:21px">${escapeHtml(o.name)} gave ${fmtMoney(total)} in California state politics</h2>
+      <span class="eyebrow">State campaign finance · ${escapeHtml(js.join(" · ") || "")}</span>
+      <h2 style="margin:6px 0 4px;font-size:21px">${escapeHtml(o.name)} gave ${fmtMoney(total)} in ${escapeHtml(where)} state politics</h2>
       <p class="caption" style="margin:0 0 10px">
-        ${fmtInt(o.n_confirmed)} confirmed · ${fmtInt(o.n_probable)} probable, from California's official CAL-ACCESS
-        disclosure database — <strong>separate from, and not included in, the federal totals above</strong>.
+        ${fmtInt(o.n_confirmed)} confirmed · ${fmtInt(o.n_probable)} probable, from official state disclosure
+        filings — <strong>separate from, and not included in, the federal totals above</strong>.
       </p>
       ${topList ? `<ul style="list-style:none;padding:0;margin:0 0 10px;font-size:14px">${topList}</ul>` : ""}
       <a href="#/states" style="font-weight:600">See the full state-finance section →</a>

@@ -25,6 +25,7 @@ import json
 import uuid
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
+from pathlib import Path
 from typing import Callable, Iterable
 
 import yaml
@@ -81,6 +82,16 @@ def _default_recipient(rcpt: dict) -> dict:
     return {"filer_id": None, "name": "", "type": None}
 
 
+# CA-default id extractors. A source adapter (e.g. PA) passes its own so the
+# composed state_txn_id is keyed on that portal's filing/transaction identifiers.
+def _ca_filing_id(rcpt: dict) -> str | None:
+    return str(rcpt.get("FILING_ID") or "").strip() or None
+
+
+def _ca_tran_id(rcpt: dict) -> str | None:
+    return str(rcpt.get("TRAN_ID") or "").strip() or None
+
+
 def ingest_state_entity(
     slug: str,
     *,
@@ -88,6 +99,8 @@ def ingest_state_entity(
     recipient_resolver: RecipientResolver = _default_recipient,
     record_adapter: RecordAdapter = calaccess_adapter.to_classifier_record,
     row_builder=calaccess_adapter.to_state_donation_row,
+    filing_id_of=_ca_filing_id,
+    tran_id_of=_ca_tran_id,
     jurisdiction: str = "CA",
     source: str = "CAL-ACCESS",
     raw_payload_path: str = "",
@@ -131,8 +144,8 @@ def ingest_state_entity(
             state_txn_id = state_db.compose_state_txn_id(
                 jurisdiction=jurisdiction,
                 source=source,
-                source_filing_id=str(rcpt.get("FILING_ID") or "").strip() or None,
-                source_tran_id=str(rcpt.get("TRAN_ID") or "").strip() or None,
+                source_filing_id=filing_id_of(rcpt),
+                source_tran_id=tran_id_of(rcpt),
             )
 
             status = c.status
@@ -267,6 +280,65 @@ def ingest_state_entity(
                 },
             )
     return res
+
+
+def ingest_state_bulk(
+    state_code: str,
+    input_path,
+    owners: list[tuple[str, dict]],
+    *,
+    dry_run: bool = False,
+    db_path=state_db.STATE_DB,
+) -> list[IngestStateResult]:
+    """Generic multi-owner ingest for any registered StateSource.
+
+    `owners` is [(slug, owner_yaml_dict), …]. Resolves the source from the registry,
+    buckets candidate rows by owner in one pass, then classifies + persists each
+    owner via the source's adapters. The federal classifier + state.db are unchanged;
+    only the per-portal adapters differ.
+    """
+    from .state_sources import get_source
+
+    src = get_source(state_code)
+    if src.requires_input:
+        input_path = Path(input_path)
+        try:
+            raw_path = relpath(input_path)
+        except ValueError:
+            raw_path = str(input_path.resolve())
+        extract_label = input_path.name
+    else:
+        # API-based source (e.g. NY Socrata): no local file; the citable origin is
+        # the dataset URL, recorded as each row's raw_payload_path.
+        input_path = None
+        raw_path = src.raw_ref
+        extract_label = src.raw_ref
+    buckets = src.candidate_rows_by_owner(input_path, owners)
+    resolver = src.recipient_resolver(input_path)
+
+    results: list[IngestStateResult] = []
+    for slug, _owner in owners:
+        rows = src.dedupe(buckets.get(slug, []))
+        if not rows:
+            continue
+        results.append(
+            ingest_state_entity(
+                slug,
+                rcpt_rows=rows,
+                recipient_resolver=resolver,
+                record_adapter=src.record_adapter,
+                row_builder=src.row_builder,
+                filing_id_of=src.filing_id_of,
+                tran_id_of=src.tran_id_of,
+                jurisdiction=src.code,
+                source=src.source,
+                raw_payload_path=raw_path,
+                extract_label=extract_label,
+                dry_run=dry_run,
+                db_path=db_path,
+            )
+        )
+    return results
 
 
 def reclassify_state_entity(
