@@ -102,6 +102,28 @@ Add a negative-signal entry only after you've manually traced the doppelgänger 
 
 ## Optional fields
 
+### `city_state_alone_insufficient` (optional boolean, default false)
+
+```yaml
+city_state_alone_insufficient: true
+```
+
+For a **high-frequency name** (e.g. "John Fisher"), a lone city+state match
+corroborates almost nothing — everyone in that metro shares it — so it sweeps
+same-named strangers into PROBABLE on a single weak signal. Set this flag to make
+`city_state` **insufficient on its own** for PROBABLE: a row whose only confirming
+signal is `city_state` stays UNCERTAIN unless a discriminating signal
+(employer / occupation / ZIP) also hits.
+
+It changes nothing else: `city_state` still counts toward a two-signal CONFIRMED,
+and the documented city still prevents the address-contradiction demotion — so
+strong-signal rows (unique employer / documented ZIP) are unaffected. Use it
+instead of deleting the residence city from `verifying_signals.cities`, which would
+both fail validation rule 3 and make every in-city record *contradict* (demoting
+even strong-signal rows to UNCERTAIN). Opt-in per owner; can also be set on a
+`related_entities` block. Applies equally to federal (`master.db`) and state
+(`state.db`) classification, since both share the classifier.
+
 ### `related_entities` (optional but encouraged)
 
 Other people or organizations whose donations we also track, attributed to their own slug (never silently to the owner).

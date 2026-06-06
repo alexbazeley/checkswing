@@ -347,6 +347,8 @@ def _classify_against_entity_signals(
     verifying_signals: dict,
     strong_signals: dict,
     negative_signals: dict | None = None,
+    *,
+    city_state_alone_insufficient: bool = False,
 ) -> tuple[str, str, list[str]]:
     vs_cities = verifying_signals.get("cities") or []
     vs_states = verifying_signals.get("states") or []
@@ -409,9 +411,25 @@ def _classify_against_entity_signals(
             all_signals,
         )
     if len(confirming_signals_matched) == 1:
+        sole = confirming_signals_matched[0]
+        # For a flagged high-frequency name (e.g. "John Fisher"), a lone city_state
+        # match is too weak to corroborate — everyone in that metro shares it, so it
+        # sweeps in same-named strangers. Require a discriminating signal
+        # (employer/occupation/zip) for PROBABLE; a bare city_state hit stays
+        # UNCERTAIN. city_state still counts toward a 2-signal CONFIRMED above, and
+        # the city still prevents the address contradiction — so strong-signal rows
+        # (Pisces/zip) are unaffected. Opt-in per owner via
+        # `city_state_alone_insufficient: true` (OWNER_SCHEMA.md).
+        if city_state_alone_insufficient and sole.startswith("city_state:"):
+            return (
+                UNCERTAIN,
+                "city/state alone — insufficient to corroborate a high-frequency name "
+                "(city_state_alone_insufficient); needs a discriminating signal",
+                all_signals,
+            )
         return (
             PROBABLE,
-            f"one confirming signal: {confirming_signals_matched[0]}",
+            f"one confirming signal: {sole}",
             all_signals,
         )
     return (UNCERTAIN, "name match only — no confirming signals", all_signals)
@@ -475,6 +493,7 @@ def classify(
             ent.get("verifying_signals") or {},
             ent.get("strong_signals") or {},
             ent.get("negative_signals") or {},
+            city_state_alone_insufficient=bool(ent.get("city_state_alone_insufficient")),
         )
         return Classification(
             status=status,
@@ -511,6 +530,7 @@ def classify(
         owner.get("verifying_signals") or {},
         owner.get("strong_signals") or {},
         owner.get("negative_signals") or {},
+        city_state_alone_insufficient=bool(owner.get("city_state_alone_insufficient")),
     )
     return Classification(
         status=status,

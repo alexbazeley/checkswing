@@ -346,21 +346,28 @@ def reclassify_state_entity(
     *,
     rcpt_rows: Iterable[dict],
     reason: str = "",
+    jurisdiction: str = "CA",
     db_path=state_db.STATE_DB,
     **kwargs,
 ) -> IngestStateResult:
-    """Wipe this owner's state_donations + open review-queue, then re-ingest from
-    the supplied extract rows. Durable verdicts (resolutions, manual attributions)
-    survive (state_db.delete_donations_for_slug leaves them). Snapshots + logs.
+    """Wipe this owner's state_donations + open review-queue FOR ONE JURISDICTION, then
+    re-ingest from the supplied extract rows. Durable verdicts (resolutions, manual
+    attributions) survive (state_db.delete_donations_for_slug leaves them). Snapshots +
+    logs.
+
+    The delete is scoped to `jurisdiction` because the re-ingest only restores rows from
+    that jurisdiction's extract — wiping a multi-state owner's other jurisdictions would
+    silently lose them.
     """
     run_id = uuid.uuid4().hex[:8]
     _maybe_snapshot(run_id, db_path)
     with state_db.connect(db_path) as conn:
-        state_db.delete_donations_for_slug(conn, slug)
+        state_db.delete_donations_for_slug(conn, slug, jurisdiction=jurisdiction)
     return ingest_state_entity(
         slug,
         rcpt_rows=rcpt_rows,
         extract_label=f"reclassify: {reason}" if reason else "reclassify",
+        jurisdiction=jurisdiction,
         db_path=db_path,
         **kwargs,
     )

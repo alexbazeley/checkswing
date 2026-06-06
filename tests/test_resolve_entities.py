@@ -725,3 +725,52 @@ class TestRelatedEntityMiddleInitialRouting:
         )
         result = classify(r, mid_owner, process_related_entities=False)
         assert result is None
+
+
+class TestCityStateAloneInsufficient:
+    """The `city_state_alone_insufficient` flag (OWNER_SCHEMA.md) — for common names
+    like "John Fisher", a lone city_state hit must not reach PROBABLE."""
+
+    def _flagged(self, owner):
+        o = dict(owner)
+        o["city_state_alone_insufficient"] = True
+        return o
+
+    def test_off_by_default_city_state_alone_is_probable(self, owner):
+        # Baseline: without the flag, a documented city+state alone → PROBABLE.
+        r = _record(contributor_city="Greenwich", contributor_state="CT")
+        result = classify(r, owner)
+        assert result is not None and result.status == PROBABLE
+        assert any(s.startswith("city_state:") for s in result.signals_matched)
+
+    def test_flag_demotes_lone_city_state_to_uncertain(self, owner):
+        r = _record(contributor_city="Greenwich", contributor_state="CT")
+        result = classify(r, self._flagged(owner))
+        assert result is not None and result.status == UNCERTAIN
+        assert "city/state alone" in result.status_reason
+
+    def test_flag_keeps_two_signal_confirmed(self, owner):
+        # city_state still counts as the second signal toward CONFIRMED.
+        r = _record(
+            contributor_employer="Point72 Securities LLC",
+            contributor_city="Greenwich",
+            contributor_state="CT",
+        )
+        result = classify(r, self._flagged(owner))
+        assert result is not None and result.status == CONFIRMED
+
+    def test_flag_does_not_touch_strong_signal(self, owner):
+        # A strong signal at a documented city still CONFIRMS (the Fisher/Pisces case).
+        r = _record(
+            contributor_employer="Cohen Private Ventures LLC",
+            contributor_city="Greenwich",
+            contributor_state="CT",
+        )
+        result = classify(r, self._flagged(owner))
+        assert result is not None and result.status == CONFIRMED
+
+    def test_flag_leaves_lone_employer_probable(self, owner):
+        # The flag targets only city_state; a lone employer/occupation still → PROBABLE.
+        r = _record(contributor_employer="Point72 Securities LLC")
+        result = classify(r, self._flagged(owner))
+        assert result is not None and result.status == PROBABLE
