@@ -2088,6 +2088,14 @@ const state = {
   changelogFilters: { types: null, q: "", visibleN: 50 },
   /* recipients page filters */
   recipientFilters: { q: "", types: null, parties: null, sort: { key: "total_amount", dir: "desc" }, visibleN: 100 },
+  /* Phase-4 state section filters (mirror the federal interactivity).
+     stateFilters drives every state CONTRIBUTION table — the #/states "all
+     contributions" table, the per-jurisdiction page, the per-recipient page,
+     and the owner-page state panel all share it. stateRecipientFilters drives
+     the #/state-recipients index. */
+  stateFilters: { q: "", status: "", jurisdiction: "", cycle: "", sort: { key: "amount", dir: "desc" }, visibleN: 100 },
+  stateOwnerSort: { key: "total", dir: "desc" },
+  stateRecipientFilters: { q: "", jurisdiction: "", type: "", sort: { key: "total_amount", dir: "desc" }, visibleN: 100 },
   /* heatmap row sort — 'total' | 'name' | 'team' */
   heatmapSort: "total",
   /* currency mode — 'nominal' or 'real' (CPI-adjusted to cpi.base_year) */
@@ -2570,6 +2578,10 @@ function route() {
   const cycleMatch = hash.match(/^#\/cycle\/(\d{4})$/);
   const committeeMatch = hash.match(/^#\/committee\/(.+)$/);
   const teamMatch = hash.match(/^#\/team\/(.+)$/);
+  /* Phase-4 state detail routes. Order matters: #/state-recipients and
+     #/state-recipient/<key> must be tested before #/state/<juris>. */
+  const stateRecipMatch = hash.match(/^#\/state-recipient\/(.+)$/);
+  const stateJurisMatch = hash.match(/^#\/state\/([A-Za-z]{2})$/);
 
   if (ownerMatch) {
     state.view = { name: "owner", slug: ownerMatch[1] };
@@ -2591,6 +2603,12 @@ function route() {
     state.view = { name: "whats-new" };
   } else if (hash === "#/recipients") {
     state.view = { name: "recipients" };
+  } else if (hash === "#/state-recipients") {
+    state.view = { name: "state-recipients" };
+  } else if (stateRecipMatch) {
+    state.view = { name: "state-recipient", key: decodeURIComponent(stateRecipMatch[1]) };
+  } else if (stateJurisMatch) {
+    state.view = { name: "state-juris", code: stateJurisMatch[1].toUpperCase() };
   } else if (hash === "#/states") {
     state.view = { name: "states" };
   } else {
@@ -2610,9 +2628,18 @@ function route() {
   if (state.view.name !== "team") {
     state.teamFilters = { q: "", cycle: "", party: "", status: "", owner: "", showAll: false };
   }
+  /* State filters are per-table-session: reset on every navigation. In-page
+     filtering/sorting/load-more re-renders via render() (not route()), so it
+     persists within a page; this just prevents one view's filter (e.g. a NY
+     jurisdiction filter on #/states) from leaking into the next view. */
+  state.stateFilters = { q: "", status: "", jurisdiction: "", cycle: "", sort: { key: "amount", dir: "desc" }, visibleN: 100 };
+  state.stateOwnerSort = { key: "total", dir: "desc" };
+  state.stateRecipientFilters = { q: "", jurisdiction: "", type: "", sort: { key: "total_amount", dir: "desc" }, visibleN: 100 };
 
   /* Update nav active states. Pipeline link is active for both /#/runs
-     and /#/changelog (they're tabs on the same logical page). */
+     and /#/changelog (they're tabs on the same logical page); the States link
+     is active for the section and all of its detail routes. */
+  const stateViews = ["states", "state-juris", "state-recipient", "state-recipients"];
   document.querySelectorAll(".nav a").forEach((a) => {
     const t = a.getAttribute("data-nav");
     const v = state.view.name;
@@ -2622,7 +2649,7 @@ function route() {
                 || (t === "runs" && (v === "runs" || v === "changelog"))
                 || (t === "whats-new" && v === "whats-new")
                 || (t === "recipients" && v === "recipients")
-                || (t === "states" && v === "states");
+                || (t === "states" && stateViews.includes(v));
     a.classList.toggle("active", active);
   });
 
@@ -2634,10 +2661,15 @@ function route() {
   window.scrollTo(0, 0);
 
   /* Honor ?d=<txn_id> after the view renders, so the drawer opens on top.
-     Cleared on any subsequent hash change. */
+     Cleared on any subsequent hash change. A state transaction id (composed
+     JURIS:SOURCE:…) opens the state drawer; everything else is federal. */
   const drawerId = new URL(window.location.href).searchParams.get("d");
   if (drawerId) {
-    openDrawer(drawerId);
+    if (state.stateData && (state.stateData.donations || []).some((d) => d.id === drawerId)) {
+      openStateDrawer(drawerId);
+    } else {
+      openDrawer(drawerId);
+    }
   } else {
     /* Close any open drawer when navigating between routes */
     if (document.getElementById("drawer").classList.contains("open")) {
@@ -2710,6 +2742,9 @@ function render() {
   else if (state.view.name === "whats-new") app.innerHTML = renderWhatsNew();
   else if (state.view.name === "recipients") app.innerHTML = renderRecipients();
   else if (state.view.name === "states") app.innerHTML = renderStates();
+  else if (state.view.name === "state-juris") app.innerHTML = renderStateJurisdiction(state.view.code);
+  else if (state.view.name === "state-recipient") app.innerHTML = renderStateRecipient(state.view.key);
+  else if (state.view.name === "state-recipients") app.innerHTML = renderStateRecipients();
 
   /* Re-bind */
   bindIndexHandlers();
@@ -2720,6 +2755,7 @@ function render() {
   bindChangelogHandlers();
   bindWhatsNewHandlers();
   bindRecipientsHandlers();
+  bindStatesHandlers();
 }
 
 /* ════════════════════════════════════════════════════════════════════════
@@ -6058,6 +6094,137 @@ function stateStatusBadge(status) {
   return `<span style="display:inline-block;font:600 10px/1.4 var(--sans);letter-spacing:.04em;text-transform:uppercase;color:${fg};background:${bg};border-radius:3px;padding:1px 6px">${label}</span>`;
 }
 
+/* Jurisdiction code → display name, shared across all state views. */
+const JURIS_NAME = { CA: "California", NY: "New York", PA: "Pennsylvania", TX: "Texas", WA: "Washington", FL: "Florida", OH: "Ohio", IL: "Illinois" };
+const jName = (c) => JURIS_NAME[c] || c;
+function jNatList(codes) {
+  const n = codes.map(jName);
+  return n.length <= 1 ? (n[0] || "") : n.slice(0, -1).join(", ") + " and " + n[n.length - 1];
+}
+
+/* ── Shared state-contribution table ───────────────────────────────────────
+   One filterable / sortable / paginated, drawer-backed contributions table,
+   used on #/states, #/state/<juris>, #/state-recipient/<key>, and the owner
+   page panel. All share state.stateFilters; opts hide redundant columns and
+   controls when a list is already scoped (e.g. to one jurisdiction or owner). */
+function stateContribSection(donations, opts = {}) {
+  const showJuris = opts.showJurisdiction !== false;
+  const showOwner = opts.showOwner !== false;
+  const f = state.stateFilters;
+  const q = f.q.trim().toLowerCase();
+
+  let rows = donations.filter((d) => {
+    if (f.status && d.status !== f.status) return false;
+    if (showJuris && f.jurisdiction && d.jurisdiction !== f.jurisdiction) return false;
+    if (f.cycle && String(d.cycle) !== String(f.cycle)) return false;
+    if (q) {
+      const hay = [d.owner_name, d.donor_name, d.recipient, d.employer, d.city]
+        .filter(Boolean).join(" ").toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    return true;
+  });
+
+  const k = f.sort.key, dir = f.sort.dir === "asc" ? 1 : -1;
+  rows.sort((a, b) => {
+    let av, bv;
+    if (k === "date") { av = a.date || ""; bv = b.date || ""; }
+    else if (k === "owner") { av = a.owner_name || ""; bv = b.owner_name || ""; }
+    else if (k === "recipient") { av = a.recipient || ""; bv = b.recipient || ""; }
+    else if (k === "status") { av = a.status || ""; bv = b.status || ""; }
+    else if (k === "jurisdiction") { av = a.jurisdiction || ""; bv = b.jurisdiction || ""; }
+    else { av = amt(a); bv = amt(b); }
+    if (typeof av === "string") return av.localeCompare(bv) * dir;
+    return (av - bv) * dir;
+  });
+
+  const total = rows.length;
+  const visible = rows.slice(0, f.visibleN);
+  const hasMore = total > visible.length;
+  const sumDollars = rows.reduce((s, d) => s + amt(d), 0);
+
+  // Controls derive their option sets from the *input* list (pre-filter).
+  const cycles = [...new Set(donations.map((d) => d.cycle).filter(Boolean))].sort((a, b) => b - a);
+  const jurisInSet = [...new Set(donations.map((d) => d.jurisdiction).filter(Boolean))].sort();
+  const statusCounts = { CONFIRMED: 0, PROBABLE: 0 };
+  for (const d of donations) statusCounts[d.status] = (statusCounts[d.status] || 0) + 1;
+
+  const arrow = (key) => f.sort.key === key ? (f.sort.dir === "asc" ? " ▲" : " ▼") : "";
+  const thSort = (key, label, klass = "") =>
+    `<th class="${klass} st-sort" data-sort="${key}" style="cursor:pointer">${escapeHtml(label)}${arrow(key)}</th>`;
+
+  const colspan = 5 + (showJuris ? 1 : 0) + (showOwner ? 1 : 0);
+  const filtered = (q || f.status || f.cycle || (showJuris && f.jurisdiction));
+
+  return `
+    <div class="recipients-filters">
+      <div class="recipients-filter-row">
+        <span class="recipients-filter-label">Status</span>
+        ${["CONFIRMED", "PROBABLE"].map((s) => `
+          <button type="button" class="recipients-pill st-pill ${f.status === s ? "on" : ""}" data-status="${s}">
+            ${s === "CONFIRMED" ? "Confirmed" : "Probable"} <span class="re-count">${fmtInt(statusCounts[s] || 0)}</span>
+          </button>`).join("")}
+      </div>
+      ${showJuris && jurisInSet.length > 1 ? `
+      <div class="recipients-filter-row">
+        <span class="recipients-filter-label">State</span>
+        ${jurisInSet.map((c) => `
+          <button type="button" class="recipients-pill st-pill ${f.jurisdiction === c ? "on" : ""}" data-juris="${escapeAttr(c)}">
+            ${escapeHtml(jName(c))}
+          </button>`).join("")}
+      </div>` : ""}
+      <div class="recipients-filter-row">
+        <input id="st-q" type="text" placeholder="Search owner, donor, recipient, employer…" value="${escapeAttr(f.q)}" autocomplete="off">
+        ${cycles.length > 1 ? `
+        <select id="st-cycle" class="st-select">
+          <option value="">All years</option>
+          ${cycles.map((c) => `<option value="${c}" ${String(f.cycle) === String(c) ? "selected" : ""}>${c}</option>`).join("")}
+        </select>` : ""}
+        <button type="button" id="st-reset" class="recipients-reset">Reset</button>
+      </div>
+    </div>
+
+    <p class="muted" style="font-size:12px;margin:4px 2px 10px">
+      Showing ${fmtInt(visible.length)} of ${fmtInt(total)}${filtered ? ` filtered (of ${fmtInt(donations.length)})` : ""} contribution${total === 1 ? "" : "s"} · ${fmtMoney(sumDollars)} total · click a row for the full provenance trail.
+    </p>
+
+    <div class="table-scroll">
+      <table class="donations-table">
+        <thead><tr>
+          ${thSort("status", "Status")}
+          ${showJuris ? thSort("jurisdiction", "State") : ""}
+          ${showOwner ? thSort("owner", "Owner") : ""}
+          <th>Employer (as filed)</th>
+          <th>From</th>
+          ${thSort("amount", "Amount", "num")}
+          ${thSort("date", "Date")}
+          ${thSort("recipient", "Recipient")}
+        </tr></thead>
+        <tbody>
+          ${visible.length === 0 ? `
+            <tr><td colspan="${colspan}" style="padding:24px 0;text-align:center;color:var(--ink-3)">${escapeHtml(opts.emptyMsg || "No contributions match the current filters.")}</td></tr>
+          ` : visible.map((d) => `
+            <tr class="st-row" data-state-id="${escapeAttr(d.id)}" style="cursor:pointer">
+              <td>${stateStatusBadge(d.status)}</td>
+              ${showJuris ? `<td class="muted" style="font-size:12px;letter-spacing:.03em">${escapeHtml(d.jurisdiction || "")}</td>` : ""}
+              ${showOwner ? `<td style="font-family:var(--serif)">${escapeHtml(d.owner_name)}</td>` : ""}
+              <td class="muted" style="font-size:12px">${escapeHtml(d.employer || "—")}</td>
+              <td class="muted" style="font-size:12px">${escapeHtml([d.city, d.state].filter(Boolean).join(", ") || "—")}</td>
+              <td class="num" style="font-variant-numeric:tabular-nums;font-weight:600">${fmtMoney(amt(d))}</td>
+              <td class="muted" style="font-size:12px">${escapeHtml((d.date || "").slice(0, 10))}</td>
+              <td style="font-size:13px">${escapeHtml(d.recipient || "")}</td>
+            </tr>`).join("")}
+        </tbody>
+      </table>
+    </div>
+    ${hasMore ? `
+      <div class="recipients-load-more">
+        <button type="button" id="st-load-more" class="csv-btn">
+          Load ${Math.min(100, total - visible.length)} more (${fmtInt(total - visible.length)} remaining)
+        </button>
+      </div>` : ""}`;
+}
+
 function renderStates() {
   const sd = state.stateData;
   if (!sd || !(sd.donations || []).length) {
@@ -6072,54 +6239,50 @@ function renderStates() {
     </div>`;
   }
 
-  const owners = Object.values(sd.owners)
-    .sort((a, b) => aggAmt(b, "total_amount") - aggAmt(a, "total_amount"));
-  const totalDollars = owners.reduce((s, o) => s + aggAmt(o, "total_amount"), 0);
+  const totalDollars = Object.values(sd.owners).reduce((s, o) => s + aggAmt(o, "total_amount"), 0);
   const nConf = sd.donations.filter((d) => d.status === "CONFIRMED").length;
   const nProb = sd.donations.length - nConf;
 
   const chips = sd.jurisdictions.map((j) =>
-    `<span class="re-chip" style="display:inline-block;font:600 11px/1.5 var(--sans);border:1px solid var(--rule);border-radius:999px;padding:2px 10px;margin-right:6px;color:var(--ink-2)">${escapeHtml(j.code)} · ${escapeHtml(j.source)}</span>`
+    `<a href="#/state/${escapeAttr(j.code)}" class="re-chip" style="display:inline-block;font:600 11px/1.5 var(--sans);border:1px solid var(--rule);border-radius:999px;padding:2px 10px;margin-right:6px;color:var(--ink-2);text-decoration:none">${escapeHtml(j.code)} · ${escapeHtml(j.source)}</a>`
   ).join("");
 
+  // By-owner table, sortable via state.stateOwnerSort.
+  const os = state.stateOwnerSort;
+  const owners = Object.values(sd.owners).sort((a, b) => {
+    const dir = os.dir === "asc" ? 1 : -1;
+    let av, bv;
+    if (os.key === "name") { av = a.name || ""; bv = b.name || ""; }
+    else if (os.key === "team") { av = a.team || ""; bv = b.team || ""; }
+    else if (os.key === "conf") { av = a.n_confirmed; bv = b.n_confirmed; }
+    else if (os.key === "prob") { av = a.n_probable; bv = b.n_probable; }
+    else if (os.key === "recipients") { av = a.n_recipients || 0; bv = b.n_recipients || 0; }
+    else { av = aggAmt(a, "total_amount"); bv = aggAmt(b, "total_amount"); }
+    if (typeof av === "string") return av.localeCompare(bv) * dir;
+    return (av - bv) * dir;
+  });
+  const oArrow = (key) => os.key === key ? (os.dir === "asc" ? " ▲" : " ▼") : "";
+  const oTh = (key, label, klass = "") =>
+    `<th class="${klass} so-sort" data-sort="${key}" style="cursor:pointer">${escapeHtml(label)}${oArrow(key)}</th>`;
+
   const ownerRows = owners.map((o) => {
-    const top = o.top_recipients && o.top_recipients[0]
-      ? `${escapeHtml(o.top_recipients[0].recipient)}` : "—";
+    const top = o.top_recipients && o.top_recipients[0] ? escapeHtml(o.top_recipients[0].recipient) : "—";
     return `
-      <tr class="state-owner-row">
+      <tr class="st-owner-row" data-owner="${escapeAttr(o.slug)}" style="cursor:pointer">
         <td><a href="#/owner/${escapeAttr(o.slug)}" style="color:inherit;font-family:var(--serif);font-weight:500">${escapeHtml(o.name)}</a></td>
         <td class="muted" style="font-size:13px">${escapeHtml(o.team || "")}</td>
         <td class="muted" style="font-size:12px;letter-spacing:.03em">${escapeHtml((o.jurisdictions || []).join(", "))}</td>
         <td class="num">${fmtInt(o.n_confirmed)}</td>
         <td class="num">${fmtInt(o.n_probable)}</td>
+        <td class="num">${fmtInt(o.n_recipients || 0)}</td>
         <td class="num" style="font-variant-numeric:tabular-nums;font-weight:600">${fmtMoney(aggAmt(o, "total_amount"))}</td>
         <td class="muted" style="font-size:13px;max-width:22ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${top}</td>
       </tr>`;
   }).join("");
 
-  const donRows = sd.donations
-    .slice()
-    .sort((a, b) => amt(b) - amt(a))
-    .map((d) => `
-      <tr>
-        <td>${stateStatusBadge(d.status)}</td>
-        <td class="muted" style="font-size:12px;letter-spacing:.03em">${escapeHtml(d.jurisdiction || "")}</td>
-        <td><a href="#/owner/${escapeAttr(d.entity)}" style="color:inherit;font-family:var(--serif)">${escapeHtml(d.owner_name)}</a></td>
-        <td class="muted" style="font-size:12px">${escapeHtml(d.employer || "")}</td>
-        <td class="muted" style="font-size:12px">${escapeHtml([d.city, d.state].filter(Boolean).join(", "))}</td>
-        <td class="num" style="font-variant-numeric:tabular-nums;font-weight:600">${fmtMoney(amt(d))}</td>
-        <td class="muted" style="font-size:12px">${escapeHtml((d.date || "").slice(0, 10))}</td>
-        <td style="font-size:13px">${escapeHtml(d.recipient || "")}</td>
-      </tr>`).join("");
+  const jurisList = jNatList(sd.jurisdictions.map((j) => j.code));
 
-  // Jurisdiction display names + a natural-language list for the deck.
-  const JNAME = { CA: "California", NY: "New York", PA: "Pennsylvania", TX: "Texas", WA: "Washington", FL: "Florida", OH: "Ohio", IL: "Illinois" };
-  const jname = (c) => JNAME[c] || c;
-  const jNames = sd.jurisdictions.map((j) => jname(j.code));
-  const jurisList = jNames.length <= 1 ? (jNames[0] || "")
-    : jNames.slice(0, -1).join(", ") + " and " + jNames[jNames.length - 1];
-
-  // Per-jurisdiction breakdown cards (the multi-state dimension, first-class).
+  // Per-jurisdiction breakdown cards (each links to its detail page).
   const jurisCards = sd.jurisdictions
     .slice()
     .sort((a, b) => aggAmt(b, "total_amount") - aggAmt(a, "total_amount"))
@@ -6127,15 +6290,16 @@ function renderStates() {
       const topR = (j.top_recipients || []).slice(0, 3).map((t) =>
         `<li style="margin:0 0 3px"><span style="font-variant-numeric:tabular-nums;font-weight:600">${fmtMoney(t.amount)}</span> <span class="muted">→ ${escapeHtml(t.recipient)}</span></li>`).join("");
       return `
-        <div style="flex:1 1 280px;border:1px solid var(--rule);border-radius:8px;padding:16px 18px">
+        <a href="#/state/${escapeAttr(j.code)}" style="flex:1 1 280px;border:1px solid var(--rule);border-radius:8px;padding:16px 18px;text-decoration:none;color:inherit" class="st-juris-card">
           <div style="display:flex;justify-content:space-between;align-items:baseline">
-            <h3 style="font-family:var(--serif);font-size:18px;margin:0">${escapeHtml(jname(j.code))}</h3>
+            <h3 style="font-family:var(--serif);font-size:18px;margin:0">${escapeHtml(jName(j.code))}</h3>
             <span class="muted" style="font-size:11px;letter-spacing:.04em;text-transform:uppercase">${escapeHtml(j.source)}</span>
           </div>
           <div style="font-size:24px;font-weight:600;font-variant-numeric:tabular-nums;margin:6px 0 2px">${fmtMoney(aggAmt(j, "total_amount"))}</div>
           <div class="muted" style="font-size:12px;margin-bottom:10px">${fmtInt(j.n_confirmed)} confirmed · ${fmtInt(j.n_probable)} probable · ${fmtInt(j.n_owners)} owner${j.n_owners === 1 ? "" : "s"}</div>
           ${topR ? `<ul style="list-style:none;padding:0;margin:0;font-size:13px">${topR}</ul>` : ""}
-        </div>`;
+          <div style="margin-top:10px;font-weight:600;font-size:13px">View ${escapeHtml(jName(j.code))} →</div>
+        </a>`;
     }).join("");
 
   return `
@@ -6171,9 +6335,11 @@ function renderStates() {
         <div class="kpi-foot">of 30 principal owners</div>
       </div>
       <div class="kpi">
-        <div class="kpi-label">Jurisdictions covered</div>
-        <div class="kpi-value">${fmtInt(sd.jurisdictions.length)}</div>
-        <div class="kpi-foot">${escapeHtml(jNames.join(" · "))} — more to come</div>
+        <a href="#/state-recipients" style="text-decoration:none;color:inherit">
+          <div class="kpi-label">State recipients</div>
+          <div class="kpi-value">${fmtInt((sd.recipients || []).length)}</div>
+          <div class="kpi-foot">across ${fmtInt(sd.jurisdictions.length)} jurisdiction${sd.jurisdictions.length === 1 ? "" : "s"} — browse all →</div>
+        </a>
       </div>
     </div>
 
@@ -6181,16 +6347,23 @@ function renderStates() {
     <section style="margin:26px 0 8px">
       <h2 style="font-family:var(--serif);font-size:22px;margin:0 0 12px">By jurisdiction</h2>
       <div style="display:flex;flex-wrap:wrap;gap:14px">${jurisCards}</div>
-    </section>` : ""}
+    </section>` : `
+    <section style="margin:26px 0 8px">
+      <div style="display:flex;flex-wrap:wrap;gap:14px">${jurisCards}</div>
+    </section>`}
 
     <section style="margin:26px 0 8px">
-      <h2 style="font-family:var(--serif);font-size:22px;margin:0 0 4px">By owner</h2>
-      <p class="muted" style="font-size:13px;margin:0 0 12px">Click an owner for their full (federal) giving record.</p>
-      <div class="table-wrap">
-        <table class="data-table">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px">
+        <h2 style="font-family:var(--serif);font-size:22px;margin:0">By owner</h2>
+        <a href="#/state-recipients" style="font-size:13px;font-weight:600">Browse recipients →</a>
+      </div>
+      <p class="muted" style="font-size:13px;margin:4px 0 12px">Click an owner for their full profile, including a per-owner state-finance table.</p>
+      <div class="table-scroll">
+        <table class="donations-table">
           <thead><tr>
-            <th>Owner</th><th>Team</th><th>State(s)</th><th class="num">Conf.</th><th class="num">Prob.</th>
-            <th class="num">State total</th><th>Top recipient</th>
+            ${oTh("name", "Owner")}${oTh("team", "Team")}<th>State(s)</th>
+            ${oTh("conf", "Conf.", "num")}${oTh("prob", "Prob.", "num")}${oTh("recipients", "Recipients", "num")}
+            ${oTh("total", "State total", "num")}<th>Top recipient</th>
           </tr></thead>
           <tbody>${ownerRows}</tbody>
         </table>
@@ -6199,17 +6372,16 @@ function renderStates() {
 
     <section style="margin:30px 0 8px">
       <h2 style="font-family:var(--serif);font-size:22px;margin:0 0 12px">All state contributions</h2>
-      <div class="table-wrap">
-        <table class="data-table">
-          <thead><tr>
-            <th>Status</th><th>State</th><th>Owner</th><th>Employer (as filed)</th><th>From</th>
-            <th class="num">Amount</th><th>Date</th><th>Recipient</th>
-          </tr></thead>
-          <tbody>${donRows}</tbody>
-        </table>
-      </div>
+      ${stateContribSection(sd.donations)}
     </section>
 
+    ${stateMethodologyNote()}
+  </div>`;
+}
+
+/* The shared sourcing/limitations note (neutral, provenance-first). */
+function stateMethodologyNote() {
+  return `
     <section class="methodology-note" style="margin:30px 0;padding:18px 20px;border:1px solid var(--rule);border-radius:8px;background:var(--paper-2, #faf8f4)">
       <h3 style="font-family:var(--serif);font-size:16px;margin:0 0 8px">How this is sourced — and what it doesn't cover yet</h3>
       <p class="muted" style="font-size:13px;line-height:1.6;margin:0 0 8px">
@@ -6217,7 +6389,8 @@ function renderStates() {
         state's <strong>official disclosure system</strong> is the system of record (California's
         CAL-ACCESS, New York's NYSBOE, …) — every confirmed or probable row traces to a specific
         official filing; aggregators are used only to discover candidates, never as the source of a
-        fact. Verification is the same three-tier standard as the federal data.
+        fact. Open any row to see its matched signals and a link to the official record. Verification
+        is the same three-tier standard as the federal data.
       </p>
       <p class="muted" style="font-size:13px;line-height:1.6;margin:0 0 8px">
         <strong>Disclosure differs by state, so confidence does too — honestly.</strong> California
@@ -6232,12 +6405,279 @@ function renderStates() {
         cleared our bar in a covered state — not that none exist. Amounts are as filed (the $/$↑
         toggle adjusts to current dollars).
       </p>
+    </section>`;
+}
+
+/* ── #/state/<juris> — one jurisdiction's full record ──────────────────────── */
+function renderStateJurisdiction(code) {
+  const sd = state.stateData;
+  const j = sd && (sd.jurisdictions || []).find((x) => x.code === code);
+  if (!j) {
+    return `<div class="container"><a class="back" href="#/states">← State finance</a><div class="loading">No state data for ${escapeHtml(code)}.</div></div>`;
+  }
+  const donations = sd.donations.filter((d) => d.jurisdiction === code);
+  const ownersHere = Object.values(sd.owners)
+    .filter((o) => (o.jurisdictions || []).includes(code))
+    .sort((a, b) => aggAmt(b, "total_amount") - aggAmt(a, "total_amount"));
+  // Per-owner total within THIS jurisdiction (owner rollups span all states).
+  const ownerHereAmt = {};
+  for (const d of donations) ownerHereAmt[d.entity] = (ownerHereAmt[d.entity] || 0) + amt(d);
+  const ownersRanked = [...ownersHere].sort((a, b) => (ownerHereAmt[b.slug] || 0) - (ownerHereAmt[a.slug] || 0));
+
+  const topR = (j.top_recipients || []).slice(0, 8).map((t) =>
+    `<li style="margin:0 0 4px"><span style="font-variant-numeric:tabular-nums;font-weight:600">${fmtMoney(t.amount)}</span> <span class="muted">→ ${escapeHtml(t.recipient)}</span></li>`).join("");
+
+  return `
+  <div class="container">
+    <a class="back" href="#/states">← All state finance</a>
+    <section class="hero" style="padding-bottom:14px">
+      <span class="eyebrow">State campaign finance · ${escapeHtml(j.source)}</span>
+      <h1 style="margin-top:12px;max-width:24ch">MLB-owner giving in ${escapeHtml(jName(code))}</h1>
+      <p class="deck">
+        Every confirmed or probable contribution by an MLB principal owner recorded in
+        ${escapeHtml(jName(code))}'s official disclosure system (${escapeHtml(j.source)}).
+        Open any row for its matched signals and a link to the official record.
+      </p>
+    </section>
+
+    <div class="kpis" style="border-top:0;border-bottom:1px solid var(--rule);">
+      <div class="kpi">
+        <div class="kpi-label">Total giving</div>
+        <div class="kpi-value">${fmtMoney(aggAmt(j, "total_amount"))}</div>
+        <div class="kpi-foot">${fmtMoneyExact(aggAmt(j, "total_amount"))}</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Contributions</div>
+        <div class="kpi-value">${fmtInt(j.n_confirmed + j.n_probable)}</div>
+        <div class="kpi-foot">${fmtInt(j.n_confirmed)} confirmed · ${fmtInt(j.n_probable)} probable</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Owners active here</div>
+        <div class="kpi-value">${fmtInt(j.n_owners)}</div>
+        <div class="kpi-foot">of 30 principal owners</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Source</div>
+        <div class="kpi-value" style="font-size:22px">${escapeHtml(j.source)}</div>
+        <div class="kpi-foot">official system of record</div>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-wrap:wrap;gap:24px;margin:26px 0 8px">
+      <section style="flex:1 1 320px">
+        <h2 style="font-family:var(--serif);font-size:20px;margin:0 0 10px">Top recipients</h2>
+        ${topR ? `<ul style="list-style:none;padding:0;margin:0;font-size:14px">${topR}</ul>` : `<p class="muted">—</p>`}
+      </section>
+      <section style="flex:1 1 320px">
+        <h2 style="font-family:var(--serif);font-size:20px;margin:0 0 10px">Owners active in ${escapeHtml(jName(code))}</h2>
+        <ul style="list-style:none;padding:0;margin:0;font-size:14px">
+          ${ownersRanked.map((o) => `
+            <li style="margin:0 0 4px;display:flex;justify-content:space-between;gap:10px">
+              <a href="#/owner/${escapeAttr(o.slug)}" style="color:inherit">${escapeHtml(o.name)}</a>
+              <span style="font-variant-numeric:tabular-nums;font-weight:600">${fmtMoney(ownerHereAmt[o.slug] || 0)}</span>
+            </li>`).join("")}
+        </ul>
+      </section>
+    </div>
+
+    <section style="margin:24px 0 8px">
+      <h2 style="font-family:var(--serif);font-size:22px;margin:0 0 12px">All ${escapeHtml(jName(code))} contributions</h2>
+      ${stateContribSection(donations, { showJurisdiction: false })}
+    </section>
+
+    ${stateMethodologyNote()}
+  </div>`;
+}
+
+/* ── #/state-recipient/<key> — who gave to one state recipient ─────────────── */
+function renderStateRecipient(key) {
+  const sd = state.stateData;
+  const rc = sd && (sd.recipients || []).find((r) => r.key === key);
+  const donations = (sd ? sd.donations : []).filter((d) => d.recipient_key === key);
+  if (!rc || !donations.length) {
+    return `<div class="container"><a class="back" href="#/state-recipients">← State recipients</a><div class="loading">No state contributions recorded for this recipient.</div></div>`;
+  }
+  // Owner breakdown within this recipient.
+  const byOwner = {};
+  for (const d of donations) {
+    const o = byOwner[d.entity] || (byOwner[d.entity] = { slug: d.entity, name: d.owner_name, amount: 0, n: 0 });
+    o.amount += amt(d); o.n += 1;
+  }
+  const ownersRanked = Object.values(byOwner).sort((a, b) => b.amount - a.amount);
+  const meta = [rc.recipient_type, rc.office, rc.party].filter(Boolean).map(escapeHtml).join(" · ");
+
+  return `
+  <div class="container">
+    <a class="back" href="#/state-recipients">← All state recipients</a>
+    <section class="hero" style="padding-bottom:14px">
+      <span class="eyebrow">${escapeHtml(jName(rc.jurisdiction))} · ${escapeHtml(rc.source)}${rc.filer_id ? ` · filer ${escapeHtml(rc.filer_id)}` : ""}</span>
+      <h1 style="margin-top:12px;max-width:26ch">${escapeHtml(rc.name)}</h1>
+      <p class="deck">
+        MLB-owner contributions to this ${escapeHtml(rc.recipient_type || "recipient")} recorded in
+        ${escapeHtml(jName(rc.jurisdiction))}'s ${escapeHtml(rc.source)} system.${meta ? ` <span class="muted">(${meta})</span>` : ""}
+      </p>
+    </section>
+
+    <div class="kpis" style="border-top:0;border-bottom:1px solid var(--rule);">
+      <div class="kpi">
+        <div class="kpi-label">Total from MLB owners</div>
+        <div class="kpi-value">${fmtMoney(aggAmt(rc, "total_amount"))}</div>
+        <div class="kpi-foot">${fmtMoneyExact(aggAmt(rc, "total_amount"))}</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Contributions</div>
+        <div class="kpi-value">${fmtInt(rc.n_donations)}</div>
+        <div class="kpi-foot">${fmtInt(rc.n_confirmed)} confirmed · ${fmtInt(rc.n_probable)} probable</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Distinct owners</div>
+        <div class="kpi-value">${fmtInt(rc.n_owners)}</div>
+        <div class="kpi-foot">gave to this recipient</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Date range</div>
+        <div class="kpi-value" style="font-size:18px">${escapeHtml((rc.first_date || "").slice(0, 10) || "—")}</div>
+        <div class="kpi-foot">through ${escapeHtml((rc.last_date || "").slice(0, 10) || "—")}</div>
+      </div>
+    </div>
+
+    <section style="margin:24px 0 8px">
+      <h2 style="font-family:var(--serif);font-size:20px;margin:0 0 10px">Owners who gave</h2>
+      <ul style="list-style:none;padding:0;margin:0;font-size:14px;max-width:480px">
+        ${ownersRanked.map((o) => `
+          <li style="margin:0 0 4px;display:flex;justify-content:space-between;gap:10px">
+            <a href="#/owner/${escapeAttr(o.slug)}" style="color:inherit">${escapeHtml(o.name)}</a>
+            <span style="font-variant-numeric:tabular-nums;font-weight:600">${fmtMoney(o.amount)} <span class="muted" style="font-weight:400">· ${fmtInt(o.n)}</span></span>
+          </li>`).join("")}
+      </ul>
+    </section>
+
+    <section style="margin:24px 0 8px">
+      <h2 style="font-family:var(--serif);font-size:22px;margin:0 0 12px">All contributions to ${escapeHtml(rc.name)}</h2>
+      ${stateContribSection(donations, { showJurisdiction: false })}
     </section>
   </div>`;
 }
 
-/* Compact per-owner state-finance panel, shown on an owner page when that owner
-   has Phase-4 state data. Federal KPIs above it never include state dollars. */
+/* ── #/state-recipients — sortable/searchable index of state recipients ────── */
+function renderStateRecipients() {
+  const sd = state.stateData;
+  if (!sd || !(sd.recipients || []).length) {
+    return `<div class="container"><a class="back" href="#/states">← State finance</a><div class="loading">No state recipients loaded.</div></div>`;
+  }
+  const f = state.stateRecipientFilters;
+  const all = sd.recipients;
+  const q = f.q.trim().toLowerCase();
+  const types = [...new Set(all.map((r) => r.recipient_type).filter(Boolean))].sort();
+  const jurisAll = [...new Set(all.map((r) => r.jurisdiction).filter(Boolean))].sort();
+
+  let rows = all.filter((r) => {
+    if (f.jurisdiction && r.jurisdiction !== f.jurisdiction) return false;
+    if (f.type && r.recipient_type !== f.type) return false;
+    if (q && !(r.name || "").toLowerCase().includes(q) && !(r.filer_id || "").toLowerCase().includes(q)) return false;
+    return true;
+  });
+  const k = f.sort.key, dir = f.sort.dir === "asc" ? 1 : -1;
+  rows.sort((a, b) => {
+    let av, bv;
+    if (k === "name") { av = a.name || ""; bv = b.name || ""; }
+    else if (k === "recipient_type") { av = a.recipient_type || ""; bv = b.recipient_type || ""; }
+    else if (k === "n_donations") { av = a.n_donations; bv = b.n_donations; }
+    else if (k === "n_owners") { av = a.n_owners; bv = b.n_owners; }
+    else if (k === "last_date") { av = a.last_date || ""; bv = b.last_date || ""; }
+    else { av = aggAmt(a, "total_amount"); bv = aggAmt(b, "total_amount"); }
+    if (typeof av === "string") return av.localeCompare(bv) * dir;
+    return (av - bv) * dir;
+  });
+
+  const total = rows.length;
+  const visible = rows.slice(0, f.visibleN);
+  const hasMore = total > visible.length;
+  const sumDollars = rows.reduce((s, r) => s + aggAmt(r, "total_amount"), 0);
+
+  const arrow = (key) => f.sort.key === key ? (f.sort.dir === "asc" ? " ▲" : " ▼") : "";
+  const thSort = (key, label, klass = "") =>
+    `<th class="${klass} sr-sort" data-sort="${key}" style="cursor:pointer">${escapeHtml(label)}${arrow(key)}</th>`;
+
+  return `
+  <div class="container">
+    <a class="back" href="#/states">← State finance</a>
+    <section class="hero" style="padding-bottom:14px">
+      <span class="eyebrow">State campaign finance</span>
+      <h1 style="margin-top:12px;max-width:24ch">Who received the state money.</h1>
+      <p class="deck">
+        Every committee, candidate, or ballot-measure campaign that received at least one
+        confirmed or probable contribution from an MLB principal owner in a covered state.
+        Sortable by amount, contributions, distinct owners, or recency.
+      </p>
+    </section>
+
+    <div class="recipients-filters">
+      ${jurisAll.length > 1 ? `
+      <div class="recipients-filter-row">
+        <span class="recipients-filter-label">State</span>
+        ${jurisAll.map((c) => `
+          <button type="button" class="recipients-pill sr-pill ${f.jurisdiction === c ? "on" : ""}" data-juris="${escapeAttr(c)}">${escapeHtml(jName(c))}</button>`).join("")}
+      </div>` : ""}
+      <div class="recipients-filter-row">
+        <span class="recipients-filter-label">Type</span>
+        ${types.map((t) => `
+          <button type="button" class="recipients-pill sr-pill ${f.type === t ? "on" : ""}" data-type="${escapeAttr(t)}">${escapeHtml(t)}</button>`).join("")}
+      </div>
+      <div class="recipients-filter-row">
+        <input id="sr-q" type="text" placeholder="Search recipient name or filer ID…" value="${escapeAttr(f.q)}" autocomplete="off">
+        <button type="button" id="sr-reset" class="recipients-reset">Reset</button>
+      </div>
+    </div>
+
+    <p class="muted" style="font-size:12px;margin:4px 2px 10px">
+      Showing ${fmtInt(visible.length)} of ${fmtInt(total)} recipient${total === 1 ? "" : "s"} · ${fmtMoney(sumDollars)} total received.
+    </p>
+
+    <section class="block">
+      <div class="table-scroll">
+        <table class="donations-table recipients-table">
+          <thead><tr>
+            ${thSort("name", "Recipient")}
+            <th>State</th>
+            ${thSort("recipient_type", "Type")}
+            ${thSort("total_amount", "Total $", "num")}
+            ${thSort("n_donations", "Contribs.", "num")}
+            ${thSort("n_owners", "Owners", "num")}
+            ${thSort("last_date", "Last gift")}
+          </tr></thead>
+          <tbody>
+            ${visible.length === 0 ? `
+              <tr><td colspan="7" style="padding:24px 0;text-align:center;color:var(--ink-3)">No recipients match the current filters.</td></tr>
+            ` : visible.map((r) => `
+              <tr class="sr-row" data-key="${escapeAttr(r.key)}" style="cursor:pointer">
+                <td>
+                  <div class="re-name">${escapeHtml(r.name || "—")}</div>
+                  <div class="re-sub">${escapeHtml(r.source)}${r.filer_id ? ` · ${escapeHtml(r.filer_id)}` : ""}</div>
+                </td>
+                <td class="muted" style="font-size:12px;letter-spacing:.03em">${escapeHtml(r.jurisdiction)}</td>
+                <td>${escapeHtml(r.recipient_type || "—")}</td>
+                <td class="num"><strong>${fmtMoney(aggAmt(r, "total_amount"))}</strong></td>
+                <td class="num">${fmtInt(r.n_donations)}</td>
+                <td class="num">${fmtInt(r.n_owners)}</td>
+                <td class="col-date">${escapeHtml((r.last_date || "").slice(0, 10) || "—")}</td>
+              </tr>`).join("")}
+          </tbody>
+        </table>
+      </div>
+      ${hasMore ? `
+        <div class="recipients-load-more">
+          <button type="button" id="sr-load-more" class="csv-btn">
+            Load ${Math.min(100, total - visible.length)} more (${fmtInt(total - visible.length)} remaining)
+          </button>
+        </div>` : ""}
+    </section>
+  </div>`;
+}
+
+/* Per-owner state-finance panel on an owner page: headline + top recipients +
+   the full, drawer-backed per-owner contributions table. Federal KPIs above it
+   never include state dollars. */
 function renderOwnerStatePanel(slug) {
   const rows = state.stateByOwner && state.stateByOwner[slug];
   if (!rows || !rows.length) return "";
@@ -6247,20 +6687,307 @@ function renderOwnerStatePanel(slug) {
   const topList = tops.map((t) =>
     `<li style="margin:0 0 4px"><span style="font-variant-numeric:tabular-nums;font-weight:600">${fmtMoney(t.amount)}</span> <span class="muted">→ ${escapeHtml(t.recipient)}</span></li>`
   ).join("");
-  const JN = { CA: "California", NY: "New York", PA: "Pennsylvania", TX: "Texas", WA: "Washington", FL: "Florida", OH: "Ohio", IL: "Illinois" };
-  const js = (o.jurisdictions || []).map((c) => JN[c] || c);
-  const where = js.length <= 1 ? (js[0] || "state") : js.slice(0, -1).join(", ") + " and " + js[js.length - 1];
+  const js = (o.jurisdictions || []);
+  const where = jNatList(js) || "state";
+  const jurisChips = js.map((c) =>
+    `<a href="#/state/${escapeAttr(c)}" class="re-chip" style="display:inline-block;font:600 11px/1.5 var(--sans);border:1px solid var(--rule);border-radius:999px;padding:1px 9px;margin-right:5px;color:var(--ink-2);text-decoration:none">${escapeHtml(jName(c))}</a>`
+  ).join("");
   return `
     <section class="block" style="border:1px solid var(--rule);border-radius:8px;padding:18px 20px;background:var(--paper-2,#faf8f4);margin-top:22px">
-      <span class="eyebrow">State campaign finance · ${escapeHtml(js.join(" · ") || "")}</span>
-      <h2 style="margin:6px 0 4px;font-size:21px">${escapeHtml(o.name)} gave ${fmtMoney(total)} in ${escapeHtml(where)} state politics</h2>
+      <span class="eyebrow">State campaign finance · ${jurisChips}</span>
+      <h2 style="margin:8px 0 4px;font-size:21px">${escapeHtml(o.name)} gave ${fmtMoney(total)} in ${escapeHtml(where)} state politics</h2>
       <p class="caption" style="margin:0 0 10px">
         ${fmtInt(o.n_confirmed)} confirmed · ${fmtInt(o.n_probable)} probable, from official state disclosure
         filings — <strong>separate from, and not included in, the federal totals above</strong>.
       </p>
-      ${topList ? `<ul style="list-style:none;padding:0;margin:0 0 10px;font-size:14px">${topList}</ul>` : ""}
-      <a href="#/states" style="font-weight:600">See the full state-finance section →</a>
+      ${topList ? `<ul style="list-style:none;padding:0;margin:0 0 12px;font-size:14px">${topList}</ul>` : ""}
+      ${stateContribSection(rows, { showOwner: false })}
+      <p style="margin:12px 0 0"><a href="#/states" style="font-weight:600">See the full state-finance section →</a></p>
     </section>`;
+}
+
+/* Bind interactions for every view that renders state tables: the shared
+   contribution table (#/states, #/state/<juris>, #/state-recipient, owner page),
+   the #/states by-owner table, and the #/state-recipients index. Each block is
+   a no-op when its elements aren't on the page. */
+function bindStatesHandlers() {
+  const stateViews = ["states", "state-juris", "state-recipient", "state-recipients", "owner"];
+  if (!stateViews.includes(state.view.name)) return;
+
+  /* ── Shared contribution table (state.stateFilters) ── */
+  const f = state.stateFilters;
+  const refocus = (id) => {
+    const el = document.getElementById(id);
+    if (el) { el.focus(); el.setSelectionRange(el.value.length, el.value.length); }
+  };
+  // Status / jurisdiction pills are single-select toggles.
+  document.querySelectorAll(".st-pill[data-status]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const v = btn.getAttribute("data-status");
+      f.status = f.status === v ? "" : v;
+      f.visibleN = 100; render();
+    });
+  });
+  document.querySelectorAll(".st-pill[data-juris]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const v = btn.getAttribute("data-juris");
+      f.jurisdiction = f.jurisdiction === v ? "" : v;
+      f.visibleN = 100; render();
+    });
+  });
+  document.querySelectorAll(".st-sort").forEach((th) => {
+    th.addEventListener("click", () => {
+      const k = th.getAttribute("data-sort");
+      if (f.sort.key === k) f.sort.dir = f.sort.dir === "asc" ? "desc" : "asc";
+      else { f.sort.key = k; f.sort.dir = ["status", "owner", "recipient", "jurisdiction", "date"].includes(k) ? "asc" : "desc"; }
+      f.visibleN = 100; render();
+    });
+  });
+  const stq = document.getElementById("st-q");
+  if (stq) {
+    let t;
+    stq.addEventListener("input", () => {
+      clearTimeout(t);
+      t = setTimeout(() => { f.q = stq.value; f.visibleN = 100; render(); refocus("st-q"); }, 150);
+    });
+  }
+  const stCycle = document.getElementById("st-cycle");
+  if (stCycle) stCycle.addEventListener("change", () => { f.cycle = stCycle.value; f.visibleN = 100; render(); });
+  const stReset = document.getElementById("st-reset");
+  if (stReset) stReset.addEventListener("click", () => {
+    state.stateFilters = { q: "", status: "", jurisdiction: "", cycle: "", sort: { key: "amount", dir: "desc" }, visibleN: 100 };
+    render();
+  });
+  const stMore = document.getElementById("st-load-more");
+  if (stMore) stMore.addEventListener("click", () => { f.visibleN += 100; render(); });
+  document.querySelectorAll(".st-row").forEach((row) => {
+    row.addEventListener("click", () => openStateDrawer(row.getAttribute("data-state-id")));
+  });
+
+  /* ── #/states by-owner table sort (state.stateOwnerSort) ── */
+  const os = state.stateOwnerSort;
+  document.querySelectorAll(".so-sort").forEach((th) => {
+    th.addEventListener("click", () => {
+      const k = th.getAttribute("data-sort");
+      if (os.key === k) os.dir = os.dir === "asc" ? "desc" : "asc";
+      else { os.key = k; os.dir = ["name", "team"].includes(k) ? "asc" : "desc"; }
+      render();
+    });
+  });
+  document.querySelectorAll(".st-owner-row").forEach((row) => {
+    row.addEventListener("click", (e) => {
+      if (e.target.closest("a")) return;  // let the owner-name link do its thing
+      const slug = row.getAttribute("data-owner");
+      if (slug) window.location.hash = `#/owner/${slug}`;
+    });
+  });
+
+  /* ── #/state-recipients index (state.stateRecipientFilters) ── */
+  const rf = state.stateRecipientFilters;
+  document.querySelectorAll(".sr-pill[data-juris]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const v = btn.getAttribute("data-juris");
+      rf.jurisdiction = rf.jurisdiction === v ? "" : v;
+      rf.visibleN = 100; render();
+    });
+  });
+  document.querySelectorAll(".sr-pill[data-type]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const v = btn.getAttribute("data-type");
+      rf.type = rf.type === v ? "" : v;
+      rf.visibleN = 100; render();
+    });
+  });
+  document.querySelectorAll(".sr-sort").forEach((th) => {
+    th.addEventListener("click", () => {
+      const k = th.getAttribute("data-sort");
+      if (rf.sort.key === k) rf.sort.dir = rf.sort.dir === "asc" ? "desc" : "asc";
+      else { rf.sort.key = k; rf.sort.dir = ["name", "recipient_type", "last_date"].includes(k) ? "asc" : "desc"; }
+      rf.visibleN = 100; render();
+    });
+  });
+  const srq = document.getElementById("sr-q");
+  if (srq) {
+    let t;
+    srq.addEventListener("input", () => {
+      clearTimeout(t);
+      t = setTimeout(() => { rf.q = srq.value; rf.visibleN = 100; render(); refocus("sr-q"); }, 150);
+    });
+  }
+  const srReset = document.getElementById("sr-reset");
+  if (srReset) srReset.addEventListener("click", () => {
+    state.stateRecipientFilters = { q: "", jurisdiction: "", type: "", sort: { key: "total_amount", dir: "desc" }, visibleN: 100 };
+    render();
+  });
+  const srMore = document.getElementById("sr-load-more");
+  if (srMore) srMore.addEventListener("click", () => { rf.visibleN += 100; render(); });
+  document.querySelectorAll(".sr-row").forEach((row) => {
+    row.addEventListener("click", () => {
+      const key = row.getAttribute("data-key");
+      if (key) window.location.hash = `#/state-recipient/${encodeURIComponent(key)}`;
+    });
+  });
+}
+
+/* State-donation provenance drawer — sibling to openDrawer (federal). Keyed on
+   the composed state_txn_id. Mirrors the federal drawer's sections, with a
+   best-effort link to the OFFICIAL source record (omitted, not faked, when the
+   portal exposes no reliable per-record URL). */
+function openStateDrawer(id) {
+  const body = document.getElementById("drawer-body");
+  const openIt = () => {
+    document.getElementById("drawer").classList.add("open");
+    document.getElementById("drawer-scrim").classList.add("open");
+    document.getElementById("drawer").setAttribute("aria-hidden", "false");
+  };
+  const d = state.stateData && (state.stateData.donations || []).find((x) => x.id === id);
+  if (!d) {
+    body.innerHTML = `
+      <h2>Contribution not found</h2>
+      <div class="drawer-section"><p class="drawer-not-found">
+        State transaction <code>${escapeHtml(id || "")}</code> isn't in the current snapshot.
+        <a href="#/states" onclick="closeDrawer()" class="drawer-link">Browse state finance</a>
+      </p></div>`;
+    openIt();
+    setDrawerParam(null);
+    return;
+  }
+
+  const ownerSlug = d.parent || d.entity;
+  const ownerKnown = state.data && state.data.owners && state.data.owners[ownerSlug];
+  const ownerNameHtml = ownerKnown
+    ? `<a href="#/owner/${escapeAttr(ownerSlug)}" onclick="closeDrawer()" class="drawer-owner-link">${escapeHtml(d.owner_name)}</a>`
+    : escapeHtml(d.owner_name);
+  const recipKey = d.recipient_key;
+  const filingUrl = safeHttpsUrl(d.filing_url);
+  const datasetUrl = safeHttpsUrl(d.dataset_url);
+
+  body.innerHTML = `
+    <h2>${ownerNameHtml} <span class="donor-arrow">→</span> ${escapeHtml(d.recipient || "—")}</h2>
+    <div class="muted" style="margin-top:4px;font-size:14px">${escapeHtml(jName(d.jurisdiction))} · ${escapeHtml(d.source)}</div>
+
+    <div class="drawer-amount">${fmtMoneyExact(amt(d))}</div>
+    <div class="drawer-amount-meta">
+      <span>${fmtDate(d.date)}</span>
+      <span>·</span>
+      <span>${escapeHtml(String(d.cycle))} cycle</span>
+      <span style="margin-left:6px">${stateStatusBadge(d.status)}</span>
+    </div>
+
+    <div class="drawer-section">
+      <h3>Why this is ${d.status === "CONFIRMED" ? "confirmed" : "probable"}</h3>
+      <div class="drawer-reason ${d.status === "PROBABLE" ? "probable" : ""}">
+        ${escapeHtml(d.status_reason || "—")}
+      </div>
+      <div class="drawer-signals">
+        ${(d.signals || []).map((s) => `<span class="chip-signal">${escapeHtml(s)}</span>`).join("")}
+      </div>
+    </div>
+
+    <div class="drawer-section">
+      <h3>Recipient</h3>
+      <div class="drawer-grid">
+        <div class="label">Name</div>
+        <div class="value">${escapeHtml(d.recipient || "—")}</div>
+        <div class="label">Type</div>
+        <div class="value">${escapeHtml(d.recipient_type || "—")}</div>
+        <div class="label">Filer ID</div>
+        <div class="value">${escapeHtml(d.recipient_filer_id || "—")}</div>
+      </div>
+      ${recipKey ? `
+        <p style="margin-top:14px">
+          <a class="drawer-link" href="#/state-recipient/${encodeURIComponent(recipKey)}" onclick="closeDrawer()">View all MLB-owner contributions to this recipient</a>
+        </p>` : ""}
+    </div>
+
+    <div class="drawer-section">
+      <h3>Contributor (as filed)</h3>
+      <div class="drawer-grid">
+        <div class="label">Name</div>
+        <div class="value">${escapeHtml(d.donor_name || "—")}</div>
+        <div class="label">Employer</div>
+        <div class="value">${escapeHtml(d.employer || "—")}</div>
+        <div class="label">Occupation</div>
+        <div class="value">${escapeHtml(d.occupation || "—")}</div>
+        <div class="label">Location</div>
+        <div class="value">${escapeHtml([d.city, d.state].filter(Boolean).join(", ") || "—")} ${escapeHtml(d.zip || "")}</div>
+      </div>
+    </div>
+
+    <div class="drawer-section">
+      <h3>Official source</h3>
+      <div class="drawer-source-links">
+        ${filingUrl ? `
+          <a class="drawer-source-link primary" href="${escapeAttr(filingUrl)}" target="_blank" rel="noopener">
+            <span class="drawer-source-icon">📄</span>
+            <div>
+              <div class="drawer-source-title">${d.source === "CAL-ACCESS" ? "Filed document (PDF)" : "Official record"}</div>
+              <div class="drawer-source-sub">${escapeHtml(d.source)}${d.source_filing_id ? ` · filing #${escapeHtml(d.source_filing_id)}` : ""}</div>
+            </div>
+          </a>` : `
+          <div class="drawer-source-link disabled">
+            <span class="drawer-source-icon">📄</span>
+            <div>
+              <div class="drawer-source-title">Official record</div>
+              <div class="drawer-source-sub">No reliable per-record link for ${escapeHtml(d.source)} yet</div>
+            </div>
+          </div>`}
+        ${datasetUrl ? `
+          <a class="drawer-source-link" href="${escapeAttr(datasetUrl)}" target="_blank" rel="noopener">
+            <span class="drawer-source-icon">🗄︎</span>
+            <div>
+              <div class="drawer-source-title">Source dataset</div>
+              <div class="drawer-source-sub">${escapeHtml(d.source)} public disclosure data</div>
+            </div>
+          </a>` : ""}
+        <button type="button" class="drawer-source-link copy-perma" onclick="copyPermalink(this)">
+          <span class="drawer-source-icon">🔗</span>
+          <div>
+            <div class="drawer-source-title">Copy permalink</div>
+            <div class="drawer-source-sub">Share this exact contribution</div>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <div class="drawer-section">
+      <h3>Provenance</h3>
+      <div class="drawer-grid">
+        <div class="label">Transaction ID</div>
+        <div class="value" style="font-size:11px">${escapeHtml(d.id)}</div>
+        <div class="label">Jurisdiction</div>
+        <div class="value">${escapeHtml(d.jurisdiction)} · ${escapeHtml(d.source)}</div>
+        <div class="label">Filing ID</div>
+        <div class="value">${escapeHtml(d.source_filing_id || "—")}</div>
+        <div class="label">Source txn ID</div>
+        <div class="value">${escapeHtml(d.source_tran_id || "—")}</div>
+        <div class="label">Discovery</div>
+        <div class="value">${escapeHtml(d.discovery_source || "direct portal scan")}</div>
+        <div class="label">Report type</div>
+        <div class="value">${escapeHtml(d.report_type || "—")}</div>
+        <div class="label">Raw payload</div>
+        <div class="value" style="font-size:11px">${escapeHtml(d.raw_payload || "—")}</div>
+        <div class="label">Ingested</div>
+        <div class="value">${escapeHtml(d.ingested_at || "—")}</div>
+      </div>
+    </div>
+
+    <div class="drawer-section">
+      <h3>Attribution</h3>
+      <div class="drawer-grid">
+        <div class="label">Attributed to</div>
+        <div class="value value-prose">
+          ${ownerNameHtml}${d.entity_kind && d.entity_kind !== "owner" ? ` <span class="muted">(${escapeHtml(d.entity_kind)})</span>` : ""}
+        </div>
+        <div class="label">Slug</div>
+        <div class="value">${escapeHtml(d.entity)}</div>
+      </div>
+      <p class="caption" style="margin-top:12px">State dollars are tracked separately and are never included in this owner's federal totals.</p>
+    </div>
+  `;
+
+  openIt();
+  setDrawerParam(id);
 }
 
 /* ──────────── /#/recipients ──────────── */
