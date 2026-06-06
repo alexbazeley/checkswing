@@ -804,3 +804,125 @@ def reclassify_entity(
         "guard_dropped_divergent": len(divergent),
     }
     return summary
+
+
+def _record_from_donation_row(row) -> dict:
+    """Rebuild the classifier record from the fields STORED on a donations row.
+
+    The donations table persists every contributor field the classifier reads, so a
+    row can be re-scored without its raw payload (which FEC may no longer return).
+    No split first/last is stored — name_synthetic stays empty and the matcher uses
+    the raw contributor name string, exactly as the FEC ingest path does.
+    """
+    return {
+        "transaction_id": row["transaction_id"],
+        "contributor_name": row["contributor_name_raw"] or "",
+        "contributor_employer": row["contributor_employer_raw"] or "",
+        "contributor_occupation": row["contributor_occupation_raw"] or "",
+        "contributor_city": row["contributor_city"] or "",
+        "contributor_state": row["contributor_state"] or "",
+        "contributor_zip": row["contributor_zip"] or "",
+    }
+
+
+def reclassify_in_place(slug: str, *, reason: str = "", db_path=None) -> dict:
+    """Re-score an entity's attributed rows from their STORED DB fields and update
+    status IN PLACE — no raw read, no delete-then-rebuild.
+
+    Unlike `reclassify_entity` (which rebuilds from raw and aborts via the C1 guard if
+    raw is missing), this re-classifies each live CONFIRMED/PROBABLE `donations` row
+    from the contributor fields already stored on it, so it is SAFE for owners whose
+    raw FEC no longer returns (the Fisher 260-CONFIRMED / malone-john case). It can
+    only RE-TIER existing rows:
+
+      - CONFIRMED/PROBABLE under the current YAML → UPDATE status/reason/signals in
+        place (row never leaves the table);
+      - UNCERTAIN/None → move to review_queue (demotion);
+      - manual_attributions: EXCLUDED drops the row; CONFIRMED/PROBABLE force-keep it.
+
+    It does NOT promote review-queue rows or re-route related entities — a signal
+    ADDITION still needs a from-raw `reclassify`/re-fetch. Snapshots + logs. Use it to
+    back-apply a signal/flag change (e.g. city_state_alone_insufficient) to existing
+    rows when a from-raw rebuild would drop verified data.
+    """
+    target_db = db_path or db.MASTER_DB
+    db.init(target_db)
+    owner = _load_owner(slug)
+    snap_path = db.snapshot(f"pre-reclassify-inplace-{slug}", target_db)
+    ts = _utc_now_iso()
+    res = {"updated": 0, "demoted": 0, "excluded": 0, "unchanged": 0, "forced": 0}
+
+    with db.connect(target_db) as conn:
+        manual = db.manual_attributions_for_slug(conn, slug)
+        rows = conn.execute(
+            "SELECT * FROM donations WHERE (entity_slug = ? OR parent_owner_slug = ?) "
+            "AND superseded_by IS NULL AND status IN ('CONFIRMED','PROBABLE')",
+            (slug, slug),
+        ).fetchall()
+
+        for row in rows:
+            txn = row["transaction_id"]
+            ent = row["entity_slug"]
+            override = manual.get(txn)
+            if override == EXCLUDED:
+                conn.execute(
+                    "DELETE FROM donations WHERE transaction_id = ? AND entity_slug = ?",
+                    (txn, ent),
+                )
+                res["excluded"] += 1
+                continue
+
+            c = classify(_record_from_donation_row(row), owner)
+            if override in (CONFIRMED, PROBABLE):
+                status, sreason, sigs = override, f"manual attribution ({override})", []
+            elif c is None:
+                status, sreason, sigs = UNCERTAIN, "name match only — no confirming signals", []
+            else:
+                status, sreason, sigs = c.status, c.status_reason, c.signals_matched
+
+            if status in (CONFIRMED, PROBABLE):
+                if status == row["status"] and sreason == row["status_reason"]:
+                    res["unchanged"] += 1
+                    continue
+                conn.execute(
+                    "UPDATE donations SET status = ?, status_reason = ?, signals_matched = ? "
+                    "WHERE transaction_id = ? AND entity_slug = ?",
+                    (status, sreason, json.dumps(sigs), txn, ent),
+                )
+                res["forced" if override else "updated"] += 1
+            else:
+                # Demotion: leave the canonical table, land in the review queue.
+                conn.execute(
+                    "DELETE FROM donations WHERE transaction_id = ? AND entity_slug = ?",
+                    (txn, ent),
+                )
+                db.insert_review_queue(
+                    conn,
+                    {
+                        "transaction_id": txn,
+                        "entity_slug": ent,
+                        "reason": sreason,
+                        "raw_payload_path": row["raw_payload_path"],
+                        "queued_at": ts,
+                    },
+                )
+                res["demoted"] += 1
+
+    block = [
+        f"\n### {ts[:10]} — RECLASSIFY-IN-PLACE — {slug}",
+        "",
+        f"- **entity_slug**: `{slug}`",
+        f"- **reason**: {reason or 'in-place reclassification from stored DB fields'}",
+        f"- **rows_scored**: `{len(rows)}`",
+        f"- **updated**: `{res['updated']}` · **demoted→queue**: `{res['demoted']}` · "
+        f"**forced**: `{res['forced']}` · **excluded**: `{res['excluded']}` · "
+        f"**unchanged**: `{res['unchanged']}`",
+        f"- **snapshot_path**: `{snap_path}`",
+        f"- **note**: in-place re-score from stored donations columns (no raw read, no "
+        f"delete-rebuild); rows recoverable from the snapshot above.",
+        "",
+    ]
+    existing = PROVENANCE_LOG.read_text(encoding="utf-8") if PROVENANCE_LOG.exists() else ""
+    PROVENANCE_LOG.write_text(existing + "\n".join(block), encoding="utf-8")
+    res["snapshot_path"] = str(snap_path) if snap_path else None
+    return res

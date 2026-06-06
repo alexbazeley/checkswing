@@ -28,10 +28,23 @@ name_variants:
 - "Fisher, John J"
 - "Fisher, John J."
 
+# "John Fisher" is so common that a lone city+state match (San Francisco/CA)
+# corroborates nothing — it swept ~99 federal + 6 CA same-named strangers (a
+# TriBike courier, BART staff, a Sidley Austin lawyer, DFJ-VC records) into
+# PROBABLE on the city signal alone. This flag makes city_state INSUFFICIENT on
+# its own for PROBABLE: such a row stays UNCERTAIN unless a discriminating signal
+# (employer/occupation/ZIP) also hits. city_state still counts toward a two-signal
+# CONFIRMED, and San Francisco stays a documented city so it does NOT contradict —
+# so the real strong-signal giving (Pisces/Sansome + ZIPs 94111/94188) is
+# untouched. See change_log 2026-06-06 and OWNER_SCHEMA.md.
+city_state_alone_insufficient: true
+
 verifying_signals:
   cities:
     # San Francisco only (Tier 2 confirmed). Marin County hinted in some
-    # press but not Tier 2-verified.
+    # press but not Tier 2-verified. Kept (NOT removed) so SF records don't trip
+    # the address-contradiction rule — the city_state_alone_insufficient flag
+    # above is what neutralizes the one-signal PROBABLE leak.
   - "san francisco"
   states:
   - "CA"
@@ -242,8 +255,46 @@ change_log:
     individual record-level adjudication (not scalable). Signal review
     date advanced.
   by: "automated pipeline (PR 4 Tier C light pass)"
+- date: 2026-06-06
+  change: |
+    Added `city_state_alone_insufficient: true` to fix a noisy PROBABLE tier.
+    Root cause: city_state:san francisco/CA, standing as the SOLE confirming
+    signal, promoted every same-named SF "John Fisher" to PROBABLE — a TriBike
+    Transport courier ($60), BART employees, a Sidley Austin attorney, Theatre
+    Rhinoceros, and DFJ-VC records that evade the spelled-out negative_signals
+    via FEC spelling variants ("DRAPER, FISHER & JURVELSON" / "DRAPER FISHER
+    JURVET"). For a name this common in a metro this large, city+state alone
+    corroborates nothing.
+
+    NOTE — the obvious fix (removing "san francisco" from cities) is WRONG and was
+    tried + reverted: it makes every SF record trip the address-contradiction rule
+    (city not in documented list), which demotes even the Pisces/ZIP-94111 strong-
+    signal rows to UNCERTAIN — nuking the real $3.7M of giving. The city must stay.
+    The new classifier flag instead makes a LONE city_state hit insufficient for
+    PROBABLE (→ UNCERTAIN) while city_state still counts toward a 2-signal CONFIRMED
+    and still prevents contradiction.
+
+    Measured impact (flag on, signals otherwise unchanged):
+      - Federal master.db: PROBABLE 99 → 0 (all 99 were lone city_state:san
+        francisco/CA), CONFIRMED 569 UNCHANGED ($3.62M; 567 strong + 2
+        occupation+city two-signal, which the flag leaves CONFIRMED). The 99 moved
+        to the review queue; zero rows lost. APPLIED via the new in-place reclassify
+        (`cli reclassify-inplace`, re-scores from the fields stored on each donations
+        row) — NOT a from-raw reclassify: a full `--full-refetch` still left 316/668
+        rows raw-missing (incl. 260 strong-signal CONFIRMEDs FEC no longer returns),
+        so a from-raw rebuild would have destroyed them (C1 guard correctly blocks).
+      - CA state.db: PROBABLE 6 → 0; CONFIRMED 258 preserved ($3.71M).
+      - TX state.db: unaffected (no SF dependency; 1 occupation:owner PROBABLE
+        survives by design — occupations kept).
+
+    Occupations (owner/investor/self-employed) KEPT this round (maintainer call):
+    the city signal was the dominant leak. A follow-up can trim them or evaluate
+    making city_state_alone_insufficient the global default for all owners.
+  by: "automated pipeline (calibration + classifier hardening, maintainer-approved)"
+  references:
+  - "data/master.db pre-fix: 569 CONFIRMED / 99 PROBABLE (≈all city_state:san francisco/CA)"
 
 audit:
   created: 2026-05-22
-  last_ingestion: '2026-05-27'
-  last_signal_review: 2026-05-25
+  last_ingestion: '2026-06-06'
+  last_signal_review: 2026-06-06

@@ -123,6 +123,34 @@ def test_reclassify_deletes_donations_but_keeps_verdicts(tmp_path):
         assert state_db.discarded_txns_for_slug(conn, "moreno-arte") == {"other"}
 
 
+def test_delete_donations_scoped_to_jurisdiction(tmp_path):
+    # A multi-state owner: deleting one jurisdiction (for a per-state reclassify) must
+    # NOT touch the owner's rows in other jurisdictions — they wouldn't be restored.
+    db_path = tmp_path / "state.db"
+    state_db.init(db_path)
+    ca = _base_row()
+    tx = _base_row(
+        state_txn_id=state_db.compose_state_txn_id(
+            jurisdiction="TX", source="TEC", source_filing_id="730", source_tran_id="100000001"
+        ),
+        jurisdiction="TX",
+        source="TEC",
+        source_tran_id="100000001",
+        source_filing_id="730",
+    )
+    with state_db.connect(db_path) as conn:
+        state_db.insert_state_donation(conn, ca)
+        state_db.insert_state_donation(conn, tx)
+    with state_db.connect(db_path) as conn:
+        deleted = state_db.delete_donations_for_slug(conn, "moreno-arte", jurisdiction="CA")
+        assert deleted == 1
+    with state_db.connect(db_path) as conn:
+        rows = conn.execute(
+            "SELECT jurisdiction FROM state_donations WHERE entity_slug='moreno-arte'"
+        ).fetchall()
+        assert [r["jurisdiction"] for r in rows] == ["TX"]  # CA gone, TX survives
+
+
 def test_upsert_filer_overwrites(tmp_path):
     db_path = tmp_path / "state.db"
     state_db.init(db_path)

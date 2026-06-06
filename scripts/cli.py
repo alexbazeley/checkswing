@@ -14,7 +14,7 @@ from .apply_committee_external_links import apply_external_links
 from .audit import audit_slug
 from .backfill_donation_image_fields import backfill as backfill_donation_image_fields
 from .export import export_aggregate, export_entity
-from .ingest import ingest_entity, reclassify_entity
+from .ingest import ingest_entity, reclassify_entity, reclassify_in_place
 from .ingest_committee_disbursements import (
     ingest_all_committee_disbursements,
 )
@@ -914,6 +914,39 @@ def ingest_all_pilot(dry_run, min_date, full_refetch, include_related):
             full_refetch=full_refetch,
             process_related_entities=include_related,
         )
+
+
+@cli.command(name="reclassify-inplace")
+@click.argument("slug")
+@click.option("--reason", default="", help="Reason (recorded in PROVENANCE_LOG).")
+@click.option("--yes", is_flag=True, help="Skip confirmation prompt.")
+def reclassify_inplace_cmd(slug, reason, yes):
+    """Re-score SLUG's attributed rows from their STORED DB fields and update status
+    in place — no raw read, no delete-then-rebuild.
+
+    Use to back-apply a signal/flag change (e.g. city_state_alone_insufficient) when a
+    from-raw `reclassify` would abort/lose verified rows because FEC no longer returns
+    their raw. It only RE-TIERS existing donations rows (CONFIRMED/PROBABLE → updated
+    in place, or demoted to the review queue); it does not promote queue rows or
+    re-route related entities. Snapshots + logs.
+    """
+    db.init()
+    with db.connect() as conn:
+        n = conn.execute(
+            "SELECT COUNT(*) FROM donations WHERE (entity_slug = ? OR parent_owner_slug = ?) "
+            "AND superseded_by IS NULL AND status IN ('CONFIRMED','PROBABLE')",
+            (slug, slug),
+        ).fetchone()[0]
+    if n == 0:
+        click.echo(f"No attributed rows for {slug}. Nothing to re-score.")
+        return
+    click.echo(f"Will re-score {n} attributed row(s) for {slug} from stored DB fields (in place).")
+    if not yes and not click.confirm("Continue?", default=False):
+        click.echo("Aborted.")
+        return
+    summary = reclassify_in_place(slug, reason=reason)
+    click.echo("")
+    click.echo(json.dumps(summary, indent=2, default=str))
 
 
 @cli.command()

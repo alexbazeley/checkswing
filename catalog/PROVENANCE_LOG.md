@@ -6600,3 +6600,218 @@ generated end-to-end from the joined data") is satisfied.
 - **uncertain_count**: `6`
 - **snapshot_path**: `data/snapshots/2026-06-06T21-29-46Z__b3446483.db`
 - **notes**: scanned=19970
+
+### 2026-06-06 — STATE_INGESTION
+
+- **run_id**: `7b035ecb`
+- **entity_slug**: `fisher-john`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `reclassify: calibration: city_state_alone_insufficient flag (kill SF one-signal PROBABLE leak)`
+- **records_scanned**: `10688`
+- **confirmed_count**: `259`
+- **probable_count**: `0`
+- **uncertain_count**: `157`
+- **snapshot_path**: `data/snapshots/2026-06-06T21-57-45Z__7b035ecb.db`
+- **notes**: scanned=10688
+
+### 2026-06-06 — INGESTION
+
+- **run_id**: `edf7e1da`
+- **entity_slug**: `fisher-john`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2026-04-30`
+- **name_variants_queried**: `["John Fisher", "John J. Fisher", "John J Fisher", "John Joseph Fisher", "Fisher, John", "Fisher, John J", "Fisher, John J."]`
+- **api_calls_made**: `245`
+- **records_fetched**: `3946`
+- **confirmed_count**: `569`
+- **probable_count**: `0`
+- **uncertain_count**: `3284`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-06-06T21-58-14Z__edf7e1da.db`
+- **notes**: skipped(no-name-match)=93 · min_date=--full-refetch · states=['CA']
+
+### 2026-06-06 — SUPERSESSION — run edf7e1da
+
+- `3061920110008177836` (fisher-john): FEC restatement: image_number
+- `3061920110008066611` (fisher-john): FEC restatement: image_number
+- `3061920110007453564` (fisher-john): FEC restatement: image_number
+- `3061920110007426764` (fisher-john): FEC restatement: image_number
+- `3061920110009701334` (fisher-john): FEC restatement: image_number
+- `3061920110009640306` (fisher-john): FEC restatement: image_number
+- `3061920110009037030` (fisher-john): FEC restatement: image_number
+- `3061920110008614631` (fisher-john): FEC restatement: image_number
+- `2110820041045290008` (fisher-john): FEC restatement: image_number
+- `2051820071077390483` (fisher-john): FEC restatement: image_number
+- `1070820110007402579` (fisher-john): FEC restatement: image_number
+- `1070820110006782411` (fisher-john): FEC restatement: image_number
+- `2061220071077937941` (fisher-john): FEC restatement: image_number
+- `2081020041041240137` (fisher-john): FEC restatement: image_number
+- `2050720041038194732` (fisher-john): FEC restatement: image_number
+- `1070820110008033357` (fisher-john): FEC restatement: image_number
+- `1070820110008002870` (fisher-john): FEC restatement: image_number
+- `1070820110007995349` (fisher-john): FEC restatement: image_number
+- `1070820110006110802` (fisher-john): FEC restatement: image_number
+- `2121920061073117280` (fisher-john): FEC restatement: image_number
+- `1070820110008120530` (fisher-john): FEC restatement: image_number
+- `1070820110007461441` (fisher-john): FEC restatement: image_number
+- `1070820110006099311` (fisher-john): FEC restatement: image_number
+- `1070820110007774903` (fisher-john): FEC restatement: image_number
+- `2103120061071456669` (fisher-john): FEC restatement: image_number
+- `1070820110006266172` (fisher-john): FEC restatement: image_number
+- `1070820110008320901` (fisher-john): FEC restatement: image_number
+- `2030620091110212145` (fisher-john): FEC restatement: image_number
+- `1121520090001216709` (fisher-john): FEC restatement: image_number
+- `2121520081102434288` (fisher-john): FEC restatement: image_number
+- `2012220091104671005` (fisher-john): FEC restatement: image_number
+- `1121520090001976513` (fisher-john): FEC restatement: image_number
+- `2021220091107613820` (fisher-john): FEC restatement: image_number
+- `1121520090001979369` (fisher-john): FEC restatement: image_number
+- `2110720081100568757` (fisher-john): FEC restatement: image_number
+- `1121520090001983382` (fisher-john): FEC restatement: image_number
+- `1121520090001854090` (fisher-john): FEC restatement: image_number
+- `2103020081099864178` (fisher-john): FEC restatement: image_number
+- `2103020081099864177` (fisher-john): FEC restatement: image_number
+- `1121520090001797049` (fisher-john): FEC restatement: image_number
+- `2102320081098411785` (fisher-john): FEC restatement: image_number
+- `2030520091108962333` (fisher-john): FEC restatement: image_number
+- `1121520090001827886` (fisher-john): FEC restatement: image_number
+- `1121520090001736705` (fisher-john): FEC restatement: image_number
+- `2103020081099864176` (fisher-john): FEC restatement: image_number
+- `2012220091104665234` (fisher-john): FEC restatement: image_number
+- `1121520090001640205` (fisher-john): FEC restatement: image_number
+- `1121520090001199865` (fisher-john): FEC restatement: image_number
+- `2021920081084897921` (fisher-john): FEC restatement: image_number
+- `1121520090001802400` (fisher-john): FEC restatement: image_number
+- `1042620110005724347` (fisher-john): FEC restatement: image_number
+- `1062820110005889474` (fisher-john): FEC restatement: image_number
+- `2051920111140062250` (fisher-john): FEC restatement: image_number
+- `2120120101132065393` (fisher-john): FEC restatement: image_number
+- `2120120101132065041` (fisher-john): FEC restatement: image_number
+- `2120120101132062894` (fisher-john): FEC restatement: image_number
+- `2041320121154794787` (fisher-john): FEC restatement: image_number
+- `1021520110005349830` (fisher-john): FEC restatement: image_number
+- `2040720111138010165` (fisher-john): FEC restatement: image_number
+- `2020720111135397231` (fisher-john): FEC restatement: image_number
+- `1032220120009535877` (fisher-john): FEC restatement: image_number
+- `1111520100004858083` (fisher-john): FEC restatement: image_number
+- `2082420111142417335` (fisher-john): FEC restatement: image_number
+- `2042820101125887741` (fisher-john): FEC restatement: image_number
+- `2042820101125887740` (fisher-john): FEC restatement: image_number
+- `2051320101126316579` (fisher-john): FEC restatement: image_number
+- `2041120111138036394` (fisher-john): FEC restatement: image_number
+- `2041120111138036393` (fisher-john): FEC restatement: image_number
+- `2021820101123494253` (fisher-john): FEC restatement: image_number
+- `2103020091120295543` (fisher-john): FEC restatement: image_number
+- `1021220100003889540` (fisher-john): FEC restatement: image_number
+- `1112420200264123760` (fisher-john): FEC restatement: image_number
+- `2102420111144112692` (fisher-john): FEC restatement: image_number
+- `2072720111141740939` (fisher-john): FEC restatement: image_number
+- `2072720111141740938` (fisher-john): FEC restatement: image_number
+- `2061520111140811844` (fisher-john): FEC restatement: image_number
+- `2050420111139653845` (fisher-john): FEC restatement: image_number
+- `1120720170036045193` (fisher-john): FEC restatement: image_number
+- `1120720170036040138` (fisher-john): FEC restatement: image_number
+- `2122220141233554716` (fisher-john): FEC restatement: image_number
+- `2061020151245491565` (fisher-john): FEC restatement: image_number
+- `2012920151237594011` (fisher-john): FEC restatement: image_number
+- `1121920140016514492` (fisher-john): FEC restatement: image_number
+- `1052220150017579853` (fisher-john): FEC restatement: image_number
+- `1050120150017430994` (fisher-john): FEC restatement: image_number
+- `2110620141226866451` (fisher-john): FEC restatement: image_number
+- `2091120141221587528` (fisher-john): FEC restatement: image_number
+- `2081320141220833373` (fisher-john): FEC restatement: image_number
+- `2081320141220833369` (fisher-john): FEC restatement: image_number
+- `2081120141220582992` (fisher-john): FEC restatement: image_number
+- `2081120141220582991` (fisher-john): FEC restatement: image_number
+- `2081120141220582990` (fisher-john): FEC restatement: image_number
+- `1010620150016546138` (fisher-john): FEC restatement: image_number
+- `2081820141220946468` (fisher-john): FEC restatement: image_number
+- `2060220141213970757` (fisher-john): FEC restatement: image_number
+- `2050620141212323129` (fisher-john): FEC restatement: image_number
+- `2050620141212323083` (fisher-john): FEC restatement: image_number
+- `2022720141206113961` (fisher-john): FEC restatement: image_number
+- `2022720141206113960` (fisher-john): FEC restatement: image_number
+- `2030420141206290068` (fisher-john): FEC restatement: image_number
+- `1022520140015221348` (fisher-john): FEC restatement: image_number
+- `1022520140015221347` (fisher-john): FEC restatement: image_number
+- `2100920141225912546` (fisher-john): FEC restatement: image_number
+- `2041620151241955135` (fisher-john): FEC restatement: image_number
+- `2111920131199147663` (fisher-john): FEC restatement: image_number
+- `1112420200263888944` (fisher-john): FEC restatement: image_number
+- `1103120160032410532` (fisher-john): FEC restatement: image_number
+- `1103120160032407596` (fisher-john): FEC restatement: image_number
+- `1103120160032407595` (fisher-john): FEC restatement: image_number
+- `2120220161356604367` (fisher-john): FEC restatement: image_number
+- `1110720160032608293` (fisher-john): FEC restatement: image_number
+- `2052620161293506618` (fisher-john): FEC restatement: image_number
+- `2052620161293505250` (fisher-john): FEC restatement: image_number
+- `2050420161291363642` (fisher-john): FEC restatement: image_number
+- `2051120161292586269` (fisher-john): FEC restatement: image_number
+- `2051620161292826623` (fisher-john): FEC restatement: image_number
+- `2031220161276386766` (fisher-john): FEC restatement: image_number
+- `2032520161277057028` (fisher-john): FEC restatement: image_number
+- `2021320161262948745` (fisher-john): FEC restatement: image_number
+- `2062220161300060797` (fisher-john): FEC restatement: image_number
+- `2022520161272894574` (fisher-john): FEC restatement: image_number
+- `2022520161272894573` (fisher-john): FEC restatement: image_number
+- `2022520161272894572` (fisher-john): FEC restatement: image_number
+- `1042820160018641815` (fisher-john): FEC restatement: image_number
+- `1042820160018639555` (fisher-john): FEC restatement: image_number
+- `2022520161272892048` (fisher-john): FEC restatement: image_number
+- `2021820161272526720` (fisher-john): FEC restatement: image_number
+- `2021120161262926389` (fisher-john): FEC restatement: image_number
+- `1072120160028290475` (fisher-john): FEC restatement: image_number
+- `2102920151256717078` (fisher-john): FEC restatement: image_number
+- `2110220151256749686` (fisher-john): FEC restatement: image_number
+- `1012920160018295010` (fisher-john): FEC restatement: image_number
+- `2072420151247911226` (fisher-john): FEC restatement: image_number
+- `1022520160018429066` (fisher-john): FEC restatement: image_number
+- `2072420151247911668` (fisher-john): FEC restatement: image_number
+- `2111520151257165497` (fisher-john): FEC restatement: image_number
+- `2101420151255588064` (fisher-john): FEC restatement: image_number
+- `2073020151248067240` (fisher-john): FEC restatement: image_number
+- `2072920151248020358` (fisher-john): FEC restatement: image_number
+- `1101920150017958937` (fisher-john): FEC restatement: image_number
+- `1112420200263995295` (fisher-john): FEC restatement: image_number
+- `1110720180037418737` (fisher-john): FEC restatement: image_number
+- `1110720180037418446` (fisher-john): FEC restatement: image_number
+- `2072020181576526656` (fisher-john): FEC restatement: image_number
+- `2071920181576442315` (fisher-john): FEC restatement: image_number
+- `2051020181552120881` (fisher-john): FEC restatement: image_number
+- `2051020181552119660` (fisher-john): FEC restatement: image_number
+- `2032220181519806962` (fisher-john): FEC restatement: image_number
+- `2032220181519805785` (fisher-john): FEC restatement: image_number
+- `2080720171442831525` (fisher-john): FEC restatement: image_number
+- `2080720171442831524` (fisher-john): FEC restatement: image_number
+- `2080520171442763729` (fisher-john): FEC restatement: image_number
+- `2080520171442763728` (fisher-john): FEC restatement: image_number
+- `2080320171442549631` (fisher-john): FEC restatement: image_number
+- `2080320171442549630` (fisher-john): FEC restatement: image_number
+- `2080220171442481096` (fisher-john): FEC restatement: image_number
+- `2080220171442480944` (fisher-john): FEC restatement: image_number
+- `2072820171442304586` (fisher-john): FEC restatement: image_number
+- `2072820171442304476` (fisher-john): FEC restatement: image_number
+- `1072120170035559028` (fisher-john): FEC restatement: image_number
+- `2102720171461394668` (fisher-john): FEC restatement: image_number
+- `2071920171426271820` (fisher-john): FEC restatement: image_number
+- `2071920171426271819` (fisher-john): FEC restatement: image_number
+- `2042620171400504254` (fisher-john): FEC restatement: image_number
+- `2042620171400504253` (fisher-john): FEC restatement: image_number
+- `2042620171400504252` (fisher-john): FEC restatement: image_number
+- `1071720170035539512` (fisher-john): FEC restatement: image_number
+- `1071720170035539511` (fisher-john): FEC restatement: image_number
+- `2042620171400509007` (fisher-john): FEC restatement: image_number
+- `2042620171400509006` (fisher-john): FEC restatement: image_number
+- `2022220171372036337` (fisher-john): FEC restatement: image_number
+- `IA13` (fisher-john): FEC restatement: image_number
+- `IA19456` (fisher-john): FEC restatement: image_number
+
+### 2026-06-06 — RECLASSIFY-IN-PLACE — fisher-john
+
+- **entity_slug**: `fisher-john`
+- **reason**: apply city_state_alone_insufficient flag (back-apply; raw incomplete so from-raw reclassify unsafe)
+- **rows_scored**: `668`
+- **updated**: `0` · **demoted→queue**: `99` · **forced**: `0` · **excluded**: `0` · **unchanged**: `569`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-06-06T23-01-26Z__pre-reclassify-inplace-fisher-john.db`
+- **note**: in-place re-score from stored donations columns (no raw read, no delete-rebuild); rows recoverable from the snapshot above.

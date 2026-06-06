@@ -475,12 +475,30 @@ def insert_state_ingestion_run(conn: sqlite3.Connection, row: dict) -> None:
     )
 
 
-def delete_donations_for_slug(conn: sqlite3.Connection, entity_slug: str) -> int:
+def delete_donations_for_slug(
+    conn: sqlite3.Connection, entity_slug: str, jurisdiction: str | None = None
+) -> int:
     """Delete this entity's state_donations + open review-queue rows (for reclassify).
+
+    When `jurisdiction` is given, only that jurisdiction's rows are deleted — REQUIRED
+    for a per-state reclassify of a multi-state owner: a CA reclassify re-ingests only
+    from the CA extract, so deleting the owner's TX/NY rows too would silently lose them
+    (they wouldn't be restored). `jurisdiction=None` deletes across all jurisdictions
+    (whole-owner wipe).
 
     Durable verdicts (state_review_resolutions, state_manual_attributions) are NOT
     touched — they survive reclassify by design. Returns donation rows deleted.
     """
-    cur = conn.execute("DELETE FROM state_donations WHERE entity_slug = ?", (entity_slug,))
-    conn.execute("DELETE FROM state_review_queue WHERE entity_slug = ?", (entity_slug,))
+    if jurisdiction:
+        cur = conn.execute(
+            "DELETE FROM state_donations WHERE entity_slug = ? AND jurisdiction = ?",
+            (entity_slug, jurisdiction),
+        )
+        conn.execute(
+            "DELETE FROM state_review_queue WHERE entity_slug = ? AND jurisdiction = ?",
+            (entity_slug, jurisdiction),
+        )
+    else:
+        cur = conn.execute("DELETE FROM state_donations WHERE entity_slug = ?", (entity_slug,))
+        conn.execute("DELETE FROM state_review_queue WHERE entity_slug = ?", (entity_slug,))
     return cur.rowcount
