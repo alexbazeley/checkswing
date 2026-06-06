@@ -30,10 +30,46 @@ from scripts.paths import OWNERS_DIR, STATE_DB  # noqa: E402
 
 OUT_PATH = Path(__file__).resolve().parent / "state_data.json"
 TOP_RECIPIENTS = 8
+TOP_DONORS = 5
 
 
 def _utc_now_iso() -> str:
     return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def _parse_signals(raw) -> list[str]:
+    """state_donations.signals_matched is a JSON array string; be forgiving."""
+    if not raw:
+        return []
+    try:
+        v = json.loads(raw)
+        return [str(s) for s in v] if isinstance(v, list) else []
+    except (ValueError, TypeError):
+        return []
+
+
+# NY dataset is the Socrata "Campaign Finance … Contributions: Beginning 1999"
+# resource (see scripts/fetch_ny.SODA_URL). The human-facing dataset page:
+_NY_DATASET_URL = "https://data.ny.gov/d/4j2b-6a2j"
+
+
+def _source_links(source: str, filing_id: str | None, tran_id: str | None) -> tuple[str | None, str | None]:
+    """Best-effort (filing_url, dataset_url) to the OFFICIAL record, per portal.
+
+    Returns (None, None) when no reliable public link can be built — we never
+    fabricate a citation. Verified patterns only:
+      * CAL-ACCESS — the actual filed PDF image, keyed on the filing id.
+      * NYSBOE     — NY has no per-filing PDF; source_filing_id is the recipient
+                     filer id, so the citable per-record handle is the Socrata
+                     transaction. Link the exact dataset record + the dataset page.
+      * PA-DOS     — no data ingested yet and no verified per-record URL; omit.
+    """
+    src = (source or "").upper()
+    if src == "CAL-ACCESS" and filing_id:
+        return (f"https://cal-access.sos.ca.gov/PDFGen/pdfgen.prg?filingid={filing_id}&amendid=0", None)
+    if src == "NYSBOE" and tran_id:
+        return (f"https://data.ny.gov/resource/4j2b-6a2j.json?trans_number={tran_id}", _NY_DATASET_URL)
+    return (None, None)
 
 
 def _owner_meta() -> dict[str, dict]:
@@ -60,13 +96,26 @@ def main(db_path: Path = STATE_DB, out_path: Path = OUT_PATH) -> Path:
     rows = con.execute(
         "SELECT * FROM state_donations WHERE status IN ('CONFIRMED','PROBABLE') ORDER BY date DESC"
     ).fetchall()
+    # Recipient identity (canonical name/type/party/office) from the filer lookup.
+    # Keyed by (jurisdiction, source, filer_id), matching the state_filers PK.
+    filers: dict[tuple, sqlite3.Row] = {}
+    try:
+        for fr in con.execute("SELECT * FROM state_filers").fetchall():
+            filers[(fr["jurisdiction"], fr["source"], fr["filer_id"])] = fr
+    except sqlite3.OperationalError:
+        pass  # very old DB without the filers table — fall back to as-filed names
     con.close()
 
     donations = []
     owners: dict[str, dict] = {}
     owner_recip: dict[str, dict[str, float]] = defaultdict(lambda: defaultdict(float))
+    owner_recip_ids: dict[str, set] = defaultdict(set)
+    owner_cycles: dict[str, set] = defaultdict(set)
     juris: dict[str, dict] = {}
     juris_recip: dict[str, dict[str, float]] = defaultdict(lambda: defaultdict(float))
+    # Recipient rollup, keyed by a stable recipient key (filer id when present,
+    # else the as-filed name) within a jurisdiction+source.
+    recips: dict[str, dict] = {}
 
     for r in rows:
         slug = r["entity_slug"]
@@ -78,27 +127,50 @@ def main(db_path: Path = STATE_DB, out_path: Path = OUT_PATH) -> Path:
         amt = float(r["amount"] or 0)
         amt2026 = to_real(amt, cycle)
         jx = r["jurisdiction"] or "CA"
-        recip = r["recipient_name"] or "(recipient unidentified)"
+        source = r["source"]
+        filer_id = r["recipient_filer_id"]
+        filer = filers.get((jx, source, filer_id))
+        # Prefer the canonical filer name; fall back to the as-filed recipient name.
+        recip = (filer["name"] if filer else None) or r["recipient_name"] or "(recipient unidentified)"
+        rtype = (filer["filer_type"] if filer else None) or r["recipient_type"]
+        filing_url, dataset_url = _source_links(source, r["source_filing_id"], r["source_tran_id"])
+        # Stable recipient routing key (filer id when present, else slugged name).
+        rkey = f"{jx}:{source}:{filer_id}" if filer_id else f"{jx}:{source}:name:{recip}"
 
         donations.append({
+            "id": r["state_txn_id"],
             "entity": slug,
             "owner_name": m["name"],
             "team": m["team"],
+            "entity_kind": r["entity_kind"],
+            "parent": r["parent_owner_slug"],
             "status": r["status"],
+            "status_reason": r["status_reason"],
+            "signals": _parse_signals(r["signals_matched"]),
             "donor_name": r["contributor_name_raw"],
             "employer": r["contributor_employer_raw"],
             "occupation": r["contributor_occupation_raw"],
             "city": r["contributor_city"],
             "state": r["contributor_state"],
+            "zip": r["contributor_zip"],
             "amount": amt,
             "amount_2026": round(amt2026, 2),
             "date": r["date"],
             "cycle": cycle,
             "recipient": recip,
-            "recipient_type": r["recipient_type"],
+            "recipient_type": rtype,
+            "recipient_filer_id": filer_id,
+            "recipient_key": rkey,
             "jurisdiction": jx,
-            "source": r["source"],
+            "source": source,
             "source_filing_id": r["source_filing_id"],
+            "source_tran_id": r["source_tran_id"],
+            "discovery_source": r["discovery_source"],
+            "report_type": r["report_type"],
+            "raw_payload": r["raw_payload_path"],
+            "ingested_at": r["ingested_at"],
+            "filing_url": filing_url,
+            "dataset_url": dataset_url,
         })
 
         o = owners.setdefault(slug, {
@@ -112,9 +184,11 @@ def main(db_path: Path = STATE_DB, out_path: Path = OUT_PATH) -> Path:
         o["total_amount_2026"] += amt2026
         o["jurisdictions"].add(jx)
         owner_recip[slug][recip] += amt
+        owner_recip_ids[slug].add(rkey)
+        owner_cycles[slug].add(cycle)
 
         j = juris.setdefault(jx, {
-            "code": jx, "source": r["source"],
+            "code": jx, "source": source,
             "n_confirmed": 0, "n_probable": 0,
             "total_amount": 0.0, "total_amount_2026": 0.0, "owners": set(),
         })
@@ -123,6 +197,27 @@ def main(db_path: Path = STATE_DB, out_path: Path = OUT_PATH) -> Path:
         j["total_amount_2026"] += amt2026
         j["owners"].add(slug)
         juris_recip[jx][recip] += amt
+
+        rc = recips.setdefault(rkey, {
+            "key": rkey, "filer_id": filer_id, "jurisdiction": jx, "source": source,
+            "name": recip, "recipient_type": rtype,
+            "party": (filer["party"] if filer else None) or r["recipient_party"],
+            "office": (filer["office"] if filer else None) or r["recipient_office"],
+            "n_confirmed": 0, "n_probable": 0,
+            "total_amount": 0.0, "total_amount_2026": 0.0,
+            "owners": set(), "_donor_amt": defaultdict(float),
+            "first_date": r["date"], "last_date": r["date"],
+        })
+        rc["n_confirmed" if r["status"] == "CONFIRMED" else "n_probable"] += 1
+        rc["total_amount"] += amt
+        rc["total_amount_2026"] += amt2026
+        rc["owners"].add(slug)
+        rc["_donor_amt"][slug] += amt
+        if r["date"]:
+            if not rc["first_date"] or r["date"] < rc["first_date"]:
+                rc["first_date"] = r["date"]
+            if not rc["last_date"] or r["date"] > rc["last_date"]:
+                rc["last_date"] = r["date"]
 
     def _top(d: dict[str, float]) -> list[dict]:
         return [
@@ -136,6 +231,8 @@ def main(db_path: Path = STATE_DB, out_path: Path = OUT_PATH) -> Path:
         o["total_amount"] = round(o["total_amount"], 2)
         o["total_amount_2026"] = round(o["total_amount_2026"], 2)
         o["top_recipients"] = _top(owner_recip[slug])
+        o["n_recipients"] = len(owner_recip_ids[slug])
+        o["cycles"] = sorted(owner_cycles[slug])
         owners_out[slug] = o
 
     juris_out = []
@@ -149,19 +246,40 @@ def main(db_path: Path = STATE_DB, out_path: Path = OUT_PATH) -> Path:
             "top_recipients": _top(juris_recip[jx]),
         })
 
+    recips_out = []
+    for rc in sorted(recips.values(), key=lambda x: -x["total_amount"]):
+        top_donors = [
+            {"slug": s, "name": meta.get(s, {"name": s})["name"], "amount": round(a, 2)}
+            for s, a in sorted(rc["_donor_amt"].items(), key=lambda kv: -kv[1])[:TOP_DONORS]
+        ]
+        recips_out.append({
+            "key": rc["key"], "filer_id": rc["filer_id"],
+            "jurisdiction": rc["jurisdiction"], "source": rc["source"],
+            "name": rc["name"], "recipient_type": rc["recipient_type"],
+            "party": rc["party"], "office": rc["office"],
+            "n_confirmed": rc["n_confirmed"], "n_probable": rc["n_probable"],
+            "n_donations": rc["n_confirmed"] + rc["n_probable"],
+            "n_owners": len(rc["owners"]),
+            "total_amount": round(rc["total_amount"], 2),
+            "total_amount_2026": round(rc["total_amount_2026"], 2),
+            "top_donors": top_donors,
+            "first_date": rc["first_date"], "last_date": rc["last_date"],
+        })
+
     out = {
         "generated_at": _utc_now_iso(),
         "cpi": {"table": {str(y): v for y, v in CPI_TABLE.items()},
                 "base_year": CPI_BASE_YEAR, "latest_month": CPI_LATEST_MONTH},
         "jurisdictions": juris_out,
         "owners": owners_out,
+        "recipients": recips_out,
         "donations": donations,
         "n_donations": len(donations),
     }
     out_path.write_text(json.dumps(out, separators=(",", ":")))
     kb = out_path.stat().st_size // 1024
     print(f"Wrote {out_path} — {len(donations)} donations, {len(owners_out)} owners, "
-          f"{len(juris_out)} jurisdiction(s), {kb} KB")
+          f"{len(recips_out)} recipients, {len(juris_out)} jurisdiction(s), {kb} KB")
     return out_path
 
 
