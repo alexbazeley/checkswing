@@ -135,15 +135,18 @@ GOVERNANCE.md §6).
   vote Z" is a neutral arithmetic fact stored/queried as such. The claim that the
   donation *caused* the vote is interpretation and belongs only in `reports/`.
 
-## Phase 4 addendum — state campaign finance (California pilot)
+## Phase 4 addendum — state campaign finance (multi-state)
 
 Phase 4 (CHARTER.md §Phase 4) extends the archive to state campaign-finance
 contributions, stored in the *separate* `data/state.db` and held to the same
 attribution + verification + provenance discipline as the federal data
 (GOVERNANCE.md §1.11). The official state portal is the **record**; an aggregator is
 only a **discovery pointer**. State sources are adopted one state at a time — each is
-a documented scope expansion (GOVERNANCE.md §5). California (CAL-ACCESS) is approved
-as of 2026-06-03; other states still require sign-off.
+a documented scope expansion (GOVERNANCE.md §5), wired in through the `StateSource`
+registry (`scripts/state_sources.py`) so the classifier, schema, and dashboard stay
+source-agnostic. Adopted so far: California (CAL-ACCESS, approved 2026-06-03),
+New York (NYSBOE), and Texas (TEC, added 2026-06-06); a PA-DOS adapter is built and
+registered. Other states still require sign-off.
 
 ### Tier 1: Primary, authoritative (the cited source of every state row)
 
@@ -151,6 +154,17 @@ as of 2026-06-03; other states still require sign-off.
   disclosure system and the source of record for CA state contributions. Each
   CONFIRMED/PROBABLE `state_donations` row cites a CAL-ACCESS filing
   (`source = "CAL-ACCESS"`, `source_filing_id`, `source_tran_id`, `raw_payload_path`).
+- **TEC** (Texas Ethics Commission) — Texas's official disclosure system and the
+  source of record for TX state contributions. The whole database is published as one
+  public bulk zip (`TEC_CF_CSV.zip`, no login/API key) at
+  `prd.tecprd.ethicsefile.com/public/cf/public/TEC_CF_CSV.zip`, refreshed ~daily:
+  itemized contributions split across `contribs_NN.csv` (plus `cont_ss.csv` /
+  `cont_t.csv`), with `filers.csv` the recipient lookup. Receipts carry contributor
+  employer + occupation + city/state/zip, so the two-signal CONFIRMED bar is reachable
+  (a gold-grade portal, like CAL-ACCESS). `source = "TEC"`.
+- **NYSBOE** (New York State Board of Elections, via the data.ny.gov SODA API) — the
+  source of record for NY state contributions. ZIP-grade disclosure only (no employer/
+  occupation/state), so CONFIRMED rests on an exact ZIP match. `source = "NYSBOE"`.
 - **California Civic Data Coalition (CCDC) mirror**
   (`calaccess.californiacivicdata.org/downloads/latest/`) — a daily-refreshed,
   documented, tab-delimited republication of the raw CAL-ACCESS files (`RCPT_CD`

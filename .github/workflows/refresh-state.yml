@@ -1,16 +1,17 @@
-name: Monthly CA state refresh
+name: Monthly state refresh (CA + TX)
 
-# Phase-4 California (CAL-ACCESS) refresh. Pulls the CA Secretary of State's daily
-# bulk export, re-runs the state ingest, and commits any changes to data/state.db +
-# the provenance log. Cloudflare's deploy regenerates mockup/state_data.json from the
-# updated DB (build_data.py invokes build_state_data).
+# Phase-4 state refresh. Pulls each adopted state's official bulk export, re-runs the
+# state ingest, and commits any changes to data/state.db + the provenance log.
+# Cloudflare's deploy regenerates mockup/state_data.json from the updated DB
+# (build_data.py invokes build_state_data).
 #
 # Deliberately SEPARATE from the federal refresh.yml and LFS-FREE:
 #   * It never reads or writes master.db (the LFS object), so the checkout uses
 #     lfs: false — no LFS bandwidth is consumed, sidestepping the federal job's
 #     LFS-quota constraint entirely. state.db is a normal, non-LFS git blob.
-#   * The 3.7 GB RCPT_CD table is STREAMED from the downloaded zip (never extracted),
-#     so the runner's disk is never stressed.
+#   * Every state's bulk export is STREAMED from the downloaded zip (never extracted) —
+#     CA's 3.7 GB RCPT_CD and TX's ~10 GB of contribs members alike — so the runner's
+#     disk is never stressed.
 #
 # Cadence: 2nd of the month, 12:00 UTC — staggered one day after the federal refresh
 # (1st) so the two never push concurrently; the rebase-before-push below absorbs any
@@ -31,7 +32,7 @@ permissions:
 jobs:
   state-refresh:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -62,6 +63,20 @@ jobs:
         # amendments superseded). One pass over all pilot/active owners.
         run: python -m scripts.cli ingest-state-ca --zip data/raw/state/ca/dbwebexport.zip
 
+      - name: Download Texas Ethics Commission bulk export (~1 GB)
+        # Public, no login/API key. Refreshed ~daily by TEC.
+        run: |
+          mkdir -p data/raw/state/tx
+          curl -fSL --retry 3 --retry-delay 15 \
+            -o data/raw/state/tx/TEC_CF_CSV.zip \
+            https://prd.tecprd.ethicsefile.com/public/cf/public/TEC_CF_CSV.zip
+          ls -lh data/raw/state/tx/TEC_CF_CSV.zip
+
+      - name: Ingest Texas state contributions
+        # Streams the contribs_* / cont_ss / cont_t members from the zip (no
+        # extraction); idempotent upsert keyed on the native contributionInfoId.
+        run: python -m scripts.cli ingest-state-bulk TX --input data/raw/state/tx/TEC_CF_CSV.zip
+
       - name: Validate
         run: python -m scripts.cli validate
 
@@ -70,12 +85,12 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           # The state layer is only allowed to touch state.db + the provenance log.
-          # The raw zip is gitignored; state_data.json is rebuilt at deploy time.
+          # The raw zips are gitignored; state_data.json is rebuilt at deploy time.
           git add data/state.db catalog/PROVENANCE_LOG.md 2>/dev/null || true
           if git diff --staged --quiet; then
             echo "No changes from state refresh — nothing to commit."
           else
-            git commit -m "CA state refresh ($(date -u +%Y-%m-%d))"
+            git commit -m "State refresh: CA + TX ($(date -u +%Y-%m-%d))"
             # Rebase onto anything that landed on main since checkout (e.g. the
             # federal refresh) so the push fast-forwards. State touches only its
             # own data files, so this replays cleanly over unrelated commits.

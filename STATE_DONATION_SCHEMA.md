@@ -105,5 +105,9 @@ Run log (counts, snapshot path, extract label) and the migration trail.
   the high-confidence degree"; attribution (which owner) is unaffected.
 - **Recipient party/office** are usually NULL — CAL-ACCESS receipts don't carry
   them; only the filer name/type is resolved (from the cover page).
-- **Coverage is California-only** and, within CA, only contributions itemized in
-  `RCPT_CD`. Other states are out until added one at a time (SOURCES.md §Phase 4).
+- **Coverage is partial and per-state.** Live jurisdictions: CA (CAL-ACCESS), NY
+  (NYSBOE), TX (TEC); a PA-DOS adapter is built and registered. Within CA, only
+  contributions itemized in `RCPT_CD`; within TX, only itemized contributions in the
+  TEC bulk export (`contribs_*` / `cont_ss` / `cont_t`). NY is ZIP-grade (no employer/
+  occupation/state), so its CONFIRMED rows rest on an exact ZIP match. Other states are
+  out until added one at a time via the `StateSource` registry (SOURCES.md §Phase 4).

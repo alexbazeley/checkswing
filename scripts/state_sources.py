@@ -18,7 +18,16 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable, Iterable
 
-from . import calaccess_adapter, fetch_calaccess, fetch_ny, fetch_pa, ny_adapter, pa_adapter
+from . import (
+    calaccess_adapter,
+    fetch_calaccess,
+    fetch_ny,
+    fetch_pa,
+    fetch_tx,
+    ny_adapter,
+    pa_adapter,
+    tx_adapter,
+)
 
 
 @dataclass(frozen=True)
@@ -111,7 +120,32 @@ NY = StateSource(
 )
 
 
-REGISTRY: dict[str, StateSource] = {s.code: s for s in (CA, PA, NY)}
+# ── Texas (TEC bulk CSV zip — streamed, no extraction) ───────────────────────
+
+def _tx_candidates(zip_path: Path, owners: list[tuple[str, dict]]) -> dict[str, list[dict]]:
+    # Streams every contribution member from the zip, builds the filer index, and
+    # pre-joins the recipient onto kept rows in one pass.
+    return fetch_tx.bucket_rows_by_owner(zip_path, owners)
+
+
+def _tx_resolver(zip_path: Path):
+    # Recipient is pre-joined during bucketing; the resolver is a stateless reader.
+    return fetch_tx.make_recipient_resolver()
+
+
+TX = StateSource(
+    code="TX", source="TEC", label="TX · TEC",
+    candidate_rows_by_owner=_tx_candidates,
+    recipient_resolver=_tx_resolver,
+    record_adapter=tx_adapter.to_classifier_record,
+    row_builder=tx_adapter.to_state_donation_row,
+    filing_id_of=tx_adapter.filing_id_of,
+    tran_id_of=tx_adapter.tran_id_of,
+    dedupe=fetch_tx.dedupe,
+)
+
+
+REGISTRY: dict[str, StateSource] = {s.code: s for s in (CA, PA, NY, TX)}
 
 
 def get_source(code: str) -> StateSource:
