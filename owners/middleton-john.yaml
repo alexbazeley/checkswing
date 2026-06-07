@@ -27,6 +27,7 @@ name_variants:
 verifying_signals:
   cities:
   - "bryn mawr"
+  - "bryn mawer"                  # PA-DOS portal typo of "Bryn Mawr" — added 2026-06-06 (state calibration; recovers a $50k 2023 Phillies-employer PA contribution leaking to UNCERTAIN on the misspelling)
   - "philadelphia"
   - "king of prussia"            # location of Dock Street Capital (his family office), 510 Feheley Dr, 19406 — added 2026-05-31
   states:
@@ -145,6 +146,28 @@ notes: |
   records under that string promote to CONFIRMED.
 
 change_log:
+- date: 2026-06-06
+  change: |
+    State calibration (Phase 4 PA-DOS onboarding). Spot-checked all 23 CONFIRMED
+    PA state contributions against the portal — zero misattributions (all Bryn
+    Mawr / King of Prussia / Philadelphia + Bradford Holdings / Dock Street Capital
+    / Phillies; recipients are PA gubernatorial/AG/legislative committees). One
+    obvious-owner row was leaking to UNCERTAIN:
+
+    - $50,000 (2023-09-18, employer PHILADELPHIA PHILLIES) filed with the city
+      misspelled "BRYN MAWER". Employer is only a verifying signal and the typo
+      blocked the corroborating city signal → UNCERTAIN.
+
+    APPLIED (§2.5a, disposition (a) — a portal typo of a documented residence):
+    - verifying_signals.cities += "bryn mawer". Same spirit as the existing
+      "Branford Holdings" / "Mc Intosh Inns" FEC-typo variants in this block.
+      Promotes that one row to CONFIRMED (Phillies + bryn mawer + PA); the
+      UNCERTAIN doppelgängers (John A. Middleton/Chicago, John C./Highland Park,
+      Houston, Morganton) are untouched (different cities/states).
+
+    Federal master.db is unaffected (no federal reclassify run; the string only
+    matters where "bryn mawer" appears). State-only change.
+  by: "automated pipeline (PA state calibration, maintainer-approved)"
 - date: 2026-05-31
   change: |
     Resolved the "Dock Street Capital connection" flagged out-of-scope in the

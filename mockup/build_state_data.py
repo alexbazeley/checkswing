@@ -55,6 +55,10 @@ _NY_DATASET_URL = "https://data.ny.gov/d/4j2b-6a2j"
 # The per-document PDF viewer keys on an encrypted token, not the raw FiledDocID, so we
 # cite the official contribution-search page rather than fabricate a per-record link.
 _IL_DATASET_URL = "https://www.elections.il.gov/CampaignDisclosure/ContributionSearchByAllContributions.aspx"
+# PA-DOS "Full Campaign Finance Export" page — the source of the per-year bulk zips.
+_PA_DATASET_URL = (
+    "https://www.pa.gov/agencies/dos/resources/voting-and-elections-resources/campaign-finance-data"
+)
 
 
 def _source_links(source: str, filing_id: str | None, tran_id: str | None) -> tuple[str | None, str | None]:
@@ -68,7 +72,9 @@ def _source_links(source: str, filing_id: str | None, tran_id: str | None) -> tu
                      transaction. Link the exact dataset record + the dataset page.
       * ISBE       — the per-doc PDF viewer keys on an encrypted token (not the raw
                      FiledDocID); cite the official contribution-search page.
-      * PA-DOS     — no data ingested yet and no verified per-record URL; omit.
+      * PA-DOS     — no verified per-record deep link in the bulk export; cite the
+                     official pa.gov Full Campaign Finance Export page (the source
+                     of the ingested file) as the dataset URL.
     """
     src = (source or "").upper()
     if src == "CAL-ACCESS" and filing_id:
@@ -77,6 +83,8 @@ def _source_links(source: str, filing_id: str | None, tran_id: str | None) -> tu
         return (f"https://data.ny.gov/resource/4j2b-6a2j.json?trans_number={tran_id}", _NY_DATASET_URL)
     if src == "ISBE":
         return (None, _IL_DATASET_URL)
+    if src == "PA-DOS":
+        return (None, _PA_DATASET_URL)
     return (None, None)
 
 
