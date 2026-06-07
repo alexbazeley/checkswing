@@ -1,4 +1,4 @@
-name: Monthly state refresh (CA + PA + TX + IL)
+name: Monthly state refresh (CA + PA + TX + IL + WA)
 
 # Phase-4 state refresh. Pulls each adopted state's official bulk export, re-runs the
 # state ingest, and commits any changes to data/state.db + the provenance log.
@@ -115,6 +115,11 @@ jobs:
         # from Committees.txt; idempotent upsert keyed on the native receipt ID.
         run: python -m scripts.cli ingest-state-bulk IL --input data/raw/state/il
 
+      - name: Ingest Washington state contributions
+        # API-based (data.wa.gov Socrata) — no bulk download; queries each owner's
+        # name server-side. Idempotent upsert keyed on the native transaction id.
+        run: python -m scripts.cli ingest-state-bulk WA
+
       - name: Validate
         run: python -m scripts.cli validate
 
@@ -128,7 +133,7 @@ jobs:
           if git diff --staged --quiet; then
             echo "No changes from state refresh — nothing to commit."
           else
-            git commit -m "State refresh: CA + PA + TX + IL ($(date -u +%Y-%m-%d))"
+            git commit -m "State refresh: CA + PA + TX + IL + WA ($(date -u +%Y-%m-%d))"
             # Rebase onto anything that landed on main since checkout (e.g. the
             # federal refresh) so the push fast-forwards. State touches only its
             # own data files, so this replays cleanly over unrelated commits.

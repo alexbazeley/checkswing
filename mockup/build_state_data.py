@@ -59,6 +59,9 @@ _IL_DATASET_URL = "https://www.elections.il.gov/CampaignDisclosure/ContributionS
 _PA_DATASET_URL = (
     "https://www.pa.gov/agencies/dos/resources/voting-and-elections-resources/campaign-finance-data"
 )
+# WA PDC Socrata dataset page (kv7h-kjye). source_filing_id is the report_number, which
+# deep-links the actual filed report image at my.pdc.wa.gov.
+_WA_DATASET_URL = "https://data.wa.gov/d/kv7h-kjye"
 
 
 def _source_links(source: str, filing_id: str | None, tran_id: str | None) -> tuple[str | None, str | None]:
@@ -72,6 +75,8 @@ def _source_links(source: str, filing_id: str | None, tran_id: str | None) -> tu
                      transaction. Link the exact dataset record + the dataset page.
       * ISBE       — the per-doc PDF viewer keys on an encrypted token (not the raw
                      FiledDocID); cite the official contribution-search page.
+      * WA-PDC     — source_filing_id is the report_number → the filed report image
+                     at my.pdc.wa.gov; also link the dataset page.
       * PA-DOS     — no verified per-record deep link in the bulk export; cite the
                      official pa.gov Full Campaign Finance Export page (the source
                      of the ingested file) as the dataset URL.
@@ -83,6 +88,8 @@ def _source_links(source: str, filing_id: str | None, tran_id: str | None) -> tu
         return (f"https://data.ny.gov/resource/4j2b-6a2j.json?trans_number={tran_id}", _NY_DATASET_URL)
     if src == "ISBE":
         return (None, _IL_DATASET_URL)
+    if src == "WA-PDC" and filing_id:
+        return (f"https://my.pdc.wa.gov/public/document?repno={filing_id}", _WA_DATASET_URL)
     if src == "PA-DOS":
         return (None, _PA_DATASET_URL)
     return (None, None)

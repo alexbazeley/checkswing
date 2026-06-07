@@ -106,13 +106,16 @@ Run log (counts, snapshot path, extract label) and the migration trail.
 - **Recipient party/office** are usually NULL — CAL-ACCESS receipts don't carry
   them; only the filer name/type is resolved (from the cover page).
 - **Coverage is partial and per-state.** Live jurisdictions: CA (CAL-ACCESS), NY
-  (NYSBOE), PA (PA-DOS), TX (TEC), IL (ISBE). Within CA, only contributions itemized in
-  `RCPT_CD`; within TX, only itemized contributions in the TEC bulk export (`contribs_*` /
-  `cont_ss` / `cont_t`). PA is gold-grade (employer + occupation) and multi-year — the
-  ingest streams `contrib_*`/`filer_*` members from each per-year `<YEAR>.zip` at pa.gov;
-  the monthly refresh re-pulls a rolling 4-year window while the committed historical years
-  stay put under the idempotent content-hash upsert. IL is gold-grade (employer +
-  occupation, itemized > $500) — the ingest streams the ~1 GB tab-delimited `Receipts.txt`
-  and joins recipients (with party) from `Committees.txt`. NY is ZIP-grade (no employer/
+  (NYSBOE), PA (PA-DOS), TX (TEC), IL (ISBE), WA (WA-PDC). Within CA, only contributions
+  itemized in `RCPT_CD`; within TX, only itemized contributions in the TEC bulk export
+  (`contribs_*` / `cont_ss` / `cont_t`). PA is gold-grade (employer + occupation) and
+  multi-year — the ingest streams `contrib_*`/`filer_*` members from each per-year
+  `<YEAR>.zip` at pa.gov; the monthly refresh re-pulls a rolling 4-year window while the
+  committed historical years stay put under the idempotent content-hash upsert. IL is
+  gold-grade (employer + occupation, itemized > $500) — the ingest streams the ~1 GB
+  tab-delimited `Receipts.txt` and joins recipients (with party) from `Committees.txt`.
+  WA is gold-grade (employer + occupation + state) and API-based — queried live over the
+  data.wa.gov Socrata dataset (`kv7h-kjye`), no bulk download; the `report_number`
+  deep-links the filed report image at my.pdc.wa.gov. NY is ZIP-grade (no employer/
   occupation/state), so its CONFIRMED rows rest on an exact ZIP match. Other states are
   out until added one at a time via the `StateSource` registry (SOURCES.md §Phase 4).

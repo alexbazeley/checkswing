@@ -6843,3 +6843,17 @@ generated end-to-end from the joined data") is satisfied.
 - **uncertain_count**: `2`
 - **snapshot_path**: `data/snapshots/2026-06-07T00-36-52Z__6d25c6b1.db`
 - **notes**: scanned=39, skipped_no_date=4
+
+### 2026-06-07 — STATE_INGESTION
+
+- **run_id**: `41770954`
+- **entity_slug**: `stanton-john`
+- **jurisdiction**: `WA`
+- **source**: `WA-PDC`
+- **extract_label**: `https://data.wa.gov/resource/kv7h-kjye.json`
+- **records_scanned**: `398`
+- **confirmed_count**: `194`
+- **probable_count**: `9`
+- **uncertain_count**: `193`
+- **snapshot_path**: `data/snapshots/2026-06-07T02-22-59Z__41770954.db`
+- **notes**: scanned=398
