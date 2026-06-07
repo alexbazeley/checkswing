@@ -124,7 +124,7 @@ def render_og() -> Image.Image:
     deck_font = load_font(SERIF_MEDIUM_CANDIDATES, 40)
     d.text(
         (96, 392),
-        "Where MLB's owners send their political money.",
+        "Where MLB's owners spend in politics.",
         font=deck_font,
         fill=INK_2,
     )
@@ -133,9 +133,9 @@ def render_og() -> Image.Image:
     stat_font = load_font(SANS_CANDIDATES, 22)
     stats = [
         (96, "36 owners"),
-        (280, "14 election cycles"),
+        (280, "Federal + state"),
         (520, "2000–present"),
-        (760, "Sourced from FEC filings"),
+        (760, "Sourced from official filings"),
     ]
     for x, text in stats:
         d.text((x, 490), text, font=stat_font, fill=INK)
@@ -146,7 +146,7 @@ def render_og() -> Image.Image:
     # Footer mono
     mono_font = load_font(MONO_CANDIDATES, 20)
     d.text((96, 568), "checkswing.pages.dev", font=mono_font, fill=INK_3)
-    right_text = "Federal political contributions"
+    right_text = "Federal + state political money"
     rb = d.textbbox((0, 0), right_text, font=mono_font)
     rw = rb[2] - rb[0]
     d.text((1104 - rw, 568), right_text, font=mono_font, fill=INK_3)
