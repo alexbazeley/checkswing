@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>CheckSwing — MLB owner federal political contributions</title>
-<meta name="description" content="Federal political contributions by MLB principal owners, 2000–present, sourced from FEC filings.">
+<title>CheckSwing — MLB owner political contributions, federal & state</title>
+<meta name="description" content="Federal and state political contributions by MLB principal owners, 2000–present, sourced from official FEC and state campaign-finance filings.">
 
 <!-- Favicons -->
 <link rel="icon" type="image/svg+xml" href="assets/checkswing-icon.svg">
@@ -13,25 +13,25 @@
 
 <!-- Open Graph -->
 <meta property="og:site_name" content="CheckSwing">
-<meta property="og:title" content="CheckSwing — MLB owner federal political contributions">
-<meta property="og:description" content="Federal political contributions by MLB principal owners, 2000–present, sourced from FEC filings.">
+<meta property="og:title" content="CheckSwing — MLB owner political contributions, federal & state">
+<meta property="og:description" content="Where Major League Baseball's owners spend in politics — federal and state contributions, 2000–present, sourced from official filings.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://checkswing.pages.dev/">
 <meta property="og:image" content="https://checkswing.pages.dev/assets/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="CheckSwing — Where MLB's owners send their political money.">
+<meta property="og:image:alt" content="CheckSwing — Where MLB's owners spend in politics.">
 
 <!-- Twitter card -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="CheckSwing — MLB owner federal political contributions">
-<meta name="twitter:description" content="Federal political contributions by MLB principal owners, 2000–present, sourced from FEC filings.">
+<meta name="twitter:title" content="CheckSwing — MLB owner political contributions, federal & state">
+<meta name="twitter:description" content="Where Major League Baseball's owners spend in politics — federal and state contributions, 2000–present, sourced from official filings.">
 <meta name="twitter:image" content="https://checkswing.pages.dev/assets/og-image.png">
-<meta name="twitter:image:alt" content="CheckSwing — Where MLB's owners send their political money.">
+<meta name="twitter:image:alt" content="CheckSwing — Where MLB's owners spend in politics.">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
 <style>
 /* ════════════════════════════════════════════════════════════════════════
@@ -41,20 +41,23 @@
    provenance carried on every record.
    ══════════════════════════════════════════════════════════════════════ */
 :root {
-  --bg:           #FAFAF6;
+  --bg:           #FBFAF5;
   --bg-elev:     #FFFFFF;
-  --bg-sunk:     #F2F0E8;
-  --ink:         #1A1916;
-  --ink-2:       #4A4842;
-  --ink-3:       #7A7669;
-  --rule:        #E5E1D5;
-  --rule-strong: #C9C4B4;
+  --bg-sunk:     #F1EFE6;
+  --bg-card:     #FFFFFF;
+  --ink:         #17150F;
+  --ink-2:       #46433A;
+  --ink-3:       #7C7666;
+  --rule:        #E7E2D4;
+  --rule-strong: #CBC5B2;
 
   --brand:       #8B1B2C;  /* CheckSwing — wordmark + logo accent */
   --brand-2:     #6E1322;
+  --brand-ink:   #5C0F1C;  /* deepest crimson — display headings on light */
   --brand-soft:  #F4E2E3;  /* subtle tinted background for brand surfaces */
   --accent:      #B8552B;  /* burnt sienna — interactive UI (links, focus, CSV button) */
   --accent-2:    #964322;
+  --accent-soft: #FBF0E7;  /* tinted hover/selected surface for accent UI */
 
   --dem:         #1F4E89;
   --dem-soft:    #DCE5F2;
@@ -68,14 +71,33 @@
   --warn-bg:     #F6E9CA;
   --warn-fg:     #7A5614;
 
+  /* Federal vs State accents — two halves of the project read as a pair.
+     Federal keeps the crimson identity; State takes a deep teal-green so the
+     two levels are instantly distinguishable without competing with party
+     colors (DEM blue / REP red). */
+  --federal:      #8B1B2C;
+  --federal-soft: #F4E2E3;
+  --state:        #1C5C56;
+  --state-2:      #14433F;
+  --state-soft:   #DDEBE7;
+
+  --display: "Fraunces", "Source Serif 4", Georgia, "Times New Roman", serif;
   --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
   --sans:  "Inter", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
   --mono:  "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
 
   --measure: 64ch;
-  --shadow-sm:  0 1px 2px rgba(0,0,0,0.04);
-  --shadow-md:  0 4px 16px rgba(0,0,0,0.07);
-  --shadow-lg:  0 24px 64px rgba(0,0,0,0.16);
+
+  /* Corner radius scale — chips/inputs stay crisp; cards & surfaces soften
+     for a more premium, less boxy feel. */
+  --radius-sm:  4px;
+  --radius:     10px;
+  --radius-lg:  16px;
+
+  --shadow-sm:  0 1px 2px rgba(40,30,15,0.05);
+  --shadow-md:  0 6px 20px rgba(40,30,15,0.08);
+  --shadow-lg:  0 24px 64px rgba(25,18,10,0.18);
+  --shadow-card: 0 1px 2px rgba(40,30,15,0.04), 0 8px 24px rgba(40,30,15,0.06);
 }
 
 /* ────────── Reset ────────── */
@@ -130,16 +152,23 @@ body {
   font-size: 15px;
   line-height: 1.55;
   font-feature-settings: "ss01", "cv11";
+  font-optical-sizing: auto;     /* Fraunces picks its optical cut from the size:
+                                    finer, higher-contrast letterforms at display sizes */
+  text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* ────────── Type ────────── */
-h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; letter-spacing: -0.01em; margin: 0; }
-h1 { font-size: 44px; line-height: 1.08; letter-spacing: -0.02em; }
-h2 { font-size: 22px; line-height: 1.2; }
+h1, h2, h3, h4 { font-family: var(--display); font-weight: 600; letter-spacing: -0.01em; margin: 0; }
+/* Balance ragged headline lines (modern, premium); body copy avoids orphans. */
+h1, h2, .deck, .ghero h1, .section-head h2, .level-divider h2 { text-wrap: balance; }
+p, .caption, .footnote, .lvl-desc, .ld-sub { text-wrap: pretty; }
+h1 { font-size: 46px; line-height: 1.04; letter-spacing: -0.024em; font-weight: 600; }
+h2 { font-size: 25px; line-height: 1.16; letter-spacing: -0.018em; font-weight: 600; }
 h3 { font-size: 15px; font-family: var(--sans); font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-2); }
 .deck { font-family: var(--serif); font-size: 19px; line-height: 1.5; color: var(--ink-2); max-width: var(--measure); margin: 0; font-weight: 400; }
-.eyebrow { font-family: var(--sans); font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); }
+.eyebrow { font-family: var(--sans); font-size: 11px; font-weight: 600; letter-spacing: 0.13em; text-transform: uppercase; color: var(--ink-3); }
 .caption { font-size: 13px; color: var(--ink-3); margin: 4px 0 0; }
 .footnote { font-size: 12px; color: var(--ink-3); margin-top: 10px; }
 
@@ -268,16 +297,22 @@ h3 { font-size: 15px; font-family: var(--sans); font-weight: 600; text-transform
   min-height: 560px;
   height: 72vh;
   max-height: 720px;
-  /* Layered: top-to-bottom dark gradient over the photo. The fallback
-     background-color shows if the photo is missing — text stays legible. */
+  /* Brand DUOTONE (an editorial print technique, not a glow): the photo's
+     colour is replaced by a crimson→warm-ink gradient via `color` blend
+     (hue+chroma from the gradient, luminance from the photo), so the hero
+     reads as part of the warm-paper/crimson system rather than a stock drop-in.
+     A separate top-to-bottom darkening gradient (composited normally) keeps the
+     headline legible. Fallback colour shows if the photo is missing. */
   background:
-    linear-gradient(180deg,
-      rgba(15,12,8,0.20) 0%,
-      rgba(15,12,8,0.10) 35%,
-      rgba(15,12,8,0.70) 78%,
-      rgba(15,12,8,0.92) 100%),
+    linear-gradient(178deg,
+      rgba(18,11,9,0.26) 0%,
+      rgba(18,11,9,0.40) 50%,
+      rgba(20,12,9,0.84) 86%,
+      rgba(22,12,9,0.96) 100%),
+    linear-gradient(150deg, #7C1B2A 0%, #4A2420 48%, #211610 100%),
     url('assets/hero-ballpark.webp') center 32% / cover no-repeat,
-    #2a2520;
+    #17120F;
+  background-blend-mode: normal, color, normal;
   display: flex;
   align-items: flex-end;
   border-bottom: 1px solid var(--rule);
@@ -342,7 +377,7 @@ h3 { font-size: 15px; font-family: var(--sans); font-weight: 600; text-transform
 .kpi { padding: 0 24px; border-right: 1px solid var(--rule); }
 .kpi:last-child { border-right: 0; }
 .kpi-label { font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); }
-.kpi-value { font-family: var(--serif); font-size: 36px; font-weight: 600; line-height: 1.1; margin-top: 6px; font-feature-settings: "lnum"; font-variant-numeric: tabular-nums lining-nums; }
+.kpi-value { font-family: var(--display); font-size: 38px; font-weight: 600; line-height: 1.05; margin-top: 6px; letter-spacing: -0.02em; font-feature-settings: "lnum"; font-variant-numeric: tabular-nums lining-nums; }
 .kpi-foot  { font-size: 12px; color: var(--ink-3); margin-top: 4px; }
 
 /* ════════════════════════════════════════════════════════════════════════
@@ -388,6 +423,9 @@ section.block:last-child { border-bottom: 0; }
 .cycle-bar-seg.dem { background: var(--dem); }
 .cycle-bar-seg.rep { background: var(--rep); }
 .cycle-bar-seg.oth { background: var(--oth); }
+/* Round the top of each stacked bar (column-reverse → :last-child is the top
+   segment). Can't use overflow:hidden on .cycle-bar — it would clip the tooltip. */
+.cycle-bar-seg:last-child { border-radius: 4px 4px 0 0; }
 /* Cycle-bar tooltip — visually consistent with .scatter-tooltip but
    anchored per-bar (CSS-only, no JS) since each bar has one fixed tooltip. */
 .cycle-bar-tooltip {
@@ -452,7 +490,7 @@ section.block:last-child { border-bottom: 0; }
 .legend {
   display: flex; gap: 18px; font-size: 12px; color: var(--ink-2); margin-top: 16px;
 }
-.legend-swatch { width: 12px; height: 12px; display: inline-block; margin-right: 6px; vertical-align: -2px; }
+.legend-swatch { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 7px; vertical-align: -1px; }
 .legend-swatch.dem { background: var(--dem); }
 .legend-swatch.rep { background: var(--rep); }
 .legend-swatch.oth { background: var(--oth); }
@@ -514,8 +552,8 @@ section.block:last-child { border-bottom: 0; }
 /* Party tilt bar */
 .tilt-cell { width: 170px; }
 .tilt-bar {
-  height: 10px; border-radius: 2px; overflow: hidden;
-  display: flex; background: var(--oth-soft);
+  height: 9px; border-radius: 999px; overflow: hidden;
+  display: flex; background: var(--bg-sunk);
 }
 .tilt-seg { height: 100%; }
 .tilt-seg.dem { background: var(--dem); }
@@ -596,8 +634,8 @@ section.block:last-child { border-bottom: 0; }
   border-bottom: 1px solid var(--rule);
 }
 .recipient:last-child { border-bottom: 0; }
-.recipient-bar-track { position: relative; height: 4px; background: var(--bg-sunk); border-radius: 2px; margin-top: 6px; }
-.recipient-bar { position: absolute; left: 0; top: 0; height: 100%; border-radius: 2px; }
+.recipient-bar-track { position: relative; height: 5px; background: var(--bg-sunk); border-radius: 999px; margin-top: 6px; overflow: hidden; }
+.recipient-bar { position: absolute; left: 0; top: 0; height: 100%; border-radius: 999px; }
 .recipient-bar.dem { background: var(--dem); }
 .recipient-bar.rep { background: var(--rep); }
 .recipient-bar.oth { background: var(--oth); }
@@ -953,8 +991,8 @@ section.block:last-child { border-bottom: 0; }
 .drawer .donor-arrow { color: var(--ink-3); font-weight: 400; }
 
 .drawer-amount {
-  font-family: var(--serif); font-size: 44px; font-weight: 600;
-  letter-spacing: -0.02em; line-height: 1; padding-top: 18px;
+  font-family: var(--display); font-size: 46px; font-weight: 600;
+  letter-spacing: -0.025em; line-height: 1; padding-top: 18px;
   font-variant-numeric: tabular-nums lining-nums;
 }
 
@@ -1403,20 +1441,31 @@ button.drawer-source-link {
    ══════════════════════════════════════════════════════════════════════ */
 .site-footer {
   border-top: 1px solid var(--rule);
-  padding: 40px 0 80px;
+  background: var(--bg-sunk);
+  padding: 48px 0 64px;
+  margin-top: 8px;
   font-size: 13px;
   color: var(--ink-3);
 }
 .site-footer .footer-grid {
-  display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 48px;
+  display: grid; grid-template-columns: 2.2fr 1fr 1fr 1fr; gap: 40px;
 }
+@media (max-width: 880px) { .site-footer .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; } }
 .site-footer h4 {
   font-family: var(--sans); font-size: 11px; text-transform: uppercase;
   letter-spacing: 0.1em; color: var(--ink-2); font-weight: 600;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
 }
+.site-footer p { margin: 0 0 8px; }
 .site-footer a { color: var(--ink-2); }
-.site-footer .colophon { font-size: 12px; line-height: 1.55; color: var(--ink-3); max-width: 50ch; }
+.site-footer a:hover { color: var(--accent); }
+.site-footer .colophon { font-size: 12.5px; line-height: 1.6; color: var(--ink-3); max-width: 46ch; margin-top: 14px; }
+.footer-brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; }
+.footer-brand:hover { text-decoration: none; }
+.footer-mark { width: 30px; height: 30px; border-radius: 7px; display: block; }
+.footer-wordmark { font-family: var(--display); font-size: 19px; font-weight: 600; letter-spacing: -0.01em; color: var(--brand); }
+.footer-mono { font-family: var(--mono); font-size: 12px; color: var(--ink-2); }
+.footer-mono-dim { color: var(--ink-3); }
 
 /* ════════════════════════════════════════════════════════════════════════
    CMD-K SEARCH PALETTE
@@ -1596,6 +1645,13 @@ button.drawer-source-link {
    LOADING / EMPTY STATES
    ══════════════════════════════════════════════════════════════════════ */
 .loading { padding: 80px 0; text-align: center; color: var(--ink-3); font-size: 14px; }
+/* Gentle pulse so the initial "Loading data…" reads as active, not stuck. */
+.loading { animation: cs-pulse 1.4s ease-in-out infinite; }
+@keyframes cs-pulse { 0%,100% { opacity: 0.5; } 50% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .loading { animation: none; } }
+
+/* Brand-tinted text selection — a small premium detail. */
+::selection { background: var(--brand-soft); color: var(--brand-ink); }
 .empty-state {
   padding: 48px 24px;
   text-align: center;
@@ -1921,6 +1977,284 @@ button.drawer-source-link {
   .site-footer .footer-grid { grid-template-columns: 1fr; gap: 24px; }
 }
 
+/* ════════════════════════════════════════════════════════════════════════
+   REDESIGN COMPONENTS (2026 refresh)
+   New reusable primitives introduced with the Home / Federal / State
+   restructure: graphic heroes, level cards, the section sub-nav, generic
+   cards, and the homepage layout. These replace the inline-styled markup the
+   States page was hand-rolling.
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* ── Graphic hero — a data-motif background used by the Federal & State
+   section landings (parallel to the photo hero on Home). The motif is a
+   faint, brand-tinted dot/bar field painted in SVG via background-image so it
+   stays crisp and weightless. Level colour comes from --hero-accent. ── */
+.ghero {
+  border-bottom: 1px solid var(--rule);
+  background: var(--bg);
+  --hero-accent: var(--brand);
+}
+.ghero.federal { --hero-accent: var(--federal); }
+.ghero.state   { --hero-accent: var(--state); }
+.ghero-inner {
+  max-width: 1280px; margin: 0 auto;
+  padding: 60px 32px 30px;
+}
+.ghero .eyebrow { color: var(--hero-accent); display: block; margin-bottom: 16px; font-weight: 700; }
+.ghero h1 { color: var(--ink); font-size: 48px; line-height: 1.05; max-width: 20ch; margin-bottom: 18px; letter-spacing: -0.025em; }
+.ghero h1 em { font-style: italic; color: var(--hero-accent); }
+.ghero .deck { color: var(--ink-2); max-width: 62ch; font-size: 19px; }
+.ghero .deck strong { color: var(--ink); font-weight: 600; }
+.ghero-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+.ghero-chip {
+  font: 600 12px/1.5 var(--sans);
+  border: 1px solid var(--rule-strong);
+  background: var(--bg-elev);
+  color: var(--ink-2);
+  border-radius: 999px; padding: 4px 12px;
+  text-decoration: none;
+  transition: border-color 100ms, color 100ms;
+}
+.ghero-chip:hover { border-color: var(--hero-accent); color: var(--hero-accent); text-decoration: none; }
+@media (max-width: 720px) {
+  .ghero-inner { padding: 44px 22px 26px; }
+  .ghero h1 { font-size: 34px; }
+  .ghero .deck { font-size: 16px; }
+}
+
+/* ── Section sub-nav — a quiet tab bar under a section hero that exposes that
+   level's sub-pages (Federal: Overview / Recipients / What's new; State:
+   Overview / Recipients / Jurisdictions). Sticky just under the masthead. ── */
+.subnav {
+  /* Intentionally NOT sticky: the sticky masthead (top:0) and the sticky
+     table headers (top:60px) already own those bands. A sticky subnav at
+     top:60px would collide with the table headers on the Federal/State
+     pages. It scrolls under the masthead with the hero instead. */
+  background: var(--bg);
+  border-bottom: 1px solid var(--rule);
+}
+.subnav-inner {
+  max-width: 1280px; margin: 0 auto; padding: 0 32px;
+  display: flex; align-items: center; gap: 4px;
+  overflow-x: auto; scrollbar-width: none;
+}
+.subnav-inner::-webkit-scrollbar { display: none; }
+.subnav-label {
+  font: 700 11px/1 var(--sans); letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--ink-3); padding-right: 14px; margin-right: 6px;
+  border-right: 1px solid var(--rule); white-space: nowrap;
+}
+.subnav a {
+  font: 500 13.5px/1 var(--sans);
+  color: var(--ink-2);
+  padding: 14px 12px;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 100ms, border-color 100ms;
+}
+.subnav a:hover { color: var(--ink); text-decoration: none; }
+.subnav a.active { color: var(--ink); border-bottom-color: var(--subnav-accent, var(--accent)); font-weight: 600; }
+.subnav.federal { --subnav-accent: var(--federal); }
+.subnav.state   { --subnav-accent: var(--state); }
+@media (max-width: 720px) { .subnav-inner { padding: 0 18px; } .subnav-label { display: none; } }
+
+/* ── Generic card ── */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  padding: 22px 24px;
+  box-shadow: var(--shadow-card);
+}
+.card-link { display: block; color: inherit; text-decoration: none; transition: border-color 120ms, box-shadow 120ms, transform 120ms; }
+.card-link:hover { text-decoration: none; border-color: var(--rule-strong); box-shadow: var(--shadow-md); transform: translateY(-2px); }
+
+/* ── Level cards (homepage Federal/State preview) ── */
+.level-cards {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+  margin: 0;
+}
+@media (max-width: 860px) { .level-cards { grid-template-columns: 1fr; } }
+.level-card {
+  position: relative;
+  display: flex; flex-direction: column;
+  background: var(--bg-card);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-lg);
+  padding: 0;
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  color: inherit; text-decoration: none;
+  transition: border-color 140ms, box-shadow 140ms, transform 140ms;
+}
+.level-card:hover { text-decoration: none; box-shadow: var(--shadow-md); transform: translateY(-3px); border-color: var(--lvl, var(--rule-strong)); }
+.level-card.federal { --lvl: var(--federal); --lvl-soft: var(--federal-soft); }
+.level-card.state   { --lvl: var(--state);   --lvl-soft: var(--state-soft); }
+.level-card-body { padding: 28px 28px 24px; display: flex; flex-direction: column; flex: 1; }
+.level-card .lvl-eyebrow {
+  font: 700 12px/1 var(--sans); letter-spacing: 0.02em;
+  color: var(--lvl); display: block; margin-bottom: 12px;
+}
+.level-card h2 { font-size: 27px; letter-spacing: -0.02em; margin-bottom: 8px; }
+.level-card .lvl-desc { font-family: var(--serif); font-size: 15.5px; line-height: 1.5; color: var(--ink-2); margin: 0 0 20px; }
+.level-card .lvl-stat-row { display: flex; gap: 28px; margin: 4px 0 18px; flex-wrap: wrap; }
+.level-card .lvl-stat .n {
+  font-family: var(--display); font-size: 30px; font-weight: 600; line-height: 1;
+  letter-spacing: -0.02em; font-variant-numeric: tabular-nums lining-nums; display: block;
+}
+.level-card .lvl-stat .k { font: 600 11px/1.3 var(--sans); letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); margin-top: 6px; display: block; }
+.level-card .lvl-viz { margin: 2px 0 20px; }
+.level-card .lvl-foot {
+  margin-top: auto; padding-top: 16px; border-top: 1px solid var(--rule);
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+}
+.level-card .lvl-finding { font-size: 13px; color: var(--ink-3); line-height: 1.4; }
+.level-card .lvl-finding strong { color: var(--ink-2); font-weight: 600; }
+.level-card .lvl-cta { font: 600 13px/1 var(--sans); color: var(--lvl); white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; }
+.level-card:hover .lvl-cta::after { transform: translateX(3px); }
+.level-card .lvl-cta::after { content: "→"; transition: transform 140ms; }
+
+/* ── Home layout helpers ── */
+.home-section { padding: 56px 0; border-bottom: 1px solid var(--rule); }
+.home-section:last-of-type { border-bottom: 0; }
+.section-head { max-width: 60ch; margin-bottom: 26px; }
+.section-head h2 { font-size: 28px; margin-bottom: 8px; }
+.section-head .caption { font-size: 15px; color: var(--ink-2); }
+
+/* ── Trust / methodology strip ── */
+.trust-strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border: 1px solid var(--rule); border-radius: var(--radius); overflow: hidden; background: var(--bg-card); }
+@media (max-width: 760px) { .trust-strip { grid-template-columns: 1fr; } }
+.trust-cell { padding: 22px 24px; border-right: 1px solid var(--rule); }
+.trust-cell:last-child { border-right: 0; }
+@media (max-width: 760px) { .trust-cell { border-right: 0; border-bottom: 1px solid var(--rule); } .trust-cell:last-child { border-bottom: 0; } }
+.trust-cell .tc-tier { font: 700 11px/1 var(--sans); letter-spacing: 0.1em; text-transform: uppercase; display: inline-flex; align-items: center; gap: 7px; margin-bottom: 12px; }
+.trust-cell .tc-tier.confirmed { color: var(--ok-fg); }
+.trust-cell .tc-tier.probable  { color: var(--warn-fg); }
+.trust-cell .tc-tier.uncertain { color: var(--ink-3); }
+.trust-cell .tc-tier::before { content: "●"; font-size: 9px; }
+.trust-cell .tc-tier.uncertain::before { content: "○"; }
+.trust-cell h4 { font-family: var(--display); font-size: 18px; font-weight: 600; letter-spacing: -0.01em; text-transform: none; color: var(--ink); margin-bottom: 6px; }
+.trust-cell p { font-size: 13.5px; line-height: 1.5; color: var(--ink-2); margin: 0; }
+
+/* ── Mini bar chart (used in the State level-card + state jurisdiction view) ── */
+.minibars { display: flex; flex-direction: column; gap: 8px; }
+.minibar-row { display: grid; grid-template-columns: 56px 1fr auto; gap: 10px; align-items: center; font-size: 12px; }
+.minibar-row .mb-label { font: 600 12px/1.2 var(--sans); color: var(--ink-2); white-space: nowrap; }
+.minibar-track { height: 8px; background: var(--bg-sunk); border-radius: 999px; overflow: hidden; }
+.minibar-fill { height: 100%; border-radius: 999px; background: var(--mb-color, var(--accent)); }
+.minibar-row .mb-val { font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: 12px; color: var(--ink-2); white-space: nowrap; }
+
+/* ── Stat band (generic KPI row that isn't the full-bleed .kpis) ── */
+.statband { display: grid; gap: 0; border: 1px solid var(--rule); border-radius: var(--radius); overflow: hidden; background: var(--bg-card); }
+/* Floating stat band — straddles the photo hero and the content below, a
+   premium way to ease the dark→light transition. The white panel + shadow
+   reads as one deliberate layer instead of a hard seam. */
+.statband-float { position: relative; z-index: 2; margin: -52px 0 0; box-shadow: var(--shadow-md); }
+@media (max-width: 560px) { .statband-float { margin-top: 24px; box-shadow: var(--shadow-card); } }
+.statband.cols-4 { grid-template-columns: repeat(4, 1fr); }
+.statband.cols-5 { grid-template-columns: repeat(5, 1fr); }
+@media (max-width: 860px) { .statband.cols-4, .statband.cols-5 { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px) { .statband.cols-4, .statband.cols-5 { grid-template-columns: 1fr; } }
+.statband .sb-cell { padding: 20px 22px; border-right: 1px solid var(--rule); }
+.statband .sb-cell:last-child { border-right: 0; }
+.statband .sb-k { font: 600 11px/1 var(--sans); letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); }
+.statband .sb-v { font-family: var(--display); font-size: 32px; font-weight: 600; line-height: 1.05; letter-spacing: -0.02em; margin-top: 8px; font-variant-numeric: tabular-nums lining-nums; }
+.statband .sb-foot { font-size: 12px; color: var(--ink-3); margin-top: 4px; }
+.statband a.sb-cell { color: inherit; text-decoration: none; transition: background 100ms; }
+.statband a.sb-cell:hover { background: var(--bg-sunk); }
+@media (max-width: 860px) {
+  /* On the 2-col wrap, interior cells need a bottom rule; the last row keeps
+     the container border. Simplest robust approach: give every cell a bottom
+     rule, then the band's own border closes the box. */
+  .statband .sb-cell { border-bottom: 1px solid var(--rule); }
+  .statband .sb-cell:nth-child(2n) { border-right: 0; }
+}
+@media (max-width: 480px) {
+  .statband .sb-cell { border-right: 0; }
+}
+
+/* ── Jurisdiction cards (State page) ── */
+.juris-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+.juris-card {
+  display: flex; flex-direction: column;
+  border: 1px solid var(--rule); border-radius: var(--radius);
+  padding: 18px 20px; background: var(--bg-card);
+  box-shadow: var(--shadow-card);
+  color: inherit; text-decoration: none;
+  transition: border-color 120ms, box-shadow 120ms, transform 120ms;
+}
+.juris-card:hover { text-decoration: none; border-color: var(--state); box-shadow: var(--shadow-md); transform: translateY(-2px); }
+.juris-card .jc-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.juris-card .jc-name { font-family: var(--display); font-size: 19px; font-weight: 600; letter-spacing: -0.01em; }
+.juris-card .jc-src { font: 500 10px/1 var(--mono); letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink-3); }
+.juris-card .jc-total { font-family: var(--display); font-size: 26px; font-weight: 600; letter-spacing: -0.02em; font-variant-numeric: tabular-nums lining-nums; margin: 8px 0 2px; }
+.juris-card .jc-meta { font-size: 12px; color: var(--ink-3); margin-bottom: 12px; }
+.juris-card .jc-recips { list-style: none; padding: 0; margin: 0 0 4px; font-size: 13px; }
+.juris-card .jc-recips li { margin: 0 0 4px; line-height: 1.35; }
+.juris-card .jc-recips .amt { font-variant-numeric: tabular-nums; font-weight: 600; font-family: var(--mono); }
+.juris-card .jc-recips .to { color: var(--ink-3); }
+.juris-card .jc-cta { margin-top: auto; padding-top: 12px; font: 600 13px/1 var(--sans); color: var(--state); display: inline-flex; gap: 6px; align-items: center; }
+.juris-card .jc-cta::after { content: "→"; }
+
+/* ── Owner "by level" split — federal & state shown as equal halves at the
+   top of an owner page. Two columns, level-coloured kickers, no decoration. ── */
+.owner-split {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+  border: 1px solid var(--rule); border-radius: var(--radius);
+  overflow: hidden; background: var(--bg-card);
+}
+@media (max-width: 760px) { .owner-split { grid-template-columns: 1fr; } }
+.owner-split .os-col { padding: 24px 26px; border-right: 1px solid var(--rule); }
+.owner-split .os-col:last-child { border-right: 0; }
+@media (max-width: 760px) {
+  .owner-split .os-col { border-right: 0; border-bottom: 1px solid var(--rule); }
+  .owner-split .os-col:last-child { border-bottom: 0; }
+}
+.owner-split .os-col.federal { --lvl: var(--federal); }
+.owner-split .os-col.state   { --lvl: var(--state); }
+.os-eyebrow { font: 700 12px/1 var(--sans); color: var(--lvl); margin-bottom: 16px; display: flex; align-items: baseline; gap: 8px; }
+.os-eyebrow .os-src { color: var(--ink-3); font-weight: 500; }
+.os-total { font-family: var(--display); font-size: 34px; font-weight: 600; letter-spacing: -0.02em; line-height: 1; font-variant-numeric: tabular-nums lining-nums; }
+.os-breakdown { font-size: 13px; color: var(--ink-3); margin-top: 8px; }
+.os-breakdown b { color: var(--ink-2); font-weight: 600; font-variant-numeric: tabular-nums; }
+.os-top { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--rule); font-size: 13px; line-height: 1.45; }
+.os-top .os-top-k { font: 600 11px/1 var(--sans); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); display: block; margin-bottom: 6px; }
+.os-top .amt { font-family: var(--mono); font-variant-numeric: tabular-nums; font-weight: 600; }
+.os-top .to { color: var(--ink-2); }
+.os-chips { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 6px; }
+.os-empty { font-size: 14px; color: var(--ink-3); line-height: 1.5; }
+
+/* ── Level divider — section front for each half (Federal / State) of an
+   owner page. Level-coloured kicker over a large title, separated by a rule. ── */
+.level-divider { border-top: 1px solid var(--rule-strong); padding-top: 30px; margin-top: 10px; }
+.level-divider .ld-kicker { font: 700 12px/1 var(--sans); color: var(--lvl); }
+.level-divider.federal { --lvl: var(--federal); }
+.level-divider.state   { --lvl: var(--state); }
+.level-divider h2 { font-size: 30px; margin-top: 10px; }
+.level-divider .ld-sub { font-size: 14px; color: var(--ink-2); margin-top: 8px; max-width: 60ch; }
+
+/* ── Provenance / note card (replaces the inline-styled methodology note) ── */
+.note-card {
+  border: 1px solid var(--rule);
+  border-radius: var(--radius); background: var(--bg-sunk);
+  padding: 18px 22px;
+}
+.note-card h3 { font-family: var(--display); font-size: 17px; font-weight: 600; text-transform: none; letter-spacing: -0.01em; color: var(--ink); margin-bottom: 10px; }
+.note-card p { font-size: 13px; line-height: 1.6; color: var(--ink-2); margin: 0 0 8px; }
+.note-card p:last-child { margin-bottom: 0; }
+
+/* Section intro row (heading + optional action), reused across State page */
+.sec-head-row { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px; margin: 30px 0 14px; }
+.sec-head-row h2 { font-size: 24px; margin: 0; }
+.sec-head-row .sec-link { font: 600 13px/1 var(--sans); }
+
+/* State "by owner" table cell treatments (replaces former inline styles) */
+.st-owner-table tbody tr { cursor: pointer; }
+.st-owner-name { color: inherit; font-family: var(--serif); font-weight: 600; }
+.st-owner-table .st-juris-cell { font-family: var(--mono); font-size: 12px; letter-spacing: 0.03em; color: var(--ink-3); }
+.st-owner-table .col-amount { font-weight: 600; font-variant-numeric: tabular-nums; }
+.st-owner-table .st-toprecip { font-size: 13px; color: var(--ink-2); max-width: 22ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
 </style>
 </head>
 
@@ -1962,10 +2296,8 @@ button.drawer-source-link {
       <span class="nav-burger-bars" aria-hidden="true"></span>
     </button>
     <nav class="nav" id="primary-nav" role="navigation" aria-label="Primary">
-      <a href="#/" data-nav="league">League</a>
-      <a href="#/whats-new" data-nav="whats-new">What's new</a>
-      <a href="#/recipients" data-nav="recipients">Recipients</a>
-      <a href="#/states" data-nav="states">States</a>
+      <a href="#/federal" data-nav="federal">Federal</a>
+      <a href="#/states" data-nav="states">State</a>
       <a href="#/methodology" data-nav="methodology">Methodology</a>
       <a href="#/about" data-nav="about">About</a>
       <a href="#/runs" data-nav="runs">Pipeline</a>
@@ -2030,26 +2362,36 @@ button.drawer-source-link {
 <footer class="site-footer">
   <div class="container footer-grid">
     <div>
-      <h4>About this archive</h4>
+      <a class="footer-brand" href="#/">
+        <img src="assets/checkswing-icon.png" alt="" class="footer-mark">
+        <span class="footer-wordmark">CheckSwing</span>
+      </a>
       <p class="colophon">
-        <strong>CheckSwing</strong> tracks federal political contributions by the
-        principal owners of all 30 Major League Baseball franchises, sourced from
-        FEC filings. Records are classified CONFIRMED or PROBABLE under a documented
-        verification rubric; records matching a donor name but no other signal stay
-        UNCERTAIN and do not enter the canonical dataset.
+        Tracks the political contributions of the principal owners of all 30
+        Major League Baseball franchises — at both the federal level (FEC filings)
+        and the state level (official state campaign-finance systems). Records are
+        classified CONFIRMED or PROBABLE under a documented verification rubric;
+        a bare name match stays UNCERTAIN and never enters the dataset. Federal and
+        state data are kept in separate databases and never mixed.
       </p>
     </div>
     <div>
+      <h4>Explore</h4>
+      <p><a href="#/federal">Federal giving</a></p>
+      <p><a href="#/states">State giving</a></p>
+      <p><a href="#/recipients">Recipients</a></p>
+      <p><a href="#/methodology">Methodology</a></p>
+    </div>
+    <div>
       <h4>Project</h4>
-      <p style="margin:0;"><a href="#/methodology">Methodology</a></p>
-      <p style="margin:6px 0 0;"><a href="#/runs">Pipeline transparency</a></p>
-      <p style="margin:6px 0 0;"><a href="#/about">About the data</a></p>
-      <p style="margin:6px 0 0;"><a href="https://www.fec.gov" target="_blank" rel="noopener">FEC.gov</a></p>
+      <p><a href="#/about">About the data</a></p>
+      <p><a href="#/runs">Pipeline transparency</a></p>
+      <p><a href="https://www.fec.gov" target="_blank" rel="noopener">FEC.gov ↗</a></p>
     </div>
     <div>
       <h4>Snapshot</h4>
-      <p id="generated-at" style="margin:0;font-family:var(--mono);font-size:12px;"></p>
-      <p id="latest-run-at" style="margin:6px 0 0;font-family:var(--mono);font-size:12px;color:var(--ink-3);"></p>
+      <p id="generated-at" class="footer-mono"></p>
+      <p id="latest-run-at" class="footer-mono footer-mono-dim"></p>
     </div>
   </div>
 </footer>
@@ -2217,8 +2559,18 @@ let __printSnapshot = null;
 
 function buildPrintHeader() {
   const v = state.view.name;
-  let title = "League overview";
-  if (v === "owner") {
+  let title = "CheckSwing — MLB owner political contributions";
+  if (v === "home") {
+    title = "CheckSwing — MLB owner political contributions, federal & state";
+  } else if (v === "league") {
+    title = "Federal — FEC contributions overview";
+  } else if (v === "states") {
+    title = "State — campaign-finance overview";
+  } else if (v === "state-juris") {
+    title = `State — ${state.view.code}`;
+  } else if (v === "state-recipients" || v === "state-recipient") {
+    title = "State — recipients";
+  } else if (v === "owner") {
     const o = state.data.owners[state.view.slug];
     title = o ? `${o.name} — federal political giving` : `Owner: ${state.view.slug}`;
   } else if (v === "team") {
@@ -2609,10 +2961,16 @@ function route() {
     state.view = { name: "state-recipient", key: decodeURIComponent(stateRecipMatch[1]) };
   } else if (stateJurisMatch) {
     state.view = { name: "state-juris", code: stateJurisMatch[1].toUpperCase() };
-  } else if (hash === "#/states") {
+  } else if (hash === "#/states" || hash === "#/state") {
     state.view = { name: "states" };
-  } else {
+  } else if (hash === "#/federal" || hash === "#/league") {
     state.view = { name: "league" };
+  } else if (hash === "#/" || hash === "#" || hash === "") {
+    state.view = { name: "home" };
+  } else {
+    /* Unknown hash → home (the new front door) rather than the federal
+       dashboard, so stale "#/<typo>" links land somewhere oriented. */
+    state.view = { name: "home" };
   }
 
   // Reset per-view filters
@@ -2639,16 +2997,17 @@ function route() {
   /* Update nav active states. Pipeline link is active for both /#/runs
      and /#/changelog (they're tabs on the same logical page); the States link
      is active for the section and all of its detail routes. */
+  /* Federal nav owns the federal dashboard + its sub-pages (recipients,
+     what's-new). State nav owns the state section + all its detail routes. */
   const stateViews = ["states", "state-juris", "state-recipient", "state-recipients"];
+  const federalViews = ["league", "recipients", "whats-new"];
   document.querySelectorAll(".nav a").forEach((a) => {
     const t = a.getAttribute("data-nav");
     const v = state.view.name;
-    const active = (t === "league" && v === "league")
+    const active = (t === "federal" && federalViews.includes(v))
                 || (t === "methodology" && v === "methodology")
                 || (t === "about" && v === "about")
                 || (t === "runs" && (v === "runs" || v === "changelog"))
-                || (t === "whats-new" && v === "whats-new")
-                || (t === "recipients" && v === "recipients")
                 || (t === "states" && stateViews.includes(v));
     a.classList.toggle("active", active);
   });
@@ -2730,7 +3089,8 @@ window.addEventListener("hashchange", () => {
 function render() {
   const app = document.getElementById("app");
   if (!state.data) return;
-  if (state.view.name === "league") app.innerHTML = renderLeague();
+  if (state.view.name === "home") app.innerHTML = renderHome();
+  else if (state.view.name === "league") app.innerHTML = renderLeague();
   else if (state.view.name === "owner") app.innerHTML = renderOwner(state.view.slug);
   else if (state.view.name === "cycle") app.innerHTML = renderCycle(state.view.year);
   else if (state.view.name === "committee") app.innerHTML = renderCommittee(state.view.id);
@@ -2759,7 +3119,249 @@ function render() {
 }
 
 /* ════════════════════════════════════════════════════════════════════════
-   LEAGUE INDEX VIEW
+   SECTION SUB-NAV
+   A quiet tab bar under a section hero exposing that level's sub-pages, so
+   Federal and State each own their own navigation instead of crowding the
+   global masthead. `level` is "federal" | "state"; `active` is the key of the
+   current sub-page.
+   ══════════════════════════════════════════════════════════════════════ */
+function sectionSubnav(level, active) {
+  const tabs = level === "federal"
+    ? [
+        { key: "overview",   label: "Overview",       href: "#/federal" },
+        { key: "recipients", label: "Recipients",     href: "#/recipients" },
+        { key: "whatsnew",   label: "What's new",     href: "#/whats-new" },
+        { key: "pipeline",   label: "Pipeline",       href: "#/runs" },
+      ]
+    : [
+        { key: "overview",   label: "Overview",       href: "#/states" },
+        { key: "recipients", label: "Recipients",     href: "#/state-recipients" },
+        { key: "method",     label: "Methodology",    href: "#/methodology" },
+      ];
+  const label = level === "federal" ? "Federal" : "State";
+  return `
+  <div class="subnav ${level}">
+    <div class="subnav-inner">
+      <span class="subnav-label">${label}</span>
+      ${tabs.map((t) =>
+        `<a href="${t.href}"${t.key === active ? ' class="active"' : ""}>${escapeHtml(t.label)}</a>`
+      ).join("")}
+    </div>
+  </div>`;
+}
+
+/* Sum league-wide dollars by party across every cycle, honoring the $ mode. */
+function federalPartyDollars() {
+  const key = state.dollars === "real" ? "dollars_by_party_2026" : "dollars_by_party";
+  const out = { DEM: 0, REP: 0, OTH: 0 };
+  const bc = state.data.league.by_cycle || {};
+  for (const yr of Object.keys(bc)) {
+    const m = bc[yr][key] || bc[yr].dollars_by_party || {};
+    out.DEM += m.DEM || 0; out.REP += m.REP || 0; out.OTH += m.OTH || 0;
+  }
+  return out;
+}
+
+/* Aggregate the state layer into homepage-ready toplines (null-safe). */
+function stateToplines() {
+  const sd = state.stateData;
+  if (!sd || !(sd.donations || []).length) return null;
+  const owners = Object.values(sd.owners);
+  const total = owners.reduce((s, o) => s + aggAmt(o, "total_amount"), 0);
+  const nConf = sd.donations.filter((d) => d.status === "CONFIRMED").length;
+  return {
+    total,
+    donations: sd.donations.length,
+    nConf,
+    nProb: sd.donations.length - nConf,
+    owners: owners.length,
+    jurisdictions: sd.jurisdictions.length,
+    recipients: (sd.recipients || []).length,
+    jurisList: sd.jurisdictions.slice().sort((a, b) => aggAmt(b, "total_amount") - aggAmt(a, "total_amount")),
+  };
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   HOME VIEW (route: #/) — the front door. Says what the project is and
+   previews both the federal and state levels as parallel siblings.
+   ══════════════════════════════════════════════════════════════════════ */
+function renderHome() {
+  const L = state.data.league;
+  const fedTotal = aggAmt(L, "total_amount");
+  const fp = federalPartyDollars();
+  const fpTotal = fp.DEM + fp.REP + fp.OTH || 1;
+  const st = stateToplines();
+
+  // Combined toplines
+  const combinedTotal = fedTotal + (st ? st.total : 0);
+  const combinedDonations = L.n_donations + (st ? st.donations : 0);
+
+  // Federal card mini viz — party split bar
+  const fedTiltBar = `
+    <div class="lvl-viz">
+      <div class="tilt-bar">
+        <div class="tilt-seg dem" style="width:${(fp.DEM / fpTotal * 100).toFixed(1)}%"></div>
+        <div class="tilt-seg rep" style="width:${(fp.REP / fpTotal * 100).toFixed(1)}%"></div>
+        <div class="tilt-seg oth" style="width:${(fp.OTH / fpTotal * 100).toFixed(1)}%"></div>
+      </div>
+      <div class="tilt-labels">
+        <span class="dem">${(fp.DEM / fpTotal * 100).toFixed(0)}% Dem</span>
+        <span>${(fp.OTH / fpTotal * 100).toFixed(0)}% Other</span>
+        <span class="rep">${(fp.REP / fpTotal * 100).toFixed(0)}% Rep</span>
+      </div>
+    </div>`;
+
+  const fedTopRecip = L.top_recipients && L.top_recipients[0]
+    ? `Top recipient: <strong>${escapeHtml(L.top_recipients[0].committee)}</strong> · ${fmtMoney(amt(L.top_recipients[0]))}`
+    : "";
+
+  // State card mini viz — top jurisdictions as mini bars
+  let stateViz = "", stateFinding = "";
+  if (st) {
+    const max = Math.max(...st.jurisList.map((j) => aggAmt(j, "total_amount")), 1);
+    stateViz = `
+      <div class="lvl-viz minibars">
+        ${st.jurisList.slice(0, 4).map((j) => `
+          <div class="minibar-row">
+            <span class="mb-label">${escapeHtml(j.code)}</span>
+            <div class="minibar-track"><div class="minibar-fill" style="width:${(aggAmt(j, "total_amount") / max * 100).toFixed(1)}%;--mb-color:var(--state)"></div></div>
+            <span class="mb-val">${fmtMoney(aggAmt(j, "total_amount"))}</span>
+          </div>`).join("")}
+      </div>`;
+    const topJ = st.jurisList[0];
+    stateFinding = topJ ? `Largest: <strong>${escapeHtml(jName(topJ.code))}</strong> · ${fmtMoney(aggAmt(topJ, "total_amount"))}` : "";
+  }
+
+  // State card body differs if the state layer isn't loaded.
+  const stateCardBody = st ? `
+      <div class="lvl-stat-row">
+        <div class="lvl-stat"><span class="n">${fmtMoney(st.total)}</span><span class="k">Tracked</span></div>
+        <div class="lvl-stat"><span class="n">${fmtInt(st.jurisdictions)}</span><span class="k">States</span></div>
+        <div class="lvl-stat"><span class="n">${fmtInt(st.owners)}</span><span class="k">Owners</span></div>
+      </div>
+      ${stateViz}
+      <div class="lvl-foot">
+        <span class="lvl-finding">${stateFinding}</span>
+        <span class="lvl-cta">Explore state giving</span>
+      </div>`
+    : `
+      <p class="lvl-desc">The state campaign-finance layer isn't loaded in this snapshot.</p>
+      <div class="lvl-foot"><span class="lvl-finding"></span><span class="lvl-cta">Open the state section</span></div>`;
+
+  return `
+  <section class="hero-photo home-hero">
+    <div class="hero-photo-inner">
+      <span class="eyebrow">MLB ownership · political money</span>
+      <h1>Where Major League Baseball's owners spend in politics.</h1>
+      <p class="deck">
+        A sourced, provenance-tracked archive of the political contributions made by
+        the principal owners of all 30 MLB franchises — at <strong>both</strong> the
+        federal and the state level. Every record is classified, traced to an official
+        filing, and free to explore.
+      </p>
+      <div class="meta">
+        <span>Snapshot ${state.data.generated_at.slice(0,10)}</span>
+        <span class="meta-dot"></span>
+        <span>${fmtMoney(combinedTotal)} tracked across ${st ? "federal + state" : "federal"}</span>
+        <span class="meta-dot"></span>
+        <span>CONFIRMED + PROBABLE only</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="container">
+    <div class="statband cols-4 statband-float">
+      <div class="sb-cell">
+        <div class="sb-k">Total tracked</div>
+        <div class="sb-v">${fmtMoney(combinedTotal)}</div>
+        <div class="sb-foot">${st ? "federal + state combined" : "federal"}</div>
+      </div>
+      <div class="sb-cell">
+        <div class="sb-k">Contributions</div>
+        <div class="sb-v">${fmtInt(combinedDonations)}</div>
+        <div class="sb-foot">verified records</div>
+      </div>
+      <div class="sb-cell">
+        <div class="sb-k">Owners covered</div>
+        <div class="sb-v">${L.n_owners}</div>
+        <div class="sb-foot">of 30 principal owners</div>
+      </div>
+      <div class="sb-cell">
+        <div class="sb-k">Jurisdictions</div>
+        <div class="sb-v">${st ? st.jurisdictions + 1 : 1}</div>
+        <div class="sb-foot">${st ? `federal + ${st.jurisdictions} state${st.jurisdictions === 1 ? "" : "s"}` : "federal only"}</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="container home-section">
+    <div class="section-head">
+      <span class="eyebrow">Two levels, one archive</span>
+      <h2>Follow the money up and down the ballot.</h2>
+      <p class="caption">Federal filings show national giving; state systems reveal the fights over stadium subsidies, ballot measures, and statehouse power. Pick a level to dive in.</p>
+    </div>
+    <div class="level-cards">
+      <a href="#/federal" class="level-card federal">
+        <div class="level-card-body">
+          <span class="lvl-eyebrow">Federal</span>
+          <h2>FEC contributions</h2>
+          <p class="lvl-desc">National political giving reported to the Federal Election Commission, 2000–present.</p>
+          <div class="lvl-stat-row">
+            <div class="lvl-stat"><span class="n">${fmtMoney(fedTotal)}</span><span class="k">Tracked</span></div>
+            <div class="lvl-stat"><span class="n">${fmtInt(L.n_donations)}</span><span class="k">Contributions</span></div>
+            <div class="lvl-stat"><span class="n">${L.n_cycles}</span><span class="k">Cycles</span></div>
+          </div>
+          ${fedTiltBar}
+          <div class="lvl-foot">
+            <span class="lvl-finding">${fedTopRecip}</span>
+            <span class="lvl-cta">Explore federal giving</span>
+          </div>
+        </div>
+      </a>
+      <a href="#/states" class="level-card state">
+        <div class="level-card-body">
+          <span class="lvl-eyebrow">State</span>
+          <h2>State campaign finance</h2>
+          <p class="lvl-desc">${st ? `Disclosure from ${escapeHtml(jNatList(st.jurisList.map((j) => j.code)))}, sourced from each state's official system. Coverage grows one state at a time.` : "State-level campaign-finance disclosure, sourced from each state's official system."}</p>
+          ${stateCardBody}
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <section class="container home-section">
+    <div class="section-head">
+      <span class="eyebrow">How we verify</span>
+      <h2>A three-tier standard, applied to every record.</h2>
+      <p class="caption">Identity is never assumed. Each contribution is classified by how strongly its signals tie it to a specific owner — and only the top two tiers are ever published.</p>
+    </div>
+    <div class="trust-strip">
+      <div class="trust-cell">
+        <span class="tc-tier confirmed">Confirmed</span>
+        <h4>Two or more signals</h4>
+        <p>Donor name plus corroborating evidence — employer, occupation, a documented address — independently tie the gift to the owner.</p>
+      </div>
+      <div class="trust-cell">
+        <span class="tc-tier probable">Probable</span>
+        <h4>Strong but partial</h4>
+        <p>The match is compelling but rests on fewer signals. Shown openly and labeled — never hidden, never upgraded.</p>
+      </div>
+      <div class="trust-cell">
+        <span class="tc-tier uncertain">Uncertain</span>
+        <h4>Held back</h4>
+        <p>A name match with nothing more stays in the review queue and never enters the public dataset. We don't guess.</p>
+      </div>
+    </div>
+    <p class="footnote" style="margin-top:16px">
+      Read the full rubric on the <a href="#/methodology">methodology page</a>. Federal and state data live in
+      separate databases and are never mixed.
+    </p>
+  </section>
+  `;
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   FEDERAL DASHBOARD VIEW (route: #/federal)
    ══════════════════════════════════════════════════════════════════════ */
 function renderLeague() {
   const L = state.data.league;
@@ -2769,22 +3371,23 @@ function renderLeague() {
   const teams = [...new Set(owners.map((o) => o.team).filter(Boolean))].sort();
 
   return `
-  <section class="hero-photo">
-    <div class="hero-photo-inner">
-      <h1>Where MLB's owners send their political money.</h1>
+  <section class="ghero federal">
+    <div class="ghero-inner">
+      <span class="eyebrow">Federal · FEC filings</span>
+      <h1>The money MLB's owners send to <em>federal</em> politics.</h1>
       <p class="deck">
-        Federal political contributions reported to the FEC by the principal owners
-        of all 30 Major League Baseball franchises, 2000–present.
+        Every federal political contribution reported to the Federal Election
+        Commission by the principal owners of all 30 Major League Baseball
+        franchises, 2000–present — classified, sourced, and traceable to its filing.
       </p>
-      <div class="meta">
-        <span>Snapshot ${state.data.generated_at.slice(0,10)}</span>
-        <span class="meta-dot"></span>
-        <span>Federal contributions only</span>
-        <span class="meta-dot"></span>
-        <span>CONFIRMED + PROBABLE shown</span>
+      <div class="ghero-chips">
+        <span class="ghero-chip">Snapshot ${state.data.generated_at.slice(0,10)}</span>
+        <span class="ghero-chip">${fmtInt(state.data.league.n_donations)} contributions</span>
+        <span class="ghero-chip">CONFIRMED + PROBABLE shown</span>
       </div>
     </div>
   </section>
+  ${sectionSubnav("federal", "overview")}
 
   <section class="container">
     <div class="kpis">
@@ -3673,9 +4276,15 @@ function renderOwner(slug) {
   /* Pick a sample CONFIRMED donation for the verification preview */
   const confirmedSample = donations.find((d) => d.status === "CONFIRMED" && d.signals && d.signals.length >= 2);
 
+  /* Does this owner have tracked state-level giving? When they do, federal and
+     state are presented as equal halves (a two-up split lead + parallel
+     level-labelled sections). When they don't, the page stays a clean
+     federal-only layout — no empty halves. */
+  const hasState = !!(state.stateByOwner && state.stateByOwner[slug] && state.stateByOwner[slug].length);
+
   return `
   <div class="container">
-    <a class="back" href="#/">← All owners</a>
+    <a class="back" href="#/federal">← All owners</a>
 
     <header class="owner-head">
       <span class="eyebrow">${o.team ? `<a href="#/team/${teamSlug(o.team)}" style="color:inherit;text-decoration:none;border-bottom:1px dotted var(--ink-3)">${escapeHtml(o.team)} →</a>` : ""}</span>
@@ -3689,6 +4298,11 @@ function renderOwner(slug) {
       </div>
     </header>
 
+    ${hasState ? `
+    <div style="margin:26px 0 4px">
+      <p class="caption" style="margin:0 0 12px">${escapeHtml(o.name)}'s political giving, by level — tracked in two separate databases that are never merged.</p>
+      ${renderOwnerLevelSplit(o, slug)}
+    </div>` : `
     <div class="kpis" style="border-top:0;border-bottom:1px solid var(--rule);">
       <div class="kpi">
         <div class="kpi-label">Total tracked</div>
@@ -3710,11 +4324,16 @@ function renderOwner(slug) {
         <div class="kpi-value">${fmtInt(o.distinct_recipients)}</div>
         <div class="kpi-foot">Committees, candidates, PACs</div>
       </div>
-    </div>
+    </div>`}
 
-    ${renderOwnerStatePanel(slug)}
+    ${hasState ? `
+    <div class="level-divider federal" style="margin-top:30px">
+      <span class="ld-kicker">Federal</span>
+      <h2>Federal giving</h2>
+      <p class="ld-sub">Contributions to federal candidates, parties, and PACs — reported to the Federal Election Commission, 2000–present.</p>
+    </div>` : ""}
 
-    <section class="block">
+    <section class="block"${hasState ? ' style="padding-top:28px"' : ""}>
       <div class="block-head">
         <span class="eyebrow">Timeline</span>
         <h2 style="margin-top:6px">Every donation, plotted by date and amount</h2>
@@ -3797,8 +4416,84 @@ function renderOwner(slug) {
         ${renderDonationsTable(donations)}
       </div>
     </section>
+
+    ${hasState ? renderOwnerStateSection(slug) : ""}
   </div>
   `;
+}
+
+/* Owner page — the two-up "by level" summary (federal | state) shown as equal
+   halves. State column degrades to a neutral empty state when the owner has no
+   tracked state-level giving. */
+function renderOwnerLevelSplit(o, slug) {
+  const so = state.stateData && state.stateData.owners[slug];
+
+  const fedTotal = aggAmt(o, "total_amount");
+  const fedTop = o.top_recipients && o.top_recipients[0];
+  const fedCol = `
+    <div class="os-col federal">
+      <div class="os-eyebrow">Federal <span class="os-src">· FEC filings</span></div>
+      <div class="os-total">${fmtMoney(fedTotal)}</div>
+      <div class="os-breakdown"><b>${fmtInt(o.n_total)}</b> donations · <b>${fmtInt(o.n_confirmed)}</b> confirmed · <b>${fmtInt(o.n_probable)}</b> probable</div>
+      <div class="os-breakdown"><b>${Object.keys(o.cycle_dollars).length}</b> cycles · ${o.earliest_date?.slice(0,4) || "—"}–${o.latest_date?.slice(0,4) || "—"}</div>
+      ${fedTop ? `<div class="os-top"><span class="os-top-k">Top recipient</span><span class="amt">${fmtMoney(amt(fedTop))}</span> <span class="to">→ ${escapeHtml(fedTop.committee)}</span></div>` : ""}
+    </div>`;
+
+  let stateCol;
+  if (so) {
+    const stTotal = aggAmt(so, "total_amount");
+    const stTop = so.top_recipients && so.top_recipients[0];
+    const js = so.jurisdictions || [];
+    const chips = js.map((c) =>
+      `<a href="#/state/${escapeAttr(c)}" class="ghero-chip">${escapeHtml(jName(c))}</a>`).join("");
+    stateCol = `
+      <div class="os-col state">
+        <div class="os-eyebrow">State <span class="os-src">· ${escapeHtml(jNatList(js) || "campaign finance")}</span></div>
+        <div class="os-total">${fmtMoney(stTotal)}</div>
+        <div class="os-breakdown"><b>${fmtInt(so.n_confirmed + so.n_probable)}</b> contributions · <b>${fmtInt(so.n_confirmed)}</b> confirmed · <b>${fmtInt(so.n_probable)}</b> probable</div>
+        <div class="os-breakdown"><b>${fmtInt(so.n_recipients || 0)}</b> recipients across ${js.length} state${js.length === 1 ? "" : "s"}</div>
+        ${stTop ? `<div class="os-top"><span class="os-top-k">Top recipient</span><span class="amt">${fmtMoney(stTop.amount)}</span> <span class="to">→ ${escapeHtml(stTop.recipient)}</span></div>` : ""}
+        ${chips ? `<div class="os-chips">${chips}</div>` : ""}
+      </div>`;
+  } else {
+    const covered = jNatList((state.stateData && state.stateData.jurisdictions || []).map((j) => j.code)) || "a growing set of states";
+    stateCol = `
+      <div class="os-col state">
+        <div class="os-eyebrow">State <span class="os-src">· campaign finance</span></div>
+        <p class="os-empty">No tracked state-level giving in a covered state yet. State coverage is a growing pilot — currently ${escapeHtml(covered)}. A $0 here means no contributions cleared our verification bar in a covered state, not that none exist.</p>
+      </div>`;
+  }
+
+  return `<div class="owner-split">${fedCol}${stateCol}</div>`;
+}
+
+/* Owner page — the State half: a level-labelled section parallel to the
+   federal sections above, replacing the old tinted "afterthought" callout. */
+function renderOwnerStateSection(slug) {
+  const rows = state.stateByOwner && state.stateByOwner[slug];
+  if (!rows || !rows.length) return "";
+  const so = state.stateData.owners[slug];
+  const total = aggAmt(so, "total_amount");
+  const where = jNatList(so.jurisdictions || []) || "state";
+  const firstName = (so.name || "").split(" ").filter(Boolean)[0] || "This owner";
+  return `
+    <div class="level-divider state" style="margin-top:36px">
+      <span class="ld-kicker">State</span>
+      <h2>State campaign finance</h2>
+      <p class="ld-sub">${firstName} gave ${fmtMoney(total)} in ${escapeHtml(where)} state politics, sourced from each state's official disclosure system and held to the same three-tier standard. Tracked in a database separate from the federal record above — the two are never merged.</p>
+    </div>
+
+    <section class="block">
+      <div class="block-head-row">
+        <div>
+          <span class="eyebrow">The data</span>
+          <h2 style="margin-top:6px">All state contributions</h2>
+          <p class="caption">${fmtInt(rows.length)} records. Click any row for the full provenance trail.</p>
+        </div>
+        <a class="sec-link" href="#/states" style="font-weight:600;font-size:13px">Full state section →</a>
+      </div>
+      ${stateContribSection(rows, { showOwner: false })}
+    </section>`;
 }
 
 function renderRecipient(r, i, totalAmount) {
@@ -4208,7 +4903,7 @@ function renderCycle(year) {
   const donations = state.data.donations.filter((d) => d.cycle === year);
 
   if (donations.length === 0) {
-    return `<div class="container"><a class="back" href="#/">← Back to league</a><div class="loading">No donations recorded for the ${year} cycle.</div></div>`;
+    return `<div class="container"><a class="back" href="#/federal">← Back to federal</a><div class="loading">No donations recorded for the ${year} cycle.</div></div>`;
   }
 
   // Per-owner totals for this cycle
@@ -4269,7 +4964,7 @@ function renderCycle(year) {
 
   return `
   <div class="container">
-    <a class="back" href="#/">← All cycles</a>
+    <a class="back" href="#/federal">← All cycles</a>
 
     <header class="owner-head">
       <span class="eyebrow">Election cycle</span>
@@ -4546,7 +5241,7 @@ function renderCommittee(committeeId) {
   const decoded = decodeURIComponent(committeeId);
   const donations = state.data.donations.filter((d) => (d.committee_id || "") === decoded);
   if (donations.length === 0) {
-    return `<div class="container"><a class="back" href="#/">← Back to league</a><div class="loading">No donations to committee ${escapeHtml(decoded)}.</div></div>`;
+    return `<div class="container"><a class="back" href="#/federal">← Back to federal</a><div class="loading">No donations to committee ${escapeHtml(decoded)}.</div></div>`;
   }
 
   // Enrichment lookup. recipientRow may be undefined for a committee that
@@ -4591,7 +5286,7 @@ function renderCommittee(committeeId) {
 
   return `
   <div class="container">
-    <a class="back" href="#/">← All committees</a>
+    <a class="back" href="#/federal">← All committees</a>
 
     <header class="owner-head">
       <span class="eyebrow">Recipient committee · <span class="chip-party ${partyClass}" style="margin-left:6px">${party}</span>${recipientRow && recipientRow.designation_label ? `<span class="chip-party oth" style="margin-left:6px">${escapeHtml(recipientRow.designation_label)}</span>` : ""}${recipientRow && recipientRow.is_terminated ? `<span class="chip-party oth" style="margin-left:6px;opacity:0.7">Terminated</span>` : ""}</span>
@@ -5040,10 +5735,35 @@ function rerenderCommitteeTable() {
 /* ════════════════════════════════════════════════════════════════════════
    TEAM ROLLUP VIEW (#/team/<slug>)
    ══════════════════════════════════════════════════════════════════════ */
+/* Roll up state-level giving across all of a team's tracked owners (null-safe).
+   State rows are keyed per-owner in state.stateByOwner; a team combines them. */
+function teamStateAgg(team) {
+  if (!state.stateData) return null;
+  let rows = [];
+  for (const o of team.owners) {
+    const r = state.stateByOwner && state.stateByOwner[o.slug];
+    if (r && r.length) rows = rows.concat(r);
+  }
+  if (!rows.length) return null;
+  const total = rows.reduce((s, d) => s + amt(d), 0);
+  const nConf = rows.filter((d) => d.status === "CONFIRMED").length;
+  const js = [...new Set(rows.map((d) => d.jurisdiction).filter(Boolean))];
+  const recAgg = {};
+  for (const d of rows) {
+    const k = d.recipient || "—";
+    (recAgg[k] = recAgg[k] || { recipient: k, amount: 0, count: 0 });
+    recAgg[k].amount += amt(d);
+    recAgg[k].count += 1;
+  }
+  const topRec = Object.values(recAgg).sort((a, b) => b.amount - a.amount);
+  const ownersWithState = team.owners.filter((o) => state.stateByOwner && state.stateByOwner[o.slug] && state.stateByOwner[o.slug].length);
+  return { rows, total, nConf, nProb: rows.length - nConf, js, topRec, distinctRec: topRec.length, ownersWithState };
+}
+
 function renderTeam(slug) {
   const team = state.teams[slug];
   if (!team) {
-    return `<div class="container"><a class="back" href="#/">← Back to league</a><div class="loading">No team matching "${escapeHtml(slug)}".</div></div>`;
+    return `<div class="container"><a class="back" href="#/federal">← Back to federal</a><div class="loading">No team matching "${escapeHtml(slug)}".</div></div>`;
   }
 
   const ownerSlugs = new Set(team.owners.map((o) => o.slug));
@@ -5052,7 +5772,7 @@ function renderTeam(slug) {
   if (donations.length === 0) {
     return `
       <div class="container">
-        <a class="back" href="#/">← Back to league</a>
+        <a class="back" href="#/federal">← Back to federal</a>
         <header class="owner-head">
           <span class="eyebrow">Team</span>
           <h1 style="margin-top:8px">${escapeHtml(team.name)}</h1>
@@ -5104,9 +5824,15 @@ function renderTeam(slug) {
        : `Mixed (${Math.round((partyDollars.DEM / partyDenom) * 100)}% DEM / ${Math.round((partyDollars.REP / partyDenom) * 100)}% REP)`)
     : "No party-classified giving";
 
+  /* State rollup across the team's owners. When present, federal and state are
+     shown as equal halves (mirrors the owner page). */
+  const st = teamStateAgg(team);
+  const hasState = !!st;
+  const fedTop = topRecipients[0];
+
   return `
   <div class="container">
-    <a class="back" href="#/">← All teams</a>
+    <a class="back" href="#/federal">← All teams</a>
 
     <header class="owner-head">
       <span class="eyebrow">Team rollup</span>
@@ -5115,11 +5841,31 @@ function renderTeam(slug) {
         <span>${team.owners.length} tracked principal owner${team.owners.length === 1 ? "" : "s"}</span>
         <span class="dot"></span>
         <span>${partyTiltText}</span>
-        <span class="dot"></span>
-        <span>${fmtMoneyExact(total)} combined federal giving</span>
+        ${hasState ? "" : `<span class="dot"></span><span>${fmtMoneyExact(total)} combined federal giving</span>`}
       </div>
     </header>
 
+    ${hasState ? `
+    <div style="margin:26px 0 4px">
+      <p class="caption" style="margin:0 0 12px">${escapeHtml(team.name)}'s tracked owners, by level — federal and state are held in separate databases that are never merged.</p>
+      <div class="owner-split">
+        <div class="os-col federal">
+          <div class="os-eyebrow">Federal <span class="os-src">· FEC filings</span></div>
+          <div class="os-total">${fmtMoney(total)}</div>
+          <div class="os-breakdown"><b>${fmtInt(donations.length)}</b> donations · <b>${fmtInt(nConfirmed)}</b> confirmed · <b>${fmtInt(nProbable)}</b> probable</div>
+          <div class="os-breakdown"><b>${cycles.length}</b> cycles · ${cycles[cycles.length-1]}–${cycles[0]}</div>
+          ${fedTop ? `<div class="os-top"><span class="os-top-k">Top recipient</span><span class="amt">${fmtMoney(amt(fedTop))}</span> <span class="to">→ ${escapeHtml(fedTop.committee)}</span></div>` : ""}
+        </div>
+        <div class="os-col state">
+          <div class="os-eyebrow">State <span class="os-src">· ${escapeHtml(jNatList(st.js) || "campaign finance")}</span></div>
+          <div class="os-total">${fmtMoney(st.total)}</div>
+          <div class="os-breakdown"><b>${fmtInt(st.rows.length)}</b> contributions · <b>${fmtInt(st.nConf)}</b> confirmed · <b>${fmtInt(st.nProb)}</b> probable</div>
+          <div class="os-breakdown"><b>${fmtInt(st.distinctRec)}</b> recipients across ${st.js.length} state${st.js.length === 1 ? "" : "s"}</div>
+          ${st.topRec[0] ? `<div class="os-top"><span class="os-top-k">Top recipient</span><span class="amt">${fmtMoney(st.topRec[0].amount)}</span> <span class="to">→ ${escapeHtml(st.topRec[0].recipient)}</span></div>` : ""}
+          <div class="os-chips">${st.js.map((c) => `<a href="#/state/${escapeAttr(c)}" class="ghero-chip">${escapeHtml(jName(c))}</a>`).join("")}</div>
+        </div>
+      </div>
+    </div>` : `
     <div class="kpis" style="border-top:0;border-bottom:1px solid var(--rule);">
       <div class="kpi">
         <div class="kpi-label">Combined total</div>
@@ -5141,7 +5887,7 @@ function renderTeam(slug) {
         <div class="kpi-value">${cycles.length}</div>
         <div class="kpi-foot">${cycles[cycles.length-1]} – ${cycles[0]}</div>
       </div>
-    </div>
+    </div>`}
 
     <section class="block">
       <span class="eyebrow">Tracked owners</span>
@@ -5150,7 +5896,14 @@ function renderTeam(slug) {
       ${renderTeamOwnersGrid(team)}
     </section>
 
-    <section class="block">
+    ${hasState ? `
+    <div class="level-divider federal" style="margin-top:30px">
+      <span class="ld-kicker">Federal</span>
+      <h2>Federal giving</h2>
+      <p class="ld-sub">Contributions to federal candidates, parties, and PACs across all tracked owners — reported to the Federal Election Commission.</p>
+    </div>` : ""}
+
+    <section class="block"${hasState ? ' style="padding-top:28px"' : ""}>
       <div class="block-head">
         <span class="eyebrow">Combined timeline</span>
         <h2 style="margin-top:6px">Every donation across ${team.owners.length === 1 ? "this owner's tenure" : "all tracked owners"}</h2>
@@ -5216,6 +5969,25 @@ function renderTeam(slug) {
         ${renderTeamDonationsTable(donations)}
       </div>
     </section>
+
+    ${hasState ? `
+    <div class="level-divider state" style="margin-top:36px">
+      <span class="ld-kicker">State</span>
+      <h2>State campaign finance</h2>
+      <p class="ld-sub">${st.ownersWithState.length === 1 ? escapeHtml(st.ownersWithState[0].name) + " gave" : "Tracked owners of " + escapeHtml(team.name) + " gave"} ${fmtMoney(st.total)} in ${escapeHtml(jNatList(st.js) || "state")} state politics, sourced from each state's official disclosure system and held to the same three-tier standard. Tracked in a database separate from the federal record above — the two are never merged.</p>
+    </div>
+
+    <section class="block">
+      <div class="block-head-row">
+        <div>
+          <span class="eyebrow">The data</span>
+          <h2 style="margin-top:6px">All state contributions</h2>
+          <p class="caption">${fmtInt(st.rows.length)} records across ${st.ownersWithState.length} owner${st.ownersWithState.length === 1 ? "" : "s"}. Click any row for the full provenance trail.</p>
+        </div>
+        <a class="sec-link" href="#/states" style="font-weight:600;font-size:13px">Full state section →</a>
+      </div>
+      ${stateContribSection(st.rows, { showOwner: st.ownersWithState.length > 1 })}
+    </section>` : ""}
   </div>`;
 }
 
@@ -5435,7 +6207,7 @@ function openDrawer(id) {
           or the link itself may be stale.
         </p>
         <p class="drawer-not-found">
-          <a href="#/" onclick="closeDrawer()" class="drawer-link">Browse all owners</a>
+          <a href="#/federal" onclick="closeDrawer()" class="drawer-link">Browse all owners</a>
         </p>
       </div>
     `;
@@ -6244,7 +7016,7 @@ function renderStates() {
   const nProb = sd.donations.length - nConf;
 
   const chips = sd.jurisdictions.map((j) =>
-    `<a href="#/state/${escapeAttr(j.code)}" class="re-chip" style="display:inline-block;font:600 11px/1.5 var(--sans);border:1px solid var(--rule);border-radius:999px;padding:2px 10px;margin-right:6px;color:var(--ink-2);text-decoration:none">${escapeHtml(j.code)} · ${escapeHtml(j.source)}</a>`
+    `<a href="#/state/${escapeAttr(j.code)}" class="ghero-chip">${escapeHtml(j.code)} · ${escapeHtml(j.source)}</a>`
   ).join("");
 
   // By-owner table, sortable via state.stateOwnerSort.
@@ -6268,15 +7040,15 @@ function renderStates() {
   const ownerRows = owners.map((o) => {
     const top = o.top_recipients && o.top_recipients[0] ? escapeHtml(o.top_recipients[0].recipient) : "—";
     return `
-      <tr class="st-owner-row" data-owner="${escapeAttr(o.slug)}" style="cursor:pointer">
-        <td><a href="#/owner/${escapeAttr(o.slug)}" style="color:inherit;font-family:var(--serif);font-weight:500">${escapeHtml(o.name)}</a></td>
-        <td class="muted" style="font-size:13px">${escapeHtml(o.team || "")}</td>
-        <td class="muted" style="font-size:12px;letter-spacing:.03em">${escapeHtml((o.jurisdictions || []).join(", "))}</td>
+      <tr class="st-owner-row" data-owner="${escapeAttr(o.slug)}">
+        <td><a href="#/owner/${escapeAttr(o.slug)}" class="st-owner-name">${escapeHtml(o.name)}</a></td>
+        <td class="col-team">${escapeHtml(o.team || "")}</td>
+        <td class="st-juris-cell">${escapeHtml((o.jurisdictions || []).join(", "))}</td>
         <td class="num">${fmtInt(o.n_confirmed)}</td>
         <td class="num">${fmtInt(o.n_probable)}</td>
         <td class="num">${fmtInt(o.n_recipients || 0)}</td>
-        <td class="num" style="font-variant-numeric:tabular-nums;font-weight:600">${fmtMoney(aggAmt(o, "total_amount"))}</td>
-        <td class="muted" style="font-size:13px;max-width:22ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${top}</td>
+        <td class="num col-amount">${fmtMoney(aggAmt(o, "total_amount"))}</td>
+        <td class="st-toprecip">${top}</td>
       </tr>`;
   }).join("");
 
@@ -6288,25 +7060,25 @@ function renderStates() {
     .sort((a, b) => aggAmt(b, "total_amount") - aggAmt(a, "total_amount"))
     .map((j) => {
       const topR = (j.top_recipients || []).slice(0, 3).map((t) =>
-        `<li style="margin:0 0 3px"><span style="font-variant-numeric:tabular-nums;font-weight:600">${fmtMoney(t.amount)}</span> <span class="muted">→ ${escapeHtml(t.recipient)}</span></li>`).join("");
+        `<li><span class="amt">${fmtMoney(t.amount)}</span> <span class="to">→ ${escapeHtml(t.recipient)}</span></li>`).join("");
       return `
-        <a href="#/state/${escapeAttr(j.code)}" style="flex:1 1 280px;border:1px solid var(--rule);border-radius:8px;padding:16px 18px;text-decoration:none;color:inherit" class="st-juris-card">
-          <div style="display:flex;justify-content:space-between;align-items:baseline">
-            <h3 style="font-family:var(--serif);font-size:18px;margin:0">${escapeHtml(jName(j.code))}</h3>
-            <span class="muted" style="font-size:11px;letter-spacing:.04em;text-transform:uppercase">${escapeHtml(j.source)}</span>
+        <a href="#/state/${escapeAttr(j.code)}" class="juris-card">
+          <div class="jc-head">
+            <span class="jc-name">${escapeHtml(jName(j.code))}</span>
+            <span class="jc-src">${escapeHtml(j.source)}</span>
           </div>
-          <div style="font-size:24px;font-weight:600;font-variant-numeric:tabular-nums;margin:6px 0 2px">${fmtMoney(aggAmt(j, "total_amount"))}</div>
-          <div class="muted" style="font-size:12px;margin-bottom:10px">${fmtInt(j.n_confirmed)} confirmed · ${fmtInt(j.n_probable)} probable · ${fmtInt(j.n_owners)} owner${j.n_owners === 1 ? "" : "s"}</div>
-          ${topR ? `<ul style="list-style:none;padding:0;margin:0;font-size:13px">${topR}</ul>` : ""}
-          <div style="margin-top:10px;font-weight:600;font-size:13px">View ${escapeHtml(jName(j.code))} →</div>
+          <div class="jc-total">${fmtMoney(aggAmt(j, "total_amount"))}</div>
+          <div class="jc-meta">${fmtInt(j.n_confirmed)} confirmed · ${fmtInt(j.n_probable)} probable · ${fmtInt(j.n_owners)} owner${j.n_owners === 1 ? "" : "s"}</div>
+          ${topR ? `<ul class="jc-recips">${topR}</ul>` : ""}
+          <span class="jc-cta">View ${escapeHtml(jName(j.code))}</span>
         </a>`;
     }).join("");
 
   return `
-  <div class="container">
-    <section class="hero" style="padding-bottom:18px">
+  <section class="ghero state">
+    <div class="ghero-inner">
       <span class="eyebrow">State campaign finance · pilot</span>
-      <h1 style="margin-top:14px;max-width:24ch">The money owners spend in <em>state</em> politics.</h1>
+      <h1>The money MLB's owners spend in <em>state</em> politics.</h1>
       <p class="deck">
         Federal filings are only half the picture — the fights over stadium
         subsidies, ballot measures, and statehouse power play out in state
@@ -6315,51 +7087,50 @@ function renderStates() {
         three-tier verification standard as the federal archive. Coverage grows one
         state at a time.
       </p>
-      <div style="margin-top:12px">${chips}</div>
-    </section>
+      <div class="ghero-chips">${chips}</div>
+    </div>
+  </section>
+  ${sectionSubnav("state", "overview")}
 
-    <div class="kpis" style="border-top:0;border-bottom:1px solid var(--rule);">
-      <div class="kpi">
-        <div class="kpi-label">Verified state donations</div>
-        <div class="kpi-value">${fmtInt(sd.donations.length)}</div>
-        <div class="kpi-foot">${fmtInt(nConf)} confirmed · ${fmtInt(nProb)} probable</div>
+  <div class="container">
+    <div class="statband cols-4" style="margin:28px 0 0">
+      <div class="sb-cell">
+        <div class="sb-k">Verified contributions</div>
+        <div class="sb-v">${fmtInt(sd.donations.length)}</div>
+        <div class="sb-foot">${fmtInt(nConf)} confirmed · ${fmtInt(nProb)} probable</div>
       </div>
-      <div class="kpi">
-        <div class="kpi-label">Total state giving</div>
-        <div class="kpi-value">${fmtMoney(totalDollars)}</div>
-        <div class="kpi-foot">${fmtMoneyExact(totalDollars)}</div>
+      <div class="sb-cell">
+        <div class="sb-k">Total state giving</div>
+        <div class="sb-v">${fmtMoney(totalDollars)}</div>
+        <div class="sb-foot">${fmtMoneyExact(totalDollars)}</div>
       </div>
-      <div class="kpi">
-        <div class="kpi-label">Owners with state activity</div>
-        <div class="kpi-value">${fmtInt(owners.length)}</div>
-        <div class="kpi-foot">of 30 principal owners</div>
+      <div class="sb-cell">
+        <div class="sb-k">Owners with state activity</div>
+        <div class="sb-v">${fmtInt(owners.length)}</div>
+        <div class="sb-foot">of 30 principal owners</div>
       </div>
-      <div class="kpi">
-        <a href="#/state-recipients" style="text-decoration:none;color:inherit">
-          <div class="kpi-label">State recipients</div>
-          <div class="kpi-value">${fmtInt((sd.recipients || []).length)}</div>
-          <div class="kpi-foot">across ${fmtInt(sd.jurisdictions.length)} jurisdiction${sd.jurisdictions.length === 1 ? "" : "s"} — browse all →</div>
-        </a>
-      </div>
+      <a class="sb-cell" href="#/state-recipients">
+        <div class="sb-k">State recipients</div>
+        <div class="sb-v">${fmtInt((sd.recipients || []).length)}</div>
+        <div class="sb-foot">across ${fmtInt(sd.jurisdictions.length)} jurisdiction${sd.jurisdictions.length === 1 ? "" : "s"} — browse all →</div>
+      </a>
     </div>
 
-    ${sd.jurisdictions.length > 1 ? `
-    <section style="margin:26px 0 8px">
-      <h2 style="font-family:var(--serif);font-size:22px;margin:0 0 12px">By jurisdiction</h2>
-      <div style="display:flex;flex-wrap:wrap;gap:14px">${jurisCards}</div>
-    </section>` : `
-    <section style="margin:26px 0 8px">
-      <div style="display:flex;flex-wrap:wrap;gap:14px">${jurisCards}</div>
-    </section>`}
-
-    <section style="margin:26px 0 8px">
-      <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px">
-        <h2 style="font-family:var(--serif);font-size:22px;margin:0">By owner</h2>
-        <a href="#/state-recipients" style="font-size:13px;font-weight:600">Browse recipients →</a>
+    <section class="block" style="border-bottom:0">
+      <div class="sec-head-row">
+        <h2>By jurisdiction</h2>
       </div>
-      <p class="muted" style="font-size:13px;margin:4px 0 12px">Click an owner for their full profile, including a per-owner state-finance table.</p>
+      <div class="juris-grid">${jurisCards}</div>
+    </section>
+
+    <section class="block" style="border-bottom:0;padding-top:8px">
+      <div class="sec-head-row">
+        <h2>By owner</h2>
+        <a class="sec-link" href="#/state-recipients">Browse recipients →</a>
+      </div>
+      <p class="caption" style="margin:0 0 12px">Click an owner for their full profile, including a per-owner state-finance table.</p>
       <div class="table-scroll">
-        <table class="donations-table">
+        <table class="donations-table st-owner-table">
           <thead><tr>
             ${oTh("name", "Owner")}${oTh("team", "Team")}<th>State(s)</th>
             ${oTh("conf", "Conf.", "num")}${oTh("prob", "Prob.", "num")}${oTh("recipients", "Recipients", "num")}
@@ -6370,21 +7141,25 @@ function renderStates() {
       </div>
     </section>
 
-    <section style="margin:30px 0 8px">
-      <h2 style="font-family:var(--serif);font-size:22px;margin:0 0 12px">All state contributions</h2>
+    <section class="block" style="border-bottom:0;padding-top:8px">
+      <div class="sec-head-row">
+        <h2>All state contributions</h2>
+      </div>
       ${stateContribSection(sd.donations)}
     </section>
 
-    ${stateMethodologyNote()}
+    <section class="block" style="border-bottom:0;padding-top:8px;padding-bottom:48px">
+      ${stateMethodologyNote()}
+    </section>
   </div>`;
 }
 
 /* The shared sourcing/limitations note (neutral, provenance-first). */
 function stateMethodologyNote() {
   return `
-    <section class="methodology-note" style="margin:30px 0;padding:18px 20px;border:1px solid var(--rule);border-radius:8px;background:var(--paper-2, #faf8f4)">
-      <h3 style="font-family:var(--serif);font-size:16px;margin:0 0 8px">How this is sourced — and what it doesn't cover yet</h3>
-      <p class="muted" style="font-size:13px;line-height:1.6;margin:0 0 8px">
+    <div class="note-card state">
+      <h3>How this is sourced — and what it doesn't cover yet</h3>
+      <p>
         State rows live in a separate database from the federal archive and never mix with it. Each
         state's <strong>official disclosure system</strong> is the system of record (California's
         CAL-ACCESS, New York's NYSBOE, …) — every confirmed or probable row traces to a specific
@@ -6392,20 +7167,20 @@ function stateMethodologyNote() {
         fact. Open any row to see its matched signals and a link to the official record. Verification
         is the same three-tier standard as the federal data.
       </p>
-      <p class="muted" style="font-size:13px;line-height:1.6;margin:0 0 8px">
+      <p>
         <strong>Disclosure differs by state, so confidence does too — honestly.</strong> California
         collects employer + occupation, so contributions reach <em>confirmed</em> on two signals.
         New York collects neither employer nor a contributor state, so a NY row is confirmed only when
         it carries a donor's <em>documented</em> ZIP (e.g. a known residence/office) — otherwise it
         stays uncertain rather than guessing. We never infer a signal a state didn't disclose.
       </p>
-      <p class="muted" style="font-size:13px;line-height:1.6;margin:0">
+      <p>
         <strong>Coverage is deliberately partial</strong> and grows one state at a time as disclosure
         data becomes machine-readable. A "$0" for an owner means no matching state contributions
         cleared our bar in a covered state — not that none exist. Amounts are as filed (the $/$↑
         toggle adjusts to current dollars).
       </p>
-    </section>`;
+    </div>`;
 }
 
 /* ── #/state/<juris> — one jurisdiction's full record ──────────────────────── */
@@ -6600,10 +7375,10 @@ function renderStateRecipients() {
     `<th class="${klass} sr-sort" data-sort="${key}" style="cursor:pointer">${escapeHtml(label)}${arrow(key)}</th>`;
 
   return `
+  ${sectionSubnav("state", "recipients")}
   <div class="container">
-    <a class="back" href="#/states">← State finance</a>
     <section class="hero" style="padding-bottom:14px">
-      <span class="eyebrow">State campaign finance</span>
+      <span class="eyebrow">State · Recipients</span>
       <h1 style="margin-top:12px;max-width:24ch">Who received the state money.</h1>
       <p class="deck">
         Every committee, candidate, or ballot-measure campaign that received at least one
@@ -6675,43 +7450,12 @@ function renderStateRecipients() {
   </div>`;
 }
 
-/* Per-owner state-finance panel on an owner page: headline + top recipients +
-   the full, drawer-backed per-owner contributions table. Federal KPIs above it
-   never include state dollars. */
-function renderOwnerStatePanel(slug) {
-  const rows = state.stateByOwner && state.stateByOwner[slug];
-  if (!rows || !rows.length) return "";
-  const o = state.stateData.owners[slug];
-  const total = aggAmt(o, "total_amount");
-  const tops = (o.top_recipients || []).slice(0, 3);
-  const topList = tops.map((t) =>
-    `<li style="margin:0 0 4px"><span style="font-variant-numeric:tabular-nums;font-weight:600">${fmtMoney(t.amount)}</span> <span class="muted">→ ${escapeHtml(t.recipient)}</span></li>`
-  ).join("");
-  const js = (o.jurisdictions || []);
-  const where = jNatList(js) || "state";
-  const jurisChips = js.map((c) =>
-    `<a href="#/state/${escapeAttr(c)}" class="re-chip" style="display:inline-block;font:600 11px/1.5 var(--sans);border:1px solid var(--rule);border-radius:999px;padding:1px 9px;margin-right:5px;color:var(--ink-2);text-decoration:none">${escapeHtml(jName(c))}</a>`
-  ).join("");
-  return `
-    <section class="block" style="border:1px solid var(--rule);border-radius:8px;padding:18px 20px;background:var(--paper-2,#faf8f4);margin-top:22px">
-      <span class="eyebrow">State campaign finance · ${jurisChips}</span>
-      <h2 style="margin:8px 0 4px;font-size:21px">${escapeHtml(o.name)} gave ${fmtMoney(total)} in ${escapeHtml(where)} state politics</h2>
-      <p class="caption" style="margin:0 0 10px">
-        ${fmtInt(o.n_confirmed)} confirmed · ${fmtInt(o.n_probable)} probable, from official state disclosure
-        filings — <strong>separate from, and not included in, the federal totals above</strong>.
-      </p>
-      ${topList ? `<ul style="list-style:none;padding:0;margin:0 0 12px;font-size:14px">${topList}</ul>` : ""}
-      ${stateContribSection(rows, { showOwner: false })}
-      <p style="margin:12px 0 0"><a href="#/states" style="font-weight:600">See the full state-finance section →</a></p>
-    </section>`;
-}
-
 /* Bind interactions for every view that renders state tables: the shared
    contribution table (#/states, #/state/<juris>, #/state-recipient, owner page),
    the #/states by-owner table, and the #/state-recipients index. Each block is
    a no-op when its elements aren't on the page. */
 function bindStatesHandlers() {
-  const stateViews = ["states", "state-juris", "state-recipient", "state-recipients", "owner"];
+  const stateViews = ["states", "state-juris", "state-recipient", "state-recipients", "owner", "team"];
   if (!stateViews.includes(state.view.name)) return;
 
   /* ── Shared contribution table (state.stateFilters) ── */
@@ -7060,13 +7804,14 @@ function renderRecipients() {
     `<th class="${klass} re-sort" data-sort="${k}" style="cursor:pointer">${escapeHtml(label)}${sortArrow(k)}</th>`;
 
   return `
+  ${sectionSubnav("federal", "recipients")}
   <div class="container">
     <section class="hero" style="padding-bottom:18px">
-      <span class="eyebrow">Recipients</span>
+      <span class="eyebrow">Federal · Recipients</span>
       <h1 style="margin-top:14px;max-width:24ch">Who received the money.</h1>
       <p class="deck">
         Every committee that received at least one CONFIRMED or PROBABLE
-        donation from an MLB principal owner. Sortable by amount, donations,
+        federal donation from an MLB principal owner. Sortable by amount, donations,
         distinct donors, or recency. Click any row for the recipient detail.
       </p>
     </section>
@@ -7268,7 +8013,7 @@ function renderWhatsNew() {
         <p class="deck">
           Weekly diffs will appear here after the first scheduled refresh.
           The full archive is browsable now via the
-          <a href="#/" class="drawer-link" style="display:inline">League index</a>.
+          <a href="#/federal" class="drawer-link" style="display:inline">Federal dashboard</a>.
         </p>
       </section>
     </div>`;
@@ -7334,9 +8079,10 @@ function renderWhatsNew() {
   const totalAmount = newDonations.reduce((a, d) => a + amt(d), 0);
 
   return `
+  ${sectionSubnav("federal", "whatsnew")}
   <div class="container">
     <section class="hero" style="padding-bottom:18px">
-      <span class="eyebrow">What's new</span>
+      <span class="eyebrow">Federal · What's new</span>
       <h1 style="margin-top:14px;max-width:24ch">Latest refresh: ${escapeHtml(batch.date)}.</h1>
       <p class="deck">
         Most recent multi-owner refresh window. Counts below reflect donations
@@ -7459,20 +8205,27 @@ function bindWhatsNewHandlers() {
 
 function renderAbout() {
   const L = state.data.league;
+  const st = stateToplines();
   return `
     <div class="container-narrow" style="padding:48px 0">
       <span class="eyebrow">About the data</span>
       <h1 style="margin-top:14px;max-width:22ch">The shape of the dataset, in numbers.</h1>
-      <p class="deck">A snapshot of what's currently in the archive — coverage, freshness, and where you can find the underlying records.</p>
+      <p class="deck">A snapshot of what's currently in the archive — coverage at both the federal and state level, freshness, and where you can find the underlying records.</p>
 
       <div style="margin-top:48px">
-        <h3>Coverage</h3>
-        <p>${fmtInt(L.n_donations)} donations across ${L.n_owners} owners, ${L.n_cycles} election cycles, totaling ${fmtMoneyExact(aggAmt(L, "total_amount"))}. Earliest record: ${fmtDate(L.earliest_date)}. Latest: ${fmtDate(L.latest_date)}.</p>
+        <h3>Federal coverage (FEC)</h3>
+        <p>${fmtInt(L.n_donations)} donations across ${L.n_owners} owners, ${L.n_cycles} election cycles, totaling ${fmtMoneyExact(aggAmt(L, "total_amount"))}. Earliest record: ${fmtDate(L.earliest_date)}. Latest: ${fmtDate(L.latest_date)}. Browse it on the <a href="#/federal">Federal dashboard</a>.</p>
       </div>
 
+      ${st ? `
       <div style="margin-top:32px">
-        <h3>Verification breakdown</h3>
-        <p><strong>${fmtInt(L.n_confirmed)}</strong> CONFIRMED · <strong>${fmtInt(L.n_probable)}</strong> PROBABLE. Both tiers appear in this dashboard; UNCERTAIN records are routed to a review queue and never published.</p>
+        <h3>State coverage</h3>
+        <p>${fmtInt(st.donations)} contributions across ${fmtInt(st.owners)} owners and ${fmtInt(st.jurisdictions)} state${st.jurisdictions === 1 ? "" : "s"} (${escapeHtml(jNatList(st.jurisList.map((j) => j.code)))}), totaling ${fmtMoneyExact(st.total)}. Sourced from each state's official disclosure system and held in a database separate from the federal archive. Browse it in the <a href="#/states">State section</a>.</p>
+      </div>` : ""}
+
+      <div style="margin-top:32px">
+        <h3>Verification breakdown (federal)</h3>
+        <p><strong>${fmtInt(L.n_confirmed)}</strong> CONFIRMED · <strong>${fmtInt(L.n_probable)}</strong> PROBABLE. Both tiers appear in this dashboard; UNCERTAIN records are routed to a review queue and never published. The same three-tier standard governs the state data.</p>
       </div>
 
       <div style="margin-top:32px">

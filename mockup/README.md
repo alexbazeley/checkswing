@@ -78,19 +78,36 @@ the editorial backbone of the UI:
 - **Color is reserved for meaning.** Party colors (DEM blue, REP red, OTH
   grey) carry data. Deep crimson (`--brand`) is reserved for the CheckSwing
   identity itself. Burnt sienna (`--accent`) carries interactive UI (links,
-  CSV buttons, focus states).
+  CSV buttons, focus states). The two halves of the project read as a pair:
+  the **Federal** level keeps the crimson (`--federal`), the **State** level
+  takes a deep teal-green (`--state`) — distinct from both the brand and the
+  party colors, so the level you're in is always legible at a glance.
+- **Display type.** Headlines and large numerals are set in **Fraunces**
+  (`--display`); running serif text stays in Source Serif 4 (`--serif`); UI
+  and labels in Inter (`--sans`); figures in JetBrains Mono (`--mono`).
 - **Tabular figures everywhere.** Money columns align on the decimal point
   in tables, sparklines, the timeline chart, the drawer.
 
 ## Routes
 
+The site has a **Home / Federal / State** information architecture. `#/` is a
+project-level front door that previews both levels; the federal FEC dashboard
+lives at `#/federal`, and the state campaign-finance section at `#/states`.
+Federal and State are parallel siblings, each with its own graphic hero and a
+sticky section sub-nav exposing its sub-pages.
+
 | Route | What it is |
 |---|---|
-| `#/` | League index — photo hero, KPIs, recent-donations feed, league political map, cycle chart, owners table |
-| `#/owner/<slug>` | Owner detail — hero stats, log-scale timeline with tenure shading, top recipients, verification preview, complete donations table |
+| `#/` | Home — project front door: photo hero, combined federal+state toplines, two level-preview cards (Federal / State), three-tier verification trust strip |
+| `#/federal` (alias `#/league`) | Federal dashboard — graphic hero + sub-nav, KPIs, recent-donations feed, league political map, cycle chart, heatmap, owners table |
+| `#/states` (alias `#/state`) | State campaign-finance overview — graphic hero + sub-nav, toplines, by-jurisdiction cards, by-owner table, all state contributions |
+| `#/owner/<slug>` | Owner detail — hero stats, log-scale timeline with tenure shading, top recipients, verification preview, complete donations table (federal + a state-finance panel) |
 | `#/team/<slug>` | Team rollup — combined stats for teams with multiple tracked owners, multi-tenure timeline, combined recipients and donations |
 | `#/cycle/<year>` | Election-cycle detail — biggest owner donors that cycle, top recipients, all-cycle donations table |
 | `#/committee/<id>` | Committee detail — which MLB owners gave to this recipient, ranked, with all donations |
+| `#/state/<code>` | One jurisdiction's full state record (e.g. `#/state/CA`) |
+| `#/state-recipients` | Every distinct state recipient committee/candidate/ballot-measure — sortable/filterable |
+| `#/state-recipient/<key>` | One state recipient's detail |
 | `#/methodology` | The three-tier rubric, in/out of scope, reproducibility |
 | `#/about` | Coverage snapshot |
 | `#/whats-new` | Most recent refresh batch — new donations, owners affected, top 5 by amount, owner-activity rollup |

@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-label="CheckSwing — federal political contributions by MLB owners">
-  <title>CheckSwing — federal political contributions by MLB owners</title>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-label="CheckSwing — federal and state political contributions by MLB owners">
+  <title>CheckSwing — federal and state political contributions by MLB owners</title>
   <!-- Cream background -->
   <rect width="1200" height="630" fill="#FAFAF6"/>
 
@@ -29,14 +29,14 @@
         font-family="'Source Serif 4','Charter','Georgia','Times New Roman',serif"
         font-size="44"
         font-weight="500"
-        fill="#4A4842">Where MLB's owners send their political money.</text>
+        fill="#4A4842">Where MLB's owners spend in politics.</text>
 
   <!-- Stat strip -->
   <g font-family="'Inter','Helvetica Neue','Arial',sans-serif" fill="#7A7669" font-size="22">
     <text x="96" y="500" font-weight="600" fill="#1A1916">36 owners</text>
-    <text x="280" y="500" font-weight="600" fill="#1A1916">14 election cycles</text>
-    <text x="560" y="500" font-weight="600" fill="#1A1916">2000–present</text>
-    <text x="800" y="500" font-weight="600" fill="#1A1916">Sourced from FEC filings</text>
+    <text x="280" y="500" font-weight="600" fill="#1A1916">Federal + state</text>
+    <text x="540" y="500" font-weight="600" fill="#1A1916">2000–present</text>
+    <text x="780" y="500" font-weight="600" fill="#1A1916">Sourced from official filings</text>
   </g>
 
   <!-- Bottom rule + footer URL -->
@@ -49,5 +49,5 @@
         font-family="'JetBrains Mono','Menlo','Consolas',monospace"
         font-size="20"
         fill="#7A7669"
-        text-anchor="end">Federal political contributions</text>
+        text-anchor="end">Federal + state political money</text>
 </svg>
