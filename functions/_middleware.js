@@ -1,6 +1,12 @@
 /**
  * CheckSwing — site-wide password gate (Cloudflare Pages Functions middleware).
  *
+ * LOCATION MATTERS: this file lives in `/functions` at the REPO ROOT, not inside
+ * the build-output directory (`mockup/`). Cloudflare Pages compiles the
+ * `functions/` directory found at the project root and refuses to pick it up
+ * from the static output root — a function placed in `mockup/functions/` is
+ * silently ignored and the gate never runs.
+ *
  * Runs at the edge on EVERY request — the HTML, data.json, state_data.json, the
  * per-committee beneficiary chunks, and every asset — before anything is served.
  * Because it sits in front of the static files, the data can't be fetched around
