@@ -11,6 +11,8 @@ Input convention per source:
   * CA — `input` is the CAL-ACCESS `dbwebexport.zip` (rows streamed from the zip).
   * PA — `input` is the extracted PA-DOS export dir (the `* ECF Contribution.txt`
     and `* ECF Filer.txt` files).
+  * IL — `input` is the ISBE bulk dir holding `Receipts.txt` + `Committees.txt`
+    (Receipts.txt streamed line-by-line).
 """
 from __future__ import annotations
 
@@ -21,9 +23,11 @@ from typing import Callable, Iterable
 from . import (
     calaccess_adapter,
     fetch_calaccess,
+    fetch_il,
     fetch_ny,
     fetch_pa,
     fetch_tx,
+    il_adapter,
     ny_adapter,
     pa_adapter,
     tx_adapter,
@@ -145,7 +149,32 @@ TX = StateSource(
 )
 
 
-REGISTRY: dict[str, StateSource] = {s.code: s for s in (CA, PA, NY, TX)}
+# ── Illinois (ISBE bulk tab-delimited files — streamed) ──────────────────────
+
+def _il_candidates(input_dir: Path, owners: list[tuple[str, dict]]) -> dict[str, list[dict]]:
+    # Streams Receipts.txt from the input dir, builds the committee index from
+    # Committees.txt, and pre-joins the recipient onto kept rows in one pass.
+    return fetch_il.bucket_rows_by_owner(input_dir, owners)
+
+
+def _il_resolver(input_dir: Path):
+    # Recipient is pre-joined during bucketing; the resolver is a stateless reader.
+    return fetch_il.make_recipient_resolver()
+
+
+IL = StateSource(
+    code="IL", source="ISBE", label="IL · ISBE",
+    candidate_rows_by_owner=_il_candidates,
+    recipient_resolver=_il_resolver,
+    record_adapter=il_adapter.to_classifier_record,
+    row_builder=il_adapter.to_state_donation_row,
+    filing_id_of=il_adapter.filing_id_of,
+    tran_id_of=il_adapter.tran_id_of,
+    dedupe=fetch_il.dedupe,
+)
+
+
+REGISTRY: dict[str, StateSource] = {s.code: s for s in (CA, PA, NY, TX, IL)}
 
 
 def get_source(code: str) -> StateSource:

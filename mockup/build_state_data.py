@@ -51,6 +51,10 @@ def _parse_signals(raw) -> list[str]:
 # NY dataset is the Socrata "Campaign Finance … Contributions: Beginning 1999"
 # resource (see scripts/fetch_ny.SODA_URL). The human-facing dataset page:
 _NY_DATASET_URL = "https://data.ny.gov/d/4j2b-6a2j"
+# ISBE bulk campaign-disclosure data files (the source of Receipts.txt / Committees.txt).
+# The per-document PDF viewer keys on an encrypted token, not the raw FiledDocID, so we
+# cite the official contribution-search page rather than fabricate a per-record link.
+_IL_DATASET_URL = "https://www.elections.il.gov/CampaignDisclosure/ContributionSearchByAllContributions.aspx"
 
 
 def _source_links(source: str, filing_id: str | None, tran_id: str | None) -> tuple[str | None, str | None]:
@@ -62,6 +66,8 @@ def _source_links(source: str, filing_id: str | None, tran_id: str | None) -> tu
       * NYSBOE     — NY has no per-filing PDF; source_filing_id is the recipient
                      filer id, so the citable per-record handle is the Socrata
                      transaction. Link the exact dataset record + the dataset page.
+      * ISBE       — the per-doc PDF viewer keys on an encrypted token (not the raw
+                     FiledDocID); cite the official contribution-search page.
       * PA-DOS     — no data ingested yet and no verified per-record URL; omit.
     """
     src = (source or "").upper()
@@ -69,6 +75,8 @@ def _source_links(source: str, filing_id: str | None, tran_id: str | None) -> tu
         return (f"https://cal-access.sos.ca.gov/PDFGen/pdfgen.prg?filingid={filing_id}&amendid=0", None)
     if src == "NYSBOE" and tran_id:
         return (f"https://data.ny.gov/resource/4j2b-6a2j.json?trans_number={tran_id}", _NY_DATASET_URL)
+    if src == "ISBE":
+        return (None, _IL_DATASET_URL)
     return (None, None)
 
 
