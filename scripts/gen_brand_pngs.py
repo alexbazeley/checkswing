@@ -73,29 +73,46 @@ def rounded_rect(draw, xy, radius, fill):
 
 
 def render_icon(size: int = 512) -> Image.Image:
-    """The favicon mark: crimson tile + cream "C" + accent dot."""
-    img = Image.new("RGBA", (size, size), (0, 0, 0, 0))
-    d = ImageDraw.Draw(img)
-    radius = int(size * 0.125)
-    rounded_rect(d, (0, 0, size, size), radius, BRAND)
+    """Favicon mark: crimson tile + high-contrast serif "C" + warm accent ball.
 
-    # Big serif C
-    c_font = load_font(SERIF_CANDIDATES, int(size * 0.75))
-    # Center using textbbox for precise placement
-    bbox = d.textbbox((0, 0), "C", font=c_font)
-    cw = bbox[2] - bbox[0]
-    ch = bbox[3] - bbox[1]
-    cx = (size - cw) // 2 - bbox[0]
-    cy = (size - ch) // 2 - bbox[1]
-    d.text((cx, cy), "C", font=c_font, fill=BG)
+    Pure geometry (no font) so it matches the source-of-truth vector exactly —
+    mockup/assets/checkswing-icon.svg. The "C" is an outer disc minus a
+    right-offset inner disc (thick left spine, thin toward the open right, like
+    the Fraunces display face), with a wedge cutting the opening.
+    """
+    S = size
+    sc = S / 64.0  # design grid is 64×64, same as the SVG viewBox
+    TILE_TOP = (154, 34, 54)   # #9A2236
+    TILE_BOT = (118, 21, 38)   # #761526
+    CREAM = (250, 247, 240)    # #FAF7F0
+    DOT = (197, 106, 58)       # #C56A3A
 
-    # Accent dot bottom-right
-    dot_r = int(size * 0.0625)
-    dot_cx = int(size * 0.78)
-    dot_cy = int(size * 0.78)
-    d.ellipse(
-        (dot_cx - dot_r, dot_cy - dot_r, dot_cx + dot_r, dot_cy + dot_r),
-        fill=ACCENT,
+    # Crimson tile with a subtle vertical gradient, clipped to a rounded rect.
+    grad = Image.new("RGB", (1, S))
+    for y in range(S):
+        t = y / max(1, S - 1)
+        grad.putpixel((0, y), tuple(int(TILE_TOP[i] + (TILE_BOT[i] - TILE_TOP[i]) * t) for i in range(3)))
+    grad = grad.resize((S, S))
+    tile_mask = Image.new("L", (S, S), 0)
+    ImageDraw.Draw(tile_mask).rounded_rectangle((0, 0, S - 1, S - 1), radius=int(15 * sc), fill=255)
+    img = Image.new("RGBA", (S, S), (0, 0, 0, 0))
+    img.paste(grad, (0, 0), tile_mask)
+
+    # High-contrast "C" built as a mask, then cream pasted through it.
+    cmask = Image.new("L", (S, S), 0)
+    cd = ImageDraw.Draw(cmask)
+
+    def ellipse(cx, cy, r, fill):
+        cd.ellipse(((cx - r) * sc, (cy - r) * sc, (cx + r) * sc, (cy + r) * sc), fill=fill)
+
+    ellipse(30, 32, 18, 255)       # outer disc
+    ellipse(33.5, 32, 10.6, 0)     # right-offset inner disc → thick-left contrast
+    cd.polygon([(30 * sc, 32 * sc), (66 * sc, 12 * sc), (66 * sc, 52 * sc)], fill=0)  # opening wedge
+    img.paste(Image.new("RGBA", (S, S), CREAM + (255,)), (0, 0), cmask)
+
+    # Warm accent ball at the mouth of the C.
+    ImageDraw.Draw(img).ellipse(
+        ((49 - 4) * sc, (32 - 4) * sc, (49 + 4) * sc, (32 + 4) * sc), fill=DOT + (255,)
     )
     return img
 
