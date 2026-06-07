@@ -6,16 +6,23 @@
   <!-- Top rule in brand crimson, thin -->
   <rect x="0" y="0" width="1200" height="8" fill="#8B1B2C"/>
 
-  <!-- Icon tile (mini favicon) top-left -->
-  <g transform="translate(96 96)">
-    <rect width="80" height="80" rx="10" ry="10" fill="#8B1B2C"/>
-    <text x="40" y="59"
-          font-family="'Source Serif 4','Charter','Georgia','Times New Roman',serif"
-          font-size="60"
-          font-weight="700"
-          text-anchor="middle"
-          fill="#FAFAF6">C</text>
-    <circle cx="62" cy="62" r="5" fill="#B8552B"/>
+  <!-- Icon tile (mini favicon) top-left — matches mockup/assets/checkswing-icon.svg -->
+  <defs>
+    <linearGradient id="og-tile" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#9A2236"/>
+      <stop offset="1" stop-color="#761526"/>
+    </linearGradient>
+    <mask id="og-c">
+      <rect width="64" height="64" fill="#000"/>
+      <circle cx="30" cy="32" r="18" fill="#fff"/>
+      <circle cx="33.5" cy="32" r="10.6" fill="#000"/>
+      <path d="M30 32 L66 12 L66 52 Z" fill="#000"/>
+    </mask>
+  </defs>
+  <g transform="translate(96 96) scale(1.25)">
+    <rect width="64" height="64" rx="15" ry="15" fill="url(#og-tile)"/>
+    <rect width="64" height="64" fill="#FAF7F0" mask="url(#og-c)"/>
+    <circle cx="49" cy="32" r="4" fill="#C56A3A"/>
   </g>
 
   <!-- Wordmark + deck, left-aligned -->
