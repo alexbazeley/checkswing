@@ -24,9 +24,11 @@ from . import (
     fetch_ny,
     fetch_pa,
     fetch_tx,
+    fetch_wa,
     ny_adapter,
     pa_adapter,
     tx_adapter,
+    wa_adapter,
 )
 
 
@@ -145,7 +147,23 @@ TX = StateSource(
 )
 
 
-REGISTRY: dict[str, StateSource] = {s.code: s for s in (CA, PA, NY, TX)}
+# ── Washington (WA PDC via data.wa.gov SODA API — no input file) ─────────────
+
+WA = StateSource(
+    code="WA", source="WA-PDC", label="WA · WA PDC",
+    candidate_rows_by_owner=fetch_wa.candidate_rows_by_owner,
+    recipient_resolver=fetch_wa.make_recipient_resolver,
+    record_adapter=wa_adapter.to_classifier_record,
+    row_builder=wa_adapter.to_state_donation_row,
+    filing_id_of=wa_adapter.filing_id_of,
+    tran_id_of=wa_adapter.tran_id_of,
+    dedupe=fetch_wa.dedupe,
+    requires_input=False,
+    raw_ref=fetch_wa.SODA_URL,
+)
+
+
+REGISTRY: dict[str, StateSource] = {s.code: s for s in (CA, PA, NY, TX, WA)}
 
 
 def get_source(code: str) -> StateSource:

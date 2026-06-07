@@ -51,6 +51,9 @@ def _parse_signals(raw) -> list[str]:
 # NY dataset is the Socrata "Campaign Finance … Contributions: Beginning 1999"
 # resource (see scripts/fetch_ny.SODA_URL). The human-facing dataset page:
 _NY_DATASET_URL = "https://data.ny.gov/d/4j2b-6a2j"
+# WA PDC Socrata dataset page (kv7h-kjye). source_filing_id is the report_number, which
+# deep-links the actual filed report image at my.pdc.wa.gov.
+_WA_DATASET_URL = "https://data.wa.gov/d/kv7h-kjye"
 
 
 def _source_links(source: str, filing_id: str | None, tran_id: str | None) -> tuple[str | None, str | None]:
@@ -62,6 +65,8 @@ def _source_links(source: str, filing_id: str | None, tran_id: str | None) -> tu
       * NYSBOE     — NY has no per-filing PDF; source_filing_id is the recipient
                      filer id, so the citable per-record handle is the Socrata
                      transaction. Link the exact dataset record + the dataset page.
+      * WA-PDC     — source_filing_id is the report_number → the filed report image
+                     at my.pdc.wa.gov; also link the dataset page.
       * PA-DOS     — no data ingested yet and no verified per-record URL; omit.
     """
     src = (source or "").upper()
@@ -69,6 +74,8 @@ def _source_links(source: str, filing_id: str | None, tran_id: str | None) -> tu
         return (f"https://cal-access.sos.ca.gov/PDFGen/pdfgen.prg?filingid={filing_id}&amendid=0", None)
     if src == "NYSBOE" and tran_id:
         return (f"https://data.ny.gov/resource/4j2b-6a2j.json?trans_number={tran_id}", _NY_DATASET_URL)
+    if src == "WA-PDC" and filing_id:
+        return (f"https://my.pdc.wa.gov/public/document?repno={filing_id}", _WA_DATASET_URL)
     return (None, None)
 
 

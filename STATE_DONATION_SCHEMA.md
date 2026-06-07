@@ -106,8 +106,11 @@ Run log (counts, snapshot path, extract label) and the migration trail.
 - **Recipient party/office** are usually NULL — CAL-ACCESS receipts don't carry
   them; only the filer name/type is resolved (from the cover page).
 - **Coverage is partial and per-state.** Live jurisdictions: CA (CAL-ACCESS), NY
-  (NYSBOE), TX (TEC); a PA-DOS adapter is built and registered. Within CA, only
-  contributions itemized in `RCPT_CD`; within TX, only itemized contributions in the
-  TEC bulk export (`contribs_*` / `cont_ss` / `cont_t`). NY is ZIP-grade (no employer/
-  occupation/state), so its CONFIRMED rows rest on an exact ZIP match. Other states are
-  out until added one at a time via the `StateSource` registry (SOURCES.md §Phase 4).
+  (NYSBOE), TX (TEC), WA (WA-PDC); a PA-DOS adapter is built and registered. Within CA,
+  only contributions itemized in `RCPT_CD`; within TX, only itemized contributions in the
+  TEC bulk export (`contribs_*` / `cont_ss` / `cont_t`). WA is gold-grade (employer +
+  occupation + state) and API-based — queried live over the data.wa.gov Socrata dataset
+  (`kv7h-kjye`), no bulk download; the `report_number` deep-links the filed report image
+  at my.pdc.wa.gov. NY is ZIP-grade (no employer/occupation/state), so its CONFIRMED rows
+  rest on an exact ZIP match. Other states are out until added one at a time via the
+  `StateSource` registry (SOURCES.md §Phase 4).

@@ -6815,3 +6815,17 @@ generated end-to-end from the joined data") is satisfied.
 - **updated**: `0` · **demoted→queue**: `99` · **forced**: `0` · **excluded**: `0` · **unchanged**: `569`
 - **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-06-06T23-01-26Z__pre-reclassify-inplace-fisher-john.db`
 - **note**: in-place re-score from stored donations columns (no raw read, no delete-rebuild); rows recoverable from the snapshot above.
+
+### 2026-06-07 — STATE_INGESTION
+
+- **run_id**: `41770954`
+- **entity_slug**: `stanton-john`
+- **jurisdiction**: `WA`
+- **source**: `WA-PDC`
+- **extract_label**: `https://data.wa.gov/resource/kv7h-kjye.json`
+- **records_scanned**: `398`
+- **confirmed_count**: `194`
+- **probable_count**: `9`
+- **uncertain_count**: `193`
+- **snapshot_path**: `data/snapshots/2026-06-07T02-22-59Z__41770954.db`
+- **notes**: scanned=398
