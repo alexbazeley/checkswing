@@ -51,6 +51,10 @@ def _parse_signals(raw) -> list[str]:
 # NY dataset is the Socrata "Campaign Finance … Contributions: Beginning 1999"
 # resource (see scripts/fetch_ny.SODA_URL). The human-facing dataset page:
 _NY_DATASET_URL = "https://data.ny.gov/d/4j2b-6a2j"
+# PA-DOS "Full Campaign Finance Export" page — the source of the per-year bulk zips.
+_PA_DATASET_URL = (
+    "https://www.pa.gov/agencies/dos/resources/voting-and-elections-resources/campaign-finance-data"
+)
 
 
 def _source_links(source: str, filing_id: str | None, tran_id: str | None) -> tuple[str | None, str | None]:
@@ -62,13 +66,17 @@ def _source_links(source: str, filing_id: str | None, tran_id: str | None) -> tu
       * NYSBOE     — NY has no per-filing PDF; source_filing_id is the recipient
                      filer id, so the citable per-record handle is the Socrata
                      transaction. Link the exact dataset record + the dataset page.
-      * PA-DOS     — no data ingested yet and no verified per-record URL; omit.
+      * PA-DOS     — no verified per-record deep link in the bulk export; cite the
+                     official pa.gov Full Campaign Finance Export page (the source
+                     of the ingested file) as the dataset URL.
     """
     src = (source or "").upper()
     if src == "CAL-ACCESS" and filing_id:
         return (f"https://cal-access.sos.ca.gov/PDFGen/pdfgen.prg?filingid={filing_id}&amendid=0", None)
     if src == "NYSBOE" and tran_id:
         return (f"https://data.ny.gov/resource/4j2b-6a2j.json?trans_number={tran_id}", _NY_DATASET_URL)
+    if src == "PA-DOS":
+        return (None, _PA_DATASET_URL)
     return (None, None)
 
 

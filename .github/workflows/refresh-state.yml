@@ -1,4 +1,4 @@
-name: Monthly state refresh (CA + TX)
+name: Monthly state refresh (CA + PA + TX)
 
 # Phase-4 state refresh. Pulls each adopted state's official bulk export, re-runs the
 # state ingest, and commits any changes to data/state.db + the provenance log.
@@ -63,6 +63,28 @@ jobs:
         # amendments superseded). One pass over all pilot/active owners.
         run: python -m scripts.cli ingest-state-ca --zip data/raw/state/ca/dbwebexport.zip
 
+      - name: Download Pennsylvania DOS export (rolling 4-year window)
+        # PA-DOS publishes ONE zip per cycle year at pa.gov (no login/API key).
+        # New + amended filings land in the recent years; historical years are
+        # frozen and already persisted in state.db, so we only re-pull the active
+        # window (current + 3 prior). The idempotent content-hash upsert tops up
+        # recent rows without disturbing the committed historical ingest.
+        run: |
+          mkdir -p data/raw/state/pa
+          CUR=$(date -u +%Y)
+          base="https://www.pa.gov/content/dam/copapwp-pagov/en/dos/resources/voting-and-elections/campaign-finance/campaign-finance-data"
+          for y in $CUR $((CUR-1)) $((CUR-2)) $((CUR-3)); do
+            code=$(curl -fSL --retry 3 --retry-delay 15 -o "data/raw/state/pa/$y.zip" -w "%{http_code}" "$base/$y.zip" || echo "000")
+            echo "PA $y: HTTP $code"
+            [ "$code" = "200" ] || rm -f "data/raw/state/pa/$y.zip"
+          done
+          ls -lh data/raw/state/pa/*.zip
+
+      - name: Ingest Pennsylvania state contributions
+        # Streams contrib_*/filer_* members directly from each per-year zip (no
+        # extraction); idempotent upsert keyed on a content-hash tran id.
+        run: python -m scripts.cli ingest-state-bulk PA --input data/raw/state/pa
+
       - name: Download Texas Ethics Commission bulk export (~1 GB)
         # Public, no login/API key. Refreshed ~daily by TEC.
         run: |
@@ -90,7 +112,7 @@ jobs:
           if git diff --staged --quiet; then
             echo "No changes from state refresh — nothing to commit."
           else
-            git commit -m "State refresh: CA + TX ($(date -u +%Y-%m-%d))"
+            git commit -m "State refresh: CA + PA + TX ($(date -u +%Y-%m-%d))"
             # Rebase onto anything that landed on main since checkout (e.g. the
             # federal refresh) so the push fast-forwards. State touches only its
             # own data files, so this replays cleanly over unrelated commits.

@@ -100,8 +100,12 @@ def test_source_links_per_portal():
     ny_filing, ny_dataset = f("NYSBOE", "filer99", "TRANS7")
     assert ny_filing == "https://data.ny.gov/resource/4j2b-6a2j.json?trans_number=TRANS7"
     assert ny_dataset == "https://data.ny.gov/d/4j2b-6a2j"
-    # No verified per-record URL for PA yet, and never guess on missing ids.
-    assert f("PA-DOS", "x", "y") == (None, None)
+    # PA has no verified per-record deep link; cite the official bulk-export
+    # dataset page (filing_url stays None — never fabricated).
+    pa_filing, pa_dataset = f("PA-DOS", "x", "y")
+    assert pa_filing is None
+    assert pa_dataset == (
+        "https://www.pa.gov/agencies/dos/resources/voting-and-elections-resources/campaign-finance-data")
     assert f("CAL-ACCESS", None, "T1") == (None, None)
 
 

@@ -6815,3 +6815,31 @@ generated end-to-end from the joined data") is satisfied.
 - **updated**: `0` · **demoted→queue**: `99` · **forced**: `0` · **excluded**: `0` · **unchanged**: `569`
 - **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-06-06T23-01-26Z__pre-reclassify-inplace-fisher-john.db`
 - **note**: in-place re-score from stored donations columns (no raw read, no delete-rebuild); rows recoverable from the snapshot above.
+
+### 2026-06-07 — STATE_INGESTION
+
+- **run_id**: `73aa8ddb`
+- **entity_slug**: `middleton-john`
+- **jurisdiction**: `PA`
+- **source**: `PA-DOS`
+- **extract_label**: `pa`
+- **records_scanned**: `2753`
+- **confirmed_count**: `24`
+- **probable_count**: `0`
+- **uncertain_count**: `22`
+- **snapshot_path**: `data/snapshots/2026-06-07T00-36-52Z__73aa8ddb.db`
+- **notes**: scanned=2753, skipped_no_date=56
+
+### 2026-06-07 — STATE_INGESTION
+
+- **run_id**: `6d25c6b1`
+- **entity_slug**: `nutting-bob`
+- **jurisdiction**: `PA`
+- **source**: `PA-DOS`
+- **extract_label**: `pa`
+- **records_scanned**: `39`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `2`
+- **snapshot_path**: `data/snapshots/2026-06-07T00-36-52Z__6d25c6b1.db`
+- **notes**: scanned=39, skipped_no_date=4

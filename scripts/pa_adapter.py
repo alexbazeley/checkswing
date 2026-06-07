@@ -1,13 +1,16 @@
 """Adapter: Pennsylvania DOS full-export contribution rows → pipeline shapes.
 
 Pennsylvania's Department of State "Full Campaign Finance Export" publishes
-comma-delimited, header-bearing files per reporting cycle. The contributions file
-(`* ECF Contribution.txt`) columns:
+comma-delimited, header-bearing files per reporting cycle (one `<YEAR>.zip` at
+pa.gov). The contributions file (`contrib_<YEAR>.txt`) columns:
 
-    FilerID, CampaignFinanceID, SubmittedDate, EYEAR, CYCLE, Section, CONTRIBUTOR,
-    FILERCODE, ADDRESS1, ADDRESS2, CITY, STATE, ZIPCODE, OCCUPATION,
+    CampaignFinanceID, FilerID, EYEAR, SubmittedDate, CYCLE, Section, CONTRIBUTOR,
+    ADDRESS1, ADDRESS2, CITY, STATE, ZIPCODE, OCCUPATION,
     ENAME, EADDRESS1, EADDRESS2, ECITY, ESTATE, EZIPCODE,
     CONTDATE1, CONTAMT1, CONTDATE2, CONTAMT2, CONTDATE3, CONTAMT3, CONTDESC
+
+(The adapter reads columns by name via DictReader, so the pre-2026 dos.pa.gov
+"ECF" column order — which carried an extra FILERCODE — also parses unchanged.)
 
 Notes that shape this adapter:
   * `CONTRIBUTOR` is a single "First [Middle] Last" string (no comma).

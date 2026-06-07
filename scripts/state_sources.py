@@ -9,8 +9,8 @@ adapter + fetcher + one registry entry; nothing downstream changes.
 
 Input convention per source:
   * CA — `input` is the CAL-ACCESS `dbwebexport.zip` (rows streamed from the zip).
-  * PA — `input` is the extracted PA-DOS export dir (the `* ECF Contribution.txt`
-    and `* ECF Filer.txt` files).
+  * PA — `input` is a dir of per-year `<YEAR>.zip` exports from pa.gov (each
+    holding `contrib_<YEAR>.txt` + `filer_<YEAR>.txt`); streamed across all years.
 """
 from __future__ import annotations
 
@@ -77,15 +77,15 @@ CA = StateSource(
 
 # ── Pennsylvania (DOS full export, extracted dir) ────────────────────────────
 
-def _pa_candidates(extract_dir: Path, owners: list[tuple[str, dict]]) -> dict[str, list[dict]]:
-    contrib = fetch_pa.find_pa_file(extract_dir, fetch_pa.CONTRIB_SUFFIX)
-    if contrib is None:
-        raise FileNotFoundError(f"No '* {fetch_pa.CONTRIB_SUFFIX}' under {extract_dir}")
-    filer = fetch_pa.find_pa_file(extract_dir, fetch_pa.FILER_SUFFIX)
-    filer_index = fetch_pa.build_filer_index(filer) if filer else {}
-    return fetch_pa.bucket_rows_by_owner(
-        fetch_pa.iter_contributions(contrib, filer_index), owners
-    )
+def _pa_candidates(input_dir: Path, owners: list[tuple[str, dict]]) -> dict[str, list[dict]]:
+    # input_dir holds one or more per-year `<YEAR>.zip` exports (or extracted
+    # contrib_*/filer_* files); iter_dir streams every year, recipient pre-joined.
+    rows = fetch_pa.iter_dir(input_dir)
+    buckets = fetch_pa.bucket_rows_by_owner(rows, owners)
+    if not any(buckets.values()) and not fetch_pa.find_pa_zips(Path(input_dir)) \
+            and not fetch_pa.find_pa_files(Path(input_dir), "contrib"):
+        raise FileNotFoundError(f"No PA export (*.zip or contrib_*.txt) under {input_dir}")
+    return buckets
 
 
 def _pa_resolver(extract_dir: Path):
