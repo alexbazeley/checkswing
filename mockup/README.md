@@ -31,10 +31,17 @@ load, so `file://` won't work in most browsers.
 
 ## Private access (password gate)
 
-`functions/_middleware.js` is a Cloudflare Pages Function that can put a shared
-password in front of the **entire** deployed site — every request (HTML,
-`data.json`, `state_data.json`, beneficiary chunks, assets) is checked at the
-edge before anything is served, so the data can't be fetched around the gate.
+The repo-root **`/functions/_middleware.js`** is a Cloudflare Pages Function that
+can put a shared password in front of the **entire** deployed site — every
+request (HTML, `data.json`, `state_data.json`, beneficiary chunks, assets) is
+checked at the edge before anything is served, so the data can't be fetched
+around the gate.
+
+> **Location matters.** The function lives in `/functions` at the **repo root**,
+> not in `mockup/functions/`. Cloudflare Pages only compiles the `functions/`
+> directory found at the project root — the static output root (`mockup/`, where
+> `_headers`/`_redirects` live) is the wrong place and the gate is silently
+> ignored there.
 
 **Turn it on:** in the Cloudflare dashboard → the Pages project → Settings →
 *Variables and Secrets*, add to the **Production** environment (and Preview, if
@@ -52,10 +59,11 @@ remembered for the session.
 The gate is **inactive until `SITE_PASSWORD` is set**, so merging the code does
 not lock anyone out before you've configured the secret. Remove the secret to
 make the site public again. (Local `serve.sh` is a plain static server and does
-not run Functions, so it's never gated — to exercise the gate locally use
-`npx wrangler pages dev . --binding SITE_PASSWORD=… --binding SITE_USER=…` from
-inside `mockup/`.) While gated, social-share crawlers can't fetch the OG image,
-so link previews won't render — expected for a private site.
+not run Functions, so it's never gated — to exercise the gate locally run, from
+the **repo root**, `npx wrangler pages dev mockup --binding SITE_PASSWORD=… --binding SITE_USER=…`
+so wrangler picks up `./functions` and serves the assets from `mockup/`.) While
+gated, social-share crawlers can't fetch the OG image, so link previews won't
+render — expected for a private site.
 
 ## Brand assets
 
