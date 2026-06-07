@@ -32,7 +32,7 @@ permissions:
 jobs:
   state-refresh:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 90
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -101,10 +101,18 @@ jobs:
 
       - name: Download Illinois State Board of Elections bulk export (~1 GB)
         # Public, no login/API key. Tab-delimited bulk files refreshed daily by ISBE.
+        # ISBE serves Receipts.txt (~1 GB) slowly and resets the HTTP/2 stream
+        # mid-transfer (curl 92), and it does NOT honour Range (416 */0) so a partial
+        # cannot resume — each attempt must complete in one pass. Mitigations:
+        #   --http1.1            avoids the HTTP/2 "stream not closed cleanly" reset
+        #   --retry-all-errors   retries the WHOLE transfer on any failure (no Range)
+        #   --speed-limit/-time  abort a stalled transfer fast so a retry fires instead
+        #                        of hanging for hours
         run: |
           mkdir -p data/raw/state/il
           for f in Committees.txt Receipts.txt; do
-            curl -fSL --retry 3 --retry-delay 15 \
+            curl -fSL --http1.1 --retry 8 --retry-all-errors --retry-delay 10 \
+              --connect-timeout 30 --speed-limit 10000 --speed-time 60 \
               -o "data/raw/state/il/$f" \
               "https://downloads.elections.il.gov/$f"
           done
