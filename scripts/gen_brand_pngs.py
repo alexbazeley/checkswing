@@ -16,6 +16,7 @@ or Times) since most CI images don't have Source Serif 4 installed.
 
 from __future__ import annotations
 
+import math
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
@@ -73,47 +74,63 @@ def rounded_rect(draw, xy, radius, fill):
 
 
 def render_icon(size: int = 512) -> Image.Image:
-    """Favicon mark: crimson tile + high-contrast serif "C" + warm accent ball.
+    """App-icon / favicon mark: a bold crimson "C" that doubles as a baseball
+    (with cream seam stitching), on a cream rounded tile.
 
-    Pure geometry (no font) so it matches the source-of-truth vector exactly —
-    mockup/assets/checkswing-icon.svg. The "C" is an outer disc minus a
-    right-offset inner disc (thick left spine, thin toward the open right, like
-    the Fraunces display face), with a wedge cutting the opening.
+    Pure geometry (no font), mirroring mockup/assets/checkswing-icon.svg. The SVG
+    is transparent; this opaque, cream-tiled raster is what the apple-touch icon,
+    PNG favicon fallback, and OG mini-mark use (so they have a defined shape and
+    good contrast). The "C" is an outer disc minus a concentric inner disc, with
+    a wedge cutting the opening to the right.
     """
     S = size
     sc = S / 64.0  # design grid is 64×64, same as the SVG viewBox
-    TILE_TOP = (154, 34, 54)   # #9A2236
-    TILE_BOT = (118, 21, 38)   # #761526
-    CREAM = (250, 247, 240)    # #FAF7F0
-    DOT = (197, 106, 58)       # #C56A3A
+    TILE = (251, 250, 245)     # #FBFAF5 cream (brand paper)
+    CRIMSON = (139, 27, 44)    # #8B1B2C
+    CREAM = (250, 247, 240)    # #FAF7F0 (seams)
 
-    # Crimson tile with a subtle vertical gradient, clipped to a rounded rect.
-    grad = Image.new("RGB", (1, S))
-    for y in range(S):
-        t = y / max(1, S - 1)
-        grad.putpixel((0, y), tuple(int(TILE_TOP[i] + (TILE_BOT[i] - TILE_TOP[i]) * t) for i in range(3)))
-    grad = grad.resize((S, S))
+    img = Image.new("RGBA", (S, S), (0, 0, 0, 0))
+
+    # Cream rounded tile.
     tile_mask = Image.new("L", (S, S), 0)
     ImageDraw.Draw(tile_mask).rounded_rectangle((0, 0, S - 1, S - 1), radius=int(15 * sc), fill=255)
-    img = Image.new("RGBA", (S, S), (0, 0, 0, 0))
-    img.paste(grad, (0, 0), tile_mask)
+    img.paste(Image.new("RGBA", (S, S), TILE + (255,)), (0, 0), tile_mask)
 
-    # High-contrast "C" built as a mask, then cream pasted through it.
+    # Crimson baseball "C": outer disc − inner disc − opening wedge.
     cmask = Image.new("L", (S, S), 0)
     cd = ImageDraw.Draw(cmask)
 
-    def ellipse(cx, cy, r, fill):
+    def ell(cx, cy, r, fill):
         cd.ellipse(((cx - r) * sc, (cy - r) * sc, (cx + r) * sc, (cy + r) * sc), fill=fill)
 
-    ellipse(30, 32, 18, 255)       # outer disc
-    ellipse(33.5, 32, 10.6, 0)     # right-offset inner disc → thick-left contrast
-    cd.polygon([(30 * sc, 32 * sc), (66 * sc, 12 * sc), (66 * sc, 52 * sc)], fill=0)  # opening wedge
-    img.paste(Image.new("RGBA", (S, S), CREAM + (255,)), (0, 0), cmask)
+    ell(32, 32, 24, 255)
+    ell(32, 32, 13.6, 0)
+    cd.polygon([(32 * sc, 32 * sc), (66 * sc, 17 * sc), (66 * sc, 47 * sc)], fill=0)
+    img.paste(Image.new("RGBA", (S, S), CRIMSON + (255,)), (0, 0), cmask)
 
-    # Warm accent ball at the mouth of the C.
-    ImageDraw.Draw(img).ellipse(
-        ((49 - 4) * sc, (32 - 4) * sc, (49 + 4) * sc, (32 + 4) * sc), fill=DOT + (255,)
-    )
+    # Baseball seam stitching (cream): a seam arc crossed by short ticks, near
+    # each terminal. Mirrors the paths in the SVG.
+    d = ImageDraw.Draw(img)
+    w = max(1, round(1.5 * sc))
+
+    def line(x1, y1, x2, y2):
+        d.line([(x1 * sc, y1 * sc), (x2 * sc, y2 * sc)], fill=CREAM + (255,), width=w)
+
+    def seam_arc(a0, a1, r=18.0, n=10):
+        pts = []
+        for i in range(n + 1):
+            a = math.radians(a0 + (a1 - a0) * i / n)
+            pts.append(((32 + r * math.cos(a)) * sc, (32 + r * math.sin(a)) * sc))
+        d.line(pts, fill=CREAM + (255,), width=w, joint="curve")
+
+    seam_arc(-68.9, -27.7)                 # upper seam line
+    line(39.6, 13.9, 41.3, 17.7)           # upper ticks
+    line(43.0, 15.0, 44.4, 18.9)
+    line(46.0, 17.2, 47.0, 21.2)
+    seam_arc(68.9, 27.7)                    # lower seam line
+    line(39.6, 50.1, 41.3, 46.3)           # lower ticks
+    line(43.0, 49.0, 44.4, 45.1)
+    line(46.0, 46.8, 47.0, 42.8)
     return img
 
 
