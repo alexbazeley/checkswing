@@ -66,6 +66,9 @@ _WA_DATASET_URL = "https://data.wa.gov/d/kv7h-kjye"
 # <YEAR>_ContributionData.csv.zip files. TRACER's per-record viewer keys on internal
 # session ids (no stable per-row deep link), so we cite the bulk-data page.
 _CO_DATASET_URL = "https://tracer.sos.colorado.gov/PublicSite/DataDownload.aspx"
+# AZ "See The Money" — the public portal the JSON API backs. Per-record deep links
+# require a primed session (no stable shareable URL), so we cite the portal home.
+_AZ_DATASET_URL = "https://seethemoney.az.gov/"
 
 
 def _source_links(source: str, filing_id: str | None, tran_id: str | None) -> tuple[str | None, str | None]:
@@ -98,6 +101,8 @@ def _source_links(source: str, filing_id: str | None, tran_id: str | None) -> tu
         return (None, _PA_DATASET_URL)
     if src == "CO-TRACER":
         return (None, _CO_DATASET_URL)
+    if src == "AZ-SOS":
+        return (None, _AZ_DATASET_URL)
     return (None, None)
 
 

@@ -369,7 +369,7 @@ def _load_state_owners(slugs: str | None):
               help="File-based sources only: CA→dbwebexport.zip; PA→export dir of per-year "
                    "zips; TX→TEC_CF_CSV.zip; IL→dir with Receipts.txt+Committees.txt; "
                    "CO→dir of per-year <YEAR>_ContributionData.csv.zip. "
-                   "Omit for API sources (NY, WA).")
+                   "Omit for API sources (NY, WA, AZ).")
 @click.option("--slugs", default=None, help="Comma-separated owner slugs (default: every pilot/active owner).")
 @click.option("--dry-run", is_flag=True, help="Classify + report counts but write nothing.")
 def ingest_state_bulk_cmd(state, input_path, slugs, dry_run):

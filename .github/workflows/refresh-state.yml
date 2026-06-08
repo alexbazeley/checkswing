@@ -1,4 +1,4 @@
-name: Monthly state refresh (CA + PA + TX + IL + WA + CO)
+name: Monthly state refresh (CA + PA + TX + IL + WA + CO + AZ)
 
 # Phase-4 state refresh. Pulls each adopted state's official bulk export, re-runs the
 # state ingest, and commits any changes to data/state.db + the provenance log.
@@ -149,6 +149,13 @@ jobs:
         # extraction); recipient inline; idempotent upsert keyed on RecordID.
         run: python -m scripts.cli ingest-state-bulk CO --input data/raw/state/co
 
+      - name: Ingest Arizona state contributions
+        # API-based (seethemoney.az.gov JSON) — no bulk download; per owner it
+        # searches the surname, keeps name-matched contributor entities, and unions
+        # their transaction detail. Idempotent upsert keyed on PublicTransactionId.
+        # (Slower than the others — a search + per-entity detail round-trip per owner.)
+        run: python -m scripts.cli ingest-state-bulk AZ
+
       - name: Validate
         run: python -m scripts.cli validate
 
@@ -162,7 +169,7 @@ jobs:
           if git diff --staged --quiet; then
             echo "No changes from state refresh — nothing to commit."
           else
-            git commit -m "State refresh: CA + PA + TX + IL + WA + CO ($(date -u +%Y-%m-%d))"
+            git commit -m "State refresh: CA + PA + TX + IL + WA + CO + AZ ($(date -u +%Y-%m-%d))"
             # Rebase onto anything that landed on main since checkout (e.g. the
             # federal refresh) so the push fast-forwards. State touches only its
             # own data files, so this replays cleanly over unrelated commits.
