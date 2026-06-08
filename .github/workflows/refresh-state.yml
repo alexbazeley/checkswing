@@ -1,4 +1,4 @@
-name: Monthly state refresh (CA + PA + TX + IL + WA + CO + AZ)
+name: Monthly state refresh (CA + PA + TX + IL + WA + CO + AZ + MN)
 
 # Phase-4 state refresh. Pulls each adopted state's official bulk export, re-runs the
 # state ingest, and commits any changes to data/state.db + the provenance log.
@@ -156,6 +156,21 @@ jobs:
         # (Slower than the others — a search + per-entity detail round-trip per owner.)
         run: python -m scripts.cli ingest-state-bulk AZ
 
+      - name: Download Minnesota CFB export (single cumulative CSV)
+        # MN CFB publishes the "Contributions received by all entities — 2015 to
+        # present" dataset as ONE plain CSV behind a `?download=<id>` link (no login/
+        # API key). The id is a content hash that can rotate when MN regenerates the
+        # page, so we resolve it from the downloads page by anchor text rather than
+        # hardcode a URL. Unlike PA/CO this is one cumulative file (not per-year), so
+        # the whole file is re-pulled each refresh and reconciled by the idempotent
+        # content-hash upsert.
+        run: python -c "from scripts.fetch_mn import download_latest; print(download_latest())"
+
+      - name: Ingest Minnesota state contributions
+        # Streams the all-entities CSV (recipient inline); idempotent upsert keyed on
+        # the stable content-hash tran id (MN discloses no per-contribution id).
+        run: python -m scripts.cli ingest-state-bulk MN --input data/raw/state/mn
+
       - name: Validate
         run: python -m scripts.cli validate
 
@@ -169,7 +184,7 @@ jobs:
           if git diff --staged --quiet; then
             echo "No changes from state refresh — nothing to commit."
           else
-            git commit -m "State refresh: CA + PA + TX + IL + WA + CO + AZ ($(date -u +%Y-%m-%d))"
+            git commit -m "State refresh: CA + PA + TX + IL + WA + CO + AZ + MN ($(date -u +%Y-%m-%d))"
             # Rebase onto anything that landed on main since checkout (e.g. the
             # federal refresh) so the push fast-forwards. State touches only its
             # own data files, so this replays cleanly over unrelated commits.

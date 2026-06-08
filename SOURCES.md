@@ -145,8 +145,9 @@ only a **discovery pointer**. State sources are adopted one state at a time — 
 a documented scope expansion (GOVERNANCE.md §5), wired in through the `StateSource`
 registry (`scripts/state_sources.py`) so the classifier, schema, and dashboard stay
 source-agnostic. Adopted so far: California (CAL-ACCESS, approved 2026-06-03),
-New York (NYSBOE), and Texas (TEC, added 2026-06-06); a PA-DOS adapter is built and
-registered. Other states still require sign-off.
+New York (NYSBOE), Texas (TEC), Pennsylvania (PA-DOS), Illinois (ISBE), Washington
+(WA-PDC), Colorado (CO-TRACER), Arizona (AZ-SOS), and Minnesota (MN-CFB, added
+2026-06-08). Other states still require sign-off.
 
 ### Tier 1: Primary, authoritative (the cited source of every state row)
 

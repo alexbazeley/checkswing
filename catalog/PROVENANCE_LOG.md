@@ -7991,3 +7991,339 @@ generated end-to-end from the joined data") is satisfied.
 - **uncertain_count**: `13`
 - **snapshot_path**: `data/snapshots/2026-06-08T05-26-15Z__a002fea6.db`
 - **notes**: scanned=71
+
+### 2026-06-08 — STATE_INGESTION
+
+- **run_id**: `717c82e7`
+- **entity_slug**: `angelos-john-p`
+- **jurisdiction**: `MN`
+- **source**: `MN-CFB`
+- **extract_label**: `mn`
+- **records_scanned**: `7`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-08T23-50-37Z__717c82e7.db`
+- **notes**: scanned=7
+
+### 2026-06-08 — STATE_INGESTION
+
+- **run_id**: `48403a6a`
+- **entity_slug**: `cohen-steven`
+- **jurisdiction**: `MN`
+- **source**: `MN-CFB`
+- **extract_label**: `mn`
+- **records_scanned**: `146`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `2`
+- **snapshot_path**: `data/snapshots/2026-06-08T23-50-37Z__48403a6a.db`
+- **notes**: scanned=146
+
+### 2026-06-08 — STATE_INGESTION
+
+- **run_id**: `9cade3c6`
+- **entity_slug**: `crane-jim`
+- **jurisdiction**: `MN`
+- **source**: `MN-CFB`
+- **extract_label**: `mn`
+- **records_scanned**: `34`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-08T23-50-37Z__9cade3c6.db`
+- **notes**: scanned=34
+
+### 2026-06-08 — STATE_INGESTION
+
+- **run_id**: `c48eedc1`
+- **entity_slug**: `davis-ray`
+- **jurisdiction**: `MN`
+- **source**: `MN-CFB`
+- **extract_label**: `mn`
+- **records_scanned**: `828`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-08T23-50-37Z__c48eedc1.db`
+- **notes**: scanned=828
+
+### 2026-06-08 — STATE_INGESTION
+
+- **run_id**: `e80279e7`
+- **entity_slug**: `dewitt-bill`
+- **jurisdiction**: `MN`
+- **source**: `MN-CFB`
+- **extract_label**: `mn`
+- **records_scanned**: `152`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-08T23-50-37Z__e80279e7.db`
+- **notes**: scanned=152
+
+### 2026-06-08 — STATE_INGESTION
+
+- **run_id**: `3b4cb4d8`
+- **entity_slug**: `dolan-paul`
+- **jurisdiction**: `MN`
+- **source**: `MN-CFB`
+- **extract_label**: `mn`
+- **records_scanned**: `128`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-08T23-50-37Z__3b4cb4d8.db`
+- **notes**: scanned=128
+
+### 2026-06-08 — STATE_INGESTION
+
+- **run_id**: `659a7a67`
+- **entity_slug**: `fisher-john`
+- **jurisdiction**: `MN`
+- **source**: `MN-CFB`
+- **extract_label**: `mn`
+- **records_scanned**: `156`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-08T23-50-37Z__659a7a67.db`
+- **notes**: scanned=156
+
+### 2026-06-08 — STATE_INGESTION
+
+- **run_id**: `77c2127b`
+- **entity_slug**: `henry-john`
+- **jurisdiction**: `MN`
+- **source**: `MN-CFB`
+- **extract_label**: `mn`
+- **records_scanned**: `498`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-08T23-50-37Z__77c2127b.db`
+- **notes**: scanned=498
+
+### 2026-06-08 — STATE_INGESTION
+
+- **run_id**: `07c5ab4d`
+- **entity_slug**: `johnson-greg`
+- **jurisdiction**: `MN`
+- **source**: `MN-CFB`
+- **extract_label**: `mn`
+- **records_scanned**: `3714`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `21`
+- **snapshot_path**: `data/snapshots/2026-06-08T23-50-37Z__07c5ab4d.db`
+- **notes**: scanned=3714
+
+### 2026-06-08 — STATE_INGESTION
+
+- **run_id**: `33dc529e`
+- **entity_slug**: `kendrick-ken`
+- **jurisdiction**: `MN`
+- **source**: `MN-CFB`
+- **extract_label**: `mn`
+- **records_scanned**: `3`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-08T23-50-37Z__33dc529e.db`
+- **notes**: scanned=3
+
+### 2026-06-08 — STATE_INGESTION
+
+- **run_id**: `0c5f6ff0`
+- **entity_slug**: `lerner-mark`
+- **jurisdiction**: `MN`
+- **source**: `MN-CFB`
+- **extract_label**: `mn`
+- **records_scanned**: `21`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-08T23-50-37Z__0c5f6ff0.db`
+- **notes**: scanned=21
+
+### 2026-06-08 — STATE_INGESTION
+
+- **run_id**: `8b6fa65f`
+- **entity_slug**: `malone-john`
+- **jurisdiction**: `MN`
+- **source**: `MN-CFB`
+- **extract_label**: `mn`
+- **records_scanned**: `116`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-08T23-50-37Z__8b6fa65f.db`
+- **notes**: scanned=116
+
+### 2026-06-08 — STATE_INGESTION
+
+- **run_id**: `ce82ec1b`
+- **entity_slug**: `middleton-john`
+- **jurisdiction**: `MN`
+- **source**: `MN-CFB`
+- **extract_label**: `mn`
+- **records_scanned**: `32`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-08T23-50-37Z__ce82ec1b.db`
+- **notes**: scanned=32
+
+### 2026-06-08 — STATE_INGESTION
+
+- **run_id**: `9f6bf938`
+- **entity_slug**: `moreno-arte`
+- **jurisdiction**: `MN`
+- **source**: `MN-CFB`
+- **extract_label**: `mn`
+- **records_scanned**: `6`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-08T23-50-37Z__9f6bf938.db`
+- **notes**: scanned=6
+
+### 2026-06-08 — STATE_INGESTION
+
+- **run_id**: `bd95a721`
+- **entity_slug**: `nutting-bob`
+- **jurisdiction**: `MN`
+- **source**: `MN-CFB`
+- **extract_label**: `mn`
+- **records_scanned**: `2`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-08T23-50-37Z__bd95a721.db`
+- **notes**: scanned=2
+
+### 2026-06-08 — STATE_INGESTION
+
+- **run_id**: `36aa1ef6`
+- **entity_slug**: `pohlad-joe`
+- **jurisdiction**: `MN`
+- **source**: `MN-CFB`
+- **extract_label**: `mn`
+- **records_scanned**: `105`
+- **confirmed_count**: `7`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-08T23-50-37Z__36aa1ef6.db`
+- **notes**: scanned=105
+
+### 2026-06-08 — STATE_INGESTION
+
+- **run_id**: `ecaf209c`
+- **entity_slug**: `pohlad-tom`
+- **jurisdiction**: `MN`
+- **source**: `MN-CFB`
+- **extract_label**: `mn`
+- **records_scanned**: `105`
+- **confirmed_count**: `4`
+- **probable_count**: `1`
+- **uncertain_count**: `1`
+- **snapshot_path**: `data/snapshots/2026-06-08T23-50-37Z__ecaf209c.db`
+- **notes**: scanned=105
+
+### 2026-06-08 — STATE_INGESTION
+
+- **run_id**: `1885d8dc`
+- **entity_slug**: `rubenstein-david`
+- **jurisdiction**: `MN`
+- **source**: `MN-CFB`
+- **extract_label**: `mn`
+- **records_scanned**: `1`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-08T23-50-37Z__1885d8dc.db`
+- **notes**: scanned=1
+
+### 2026-06-08 — STATE_INGESTION
+
+- **run_id**: `0ebb6651`
+- **entity_slug**: `sherman-bruce`
+- **jurisdiction**: `MN`
+- **source**: `MN-CFB`
+- **extract_label**: `mn`
+- **records_scanned**: `110`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-08T23-50-37Z__0ebb6651.db`
+- **notes**: scanned=110
+
+### 2026-06-08 — STATE_INGESTION
+
+- **run_id**: `c24426af`
+- **entity_slug**: `sherman-john`
+- **jurisdiction**: `MN`
+- **source**: `MN-CFB`
+- **extract_label**: `mn`
+- **records_scanned**: `110`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-08T23-50-37Z__c24426af.db`
+- **notes**: scanned=110
+
+### 2026-06-08 — STATE_INGESTION
+
+- **run_id**: `0120c3ed`
+- **entity_slug**: `simpson-bob`
+- **jurisdiction**: `MN`
+- **source**: `MN-CFB`
+- **extract_label**: `mn`
+- **records_scanned**: `63`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-08T23-50-37Z__0120c3ed.db`
+- **notes**: scanned=63
+
+### 2026-06-08 — STATE_INGESTION
+
+- **run_id**: `f6b644ff`
+- **entity_slug**: `stanton-john`
+- **jurisdiction**: `MN`
+- **source**: `MN-CFB`
+- **extract_label**: `mn`
+- **records_scanned**: `39`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-08T23-50-37Z__f6b644ff.db`
+- **notes**: scanned=39
+
+### 2026-06-08 — STATE_INGESTION
+
+- **run_id**: `cc6d1560`
+- **entity_slug**: `steinbrenner-hal`
+- **jurisdiction**: `MN`
+- **source**: `MN-CFB`
+- **extract_label**: `mn`
+- **records_scanned**: `14`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-08T23-50-37Z__cc6d1560.db`
+- **notes**: scanned=14
+
+### 2026-06-08 — STATE_INGESTION
+
+- **run_id**: `d754a4ed`
+- **entity_slug**: `walter-mark`
+- **jurisdiction**: `MN`
+- **source**: `MN-CFB`
+- **extract_label**: `mn`
+- **records_scanned**: `257`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-08T23-50-37Z__d754a4ed.db`
+- **notes**: scanned=257

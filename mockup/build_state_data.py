@@ -69,6 +69,10 @@ _CO_DATASET_URL = "https://tracer.sos.colorado.gov/PublicSite/DataDownload.aspx"
 # AZ "See The Money" — the public portal the JSON API backs. Per-record deep links
 # require a primed session (no stable shareable URL), so we cite the portal home.
 _AZ_DATASET_URL = "https://seethemoney.az.gov/"
+# MN CFB "Campaign finance data downloads" page — the source of the all-entities
+# contributions CSV. The export carries no per-contribution id (we key on a content
+# hash), so there is no per-row deep link; cite the bulk-download page.
+_MN_DATASET_URL = "https://cfb.mn.gov/reports-and-data/self-help/data-downloads/campaign-finance/"
 
 
 def _source_links(source: str, filing_id: str | None, tran_id: str | None) -> tuple[str | None, str | None]:
@@ -103,6 +107,8 @@ def _source_links(source: str, filing_id: str | None, tran_id: str | None) -> tu
         return (None, _CO_DATASET_URL)
     if src == "AZ-SOS":
         return (None, _AZ_DATASET_URL)
+    if src == "MN-CFB":
+        return (None, _MN_DATASET_URL)
     return (None, None)
 
 
