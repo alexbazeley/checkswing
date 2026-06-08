@@ -7753,3 +7753,241 @@ generated end-to-end from the joined data") is satisfied.
 - **uncertain_count**: `1`
 - **snapshot_path**: `data/snapshots/2026-06-08T04-41-17Z__3c177db0.db`
 - **notes**: scanned=1
+
+### 2026-06-08 — STATE_INGESTION
+
+- **run_id**: `7d93c982`
+- **entity_slug**: `castellini-bob`
+- **jurisdiction**: `AZ`
+- **source**: `AZ-SOS`
+- **extract_label**: `https://seethemoney.az.gov/Reporting/GetNEWDetailedTableData (Page=80, Individuals)`
+- **records_scanned**: `19`
+- **confirmed_count**: `6`
+- **probable_count**: `0`
+- **uncertain_count**: `13`
+- **snapshot_path**: `data/snapshots/2026-06-08T05-26-14Z__7d93c982.db`
+- **notes**: scanned=19
+
+### 2026-06-08 — STATE_INGESTION
+
+- **run_id**: `fbcd8662`
+- **entity_slug**: `cohen-steven`
+- **jurisdiction**: `AZ`
+- **source**: `AZ-SOS`
+- **extract_label**: `https://seethemoney.az.gov/Reporting/GetNEWDetailedTableData (Page=80, Individuals)`
+- **records_scanned**: `1`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-08T05-26-14Z__fbcd8662.db`
+- **notes**: scanned=1
+
+### 2026-06-08 — STATE_INGESTION
+
+- **run_id**: `6fce78a7`
+- **entity_slug**: `crane-jim`
+- **jurisdiction**: `AZ`
+- **source**: `AZ-SOS`
+- **extract_label**: `https://seethemoney.az.gov/Reporting/GetNEWDetailedTableData (Page=80, Individuals)`
+- **records_scanned**: `36`
+- **confirmed_count**: `1`
+- **probable_count**: `0`
+- **uncertain_count**: `9`
+- **snapshot_path**: `data/snapshots/2026-06-08T05-26-14Z__6fce78a7.db`
+- **notes**: scanned=36
+
+### 2026-06-08 — STATE_INGESTION
+
+- **run_id**: `78e61794`
+- **entity_slug**: `davis-ray`
+- **jurisdiction**: `AZ`
+- **source**: `AZ-SOS`
+- **extract_label**: `https://seethemoney.az.gov/Reporting/GetNEWDetailedTableData (Page=80, Individuals)`
+- **records_scanned**: `72`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-08T05-26-14Z__78e61794.db`
+- **notes**: scanned=72
+
+### 2026-06-08 — STATE_INGESTION
+
+- **run_id**: `94099e13`
+- **entity_slug**: `dewitt-bill`
+- **jurisdiction**: `AZ`
+- **source**: `AZ-SOS`
+- **extract_label**: `https://seethemoney.az.gov/Reporting/GetNEWDetailedTableData (Page=80, Individuals)`
+- **records_scanned**: `4`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `2`
+- **snapshot_path**: `data/snapshots/2026-06-08T05-26-14Z__94099e13.db`
+- **notes**: scanned=4
+
+### 2026-06-08 — STATE_INGESTION
+
+- **run_id**: `1cac3150`
+- **entity_slug**: `dolan-paul`
+- **jurisdiction**: `AZ`
+- **source**: `AZ-SOS`
+- **extract_label**: `https://seethemoney.az.gov/Reporting/GetNEWDetailedTableData (Page=80, Individuals)`
+- **records_scanned**: `2`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `1`
+- **snapshot_path**: `data/snapshots/2026-06-08T05-26-14Z__1cac3150.db`
+- **notes**: scanned=2
+
+### 2026-06-08 — STATE_INGESTION
+
+- **run_id**: `ea000287`
+- **entity_slug**: `kendrick-ken`
+- **jurisdiction**: `AZ`
+- **source**: `AZ-SOS`
+- **extract_label**: `https://seethemoney.az.gov/Reporting/GetNEWDetailedTableData (Page=80, Individuals)`
+- **records_scanned**: `79`
+- **confirmed_count**: `74`
+- **probable_count**: `5`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-08T05-26-14Z__ea000287.db`
+- **notes**: scanned=79
+
+### 2026-06-08 — STATE_INGESTION
+
+- **run_id**: `4ea02ff8`
+- **entity_slug**: `lerner-mark`
+- **jurisdiction**: `AZ`
+- **source**: `AZ-SOS`
+- **extract_label**: `https://seethemoney.az.gov/Reporting/GetNEWDetailedTableData (Page=80, Individuals)`
+- **records_scanned**: `2`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `2`
+- **snapshot_path**: `data/snapshots/2026-06-08T05-26-14Z__4ea02ff8.db`
+- **notes**: scanned=2
+
+### 2026-06-08 — STATE_INGESTION
+
+- **run_id**: `9e51bbe4`
+- **entity_slug**: `malone-john`
+- **jurisdiction**: `AZ`
+- **source**: `AZ-SOS`
+- **extract_label**: `https://seethemoney.az.gov/Reporting/GetNEWDetailedTableData (Page=80, Individuals)`
+- **records_scanned**: `37`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `37`
+- **snapshot_path**: `data/snapshots/2026-06-08T05-26-14Z__9e51bbe4.db`
+- **notes**: scanned=37
+
+### 2026-06-08 — STATE_INGESTION
+
+- **run_id**: `6ee21ac4`
+- **entity_slug**: `middleton-john`
+- **jurisdiction**: `AZ`
+- **source**: `AZ-SOS`
+- **extract_label**: `https://seethemoney.az.gov/Reporting/GetNEWDetailedTableData (Page=80, Individuals)`
+- **records_scanned**: `35`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `34`
+- **snapshot_path**: `data/snapshots/2026-06-08T05-26-14Z__6ee21ac4.db`
+- **notes**: scanned=35
+
+### 2026-06-08 — STATE_INGESTION
+
+- **run_id**: `d139a6f1`
+- **entity_slug**: `moreno-arte`
+- **jurisdiction**: `AZ`
+- **source**: `AZ-SOS`
+- **extract_label**: `https://seethemoney.az.gov/Reporting/GetNEWDetailedTableData (Page=80, Individuals)`
+- **records_scanned**: `31`
+- **confirmed_count**: `9`
+- **probable_count**: `0`
+- **uncertain_count**: `1`
+- **snapshot_path**: `data/snapshots/2026-06-08T05-26-14Z__d139a6f1.db`
+- **notes**: scanned=31
+
+### 2026-06-08 — STATE_INGESTION
+
+- **run_id**: `126510da`
+- **entity_slug**: `reinsdorf-jerry`
+- **jurisdiction**: `AZ`
+- **source**: `AZ-SOS`
+- **extract_label**: `https://seethemoney.az.gov/Reporting/GetNEWDetailedTableData (Page=80, Individuals)`
+- **records_scanned**: `11`
+- **confirmed_count**: `11`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-08T05-26-14Z__126510da.db`
+- **notes**: scanned=11
+
+### 2026-06-08 — STATE_INGESTION
+
+- **run_id**: `ae893aa5`
+- **entity_slug**: `rubenstein-david`
+- **jurisdiction**: `AZ`
+- **source**: `AZ-SOS`
+- **extract_label**: `https://seethemoney.az.gov/Reporting/GetNEWDetailedTableData (Page=80, Individuals)`
+- **records_scanned**: `2`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `2`
+- **snapshot_path**: `data/snapshots/2026-06-08T05-26-14Z__ae893aa5.db`
+- **notes**: scanned=2
+
+### 2026-06-08 — STATE_INGESTION
+
+- **run_id**: `6764a7b9`
+- **entity_slug**: `sherman-bruce`
+- **jurisdiction**: `AZ`
+- **source**: `AZ-SOS`
+- **extract_label**: `https://seethemoney.az.gov/Reporting/GetNEWDetailedTableData (Page=80, Individuals)`
+- **records_scanned**: `12`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `12`
+- **snapshot_path**: `data/snapshots/2026-06-08T05-26-14Z__6764a7b9.db`
+- **notes**: scanned=12
+
+### 2026-06-08 — STATE_INGESTION
+
+- **run_id**: `cc473375`
+- **entity_slug**: `sherman-john`
+- **jurisdiction**: `AZ`
+- **source**: `AZ-SOS`
+- **extract_label**: `https://seethemoney.az.gov/Reporting/GetNEWDetailedTableData (Page=80, Individuals)`
+- **records_scanned**: `413`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `384`
+- **snapshot_path**: `data/snapshots/2026-06-08T05-26-14Z__cc473375.db`
+- **notes**: scanned=413
+
+### 2026-06-08 — STATE_INGESTION
+
+- **run_id**: `546e1bb4`
+- **entity_slug**: `simpson-bob`
+- **jurisdiction**: `AZ`
+- **source**: `AZ-SOS`
+- **extract_label**: `https://seethemoney.az.gov/Reporting/GetNEWDetailedTableData (Page=80, Individuals)`
+- **records_scanned**: `2`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `1`
+- **snapshot_path**: `data/snapshots/2026-06-08T05-26-14Z__546e1bb4.db`
+- **notes**: scanned=2
+
+### 2026-06-08 — STATE_INGESTION
+
+- **run_id**: `a002fea6`
+- **entity_slug**: `stanton-john`
+- **jurisdiction**: `AZ`
+- **source**: `AZ-SOS`
+- **extract_label**: `https://seethemoney.az.gov/Reporting/GetNEWDetailedTableData (Page=80, Individuals)`
+- **records_scanned**: `71`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `13`
+- **snapshot_path**: `data/snapshots/2026-06-08T05-26-15Z__a002fea6.db`
+- **notes**: scanned=71

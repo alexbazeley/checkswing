@@ -21,8 +21,10 @@ from pathlib import Path
 from typing import Callable, Iterable
 
 from . import (
+    az_adapter,
     calaccess_adapter,
     co_adapter,
+    fetch_az,
     fetch_calaccess,
     fetch_co,
     fetch_il,
@@ -223,7 +225,23 @@ CO = StateSource(
 )
 
 
-REGISTRY: dict[str, StateSource] = {s.code: s for s in (CA, PA, NY, TX, IL, WA, CO)}
+# ── Arizona (See The Money JSON API — contributor-entity pull, no input file) ─
+
+AZ = StateSource(
+    code="AZ", source="AZ-SOS", label="AZ · See The Money",
+    candidate_rows_by_owner=fetch_az.candidate_rows_by_owner,
+    recipient_resolver=fetch_az.make_recipient_resolver,
+    record_adapter=az_adapter.to_classifier_record,
+    row_builder=az_adapter.to_state_donation_row,
+    filing_id_of=az_adapter.filing_id_of,
+    tran_id_of=az_adapter.tran_id_of,
+    dedupe=fetch_az.dedupe,
+    requires_input=False,
+    raw_ref=fetch_az.RAW_REF,
+)
+
+
+REGISTRY: dict[str, StateSource] = {s.code: s for s in (CA, PA, NY, TX, IL, WA, CO, AZ)}
 
 
 def get_source(code: str) -> StateSource:
