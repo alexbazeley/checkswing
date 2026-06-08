@@ -1,4 +1,4 @@
-name: Monthly state refresh (CA + PA + TX + IL + WA)
+name: Monthly state refresh (CA + PA + TX + IL + WA + CO)
 
 # Phase-4 state refresh. Pulls each adopted state's official bulk export, re-runs the
 # state ingest, and commits any changes to data/state.db + the provenance log.
@@ -128,6 +128,27 @@ jobs:
         # name server-side. Idempotent upsert keyed on the native transaction id.
         run: python -m scripts.cli ingest-state-bulk WA
 
+      - name: Download Colorado TRACER export (rolling 4-year window)
+        # CO TRACER publishes ONE zip per cycle year at a stable, constructable URL
+        # (no login/API key). Like PA, historical years are frozen and already in
+        # state.db, so we only re-pull the active window (current + 3 prior); the
+        # idempotent upsert (keyed on the native RecordID) tops up recent rows.
+        run: |
+          mkdir -p data/raw/state/co
+          CUR=$(date -u +%Y)
+          base="https://tracer.sos.colorado.gov/PublicSite/Docs/BulkDataDownloads"
+          for y in $CUR $((CUR-1)) $((CUR-2)) $((CUR-3)); do
+            code=$(curl -fSL --retry 3 --retry-delay 15 -o "data/raw/state/co/${y}_ContributionData.csv.zip" -w "%{http_code}" "$base/${y}_ContributionData.csv.zip" || echo "000")
+            echo "CO $y: HTTP $code"
+            [ "$code" = "200" ] || rm -f "data/raw/state/co/${y}_ContributionData.csv.zip"
+          done
+          ls -lh data/raw/state/co/*.zip
+
+      - name: Ingest Colorado state contributions
+        # Streams each per-year ContributionData CSV directly from its zip (no
+        # extraction); recipient inline; idempotent upsert keyed on RecordID.
+        run: python -m scripts.cli ingest-state-bulk CO --input data/raw/state/co
+
       - name: Validate
         run: python -m scripts.cli validate
 
@@ -141,7 +162,7 @@ jobs:
           if git diff --staged --quiet; then
             echo "No changes from state refresh — nothing to commit."
           else
-            git commit -m "State refresh: CA + PA + TX + IL + WA ($(date -u +%Y-%m-%d))"
+            git commit -m "State refresh: CA + PA + TX + IL + WA + CO ($(date -u +%Y-%m-%d))"
             # Rebase onto anything that landed on main since checkout (e.g. the
             # federal refresh) so the push fast-forwards. State touches only its
             # own data files, so this replays cleanly over unrelated commits.

@@ -22,7 +22,9 @@ from typing import Callable, Iterable
 
 from . import (
     calaccess_adapter,
+    co_adapter,
     fetch_calaccess,
+    fetch_co,
     fetch_il,
     fetch_ny,
     fetch_pa,
@@ -192,7 +194,36 @@ WA = StateSource(
 )
 
 
-REGISTRY: dict[str, StateSource] = {s.code: s for s in (CA, PA, NY, TX, IL, WA)}
+# ── Colorado (TRACER per-year CSV zip — streamed, recipient inline) ──────────
+
+def _co_candidates(input_dir: Path, owners: list[tuple[str, dict]]) -> dict[str, list[dict]]:
+    # Streams every per-year ContributionData CSV from the input dir; the recipient
+    # (CommitteeName/CommitteeType/CO_ID) is inline, pre-joined onto kept rows.
+    rows = fetch_co.iter_dir(input_dir)
+    buckets = fetch_co.bucket_rows_by_owner(rows, owners)
+    if not any(buckets.values()) and not fetch_co.find_co_zips(Path(input_dir)) \
+            and not fetch_co.find_co_files(Path(input_dir)):
+        raise FileNotFoundError(f"No CO export (*.zip or *ContributionData.csv) under {input_dir}")
+    return buckets
+
+
+def _co_resolver(input_dir: Path):
+    return fetch_co.make_recipient_resolver()
+
+
+CO = StateSource(
+    code="CO", source="CO-TRACER", label="CO · TRACER",
+    candidate_rows_by_owner=_co_candidates,
+    recipient_resolver=_co_resolver,
+    record_adapter=co_adapter.to_classifier_record,
+    row_builder=co_adapter.to_state_donation_row,
+    filing_id_of=co_adapter.filing_id_of,
+    tran_id_of=co_adapter.tran_id_of,
+    dedupe=fetch_co.dedupe,
+)
+
+
+REGISTRY: dict[str, StateSource] = {s.code: s for s in (CA, PA, NY, TX, IL, WA, CO)}
 
 
 def get_source(code: str) -> StateSource:

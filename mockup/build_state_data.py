@@ -62,6 +62,10 @@ _PA_DATASET_URL = (
 # WA PDC Socrata dataset page (kv7h-kjye). source_filing_id is the report_number, which
 # deep-links the actual filed report image at my.pdc.wa.gov.
 _WA_DATASET_URL = "https://data.wa.gov/d/kv7h-kjye"
+# CO TRACER "Campaign Finance Data" bulk-download page — the source of the per-year
+# <YEAR>_ContributionData.csv.zip files. TRACER's per-record viewer keys on internal
+# session ids (no stable per-row deep link), so we cite the bulk-data page.
+_CO_DATASET_URL = "https://tracer.sos.colorado.gov/PublicSite/DataDownload.aspx"
 
 
 def _source_links(source: str, filing_id: str | None, tran_id: str | None) -> tuple[str | None, str | None]:
@@ -92,6 +96,8 @@ def _source_links(source: str, filing_id: str | None, tran_id: str | None) -> tu
         return (f"https://my.pdc.wa.gov/public/document?repno={filing_id}", _WA_DATASET_URL)
     if src == "PA-DOS":
         return (None, _PA_DATASET_URL)
+    if src == "CO-TRACER":
+        return (None, _CO_DATASET_URL)
     return (None, None)
 
 
