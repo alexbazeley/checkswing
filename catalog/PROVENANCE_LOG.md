@@ -9629,3 +9629,297 @@ generated end-to-end from the joined data") is satisfied.
 - **uncertain_count**: `0`
 - **snapshot_path**: `data/snapshots/2026-06-09T00-34-50Z__13503866.db`
 - **notes**: scanned=6
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `3ea8bfe7`
+- **entity_slug**: `attanasio-mark`
+- **jurisdiction**: `NY`
+- **source**: `NYSBOE`
+- **extract_label**: `https://data.ny.gov/resource/4j2b-6a2j.json`
+- **records_scanned**: `2`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `2`
+- **snapshot_path**: `data/snapshots/2026-06-09T01-10-00Z__3ea8bfe7.db`
+- **notes**: scanned=2
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `76301667`
+- **entity_slug**: `cohen-steven`
+- **jurisdiction**: `NY`
+- **source**: `NYSBOE`
+- **extract_label**: `https://data.ny.gov/resource/4j2b-6a2j.json`
+- **records_scanned**: `583`
+- **confirmed_count**: `42`
+- **probable_count**: `0`
+- **uncertain_count**: `541`
+- **snapshot_path**: `data/snapshots/2026-06-09T01-10-00Z__76301667.db`
+- **notes**: scanned=583
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `d7ce889f`
+- **entity_slug**: `crane-jim`
+- **jurisdiction**: `NY`
+- **source**: `NYSBOE`
+- **extract_label**: `https://data.ny.gov/resource/4j2b-6a2j.json`
+- **records_scanned**: `35`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `35`
+- **snapshot_path**: `data/snapshots/2026-06-09T01-10-01Z__d7ce889f.db`
+- **notes**: scanned=35
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `d41713ac`
+- **entity_slug**: `davis-ray`
+- **jurisdiction**: `NY`
+- **source**: `NYSBOE`
+- **extract_label**: `https://data.ny.gov/resource/4j2b-6a2j.json`
+- **records_scanned**: `8`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `8`
+- **snapshot_path**: `data/snapshots/2026-06-09T01-10-01Z__d41713ac.db`
+- **notes**: scanned=8
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `81833ed5`
+- **entity_slug**: `dewitt-bill`
+- **jurisdiction**: `NY`
+- **source**: `NYSBOE`
+- **extract_label**: `https://data.ny.gov/resource/4j2b-6a2j.json`
+- **records_scanned**: `117`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `3`
+- **snapshot_path**: `data/snapshots/2026-06-09T01-10-01Z__81833ed5.db`
+- **notes**: scanned=117
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `d899f068`
+- **entity_slug**: `dolan-paul`
+- **jurisdiction**: `NY`
+- **source**: `NYSBOE`
+- **extract_label**: `https://data.ny.gov/resource/4j2b-6a2j.json`
+- **records_scanned**: `103`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `103`
+- **snapshot_path**: `data/snapshots/2026-06-09T01-10-01Z__d899f068.db`
+- **notes**: scanned=103
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `9b14c66c`
+- **entity_slug**: `feliciano-jose`
+- **jurisdiction**: `NY`
+- **source**: `NYSBOE`
+- **extract_label**: `https://data.ny.gov/resource/4j2b-6a2j.json`
+- **records_scanned**: `23`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `22`
+- **snapshot_path**: `data/snapshots/2026-06-09T01-10-01Z__9b14c66c.db`
+- **notes**: scanned=23
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `fd5f3868`
+- **entity_slug**: `henry-john`
+- **jurisdiction**: `NY`
+- **source**: `NYSBOE`
+- **extract_label**: `https://data.ny.gov/resource/4j2b-6a2j.json`
+- **records_scanned**: `60`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `59`
+- **snapshot_path**: `data/snapshots/2026-06-09T01-10-01Z__fd5f3868.db`
+- **notes**: scanned=60
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `9eee48cc`
+- **entity_slug**: `johnson-greg`
+- **jurisdiction**: `NY`
+- **source**: `NYSBOE`
+- **extract_label**: `https://data.ny.gov/resource/4j2b-6a2j.json`
+- **records_scanned**: `426`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `426`
+- **snapshot_path**: `data/snapshots/2026-06-09T01-10-01Z__9eee48cc.db`
+- **notes**: scanned=426
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `878fbfa9`
+- **entity_slug**: `kendrick-ken`
+- **jurisdiction**: `NY`
+- **source**: `NYSBOE`
+- **extract_label**: `https://data.ny.gov/resource/4j2b-6a2j.json`
+- **records_scanned**: `2`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-09T01-10-01Z__878fbfa9.db`
+- **notes**: scanned=2
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `fe2ed7be`
+- **entity_slug**: `lerner-mark`
+- **jurisdiction**: `NY`
+- **source**: `NYSBOE`
+- **extract_label**: `https://data.ny.gov/resource/4j2b-6a2j.json`
+- **records_scanned**: `14`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `14`
+- **snapshot_path**: `data/snapshots/2026-06-09T01-10-01Z__fe2ed7be.db`
+- **notes**: scanned=14
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `f747b674`
+- **entity_slug**: `malone-john`
+- **jurisdiction**: `NY`
+- **source**: `NYSBOE`
+- **extract_label**: `https://data.ny.gov/resource/4j2b-6a2j.json`
+- **records_scanned**: `20`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `20`
+- **snapshot_path**: `data/snapshots/2026-06-09T01-10-01Z__f747b674.db`
+- **notes**: scanned=20
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `6605794f`
+- **entity_slug**: `middleton-john`
+- **jurisdiction**: `NY`
+- **source**: `NYSBOE`
+- **extract_label**: `https://data.ny.gov/resource/4j2b-6a2j.json`
+- **records_scanned**: `103`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `103`
+- **snapshot_path**: `data/snapshots/2026-06-09T01-10-01Z__6605794f.db`
+- **notes**: scanned=103
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `adfbb880`
+- **entity_slug**: `nutting-bob`
+- **jurisdiction**: `NY`
+- **source**: `NYSBOE`
+- **extract_label**: `https://data.ny.gov/resource/4j2b-6a2j.json`
+- **records_scanned**: `4`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `4`
+- **snapshot_path**: `data/snapshots/2026-06-09T01-10-01Z__adfbb880.db`
+- **notes**: scanned=4
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `01334dfb`
+- **entity_slug**: `rubenstein-david`
+- **jurisdiction**: `NY`
+- **source**: `NYSBOE`
+- **extract_label**: `https://data.ny.gov/resource/4j2b-6a2j.json`
+- **records_scanned**: `14`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `14`
+- **snapshot_path**: `data/snapshots/2026-06-09T01-10-01Z__01334dfb.db`
+- **notes**: scanned=14
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `51640995`
+- **entity_slug**: `sherman-bruce`
+- **jurisdiction**: `NY`
+- **source**: `NYSBOE`
+- **extract_label**: `https://data.ny.gov/resource/4j2b-6a2j.json`
+- **records_scanned**: `76`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `76`
+- **snapshot_path**: `data/snapshots/2026-06-09T01-10-01Z__51640995.db`
+- **notes**: scanned=76
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `f365c7c9`
+- **entity_slug**: `sherman-john`
+- **jurisdiction**: `NY`
+- **source**: `NYSBOE`
+- **extract_label**: `https://data.ny.gov/resource/4j2b-6a2j.json`
+- **records_scanned**: `70`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `70`
+- **snapshot_path**: `data/snapshots/2026-06-09T01-10-01Z__f365c7c9.db`
+- **notes**: scanned=70
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `c572e18b`
+- **entity_slug**: `simpson-bob`
+- **jurisdiction**: `NY`
+- **source**: `NYSBOE`
+- **extract_label**: `https://data.ny.gov/resource/4j2b-6a2j.json`
+- **records_scanned**: `1`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `1`
+- **snapshot_path**: `data/snapshots/2026-06-09T01-10-01Z__c572e18b.db`
+- **notes**: scanned=1
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `e9e32ca5`
+- **entity_slug**: `stanton-john`
+- **jurisdiction**: `NY`
+- **source**: `NYSBOE`
+- **extract_label**: `https://data.ny.gov/resource/4j2b-6a2j.json`
+- **records_scanned**: `22`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `22`
+- **snapshot_path**: `data/snapshots/2026-06-09T01-10-01Z__e9e32ca5.db`
+- **notes**: scanned=22
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `04287ec3`
+- **entity_slug**: `steinbrenner-hal`
+- **jurisdiction**: `NY`
+- **source**: `NYSBOE`
+- **extract_label**: `https://data.ny.gov/resource/4j2b-6a2j.json`
+- **records_scanned**: `3`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `3`
+- **snapshot_path**: `data/snapshots/2026-06-09T01-10-01Z__04287ec3.db`
+- **notes**: scanned=3
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `66e93711`
+- **entity_slug**: `walter-mark`
+- **jurisdiction**: `NY`
+- **source**: `NYSBOE`
+- **extract_label**: `https://data.ny.gov/resource/4j2b-6a2j.json`
+- **records_scanned**: `13`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `13`
+- **snapshot_path**: `data/snapshots/2026-06-09T01-10-01Z__66e93711.db`
+- **notes**: scanned=13

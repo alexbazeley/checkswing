@@ -3252,7 +3252,7 @@ function renderHome() {
       <div class="lvl-viz minibars">
         ${st.jurisList.slice(0, 4).map((j) => `
           <div class="minibar-row">
-            <span class="mb-label">${escapeHtml(j.code)}</span>
+            <span class="mb-label">${escapeHtml(jName(j.code))}</span>
             <div class="minibar-track"><div class="minibar-fill" style="width:${(aggAmt(j, "total_amount") / max * 100).toFixed(1)}%;--mb-color:var(--state)"></div></div>
             <span class="mb-val">${fmtMoney(aggAmt(j, "total_amount"))}</span>
           </div>`).join("")}
@@ -4485,7 +4485,7 @@ function renderOwnerLevelSplit(o, slug) {
         ${chips ? `<div class="os-chips">${chips}</div>` : ""}
       </div>`;
   } else {
-    const covered = jNatList((state.stateData && state.stateData.jurisdictions || []).map((j) => j.code)) || "a growing set of states";
+    const covered = jNatList((state.stateData && state.stateData.jurisdictions || []).map((j) => jName(j.code))) || "a growing set of states";
     stateCol = `
       <div class="os-col state">
         <div class="os-eyebrow">State <span class="os-src">· campaign finance</span></div>
@@ -6896,7 +6896,19 @@ function stateStatusBadge(status) {
 }
 
 /* Jurisdiction code → display name, shared across all state views. */
-const JURIS_NAME = { CA: "California", NY: "New York", PA: "Pennsylvania", TX: "Texas", WA: "Washington", FL: "Florida", OH: "Ohio", IL: "Illinois" };
+const JURIS_NAME = {
+  AL: "Alabama", AK: "Alaska", AZ: "Arizona", AR: "Arkansas", CA: "California",
+  CO: "Colorado", CT: "Connecticut", DE: "Delaware", DC: "District of Columbia",
+  FL: "Florida", GA: "Georgia", HI: "Hawaii", ID: "Idaho", IL: "Illinois",
+  IN: "Indiana", IA: "Iowa", KS: "Kansas", KY: "Kentucky", LA: "Louisiana",
+  ME: "Maine", MD: "Maryland", MA: "Massachusetts", MI: "Michigan", MN: "Minnesota",
+  MS: "Mississippi", MO: "Missouri", MT: "Montana", NE: "Nebraska", NV: "Nevada",
+  NH: "New Hampshire", NJ: "New Jersey", NM: "New Mexico", NY: "New York",
+  NC: "North Carolina", ND: "North Dakota", OH: "Ohio", OK: "Oklahoma", OR: "Oregon",
+  PA: "Pennsylvania", RI: "Rhode Island", SC: "South Carolina", SD: "South Dakota",
+  TN: "Tennessee", TX: "Texas", UT: "Utah", VT: "Vermont", VA: "Virginia",
+  WA: "Washington", WV: "West Virginia", WI: "Wisconsin", WY: "Wyoming",
+};
 const jName = (c) => JURIS_NAME[c] || c;
 function jNatList(codes) {
   const n = codes.map(jName);
@@ -7007,7 +7019,7 @@ function stateContribSection(donations, opts = {}) {
           ` : visible.map((d) => `
             <tr class="st-row" data-state-id="${escapeAttr(d.id)}" style="cursor:pointer">
               <td>${stateStatusBadge(d.status)}</td>
-              ${showJuris ? `<td class="muted" style="font-size:12px;letter-spacing:.03em">${escapeHtml(d.jurisdiction || "")}</td>` : ""}
+              ${showJuris ? `<td class="muted" style="font-size:12px">${escapeHtml(jName(d.jurisdiction || ""))}</td>` : ""}
               ${showOwner ? `<td style="font-family:var(--serif)">${escapeHtml(d.owner_name)}</td>` : ""}
               <td class="muted" style="font-size:12px">${escapeHtml(d.employer || "—")}</td>
               <td class="muted" style="font-size:12px">${escapeHtml([d.city, d.state].filter(Boolean).join(", ") || "—")}</td>
@@ -7045,7 +7057,7 @@ function renderStates() {
   const nProb = sd.donations.length - nConf;
 
   const chips = sd.jurisdictions.map((j) =>
-    `<a href="#/state/${escapeAttr(j.code)}" class="ghero-chip">${escapeHtml(j.code)} · ${escapeHtml(j.source)}</a>`
+    `<a href="#/state/${escapeAttr(j.code)}" class="ghero-chip">${escapeHtml(jName(j.code))} · ${escapeHtml(j.source)}</a>`
   ).join("");
 
   // By-owner table, sortable via state.stateOwnerSort.
@@ -7072,7 +7084,7 @@ function renderStates() {
       <tr class="st-owner-row" data-owner="${escapeAttr(o.slug)}">
         <td><a href="#/owner/${escapeAttr(o.slug)}" class="st-owner-name">${escapeHtml(o.name)}</a></td>
         <td class="col-team">${escapeHtml(o.team || "")}</td>
-        <td class="st-juris-cell">${escapeHtml((o.jurisdictions || []).join(", "))}</td>
+        <td class="st-juris-cell">${escapeHtml((o.jurisdictions || []).map(jName).join(", "))}</td>
         <td class="num">${fmtInt(o.n_confirmed)}</td>
         <td class="num">${fmtInt(o.n_probable)}</td>
         <td class="num">${fmtInt(o.n_recipients || 0)}</td>
@@ -7081,7 +7093,7 @@ function renderStates() {
       </tr>`;
   }).join("");
 
-  const jurisList = jNatList(sd.jurisdictions.map((j) => j.code));
+  const jurisList = jNatList(sd.jurisdictions.map((j) => jName(j.code)));
 
   // Per-jurisdiction breakdown cards (each links to its detail page).
   const jurisCards = sd.jurisdictions
@@ -7208,7 +7220,7 @@ function renderStateCoverage() {
   // Per-jurisdiction funnel table.
   const jrows = jur.map((j) => {
     const excl = (j.excluded_owners || []).map((o) =>
-      `<a href="#/owner/${escapeAttr(o.slug)}" title="excluded from ${escapeHtml(j.code)} — see Methodology">${escapeHtml(o.name)}</a>`
+      `<a href="#/owner/${escapeAttr(o.slug)}" title="excluded from ${escapeHtml(jName(j.code))} — see Methodology">${escapeHtml(o.name)}</a>`
     ).join(", ");
     const keep = (j.confirmed || 0) + (j.probable || 0);
     const pct = j.records_scanned ? Math.max(0.4, (keep / j.records_scanned) * 100) : 0;
@@ -7593,7 +7605,7 @@ function renderStateRecipients() {
                   <div class="re-name">${escapeHtml(r.name || "—")}</div>
                   <div class="re-sub">${escapeHtml(r.source)}${r.filer_id ? ` · ${escapeHtml(r.filer_id)}` : ""}</div>
                 </td>
-                <td class="muted" style="font-size:12px;letter-spacing:.03em">${escapeHtml(r.jurisdiction)}</td>
+                <td class="muted" style="font-size:12px">${escapeHtml(jName(r.jurisdiction))}</td>
                 <td>${escapeHtml(r.recipient_type || "—")}</td>
                 <td class="num"><strong>${fmtMoney(aggAmt(r, "total_amount"))}</strong></td>
                 <td class="num">${fmtInt(r.n_donations)}</td>
@@ -7863,7 +7875,7 @@ function openStateDrawer(id) {
         <div class="label">Transaction ID</div>
         <div class="value" style="font-size:11px">${escapeHtml(d.id)}</div>
         <div class="label">Jurisdiction</div>
-        <div class="value">${escapeHtml(d.jurisdiction)} · ${escapeHtml(d.source)}</div>
+        <div class="value">${escapeHtml(jName(d.jurisdiction))} · ${escapeHtml(d.source)}</div>
         <div class="label">Filing ID</div>
         <div class="value">${escapeHtml(d.source_filing_id || "—")}</div>
         <div class="label">Source txn ID</div>
