@@ -28,11 +28,13 @@ from . import (
     fetch_calaccess,
     fetch_co,
     fetch_il,
+    fetch_mn,
     fetch_ny,
     fetch_pa,
     fetch_tx,
     fetch_wa,
     il_adapter,
+    mn_adapter,
     ny_adapter,
     pa_adapter,
     tx_adapter,
@@ -241,7 +243,35 @@ AZ = StateSource(
 )
 
 
-REGISTRY: dict[str, StateSource] = {s.code: s for s in (CA, PA, NY, TX, IL, WA, CO, AZ)}
+# ── Minnesota (CFB bulk CSV — single cumulative file, recipient inline) ──────
+
+def _mn_candidates(input_dir: Path, owners: list[tuple[str, dict]]) -> dict[str, list[dict]]:
+    # Streams the all-entities receipts CSV from the input dir; the recipient
+    # (Recipient/Recipient type/Recipient reg num) is inline, pre-joined onto kept
+    # rows, with a stable content-hash `_tran` stamped for keying + dedup.
+    buckets = fetch_mn.bucket_rows_by_owner(input_dir, owners)
+    if not any(buckets.values()) and not fetch_mn.find_mn_files(Path(input_dir)):
+        raise FileNotFoundError(f"No MN export (*.csv) under {input_dir}")
+    return buckets
+
+
+def _mn_resolver(input_dir: Path):
+    return fetch_mn.make_recipient_resolver()
+
+
+MN = StateSource(
+    code="MN", source="MN-CFB", label="MN · MN CFB",
+    candidate_rows_by_owner=_mn_candidates,
+    recipient_resolver=_mn_resolver,
+    record_adapter=mn_adapter.to_classifier_record,
+    row_builder=mn_adapter.to_state_donation_row,
+    filing_id_of=mn_adapter.filing_id_of,
+    tran_id_of=mn_adapter.tran_id_of,
+    dedupe=fetch_mn.dedupe,
+)
+
+
+REGISTRY: dict[str, StateSource] = {s.code: s for s in (CA, PA, NY, TX, IL, WA, CO, AZ, MN)}
 
 
 def get_source(code: str) -> StateSource:
