@@ -146,8 +146,8 @@ a documented scope expansion (GOVERNANCE.md §5), wired in through the `StateSou
 registry (`scripts/state_sources.py`) so the classifier, schema, and dashboard stay
 source-agnostic. Adopted so far: California (CAL-ACCESS, approved 2026-06-03),
 New York (NYSBOE), Texas (TEC), Pennsylvania (PA-DOS), Illinois (ISBE), Washington
-(WA-PDC), Colorado (CO-TRACER), Arizona (AZ-SOS), and Minnesota (MN-CFB, added
-2026-06-08). Other states still require sign-off.
+(WA-PDC), Colorado (CO-TRACER), Arizona (AZ-SOS), Minnesota (MN-CFB), and Florida
+(FL-DOE, added 2026-06-08). Other states still require sign-off.
 
 ### Tier 1: Primary, authoritative (the cited source of every state row)
 

@@ -23,6 +23,15 @@ name_variants:
 - "Henry, John W."
 - "Henry, John"
 
+# Opt out of Florida (FL-DOE) ingestion. Henry's documented FL state-level giving is
+# zero (he lives in Boca Raton but gives federally, not to FL races — CommonWealth
+# Magazine). His only FL matches are a same-named Boca Raton *attorney* (a different
+# John Henry) that the lone city_state signal floats to PROBABLE; with no employer
+# field in FL to separate them, exclude him rather than carry the doppelganger. See
+# `exclude_state_jurisdictions` in OWNER_SCHEMA.md.
+exclude_state_jurisdictions:
+- "FL"
+
 verifying_signals:
   cities:
     # Primary: Boca Raton FL (CommonWealth Beacon — FL driver's license, FL
