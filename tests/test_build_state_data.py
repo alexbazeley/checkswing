@@ -43,6 +43,52 @@ def _seed(db_path: Path) -> None:
             })
 
 
+def _seed_run(db_path: Path, **over) -> None:
+    fields = {
+        "run_id": "run0001", "entity_slug": "fisher-john", "jurisdiction": "CA",
+        "source": "CAL-ACCESS", "started_at": "2026-06-04T00:00:00Z",
+        "completed_at": "2026-06-04T00:01:00Z", "extract_label": "x",
+        "name_variants_queried": "[]", "records_scanned": 4096,
+        "confirmed_count": 2, "probable_count": 1, "uncertain_count": 37,
+        "snapshot_path": None, "notes": "scanned=4096", "dry_run": 0,
+    }
+    fields.update(over)
+    with state_db.connect(db_path) as conn:
+        state_db.insert_state_ingestion_run(conn, fields)
+
+
+def test_coverage_panel_rolls_up_runs_and_exclusions(tmp_path):
+    """Tier-3: the ingestion-run ledger surfaces as a per-jurisdiction funnel, the
+    latest run wins per (owner, jurisdiction), and `exclude_state_jurisdictions`
+    opt-outs are folded in (they produce no run by design)."""
+    db = tmp_path / "state.db"
+    out = tmp_path / "state_data.json"
+    _seed(db)
+    # Two runs for the same (owner, jurisdiction) — the later one must win.
+    _seed_run(db, run_id="old", records_scanned=10, confirmed_count=0,
+              started_at="2026-06-01T00:00:00Z", completed_at="2026-06-01T00:00:30Z")
+    _seed_run(db, run_id="new", records_scanned=4096, confirmed_count=2, probable_count=1,
+              uncertain_count=37, started_at="2026-06-04T00:00:00Z")
+    build_state_data.main(db_path=db, out_path=out)
+    cov = json.loads(out.read_text())["coverage"]
+
+    ca = next(j for j in cov["jurisdictions"] if j["code"] == "CA")
+    assert ca["source"] == "CAL-ACCESS"
+    assert ca["records_scanned"] == 4096          # latest run, not the stale 10
+    assert ca["confirmed"] == 2 and ca["probable"] == 1 and ca["uncertain"] == 37
+    assert ca["n_owners_scanned"] == 1 and ca["n_owners_hit"] == 1
+    assert ca["last_ingested"] == "2026-06-04T00:01:00Z"
+
+    cell = next(c for c in cov["matrix"] if c["slug"] == "fisher-john" and c["jurisdiction"] == "CA")
+    assert cell["confirmed"] == 2 and cell["scanned"] == 4096
+
+    # fisher-john's real owner YAML excludes FL → it shows up as an excluded owner there,
+    # with no run, proving opt-outs are visible (not silently missing).
+    fl = next((j for j in cov["jurisdictions"] if j["code"] == "FL"), None)
+    assert fl is not None
+    assert any(o["slug"] == "fisher-john" for o in fl["excluded_owners"])
+
+
 def test_build_produces_expected_shape(tmp_path):
     db = tmp_path / "state.db"
     out = tmp_path / "state_data.json"
