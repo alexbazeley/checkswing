@@ -2196,6 +2196,31 @@ button.drawer-source-link {
 .juris-card .jc-cta { margin-top: auto; padding-top: 12px; font: 600 13px/1 var(--sans); color: var(--state); display: inline-flex; gap: 6px; align-items: center; }
 .juris-card .jc-cta::after { content: "→"; }
 
+/* ── Tier-3 coverage panel (#/state-coverage) — the ingestion ledger ─────────── */
+.cov-src { display: inline-block; margin-left: 8px; font: 500 10px/1 var(--mono); letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink-3); }
+.cov-dim { color: var(--ink-3); }
+.cov-fresh { font-variant-numeric: tabular-nums; font-family: var(--mono); font-size: 12px; color: var(--ink-2); white-space: nowrap; }
+.cov-table td { vertical-align: middle; }
+.cov-excl { font-size: 12px; color: var(--ink-2); max-width: 240px; }
+.cov-excl a { color: var(--state); }
+/* the keep-rate micro-bar behind the confirmed count */
+.cov-keep { white-space: nowrap; }
+.cov-bar { display: inline-block; width: 46px; height: 6px; border-radius: 3px; background: var(--rule); margin-right: 8px; vertical-align: middle; overflow: hidden; }
+.cov-bar > span { display: block; height: 100%; background: var(--state); }
+
+.cov-matrix { font-variant-numeric: tabular-nums; }
+.cov-matrix th.cov-jx { text-align: center; font: 600 11px/1 var(--mono); letter-spacing: 0.03em; color: var(--ink-2); padding: 8px 6px; }
+.cov-matrix td.cov-owner, .cov-matrix th.cov-owner { text-align: left; white-space: nowrap; position: sticky; left: 0; background: var(--bg-card); z-index: 1; }
+.cov-matrix td.cov-owner a { font-weight: 600; }
+.cov-matrix td.cov-owner .cov-dim { display: block; font-size: 11px; }
+.cov-matrix td.cov-cell { text-align: center; font-weight: 600; font-size: 13px; min-width: 34px; color: var(--ink-3); }
+.cov-c { color: var(--state); background: color-mix(in srgb, var(--state) 12%, transparent); }
+.cov-p { color: var(--ink-2); background: color-mix(in srgb, var(--state) 5%, transparent); }
+.cov-o { color: var(--ink-3); }
+.cov-x { color: #b4493b; font-weight: 700; }
+/* inline legend swatches */
+.cov-lg { display: inline-block; min-width: 18px; text-align: center; border-radius: 4px; padding: 1px 5px; margin: 0 2px; font-weight: 700; font-size: 12px; }
+
 /* ── Owner "by level" split — federal & state shown as equal halves at the
    top of an owner page. Two columns, level-coloured kickers, no decoration. ── */
 .owner-split {
@@ -2961,6 +2986,8 @@ function route() {
     state.view = { name: "state-recipient", key: decodeURIComponent(stateRecipMatch[1]) };
   } else if (stateJurisMatch) {
     state.view = { name: "state-juris", code: stateJurisMatch[1].toUpperCase() };
+  } else if (hash === "#/state-coverage") {
+    state.view = { name: "state-coverage" };
   } else if (hash === "#/states" || hash === "#/state") {
     state.view = { name: "states" };
   } else if (hash === "#/federal" || hash === "#/league") {
@@ -2999,7 +3026,7 @@ function route() {
      is active for the section and all of its detail routes. */
   /* Federal nav owns the federal dashboard + its sub-pages (recipients,
      what's-new). State nav owns the state section + all its detail routes. */
-  const stateViews = ["states", "state-juris", "state-recipient", "state-recipients"];
+  const stateViews = ["states", "state-juris", "state-recipient", "state-recipients", "state-coverage"];
   const federalViews = ["league", "recipients", "whats-new"];
   document.querySelectorAll(".nav a").forEach((a) => {
     const t = a.getAttribute("data-nav");
@@ -3105,6 +3132,7 @@ function render() {
   else if (state.view.name === "state-juris") app.innerHTML = renderStateJurisdiction(state.view.code);
   else if (state.view.name === "state-recipient") app.innerHTML = renderStateRecipient(state.view.key);
   else if (state.view.name === "state-recipients") app.innerHTML = renderStateRecipients();
+  else if (state.view.name === "state-coverage") app.innerHTML = renderStateCoverage();
 
   /* Re-bind */
   bindIndexHandlers();
@@ -3136,6 +3164,7 @@ function sectionSubnav(level, active) {
     : [
         { key: "overview",   label: "Overview",       href: "#/states" },
         { key: "recipients", label: "Recipients",     href: "#/state-recipients" },
+        { key: "coverage",   label: "Coverage",       href: "#/state-coverage" },
         { key: "method",     label: "Methodology",    href: "#/methodology" },
       ];
   const label = level === "federal" ? "Federal" : "State";
@@ -7146,6 +7175,140 @@ function renderStates() {
         <h2>All state contributions</h2>
       </div>
       ${stateContribSection(sd.donations)}
+    </section>
+
+    <section class="block" style="border-bottom:0;padding-top:8px;padding-bottom:48px">
+      ${stateMethodologyNote()}
+    </section>
+  </div>`;
+}
+
+/* ── #/state-coverage — Tier-3: how the archive was built (the ingestion ledger) ── */
+function renderStateCoverage() {
+  const sd = state.stateData;
+  const cov = sd && sd.coverage;
+  if (!cov || !(cov.jurisdictions || []).length) {
+    return `
+    <section class="ghero state"><div class="ghero-inner">
+      <span class="eyebrow">State campaign finance · coverage</span>
+      <h1>Coverage data isn't loaded yet.</h1>
+      <p class="deck">The ingestion ledger is generated from <code>state_ingestion_runs</code> by
+      <code>mockup/build_state_data.py</code>.</p>
+    </div></section>
+    ${sectionSubnav("state", "coverage")}`;
+  }
+
+  const jur = cov.jurisdictions.slice().sort((a, b) => (b.records_scanned || 0) - (a.records_scanned || 0));
+  const totScanned = jur.reduce((s, j) => s + (j.records_scanned || 0), 0);
+  const totConf = jur.reduce((s, j) => s + (j.confirmed || 0), 0);
+  const totProb = jur.reduce((s, j) => s + (j.probable || 0), 0);
+  const totExcl = jur.reduce((s, j) => s + (j.excluded_owners || []).length, 0);
+  const dateOnly = (s) => (s || "").slice(0, 10) || "—";
+
+  // Per-jurisdiction funnel table.
+  const jrows = jur.map((j) => {
+    const excl = (j.excluded_owners || []).map((o) =>
+      `<a href="#/owner/${escapeAttr(o.slug)}" title="excluded from ${escapeHtml(j.code)} — see Methodology">${escapeHtml(o.name)}</a>`
+    ).join(", ");
+    const keep = (j.confirmed || 0) + (j.probable || 0);
+    const pct = j.records_scanned ? Math.max(0.4, (keep / j.records_scanned) * 100) : 0;
+    return `
+      <tr>
+        <td><a href="#/state/${escapeAttr(j.code)}" class="st-owner-name">${escapeHtml(jName(j.code))}</a>
+            <span class="cov-src">${escapeHtml(j.source || "—")}</span></td>
+        <td class="cov-fresh">${dateOnly(j.last_ingested)}</td>
+        <td class="num">${fmtInt(j.n_owners_scanned)} <span class="cov-dim">→ ${fmtInt(j.n_owners_hit)}</span></td>
+        <td class="num">${fmtInt(j.records_scanned)}</td>
+        <td class="num cov-keep">
+          <span class="cov-bar"><span style="width:${pct.toFixed(2)}%"></span></span>
+          <strong>${fmtInt(j.confirmed)}</strong> <span class="cov-dim">/ ${fmtInt(j.probable)} / ${fmtInt(j.uncertain)}</span>
+        </td>
+        <td class="cov-excl">${excl || "—"}</td>
+      </tr>`;
+  }).join("");
+
+  // Coverage matrix: owners (rows) × jurisdictions (cols). Each cell shows the
+  // classifier outcome — a confirmed/probable count, a scanned-but-nothing dot, an
+  // opt-out ✕, or blank (the owner's surname never appeared in that state).
+  const jcodes = cov.jurisdictions.map((j) => j.code).slice().sort();
+  const cellMap = {}; const nameMap = {}; const teamMap = {};
+  (cov.matrix || []).forEach((c) => {
+    (cellMap[c.slug] = cellMap[c.slug] || {})[c.jurisdiction] = c;
+    nameMap[c.slug] = c.name; teamMap[c.slug] = c.team;
+  });
+  const exclMap = {};
+  cov.jurisdictions.forEach((j) => (j.excluded_owners || []).forEach((o) => {
+    (exclMap[o.slug] = exclMap[o.slug] || new Set()).add(j.code);
+    nameMap[o.slug] = nameMap[o.slug] || o.name;
+  }));
+  const slugs = Object.keys(nameMap).sort((a, b) => (nameMap[a] || a).localeCompare(nameMap[b] || b));
+
+  const headCols = jcodes.map((c) => `<th class="cov-jx" title="${escapeAttr(jName(c))}">${escapeHtml(c)}</th>`).join("");
+  const matrixRows = slugs.map((slug) => {
+    const cells = jcodes.map((jx) => {
+      const c = cellMap[slug] && cellMap[slug][jx];
+      const excluded = exclMap[slug] && exclMap[slug].has(jx);
+      if (excluded) return `<td class="cov-cell cov-x" title="opted out of ${escapeHtml(jx)} (doppelganger guard)">✕</td>`;
+      if (c && c.confirmed) return `<td class="cov-cell cov-c" title="${fmtInt(c.confirmed)} confirmed (${fmtInt(c.scanned)} scanned)">${fmtInt(c.confirmed)}</td>`;
+      if (c && c.probable) return `<td class="cov-cell cov-p" title="${fmtInt(c.probable)} probable">${fmtInt(c.probable)}</td>`;
+      if (c && c.scanned) return `<td class="cov-cell cov-o" title="${fmtInt(c.scanned)} look-alikes scanned, 0 attributed">·</td>`;
+      return `<td class="cov-cell"></td>`;
+    }).join("");
+    return `<tr><td class="cov-owner"><a href="#/owner/${escapeAttr(slug)}">${escapeHtml(nameMap[slug] || slug)}</a>
+      <span class="cov-dim">${escapeHtml(teamMap[slug] || "")}</span></td>${cells}</tr>`;
+  }).join("");
+
+  return `
+  <section class="ghero state">
+    <div class="ghero-inner">
+      <span class="eyebrow">State campaign finance · coverage</span>
+      <h1>How this archive was built.</h1>
+      <p class="deck">
+        Every state ingest is logged: which official portal, when it last ran, how many
+        look-alike records the classifier judged, and how many it actually attributed.
+        This is the archive showing its work — the same neutral, provenance-first standard
+        as the federal <a href="#/runs">pipeline</a>. A small attributed count next to a
+        large scanned count is the point: the bar is high, and most look-alikes are rejected.
+      </p>
+    </div>
+  </section>
+  ${sectionSubnav("state", "coverage")}
+
+  <div class="container">
+    <div class="statband cols-4" style="margin:28px 0 0">
+      <div class="sb-cell"><div class="sb-k">Jurisdictions covered</div><div class="sb-v">${fmtInt(jur.length)}</div><div class="sb-foot">official disclosure systems</div></div>
+      <div class="sb-cell"><div class="sb-k">Look-alike records judged</div><div class="sb-v">${fmtInt(totScanned)}</div><div class="sb-foot">surname-matched candidate rows</div></div>
+      <div class="sb-cell"><div class="sb-k">Attributed</div><div class="sb-v">${fmtInt(totConf + totProb)}</div><div class="sb-foot">${fmtInt(totConf)} confirmed · ${fmtInt(totProb)} probable</div></div>
+      <div class="sb-cell"><div class="sb-k">Per-owner opt-outs</div><div class="sb-v">${fmtInt(totExcl)}</div><div class="sb-foot">excluded where a portal can't disambiguate</div></div>
+    </div>
+
+    <section class="block" style="border-bottom:0">
+      <div class="sec-head-row"><h2>By jurisdiction</h2></div>
+      <p class="caption" style="margin:0 0 12px">The funnel per state: records the classifier scanned → <strong>confirmed</strong> / probable / uncertain. "Last ingested" surfaces staleness.</p>
+      <div class="table-scroll">
+        <table class="donations-table cov-table">
+          <thead><tr>
+            <th>Jurisdiction</th><th>Last ingested</th><th class="num">Owners scan→hit</th>
+            <th class="num">Records scanned</th><th class="num">Conf / Prob / Uncert</th><th>Opt-outs</th>
+          </tr></thead>
+          <tbody>${jrows}</tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="block" style="border-bottom:0;padding-top:8px">
+      <div class="sec-head-row"><h2>Coverage matrix</h2></div>
+      <p class="caption" style="margin:0 0 12px">
+        Which owners were checked in which states. <span class="cov-lg cov-c">3</span> confirmed ·
+        <span class="cov-lg cov-p">2</span> probable · <span class="cov-lg cov-o">·</span> scanned, none attributed ·
+        <span class="cov-lg cov-x">✕</span> opted out · blank = surname never appeared.
+      </p>
+      <div class="table-scroll">
+        <table class="donations-table cov-matrix">
+          <thead><tr><th class="cov-owner">Owner</th>${headCols}</tr></thead>
+          <tbody>${matrixRows}</tbody>
+        </table>
+      </div>
     </section>
 
     <section class="block" style="border-bottom:0;padding-top:8px;padding-bottom:48px">

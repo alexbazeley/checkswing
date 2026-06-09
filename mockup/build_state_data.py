@@ -129,6 +129,77 @@ def _owner_meta() -> dict[str, dict]:
     return meta
 
 
+def _owner_exclusions() -> dict[str, list[str]]:
+    """slug → [excluded jurisdiction codes] from owners/*.yaml `exclude_state_jurisdictions`."""
+    out: dict[str, list[str]] = {}
+    for p in sorted(OWNERS_DIR.glob("*.yaml")):
+        if p.name.startswith("_"):
+            continue
+        d = yaml.safe_load(p.read_text(encoding="utf-8"))
+        if isinstance(d, dict) and d.get("slug"):
+            ex = [str(j).upper() for j in (d.get("exclude_state_jurisdictions") or []) if j]
+            if ex:
+                out[d["slug"]] = sorted(set(ex))
+    return out
+
+
+def _build_coverage(runs, meta: dict, exclusions: dict[str, list[str]]) -> dict:
+    """Tier-3 coverage panel: reduce the ingestion-run ledger to the latest run per
+    (owner, jurisdiction), roll up per jurisdiction, and fold in the per-owner
+    `exclude_state_jurisdictions` opt-outs (which produce no run by design).
+
+    The funnel is honest about scope: a run is only recorded for an owner that had ≥1
+    surname-matching candidate row, so `records_scanned` is the candidate pool the
+    classifier judged (e.g. henry-john's 2,568 FL look-alikes → 0 confirmed), not the
+    whole portal. Every CONFIRMED/PROBABLE/UNCERTAIN count is the classifier's verdict.
+    """
+    # `runs` is ordered oldest→newest, so the last assignment wins = latest run.
+    latest: dict[tuple, dict] = {}
+    for r in runs:
+        latest[(r["entity_slug"], r["jurisdiction"])] = r
+
+    jur: dict[str, dict] = {}
+    matrix: list[dict] = []
+    for (slug, jx), r in latest.items():
+        m = meta.get(slug, {"name": slug, "team": ""})
+        conf, prob = r["confirmed_count"] or 0, r["probable_count"] or 0
+        uncert, scanned = r["uncertain_count"] or 0, r["records_scanned"] or 0
+        last = r["completed_at"] or r["started_at"]
+        matrix.append({
+            "slug": slug, "name": m["name"], "team": m["team"], "jurisdiction": jx,
+            "confirmed": conf, "probable": prob, "uncertain": uncert,
+            "scanned": scanned, "last": last,
+        })
+        j = jur.setdefault(jx, {
+            "code": jx, "source": r["source"], "n_owners_scanned": 0, "n_owners_hit": 0,
+            "records_scanned": 0, "confirmed": 0, "probable": 0, "uncertain": 0,
+            "last_ingested": None, "excluded_owners": [],
+        })
+        j["n_owners_scanned"] += 1
+        if conf or prob:
+            j["n_owners_hit"] += 1
+        j["records_scanned"] += scanned
+        j["confirmed"] += conf
+        j["probable"] += prob
+        j["uncertain"] += uncert
+        if last and (j["last_ingested"] is None or last > j["last_ingested"]):
+            j["last_ingested"] = last
+
+    for slug, codes in exclusions.items():
+        for jx in codes:
+            j = jur.setdefault(jx, {
+                "code": jx, "source": None, "n_owners_scanned": 0, "n_owners_hit": 0,
+                "records_scanned": 0, "confirmed": 0, "probable": 0, "uncertain": 0,
+                "last_ingested": None, "excluded_owners": [],
+            })
+            j["excluded_owners"].append({"slug": slug, "name": meta.get(slug, {}).get("name", slug)})
+
+    return {
+        "jurisdictions": sorted(jur.values(), key=lambda x: x["code"]),
+        "matrix": sorted(matrix, key=lambda c: (c["slug"], c["jurisdiction"])),
+    }
+
+
 def main(db_path: Path = STATE_DB, out_path: Path = OUT_PATH) -> Path:
     meta = _owner_meta()
     if not db_path.exists():
@@ -149,6 +220,17 @@ def main(db_path: Path = STATE_DB, out_path: Path = OUT_PATH) -> Path:
             filers[(fr["jurisdiction"], fr["source"], fr["filer_id"])] = fr
     except sqlite3.OperationalError:
         pass  # very old DB without the filers table — fall back to as-filed names
+    # Tier-3 coverage: the ingestion-run ledger (how the archive was produced). Ordered
+    # oldest→newest so the last write per (owner, jurisdiction) is the latest run.
+    runs: list[sqlite3.Row] = []
+    try:
+        runs = con.execute(
+            "SELECT entity_slug, jurisdiction, source, started_at, completed_at, "
+            "records_scanned, confirmed_count, probable_count, uncertain_count "
+            "FROM state_ingestion_runs WHERE dry_run = 0 ORDER BY started_at"
+        ).fetchall()
+    except sqlite3.OperationalError:
+        pass  # old DB without the runs table — coverage panel simply stays empty
     con.close()
 
     donations = []
@@ -320,11 +402,14 @@ def main(db_path: Path = STATE_DB, out_path: Path = OUT_PATH) -> Path:
         "recipients": recips_out,
         "donations": donations,
         "n_donations": len(donations),
+        "coverage": _build_coverage(runs, meta, _owner_exclusions()),
     }
     out_path.write_text(json.dumps(out, separators=(",", ":")))
     kb = out_path.stat().st_size // 1024
+    cov = out["coverage"]["jurisdictions"]
     print(f"Wrote {out_path} — {len(donations)} donations, {len(owners_out)} owners, "
-          f"{len(recips_out)} recipients, {len(juris_out)} jurisdiction(s), {kb} KB")
+          f"{len(recips_out)} recipients, {len(juris_out)} jurisdiction(s), "
+          f"coverage for {len(cov)} juris, {kb} KB")
     return out_path
 
 
