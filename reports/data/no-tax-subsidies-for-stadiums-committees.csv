@@ -1,0 +1,19 @@
+owner_slug,owner_name,owner_team,transaction_id,amount,donation_date,donation_status,recipient_committee_name,recipient_candidate_name,bill_ids,committee_id,committee_name,member_title,legislator_bioguide,legislator_name,legislator_party,legislator_state
+kendrick-ken,Earl G. Kendrick Jr.,Arizona Diamondbacks,A743921DF303B430F854,6600.0,2024-05-10,CONFIRMED,WINRED,,119-hr-2434,HSWM,House Committee on Ways and Means,,F000470,Michelle Fischbach,Republican,MN
+kendrick-ken,Earl G. Kendrick Jr.,Arizona Diamondbacks,A9140878DA1D440308BE,5800.0,2022-08-10,CONFIRMED,WINRED,,119-s-1192,SSFI,Senate Committee on Finance,,J000293,Ron Johnson,Republican,WI
+kendrick-ken,Earl G. Kendrick Jr.,Arizona Diamondbacks,ADB1C17F5A7384A1AB4A,5600.0,2020-01-15,CONFIRMED,WINRED,,119-hr-2434,HSWM,House Committee on Ways and Means,,F000470,Michelle Fischbach,Republican,MN
+pohlad-tom,Thomas Pohlad,Minnesota Twins,SA11AI_211505366,5600.0,2020-02-21,CONFIRMED,ACTBLUE,,119-s-1192,SSFI,Senate Committee on Finance,,S001203,Tina Smith,Democrat,MN
+reinsdorf-jerry,Jerry M. Reinsdorf,Chicago White Sox,7295040ADA9A4E1CA8EF,5600.0,2020-03-03,CONFIRMED,NO LABELS PROBLEM SOLVERS POLITICAL ACTION COMMITTEE (NO LABELS PROBLEM SOLVERS PAC),,119-s-1192,SSFI,Senate Committee on Finance,,C001075,Bill Cassidy,Republican,LA
+fisher-john,John J. Fisher,Athletics,15375062,3300.0,2023-05-30,CONFIRMED,NEW DEMOCRAT COALITION ACTION FUND,,119-hr-2434,HSWM,House Committee on Ways and Means,,P000613,Jimmy Panetta,Democrat,CA
+kendrick-ken,Earl G. Kendrick Jr.,Arizona Diamondbacks,AC352274A2F3141C5970,3300.0,2023-07-06,CONFIRMED,WINRED,,119-s-1192,SSFI,Senate Committee on Finance,,S001184,Tim Scott,Republican,SC
+cohen-steven,Steven A. Cohen,New York Mets,SA11AI_568548360,3300.0,2024-02-05,CONFIRMED,ACTBLUE,,119-hr-2434,HSWM,House Committee on Ways and Means,,S001201,Thomas R. Suozzi,Democrat,NY
+stanton-john,John W. Stanton,Seattle Mariners,A3C70812926D7493BB38,3300.0,2024-08-12,CONFIRMED,WINRED,,119-s-1192,SSFI,Senate Committee on Finance,,B001261,John Barrasso,Republican,WY
+fisher-john,John J. Fisher,Athletics,17845022,3300.0,2024-09-26,CONFIRMED,NEW DEMOCRAT COALITION ACTION FUND,,119-hr-2434,HSWM,House Committee on Ways and Means,,P000613,Jimmy Panetta,Democrat,CA
+fisher-john,John J. Fisher,Athletics,17845018,3300.0,2024-09-26,CONFIRMED,NEW DEMOCRAT COALITION ACTION FUND,,119-hr-2434,HSWM,House Committee on Ways and Means,,S001190,Bradley Scott Schneider,Democrat,IL
+fisher-john,John J. Fisher,Athletics,17845017,3300.0,2024-09-26,CONFIRMED,NEW DEMOCRAT COALITION ACTION FUND,,119-hr-2434,HSWM,House Committee on Ways and Means,,S001190,Bradley Scott Schneider,Democrat,IL
+fisher-john,John J. Fisher,Athletics,11270468,2900.0,2021-12-08,CONFIRMED,NEW DEMOCRAT COALITION ACTION FUND,,119-hr-2434,HSWM,House Committee on Ways and Means,,P000613,Jimmy Panetta,Democrat,CA
+pohlad-joe,Joseph C. Pohlad,Minnesota Twins,SA11AI_235376354,2800.0,2020-05-18,CONFIRMED,ACTBLUE,,119-s-1192,SSFI,Senate Committee on Finance,,S001203,Tina Smith,Democrat,MN
+pohlad-tom,Thomas Pohlad,Minnesota Twins,SA11AI_505166267,2500.0,2022-11-11,CONFIRMED,ACTBLUE,,119-s-1192,SSFI,Senate Committee on Finance,,W000790,Raphael G. Warnock,Democrat,GA
+fisher-john,John J. Fisher,Athletics,19005168,2000.0,2025-06-13,CONFIRMED,NEW DEMOCRAT COALITION ACTION FUND,,119-hr-2434,HSWM,House Committee on Ways and Means,,S001190,Bradley Scott Schneider,Democrat,IL
+stanton-john,John W. Stanton,Seattle Mariners,SA11AI_157928103,1000.0,2019-05-17,CONFIRMED,ACTBLUE,,119-s-1192,SSFI,Senate Committee on Finance,,W000805,Mark R. Warner,Democrat,VA
+fisher-john,John J. Fisher,Athletics,19005167,1000.0,2025-06-13,CONFIRMED,NEW DEMOCRAT COALITION ACTION FUND,,119-hr-2434,HSWM,House Committee on Ways and Means,,P000613,Jimmy Panetta,Democrat,CA

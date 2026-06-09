@@ -29,7 +29,7 @@ The conservative attribution standard is itself an editorial commitment: we'd ra
 
 ## Out of scope (explicit, not just "later")
 
-- **State and local campaign finance.** Different sources per state, often paper-only. Phase 4 territory — **now active as a California pilot** in a *separate* `data/state.db` (see Phase 4 below); the federal `master.db` remains FEC-only and any report says which layer a figure comes from.
+- **State and local campaign finance.** Different sources per state, often paper-only. Phase 4 territory — **now active across 10 states** (CA pilot generalized; see Phase 4 below) in a *separate* `data/state.db`; the federal `master.db` remains FEC-only and any report says which layer a figure comes from.
 - **501(c)(4) "dark money."** Not in FEC data. Tracked elsewhere if at all.
 - **Federal lobbying disclosures.** A different LD-1 / LD-2 system. Worth a sibling project; not this one.
 - **Cross-referencing donations to specific legislation, votes, or regulatory outcomes.** Phase 3.
@@ -58,20 +58,53 @@ The conservative attribution standard is itself an editorial commitment: we'd ra
 - Refine the matching logic based on what each new owner reveals.
 - **Exit criteria:** five owners each with full export; matching logic is stable; no further code changes needed to add the remaining 25.
 
-### Phase 2 — All 30 owners
+### Phase 2 — All 30 owners — **SUBSTANTIALLY COMPLETE**
+- *Status (2026-06): all 30 franchises' principal owners plus documented related
+  entities (spouses/family) are populated and validating; the federal archive
+  holds 3,925 CONFIRMED rows (~$33.8M) + 212 PROBABLE (~$1.1M). The UNCERTAIN review queue
+  is adjudicated on an ongoing cadence (see `cli audit` / `review` and the
+  calibration playbook).*
 - Populate `verifying_signals` for the remaining 25 owners.
 - Run the pipeline league-wide.
 - Add spouses + named family members where publicly documented.
 - Document and track team-affiliated PACs where they exist.
 - **Exit criteria:** every MLB principal owner has an export; review queue is being adjudicated on a regular cadence.
 
-### Phase 3 — Cross-referencing
+### Phase 3 — Cross-referencing — **ACTIVE (machinery live, corpus early)**
+- *Status (2026-06): the join layer is wired in a separate `legislation.db` and
+  has produced two end-to-end per-episode briefs (the exit criterion, met and
+  exceeded). The curated corpus is 16 bills across all 5 issue areas — antitrust
+  exemption (Curt Flood Act), minor-league pay (Save America's Pastime Act +
+  carrier), stadium financing ("No Tax Subsidies for Stadiums Act" line,
+  115th→119th), sports betting (PASPA → Murphy v. NCAA → Sports Wagering Market
+  Integrity Act → SAFE Bet Act), and broadcast/IP/blackout (Sports Broadcasting
+  Act of 1961 → FANS Act → Stop Sports Blackouts Act / For the Fans Act) — plus
+  3 roll-call votes (the 2018 SAPA-carrier House+Senate passages, and PASPA's
+  1992 Senate passage). A deliberate finding: recorded MLB-relevant votes that
+  overlap the post-2000 donation window are scarce — this policy area moves by
+  voice vote, unanimous consent, committee death, or omnibus burial — so the
+  committee-of-referral join, not the vote join, is the workhorse here. The join
+  engine supports three modes: donations→voters
+  (`--bill`), donations→sponsors (`--sponsors-of`), and donations→current
+  committee-of-referral members (`--via-committee`, guarded to current-congress
+  bills since membership is a current snapshot). The committee join is the widest
+  money-meets-power surface — e.g. owners who funded the Ways & Means / Finance /
+  Judiciary / Energy & Commerce members holding the live stadium, betting, and
+  blackout bills. Briefs in reports/: Save America's Pastime Act and the
+  stadium-subsidy committees. Natural next: more briefs, and roll-call-bearing
+  bills (the curated set is currently committee-stage-heavy).*
 - Build a parallel index of MLB-relevant federal legislation, votes, and regulatory actions (antitrust exemption, minor league pay, stadium-related federal action, broadcast/IP cases).
 - Pair donations with relevant policy timeline.
 - Enable queries like "donations from owner X to legislator Y in the 90 days before vote Z."
 - **Exit criteria:** at least one publishable per-episode brief generated end-to-end from the joined data.
 
-### Phase 4 — State and local — **ACTIVE (California pilot)**
+### Phase 4 — State and local — **ACTIVE (10 states live; CA pilot complete)**
+- *Status (2026-06): the CA pilot is complete and has been generalized into a
+  `StateSource` registry; 10 jurisdictions are live in `data/state.db` —
+  CA, NY, TX, PA, IL, WA, CO, AZ, MN, FL (1,011 matched rows). Coverage is
+  honestly partial and per-state; remaining teams' home states are tracked in
+  the `#/state-coverage` ledger. See SOURCES.md §"Phase 4 addendum" for the
+  per-portal source tiering.*
 - Identify each owner's primary state/local political exposure (team's home state, owner's residence state, stadium-deal jurisdictions).
 - Connect to that state's campaign finance database.
 - Pull stadium-relevant state and local donations.
@@ -90,15 +123,18 @@ The same three-tier classifier (`scripts/resolve_entities.py`) is reused verbati
 only a per-portal input adapter differs. Coverage is **state-by-state and honestly
 partial** — some states are paper-only and stay out until machine-readable.
 
-**Pilot — California (CAL-ACCESS).** California first: 5 of 30 teams, and the
-gold-standard open-data portal (CAL-ACCESS, via the California Civic Data Coalition
-mirror) whose receipts carry employer + occupation + city, so the two-signal
-CONFIRMED bar is reachable.
-- **Pilot exit criteria (mirrors the Phase-1 Cohen bar):** CA-team owners have a
-  complete `state.db` export with provenance; the state review queue is non-empty
-  (conservative proof); zero misattributions on a manual audit of a CONFIRMED sample.
-- The CA pilot proves the pattern; a `StateAdapter` runbook then makes state #2
-  (NY or TX, by team count) a new adapter + source-tiering, not a rewrite.
+**Pilot — California (CAL-ACCESS) — COMPLETE.** California was the pilot: 5 of 30
+teams, and the gold-standard open-data portal (CAL-ACCESS, via the California Civic
+Data Coalition mirror) whose receipts carry employer + occupation + city, so the
+two-signal CONFIRMED bar is reachable.
+- **Pilot exit criteria (mirrors the Phase-1 Cohen bar), all met:** CA-team owners
+  have a complete `state.db` export with provenance; the state review queue is
+  non-empty (conservative proof); zero misattributions on a manual audit of a
+  CONFIRMED sample.
+- The pilot proved the pattern, which has since been generalized into the
+  `StateSource` registry (`scripts/state_sources.py`): each new state is a source
+  entry + per-portal adapter, not a rewrite. Nine more states have been added this
+  way (NY, TX, PA, IL, WA, CO, AZ, MN, FL).
 
 ### Phase 5 — Maintenance and automation
 - Scheduled quarterly pulls (FEC quarterly reporting cycle).

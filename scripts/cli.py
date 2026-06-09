@@ -21,6 +21,7 @@ from .ingest_committee_disbursements import (
 from .ingest_committees import ingest_all_committees
 from .ingest_filings import ingest_filings as ingest_filings_orchestrator
 from .paths import OWNERS_DIR
+from .queue_stats import queue_stats_report
 from .refresh import refresh_all, select_bucket
 from .validate_owners import format_report, validate_all
 
@@ -456,6 +457,46 @@ def ingest_legislators_cmd(no_historical, all_legislators):
     click.echo(json.dumps(counts, indent=2))
 
 
+@cli.command(name="ingest-congress-committees")
+def ingest_congress_committees_cmd():
+    """Fetch current congressional committees + membership (for the committee join).
+
+    GATED DATA OPERATION — snapshots legislation.db first and appends a
+    PROVENANCE_LOG entry. Current-congress snapshot only (upstream has no history);
+    `committees.congress` records which congress it represents. Run
+    `ingest-legislators` first so the current congress can be derived.
+    """
+    from datetime import datetime, timezone
+
+    from . import legislation_db
+    from .fetch_congress_committees import COMMITTEES_URL, MEMBERSHIP_URL, SOURCE_LABEL, fetch_and_parse
+    from .ingest_legislation import ingest_committees
+    from .paths import PROVENANCE_LOG
+
+    ts = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    snap = legislation_db.snapshot("pre-ingest-committees")
+    click.echo("Fetching current congressional committees + membership…")
+    committee_rows, membership_rows, raw_path = fetch_and_parse()
+    counts = ingest_committees(committee_rows, membership_rows, raw_payload_path=raw_path)
+
+    block = [
+        f"\n### {ts[:10]} — INGESTION (congressional committees)",
+        "",
+        f"- **source**: `{SOURCE_LABEL}` ({COMMITTEES_URL} + {MEMBERSHIP_URL})",
+        f"- **fetched_at**: `{ts}`",
+        f"- **committees**: `{counts['committees']}`",
+        f"- **memberships**: `{counts['memberships']}`",
+        f"- **congress**: `{counts['congress']}`",
+        f"- **snapshot_path**: `{snap}`",
+        "- **note**: Current-congress committee membership only (upstream has no history). The committee→donation join (policy-join --via-committee) guards on committees.congress so a present-day member is never tied to a historical bill. Idempotent wipe-and-rebuild.",
+        "",
+    ]
+    existing = PROVENANCE_LOG.read_text(encoding="utf-8") if PROVENANCE_LOG.exists() else ""
+    PROVENANCE_LOG.write_text(existing + "\n".join(block), encoding="utf-8")
+
+    click.echo(json.dumps(counts, indent=2))
+
+
 @cli.command(name="legislation-coverage")
 @click.option("--json", "as_json", is_flag=True, help="Emit raw JSON instead of a table.")
 def legislation_coverage_cmd(as_json):
@@ -576,22 +617,28 @@ def ingest_votes_cmd():
 @cli.command(name="policy-join")
 @click.option("--bill", "bills", multiple=True, help="Vote-bearing bill_id(s): join donations→legislators who voted on these.")
 @click.option("--sponsors-of", "sponsor_bills", multiple=True, help="Bill_id(s): also join donations→sponsors/cosponsors of these.")
+@click.option("--via-committee", "committee_bills", multiple=True, help="Bill_id(s): also join donations→current members of the bill's committee(s) of referral (current-congress bills only).")
 @click.option("--out", "basename", required=True, help="Output basename written under reports/data/.")
-def policy_join_cmd(bills, sponsor_bills, basename):
+def policy_join_cmd(bills, sponsor_bills, committee_bills, basename):
     """Read-only: write the neutral owner→donation→legislator→vote join to reports/data/.
 
     Produces a reproducible CSV + JSON of neutral facts (donation, legislator,
     position, days_before_vote). NO interpretation — that lives in the brief.
+
+    Three join modes (combinable): --bill (voters), --sponsors-of (authors),
+    --via-committee (current members of the committee(s) the bill was referred
+    to — the widest money-meets-power surface; current-congress bills only).
     """
     from .policy_join import (
+        committee_donation_rows,
         sponsor_donation_rows,
         summarize_by_owner,
         vote_donation_rows,
         write_outputs,
     )
 
-    if not bills and not sponsor_bills:
-        click.echo("Pass at least one --bill or --sponsors-of.")
+    if not bills and not sponsor_bills and not committee_bills:
+        click.echo("Pass at least one --bill, --sponsors-of, or --via-committee.")
         return
 
     written = {}
@@ -608,6 +655,17 @@ def policy_join_cmd(bills, sponsor_bills, basename):
             sp_rows,
             basename=f"{basename}-sponsors",
             meta={"join": "donations_to_sponsors", "bill_ids": list(sponsor_bills)},
+        )
+    if committee_bills:
+        cm_rows = committee_donation_rows(bill_ids=list(committee_bills))
+        written["committees"] = write_outputs(
+            cm_rows,
+            basename=f"{basename}-committees",
+            meta={
+                "join": "donations_to_committee_members",
+                "bill_ids": list(committee_bills),
+                "membership_note": "Current-congress committee membership only; restricted to bills of that congress.",
+            },
         )
 
     if vote_rows:
@@ -1059,6 +1117,21 @@ def review():
         n_res = conn.execute("SELECT COUNT(*) FROM review_resolutions WHERE resolution='DISCARDED'").fetchone()[0]
     if n_res:
         click.echo(f"{n_res} standing DISCARDED verdict(s) (suppressed from the queue).")
+
+
+@cli.command(name="queue-stats")
+@click.option("--top", default=0, type=int,
+              help="Limit the per-owner tables to the top N rows (0 = all).")
+def queue_stats_cmd(top):
+    """Review-queue burndown across all owners (and states).
+
+    The wide, read-only counterpart to `audit <slug>`: open vs resolved
+    UNCERTAIN counts, per-owner P/C ratio and last-ingestion age, and
+    open-reason histograms — for both master.db and state.db. Surfaces where
+    the adjudication work actually is so it can be prioritized.
+    """
+    db.init()
+    click.echo(queue_stats_report(top=top))
 
 
 @cli.command()

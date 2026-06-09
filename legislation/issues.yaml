@@ -31,3 +31,15 @@ issues:
     description: >-
       Federal law on sports broadcasting, territorial blackouts, and
       streaming/intellectual-property questions affecting how baseball is carried.
+
+  sports_betting:
+    label: "Sports betting / PASPA"
+    description: >-
+      Federal law on sports wagering: the Professional and Amateur Sports
+      Protection Act of 1992 (PASPA, Public Law 102-559), which barred most
+      states from authorizing sports betting; the Supreme Court's 2018 decision
+      in Murphy v. NCAA striking PASPA down on Tenth Amendment grounds; and the
+      subsequent federal proposals to set national standards for the now-legal
+      sports-betting market. Bears on baseball through league and ownership
+      commercial ties to sportsbooks and the integrity questions raised by
+      legalized wagering on the sport.

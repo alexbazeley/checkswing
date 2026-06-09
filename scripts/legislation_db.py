@@ -174,6 +174,53 @@ CREATE TABLE IF NOT EXISTS policy_events (
 );
 CREATE INDEX IF NOT EXISTS idx_policy_events_bill ON policy_events(bill_id);
 
+-- ── Congressional committees + current membership ──────────────────────────
+-- Sourced from the public-domain unitedstates/congress-legislators project
+-- (committees-current.yaml + committee-membership-current.yaml). Lets a bill's
+-- committee(s) of referral be joined to the legislators who sit on them — the
+-- "owner money met the committee that held this bill" surface that sponsorship
+-- alone misses.
+--
+-- HONESTY GUARD: membership here is the CURRENT-congress snapshot only (the
+-- upstream file has no history). `committees.congress` records which congress it
+-- represents, and the committee→donation join is restricted to bills of that
+-- same congress — never asserting a present-day member handled a historical bill.
+CREATE TABLE IF NOT EXISTS committees (
+    thomas_id    TEXT PRIMARY KEY,   -- e.g. SSJU (Senate Judiciary), HSWM (House Ways and Means)
+    congress     INTEGER NOT NULL,   -- the congress this membership snapshot represents
+    chamber      TEXT,               -- 'house' / 'senate' / 'joint'
+    name         TEXT,
+    source       TEXT NOT NULL,
+    source_url   TEXT,
+    raw_payload_path TEXT,
+    fetched_at   TEXT,
+    refreshed_at TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS committee_memberships (
+    thomas_id   TEXT NOT NULL,
+    bioguide_id TEXT NOT NULL,
+    rank        INTEGER,
+    title       TEXT,               -- 'Chair' / 'Ranking Member' / NULL
+    party       TEXT,
+    PRIMARY KEY (thomas_id, bioguide_id)
+);
+CREATE INDEX IF NOT EXISTS idx_committee_memberships_bioguide
+    ON committee_memberships(bioguide_id);
+
+-- Committee(s) a curated bill was referred to, from the Congress.gov bill
+-- /committees endpoint. system_code is Congress.gov's code (e.g. ssju00);
+-- thomas_id is the congress-legislators key it maps to (ssju00 → SSJU).
+CREATE TABLE IF NOT EXISTS bill_committees (
+    bill_id     TEXT NOT NULL,
+    system_code TEXT NOT NULL,      -- Congress.gov systemCode, e.g. ssju00
+    thomas_id   TEXT,               -- mapped congress-legislators id, e.g. SSJU
+    chamber     TEXT,
+    name        TEXT,
+    PRIMARY KEY (bill_id, system_code)
+);
+CREATE INDEX IF NOT EXISTS idx_bill_committees_thomas ON bill_committees(thomas_id);
+
 CREATE TABLE IF NOT EXISTS leg_schema_version (
     version    INTEGER PRIMARY KEY,
     applied_at TEXT NOT NULL
@@ -183,7 +230,9 @@ CREATE TABLE IF NOT EXISTS leg_schema_version (
 # v2 adds legislators.lis_id (Senate LIS member id) so Senate roll-call XML —
 # which keys members by lis_member_id, not Bioguide — can be mapped into the
 # index. Added via ALTER TABLE in init() for pre-existing DBs.
-LEG_SCHEMA_VERSION = 2
+# v3 adds committees / committee_memberships / bill_committees (the committee-of-
+# referral join). New tables, so CREATE TABLE IF NOT EXISTS handles the migration.
+LEG_SCHEMA_VERSION = 3
 
 
 def _utc_now_iso() -> str:

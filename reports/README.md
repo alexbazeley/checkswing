@@ -31,6 +31,10 @@ show-prep sheets:
 - **`2026-05-31_save-americas-pastime-act.md`** — the first donations × legislation
   brief (Phase 3 exit criterion): MLB owner donations joined to the 2018 vote that
   carried the Save America's Pastime Act.
+- **`2026-06-08_no-tax-subsidies-for-stadiums.md`** — the committee-of-referral
+  join: MLB owner donations to current members of the Senate Finance / House Ways
+  and Means committees that hold the recurring (and recurringly dead) bills to end
+  the federal tax subsidy for stadium bonds.
 - **`data/`** — the *neutral* machine-generated join outputs the briefs are built
   on (CSV + JSON), produced by `python -m scripts.cli policy-join`. These carry no
   interpretation; they are the reproducible evidence layer. Regenerate them to

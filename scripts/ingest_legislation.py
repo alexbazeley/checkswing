@@ -114,12 +114,13 @@ def ingest_bills(specs: list[dict], client, *, db_path: Path = LEGISLATION_DB) -
     fetch_cosponsors). The curated fields (mlb_issue_area, relevance_basis, …)
     always come from `specs`, never from the API.
     """
-    from .fetch_congress import parse_bill, parse_sponsors
+    from .fetch_congress import parse_bill, parse_bill_committees, parse_sponsors
 
     legislation_db.init(db_path)
     now = _utc_now_iso()
     n_bills = 0
     n_sponsors = 0
+    n_committees = 0
     errors: list[dict] = []
 
     with legislation_db.connect(db_path) as conn:
@@ -199,7 +200,98 @@ def ingest_bills(specs: list[dict], client, *, db_path: Path = LEGISLATION_DB) -
             )
             n_sponsors += len(sponsors)
 
-    return {"bills": n_bills, "sponsors": n_sponsors, "errors": errors}
+            # Committee(s) of referral — best-effort. A failure here must not
+            # lose the bill/sponsor work already written, so it's caught
+            # separately and recorded as a soft error.
+            if hasattr(client, "fetch_bill_committees"):
+                try:
+                    raw_committees, _ = client.fetch_bill_committees(
+                        spec["congress"], spec["bill_type"], spec["number"]
+                    )
+                    com_rows = parse_bill_committees(raw_committees)
+                    conn.execute("DELETE FROM bill_committees WHERE bill_id = ?", (bill_id,))
+                    conn.executemany(
+                        "INSERT OR IGNORE INTO bill_committees "
+                        "(bill_id, system_code, thomas_id, chamber, name) "
+                        "VALUES (?, ?, ?, ?, ?)",
+                        [
+                            (bill_id, c["system_code"], c["thomas_id"], c["chamber"], c["name"])
+                            for c in com_rows
+                        ],
+                    )
+                    n_committees += len(com_rows)
+                except Exception as e:  # noqa: BLE001 — soft-fail the committee step only
+                    errors.append({"bill_id": bill_id, "error": f"committees: {e}"})
+
+    return {"bills": n_bills, "sponsors": n_sponsors, "committees": n_committees, "errors": errors}
+
+
+def _current_congress(conn) -> int:
+    """The congress the committee-membership snapshot represents.
+
+    Derived from the crosswalk (max congress in legislator_terms) so it tracks
+    the data rather than a hardcoded number; falls back to a date computation if
+    terms aren't loaded yet (a Congress convenes Jan of 1789 + 2*(N-1))."""
+    row = conn.execute("SELECT MAX(congress) AS c FROM legislator_terms").fetchone()
+    if row and row["c"]:
+        return int(row["c"])
+    year = datetime.now(timezone.utc).year
+    base_odd = year if year % 2 == 1 else year - 1
+    return (base_odd - 1789) // 2 + 1
+
+
+def ingest_committees(
+    committee_rows: list[dict],
+    membership_rows: list[dict],
+    *,
+    raw_payload_path: str | None = None,
+    db_path: Path = LEGISLATION_DB,
+) -> dict:
+    """Wipe + rebuild committees + committee_memberships (current snapshot).
+
+    Membership has no upstream history, so this is the current-congress roster;
+    `committees.congress` records which congress it represents so the
+    committee→donation join can guard on it. Returns counts.
+    """
+    legislation_db.init(db_path)
+    now = _utc_now_iso()
+    with legislation_db.connect(db_path) as conn:
+        congress = _current_congress(conn)
+        conn.execute("DELETE FROM committee_memberships")
+        conn.execute("DELETE FROM committees")
+        conn.executemany(
+            """
+            INSERT INTO committees (
+                thomas_id, congress, chamber, name, source, source_url,
+                raw_payload_path, fetched_at, refreshed_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            [
+                (
+                    c["thomas_id"], congress, c.get("chamber"), c.get("name"),
+                    "unitedstates/congress-legislators",
+                    "https://unitedstates.github.io/congress-legislators/committees-current.yaml",
+                    raw_payload_path, now, now,
+                )
+                for c in committee_rows
+            ],
+        )
+        conn.executemany(
+            """
+            INSERT OR IGNORE INTO committee_memberships (
+                thomas_id, bioguide_id, rank, title, party
+            ) VALUES (?, ?, ?, ?, ?)
+            """,
+            [
+                (m["thomas_id"], m["bioguide_id"], m.get("rank"), m.get("title"), m.get("party"))
+                for m in membership_rows
+            ],
+        )
+    return {
+        "committees": len(committee_rows),
+        "memberships": len(membership_rows),
+        "congress": congress,
+    }
 
 
 def load_curated_roll_calls(bills_dir: Path = LEGISLATION_BILLS_DIR) -> list[dict]:

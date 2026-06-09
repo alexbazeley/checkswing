@@ -9923,3 +9923,69 @@ generated end-to-end from the joined data") is satisfied.
 - **uncertain_count**: `13`
 - **snapshot_path**: `data/snapshots/2026-06-09T01-10-01Z__66e93711.db`
 - **notes**: scanned=13
+
+### 2026-06-09 — INGESTION (bills)
+
+- **source**: `congress.gov` (api.congress.gov v3)
+- **fetched_at**: `2026-06-09T02:46:50Z`
+- **curated_bills_in_set**: `7`
+- **bills_enriched**: `7`
+- **sponsor_rows**: `70`
+- **errors**: `[]`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-06-09T02-46-50Z__pre-ingest-bills.db`
+- **note**: Curated fields (mlb_issue_area, relevance_basis, carried_by_bill_id) sourced from legislation/bills/*.yaml; identity/sponsors/action from Congress.gov (Tier-1). Raw payloads under data/raw/legislation/.
+
+### 2026-06-09 — INGESTION (bills)
+
+- **source**: `congress.gov` (api.congress.gov v3)
+- **fetched_at**: `2026-06-09T03:03:29Z`
+- **curated_bills_in_set**: `11`
+- **bills_enriched**: `11`
+- **sponsor_rows**: `138`
+- **errors**: `[]`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-06-09T03-03-29Z__pre-ingest-bills.db`
+- **note**: Curated fields (mlb_issue_area, relevance_basis, carried_by_bill_id) sourced from legislation/bills/*.yaml; identity/sponsors/action from Congress.gov (Tier-1). Raw payloads under data/raw/legislation/.
+
+### 2026-06-09 — INGESTION (bills)
+
+- **source**: `congress.gov` (api.congress.gov v3)
+- **fetched_at**: `2026-06-09T03:13:49Z`
+- **curated_bills_in_set**: `11`
+- **bills_enriched**: `11`
+- **sponsor_rows**: `138`
+- **errors**: `[]`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-06-09T03-13-49Z__pre-ingest-bills.db`
+- **note**: Curated fields (mlb_issue_area, relevance_basis, carried_by_bill_id) sourced from legislation/bills/*.yaml; identity/sponsors/action from Congress.gov (Tier-1). Raw payloads under data/raw/legislation/.
+
+### 2026-06-09 — INGESTION (congressional committees)
+
+- **source**: `unitedstates/congress-legislators` (https://unitedstates.github.io/congress-legislators/committees-current.yaml + https://unitedstates.github.io/congress-legislators/committee-membership-current.yaml)
+- **fetched_at**: `2026-06-09T03:16:01Z`
+- **committees**: `49`
+- **memberships**: `1329`
+- **congress**: `119`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-06-09T03-16-01Z__pre-ingest-committees.db`
+- **note**: Current-congress committee membership only (upstream has no history). The committee→donation join (policy-join --via-committee) guards on committees.congress so a present-day member is never tied to a historical bill. Idempotent wipe-and-rebuild.
+
+### 2026-06-09 — INGESTION (bills)
+
+- **source**: `congress.gov` (api.congress.gov v3)
+- **fetched_at**: `2026-06-09T03:33:02Z`
+- **curated_bills_in_set**: `16`
+- **bills_enriched**: `16`
+- **sponsor_rows**: `150`
+- **errors**: `[]`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-06-09T03-33-02Z__pre-ingest-bills.db`
+- **note**: Curated fields (mlb_issue_area, relevance_basis, carried_by_bill_id) sourced from legislation/bills/*.yaml; identity/sponsors/action from Congress.gov (Tier-1). Raw payloads under data/raw/legislation/.
+
+### 2026-06-09 — INGESTION (votes)
+
+- **source**: `clerk.house.gov` (EVS XML) + `senate.gov` (LIS XML) — Tier-1 source of record
+- **fetched_at**: `2026-06-09T03:40:38Z`
+- **roll_calls_in_set**: `3`
+- **votes_ingested**: `3`
+- **vote_positions**: `585`
+- **senate_unmapped (no FEC-crosswalk lis_id)**: `45`
+- **errors**: `[]`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-06-09T03-40-38Z__pre-ingest-votes.db`
+- **note**: Vote positions are FEC-neutral facts (who voted Yea/Nay). Senate LIS ids mapped to Bioguide via legislators.lis_id. Raw XML under data/raw/legislation/.

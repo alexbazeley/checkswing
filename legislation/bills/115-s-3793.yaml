@@ -1,0 +1,22 @@
+bill_id: 115-s-3793
+congress: 115
+bill_type: s
+number: 3793
+mlb_issue_area: sports_betting
+relevance_basis: >-
+  Sports Wagering Market Integrity Act of 2018. The first major federal response
+  after Murphy v. NCAA (2018) struck down PASPA: it would have set federal
+  minimum standards for state-legal sports wagering and preserved a federal
+  interest in the integrity of professional and amateur contests. Sponsored by
+  Sen. Orrin Hatch (R-UT) with Sen. Charles Schumer (D-NY). Read twice and
+  referred to the Committee on the Judiciary on 2018-12-19; it received no
+  further action and no roll-call vote. Indexed as the bridge between PASPA's
+  fall and the current SAFE Bet Act effort.
+relevance_source_url: "https://www.congress.gov/bill/115th-congress/senate-bill/3793"
+sources:
+  - description: "Congress.gov bill page — Sports Wagering Market Integrity Act of 2018, S.3793 (115th)"
+    url: "https://www.congress.gov/bill/115th-congress/senate-bill/3793"
+    accessed: 2026-06-08
+change_log:
+  - date: 2026-06-08
+    change: "Indexed as a Phase 3 curated bill (sports_betting) — Hatch/Schumer post-Murphy bill; verified sponsor + latest action against api.congress.gov v3."

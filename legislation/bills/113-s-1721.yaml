@@ -1,0 +1,22 @@
+bill_id: 113-s-1721
+congress: 113
+bill_type: s
+number: 1721
+mlb_issue_area: broadcast_ip_blackout
+relevance_basis: >-
+  FANS Act (Furthering Access and Networks for Sports). Sponsored by Sen. Richard
+  Blumenthal (D-CT). Would have conditioned the Sports Broadcasting Act's antitrust
+  exemption on ending local sports television blackouts and making games available
+  online, and would have applied the antitrust laws to Major League Baseball's
+  broadcasting. The Committee on the Judiciary held hearings (2014-12-04,
+  S.Hrg. 113-847) but the bill received no further action and no roll-call vote.
+  The origin of the modern blackout-reform line carried forward as the Stop Sports
+  Blackouts Act and For the Fans Act in later congresses.
+relevance_source_url: "https://www.congress.gov/bill/113th-congress/senate-bill/1721"
+sources:
+  - description: "Congress.gov bill page — FANS Act, S.1721 (113th); Judiciary hearings held (S.Hrg. 113-847)"
+    url: "https://www.congress.gov/bill/113th-congress/senate-bill/1721"
+    accessed: 2026-06-08
+change_log:
+  - date: 2026-06-08
+    change: "Indexed as a Phase 3 curated bill (broadcast_ip_blackout) — the FANS Act origin; verified sponsor + latest action against api.congress.gov v3."

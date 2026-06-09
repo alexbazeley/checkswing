@@ -1,0 +1,21 @@
+bill_id: 119-hr-2434
+congress: 119
+bill_type: hr
+number: 2434
+mlb_issue_area: stadium_financing
+relevance_basis: >-
+  No Tax Subsidies for Stadiums Act of 2025. Current-congress House reintroduction
+  of the effort to end tax-exempt bond financing for professional sports stadiums
+  by amending the Internal Revenue Code. Sponsored by Rep. Glenn Grothman (R-WI-6);
+  referred to the House Committee on Ways and Means on 2025-03-27, pending with no
+  roll-call vote as indexed. The House companion to S.1192 (119th) and the live
+  House entry in the recurring "No Tax Subsidies for Stadiums Act" line begun by
+  H.R.811 / S.1342 (115th).
+relevance_source_url: "https://www.congress.gov/bill/119th-congress/house-bill/2434"
+sources:
+  - description: "Congress.gov bill page — No Tax Subsidies for Stadiums Act of 2025, H.R.2434 (119th)"
+    url: "https://www.congress.gov/bill/119th-congress/house-bill/2434"
+    accessed: 2026-06-08
+change_log:
+  - date: 2026-06-08
+    change: "Indexed as a Phase 3 curated bill (stadium_financing) — live 119th-Congress House entry; verified sponsor + latest action against api.congress.gov v3."

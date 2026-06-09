@@ -1,0 +1,33 @@
+{
+  "_meta": {
+    "generated_at": "2026-06-09T03:44:42Z",
+    "n_rows": 1,
+    "neutrality_note": "Neutral sourced facts only (GOVERNANCE.md \u00a76). days_before_vote is arithmetic, not a causal claim. Interpretation lives in the brief.",
+    "join": "donations_to_sponsors",
+    "bill_ids": [
+      "115-s-1342",
+      "115-hr-811",
+      "119-s-1192",
+      "119-hr-2434"
+    ]
+  },
+  "rows": [
+    {
+      "owner_slug": "angelos-john-p",
+      "owner_name": "John P. Angelos",
+      "owner_team": "Baltimore Orioles",
+      "transaction_id": "SA11AI_523540196",
+      "amount": 6600.0,
+      "donation_date": "2023-03-31",
+      "donation_status": "CONFIRMED",
+      "recipient_committee_name": "ACTBLUE",
+      "recipient_candidate_name": "",
+      "bill_id": "115-hr-811",
+      "sponsor_role": "cosponsor",
+      "legislator_bioguide": "R000606",
+      "legislator_name": "Jamie Raskin",
+      "legislator_party": "Democrat",
+      "legislator_state": "MD"
+    }
+  ]
+}

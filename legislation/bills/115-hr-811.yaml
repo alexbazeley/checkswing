@@ -1,0 +1,23 @@
+bill_id: 115-hr-811
+congress: 115
+bill_type: hr
+number: 811
+mlb_issue_area: stadium_financing
+relevance_basis: >-
+  No Tax Subsidies for Stadiums Act. Would amend the Internal Revenue Code so
+  that bonds issued to finance professional sports stadiums fail the
+  private-security-or-payment test, ending their eligibility for tax-exempt
+  status — the federal subsidy for stadium construction. Sponsored by Rep. Steve
+  Russell (R-OK-5); referred to the House Committee on Ways and Means on
+  2017-02-01, with no further action and no roll-call vote. The House counterpart
+  to the Senate's Eliminating Federal Tax Subsidies for Stadiums Act (S.1342,
+  115th) and the original of the recurring "No Tax Subsidies for Stadiums Act"
+  line carried forward in later congresses (e.g., H.R.2434 / S.1192, 119th).
+relevance_source_url: "https://www.congress.gov/bill/115th-congress/house-bill/811"
+sources:
+  - description: "Congress.gov bill page — No Tax Subsidies for Stadiums Act, H.R.811 (115th)"
+    url: "https://www.congress.gov/bill/115th-congress/house-bill/811"
+    accessed: 2026-06-08
+change_log:
+  - date: 2026-06-08
+    change: "Indexed as a Phase 3 curated bill (stadium_financing) — House companion to S.1342; verified sponsor + latest action against api.congress.gov v3."

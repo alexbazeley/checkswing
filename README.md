@@ -87,7 +87,8 @@ python -m scripts.cli ingest <slug> --full-refetch   # re-fetch full history
 python -m scripts.cli audit <slug>             # read-only signal/classification audit
 python -m scripts.cli reclassify <slug>        # re-apply classifier to existing raw (no FEC calls)
 python -m scripts.cli raw-coverage             # report rows whose raw payload is missing on disk
-python -m scripts.cli review-queue             # list open review-queue items
+python -m scripts.cli review                    # list open review-queue items
+python -m scripts.cli queue-stats              # review-queue burndown across all owners + states
 python -m pytest -q                            # run the test suite
 ```
 

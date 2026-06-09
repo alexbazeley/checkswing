@@ -1,0 +1,37 @@
+bill_id: 102-s-474
+congress: 102
+bill_type: s
+number: 474
+mlb_issue_area: sports_betting
+relevance_basis: >-
+  Professional and Amateur Sports Protection Act (PASPA). Enacted as Public Law
+  102-559 on 1992-10-28, it prohibited most states from authorizing, licensing,
+  or operating sports-wagering schemes, effectively freezing legal sports betting
+  outside the states (chiefly Nevada) that already permitted it. Sponsored by
+  Sen. Dennis DeConcini (D-AZ). PASPA stood until the Supreme Court struck it
+  down in Murphy v. NCAA (2018) on Tenth Amendment grounds, opening the
+  state-by-state legalization of sports betting. The statutory anchor of the
+  sports-betting issue area; the professional sports leagues, including MLB, were
+  central advocates for PASPA's original passage.
+relevance_source_url: "https://www.congress.gov/bill/102nd-congress/senate-bill/474"
+# The Senate passed PASPA on a recorded roll call (the House passed it by voice
+# vote, so there is no House roll call to ingest). This is the one foundational
+# MLB-relevant law in the index with a recorded vote — note that every archived
+# owner donation post-dates the 2000 floor, so the join is structural (which
+# owners fund senators who voted on the ban), not a donation-before-vote timing.
+roll_calls:
+  - chamber: senate
+    congress: 102
+    session: 2
+    roll: 111
+    question: "On Passage of the Bill"
+sources:
+  - description: "Congress.gov bill page — Professional and Amateur Sports Protection Act, S.474 (102nd); became Public Law 102-559"
+    url: "https://www.congress.gov/bill/102nd-congress/senate-bill/474"
+    accessed: 2026-06-08
+  - description: "U.S. Senate roll-call vote 102-2-111 (On Passage of S.474), 1992-06-02"
+    url: "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1022/vote_102_2_00111.htm"
+    accessed: 2026-06-08
+change_log:
+  - date: 2026-06-08
+    change: "Indexed as a Phase 3 curated bill (sports_betting) — PASPA, the statutory anchor; verified sponsor + enactment (P.L. 102-559) against api.congress.gov v3."

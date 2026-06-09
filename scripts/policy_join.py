@@ -148,6 +148,71 @@ def sponsor_donation_rows(
     return rows
 
 
+def committee_donation_rows(
+    *,
+    bill_ids: list[str],
+    master_db: Path = MASTER_DB,
+    leg_db: Path = LEGISLATION_DB,
+    statuses: tuple[str, ...] = ("CONFIRMED", "PROBABLE"),
+) -> list[dict]:
+    """Owner donations to CURRENT members of a committee any of `bill_ids` was
+    referred to — the "owner money met the committee that holds this bill"
+    surface that sponsorship alone misses. One row per (donation, committee-member).
+
+    HONESTY GUARD: committee membership is the current-congress snapshot only, so
+    this join is restricted to bills in that same congress (`b.congress =
+    c.congress`). A donation to a present-day committee member is never tied to a
+    historical bill whose committee had different members.
+
+    One row per (donation, committee): when several of `bill_ids` share a committee
+    of referral, the matching bills are aggregated into `bill_ids` rather than
+    emitting a duplicate row per bill — so a single gift to a committee member is
+    never counted once per bill it happens to gate. Read-only.
+    """
+    if not bill_ids:
+        return []
+    with legislation_db.connect(leg_db) as conn:
+        legislation_db.attach_for_join(conn, master_db=master_db)
+        status_ph = ",".join("?" for _ in statuses)
+        bill_ph = ",".join("?" for _ in bill_ids)
+        sql = f"""
+            SELECT
+                d.entity_slug              AS owner_slug,
+                e.name                     AS owner_name,
+                e.team                     AS owner_team,
+                d.transaction_id           AS transaction_id,
+                d.amount                   AS amount,
+                d.date                     AS donation_date,
+                d.status                   AS donation_status,
+                d.recipient_committee_name AS recipient_committee_name,
+                d.recipient_candidate_name AS recipient_candidate_name,
+                GROUP_CONCAT(DISTINCT bc.bill_id) AS bill_ids,
+                c.thomas_id                AS committee_id,
+                c.name                     AS committee_name,
+                cm.title                   AS member_title,
+                l.bioguide_id              AS legislator_bioguide,
+                l.full_name                AS legislator_name,
+                l.current_party            AS legislator_party,
+                l.current_state            AS legislator_state
+            FROM master.donations d
+            JOIN legislator_fec_ids x  ON x.fec_candidate_id = d.recipient_candidate_id
+            JOIN legislators l         ON l.bioguide_id = x.bioguide_id
+            JOIN committee_memberships cm ON cm.bioguide_id = l.bioguide_id
+            JOIN committees c          ON c.thomas_id = cm.thomas_id
+            JOIN bill_committees bc    ON bc.thomas_id = cm.thomas_id
+            JOIN bills b               ON b.bill_id = bc.bill_id
+            LEFT JOIN master.entities e ON e.slug = d.entity_slug
+            WHERE d.status IN ({status_ph})
+              AND bc.bill_id IN ({bill_ph})
+              AND b.congress = c.congress
+            GROUP BY d.transaction_id, c.thomas_id
+            ORDER BY d.amount DESC, d.date
+        """
+        cur = conn.execute(sql, (*statuses, *bill_ids))
+        rows = [dict(r) for r in cur.fetchall()]
+    return rows
+
+
 def summarize_by_owner(rows: list[dict]) -> list[dict]:
     """Neutral per-owner rollup of vote_donation_rows: totals + vote breakdown."""
     agg: dict[str, dict] = {}
