@@ -6,6 +6,7 @@ import json
 from scripts import db, legislation_db
 from scripts.policy_join import (
     _days_before,
+    committee_donation_rows,
     sponsor_donation_rows,
     summarize_by_owner,
     vote_donation_rows,
@@ -73,6 +74,45 @@ def _build(tmp_path):
         conn.execute(
             "INSERT INTO vote_positions (vote_id, bioguide_id, position) VALUES ('senate-115-2-63','S000001','Nay')"
         )
+
+        # ── Committee join fixtures ──────────────────────────────────────────
+        # Current-congress (119) committee snapshot: House Ways & Means (HSWM),
+        # with Rep One (R000001, who received donation T1) as a member.
+        conn.execute(
+            "INSERT INTO committees (thomas_id, congress, chamber, name, source, refreshed_at) "
+            "VALUES ('HSWM',119,'house','House Committee on Ways and Means','test','2026-05-31T00:00:00Z')"
+        )
+        conn.execute(
+            "INSERT INTO committee_memberships (thomas_id, bioguide_id, title) "
+            "VALUES ('HSWM','R000001','Member')"
+        )
+        # A current-congress (119) bill referred to HSWM → SHOULD join.
+        conn.execute(
+            "INSERT INTO bills (bill_id, congress, bill_type, number, mlb_issue_area, "
+            "relevance_basis, refreshed_at) VALUES "
+            "('119-hr-9',119,'hr',9,'stadium_financing','current','2026-05-31T00:00:00Z')"
+        )
+        conn.execute(
+            "INSERT INTO bill_committees (bill_id, system_code, thomas_id, chamber, name) "
+            "VALUES ('119-hr-9','hswm00','HSWM','house','House Committee on Ways and Means')"
+        )
+        # A SECOND current-congress bill referred to the SAME committee (HSWM).
+        # A single gift to a HSWM member must not be counted once per bill.
+        conn.execute(
+            "INSERT INTO bills (bill_id, congress, bill_type, number, mlb_issue_area, "
+            "relevance_basis, refreshed_at) VALUES "
+            "('119-hr-10',119,'hr',10,'stadium_financing','current','2026-05-31T00:00:00Z')"
+        )
+        conn.execute(
+            "INSERT INTO bill_committees (bill_id, system_code, thomas_id, chamber, name) "
+            "VALUES ('119-hr-10','hswm00','HSWM','house','House Committee on Ways and Means')"
+        )
+        # The HISTORICAL (115) bill is ALSO referred to HSWM — but must NOT join
+        # against the current (119) membership snapshot (the honesty guard).
+        conn.execute(
+            "INSERT INTO bill_committees (bill_id, system_code, thomas_id, chamber, name) "
+            "VALUES ('115-hr-1625','hswm00','HSWM','house','House Committee on Ways and Means')"
+        )
     return master, leg
 
 
@@ -122,6 +162,50 @@ class TestSponsorJoin:
         assert len(rows) == 1
         assert rows[0]["sponsor_role"] == "cosponsor"
         assert rows[0]["legislator_name"] == "Rep One"
+
+
+class TestCommitteeJoin:
+    def test_current_congress_bill_joins_committee_member(self, tmp_path):
+        master, leg = _build(tmp_path)
+        rows = committee_donation_rows(bill_ids=["119-hr-9"], master_db=master, leg_db=leg)
+        # Rep One sits on Ways & Means and received donation T1 ($5000).
+        assert len(rows) == 1
+        r = rows[0]
+        assert r["owner_slug"] == "owner-x"
+        assert r["bill_ids"] == "119-hr-9"
+        assert r["committee_id"] == "HSWM"
+        assert r["legislator_name"] == "Rep One"
+        assert r["amount"] == 5000.0
+
+    def test_bills_sharing_a_committee_do_not_double_count(self, tmp_path):
+        """119-hr-9 and 119-hr-10 are both referred to Ways & Means. A single
+        $5000 gift to a W&M member must produce ONE row (not one per bill), with
+        both bills aggregated into bill_ids."""
+        master, leg = _build(tmp_path)
+        rows = committee_donation_rows(
+            bill_ids=["119-hr-9", "119-hr-10"], master_db=master, leg_db=leg
+        )
+        assert len(rows) == 1
+        assert rows[0]["amount"] == 5000.0  # NOT $10,000
+        assert set(rows[0]["bill_ids"].split(",")) == {"119-hr-9", "119-hr-10"}
+
+    def test_historical_bill_does_not_join_current_membership(self, tmp_path):
+        """The honesty guard: a 115th-Congress bill referred to the same committee
+        must NOT join against the current (119th) membership snapshot."""
+        master, leg = _build(tmp_path)
+        rows = committee_donation_rows(bill_ids=["115-hr-1625"], master_db=master, leg_db=leg)
+        assert rows == []
+
+    def test_mixed_set_only_returns_current(self, tmp_path):
+        master, leg = _build(tmp_path)
+        rows = committee_donation_rows(
+            bill_ids=["119-hr-9", "115-hr-1625"], master_db=master, leg_db=leg
+        )
+        assert {r["bill_ids"] for r in rows} == {"119-hr-9"}
+
+    def test_empty_bill_ids(self, tmp_path):
+        master, leg = _build(tmp_path)
+        assert committee_donation_rows(bill_ids=[], master_db=master, leg_db=leg) == []
 
 
 class TestWriteOutputs:

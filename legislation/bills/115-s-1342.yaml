@@ -1,0 +1,24 @@
+bill_id: 115-s-1342
+congress: 115
+bill_type: s
+number: 1342
+mlb_issue_area: stadium_financing
+relevance_basis: >-
+  Eliminating Federal Tax Subsidies for Stadiums Act of 2017. Would amend the
+  Internal Revenue Code to bar the use of tax-exempt governmental bonds to
+  finance professional sports stadiums, removing the federal tax subsidy that
+  has helped fund ballpark construction. Sponsored by Sen. Cory Booker (D-NJ)
+  and cosponsored by Sen. James Lankford (R-OK) — the bipartisan Senate vehicle
+  in the recurring "No Tax Subsidies for Stadiums Act" line of bills (House
+  companion H.R.811, 115th). Read twice and referred to the Committee on Finance
+  on 2017-06-12; it received no further action and no roll-call vote. Indexed
+  because federal tax treatment of stadium bonds bears directly on MLB ownership,
+  which has repeatedly financed ballparks with tax-exempt municipal debt.
+relevance_source_url: "https://www.congress.gov/bill/115th-congress/senate-bill/1342"
+sources:
+  - description: "Congress.gov bill page — Eliminating Federal Tax Subsidies for Stadiums Act of 2017, S.1342 (115th)"
+    url: "https://www.congress.gov/bill/115th-congress/senate-bill/1342"
+    accessed: 2026-06-08
+change_log:
+  - date: 2026-06-08
+    change: "Indexed as a Phase 3 curated bill (stadium_financing) — Senate Booker/Lankford vehicle; verified sponsor + cosponsor + latest action against api.congress.gov v3."

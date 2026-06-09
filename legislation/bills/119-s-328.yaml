@@ -1,0 +1,19 @@
+bill_id: 119-s-328
+congress: 119
+bill_type: s
+number: 328
+mlb_issue_area: broadcast_ip_blackout
+relevance_basis: >-
+  Stop Sports Blackouts Act. Current-congress Senate companion addressing local
+  sports television blackouts. Sponsored by Sen. Christopher Murphy (D-CT); read
+  twice and referred to the Committee on Commerce, Science, and Transportation on
+  2025-01-30, pending with no roll-call vote as indexed. The live Senate entry in
+  the broadcast/blackout line (with the House's H.R.888, 119th).
+relevance_source_url: "https://www.congress.gov/bill/119th-congress/senate-bill/328"
+sources:
+  - description: "Congress.gov bill page — Stop Sports Blackouts Act, S.328 (119th)"
+    url: "https://www.congress.gov/bill/119th-congress/senate-bill/328"
+    accessed: 2026-06-08
+change_log:
+  - date: 2026-06-08
+    change: "Indexed as a Phase 3 curated bill (broadcast_ip_blackout) — live 119th-Congress Senate blackout bill; verified sponsor + latest action against api.congress.gov v3."

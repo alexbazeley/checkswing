@@ -133,6 +133,20 @@ class TestAcquireLock:
             assert lock.exists()
         assert not lock.exists()
 
+    def test_no_arg_acquire_honors_patched_global(self, refresh_world):
+        """Regression: a no-argument `_acquire_lock()` must resolve REFRESH_LOCK
+        at call time, so monkeypatching the module global redirects it.
+
+        If the path default were bound at import time (the old bug), this call
+        would create the repo's real `data/.refresh.lock` and leave the patched
+        temp path untouched.
+        """
+        patched = refresh_world["lock_path"]
+        assert not patched.exists()
+        with _acquire_lock():
+            assert patched.exists(), "no-arg _acquire_lock did not use the patched REFRESH_LOCK"
+        assert not patched.exists()
+
 
 class TestLockStaleness:
     def test_live_pid_not_stale(self):
@@ -233,6 +247,39 @@ def _stub_ingest(records_by_slug: dict, failures: set[str] | None = None):
 
 
 class TestRefreshAll:
+    def test_uses_patched_lock_not_real(self, refresh_world, monkeypatch):
+        """Regression for the import-time-default lock bug: refresh_all must
+        acquire the *patched* temp lock, never the repo's real lock.
+
+        We observe the lock mid-run (the ingest stub fires while the lock is
+        held) and assert the temp path is the one that exists, and that the
+        real repo lock path is not created by this run.
+        """
+        from scripts.paths import DATA_DIR as REAL_DATA_DIR
+
+        real_lock = REAL_DATA_DIR / ".refresh.lock"
+        real_pre_existing = real_lock.exists()
+
+        d = refresh_world["owners_dir"]
+        _make_owner(d, "a-owner", "pilot")
+
+        observed = {}
+
+        def _observe(slug, **kwargs):
+            observed["temp_lock_held"] = refresh_world["lock_path"].exists()
+            return {"records_fetched": 0}
+
+        monkeypatch.setattr(refresh, "ingest_entity", _observe)
+        monkeypatch.setattr(refresh, "_rebuild_data_json", lambda: (True, None))
+
+        refresh_all()
+
+        assert observed.get("temp_lock_held") is True, "refresh_all did not hold the patched temp lock"
+        # The run must not have created the real repo lock (only meaningful if
+        # it wasn't already present from some other process).
+        if not real_pre_existing:
+            assert not real_lock.exists(), "refresh_all touched the real data/.refresh.lock"
+
     def test_isolates_per_owner_failures(self, refresh_world, monkeypatch):
         d = refresh_world["owners_dir"]
         _make_owner(d, "a-owner", "pilot")

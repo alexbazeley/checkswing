@@ -1,0 +1,20 @@
+bill_id: 119-s-4301
+congress: 119
+bill_type: s
+number: 4301
+mlb_issue_area: broadcast_ip_blackout
+relevance_basis: >-
+  For the Fans Act. Current-congress Senate bill on fan access to sports broadcasts
+  in the streaming/RSN era — the latest entry in the broadcast-access line that
+  runs back through the FANS Act to the Sports Broadcasting Act exemption.
+  Sponsored by Sen. Tammy Baldwin (D-WI); read twice and referred to the Committee
+  on Commerce, Science, and Transportation on 2026-04-15, pending with no roll-call
+  vote as indexed.
+relevance_source_url: "https://www.congress.gov/bill/119th-congress/senate-bill/4301"
+sources:
+  - description: "Congress.gov bill page — For the Fans Act, S.4301 (119th)"
+    url: "https://www.congress.gov/bill/119th-congress/senate-bill/4301"
+    accessed: 2026-06-08
+change_log:
+  - date: 2026-06-08
+    change: "Indexed as a Phase 3 curated bill (broadcast_ip_blackout) — live 119th-Congress fan-access bill; verified sponsor + latest action against api.congress.gov v3."

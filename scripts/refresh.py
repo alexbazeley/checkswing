@@ -89,14 +89,22 @@ def _lock_is_stale(content: str) -> bool:
 
 
 @contextmanager
-def _acquire_lock(path: Path = REFRESH_LOCK) -> Iterator[None]:
+def _acquire_lock(path: Path | None = None) -> Iterator[None]:
     """Acquire an exclusive file lock; raise if another refresh is running.
 
     Uses O_EXCL — atomic on POSIX. The lock file content records the holder's
     pid + start time so a stuck-process recovery is humanly debuggable. A stale
     lock (dead pid, or older than REFRESH_LOCK_STALE_HOURS) is reclaimed
     automatically rather than wedging the run.
+
+    `path` defaults to the module-level REFRESH_LOCK, but is resolved *at call
+    time* (not bound as a parameter default at import time). This keeps the lock
+    monkeypatchable — `monkeypatch.setattr(refresh, "REFRESH_LOCK", tmp)` is
+    honored even by a no-argument `_acquire_lock()` call, so tests stay hermetic
+    and never touch the repo's real `data/.refresh.lock`.
     """
+    if path is None:
+        path = REFRESH_LOCK
     path.parent.mkdir(parents=True, exist_ok=True)
     try:
         fd = os.open(str(path), os.O_CREAT | os.O_EXCL | os.O_WRONLY)
@@ -288,7 +296,7 @@ def refresh_all(
         "data_json_regenerated": False,
     }
 
-    with _acquire_lock():
+    with _acquire_lock(REFRESH_LOCK):
         owners = _list_active_owners(only=only)
         summary["owners_attempted"] = len(owners)
         if not owners:

@@ -1,0 +1,20 @@
+bill_id: 119-hr-888
+congress: 119
+bill_type: hr
+number: 888
+mlb_issue_area: broadcast_ip_blackout
+relevance_basis: >-
+  Stop Sports Blackouts Act of 2025. Current-congress House bill addressing local
+  sports television blackouts — the modern, RSN/streaming-era revival of the
+  blackout-reform effort begun by the FANS Act. Sponsored by Rep. Patrick Ryan
+  (D-NY-18); referred to the House Committee on Energy and Commerce on 2025-01-31,
+  pending with no roll-call vote as indexed. The live House entry for the
+  broadcast/blackout issue area.
+relevance_source_url: "https://www.congress.gov/bill/119th-congress/house-bill/888"
+sources:
+  - description: "Congress.gov bill page — Stop Sports Blackouts Act of 2025, H.R.888 (119th)"
+    url: "https://www.congress.gov/bill/119th-congress/house-bill/888"
+    accessed: 2026-06-08
+change_log:
+  - date: 2026-06-08
+    change: "Indexed as a Phase 3 curated bill (broadcast_ip_blackout) — live 119th-Congress House blackout bill; verified sponsor + latest action against api.congress.gov v3."

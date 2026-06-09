@@ -1,0 +1,22 @@
+bill_id: 87-hr-9096
+congress: 87
+bill_type: hr
+number: 9096
+mlb_issue_area: broadcast_ip_blackout
+relevance_basis: >-
+  Sports Broadcasting Act of 1961. Enacted as Public Law 87-331 on 1961-09-30, it
+  amended the antitrust laws to let professional football, baseball, basketball,
+  and hockey leagues pool and sell their television broadcast rights collectively
+  without antitrust liability — the legal foundation of modern national
+  sports-TV economics, including league-wide broadcast deals and the territorial
+  structure that produces local blackouts. The statutory anchor of the
+  broadcast/IP issue area: the exemption that later blackout-reform bills (the
+  FANS Act; the Stop Sports Blackouts Act) seek to condition or narrow.
+relevance_source_url: "https://www.congress.gov/bill/87th-congress/house-bill/9096"
+sources:
+  - description: "Congress.gov bill page — Sports Broadcasting Act of 1961, H.R.9096 (87th); became Public Law 87-331"
+    url: "https://www.congress.gov/bill/87th-congress/house-bill/9096"
+    accessed: 2026-06-08
+change_log:
+  - date: 2026-06-08
+    change: "Indexed as a Phase 3 curated bill (broadcast_ip_blackout) — the Sports Broadcasting Act anchor; verified title + enactment (P.L. 87-331) against api.congress.gov v3."

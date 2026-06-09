@@ -90,7 +90,10 @@ Run log (counts, snapshot path, extract label) and the migration trail.
   `SUPERSEDED` are excluded from it.
 - The federal `master.db` is never written by the state pipeline, and vice versa.
 
-## Known limitations (CA pilot)
+## Known limitations
+
+(The first two are CAL-ACCESS-specific, from the California pilot; the rest are
+general to the multi-state layer.)
 
 - **CAL-ACCESS double-reporting.** A single real contribution can be filed more than
   once. `fetch_calaccess.dedupe_receipts` folds the two safe cases — amendments

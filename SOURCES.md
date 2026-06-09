@@ -115,6 +115,15 @@ GOVERNANCE.md §6).
   Tier-2 data: it tells us *who* a candidate id is, never *what* they voted or
   *whether* a donation occurred. The subset of FEC ids present in our donations is
   cross-checked against OpenFEC (Tier 1) before use.
+- **`unitedstates/congress-legislators` committee files** (`committees-current.yaml`
+  + `committee-membership-current.yaml`). The current-congress roster of who sits
+  on which committee, keyed by `thomas_id` (e.g. SSJU, HSWM) with member `bioguide`
+  ids. Powers the `--via-committee` join (donations → current members of a bill's
+  committee of referral). **Current snapshot only — the upstream files carry no
+  membership history**, so the join is guarded to bills of the current congress
+  (`committees.congress`); a present-day member is never asserted to have handled a
+  historical bill. A bill's committee(s) of referral come from the Congress.gov
+  `/bill/{c}/{type}/{n}/committees` endpoint (Tier 1).
 
 ### Tier 3: Cross-reference only
 

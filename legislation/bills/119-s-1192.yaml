@@ -1,0 +1,20 @@
+bill_id: 119-s-1192
+congress: 119
+bill_type: s
+number: 1192
+mlb_issue_area: stadium_financing
+relevance_basis: >-
+  No Tax Subsidies for Stadiums Act of 2025. Current-congress Senate reintroduction
+  of the effort to end tax-exempt bond financing for professional sports stadiums
+  by amending the Internal Revenue Code. Sponsored by Sen. James Lankford (R-OK);
+  read twice and referred to the Committee on Finance on 2025-03-27, pending with
+  no roll-call vote as indexed. Continues the line begun by S.1342 / H.R.811
+  (115th); the live (119th Congress) entry for the stadium-financing issue area.
+relevance_source_url: "https://www.congress.gov/bill/119th-congress/senate-bill/1192"
+sources:
+  - description: "Congress.gov bill page — No Tax Subsidies for Stadiums Act of 2025, S.1192 (119th)"
+    url: "https://www.congress.gov/bill/119th-congress/senate-bill/1192"
+    accessed: 2026-06-08
+change_log:
+  - date: 2026-06-08
+    change: "Indexed as a Phase 3 curated bill (stadium_financing) — live 119th-Congress Senate entry; verified sponsor + latest action against api.congress.gov v3."

@@ -84,9 +84,11 @@ Answer it from the contributor block in the raw payload, not from the name
 alone. The single most important lesson from the triage sessions:
 
 > **Disambiguate by city + employer + title, never by name.** Same-named
-> relatives (father/son, Jr./III) and doppelgängers all share the normalized
-> name. The classifier strips middle initials and treats the name as a gate,
-> not as proof — so the *signals* are what separate the people.
+> relatives (father/son, Jr./III) and doppelgängers share the owner's name.
+> The classifier treats the name as a gate, not as proof: it *does* use middle
+> initials as a discriminator where both sides carry one ("John P." ≠ "John
+> S."), but anyone matching a *bare* variant still clears the gate — so the
+> *signals* are what actually separate the people.
 
 Worked cases from the archive (see PROVENANCE_LOG):
 
@@ -99,7 +101,10 @@ Worked cases from the archive (see PROVENANCE_LOG):
   advisor doppelgänger of the same name.
 - **Middleton** — father John **S.** (Staubus, owner) vs son John **P.**
   (Powers, an independent major federal donor at Vertigo Entertainment). The
-  records *carry* the middle initial; the classifier just doesn't preserve it.
+  matcher *does* separate conflicting initials ("John P." ≠ "John S."), but the
+  owner keeps a bare `"John Middleton"` variant for recall and the son's records
+  match *that* — so the split still needs `exclude`, not the initials rule. See
+  [middle initials](#middle-initials--how-matching-handles-them) below.
 
 ---
 
@@ -141,12 +146,13 @@ else (different employer/city/title). Add their distinctive employer string to
 Only after you've *confirmed* they're a different person. This is a §1.7
 deliberate edit with a change_log entry.
 
-### (c) A same-named **relative** the classifier can't separate by name → **`exclude`**
+### (c) A same-named **relative** a signal edit can't safely separate → **`exclude`**
 
-When the records are a relative's (son, spouse) and the only thing
-distinguishing them is a middle initial — which `normalize_name` strips — a
-signal edit can't safely separate them. Drop the relative's specific
-transactions:
+When the records are a relative's (son, spouse) and a signal edit can't cleanly
+separate them — typically because the owner keeps a *bare* name variant the
+relative's records also match (so the middle-initial discriminator never bites;
+see [middle initials](#middle-initials--how-matching-handles-them)) — drop the
+relative's specific transactions:
 
 ```
 python -m scripts.cli exclude <txn_id> <slug> --reason "…" --source "…"
@@ -157,9 +163,10 @@ queued), survives reclassify, and is reversible with `unexclude`. It's the
 negative counterpart of `attribute`.
 
 > Prefer a `related_entities` entry (which routes the relative's rows to *their*
-> slug) when the relative is separable. Today they often aren't, because the
-> classifier collapses middle initials — see the [known limitation](#known-limitation-middle-initials)
-> below. Until that's fixed, `exclude` is the honest interim tool.
+> slug) when the relative is cleanly separable — e.g. their records consistently
+> carry a *conflicting* middle initial and the owner has no bare variant. When a
+> bare variant exists for recall, the relative's rows clear the name gate anyway
+> and `exclude` is the honest tool — see [middle initials](#middle-initials--how-matching-handles-them) below.
 
 ### (d) A single owner row the rules can't reach → **`attribute`**
 
@@ -310,18 +317,39 @@ Document the calibration result in PROVENANCE_LOG.md.
 
 ---
 
-## Known limitation: middle initials
+## Middle initials — how matching handles them
 
-`normalize_name` (`scripts/resolve_entities.py`) deliberately drops single-char
-middle-initial tokens so "Steven A Cohen" and "Steven Cohen" share a canonical
-form. The cost: a father/son pair distinguished *only* by middle initial (John
-**S.** vs John **P.** Middleton) is indistinguishable to the matcher, so the
-son can't be given his own `related_entities` slug — he has to be handled with
-`exclude` (disposition (c)) or a negative employer signal.
+Middle initials are **optional but discriminating** (VERIFICATION.md §"Name
+normalization"). `normalize_name` (`scripts/resolve_entities.py`) strips a
+single-char middle token from the canonical first+last form — so "Steven A
+Cohen" and "Steven Cohen" share a form — but it *also* returns those initials
+separately, and `names_match` calls `_middle_initials_compatible` to use them as
+a discriminator. The rule:
 
-Preserving middle initials in matching is the planned fix that would let such
-relatives become properly tracked entities and retire those workarounds. Until
-then, the dispositions above are the honest interim handling.
+- either side has **no** initial → compatible (a bare "John Middleton" matches
+  "John P." and "John S." alike);
+- both carry an initial and they **share** one → compatible;
+- both carry an initial and they're **disjoint** → **incompatible** ("John P.
+  Middleton" does not match the variant "John S. Middleton").
+
+So a record whose initial conflicts with *every* variant it could hit is held
+out, and a separable relative (consistently filed with a conflicting initial)
+*can* be routed to their own `related_entities` slug.
+
+**The bare-variant trap.** This discriminator only bites when **both** the
+record and the matched variant carry conflicting initials. Owners typically keep
+a *bare* variant for recall — `middleton-john.yaml` lists `"John Middleton"`
+alongside `"John S. Middleton"` — and an empty initial is compatible with
+anything. So a "John P. Middleton" record still matches the bare `"John
+Middleton"` variant and routes to the owner regardless of the initials rule.
+That is why the Middleton son still needs `exclude` (disposition (c)): not
+because the matcher *can't* tell "John P." from "John S.", but because the
+owner's bare variant re-admits him through the gate.
+
+Practical consequence: a relative becomes a clean `related_entities` entry only
+when their records carry a conflicting initial **and** the owner's variant list
+has no bare form for those records to fall back onto. Otherwise `exclude` (or a
+negative employer signal) is the honest tool.
 
 ---
 
@@ -331,11 +359,17 @@ then, the dispositions above are the honest interim handling.
 |---|---|
 | Real owner rows missing a signal | edit YAML → `reclassify` |
 | Confirmed same-named different person | `negative_signals.employers` → `reclassify` |
-| Relative separable only by middle initial | `exclude <txn> <slug>` |
+| Relative re-admitted by a bare name variant | `exclude <txn> <slug>` |
 | One owner row the rules can't reach | `attribute <txn> <slug>` |
 | Positively-identified stranger in the queue | `resolve --verdict DISCARDED` / `bulk-discard` |
 | Can't tell | leave UNCERTAIN |
 
 All mutating commands snapshot `master.db` + log to PROVENANCE_LOG and are
-reversible. `audit`, `sample`, `review`, `raw-coverage`, `validate` are
-read-only.
+reversible. `audit`, `queue-stats`, `sample`, `review`, `raw-coverage`,
+`validate` are read-only.
+
+> **`queue-stats`** is the wide, cross-owner counterpart to `audit <slug>`: a
+> read-only review-queue *burndown* across every owner and every live state —
+> open vs resolved counts, per-owner P/C ratio and last-ingestion age, and
+> open-reason histograms. Run it to see *where* the adjudication work is
+> concentrated before drilling into a single owner with `audit`.

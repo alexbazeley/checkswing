@@ -105,6 +105,19 @@ class CongressClient:
         )
         return payload.get("cosponsors") or [], raw_path
 
+    def fetch_bill_committees(self, congress: int, bill_type: str, number: int) -> tuple[list[dict], Path]:
+        """GET /bill/{congress}/{type}/{number}/committees. Returns (committees, raw_path).
+
+        These are the committee(s) of referral — the join target for
+        committee-membership donation surfaces.
+        """
+        path = f"/bill/{congress}/{bill_type.lower()}/{number}/committees"
+        payload = self._request(path, params={"limit": 250})
+        raw_path = self._persist_raw(
+            f"committees-{congress}-{bill_type.lower()}-{number}", path, payload
+        )
+        return payload.get("committees") or [], raw_path
+
 
 def parse_bill(raw: dict, *, raw_payload_path: str | None = None) -> dict:
     """Parse a /bill response into bills-table fields (the FEC-neutral subset).
@@ -166,4 +179,42 @@ def parse_sponsors(raw_bill: dict, cosponsors: list[dict]) -> list[dict]:
         if bid and ("cosponsor", bid) not in seen and ("sponsor", bid) not in seen:
             seen.add(("cosponsor", bid))
             rows.append({"bioguide_id": bid, "role": "cosponsor"})
+    return rows
+
+
+def _system_code_to_thomas_id(system_code: str | None) -> str | None:
+    """Map a Congress.gov committee systemCode to a congress-legislators thomas_id.
+
+    Full-committee codes are the thomas_id lower-cased with a trailing '00'
+    (e.g. ssju00 → SSJU); subcommittee codes carry a non-zero suffix (ssju01).
+    Stripping the trailing two digits and upper-casing yields the parent full
+    committee, which is the membership-join target. Returns None if unmappable.
+    """
+    if not system_code or len(system_code) < 3:
+        return None
+    return system_code[:-2].upper() if system_code[-2:].isdigit() else system_code.upper()
+
+
+def parse_bill_committees(committees: list[dict]) -> list[dict]:
+    """Parse the /bill/.../committees list into bill_committees rows.
+
+    Returns {system_code, thomas_id, chamber, name}, deduped on system_code.
+    """
+    rows: list[dict] = []
+    seen: set[str] = set()
+    for c in committees or []:
+        if not isinstance(c, dict):
+            continue
+        sc = c.get("systemCode")
+        if not sc or sc in seen:
+            continue
+        seen.add(sc)
+        rows.append(
+            {
+                "system_code": sc,
+                "thomas_id": _system_code_to_thomas_id(sc),
+                "chamber": (c.get("chamber") or "").lower() or None,
+                "name": c.get("name"),
+            }
+        )
     return rows

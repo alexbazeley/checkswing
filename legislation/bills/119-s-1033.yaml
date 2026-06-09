@@ -1,0 +1,22 @@
+bill_id: 119-s-1033
+congress: 119
+bill_type: s
+number: 1033
+mlb_issue_area: sports_betting
+relevance_basis: >-
+  SAFE Bet Act (Supporting Affordability and Fairness with Every Bet Act).
+  Current-congress Senate bill to establish federal minimum standards for legal
+  sports betting — covering advertising, affordability checks, and consumer
+  protections — in the post-PASPA, state-by-state market. Sponsored by Sen.
+  Richard Blumenthal (D-CT); read twice and referred to the Committee on the
+  Judiciary on 2025-03-13, pending with no roll-call vote as indexed. The Senate
+  companion to H.R.2087 (119th) and the live federal sports-betting-standards
+  effort.
+relevance_source_url: "https://www.congress.gov/bill/119th-congress/senate-bill/1033"
+sources:
+  - description: "Congress.gov bill page — SAFE Bet Act, S.1033 (119th)"
+    url: "https://www.congress.gov/bill/119th-congress/senate-bill/1033"
+    accessed: 2026-06-08
+change_log:
+  - date: 2026-06-08
+    change: "Indexed as a Phase 3 curated bill (sports_betting) — live 119th-Congress Senate SAFE Bet Act; verified sponsor + latest action against api.congress.gov v3."
