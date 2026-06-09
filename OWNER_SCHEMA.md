@@ -124,6 +124,24 @@ even strong-signal rows to UNCERTAIN). Opt-in per owner; can also be set on a
 `related_entities` block. Applies equally to federal (`master.db`) and state
 (`state.db`) classification, since both share the classifier.
 
+### `exclude_state_jurisdictions` (optional list of state codes, default none)
+
+```yaml
+exclude_state_jurisdictions:
+- "FL"
+```
+
+Skip this owner entirely when ingesting the named **state** jurisdiction(s). The
+case for it: a state portal with **no employer field** (e.g. FL-DOE) can only reach
+CONFIRMED for some owners via a strong ZIP — but a dense-metro ZIP (SF 94111,
+NYC 10001) conflates same-named strangers, and without an employer signal to
+corroborate, the match is doppelganger-contaminated. Rather than pollute CONFIRMED,
+the owner opts out of that one jurisdiction (federal `master.db` and every other
+state are untouched). This is the per-owner, durable form of NY's selective
+ingestion (only the cleanly-resolvable owners). Used by `fisher-john` for `FL`
+(SF-94111 has multiple "John Fisher" filers; FL discloses no employer to separate
+the Pisces Inc owner from the rest).
+
 ### `related_entities` (optional but encouraged)
 
 Other people or organizations whose donations we also track, attributed to their own slug (never silently to the owner).

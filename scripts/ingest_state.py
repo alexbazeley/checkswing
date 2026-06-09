@@ -300,6 +300,7 @@ def ingest_state_bulk(
     from .state_sources import get_source
 
     src = get_source(state_code)
+    owners = filter_excluded_owners(owners, src.code)
     if src.requires_input:
         input_path = Path(input_path)
         try:
@@ -339,6 +340,25 @@ def ingest_state_bulk(
             )
         )
     return results
+
+
+def filter_excluded_owners(
+    owners: list[tuple[str, dict]], state_code: str
+) -> list[tuple[str, dict]]:
+    """Drop owners that opt out of this jurisdiction via `exclude_state_jurisdictions`.
+
+    An owner whose only reachable CONFIRMED path in a state is a strong ZIP can be
+    over-matched in an **employer-less** portal (e.g. FL discloses no employer, so a
+    dense-metro ZIP like SF 94111 conflates same-named strangers — see fisher-john).
+    Rather than pollute CONFIRMED, such owners list the jurisdiction code in
+    `exclude_state_jurisdictions` and are skipped for that state only (mirrors NY's
+    selective ingestion of just the cleanly-resolvable owners).
+    """
+    code = (state_code or "").upper()
+    return [
+        (slug, o) for slug, o in owners
+        if code not in {(j or "").upper() for j in (o.get("exclude_state_jurisdictions") or [])}
+    ]
 
 
 def reclassify_state_entity(

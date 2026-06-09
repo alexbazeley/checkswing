@@ -54,6 +54,7 @@ verifying_signals:
   - "owner"
   - "investor"
   - "investment manager"
+  - "investment"               # FL-DOE occupations "INVESTMENTS" / "INVESTMENT BROKER" (Naples, Private Capital Mgmt)
   - "businessman"
   - "ceo"
   - "retired"

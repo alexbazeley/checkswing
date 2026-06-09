@@ -27,6 +27,7 @@ verifying_signals:
   cities:
   - "jacksonville"             # current primary (Avondale neighborhood, since Jan 2024)
   - "ponte vedra beach"        # former primary (sold Dec 2025); covers 2016-2025 history
+  - "jacksonville beach"       # FL-DOE filings list this Duval-county suburb address (2011-2014)
   states:
   - "FL"
   employers:
@@ -40,6 +41,7 @@ verifying_signals:
   - "chairman"
   - "founder"
   - "homebuilder"
+  - "builder"                  # FL-DOE occupation "HOME BUILDER" (space form) + "BUILDER"
   - "real estate developer"
   - "executive"
   - "director"

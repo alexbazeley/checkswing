@@ -73,6 +73,9 @@ _AZ_DATASET_URL = "https://seethemoney.az.gov/"
 # contributions CSV. The export carries no per-contribution id (we key on a content
 # hash), so there is no per-row deep link; cite the bulk-download page.
 _MN_DATASET_URL = "https://cfb.mn.gov/reports-and-data/self-help/data-downloads/campaign-finance/"
+# FL Division of Elections contributions query — the source of the tab-delimited
+# export. No per-contribution id (content-hash keyed), so cite the query page.
+_FL_DATASET_URL = "https://dos.elections.myflorida.com/campaign-finance/contributions/"
 
 
 def _source_links(source: str, filing_id: str | None, tran_id: str | None) -> tuple[str | None, str | None]:
@@ -109,6 +112,8 @@ def _source_links(source: str, filing_id: str | None, tran_id: str | None) -> tu
         return (None, _AZ_DATASET_URL)
     if src == "MN-CFB":
         return (None, _MN_DATASET_URL)
+    if src == "FL-DOE":
+        return (None, _FL_DATASET_URL)
     return (None, None)
 
 

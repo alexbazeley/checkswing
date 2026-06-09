@@ -8327,3 +8327,1305 @@ generated end-to-end from the joined data") is satisfied.
 - **uncertain_count**: `0`
 - **snapshot_path**: `data/snapshots/2026-06-08T23-50-37Z__d754a4ed.db`
 - **notes**: scanned=257
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `599c4e43`
+- **entity_slug**: `angelos-john-p`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `33`
+- **confirmed_count**: `1`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-23-56Z__599c4e43.db`
+- **notes**: scanned=33
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `84cd510c`
+- **entity_slug**: `attanasio-mark`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `18`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-23-56Z__84cd510c.db`
+- **notes**: scanned=18
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `5d855e8c`
+- **entity_slug**: `castellini-bob`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `2`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-23-56Z__5d855e8c.db`
+- **notes**: scanned=2
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `0026b8f1`
+- **entity_slug**: `castellini-phil`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `2`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-23-56Z__0026b8f1.db`
+- **notes**: scanned=2
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `310cb7ca`
+- **entity_slug**: `cohen-steven`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `4786`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `84`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-23-56Z__310cb7ca.db`
+- **notes**: scanned=4786
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `37cae73d`
+- **entity_slug**: `crane-jim`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `972`
+- **confirmed_count**: `0`
+- **probable_count**: `1`
+- **uncertain_count**: `44`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-23-56Z__37cae73d.db`
+- **notes**: scanned=972
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `60476543`
+- **entity_slug**: `davis-ray`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `4568`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-23-56Z__60476543.db`
+- **notes**: scanned=4568
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `6840e1f3`
+- **entity_slug**: `dewitt-bill`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `457`
+- **confirmed_count**: `1`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-23-57Z__6840e1f3.db`
+- **notes**: scanned=457
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `c0e9bc2c`
+- **entity_slug**: `dolan-paul`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `643`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `3`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-23-57Z__c0e9bc2c.db`
+- **notes**: scanned=643
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `a5d00da3`
+- **entity_slug**: `feliciano-jose`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `115`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-23-57Z__a5d00da3.db`
+- **notes**: scanned=115
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `1f713a7e`
+- **entity_slug**: `fisher-john`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `3357`
+- **confirmed_count**: `27`
+- **probable_count**: `0`
+- **uncertain_count**: `65`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-23-57Z__1f713a7e.db`
+- **notes**: scanned=3357
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `811610b1`
+- **entity_slug**: `henry-john`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `2568`
+- **confirmed_count**: `0`
+- **probable_count**: `2`
+- **uncertain_count**: `14`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-23-57Z__811610b1.db`
+- **notes**: scanned=2568
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `9c400126`
+- **entity_slug**: `ilitch-chris`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `1`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `1`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-23-57Z__9c400126.db`
+- **notes**: scanned=1
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `1556431d`
+- **entity_slug**: `johnson-greg`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `4521`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-23-57Z__1556431d.db`
+- **notes**: scanned=4521
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `1c631dd2`
+- **entity_slug**: `kendrick-ken`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `375`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-23-57Z__1c631dd2.db`
+- **notes**: scanned=375
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `12b5985b`
+- **entity_slug**: `lerner-mark`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `752`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `4`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-23-57Z__12b5985b.db`
+- **notes**: scanned=752
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `bc80bf77`
+- **entity_slug**: `malone-john`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `1348`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `13`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-23-57Z__bc80bf77.db`
+- **notes**: scanned=1348
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `a785dd78`
+- **entity_slug**: `mcguirk-terry`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `193`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `2`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-23-57Z__a785dd78.db`
+- **notes**: scanned=193
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `97ab0d3b`
+- **entity_slug**: `middleton-john`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `450`
+- **confirmed_count**: `0`
+- **probable_count**: `1`
+- **uncertain_count**: `26`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-23-57Z__97ab0d3b.db`
+- **notes**: scanned=450
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `dfc94021`
+- **entity_slug**: `monfort-dick`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `40`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-23-57Z__dfc94021.db`
+- **notes**: scanned=40
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `c1e235b4`
+- **entity_slug**: `moreno-arte`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `491`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `1`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-23-57Z__c1e235b4.db`
+- **notes**: scanned=491
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `8906d141`
+- **entity_slug**: `nutting-bob`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `28`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `6`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-23-57Z__8906d141.db`
+- **notes**: scanned=28
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `4cd5d005`
+- **entity_slug**: `ricketts-tom`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `110`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `1`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-23-57Z__4cd5d005.db`
+- **notes**: scanned=110
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `0b9006c0`
+- **entity_slug**: `rubenstein-david`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `825`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-23-57Z__0b9006c0.db`
+- **notes**: scanned=825
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `4192a1ef`
+- **entity_slug**: `seidler-john`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `45`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-23-57Z__4192a1ef.db`
+- **notes**: scanned=45
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `cadf034c`
+- **entity_slug**: `sherman-bruce`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `1551`
+- **confirmed_count**: `2`
+- **probable_count**: `1`
+- **uncertain_count**: `5`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-23-57Z__cadf034c.db`
+- **notes**: scanned=1551
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `2f625923`
+- **entity_slug**: `sherman-john`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `1551`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `10`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-23-57Z__2f625923.db`
+- **notes**: scanned=1551
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `2e82c4fe`
+- **entity_slug**: `simpson-bob`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `1753`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `2`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-23-57Z__2e82c4fe.db`
+- **notes**: scanned=1753
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `8684536a`
+- **entity_slug**: `stanton-john`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `653`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `47`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-23-57Z__8684536a.db`
+- **notes**: scanned=653
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `3ec521d0`
+- **entity_slug**: `steinbrenner-hal`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `46`
+- **confirmed_count**: `2`
+- **probable_count**: `2`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-23-57Z__3ec521d0.db`
+- **notes**: scanned=46
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `95dad988`
+- **entity_slug**: `walter-mark`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `2569`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `1`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-23-57Z__95dad988.db`
+- **notes**: scanned=2569
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `6697ec63`
+- **entity_slug**: `zalupski-patrick`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `6`
+- **confirmed_count**: `3`
+- **probable_count**: `1`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-23-57Z__6697ec63.db`
+- **notes**: scanned=6
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `b1416608`
+- **entity_slug**: `angelos-john-p`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `33`
+- **confirmed_count**: `1`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-30-45Z__b1416608.db`
+- **notes**: scanned=33
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `09ba66c0`
+- **entity_slug**: `attanasio-mark`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `18`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-30-45Z__09ba66c0.db`
+- **notes**: scanned=18
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `b909517e`
+- **entity_slug**: `castellini-bob`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `2`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-30-45Z__b909517e.db`
+- **notes**: scanned=2
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `146b52ff`
+- **entity_slug**: `castellini-phil`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `2`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-30-45Z__146b52ff.db`
+- **notes**: scanned=2
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `4b3195a8`
+- **entity_slug**: `cohen-steven`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `4786`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `84`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-30-45Z__4b3195a8.db`
+- **notes**: scanned=4786
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `77ca9515`
+- **entity_slug**: `crane-jim`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `972`
+- **confirmed_count**: `0`
+- **probable_count**: `1`
+- **uncertain_count**: `44`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-30-46Z__77ca9515.db`
+- **notes**: scanned=972
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `a7d21229`
+- **entity_slug**: `davis-ray`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `4568`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-30-46Z__a7d21229.db`
+- **notes**: scanned=4568
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `5d1c8405`
+- **entity_slug**: `dewitt-bill`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `457`
+- **confirmed_count**: `1`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-30-46Z__5d1c8405.db`
+- **notes**: scanned=457
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `5975277d`
+- **entity_slug**: `dolan-paul`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `643`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `3`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-30-46Z__5975277d.db`
+- **notes**: scanned=643
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `bceb240b`
+- **entity_slug**: `feliciano-jose`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `115`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-30-46Z__bceb240b.db`
+- **notes**: scanned=115
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `0c0e7ad4`
+- **entity_slug**: `henry-john`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `2568`
+- **confirmed_count**: `0`
+- **probable_count**: `2`
+- **uncertain_count**: `14`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-30-46Z__0c0e7ad4.db`
+- **notes**: scanned=2568
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `9e8db903`
+- **entity_slug**: `ilitch-chris`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `1`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `1`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-30-46Z__9e8db903.db`
+- **notes**: scanned=1
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `fc6271fb`
+- **entity_slug**: `johnson-greg`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `4521`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-30-46Z__fc6271fb.db`
+- **notes**: scanned=4521
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `81e06780`
+- **entity_slug**: `kendrick-ken`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `375`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-30-46Z__81e06780.db`
+- **notes**: scanned=375
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `a8b46d1e`
+- **entity_slug**: `lerner-mark`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `752`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `4`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-30-46Z__a8b46d1e.db`
+- **notes**: scanned=752
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `b6e75eef`
+- **entity_slug**: `malone-john`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `1348`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `13`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-30-46Z__b6e75eef.db`
+- **notes**: scanned=1348
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `3b0a0b9e`
+- **entity_slug**: `mcguirk-terry`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `193`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `2`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-30-46Z__3b0a0b9e.db`
+- **notes**: scanned=193
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `d173af3a`
+- **entity_slug**: `middleton-john`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `450`
+- **confirmed_count**: `0`
+- **probable_count**: `1`
+- **uncertain_count**: `26`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-30-46Z__d173af3a.db`
+- **notes**: scanned=450
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `26aee8b8`
+- **entity_slug**: `monfort-dick`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `40`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-30-46Z__26aee8b8.db`
+- **notes**: scanned=40
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `4d1b144f`
+- **entity_slug**: `moreno-arte`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `491`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `1`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-30-46Z__4d1b144f.db`
+- **notes**: scanned=491
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `c8d5a8ab`
+- **entity_slug**: `nutting-bob`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `28`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `6`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-30-46Z__c8d5a8ab.db`
+- **notes**: scanned=28
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `09383232`
+- **entity_slug**: `ricketts-tom`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `110`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `1`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-30-46Z__09383232.db`
+- **notes**: scanned=110
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `87c1ab56`
+- **entity_slug**: `rubenstein-david`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `825`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-30-46Z__87c1ab56.db`
+- **notes**: scanned=825
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `128a2765`
+- **entity_slug**: `seidler-john`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `45`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-30-46Z__128a2765.db`
+- **notes**: scanned=45
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `efe51413`
+- **entity_slug**: `sherman-bruce`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `1551`
+- **confirmed_count**: `2`
+- **probable_count**: `1`
+- **uncertain_count**: `5`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-30-46Z__efe51413.db`
+- **notes**: scanned=1551
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `33dfdc9e`
+- **entity_slug**: `sherman-john`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `1551`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `10`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-30-46Z__33dfdc9e.db`
+- **notes**: scanned=1551
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `4841637d`
+- **entity_slug**: `simpson-bob`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `1753`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `2`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-30-46Z__4841637d.db`
+- **notes**: scanned=1753
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `9774895b`
+- **entity_slug**: `stanton-john`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `653`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `47`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-30-46Z__9774895b.db`
+- **notes**: scanned=653
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `7016ef4e`
+- **entity_slug**: `steinbrenner-hal`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `46`
+- **confirmed_count**: `2`
+- **probable_count**: `2`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-30-46Z__7016ef4e.db`
+- **notes**: scanned=46
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `72ebe3fa`
+- **entity_slug**: `walter-mark`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `2569`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `1`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-30-46Z__72ebe3fa.db`
+- **notes**: scanned=2569
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `232c0109`
+- **entity_slug**: `zalupski-patrick`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `6`
+- **confirmed_count**: `3`
+- **probable_count**: `1`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-30-46Z__232c0109.db`
+- **notes**: scanned=6
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `5d96bbe9`
+- **entity_slug**: `angelos-john-p`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `33`
+- **confirmed_count**: `1`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-34-49Z__5d96bbe9.db`
+- **notes**: scanned=33
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `6d9aead5`
+- **entity_slug**: `attanasio-mark`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `18`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-34-49Z__6d9aead5.db`
+- **notes**: scanned=18
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `9250c919`
+- **entity_slug**: `castellini-bob`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `2`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-34-49Z__9250c919.db`
+- **notes**: scanned=2
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `8cd0fd30`
+- **entity_slug**: `castellini-phil`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `2`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-34-49Z__8cd0fd30.db`
+- **notes**: scanned=2
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `23f27fe0`
+- **entity_slug**: `cohen-steven`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `4786`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `84`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-34-49Z__23f27fe0.db`
+- **notes**: scanned=4786
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `f66b230d`
+- **entity_slug**: `crane-jim`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `972`
+- **confirmed_count**: `0`
+- **probable_count**: `1`
+- **uncertain_count**: `44`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-34-50Z__f66b230d.db`
+- **notes**: scanned=972
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `8bedb994`
+- **entity_slug**: `davis-ray`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `4568`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-34-50Z__8bedb994.db`
+- **notes**: scanned=4568
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `6f0eafc2`
+- **entity_slug**: `dewitt-bill`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `457`
+- **confirmed_count**: `1`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-34-50Z__6f0eafc2.db`
+- **notes**: scanned=457
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `575605cf`
+- **entity_slug**: `dolan-paul`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `643`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `3`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-34-50Z__575605cf.db`
+- **notes**: scanned=643
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `786dc2c0`
+- **entity_slug**: `feliciano-jose`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `115`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-34-50Z__786dc2c0.db`
+- **notes**: scanned=115
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `d447eaaf`
+- **entity_slug**: `ilitch-chris`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `1`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `1`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-34-50Z__d447eaaf.db`
+- **notes**: scanned=1
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `68833f1e`
+- **entity_slug**: `johnson-greg`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `4521`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-34-50Z__68833f1e.db`
+- **notes**: scanned=4521
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `d107a27b`
+- **entity_slug**: `kendrick-ken`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `375`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-34-50Z__d107a27b.db`
+- **notes**: scanned=375
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `e6469d9b`
+- **entity_slug**: `lerner-mark`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `752`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `4`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-34-50Z__e6469d9b.db`
+- **notes**: scanned=752
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `6757c517`
+- **entity_slug**: `malone-john`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `1348`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `13`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-34-50Z__6757c517.db`
+- **notes**: scanned=1348
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `d1b12cfd`
+- **entity_slug**: `mcguirk-terry`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `193`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `2`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-34-50Z__d1b12cfd.db`
+- **notes**: scanned=193
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `e34e568c`
+- **entity_slug**: `middleton-john`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `450`
+- **confirmed_count**: `0`
+- **probable_count**: `1`
+- **uncertain_count**: `26`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-34-50Z__e34e568c.db`
+- **notes**: scanned=450
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `7cc33000`
+- **entity_slug**: `monfort-dick`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `40`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-34-50Z__7cc33000.db`
+- **notes**: scanned=40
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `dba0ba88`
+- **entity_slug**: `moreno-arte`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `491`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `1`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-34-50Z__dba0ba88.db`
+- **notes**: scanned=491
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `e56e36ab`
+- **entity_slug**: `nutting-bob`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `28`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `6`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-34-50Z__e56e36ab.db`
+- **notes**: scanned=28
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `8d56d9f1`
+- **entity_slug**: `ricketts-tom`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `110`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `1`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-34-50Z__8d56d9f1.db`
+- **notes**: scanned=110
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `d77f7aff`
+- **entity_slug**: `rubenstein-david`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `825`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-34-50Z__d77f7aff.db`
+- **notes**: scanned=825
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `bee99335`
+- **entity_slug**: `seidler-john`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `45`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-34-50Z__bee99335.db`
+- **notes**: scanned=45
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `d0e0d42a`
+- **entity_slug**: `sherman-bruce`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `1551`
+- **confirmed_count**: `2`
+- **probable_count**: `1`
+- **uncertain_count**: `5`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-34-50Z__d0e0d42a.db`
+- **notes**: scanned=1551
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `89dc6b36`
+- **entity_slug**: `sherman-john`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `1551`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `10`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-34-50Z__89dc6b36.db`
+- **notes**: scanned=1551
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `df161b7a`
+- **entity_slug**: `simpson-bob`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `1753`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `2`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-34-50Z__df161b7a.db`
+- **notes**: scanned=1753
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `37923139`
+- **entity_slug**: `stanton-john`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `653`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `47`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-34-50Z__37923139.db`
+- **notes**: scanned=653
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `0c11c214`
+- **entity_slug**: `steinbrenner-hal`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `46`
+- **confirmed_count**: `2`
+- **probable_count**: `2`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-34-50Z__0c11c214.db`
+- **notes**: scanned=46
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `05d6c092`
+- **entity_slug**: `walter-mark`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `2569`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `1`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-34-50Z__05d6c092.db`
+- **notes**: scanned=2569
+
+### 2026-06-09 — STATE_INGESTION
+
+- **run_id**: `13503866`
+- **entity_slug**: `zalupski-patrick`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `6`
+- **confirmed_count**: `3`
+- **probable_count**: `1`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-06-09T00-34-50Z__13503866.db`
+- **notes**: scanned=6

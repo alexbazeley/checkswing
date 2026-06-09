@@ -107,7 +107,7 @@ Run log (counts, snapshot path, extract label) and the migration trail.
   them; only the filer name/type is resolved (from the cover page).
 - **Coverage is partial and per-state.** Live jurisdictions: CA (CAL-ACCESS), NY
   (NYSBOE), PA (PA-DOS), TX (TEC), IL (ISBE), WA (WA-PDC), CO (CO-TRACER), AZ (AZ-SOS),
-  MN (MN-CFB). Within CA, only contributions
+  MN (MN-CFB), FL (FL-DOE). Within CA, only contributions
   itemized in `RCPT_CD`; within TX, only itemized contributions in the TEC bulk export
   (`contribs_*` / `cont_ss` / `cont_t`). PA is gold-grade (employer + occupation) and
   multi-year — the ingest streams `contrib_*`/`filer_*` members from each per-year
@@ -126,5 +126,11 @@ Run log (counts, snapshot path, extract label) and the migration trail.
   transaction detail. MN is employer-and-ZIP-grade (no occupation, **no city/state**) —
   the ingest streams the single cumulative "all entities" contributions CSV from
   cfb.mn.gov; with no city/state the address-contradiction rule never fires, so a strong
-  ZIP or strong employer is the only confirming path (the NY model). Other states are
-  out until added one at a time via the `StateSource` registry (SOURCES.md §Phase 4).
+  ZIP or strong employer is the only confirming path (the NY model). FL is occupation-
+  and-city/zip-grade (**no employer**) and API-like — no bulk file; the ingest POSTs the
+  contributions query CGI per owner surname (`search_on=2`/`queryformat=2`) and parses
+  the TSV, recovering recipient party+office inline. Because FL has no employer to
+  corroborate a strong ZIP, owners whose only FL path is a dense-metro ZIP that
+  conflates same-named strangers (e.g. fisher-john/SF-94111) opt out via the owner-YAML
+  `exclude_state_jurisdictions` rather than pollute CONFIRMED. Other states are out
+  until added one at a time via the `StateSource` registry (SOURCES.md §Phase 4).

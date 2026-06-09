@@ -39,6 +39,18 @@ name_variants:
 # untouched. See change_log 2026-06-06 and OWNER_SCHEMA.md.
 city_state_alone_insufficient: true
 
+# Opt out of Florida (FL-DOE) ingestion. FL discloses NO employer field, so Fisher's
+# only reachable CONFIRMED path there is the strong ZIP 94111 — but 94111 is a dense
+# San Francisco financial-district ZIP that conflates multiple "John Fisher"s (our
+# Pisces Inc / One Maritime Plaza #1400 filer AND unrelated 147 Pacific Ave / 111 Pine
+# St / Clay St donors). Without the Pisces *employer* signal that corroborates 94111
+# federally + in CA, the FL match is doppelganger-contaminated, and the giving profile
+# ($500s to FL Democratic legislators) is inconsistent with the documented owner. So
+# Fisher is excluded from FL rather than polluting CONFIRMED (mirrors why NY ingested
+# only Cohen+Steinbrenner — the employer-less doppelganger problem).
+exclude_state_jurisdictions:
+- "FL"
+
 verifying_signals:
   cities:
     # San Francisco only (Tier 2 confirmed). Marin County hinted in some
