@@ -402,9 +402,17 @@ h3 { font-size: 15px; font-family: var(--sans); font-weight: 600; text-transform
   text-shadow: 0 1px 4px rgba(0,0,0,0.6);
 }
 @media (max-width: 720px) {
-  .hero-photo { min-height: 420px; height: 60vh; }
-  .hero-photo h1 { font-size: 40px; }
+  /* Let the photo hero grow with its copy and top-align it. Bottom-aligning a
+     hero whose copy is taller than the box pushed the eyebrow + first headline
+     line up behind the sticky masthead. min-height keeps it feeling
+     substantial; the inner padding clears the masthead and matches the 18px
+     mobile container gutter. */
+  .hero-photo { min-height: 360px; height: auto; max-height: none; align-items: flex-start; }
+  .hero-photo-inner { padding: 36px 18px 34px; }
+  .hero-photo h1 { font-size: 34px; }
   .hero-photo .deck { font-size: 16px; }
+  .hero-photo .eyebrow { margin-bottom: 14px; }
+  .hero-photo .meta { margin-top: 22px; }
 }
 
 /* ════════════════════════════════════════════════════════════════════════
@@ -535,8 +543,10 @@ section.block:last-child { border-bottom: 0; }
 .cycle-chart-axis > div { flex: 1; text-align: center; font-family: var(--mono); font-size: 11px; color: var(--ink-3); padding-top: 6px; }
 
 .legend {
-  display: flex; gap: 18px; font-size: 12px; color: var(--ink-2); margin-top: 16px;
+  display: flex; flex-wrap: wrap; gap: 8px 18px;
+  font-size: 12px; color: var(--ink-2); margin-top: 16px;
 }
+@media (max-width: 560px) { .legend { gap: 8px 14px; } }
 .legend-swatch { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 7px; vertical-align: -1px; }
 .legend-swatch.dem { background: var(--dem); }
 .legend-swatch.rep { background: var(--rep); }
@@ -814,6 +824,21 @@ section.block:last-child { border-bottom: 0; }
 @media (max-width: 880px) {
   .recent-row { grid-template-columns: 80px minmax(0, 1fr) 100px; gap: 12px; }
   .recent-chips { display: none; }
+}
+@media (max-width: 560px) {
+  /* Two-line stack — the donor→recipient flow gets the full width (so the
+     arrow no longer floats on its own line and names stop wrapping mid-word),
+     with date + amount on a tidy second line. */
+  .recent-row {
+    grid-template-columns: 1fr auto;
+    grid-template-areas: "flow flow" "date amount";
+    gap: 6px 12px;
+    padding: 14px 2px;
+    align-items: baseline;
+  }
+  .recent-flow   { grid-area: flow; font-size: 15px; }
+  .recent-date   { grid-area: date; align-self: center; }
+  .recent-amount { grid-area: amount; align-self: center; }
 }
 
 /* Block-head row with action button (eg "Download CSV") */
