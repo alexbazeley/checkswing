@@ -101,26 +101,41 @@ jobs:
 
       - name: Download Illinois State Board of Elections bulk export (~1 GB)
         # Public, no login/API key. Tab-delimited bulk files refreshed daily by ISBE.
-        # ISBE serves Receipts.txt (~1 GB) slowly and resets the HTTP/2 stream
-        # mid-transfer (curl 92), and it does NOT honour Range (416 */0) so a partial
-        # cannot resume — each attempt must complete in one pass. Mitigations:
-        #   --http1.1            avoids the HTTP/2 "stream not closed cleanly" reset
-        #   --retry-all-errors   retries the WHOLE transfer on any failure (no Range)
-        #   --speed-limit/-time  abort a stalled transfer fast so a retry fires instead
-        #                        of hanging for hours
+        # ISBE serves Receipts.txt (~1 GB) chronically slowly (~0.1 MB/s) and resets
+        # the HTTP/2 stream mid-transfer (curl 92), and it does NOT honour Range
+        # (416 */0) so a partial cannot resume — each attempt must complete in one
+        # pass. At ~0.1 MB/s a full pass is ~3-4 h, which blows the 90-min job budget.
+        # So IL is BEST-EFFORT on the cron: fail FAST and skip, never block the other
+        # 8 states. Backfill IL via a dedicated manual `workflow_dispatch` (longer).
+        #   --http1.1                 avoids the HTTP/2 "stream not closed cleanly" reset
+        #   --speed-limit/-time 150K  bail in ~30s if throughput stays below 150 KB/s
+        #                             (IL's steady ~0.1 MB/s crawl trips this immediately)
+        #   --max-time 1800           hard 30-min backstop so one host can't eat the budget
+        # continue-on-error + cleanup: on any failure, drop the partials and let the
+        # run proceed; the ingest step below is `if: hashFiles(...)`-guarded so it
+        # skips automatically when no complete Receipts.txt landed.
+        continue-on-error: true
         run: |
           mkdir -p data/raw/state/il
           for f in Committees.txt Receipts.txt; do
-            curl -fSL --http1.1 --retry 8 --retry-all-errors --retry-delay 10 \
-              --connect-timeout 30 --speed-limit 10000 --speed-time 60 \
+            curl -fSL --http1.1 --retry 3 --retry-all-errors --retry-delay 10 \
+              --connect-timeout 30 --speed-limit 150000 --speed-time 30 --max-time 1800 \
               -o "data/raw/state/il/$f" \
-              "https://downloads.elections.il.gov/$f"
+              "https://downloads.elections.il.gov/$f" || {
+                echo "::warning::IL bulk export too slow/unavailable this run — skipping IL (best-effort; backfill via manual dispatch)."
+                rm -f data/raw/state/il/Committees.txt data/raw/state/il/Receipts.txt
+                exit 1
+              }
           done
           ls -lh data/raw/state/il/
 
       - name: Ingest Illinois state contributions
         # Streams Receipts.txt line-by-line (no whole-file load); recipient joined
         # from Committees.txt; idempotent upsert keyed on the native receipt ID.
+        # Skipped automatically when the download above bailed (no Receipts.txt) so a
+        # chronically-throttled IL never blocks the other 8 states' commit.
+        if: ${{ hashFiles('data/raw/state/il/Receipts.txt') != '' }}
+        continue-on-error: true
         run: python -m scripts.cli ingest-state-bulk IL --input data/raw/state/il
 
       - name: Ingest Washington state contributions
