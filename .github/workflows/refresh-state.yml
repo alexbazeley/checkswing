@@ -51,16 +51,21 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Download CAL-ACCESS bulk export (~1.5 GB)
+        # best-effort: a CA outage drops the partial and skips CA, never the commit.
+        continue-on-error: true
         run: |
           mkdir -p data/raw/state/ca
           curl -fSL --retry 3 --retry-delay 15 \
             -o data/raw/state/ca/dbwebexport.zip \
-            https://campaignfinance.cdn.sos.ca.gov/dbwebexport.zip
+            https://campaignfinance.cdn.sos.ca.gov/dbwebexport.zip \
+            || { echo "::warning::CA CAL-ACCESS download failed — skipping CA this run."; rm -f data/raw/state/ca/dbwebexport.zip; exit 1; }
           ls -lh data/raw/state/ca/dbwebexport.zip
 
       - name: Ingest California state contributions
         # Streams RCPT_CD from the zip; idempotent upsert (new filings inserted,
         # amendments superseded). One pass over all pilot/active owners.
+        if: ${{ hashFiles('data/raw/state/ca/dbwebexport.zip') != '' }}
+        continue-on-error: true
         run: python -m scripts.cli ingest-state-ca --zip data/raw/state/ca/dbwebexport.zip
 
       - name: Download Pennsylvania DOS export (rolling 4-year window)
@@ -69,6 +74,9 @@ jobs:
         # frozen and already persisted in state.db, so we only re-pull the active
         # window (current + 3 prior). The idempotent content-hash upsert tops up
         # recent rows without disturbing the committed historical ingest.
+        # best-effort: per-year failures already self-clean; continue-on-error keeps
+        # an all-years-down PA (or the empty-glob `ls`) from blocking the commit.
+        continue-on-error: true
         run: |
           mkdir -p data/raw/state/pa
           CUR=$(date -u +%Y)
@@ -83,20 +91,27 @@ jobs:
       - name: Ingest Pennsylvania state contributions
         # Streams contrib_*/filer_* members directly from each per-year zip (no
         # extraction); idempotent upsert keyed on a content-hash tran id.
+        if: ${{ hashFiles('data/raw/state/pa/*.zip') != '' }}
+        continue-on-error: true
         run: python -m scripts.cli ingest-state-bulk PA --input data/raw/state/pa
 
       - name: Download Texas Ethics Commission bulk export (~1 GB)
         # Public, no login/API key. Refreshed ~daily by TEC.
+        # best-effort: a TEC outage drops the partial and skips TX, never the commit.
+        continue-on-error: true
         run: |
           mkdir -p data/raw/state/tx
           curl -fSL --retry 3 --retry-delay 15 \
             -o data/raw/state/tx/TEC_CF_CSV.zip \
-            https://prd.tecprd.ethicsefile.com/public/cf/public/TEC_CF_CSV.zip
+            https://prd.tecprd.ethicsefile.com/public/cf/public/TEC_CF_CSV.zip \
+            || { echo "::warning::TX TEC download failed — skipping TX this run."; rm -f data/raw/state/tx/TEC_CF_CSV.zip; exit 1; }
           ls -lh data/raw/state/tx/TEC_CF_CSV.zip
 
       - name: Ingest Texas state contributions
         # Streams the contribs_* / cont_ss / cont_t members from the zip (no
         # extraction); idempotent upsert keyed on the native contributionInfoId.
+        if: ${{ hashFiles('data/raw/state/tx/TEC_CF_CSV.zip') != '' }}
+        continue-on-error: true
         run: python -m scripts.cli ingest-state-bulk TX --input data/raw/state/tx/TEC_CF_CSV.zip
 
       - name: Download Illinois State Board of Elections bulk export (~1 GB)
@@ -141,6 +156,8 @@ jobs:
       - name: Ingest Washington state contributions
         # API-based (data.wa.gov Socrata) — no bulk download; queries each owner's
         # name server-side. Idempotent upsert keyed on the native transaction id.
+        # best-effort: a Socrata outage skips WA, never the commit.
+        continue-on-error: true
         run: python -m scripts.cli ingest-state-bulk WA
 
       - name: Download Colorado TRACER export (rolling 4-year window)
@@ -148,6 +165,9 @@ jobs:
         # (no login/API key). Like PA, historical years are frozen and already in
         # state.db, so we only re-pull the active window (current + 3 prior); the
         # idempotent upsert (keyed on the native RecordID) tops up recent rows.
+        # best-effort: per-year failures already self-clean; continue-on-error keeps
+        # an all-years-down CO (or the empty-glob `ls`) from blocking the commit.
+        continue-on-error: true
         run: |
           mkdir -p data/raw/state/co
           CUR=$(date -u +%Y)
@@ -162,6 +182,8 @@ jobs:
       - name: Ingest Colorado state contributions
         # Streams each per-year ContributionData CSV directly from its zip (no
         # extraction); recipient inline; idempotent upsert keyed on RecordID.
+        if: ${{ hashFiles('data/raw/state/co/*.zip') != '' }}
+        continue-on-error: true
         run: python -m scripts.cli ingest-state-bulk CO --input data/raw/state/co
 
       - name: Ingest Arizona state contributions
@@ -169,6 +191,8 @@ jobs:
         # searches the surname, keeps name-matched contributor entities, and unions
         # their transaction detail. Idempotent upsert keyed on PublicTransactionId.
         # (Slower than the others — a search + per-entity detail round-trip per owner.)
+        # best-effort: an AZ API outage skips AZ, never the commit.
+        continue-on-error: true
         run: python -m scripts.cli ingest-state-bulk AZ
 
       - name: Download Minnesota CFB export (single cumulative CSV)
@@ -179,11 +203,19 @@ jobs:
         # hardcode a URL. Unlike PA/CO this is one cumulative file (not per-year), so
         # the whole file is re-pulled each refresh and reconciled by the idempotent
         # content-hash upsert.
-        run: python -c "from scripts.fetch_mn import download_latest; print(download_latest())"
+        # best-effort: the anchor-text resolver breaks when CFB redesigns the page;
+        # continue-on-error skips MN (no file written → ingest below auto-skips)
+        # instead of aborting the whole refresh. Fix the resolver in fetch_mn.py.
+        continue-on-error: true
+        run: |
+          python -c "from scripts.fetch_mn import download_latest; print(download_latest())" \
+            || { echo "::warning::MN CFB download link could not be resolved (page markup drift) — skipping MN this run."; exit 1; }
 
       - name: Ingest Minnesota state contributions
         # Streams the all-entities CSV (recipient inline); idempotent upsert keyed on
         # the stable content-hash tran id (MN discloses no per-contribution id).
+        if: ${{ hashFiles('data/raw/state/mn/*.csv') != '' }}
+        continue-on-error: true
         run: python -m scripts.cli ingest-state-bulk MN --input data/raw/state/mn
 
       - name: Ingest Florida state contributions
@@ -193,6 +225,8 @@ jobs:
         # content-hash (FL has no per-contribution id). Owners whose only FL path is a
         # doppelganger-prone strong ZIP (fisher-john/94111) opt out via the owner-YAML
         # `exclude_state_jurisdictions` — FL has no employer field to corroborate.
+        # best-effort: an FL CGI outage skips FL, never the commit.
+        continue-on-error: true
         run: python -m scripts.cli ingest-state-bulk FL
 
       - name: Validate
