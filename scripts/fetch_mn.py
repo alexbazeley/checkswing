@@ -15,11 +15,17 @@ keying + dedup (like PA).
 
 The `?download=<id>` numbers are content hashes of the dataset definition, not a
 stable constructable URL, so `download_latest` resolves the current id by reading
-the data-downloads page and matching the dataset's anchor text — more robust than
-hardcoding an id that could rotate when MN regenerates the page. Parsing + the
-resolver are pure and unit-tested against fixtures; only the network download is
-untested (same split as the CA/PA/CO fetchers). The downloaded CSV is the ground
-truth (GOVERNANCE.md §1.4), gitignored under data/raw/state/mn/.
+the data-downloads page and matching the dataset's label — more robust than
+hardcoding an id that could rotate when MN regenerates the page. The page lists
+each dataset as a table row (`Download name` | `Data included` | a `csvFile`
+`Download` link); the dataset label lives in the "Data included" cell, and the
+generic anchor text is just "Download". "by all entities" recurs across three
+tables (contributions received / expenditures / independent expenditures), so we
+match the full label "Contributions received by all entities …" against the whole
+row (with a fallback to the older anchor-text layout). Parsing + the resolver are
+pure and unit-tested against fixtures; only the network download is untested (same
+split as the CA/PA/CO fetchers). The downloaded CSV is the ground truth
+(GOVERNANCE.md §1.4), gitignored under data/raw/state/mn/.
 """
 from __future__ import annotations
 
@@ -36,10 +42,12 @@ csv.field_size_limit(10_000_000)
 DOWNLOAD_PAGE = (
     "https://cfb.mn.gov/reports-and-data/self-help/data-downloads/campaign-finance/"
 )
-# The dataset we ingest — its anchor text on the downloads page. "all entities"
-# is the union of candidates + committees + party units (the broadest individual-
-# contribution receipts feed), 2015–present.
-DEFAULT_DATASET = "all entities"
+# The dataset we ingest — the "Data included" label on the downloads page. The
+# "all entities" receipts feed is the union of candidates + committees + party
+# units (the broadest individual-contribution receipts feed), 2015–present. Use
+# the FULL label: bare "all entities" now also matches the expenditures and
+# independent-expenditure tables, which we must NOT ingest here.
+DEFAULT_DATASET = "contributions received by all entities"
 
 
 def _is_contrib_csv(name: str) -> bool:
@@ -164,21 +172,44 @@ def dedupe(rows: Iterable[dict]) -> list[dict]:
 
 # ── Download (live cfb.mn.gov CSV) ───────────────────────────────────────────
 
-def resolve_download_url(page_html: str, dataset: str = DEFAULT_DATASET) -> str | None:
-    """Find the `?download=<id>` URL whose anchor text contains `dataset`.
+_MN_ANCHOR = re.compile(
+    r'<a\b[^>]*href="([^"]*\?download=-?\d+)"[^>]*>(.*?)</a>',
+    re.IGNORECASE | re.DOTALL,
+)
 
-    Pure (testable on fixture HTML). Returns an absolute cfb.mn.gov URL, or None
-    if no matching dataset link is present.
+
+def _mn_abs(href: str) -> str:
+    if href.startswith("http"):
+        return href
+    return "https://cfb.mn.gov" + (href if href.startswith("/") else "/" + href)
+
+
+def resolve_download_url(page_html: str, dataset: str = DEFAULT_DATASET) -> str | None:
+    """Find the `?download=<id>` URL for the dataset labelled `dataset`.
+
+    Current CFB layout: each dataset is a table row whose "Data included" cell
+    names it and whose last cell holds `<a class="csvFile" …?download=<id>>Download</a>`
+    (the anchor text itself is the generic "Download"). We match `dataset` against
+    the whole row's visible text. Falls back to the older layout where the dataset
+    name was the anchor's own text. Pure (testable on fixture HTML); returns an
+    absolute cfb.mn.gov URL, or None if no matching dataset link is present.
     """
     want = dataset.lower()
-    # Anchors are `<a href="...?download=<id>">Contributions received by all entities …</a>`.
-    for m in re.finditer(r'<a[^>]+href="([^"]*\?download=[-0-9]+)"[^>]*>(.*?)</a>',
-                          page_html, re.IGNORECASE | re.DOTALL):
-        href, text = m.group(1), re.sub(r"<[^>]+>", "", m.group(2))
-        if want in text.lower():
-            if href.startswith("http"):
-                return href
-            return "https://cfb.mn.gov" + (href if href.startswith("/") else "/" + href)
+
+    # New table layout: match the row whose text contains the dataset label.
+    for m in re.finditer(r'<tr\b[^>]*>(.*?)</tr>', page_html, re.IGNORECASE | re.DOTALL):
+        row = m.group(1)
+        am = _MN_ANCHOR.search(row)
+        if not am:
+            continue
+        row_text = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", row)).lower()
+        if want in row_text:
+            return _mn_abs(am.group(1))
+
+    # Fallback: older layout where the dataset name was the anchor's own text.
+    for href, text in _MN_ANCHOR.findall(page_html):
+        if want in re.sub(r"<[^>]+>", "", text).lower():
+            return _mn_abs(href)
     return None
 
 

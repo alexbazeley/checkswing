@@ -248,6 +248,7 @@ def test_iter_dir_reads_csv(tmp_path: Path):
 
 
 def test_resolve_download_url_matches_anchor_text():
+    # Legacy layout: the dataset name is the anchor's own text (fallback path).
     html = (
         '<a href="/reports-and-data/self-help/data-downloads/campaign-finance/?download=-115995361">'
         'Contributions received by all candidates - 2015 to present</a>'
@@ -256,4 +257,40 @@ def test_resolve_download_url_matches_anchor_text():
     )
     url = fetch_mn.resolve_download_url(html, "all entities")
     assert url == "https://cfb.mn.gov/reports-and-data/self-help/data-downloads/campaign-finance/?download=-2113865252"
+    assert fetch_mn.resolve_download_url(html, "no such dataset") is None
+
+
+def test_resolve_download_url_matches_table_row_layout():
+    # Current CFB layout: dataset label in the "Data included" cell, generic
+    # "Download" anchor text, and "by all entities" recurring across three tables.
+    # The full DEFAULT_DATASET label must pick the contributions-received row only.
+    def _row(name, included, did):
+        return (
+            f"<tr><td>{name}</td><td>{included}</td>"
+            f'<td><a class="csvFile" href="/reports-and-data/self-help/data-downloads/'
+            f'campaign-finance/?download={did}">Download</a></td></tr>'
+        )
+
+    html = (
+        "<h1>Itemized contributions received of over $200</h1><table><thead><tr>"
+        "<th>Download name</th><th>Data included</th><th>Download data</th></tr></thead><tbody>"
+        + _row("All", "Contributions received by all entities - 2015 to present", "-2113865252")
+        + _row("Candidates", "Contributions received by all candidates - 2015 to present", "-2026985457")
+        + "</tbody></table>"
+        "<h1>Itemized general expenditures and contributions made of over $200</h1><table><tbody>"
+        + _row("All", "Expenditures, including contributions made, by all entities - 2015 to present", "-1890073264")
+        + "</tbody></table>"
+        "<h1>Itemized independent expenditures of over $200</h1><table><tbody>"
+        + _row("All", "Independent expenditures by all entities - 2015 to present", "-617535497")
+        + "</tbody></table>"
+    )
+
+    url = fetch_mn.resolve_download_url(html)  # uses DEFAULT_DATASET
+    assert url == (
+        "https://cfb.mn.gov/reports-and-data/self-help/data-downloads/"
+        "campaign-finance/?download=-2113865252"
+    )
+    # A bare "all entities" would be ambiguous across the three tables; the full
+    # label disambiguates to the receipts feed (not expenditures).
+    assert "download=-1890073264" not in (url or "")
     assert fetch_mn.resolve_download_url(html, "no such dataset") is None
