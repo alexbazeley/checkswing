@@ -1,0 +1,82 @@
+name: IL backfill (manual, long-running)
+
+# Dedicated manual backfill for Illinois (ISBE) only.
+#
+# WHY THIS EXISTS: the monthly state refresh (refresh-state.yml) caps IL at 20 min
+# (`timeout 1200`) because ISBE serves its ~1 GB Receipts.txt at a highly variable,
+# often very slow rate and honours no Range — so on a slow day the monthly cron
+# skips IL (best-effort) to protect the other states' commit. That keeps the cron
+# reliable but means IL can drift stale. Run THIS workflow by hand to force IL
+# current: it gives the download a generous budget (up to ~3 h) with no fast-fail
+# cap, ingests, and commits data/state.db like the monthly job.
+#
+# LFS-free (state.db is a normal git blob; never touches master.db), same as
+# refresh-state.yml. Idempotent: the IL ingest upserts on the native receipt id, so
+# re-running is safe and the monthly cron will reconcile cleanly afterwards.
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  # Share the state-refresh lane so this never pushes concurrently with the monthly job.
+  group: refresh-state
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  il-backfill:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          lfs: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Download Illinois State Board of Elections bulk export (~1 GB, patient)
+        # No 20-min cap here (that's the monthly job's protection). Give ISBE room to
+        # finish even at its slow rate: retry the whole transfer, and only abort a
+        # transfer that stalls below ~10 KB/s for 2 min. --http1.1 avoids the HTTP/2
+        # stream reset; ISBE honours no Range so each attempt is a full pass.
+        run: |
+          mkdir -p data/raw/state/il
+          for f in Committees.txt Receipts.txt; do
+            curl -fSL --http1.1 --retry 5 --retry-all-errors --retry-delay 15 \
+              --connect-timeout 30 --speed-limit 10000 --speed-time 120 \
+              -o "data/raw/state/il/$f" \
+              "https://downloads.elections.il.gov/$f"
+          done
+          ls -lh data/raw/state/il/
+
+      - name: Ingest Illinois state contributions
+        run: python -m scripts.cli ingest-state-bulk IL --input data/raw/state/il
+
+      - name: Validate
+        run: python -m scripts.cli validate
+
+      - name: Commit + push refreshed IL data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/state.db catalog/PROVENANCE_LOG.md 2>/dev/null || true
+          if git diff --staged --quiet; then
+            echo "No changes from IL backfill — nothing to commit."
+          else
+            git commit -m "IL backfill (ISBE) ($(date -u +%Y-%m-%d))"
+            # Rebase onto anything that landed on main since checkout so the push
+            # fast-forwards (same hardening as the monthly refresh).
+            git pull --rebase origin main
+            git push
+          fi
