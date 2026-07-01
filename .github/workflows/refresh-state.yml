@@ -1,4 +1,4 @@
-name: Monthly state refresh (CA + PA + TX + IL + WA + CO + AZ + MN + FL)
+name: Monthly state refresh (CA + PA + TX + IL + WA + CO + AZ + MN + FL + NY)
 
 # Phase-4 state refresh. Pulls each adopted state's official bulk export, re-runs the
 # state ingest, and commits any changes to data/state.db + the provenance log.
@@ -236,6 +236,18 @@ jobs:
         continue-on-error: true
         run: python -m scripts.cli ingest-state-bulk FL
 
+      - name: Ingest New York state contributions
+        # API-based (data.ny.gov Socrata dataset 4j2b-6a2j) — no bulk download; queries
+        # each owner's first+last name server-side. NY collects no employer/occupation
+        # and no contributor STATE, so it CONFIRMS only via a documented strong ZIP
+        # (e.g. Cohen's NYC 10001) and otherwise leaves candidates UNCERTAIN — a full-
+        # roster ingest surfaces ZERO false CONFIRMEDs (verified: only cohen-steven
+        # confirms, $4.9M). Optional NY_APP_TOKEN raises the Socrata rate limit but is
+        # not required for these filtered queries.
+        # best-effort: a Socrata outage skips NY, never the commit.
+        continue-on-error: true
+        run: python -m scripts.cli ingest-state-bulk NY
+
       - name: Validate
         run: python -m scripts.cli validate
 
@@ -249,7 +261,7 @@ jobs:
           if git diff --staged --quiet; then
             echo "No changes from state refresh — nothing to commit."
           else
-            git commit -m "State refresh: CA + PA + TX + IL + WA + CO + AZ + MN + FL ($(date -u +%Y-%m-%d))"
+            git commit -m "State refresh: CA + PA + TX + IL + WA + CO + AZ + MN + FL + NY ($(date -u +%Y-%m-%d))"
             # Rebase onto anything that landed on main since checkout (e.g. the
             # federal refresh) so the push fast-forwards. State touches only its
             # own data files, so this replays cleanly over unrelated commits.
