@@ -6345,6 +6345,14 @@ function downloadDonationsCSV(rows, filename) {
 function openDrawer(id) {
   const d = state.data.donations.find((x) => x.id === id);
   if (!d) {
+    /* The State overview's recent-contribution rows reuse .recent-row → this
+       handler, but their composed ids (e.g. "WA:WA-PDC:…") live in
+       state.stateData, not the federal donations array. Auto-route them to the
+       state drawer — same fallback the ?d= permalink route uses. Ids never
+       collide (federal ids are numeric FEC tx ids), so federal wins first. */
+    if (state.stateData && (state.stateData.donations || []).some((x) => x.id === id)) {
+      return openStateDrawer(id);
+    }
     document.getElementById("drawer-body").innerHTML = `
       <h2>Donation not found</h2>
       <div class="drawer-amount-meta" style="margin-bottom:0">
