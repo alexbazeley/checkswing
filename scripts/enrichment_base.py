@@ -12,7 +12,16 @@ from datetime import datetime, timezone
 # A committee / filing / (committee, cycle) row refreshed within this many days
 # is considered current; re-running within the window skips the FEC fetch.
 # Override per-call via --force-refresh on the relevant CLI command.
-FRESHNESS_DAYS = 30
+#
+# MUST exceed the enrichment cron cadence, or the gate is useless: the refresh
+# runs monthly (refresh.yml, `0 12 1 * *`), so a 30-day window meant every run
+# found the *previous* run's rows just past 30 days and re-fetched the entire
+# ~1040-committee universe — ~5h of FEC time that blew the job's 5.5h cap before
+# the beneficiaries step could run, and (since the job died mid-run and never
+# committed) never advanced the stamps, so the next month repeated it. 45 gives
+# ~14 days of slack over a 31-day month so a monthly run skips what the prior
+# monthly run stamped. Committee identity/totals age slowly; ~45d is harmless.
+FRESHNESS_DAYS = 45
 
 
 def fresh_within_days(
