@@ -220,13 +220,17 @@ jobs:
     # the beneficiaries step alone needs 5-17 hours of FEC API time for the
     # full ~1054 committees × ~5-15 cycles. GitHub Actions caps a single job
     # at 6 hours, so the backfill completes incrementally across multiple
-    # weekly runs — each subsequent run skips what's already in the 30d
-    # freshness window. The timeout-minutes cap matches the refresh job's
-    # cap (just under the 6h GHA ceiling) so we fail-fast with logs rather
-    # than getting silently killed.
+    # weekly runs — each subsequent run skips what's already in the 45d
+    # freshness window. The timeout-minutes cap sits just under the 6h GHA
+    # ceiling so we fail-fast with logs rather than getting silently killed.
+    #
+    # 350 (not 330) gives ~20 min of headroom for the one convergence run each
+    # time the whole committee cohort's stamps go stale on the same day and get
+    # re-fetched together (~5h) alongside filings + beneficiaries (~25 min). At
+    # 330 that run landed at ~5h27m — 3 min of slack; 350 keeps it safe.
     needs: consolidate
     runs-on: ubuntu-latest
-    timeout-minutes: 330
+    timeout-minutes: 350
     permissions:
       contents: write
     steps:
