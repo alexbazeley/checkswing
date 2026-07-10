@@ -51,6 +51,19 @@ def _utc_now_iso() -> str:
     return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
+def _parse_amount(v) -> float | None:
+    """Parse an FEC contribution amount, returning None when it is absent or
+    unparseable (GOVERNANCE §3 — a required field is never guessed to 0.0). A
+    real $0 or a negative refund parses fine; only a missing/garbage value is
+    None, and the ingest loop rejects those rather than storing a fabricated 0."""
+    if v is None:
+        return None
+    try:
+        return float(v)
+    except (TypeError, ValueError):
+        return None
+
+
 def _row_has_required_provenance(row: dict) -> bool:
     """GOVERNANCE.md §1.3 — a row must carry filing_id, raw_payload_path, and date.
 
@@ -174,7 +187,7 @@ def _record_to_donation_row(
         if isinstance(record.get("committee"), dict)
         else None,
         "recipient_office": record.get("candidate_office") or None,
-        "amount": float(record.get("contribution_receipt_amount") or 0.0),
+        "amount": _parse_amount(record.get("contribution_receipt_amount")),
         "date": str(record.get("contribution_receipt_date") or "")[:10],
         "election_cycle": record.get("two_year_transaction_period"),
         "report_type": record.get("report_type") or None,
@@ -516,6 +529,7 @@ def ingest_entity(
     # ── Steps 6-7: write donations + review queue ──────────────────────────
     superseded_events: list[tuple[str, str, str]] = []  # (txn, entity_slug, reason)
     skipped_missing_provenance = 0
+    skipped_missing_amount = 0
     with db.connect() as conn:
         for record, c in confirmed + probable:
             row = _record_to_donation_row(record, c, completed_at)
@@ -524,6 +538,11 @@ def ingest_entity(
             if not _row_has_required_provenance(row):
                 # GOVERNANCE.md §1.3 — no provenance, no entry.
                 skipped_missing_provenance += 1
+                continue
+            if row["amount"] is None:
+                # GOVERNANCE §3 — a missing/unparseable amount is rejected, not
+                # stored as a fabricated 0.0.
+                skipped_missing_amount += 1
                 continue
             action, reason = db.insert_donation(conn, row)
             if action == "superseded":
@@ -560,6 +579,12 @@ def ingest_entity(
         print(
             f"[{slug}] WARNING: skipped {skipped_missing_provenance} row(s) "
             f"missing required provenance (filing_id/raw_payload_path/date — §1.3)."
+        )
+    if skipped_missing_amount:
+        summary["skipped_missing_amount"] = skipped_missing_amount
+        print(
+            f"[{slug}] WARNING: skipped {skipped_missing_amount} row(s) "
+            f"with a missing/unparseable contribution amount (§3)."
         )
     if suppressed_by_resolution:
         summary["suppressed_by_resolution"] = suppressed_by_resolution
@@ -855,10 +880,14 @@ def reclassify_in_place(slug: str, *, reason: str = "", db_path=None) -> dict:
       - UNCERTAIN/None → move to review_queue (demotion);
       - manual_attributions: EXCLUDED drops the row; CONFIRMED/PROBABLE force-keep it.
 
-    It does NOT promote review-queue rows or re-route related entities — a signal
-    ADDITION still needs a from-raw `reclassify`/re-fetch. Snapshots + logs. Use it to
-    back-apply a signal/flag change (e.g. city_state_alone_insufficient) to existing
-    rows when a from-raw rebuild would drop verified data.
+    It does NOT promote review-queue rows or DISCOVER new related-entity rows — a
+    signal ADDITION still needs a from-raw `reclassify`/re-fetch. It DOES re-score
+    existing related-entity (spouse/family) rows against their own signals
+    (process_related_entities=True), so a household row is never wrongly demoted;
+    and a demoted row with a standing DISCARDED verdict is removed from canonical
+    without re-queuing it (§2.5). Snapshots + logs. Use it to back-apply a
+    signal/flag change (e.g. city_state_alone_insufficient) to existing rows when a
+    from-raw rebuild would drop verified data.
     """
     target_db = db_path or db.MASTER_DB
     db.init(target_db)
@@ -875,6 +904,16 @@ def reclassify_in_place(slug: str, *, reason: str = "", db_path=None) -> dict:
             (slug, slug),
         ).fetchall()
 
+        # Standing DISCARDED verdicts (review_resolutions, §2.5) must suppress a
+        # demoted row from re-entering the review queue — keyed per entity_slug,
+        # since a related-entity row (spouse) carries its own slug. Cached by ent.
+        discarded_by_ent: dict[str, set[str]] = {}
+
+        def _discarded(ent: str) -> set[str]:
+            if ent not in discarded_by_ent:
+                discarded_by_ent[ent] = db.discarded_txns_for_slug(conn, ent)
+            return discarded_by_ent[ent]
+
         for row in rows:
             txn = row["transaction_id"]
             ent = row["entity_slug"]
@@ -887,7 +926,11 @@ def reclassify_in_place(slug: str, *, reason: str = "", db_path=None) -> dict:
                 res["excluded"] += 1
                 continue
 
-            c = classify(_record_from_donation_row(row), owner)
+            # process_related_entities=True so a spouse/related row is re-scored
+            # against its OWN signals and kept — without it, the related check
+            # returns None and the row is wrongly demoted the day a household
+            # entity (PR #27) is live (§1.4 / §2.5).
+            c = classify(_record_from_donation_row(row), owner, process_related_entities=True)
             if override in (CONFIRMED, PROBABLE):
                 status, sreason, sigs = override, f"manual attribution ({override})", []
             elif c is None:
@@ -906,28 +949,34 @@ def reclassify_in_place(slug: str, *, reason: str = "", db_path=None) -> dict:
                 )
                 res["forced" if override else "updated"] += 1
             else:
-                # Demotion: leave the canonical table, land in the review queue.
+                # Demotion: leave the canonical table. Land in the review queue
+                # UNLESS a standing DISCARDED verdict already adjudicated it —
+                # then it's removed from canonical but not re-queued (§2.5).
                 conn.execute(
                     "DELETE FROM donations WHERE transaction_id = ? AND entity_slug = ?",
                     (txn, ent),
                 )
-                db.insert_review_queue(
-                    conn,
-                    {
-                        "transaction_id": txn,
-                        "entity_slug": ent,
-                        "reason": sreason,
-                        "raw_payload_path": row["raw_payload_path"],
-                        "queued_at": ts,
-                    },
-                )
-                res["demoted"] += 1
+                if txn in _discarded(ent):
+                    res["suppressed_by_resolution"] = res.get("suppressed_by_resolution", 0) + 1
+                else:
+                    db.insert_review_queue(
+                        conn,
+                        {
+                            "transaction_id": txn,
+                            "entity_slug": ent,
+                            "reason": sreason,
+                            "raw_payload_path": row["raw_payload_path"],
+                            "queued_at": ts,
+                        },
+                    )
+                    res["demoted"] += 1
 
         # v8: re-tiering here can change which legs are countable (e.g. a demoted
         # recipient leg was the only countable sibling of a passthrough leg), so
         # recompute the earmark/conduit dedup flag for this owner.
         db.recompute_counted(conn, slug)
 
+    res.setdefault("suppressed_by_resolution", 0)
     block = [
         f"\n### {ts[:10]} — RECLASSIFY-IN-PLACE — {slug}",
         "",
@@ -935,6 +984,7 @@ def reclassify_in_place(slug: str, *, reason: str = "", db_path=None) -> dict:
         f"- **reason**: {reason or 'in-place reclassification from stored DB fields'}",
         f"- **rows_scored**: `{len(rows)}`",
         f"- **updated**: `{res['updated']}` · **demoted→queue**: `{res['demoted']}` · "
+        f"**suppressed (DISCARDED)**: `{res['suppressed_by_resolution']}` · "
         f"**forced**: `{res['forced']}` · **excluded**: `{res['excluded']}` · "
         f"**unchanged**: `{res['unchanged']}`",
         f"- **snapshot_path**: `{snap_path}`",

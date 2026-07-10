@@ -327,6 +327,39 @@ class TestMemoFieldMapping:
         assert row["is_individual"] is None
 
 
+class TestAmountHygiene:
+    """§1.4: a missing/unparseable amount is None (rejected downstream), never a
+    fabricated 0.0 (GOVERNANCE §3)."""
+
+    def test_parse_amount_values(self):
+        from scripts.ingest import _parse_amount
+        assert _parse_amount(2500) == 2500.0
+        assert _parse_amount("2500.50") == 2500.5
+        assert _parse_amount(-2800) == -2800.0   # refunds are real
+        assert _parse_amount(0) == 0.0           # a real $0 parses
+        assert _parse_amount(None) is None       # absent → None, not 0.0
+        assert _parse_amount("n/a") is None       # garbage → None
+
+    def test_missing_amount_becomes_none_not_zero(self):
+        rec = {
+            "transaction_id": "T1", "file_number": "123",
+            "contribution_receipt_date": "2024-05-01",
+            "_raw_payload_path": "data/raw/owner-x/a.json",
+        }
+        row = _record_to_donation_row(rec, _classification(), "ts")
+        assert row["amount"] is None
+
+    def test_present_amount_preserved(self):
+        rec = {
+            "transaction_id": "T1", "file_number": "123",
+            "contribution_receipt_amount": 2500.0,
+            "contribution_receipt_date": "2024-05-01",
+            "_raw_payload_path": "data/raw/owner-x/a.json",
+        }
+        row = _record_to_donation_row(rec, _classification(), "ts")
+        assert row["amount"] == 2500.0
+
+
 class TestRequiredProvenanceGuard:
     def test_passes_with_sentinel_filing_id(self):
         row = {"filing_id": SENTINEL_FILING_ID, "raw_payload_path": "p", "date": "2003-01-01"}
@@ -408,6 +441,32 @@ class TestReclassifyInPlace:
         assert statuses.get("STRONG") == "CONFIRMED"   # strong signal preserved
         assert "CITYONLY" not in statuses              # demoted out of donations
         assert "CITYONLY" in queued                    # …into the review queue
+
+    def test_discarded_verdict_suppresses_requeue(self, tmp_path, monkeypatch):
+        """§1.4/§2.5: a demoted row with a standing DISCARDED verdict is removed
+        from canonical but NOT re-inserted into the review queue."""
+        from scripts import db, ingest
+        p = self._setup(tmp_path, monkeypatch)
+        with db.connect(p) as conn:
+            db.insert_donation(conn, self._don(
+                txn="CITYONLY", status="PROBABLE",
+                status_reason="one confirming signal: city_state:san francisco/CA",
+                contributor_employer_raw="", contributor_occupation_raw="", contributor_zip="",
+                contributor_city="San Francisco", contributor_state="CA"))
+            db.upsert_review_resolution(
+                conn, transaction_id="CITYONLY", entity_slug="fisher-x",
+                resolution="DISCARDED", resolution_reason="different SF donor",
+                resolved_at="2026-07-01T00:00:00Z", resolved_by="test")
+        res = ingest.reclassify_in_place("fisher-x", reason="test", db_path=p)
+        with db.connect(p) as conn:
+            in_donations = conn.execute(
+                "SELECT COUNT(*) FROM donations WHERE transaction_id='CITYONLY'").fetchone()[0]
+            in_queue = conn.execute(
+                "SELECT COUNT(*) FROM review_queue WHERE transaction_id='CITYONLY'").fetchone()[0]
+        assert in_donations == 0            # removed from canonical
+        assert in_queue == 0                # NOT re-queued (already adjudicated)
+        assert res["suppressed_by_resolution"] == 1
+        assert res["demoted"] == 0
 
     def test_never_loses_rows_when_raw_absent(self, tmp_path, monkeypatch):
         # No raw files exist at all; in-place must still re-score (count conserved).

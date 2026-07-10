@@ -255,6 +255,40 @@ class TestEmployerMatch:
         assert employer_match("Backpack Industries", ["SAC"]) == []
 
 
+class TestWordBoundaryMatching:
+    """§1.4: a signal must begin at a word boundary — closes the inside-a-larger-
+    word false-match class (a short employer/occupation matching mid-word)."""
+
+    def test_short_employer_does_not_match_mid_word(self):
+        # "Gap" must not match "Singapore" (sin-GAP-ore).
+        assert employer_match("Singapore Airlines", ["Gap"]) == []
+
+    def test_short_employer_matches_at_token_start(self):
+        assert employer_match("Gap Inc", ["Gap"]) == ["Gap"]
+
+    def test_occupation_owner_not_landowner(self):
+        from scripts.resolve_entities import occupation_match
+        assert occupation_match("Landowner", ["owner"]) == []
+        assert occupation_match("Team Owner", ["owner"]) == ["owner"]
+
+    def test_trailing_word_still_matches(self):
+        # The VERIFICATION.md example: a trailing word (LLC) is fine.
+        assert employer_match("Cohen Private Ventures LLC", ["Cohen Private Ventures"]) == [
+            "Cohen Private Ventures"
+        ]
+
+    def test_plural_continuation_still_matches(self):
+        # Only a LEADING boundary is required, so a plural "s" doesn't break it.
+        assert employer_match("Trilogy Partnerships", ["Trilogy Partnership"]) == [
+            "Trilogy Partnership"
+        ]
+
+    def test_regex_metachars_in_signal_are_literal(self):
+        # re.escape guards a signal that contains regex metacharacters.
+        assert employer_match("A+B Capital (Group)", ["A+B Capital"]) == ["A+B Capital"]
+        assert employer_match("AXB Capital", ["A+B Capital"]) == []
+
+
 # ─── classify() — the main spec tests ──────────────────────────────────────
 
 

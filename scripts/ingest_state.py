@@ -57,6 +57,7 @@ class IngestStateResult:
     uncertain: int = 0
     excluded: int = 0
     skipped_no_date: int = 0
+    skipped_no_amount: int = 0
     superseded: int = 0
     excluded_owner: bool = False  # owner opts out of this jurisdiction (§1.5)
     snapshot_path: str | None = None
@@ -202,6 +203,27 @@ def ingest_state_entity(
                             "jurisdiction": jurisdiction,
                             "source": source,
                             "reason": "unparseable contribution date — verify against portal filing",
+                            "raw_payload_path": raw_payload_path,
+                            "queued_at": ingested_at,
+                        },
+                    )
+                continue
+
+            # Amount gate (GOVERNANCE.md §3): a contribution with no parseable
+            # amount can't be summed and must not be stored as a fabricated 0 —
+            # route to the review queue rather than crashing on the NOT NULL
+            # column or inventing a value (state_db amount is NOT NULL).
+            if row.get("amount") is None:
+                res.skipped_no_amount += 1
+                if not dry_run:
+                    state_db.insert_state_review_queue(
+                        conn,
+                        {
+                            "state_txn_id": state_txn_id,
+                            "entity_slug": slug,
+                            "jurisdiction": jurisdiction,
+                            "source": source,
+                            "reason": "unparseable contribution amount — verify against portal filing",
                             "raw_payload_path": raw_payload_path,
                             "queued_at": ingested_at,
                         },
@@ -427,6 +449,8 @@ def _result_note(res: IngestStateResult) -> str:
         bits.append(f"excluded={res.excluded}")
     if res.skipped_no_date:
         bits.append(f"skipped_no_date={res.skipped_no_date}")
+    if res.skipped_no_amount:
+        bits.append(f"skipped_no_amount={res.skipped_no_amount}")
     if res.superseded:
         bits.append(f"superseded={res.superseded}")
     return ", ".join(bits)
