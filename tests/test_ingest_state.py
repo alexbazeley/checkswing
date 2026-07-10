@@ -198,3 +198,65 @@ def test_reclassify_rebuilds_from_extract(tmp_path, monkeypatch):
         rows = conn.execute("SELECT amount FROM state_donations").fetchall()
         # Old row was deleted (not superseded) by reclassify; only the new one remains.
         assert len(rows) == 1 and rows[0]["amount"] == 999.0
+
+
+def _setup_excluded(tmp_path, monkeypatch):
+    """Owner opts out of CA via exclude_state_jurisdictions."""
+    owners_dir = tmp_path / "owners"
+    owners_dir.mkdir()
+    y = dict(OWNER_YAML)
+    y["exclude_state_jurisdictions"] = ["CA"]
+    (owners_dir / "moreno-arte.yaml").write_text(yaml.safe_dump(y), encoding="utf-8")
+    monkeypatch.setattr(ingest_state, "OWNERS_DIR", owners_dir)
+    monkeypatch.setattr(ingest_state, "PROVENANCE_LOG", tmp_path / "PROVENANCE_LOG.md")
+    snaps = tmp_path / "snapshots"; snaps.mkdir()
+    monkeypatch.setattr(state_db, "SNAPSHOTS_DIR", snaps)
+    db_path = tmp_path / "state.db"
+    state_db.init(db_path)
+    return db_path
+
+
+def test_excluded_jurisdiction_skips_single_ingest(tmp_path, monkeypatch):
+    """§1.5: exclude_state_jurisdictions is honored on the single-owner path
+    (ingest_state_entity — the funnel every path reaches), not only in bulk."""
+    db_path = _setup_excluded(tmp_path, monkeypatch)
+    res = ingest_state.ingest_state_entity(
+        "moreno-arte", rcpt_rows=[_rcpt()], recipient_resolver=_resolver,
+        jurisdiction="CA", db_path=db_path,
+    )
+    assert res.excluded_owner is True
+    assert res.confirmed == 0 and res.records_scanned == 0
+    with state_db.connect(db_path) as conn:
+        assert conn.execute("SELECT COUNT(*) AS n FROM state_donations").fetchone()["n"] == 0
+
+
+def test_excluded_jurisdiction_only_that_state(tmp_path, monkeypatch):
+    """The exclusion is per-jurisdiction: an owner excluded from CA still ingests
+    for another state."""
+    db_path = _setup_excluded(tmp_path, monkeypatch)
+    res = ingest_state.ingest_state_entity(
+        "moreno-arte", rcpt_rows=[_rcpt()], recipient_resolver=_resolver,
+        jurisdiction="AZ", source="AZ-SOS", db_path=db_path,
+    )
+    assert res.excluded_owner is False
+    assert res.confirmed == 1
+
+
+def test_excluded_jurisdiction_skips_reclassify(tmp_path, monkeypatch):
+    """§1.5: reclassify (which deletes then re-ingests via the funnel) also honors
+    the exclusion — an owner newly excluded is cleaned out, not re-added."""
+    # Ingest first WITHOUT exclusion, then flip on exclusion and reclassify.
+    db_path = _setup(tmp_path, monkeypatch)
+    ingest_state.ingest_state_entity(
+        "moreno-arte", rcpt_rows=[_rcpt()], recipient_resolver=_resolver, db_path=db_path
+    )
+    # Rewrite the YAML with the exclusion.
+    y = dict(OWNER_YAML); y["exclude_state_jurisdictions"] = ["CA"]
+    (ingest_state.OWNERS_DIR / "moreno-arte.yaml").write_text(yaml.safe_dump(y), encoding="utf-8")
+    res = ingest_state.reclassify_state_entity(
+        "moreno-arte", rcpt_rows=[_rcpt()], recipient_resolver=_resolver,
+        reason="now excluded", db_path=db_path,
+    )
+    assert res.excluded_owner is True
+    with state_db.connect(db_path) as conn:
+        assert conn.execute("SELECT COUNT(*) AS n FROM state_donations").fetchone()["n"] == 0

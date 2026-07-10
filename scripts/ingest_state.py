@@ -58,6 +58,7 @@ class IngestStateResult:
     excluded: int = 0
     skipped_no_date: int = 0
     superseded: int = 0
+    excluded_owner: bool = False  # owner opts out of this jurisdiction (§1.5)
     snapshot_path: str | None = None
     dry_run: bool = False
     rows: list[dict] = field(default_factory=list)  # populated on dry_run for inspection
@@ -119,6 +120,14 @@ def ingest_state_entity(
     res = IngestStateResult(slug=slug, jurisdiction=jurisdiction, source=source, dry_run=dry_run)
     ingested_at = _utc_now_iso()
     run_id = uuid.uuid4().hex[:8]
+
+    # §1.5: honor `exclude_state_jurisdictions` on EVERY ingest path. This is the
+    # single funnel — bulk, single, the CA cron (ingest-state-ca), and reclassify
+    # all reach here — so an owner that opts out of this jurisdiction is skipped
+    # everywhere, not just in ingest_state_bulk. Writes nothing (mirrors dry_run).
+    if _owner_excludes_jurisdiction(owner, jurisdiction):
+        res.excluded_owner = True
+        return res
 
     if not dry_run:
         res.snapshot_path = _maybe_snapshot(run_id, db_path)
@@ -342,6 +351,12 @@ def ingest_state_bulk(
     return results
 
 
+def _owner_excludes_jurisdiction(owner: dict, state_code: str) -> bool:
+    """True if this owner opts out of `state_code` via `exclude_state_jurisdictions`."""
+    code = (state_code or "").upper()
+    return code in {(j or "").upper() for j in (owner.get("exclude_state_jurisdictions") or [])}
+
+
 def filter_excluded_owners(
     owners: list[tuple[str, dict]], state_code: str
 ) -> list[tuple[str, dict]]:
@@ -353,11 +368,14 @@ def filter_excluded_owners(
     Rather than pollute CONFIRMED, such owners list the jurisdiction code in
     `exclude_state_jurisdictions` and are skipped for that state only (mirrors NY's
     selective ingestion of just the cleanly-resolvable owners).
+
+    This is a list-level pre-filter used by bulk; the authoritative per-owner check
+    lives in `ingest_state_entity` (the funnel every path reaches), so a single
+    ingest, the CA cron, and reclassify honor the exclusion too (§1.5).
     """
-    code = (state_code or "").upper()
     return [
         (slug, o) for slug, o in owners
-        if code not in {(j or "").upper() for j in (o.get("exclude_state_jurisdictions") or [])}
+        if not _owner_excludes_jurisdiction(o, state_code)
     ]
 
 
