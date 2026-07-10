@@ -24718,3 +24718,13 @@ generated end-to-end from the joined data") is satisfied.
 - **total_records_fetched**: `142`
 - **data_json_regenerated**: `False`
 - **failed_owners**: `['lerner-mark']`
+
+### 2026-07-10 — CORRECTION — earmark/conduit dedup (schema v8, §1.1)
+
+- **what**: added FEC memo_code/memo_text/is_individual to donations and a derived `counted` flag; a conduit passthrough leg (is_individual=0) with a countable sibling in the same (owner, donor, date, amount) group is now excluded from every published SUM (double-count removed). Lone conduit legs are preserved (counted=1).
+- **rows_updated (is_individual backfilled from raw)**: `3137`
+- **rows_unrecoverable (raw gone, left NULL / countable)**: `1017`
+- **counted excluded**: `108` rows / `$683,135.35`
+- **published CONFIRMED+PROBABLE total**: `$35,023,001.26` (4154 rows) → `$34,339,865.91` (4046 rows)
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-10T23-15-02Z__backfill_memo_fields.db`
+- **note**: rows are never deleted (§1.10); the excluded legs stay queryable (counted=0). Mirrors FEC's own is_individual dedup convention.

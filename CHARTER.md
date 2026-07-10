@@ -61,7 +61,8 @@ The conservative attribution standard is itself an editorial commitment: we'd ra
 ### Phase 2 — All 30 owners — **SUBSTANTIALLY COMPLETE**
 - *Status (2026-06): all 30 franchises' principal owners plus documented related
   entities (spouses/family) are populated and validating; the federal archive
-  holds 3,925 CONFIRMED rows (~$33.8M) + 212 PROBABLE (~$1.1M). The UNCERTAIN review queue
+  holds 3,840 CONFIRMED rows (~$33.3M) + 206 PROBABLE (~$1.07M), counting each
+  earmarked conduit contribution once (schema v8 dedup). The UNCERTAIN review queue
   is adjudicated on an ongoing cadence (see `cli audit` / `review` and the
   calibration playbook).*
 - Populate `verifying_signals` for the remaining 25 owners.

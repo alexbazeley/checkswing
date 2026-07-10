@@ -196,6 +196,17 @@ def _record_to_donation_row(
         ),
         "receipt_type_full": record.get("receipt_type_full") or None,
         "recipient_committee_type": _committee_type_of(record),
+        # v8 FEC earmark/conduit fields. is_individual distinguishes a conduit
+        # passthrough leg (False) from a countable individual contribution
+        # (True); it drives the derived `counted` dedup flag (db.recompute_counted).
+        # memo_code/memo_text are kept for provenance. See DONATION_SCHEMA.md.
+        "memo_code": record.get("memo_code") or None,
+        "memo_text": record.get("memo_text") or None,
+        "is_individual": (
+            int(record["is_individual"])
+            if record.get("is_individual") is not None
+            else None
+        ),
     }
 
 
@@ -517,6 +528,10 @@ def ingest_entity(
             action, reason = db.insert_donation(conn, row)
             if action == "superseded":
                 superseded_events.append((row["transaction_id"], row["entity_slug"], reason or ""))
+        # v8: recompute the earmark/conduit dedup flag for this owner's rows now
+        # that all legs are written (a passthrough leg is only detectable once its
+        # countable sibling is present). GOVERNANCE.md §1.10: never deletes.
+        db.recompute_counted(conn, slug)
         # Standing DISCARDED verdicts (review_resolutions, schema v6) suppress a
         # transaction from re-entering the review queue (GOVERNANCE.md §2.5).
         # This is the queue-only effect: it does NOT touch the donations written
@@ -907,6 +922,11 @@ def reclassify_in_place(slug: str, *, reason: str = "", db_path=None) -> dict:
                     },
                 )
                 res["demoted"] += 1
+
+        # v8: re-tiering here can change which legs are countable (e.g. a demoted
+        # recipient leg was the only countable sibling of a passthrough leg), so
+        # recompute the earmark/conduit dedup flag for this owner.
+        db.recompute_counted(conn, slug)
 
     block = [
         f"\n### {ts[:10]} — RECLASSIFY-IN-PLACE — {slug}",

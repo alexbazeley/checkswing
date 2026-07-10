@@ -13,6 +13,7 @@ from . import db
 from .apply_committee_external_links import apply_external_links
 from .audit import audit_slug
 from .backfill_donation_image_fields import backfill as backfill_donation_image_fields
+from .backfill_memo_fields import backfill as backfill_memo_fields
 from .export import export_aggregate, export_entity
 from .ingest import ingest_entity, reclassify_entity, reclassify_in_place
 from .ingest_committee_disbursements import (
@@ -827,6 +828,21 @@ def backfill_donation_image_fields_cmd():
     and need a full --full-refetch to recover.
     """
     summary = backfill_donation_image_fields()
+    click.echo(json.dumps(summary, indent=2, default=str))
+
+
+@cli.command(name="backfill-memo-fields")
+def backfill_memo_fields_cmd():
+    """One-shot (GATED): populate v8 memo_code/memo_text/is_individual and recompute `counted`.
+
+    Scans data/raw/<slug>/*.json for each owner whose donation rows still have
+    NULL is_individual, backfills the FEC earmark/conduit fields, then recomputes
+    the derived `counted` dedup flag over the whole table so double-counted
+    conduit passthrough legs (ActBlue/WinRed) drop out of every published SUM
+    (§1.1). Snapshots master.db and appends a CORRECTION entry to PROVENANCE_LOG.
+    Idempotent; never deletes a row (GOVERNANCE.md §1.10).
+    """
+    summary = backfill_memo_fields()
     click.echo(json.dumps(summary, indent=2, default=str))
 
 

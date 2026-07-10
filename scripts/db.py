@@ -278,9 +278,31 @@ DONATION_EXTRA_COLS: list[tuple[str, str]] = [
     ("line_number", "TEXT"),
     ("receipt_type_full", "TEXT"),
     ("recipient_committee_type", "TEXT"),
+    # v8: FEC earmark/conduit fields. An earmarked contribution routed through a
+    # conduit (ActBlue/WinRed) is reported twice — once by the conduit and once
+    # by the ultimate recipient — under distinct transaction_ids, so a naive SUM
+    # double-counts it. FEC's own convention distinguishes the legs via
+    # is_individual (the conduit passthrough leg is is_individual=False); memo_code
+    # / memo_text are stored for provenance. The derived `counted` column (below)
+    # is what SUM surfaces filter on. See DONATION_SCHEMA.md.
+    ("memo_code", "TEXT"),
+    ("memo_text", "TEXT"),
+    ("is_individual", "INTEGER"),
 ]
 
-SCHEMA_VERSION = 7
+# v8: derived dedup flag. NOT an FEC field — it is neutral, mechanical arithmetic
+# (the same dedup FEC applies to its own totals via is_individual), recomputed by
+# recompute_counted() after every ingest/reclassify. counted=0 marks a conduit
+# passthrough leg (is_individual=False) that has a countable sibling leg in the
+# same (entity_slug, contributor_name_raw, date, amount) group — i.e. the genuine
+# double-count. A lone conduit leg (the only record of a real contribution) keeps
+# counted=1. Every published SUM filters `counted = 1`; the row is never deleted
+# (GOVERNANCE.md §1.10) and stays queryable.
+DONATION_DERIVED_COLS: list[tuple[str, str]] = [
+    ("counted", "INTEGER NOT NULL DEFAULT 1"),
+]
+
+SCHEMA_VERSION = 8
 
 
 def _utc_now_iso() -> str:
@@ -321,9 +343,9 @@ def init(db_path: Path = MASTER_DB) -> None:
     ensure_data_dirs()
     with connect(db_path) as conn:
         conn.executescript(SCHEMA_SQL)
-        # v3: per-transaction FEC fields on donations
+        # v3/v8: per-transaction FEC fields + the derived counted flag on donations
         existing_donation_cols = {r["name"] for r in conn.execute("PRAGMA table_info(donations)")}
-        for col_name, col_type in DONATION_EXTRA_COLS:
+        for col_name, col_type in DONATION_EXTRA_COLS + DONATION_DERIVED_COLS:
             if col_name not in existing_donation_cols:
                 conn.execute(f"ALTER TABLE donations ADD COLUMN {col_name} {col_type}")
         existing = conn.execute("SELECT MAX(version) AS v FROM schema_version").fetchone()
@@ -451,7 +473,8 @@ def _insert_donation_row(conn: sqlite3.Connection, full_row: dict) -> None:
             amount, date, election_cycle, report_type,
             filing_id, raw_payload_path, ingested_at,
             image_number, pdf_url, filing_form, line_number,
-            receipt_type_full, recipient_committee_type
+            receipt_type_full, recipient_committee_type,
+            memo_code, memo_text, is_individual
         ) VALUES (
             :transaction_id, :entity_slug, :entity_kind, :parent_owner_slug,
             :status, :status_reason, :signals_matched,
@@ -463,7 +486,8 @@ def _insert_donation_row(conn: sqlite3.Connection, full_row: dict) -> None:
             :amount, :date, :election_cycle, :report_type,
             :filing_id, :raw_payload_path, :ingested_at,
             :image_number, :pdf_url, :filing_form, :line_number,
-            :receipt_type_full, :recipient_committee_type
+            :receipt_type_full, :recipient_committee_type,
+            :memo_code, :memo_text, :is_individual
         )
         """,
         full_row,
@@ -526,6 +550,56 @@ def insert_donation(conn: sqlite3.Connection, row: dict) -> tuple[str, str | Non
     )
     _insert_donation_row(conn, full_row)
     return ("superseded", reason)
+
+
+def recompute_counted(conn: sqlite3.Connection, slug: str | None = None) -> int:
+    """Recompute the derived `counted` dedup flag on CONFIRMED/PROBABLE donations.
+
+    An earmarked contribution routed through a conduit (ActBlue/WinRed) is
+    reported twice in FEC data — once by the conduit and once by the ultimate
+    recipient — under distinct transaction_ids. FEC excludes the conduit
+    passthrough leg from its own individual-contribution totals; that leg carries
+    is_individual = 0. We mirror that: a leg is marked counted = 0 (excluded from
+    every published SUM) **only when** is_individual = 0 AND a countable sibling
+    leg exists in the same (entity_slug, contributor_name_raw, date, amount)
+    group. A lone conduit leg — the sole record of a real contribution FEC only
+    itemized at the conduit — keeps counted = 1 so it is never silently dropped.
+
+    Idempotent; rows are never deleted (GOVERNANCE.md §1.10). Pass `slug` to scope
+    to one owner (unset column stays at its DEFAULT 1 elsewhere), or None to
+    recompute the whole table. Returns the number of counted = 0 rows after the
+    pass. A sibling with unknown is_individual (NULL — e.g. a row whose raw
+    payload is gone) is treated as countable, so a real recipient leg is never
+    mistaken for a passthrough.
+    """
+    params: list = []
+    scope = ""
+    if slug is not None:
+        scope = " AND (entity_slug = ? OR parent_owner_slug = ?)"
+        params = [slug, slug]
+    conn.execute(
+        f"""
+        UPDATE donations
+           SET counted = CASE
+               WHEN is_individual = 0
+                AND EXISTS (
+                    SELECT 1 FROM donations s
+                     WHERE s.entity_slug = donations.entity_slug
+                       AND s.contributor_name_raw = donations.contributor_name_raw
+                       AND s.date = donations.date
+                       AND s.amount = donations.amount
+                       AND s.transaction_id <> donations.transaction_id
+                       AND s.status IN ('CONFIRMED', 'PROBABLE')
+                       AND (s.is_individual IS NULL OR s.is_individual <> 0)
+                )
+               THEN 0 ELSE 1 END
+         WHERE status IN ('CONFIRMED', 'PROBABLE'){scope}
+        """,
+        params,
+    )
+    return conn.execute(
+        "SELECT COUNT(*) FROM donations WHERE counted = 0 AND status IN ('CONFIRMED','PROBABLE')"
+    ).fetchone()[0]
 
 
 def insert_review_queue(conn: sqlite3.Connection, row: dict) -> None:
