@@ -288,6 +288,45 @@ class TestFilingIdSentinel:
         assert row["filing_id"] == "RPT-9"
 
 
+class TestMemoFieldMapping:
+    """v8: _record_to_donation_row carries the FEC earmark/conduit fields (§1.1)."""
+
+    def test_maps_memo_and_is_individual(self):
+        rec = {
+            "transaction_id": "T1",
+            "file_number": "12345",
+            "contribution_receipt_date": "2018-11-06",
+            "_raw_payload_path": "data/raw/owner-x/a.json",
+            "memo_code": None,
+            "memo_text": "EARMARKED FOR DEMOCRACY SUMMER (C00664318)",
+            "is_individual": False,
+        }
+        row = _record_to_donation_row(rec, _classification(), "ts")
+        assert row["memo_text"].startswith("EARMARKED")
+        assert row["is_individual"] == 0  # bool → INTEGER
+
+    def test_is_individual_true_becomes_one(self):
+        rec = {
+            "transaction_id": "T1",
+            "file_number": "12345",
+            "contribution_receipt_date": "2018-11-06",
+            "_raw_payload_path": "data/raw/owner-x/a.json",
+            "is_individual": True,
+        }
+        row = _record_to_donation_row(rec, _classification(), "ts")
+        assert row["is_individual"] == 1
+
+    def test_missing_is_individual_is_none(self):
+        rec = {
+            "transaction_id": "T1",
+            "file_number": "12345",
+            "contribution_receipt_date": "2018-11-06",
+            "_raw_payload_path": "data/raw/owner-x/a.json",
+        }
+        row = _record_to_donation_row(rec, _classification(), "ts")
+        assert row["is_individual"] is None
+
+
 class TestRequiredProvenanceGuard:
     def test_passes_with_sentinel_filing_id(self):
         row = {"filing_id": SENTINEL_FILING_ID, "raw_payload_path": "p", "date": "2003-01-01"}

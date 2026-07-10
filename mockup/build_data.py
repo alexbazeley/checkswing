@@ -200,7 +200,12 @@ def main() -> None:
     for r in runs:
         runs_by_entity.setdefault(r["entity_slug"], []).append(r)
 
-    # Donations: CONFIRMED + PROBABLE only (matches export rule).
+    # Donations: CONFIRMED + PROBABLE only (matches export rule), and counted = 1
+    # only — v8 excludes earmark/conduit passthrough legs (ActBlue/WinRed) that
+    # are double-counted against the ultimate recipient's own report (see
+    # db.recompute_counted / DONATION_SCHEMA.md). The excluded conduit leg drops
+    # from every dashboard aggregate; the countable recipient leg (which carries
+    # the "EARMARKED …" memo text) is what's shown.
     # v3 schema: image_number/pdf_url/filing_form/line_number/receipt_type_full/
     # recipient_committee_type live on the row, populated at ingest time. The
     # raw-payload lookup below is a legacy fallback for rows ingested before
@@ -220,7 +225,7 @@ def main() -> None:
                image_number, pdf_url, filing_form, line_number,
                receipt_type_full, recipient_committee_type
         FROM donations
-        WHERE status IN ('CONFIRMED', 'PROBABLE')
+        WHERE status IN ('CONFIRMED', 'PROBABLE') AND counted = 1
         ORDER BY date DESC
         """
     )

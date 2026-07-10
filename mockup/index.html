@@ -6697,6 +6697,25 @@ function renderMethodology() {
         alone — the database is a derivative; the raw payloads are the ground truth.
       </p>
 
+      <h2>Counting earmarked contributions</h2>
+      <p>
+        A contribution earmarked through a conduit (ActBlue, WinRed) is reported to
+        the FEC twice — once by the conduit and once by the ultimate recipient —
+        under two different transaction IDs. Following the FEC's own convention (the
+        <code>is_individual</code> flag), the archive counts each such contribution
+        once, at the ultimate recipient, and excludes the conduit's pass-through leg
+        from every total so the money is not double-counted. Both legs remain in the
+        database; only the counted view is deduplicated. Where the FEC itemized a
+        contribution only at the conduit, that record is kept as the sole record of
+        the gift.
+      </p>
+      <p class="method-correction" style="font-size:13px;color:var(--ink-3)">
+        Correction (2026-07): earlier totals double-counted earmarked contributions
+        routed through ActBlue/WinRed. Applying the dedup above removed 108
+        duplicate pass-through rows ($683,135), lowering the published
+        confirmed + probable total from $35.02M to $34.34M.
+      </p>
+
       <h2>What we don't claim</h2>
       <p>
         This archive does not interpret. It does not assert what a donation means,

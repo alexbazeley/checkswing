@@ -7,6 +7,11 @@ Per-cycle: data/donations/<slug>/by_cycle/<cycle>.csv (same schema).
 
 Aggregate: data/donations/_aggregate/by_owner.csv (CONFIRMED only) and
 by_owner_with_probable.csv (both tiers, status preserved).
+
+All exports filter `counted = 1` — v8 excludes earmark/conduit passthrough legs
+(ActBlue/WinRed) that FEC double-reports against the ultimate recipient, so a
+naive SUM of an exported CSV matches the dashboard totals (see
+db.recompute_counted / DONATION_SCHEMA.md).
 """
 from __future__ import annotations
 
@@ -73,6 +78,7 @@ def export_entity(slug: str) -> dict:
             """
             SELECT * FROM donations
             WHERE entity_slug = ? AND status IN ('CONFIRMED', 'PROBABLE')
+              AND counted = 1
             ORDER BY date DESC, transaction_id
             """,
             (slug,),
@@ -135,7 +141,7 @@ def export_aggregate() -> dict:
                    COUNT(*) AS donations,
                    SUM(amount) AS total_amount
             FROM donations
-            WHERE status = 'CONFIRMED'
+            WHERE status = 'CONFIRMED' AND counted = 1
             GROUP BY entity_slug, parent_owner_slug, entity_kind, election_cycle, recipient_party, recipient_office
             ORDER BY entity_slug, election_cycle
             """
@@ -152,7 +158,7 @@ def export_aggregate() -> dict:
                    COUNT(*) AS donations,
                    SUM(amount) AS total_amount
             FROM donations
-            WHERE status IN ('CONFIRMED', 'PROBABLE')
+            WHERE status IN ('CONFIRMED', 'PROBABLE') AND counted = 1
             GROUP BY entity_slug, parent_owner_slug, entity_kind, status, election_cycle, recipient_party, recipient_office
             ORDER BY entity_slug, election_cycle, status
             """
