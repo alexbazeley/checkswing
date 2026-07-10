@@ -2779,7 +2779,10 @@ const fmtDate = (s) => {
   if (!s) return "—";
   const d = new Date(s);
   if (isNaN(d)) return s;
-  return d.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+  // Render in UTC. A date-only string ("2024-01-15") parses to UTC midnight, so
+  // formatting in the local zone (west of UTC) would show the previous day — the
+  // drawer/verification-card date would disagree with the table row (§1.6).
+  return d.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric", timeZone: "UTC" });
 };
 
 /* Renders a friendly empty-state card. Used when filters return nothing,
@@ -3629,7 +3632,7 @@ function renderLeague() {
       <span class="filter-result" id="ix-result"></span>
     </div>
 
-    ${renderOwnersTable(owners)}
+    <div id="oi-table-wrap">${renderOwnersTable(owners)}</div>
 
     <p class="footnote">
       Party tilt is computed from CONFIRMED + PROBABLE dollars to identifiable
@@ -4379,13 +4382,15 @@ function hideScatterTooltip(tooltip) {
 }
 
 function rerenderOwnersTableOnly() {
-  /* Light re-render: just the table, preserving inputs/focus */
+  /* Light re-render: just the table, preserving inputs/focus. Target the STABLE
+     wrapper (#oi-table-wrap), not `.owners-table` — a zero-result search renders
+     an empty-state div with no `.owners-table`, so querying the table would go
+     null and never recover (soft-lock), and replaceWith nested `.table-scroll`
+     wrappers each keystroke (§1.6). */
   const owners = Object.values(state.data.owners);
-  const cur = document.querySelector(".owners-table");
-  if (!cur) return;
-  const wrap = document.createElement("div");
+  const wrap = document.getElementById("oi-table-wrap");
+  if (!wrap) return;
   wrap.innerHTML = renderOwnersTable(owners);
-  cur.replaceWith(wrap.firstElementChild);
   document.querySelectorAll(".owners-table th[data-sort]").forEach((th) => {
     th.addEventListener("click", () => {
       const k = th.getAttribute("data-sort");
@@ -5476,7 +5481,14 @@ function renderCommittee(committeeId) {
         const latest = scaleCycles[scaleCycles.length - 1];
         const recv = latest.receipts || 0;
         if (!recv) return "";
-        const pct = (total / recv) * 100;
+        // Same-cycle share: the owner's giving IN this cycle over this cycle's
+        // receipts — not all-cycles `total`, which divided by one cycle's receipts
+        // exceeded 100% on 132 committees (§1.6). Computed from the donations array
+        // the same way the per-cycle sliver below is, via amt() (currency-aware).
+        const ownerInLatest = donations
+          .filter((d) => d.cycle === latest.cycle)
+          .reduce((s, d) => s + amt(d), 0);
+        const pct = (ownerInLatest / recv) * 100;
         const display = pct >= 0.1 ? pct.toFixed(2) + "%" : "<0.1%";
         return `
         <div class="kpi">
