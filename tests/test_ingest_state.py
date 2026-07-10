@@ -170,6 +170,20 @@ def test_unparseable_date_routes_to_review(tmp_path, monkeypatch):
         assert row is not None and "date" in row["reason"]
 
 
+def test_unparseable_amount_routes_to_review(tmp_path, monkeypatch):
+    """§1.4: a missing/unparseable amount routes to the review queue instead of
+    crashing on the NOT NULL column or storing a fabricated 0."""
+    db_path = _setup(tmp_path, monkeypatch)
+    res = ingest_state.ingest_state_entity(
+        "moreno-arte", rcpt_rows=[_rcpt(AMOUNT="n/a")], recipient_resolver=_resolver, db_path=db_path
+    )
+    assert res.skipped_no_amount == 1 and res.confirmed == 0
+    with state_db.connect(db_path) as conn:
+        assert conn.execute("SELECT COUNT(*) AS n FROM state_donations").fetchone()["n"] == 0
+        row = conn.execute("SELECT reason FROM state_review_queue").fetchone()
+        assert row is not None and "amount" in row["reason"]
+
+
 def test_dry_run_writes_nothing(tmp_path, monkeypatch):
     db_path = _setup(tmp_path, monkeypatch)
     res = ingest_state.ingest_state_entity(

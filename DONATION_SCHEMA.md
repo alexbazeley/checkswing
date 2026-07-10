@@ -29,7 +29,7 @@ The canonical record. One row per FEC transaction, attributed to one entity (own
 | `recipient_candidate_name` | TEXT | Candidate name when applicable |
 | `recipient_party` | TEXT | DEM / REP / IND / LIB / etc., as classified by FEC |
 | `recipient_office` | TEXT | H / S / P (House / Senate / Presidential) when applicable |
-| `amount` | REAL NOT NULL | USD; FEC `contribution_receipt_amount` |
+| `amount` | REAL NOT NULL | USD; FEC `contribution_receipt_amount`. **Refunds/reattributions are negative and counted net** (see below). Never fabricated: a row whose FEC amount is missing/unparseable is rejected at ingest, not stored as `0.0` (GOVERNANCE §3). |
 | `date` | TEXT NOT NULL | `contribution_receipt_date`, ISO 8601 |
 | `election_cycle` | INTEGER | Two-year cycle (e.g., 2026) |
 | `report_type` | TEXT | FEC report code (Q1 / Q2 / YE / 12P / 48H / etc.) |
@@ -44,6 +44,8 @@ The canonical record. One row per FEC transaction, attributed to one entity (own
 | `counted` | INTEGER NOT NULL DEFAULT 1 | v8 **derived** dedup flag (not an FEC field). `0` marks an earmark/conduit pass-through leg (`is_individual=0`) that has a countable sibling in the same (entity_slug, contributor_name_raw, date, amount) group — the genuine double-count. Every published SUM filters `counted = 1`. Recomputed by `db.recompute_counted` after each ingest/reclassify; the row is never deleted (§1.10). |
 
 **Earmark/conduit dedup (GOVERNANCE.md §1.10; schema v8).** A contribution earmarked through a conduit (ActBlue/WinRed) is reported to the FEC twice — the conduit's pass-through leg and the ultimate recipient's own report — under distinct `transaction_id`s. FEC excludes the pass-through leg from its individual-contribution totals (`is_individual=0`); the archive mirrors that via `counted`. A **lone** conduit leg (the only record of a real gift FEC itemized only at the conduit) keeps `counted=1` so it is never silently dropped. Both legs remain in the table; only the counted view is deduplicated.
+
+**Refunds and negative amounts (net totals).** FEC records refunds, reattributions, and chargebacks as **negative** `contribution_receipt_amount` rows (≈138 federally). The archive's policy is **net**: negative rows are stored as filed and included in every `SUM(amount)`, so an owner's total reflects money actually retained, not gross inflow. `receipt_type_full` carries the FEC receipt-type label (e.g. "REFUND", "REATTRIBUTION") for a row that needs to be read as a reversal. This is a deliberate, documented choice (the alternative — gross, ignoring refunds — would overstate giving).
 
 **Supersession (GOVERNANCE.md §1.5).** When FEC restates an already-ingested transaction (a change in amount, date, recipient, filing reference, or image), `insert_donation` archives the old row under a derived key (`<transaction_id>~superseded~<UTC>`) with `status=SUPERSEDED` and `superseded_by` pointing at the canonical id, then inserts the restated payload under the canonical `transaction_id`. The old row is never deleted (§1.10). Live queries filter `status IN ('CONFIRMED','PROBABLE')`, so archived rows never reach exports or the dashboard. Supersession compares FEC-sourced substance only, not our derived `status`/`signals_matched`, so a reclassification does not trip it.
 

@@ -234,11 +234,32 @@ def _norm(s) -> str:
     return re.sub(r"\s+", " ", s).strip()
 
 
-def employer_match(record_employer: str | None, signal_list: Sequence[str]) -> list[str]:
-    """Return signal strings that matched (case-insensitive substring).
+def _signal_in(needle: str, hay: str) -> bool:
+    """Token-aligned substring test used by employer/occupation matching.
 
-    Match rule per VERIFICATION.md: signal_string must be a substring of
-    record_employer. No stemming, no word removal.
+    Both args are already `_norm`'d (lowercased, punctuation→space, collapsed).
+    The signal must begin at a **word boundary** in the record — so a short
+    signal like `"gap"` matches "gap inc" but NOT "sin**gap**ore airlines", and
+    `"owner"` matches "owner" / "team owner" but NOT "land**owner**". Only a
+    *leading* boundary is required, not a trailing one, so genuine token-start
+    matches the raw-substring rule always allowed are preserved: a trailing word
+    ("cohen private ventures" ⊂ "cohen private ventures llc"), a plural
+    ("trilogy partnership" ⊂ "trilogy partnerships"), or a company-name
+    continuation. This closes the inside-a-larger-word false-match class
+    (VERIFICATION.md §"Stem-matching") without demoting any currently-classified
+    row (verified against the live DB: 0 tier changes). No stemming, no word
+    removal.
+    """
+    if not needle:
+        return False
+    return re.search(r"\b" + re.escape(needle), hay) is not None
+
+
+def employer_match(record_employer: str | None, signal_list: Sequence[str]) -> list[str]:
+    """Return signal strings that matched (case-insensitive, word-boundary substring).
+
+    Match rule per VERIFICATION.md: signal_string must appear in record_employer
+    on word boundaries. No stemming, no word removal.
     """
     if not record_employer:
         return []
@@ -246,7 +267,7 @@ def employer_match(record_employer: str | None, signal_list: Sequence[str]) -> l
     hits = []
     for sig in signal_list or []:
         needle = _norm(sig)
-        if needle and needle in hay:
+        if _signal_in(needle, hay):
             hits.append(sig)
     return hits
 
