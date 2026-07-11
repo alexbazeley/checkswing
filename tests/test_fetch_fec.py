@@ -344,3 +344,32 @@ def test_fetch_all_variants_resumes_skipping_completed(fec_client):
         assert "Steven%20A%20Cohen" not in call.request.url
     # Checkpoint should be gone after success.
     assert not _checkpoint_path(slug).exists()
+
+
+class TestPermanent4xxFailFast:
+    """§4.4: a permanent client error (404/403/422) is NOT retried — retrying
+    just burns 5 backoff attempts every convergence run."""
+
+    def test_404_raises_immediately_without_retry(self, monkeypatch):
+        monkeypatch.setenv("FEC_API_KEY", "test-key")
+        monkeypatch.setattr(fetch_fec, "MIN_REQUEST_INTERVAL_S", 0.0)
+        with responses.RequestsMock() as rsps:
+            rsps.add(responses.GET, BASE_URL + SCHEDULE_A, status=404)
+            client = FECClient()
+            with pytest.raises(RuntimeError, match="permanent"):
+                client._request(SCHEDULE_A, {"contributor_name": "x"})
+            assert client.calls_made == 1          # exactly one attempt
+            assert len(rsps.calls) == 1            # not retried 5×
+
+    def test_500_still_retries(self, monkeypatch):
+        monkeypatch.setenv("FEC_API_KEY", "test-key")
+        monkeypatch.setattr(fetch_fec, "MIN_REQUEST_INTERVAL_S", 0.0)
+        with responses.RequestsMock() as rsps:
+            # First a 500 (transient → retried), then a 200.
+            rsps.add(responses.GET, BASE_URL + SCHEDULE_A, status=500)
+            rsps.add(responses.GET, BASE_URL + SCHEDULE_A, json={"results": []}, status=200)
+            client = FECClient()
+            monkeypatch.setattr(fetch_fec.time, "sleep", lambda *_a, **_k: None)
+            out = client._request(SCHEDULE_A, {"contributor_name": "x"})
+            assert out == {"results": []}
+            assert len(rsps.calls) == 2            # retried past the 500
