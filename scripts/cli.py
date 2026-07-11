@@ -14,6 +14,7 @@ from .apply_committee_external_links import apply_external_links
 from .audit import audit_slug
 from .backfill_donation_image_fields import backfill as backfill_donation_image_fields
 from .backfill_memo_fields import backfill as backfill_memo_fields
+from .backfill_subid import backfill as backfill_subid
 from .export import export_aggregate, export_entity
 from .ingest import ingest_entity, reclassify_entity, reclassify_in_place
 from .ingest_committee_disbursements import (
@@ -864,6 +865,20 @@ def backfill_memo_fields_cmd():
     Idempotent; never deletes a row (GOVERNANCE.md §1.10).
     """
     summary = backfill_memo_fields()
+    click.echo(json.dumps(summary, indent=2, default=str))
+
+
+@cli.command(name="backfill-sub-id")
+def backfill_subid_cmd():
+    """One-shot (GATED): populate the v9 sub_id column on existing donation rows.
+
+    Scans data/raw/<slug>/*.json for each owner whose rows still have NULL sub_id
+    and rehydrates FEC's globally-unique record id (the §1.3 collision
+    discriminator). Snapshots master.db. Idempotent; changes no published total.
+    Rows whose raw is gone stay NULL and safely fall back to the transaction_id
+    identity (no live collisions).
+    """
+    summary = backfill_subid()
     click.echo(json.dumps(summary, indent=2, default=str))
 
 

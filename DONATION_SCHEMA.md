@@ -42,6 +42,9 @@ The canonical record. One row per FEC transaction, attributed to one entity (own
 | `memo_code` · `memo_text` | TEXT | v8: FEC memo fields, stored for provenance on earmarked/conduit rows. `memo_code` is set on FEC memo lines; note it is NOT the dedup key (it is null on both legs of an ActBlue/WinRed earmark). |
 | `is_individual` | INTEGER | v8: FEC's flag distinguishing a countable individual contribution (1) from a conduit pass-through leg (0). Drives `counted`. NULL when unrecoverable (raw payload gone) — treated as countable. |
 | `counted` | INTEGER NOT NULL DEFAULT 1 | v8 **derived** dedup flag (not an FEC field). `0` marks an earmark/conduit pass-through leg (`is_individual=0`) that has a countable sibling in the same (entity_slug, contributor_name_raw, date, amount) group — the genuine double-count. Every published SUM filters `counted = 1`. Recomputed by `db.recompute_counted` after each ingest/reclassify; the row is never deleted (§1.10). |
+| `sub_id` | TEXT | v9: FEC's **globally-unique** record id. `transaction_id` (the PK) is filer-assigned and NOT unique across committees; `sub_id` is the authoritative identity `insert_donation` uses to tell a genuine restatement (same `sub_id`) from a cross-committee `transaction_id` collision (different `sub_id` → distinct contributions, not a restatement — see below). NULL on legacy rows whose raw is gone (backfill via `cli backfill-sub-id`); a NULL falls back to the `transaction_id` identity. |
+
+**transaction_id collisions (GOVERNANCE.md §1.5; schema v9).** `transaction_id` is filer-assigned (e.g. `SA11AI.20387`) and not unique across committees, so two distinct contributions can share one. When `insert_donation` finds an existing row with the same `transaction_id` but a **different** `sub_id`, it returns `("collision", …)` and writes nothing — refusing to supersede the wrong record — and the ingest run logs it. (Zero occurrences in the live DB; this converts a would-be silent wrong-supersession into a loud, auditable skip.) The `review_queue` PK is likewise `(transaction_id, entity_slug)` as of v9, so two owners can each flag the same FEC transaction without one silently dropping the other.
 
 **Earmark/conduit dedup (GOVERNANCE.md §1.10; schema v8).** A contribution earmarked through a conduit (ActBlue/WinRed) is reported to the FEC twice — the conduit's pass-through leg and the ultimate recipient's own report — under distinct `transaction_id`s. FEC excludes the pass-through leg from its individual-contribution totals (`is_individual=0`); the archive mirrors that via `counted`. A **lone** conduit leg (the only record of a real gift FEC itemized only at the conduit) keeps `counted=1` so it is never silently dropped. Both legs remain in the table; only the counted view is deduplicated.
 
@@ -93,8 +96,8 @@ UNCERTAIN records routed for human adjudication.
 
 | Column | Type | Notes |
 |---|---|---|
-| `transaction_id` | TEXT PK | |
-| `entity_slug` | TEXT NOT NULL | The entity name-matched against |
+| `transaction_id` | TEXT | Part of the composite PK. |
+| `entity_slug` | TEXT NOT NULL | The entity name-matched against. v9: PK is `(transaction_id, entity_slug)` so two owners can flag the same FEC transaction. |
 | `reason` | TEXT NOT NULL | Why UNCERTAIN |
 | `raw_payload_path` | TEXT NOT NULL | |
 | `queued_at` | TEXT NOT NULL | |
