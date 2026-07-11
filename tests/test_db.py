@@ -497,3 +497,10 @@ class TestReviewQueueCompositePK:
             row = conn.execute("SELECT transaction_id, entity_slug FROM review_queue").fetchone()
         assert pk == {"transaction_id", "entity_slug"}
         assert row["transaction_id"] == "T1" and row["entity_slug"] == "owner-a"  # data preserved
+
+
+def test_connect_sets_busy_timeout(db_path):
+    # §4.5: a 30s busy_timeout so a competing writer waits instead of failing
+    # instantly with "database is locked".
+    with db.connect(db_path) as conn:
+        assert conn.execute("PRAGMA busy_timeout").fetchone()[0] == 30000

@@ -215,6 +215,8 @@ def connect(db_path: Path = STATE_DB) -> Iterator[sqlite3.Connection]:
     conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA foreign_keys = ON")
+    # §4.5: wait up to 30s for a competing writer's lock (see scripts/db.py).
+    conn.execute("PRAGMA busy_timeout = 30000")
     try:
         yield conn
         conn.commit()

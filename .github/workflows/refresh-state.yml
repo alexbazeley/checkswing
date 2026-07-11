@@ -23,7 +23,8 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: refresh-state
+  # §4.5: shared with refresh.yml + il-backfill.yml — see refresh.yml for why.
+  group: fec-archive-refresh
   cancel-in-progress: false
 
 permissions:

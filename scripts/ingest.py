@@ -619,12 +619,17 @@ def ingest_entity(
     # Records today's UTC date as the freshness watermark so the NEXT ingest
     # fetches incrementally (B.5 reads this back). Skipped for `from_raw`
     # runs — those don't fetch from FEC, so they shouldn't move the watermark.
+    # Also skipped for a `max_pages`-capped fetch (§4.5): that fetch is
+    # deliberately truncated (a smoke/test run), so advancing the watermark would
+    # make the next incremental run skip the un-fetched pages — a silent gap.
     # GOVERNANCE.md §1.7 boundary: this only touches audit.last_ingestion;
     # signal blocks remain untouched.
-    if not from_raw:
+    if not from_raw and max_pages is None:
         today_iso = _utc_today_iso()
         _write_audit_last_ingestion(slug, today_iso)
         summary["audit_last_ingestion_set"] = today_iso
+    elif max_pages is not None:
+        summary["audit_last_ingestion_skipped"] = "max_pages-truncated fetch"
 
     return summary
 
