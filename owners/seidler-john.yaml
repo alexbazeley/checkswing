@@ -4,11 +4,12 @@
 # after Eric Kutsenda's interim role (Nov 2023 - Feb 2025).
 #
 # CURRENT-OWNER STATUS IS TRANSITIONAL: A sale to a José E. Feliciano /
-# Kwanza Jones-led group at $3.9B was publicly announced 2026-05-02. MLB
-# approval expected at June 2026 quarterly owners meetings; targeted close
-# pre-2026 All-Star break. When that closes, this YAML's tenure_end_date
-# should be updated to the close date; Feliciano then takes over as MLB
-# control person.
+# Kwanza Jones-led group at $3.9B was publicly announced 2026-05-02. The
+# required 75%-of-owners approval vote — first expected at the June 2026
+# meetings — SLIPPED and, as of 2026-07-11, is still pending (hoped for late
+# July; Sportico/SI). John Seidler REMAINS the MLB control person until it
+# closes. When it closes, set this YAML's tenure_end_date to the close date;
+# Feliciano then takes over as control person. Do not anticipate the date.
 #
 # Read OWNER_SCHEMA.md before editing. Read GOVERNANCE.md §1.7 before adding entities.
 
@@ -104,12 +105,14 @@ notes: |
   family office that manages assets for four generations of the
   O'Malley-Seidler family). Board member of Rawlings Sporting Goods.
 
-  ANTICIPATED TRANSITION: Padres sale agreement to a José E. Feliciano /
-  Kwanza Jones-led group was publicly announced 2026-05-02 ($3.9B; new MLB
-  record). MLB approval expected at June 2026 owners meetings; target close
-  before 2026 All-Star Break (~mid-July 2026). When MLB approves and the
-  sale closes, this YAML's tenure_end_date should be updated to the close
-  date, and feliciano-jose.yaml's tenure_start_date should be aligned.
+  PENDING TRANSITION (verified 2026-07-11): Padres sale agreement to a José
+  E. Feliciano / Kwanza Jones-led group was publicly announced 2026-05-02
+  ($3.9B; new MLB record). The 75%-of-owners approval vote first expected at
+  the June 2026 meetings SLIPPED and is still pending as of 2026-07-11 (hoped
+  for late July; Sportico/SI) — John Seidler remains the control person until
+  it closes. When MLB approves and the sale closes, this YAML's tenure_end_date
+  should be updated to the close date, and feliciano-jose.yaml's
+  tenure_start_date should be aligned. Do not anticipate the date.
 
   Strong_signal: "O'Malley Seidler Partners" (uniquely-named family-office
   vehicle). Both apostrophe and non-apostrophe forms included to handle FEC
