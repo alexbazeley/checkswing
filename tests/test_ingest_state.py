@@ -203,6 +203,7 @@ def test_reclassify_rebuilds_from_extract(tmp_path, monkeypatch):
     res = ingest_state.reclassify_state_entity(
         "moreno-arte",
         rcpt_rows=[_rcpt(AMOUNT="999.00")],
+        jurisdiction="CA",
         recipient_resolver=_resolver,
         reason="test",
         db_path=db_path,
@@ -268,7 +269,7 @@ def test_excluded_jurisdiction_skips_reclassify(tmp_path, monkeypatch):
     y = dict(OWNER_YAML); y["exclude_state_jurisdictions"] = ["CA"]
     (ingest_state.OWNERS_DIR / "moreno-arte.yaml").write_text(yaml.safe_dump(y), encoding="utf-8")
     res = ingest_state.reclassify_state_entity(
-        "moreno-arte", rcpt_rows=[_rcpt()], recipient_resolver=_resolver,
+        "moreno-arte", rcpt_rows=[_rcpt()], jurisdiction="CA", recipient_resolver=_resolver,
         reason="now excluded", db_path=db_path,
     )
     assert res.excluded_owner is True

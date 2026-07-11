@@ -353,6 +353,35 @@ negative employer signal) is the honest tool.
 
 ---
 
+## State adjudication (Phase 4 — `data/state.db`)
+
+The state review queue (`state_review_queue`) has its own adjudication trio,
+mirroring the federal one but keyed on `(state_txn_id, entity_slug)` and gated on
+`state.db`. **One structural difference matters:** the federal `attribute`/`exclude`
+*reclassify from the stored per-owner raw* so the override applies immediately;
+state has no per-owner raw (its raw is the bulk portal extract), so
+`attribute-state`/`exclude-state` write a durable override that **applies on the
+next `ingest-state` / `reclassify-state` for that owner** — not instantly. The
+queue-only verdicts, by contrast, take effect immediately.
+
+| Situation (state) | Tool | Effect |
+|---|---|---|
+| Positively-identified stranger in the state queue | `resolve-state <state_txn_id> <slug> --verdict DISCARDED` | immediate (queue-only) |
+| Burn down an owner's open state queue | `bulk-discard-state <slug> [--jurisdiction TX] [--reason-like '…']` | immediate (queue-only) |
+| A state txn provably the owner's the rules can't reach | `attribute-state <state_txn_id> <slug> --reason … --status CONFIRMED` | on next state ingest/reclassify |
+| A same-named relative's state txn | `exclude-state <state_txn_id> <slug> --reason …` | on next state ingest/reclassify |
+| Undo any of the above | `unresolve-state` / `unattribute-state` / `unexclude-state` | — |
+
+`resolve-state`/`bulk-discard-state`/`attribute-state`/`exclude-state` are gated
+(snapshot + PROVENANCE_LOG for the mass/override ops) and reversible. Durable
+verdicts survive `reclassify-state` (the delete leaves `state_review_resolutions`
++ `state_manual_attributions`). `reclassify-state` is per-jurisdiction — the
+`jurisdiction` is required (a wrong/absent one would wipe the wrong jurisdiction's
+rows). Use `queue-stats` to see where the state backlog is concentrated before
+drilling in.
+
+---
+
 ## Quick reference
 
 | Situation | Tool |
@@ -363,6 +392,7 @@ negative employer signal) is the honest tool.
 | One owner row the rules can't reach | `attribute <txn> <slug>` |
 | Positively-identified stranger in the queue | `resolve --verdict DISCARDED` / `bulk-discard` |
 | Can't tell | leave UNCERTAIN |
+| **State** queue/attribution | **`*-state`** variants (see the State section above) |
 
 All mutating commands snapshot `master.db` + log to PROVENANCE_LOG and are
 reversible. `audit`, `queue-stats`, `sample`, `review`, `raw-coverage`,

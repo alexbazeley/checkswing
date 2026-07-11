@@ -406,8 +406,8 @@ def reclassify_state_entity(
     slug: str,
     *,
     rcpt_rows: Iterable[dict],
+    jurisdiction: str,
     reason: str = "",
-    jurisdiction: str = "CA",
     db_path=state_db.STATE_DB,
     **kwargs,
 ) -> IngestStateResult:
@@ -418,7 +418,9 @@ def reclassify_state_entity(
 
     The delete is scoped to `jurisdiction` because the re-ingest only restores rows from
     that jurisdiction's extract — wiping a multi-state owner's other jurisdictions would
-    silently lose them.
+    silently lose them. `jurisdiction` is REQUIRED (§5.4): the old `="CA"` default meant
+    a caller that forgot to pass it silently wiped an owner's California rows regardless
+    of which extract it was actually re-ingesting.
     """
     run_id = uuid.uuid4().hex[:8]
     _maybe_snapshot(run_id, db_path)

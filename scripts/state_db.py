@@ -458,6 +458,29 @@ def state_manual_attributions_for_slug(
     }
 
 
+def delete_state_review_resolution(
+    conn: sqlite3.Connection, *, state_txn_id: str, entity_slug: str
+) -> int:
+    """Remove a standing state review verdict (undo a resolve-state). Returns rows deleted."""
+    cur = conn.execute(
+        "DELETE FROM state_review_resolutions WHERE state_txn_id = ? AND entity_slug = ?",
+        (state_txn_id, entity_slug),
+    )
+    return cur.rowcount
+
+
+def delete_state_manual_attribution(
+    conn: sqlite3.Connection, *, state_txn_id: str, entity_slug: str
+) -> int:
+    """Remove a manual state attribution/exclusion (undo attribute-state/exclude-state).
+    Returns rows deleted."""
+    cur = conn.execute(
+        "DELETE FROM state_manual_attributions WHERE state_txn_id = ? AND entity_slug = ?",
+        (state_txn_id, entity_slug),
+    )
+    return cur.rowcount
+
+
 def insert_state_ingestion_run(conn: sqlite3.Connection, row: dict) -> None:
     conn.execute(
         """
