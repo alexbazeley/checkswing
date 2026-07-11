@@ -216,8 +216,10 @@ The state review queue is **10,106 open items, zero ever adjudicated** — there
 - Timeline SVG `preserveAspectRatio="none"` (`:4888`) distorts dots on narrow viewports; federal ghero chips are inert spans while state's are links (`3494` vs `7188`); committee back-link mislabeled (`5439`).
 - Latent: `indexStateByOwner` keys on `d.entity` only (`:2627`) while federal rolls up `d.parent || d.entity` — state spouse rows will silently vanish from owner pages when household tracking reaches Phase 4. Fix alongside §5.1. — ✅ PR #102 (now `parent || entity`)
 
-### 6.4 JS test floor (M)
-6,200 lines of JS, zero automated coverage — the structural reason §1.6's bugs survived. Minimum viable: extract pure functions (fmtDate, aggregation, share-math, CSV building) into a `<script>`-loadable module tested via a tiny Node harness in CI. Not a framework migration.
+### 6.4 JS test floor (M) — ✅ PR #111
+> Established the floor. Extracted the pure formatting/escaping/CSV helpers (`fmtMoney`, `fmtMoneyExact`, `fmtInt`, `escapeHtml`/`escapeAttr`, `csvEscape`, `buildCSV`) into **`mockup/lib.js`** — a `<script>`-loadable module the SPA loads first (they become globals, single source of truth; the inline dupes were removed) and Node can `require`. **`tests/js/lib.test.js`** (5 tests, `node --test`) exercises the money tiers, the §3.8 CSV formula-injection guard, HTML escaping, and CSV assembly. Wired into **`ci.yml`** (setup-node + `node --test tests/js/*.test.js`) as a gate alongside pytest/validate. Browser-verified the SPA still renders via the lib.js globals (KPI "$34.5M", no console errors). Minimum-viable per the plan — not a framework migration; the module can grow to cover aggregation/share-math next.
+
+**Original:** 6,200 lines of JS, zero automated coverage — the structural reason §1.6's bugs survived. Minimum viable: extract pure functions (fmtDate, aggregation, share-math, CSV building) into a `<script>`-loadable module tested via a tiny Node harness in CI. Not a framework migration.
 
 ---
 
