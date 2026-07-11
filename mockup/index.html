@@ -2737,8 +2737,11 @@ function buildPrintHeader() {
   } else if (v === "cycle") {
     title = `${state.view.year} election cycle`;
   } else if (v === "committee") {
-    /* The committee's name is in donations; pick the first matching record. */
-    const d = state.data.donations.find((x) => x.committee_id === state.view.id);
+    /* Committee name: the recipients[] rollup carries it (present at first paint);
+       fall back to the donations array, then the bare id. §6.1 Stage 2 — don't
+       depend on the lazy donations array for the document title. */
+    const rec = (state.data.recipients || []).find((x) => x.committee_id === state.view.id);
+    const d = rec || state.data.donations.find((x) => x.committee_id === state.view.id);
     title = d ? `Recipient: ${d.committee}` : `Committee: ${state.view.id}`;
   } else if (v === "recipients") {
     title = "Recipients — every committee that received MLB-owner money";
@@ -2940,64 +2943,37 @@ function buildSearchIndex() {
     });
   }
 
-  /* Committees (recipient organizations). Dedup by committee_id. */
-  const cmAgg = {};
-  for (const d of state.data.donations) {
-    if (!d.committee_id || !d.committee) continue;
-    if (!cmAgg[d.committee_id]) {
-      cmAgg[d.committee_id] = { id: d.committee_id, name: d.committee, party: d.party, amount: 0, count: 0 };
-    }
-    cmAgg[d.committee_id].amount += amt(d);
-    cmAgg[d.committee_id].count += 1;
-  }
-  for (const c of Object.values(cmAgg)) {
+  /* Committees (recipient organizations). §6.1 Stage 2: derived from the
+     pre-baked recipients[] rollup rather than the (now lazy-loaded) donations
+     array, so cmd-K is complete at first paint. recipients[] already dedupes by
+     committee_id and skips the "_unknown" bucket. */
+  for (const r of state.data.recipients || []) {
+    if (!r.committee_id || !r.committee) continue;
     items.push({
       type: "committee",
-      label: c.name,
-      sub: `${c.party} · ${c.count} donation${c.count === 1 ? "" : "s"} from MLB`,
-      key: c.name.toLowerCase(),
-      url: `#/committee/${encodeURIComponent(c.id)}`,
-      sortBy: c.amount,
-      metaText: fmtMoney(c.amount),
+      label: r.committee,
+      sub: `${r.party} · ${r.n_donations} donation${r.n_donations === 1 ? "" : "s"} from MLB`,
+      key: r.committee.toLowerCase(),
+      url: `#/committee/${encodeURIComponent(r.committee_id)}`,
+      sortBy: aggAmt(r, "total_amount"),
+      metaText: fmtMoney(aggAmt(r, "total_amount")),
     });
   }
 
-  /* Candidates — dedup by candidate_id. We don't have a candidate detail
-     page, so candidate hits route to the committee that received the most
-     MLB money on their behalf (e.g. "Pete Ricketts" → PETE RICKETTS FOR
-     SENATE). The cmd-k result label shows the candidate name; the sub-line
-     names the committee they're being redirected to so the redirect isn't
-     mysterious. Candidates with no candidate_id are skipped (would dedupe
-     poorly by name alone). */
-  const cdAgg = {};
-  for (const d of state.data.donations) {
-    if (!d.candidate || !d.candidate_id) continue;
-    if (!cdAgg[d.candidate_id]) {
-      cdAgg[d.candidate_id] = {
-        id: d.candidate_id, name: d.candidate, party: d.party,
-        amount: 0, count: 0, byCommittee: {},
-      };
-    }
-    const c = cdAgg[d.candidate_id];
-    c.amount += amt(d);
-    c.count += 1;
-    if (d.committee_id) {
-      const slot = c.byCommittee[d.committee_id] || { name: d.committee, amount: 0 };
-      slot.amount += amt(d);
-      slot.name = d.committee;
-      c.byCommittee[d.committee_id] = slot;
-    }
-  }
-  for (const cd of Object.values(cdAgg)) {
-    const top = Object.entries(cd.byCommittee).sort((a, b) => b[1].amount - a[1].amount)[0];
-    if (!top) continue;   // no committee_id to route to — skip
-    const [topCommitteeId, topCommittee] = top;
+  /* Candidates — §6.1 Stage 2: from the pre-baked search_candidates rollup
+     (dedup by candidate_id, routed to the committee that received the most MLB
+     money on that candidate's behalf) so cmd-K needs no donations array. We
+     don't have a candidate detail page, so candidate hits route to that top
+     committee; the sub-line names it so the redirect isn't mysterious.
+     Candidates with no routable committee are already dropped at build time. */
+  for (const cd of state.data.search_candidates || []) {
+    if (!cd.name || !cd.top_committee_id) continue;
     items.push({
       type: "candidate",
       label: cd.name,
-      sub: `→ ${topCommittee.name}`,
+      sub: `→ ${cd.top_committee_name}`,
       key: cd.name.toLowerCase(),
-      url: `#/committee/${encodeURIComponent(topCommitteeId)}`,
+      url: `#/committee/${encodeURIComponent(cd.top_committee_id)}`,
       sortBy: cd.amount,
       metaText: fmtMoney(cd.amount),
     });
@@ -3043,6 +3019,62 @@ function buildTeamsIndex() {
   return teams;
 }
 
+/* ────────── Lazy donations array (§6.1 Stage 2) ──────────
+   data.json ships only aggregates now; the full donations array lives in the
+   sibling donations.json and loads on demand. ensureDonations() fetches it at
+   most once (idempotent — returns the in-flight promise on concurrent callers),
+   populates state.data.donations, and flips state.donationsLoaded. A failed
+   fetch clears the cached promise so a Retry can re-attempt. */
+function ensureDonations() {
+  if (state.donationsLoaded) return Promise.resolve(state.data.donations);
+  if (state.donationsPromise) return state.donationsPromise;
+  state.donationsPromise = fetch("./donations.json")
+    .then((r) => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+    .then((arr) => {
+      state.data.donations = Array.isArray(arr) ? arr : [];
+      state.donationsLoaded = true;
+      state.donationsError = false;
+      return state.data.donations;
+    })
+    .catch((e) => {
+      state.donationsPromise = null;   // allow retry
+      state.donationsError = true;
+      throw e;
+    });
+  return state.donationsPromise;
+}
+
+/* Views whose per-row contribution tables read the full donations array. When
+   donations land (or a Retry succeeds) the current view is re-rendered iff it's
+   one of these — Home/Federal/recipients render wholly from aggregates. */
+function viewNeedsDonations() {
+  return ["owner", "cycle", "committee", "team", "whats-new"].includes(
+    state.view && state.view.name
+  );
+}
+
+/* Re-attempt a failed donations fetch from the inline gate banner. */
+function retryDonations() {
+  state.donationsError = false;
+  render();  // repaint the gate into "Loading…" immediately
+  ensureDonations()
+    .then(() => render())
+    .catch(() => render());
+}
+
+/* Inline banner for donation-dependent views while the lazy array is loading or
+   after it failed. Returns "" once loaded, so a re-render clears it. */
+function donationsGate() {
+  if (state.donationsLoaded) return "";
+  if (state.donationsError) {
+    return `<div class="error-banner" style="margin:16px 0">
+      Couldn't load the full contribution records.
+      <a href="#" onclick="retryDonations();return false" class="drawer-link" style="display:inline">Retry</a>
+    </div>`;
+  }
+  return `<p class="loading" style="padding:12px 0">Loading contribution records…</p>`;
+}
+
 /* ────────── Data load ────────── */
 async function loadData() {
   /* Hydrate the inflation toggle preference before the first render so
@@ -3062,6 +3094,14 @@ async function loadData() {
     ]);
     if (!res.ok) throw new Error("HTTP " + res.status);
     state.data = await res.json();
+    /* §6.1 Stage 2: the donations array now lazy-loads from donations.json after
+       first paint. Seed an empty array so every consumer (owner/cycle/committee/
+       team/whats-new/drawer/CSV) is null-safe until it lands; ensureDonations()
+       fills it and re-renders. `recent` + `search_candidates` (pre-baked in
+       data.json) carry Home/Federal + cmd-K in the meantime. */
+    if (!Array.isArray(state.data.donations)) state.data.donations = [];
+    state.donationsLoaded = false;
+    state.donationsError = false;
     state.teams = buildTeamsIndex();
     state.searchIndex = buildSearchIndex();
     /* Phase-4 state campaign-finance payload (separate, small). Non-fatal if
@@ -3110,6 +3150,13 @@ async function loadData() {
     }
     registerPrintHooks();
     route();
+    /* §6.1 Stage 2: kick off the donations array in the background. Home/Federal
+       are already painted from aggregates; when donations land, re-render the
+       current view only if it needs per-row donations (owner/cycle/committee/
+       team/whats-new) — Home/Federal/recipients don't, so no flash there. */
+    ensureDonations()
+      .then(() => { if (viewNeedsDonations()) render(); })
+      .catch(() => { state.donationsError = true; if (viewNeedsDonations()) render(); });
   } catch (e) {
     document.getElementById("app").innerHTML = `
       <div class="container" style="padding:40px 0">
@@ -3317,6 +3364,17 @@ function render() {
   else if (state.view.name === "state-recipients") app.innerHTML = renderStateRecipients();
   else if (state.view.name === "state-coverage") app.innerHTML = renderStateCoverage();
   else if (state.view.name === "legislation") app.innerHTML = renderLegislation();
+
+  /* §6.1 Stage 2: donation-dependent views (owner/cycle/committee/team/whats-new)
+     paint their aggregate shell from data.json immediately, but their per-row
+     contribution tables need the lazy donations array. While it's loading (or
+     after a failure) prepend an inline gate banner to the view so the empty
+     tables read as "loading", not "no records". The re-render that fires when
+     donations land clears it (donationsGate() returns "" once loaded). */
+  if (viewNeedsDonations() && !state.donationsLoaded) {
+    const container = app.querySelector(".container");
+    if (container) container.insertAdjacentHTML("afterbegin", donationsGate());
+  }
 
   /* Re-bind */
   bindIndexHandlers();
@@ -3633,7 +3691,7 @@ function renderLeague() {
       <h2 style="margin-top:6px">Recent contributions</h2>
       <p class="caption">The 20 most recently dated contributions in the archive. Each is one click from its FEC filing image.</p>
     </div>
-    ${renderRecentDonations(state.data.donations)}
+    ${renderRecentDonations(state.data.recent || state.data.donations)}
     <p class="footnote">
       Sorted by donation date as filed with the FEC, not by ingestion date.
       During an election cycle, late additions can include contributions filed under
@@ -4400,7 +4458,20 @@ function bindIndexHandlers() {
 
   document.querySelectorAll(".csv-btn[data-csv=\"league\"]").forEach((btn) => {
     btn.addEventListener("click", () => {
-      downloadDonationsCSV(state.data.donations, `checkswing-all-donations-${state.data.generated_at.slice(0,10)}.csv`);
+      /* §6.1 Stage 2: the "all donations" CSV needs the full lazy array. If it's
+         not in yet, fetch it first (label the wait), then export. */
+      const doExport = () => downloadDonationsCSV(
+        state.data.donations,
+        `checkswing-all-donations-${state.data.generated_at.slice(0,10)}.csv`
+      );
+      if (state.donationsLoaded) return doExport();
+      const orig = btn.textContent;
+      btn.textContent = "Preparing…";
+      btn.disabled = true;
+      ensureDonations()
+        .then(doExport)
+        .catch(() => { alert("Couldn't load the full contribution records for export. Please retry."); })
+        .finally(() => { btn.textContent = orig; btn.disabled = false; });
     });
   });
 
@@ -5545,6 +5616,13 @@ function renderCommittee(committeeId) {
   const decoded = decodeURIComponent(committeeId);
   const donations = state.data.donations.filter((d) => (d.committee_id || "") === decoded);
   if (donations.length === 0) {
+    /* §6.1 Stage 2: this page is donations-coupled (name/party/totals derive from
+       the array). During the lazy-load race, render just the shell — the central
+       donationsGate() banner supplies "Loading…", and the re-render on load fills
+       the real page. Only claim "No donations" once the array is actually in. */
+    if (!state.donationsLoaded) {
+      return `<div class="container"><a class="back" href="#/federal">← Back to federal</a></div>`;
+    }
     return `<div class="container"><a class="back" href="#/federal">← Back to federal</a><div class="loading">No donations to committee ${escapeHtml(decoded)}.</div></div>`;
   }
 
@@ -6503,7 +6581,29 @@ function downloadDonationsCSV(rows, filename, cols = FEDERAL_CSV_COLS) {
    DRAWER
    ══════════════════════════════════════════════════════════════════════ */
 function openDrawer(id) {
-  const d = state.data.donations.find((x) => x.id === id);
+  state.drawerId = id;
+  /* §6.1 Stage 2 race guard: federal donations lazy-load. Fast path — the visible
+     Federal "recent" rows are pre-baked in state.data.recent, so they open
+     instantly. Otherwise, if the full array isn't in yet and this id isn't a
+     known state row, open a loading drawer, fetch donations.json, and re-open
+     when it lands (only if the user hasn't closed/changed the drawer meanwhile). */
+  let d = state.data.donations.find((x) => x.id === id)
+        || (state.data.recent || []).find((x) => x.id === id);
+  if (!d && !state.donationsLoaded &&
+      !(state.stateData && (state.stateData.donations || []).some((x) => x.id === id))) {
+    openDrawerShell(`<p class="loading" style="padding:8px 0">Loading contribution record…</p>`);
+    ensureDonations()
+      .then(() => { if (state.drawerId === id) openDrawer(id); })
+      .catch(() => {
+        if (state.drawerId === id) openDrawerShell(
+          `<h2>Couldn't load record</h2>
+           <div class="drawer-section"><p class="drawer-not-found">
+             The contribution records failed to load.
+             <a href="#" onclick="retryDrawer();return false" class="drawer-link" style="display:inline">Retry</a>
+           </p></div>`);
+      });
+    return;
+  }
   if (!d) {
     /* The State overview's recent-contribution rows reuse .recent-row → this
        handler, but their composed ids (e.g. "WA:WA-PDC:…") live in
@@ -6729,6 +6829,7 @@ function openDrawer(id) {
    and Tab leaked to the background. activate/deactivate below move focus into the
    drawer, trap Tab within it, and restore focus to the trigger on close. */
 let _drawerReturnFocus = null;
+let _drawerOpen = false;
 function _drawerFocusables() {
   const d = document.getElementById("drawer");
   return [...d.querySelectorAll('a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])')]
@@ -6745,25 +6846,50 @@ function _drawerTrap(e) {
 function activateDrawerFocus() {
   const d = document.getElementById("drawer");
   d.setAttribute("aria-hidden", "false");   // defensive — every open path also sets it
-  _drawerReturnFocus = document.activeElement;
+  /* §6.1 Stage 2: capture the trigger for focus-return only on the FIRST open —
+     a loading→real re-open must not overwrite it with an in-drawer element. */
+  if (!_drawerOpen) { _drawerReturnFocus = document.activeElement; _drawerOpen = true; }
   d.setAttribute("tabindex", "-1");
   const f = _drawerFocusables();
   (f[0] || d).focus();
+  d.removeEventListener("keydown", _drawerTrap);   // idempotent across re-opens
   d.addEventListener("keydown", _drawerTrap);
 }
 function deactivateDrawerFocus() {
   document.getElementById("drawer").removeEventListener("keydown", _drawerTrap);
+  _drawerOpen = false;
   const t = _drawerReturnFocus;
   _drawerReturnFocus = null;
   if (t && typeof t.focus === "function" && document.contains(t)) t.focus();
 }
 
 function closeDrawer() {
+  state.drawerId = null;   // §6.1 Stage 2: cancel any pending lazy re-open
   document.getElementById("drawer").classList.remove("open");
   document.getElementById("drawer-scrim").classList.remove("open");
   document.getElementById("drawer").setAttribute("aria-hidden", "true");
   deactivateDrawerFocus();
   setDrawerParam(null);
+}
+
+/* §6.1 Stage 2: open the drawer with an arbitrary body (loading / error shells
+   used while the lazy donations array is in flight). Same open + focus lifecycle
+   as the real donation drawer; the ?d= param is set by the real openDrawer on
+   success. */
+function openDrawerShell(bodyHtml) {
+  document.getElementById("drawer-body").innerHTML = bodyHtml;
+  document.getElementById("drawer").classList.add("open");
+  document.getElementById("drawer-scrim").classList.add("open");
+  document.getElementById("drawer").setAttribute("aria-hidden", "false");
+  activateDrawerFocus();
+}
+
+/* Retry a drawer whose donations fetch failed, from its inline Retry link. */
+function retryDrawer() {
+  const id = state.drawerId;
+  if (!id) return;
+  state.donationsError = false;
+  openDrawer(id);
 }
 
 /* Sync ?d=<txn_id> to URL without triggering a route. */
