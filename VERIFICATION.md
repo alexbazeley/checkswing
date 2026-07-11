@@ -37,7 +37,7 @@ Compare against `name_variants` after the following normalization:
 - Suffixes (Jr., Sr., II, III) are part of the name and matter — "John Smith Jr." does not match "John Smith".
 - Hyphenated last names are matched both ways ("Smith-Jones" matches "Smith Jones" and "Jones-Smith").
 
-Use `rapidfuzz` for fuzzy comparison only as a discovery aid for new name variants the registry might be missing — not as a substitute for an exact normalized match in classification.
+`rapidfuzz` is available (in `requirements.txt`) for ad-hoc fuzzy comparison when hunting for name variants the registry might be missing — it is deliberately NOT part of the classification path (which uses only exact normalized matching). No command wires it in today; it is a maintainer discovery aid.
 
 ### Confirming signals (each worth one point toward CONFIRMED)
 
