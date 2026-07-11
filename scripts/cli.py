@@ -818,12 +818,20 @@ def refresh(only, bucket, dry_run, skip_data_json, full_refetch, chunk_by_cycle)
     default=None,
     help="Cap the number of committees processed (for testing / smoke runs).",
 )
-def ingest_committees_cmd(only, force_refresh, max_count):
+@click.option(
+    "--max-fetch",
+    "max_fetch",
+    type=int,
+    default=None,
+    help="Cap committees actually FETCHED from FEC this run (oldest first; the rest "
+         "deferred to the next run). Bounds runtime and de-syncs the cohort (§4.3).",
+)
+def ingest_committees_cmd(only, force_refresh, max_count, max_fetch):
     """Enrich the committees and committee_totals tables from OpenFEC.
 
     Fetches /committee/<id>/ (identity) and /committee/<id>/totals/ (per-cycle
     scale) for every committee that has received an attributed donation.
-    Idempotent — re-runs within 30 days are no-ops unless --force-refresh.
+    Idempotent — re-runs within 45 days are no-ops unless --force-refresh.
     """
     only_list: list[str] | None = None
     if only:
@@ -832,6 +840,7 @@ def ingest_committees_cmd(only, force_refresh, max_count):
         only=only_list,
         force_refresh=force_refresh,
         max_count=max_count,
+        max_fetch=max_fetch,
     )
     click.echo("")
     click.echo(json.dumps(summary, indent=2, default=str))

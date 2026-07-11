@@ -315,3 +315,40 @@ class TestIngestAllCommittees:
         with db.connect(tmp_master) as conn:
             ids = [r[0] for r in conn.execute("SELECT committee_id FROM committees ORDER BY committee_id")]
             assert ids == ["C00000002"]
+
+
+class TestStalenessOrderingAndCap:
+    """§4.3: fetch oldest-refreshed committees first and cap fetches per run so a
+    convergence is bounded and the cohort de-synchronizes."""
+
+    def _seed_committee(self, db_path, cid, refreshed_at):
+        with db.connect(db_path) as conn:
+            conn.execute(
+                """INSERT OR REPLACE INTO committees
+                   (committee_id, name, raw_payload_path, fetched_at, refreshed_at)
+                   VALUES (?, ?, 'p', ?, ?)""",
+                (cid, cid, refreshed_at, refreshed_at),
+            )
+
+    def test_order_by_staleness_oldest_and_unseen_first(self, tmp_master):
+        self._seed_committee(tmp_master, "C00000001", "2020-01-01T00:00:00Z")
+        # C00000002 not seeded → never refreshed → should sort first.
+        with db.connect(tmp_master) as conn:
+            ordered = ingest_committees._order_by_staleness(
+                conn, ["C00000001", "C00000002"])
+        assert ordered == ["C00000002", "C00000001"]
+
+    def test_max_fetch_caps_and_defers_oldest_first(self, tmp_master, fec_responses):
+        # Both committees stale; C00000002 older → fetched first, C00000001 deferred.
+        self._seed_committee(tmp_master, "C00000001", "2020-06-01T00:00:00Z")
+        self._seed_committee(tmp_master, "C00000002", "2019-01-01T00:00:00Z")
+        _mock_committee(fec_responses, "C00000002")
+        summary = ingest_committees.ingest_all_committees(max_fetch=1, db_path=tmp_master)
+        assert summary["fetched"] == 1
+        assert summary["deferred"] == 1
+        with db.connect(tmp_master) as conn:
+            rows = dict(conn.execute(
+                "SELECT committee_id, refreshed_at FROM committees").fetchall())
+        # The oldest (C00000002) was refreshed; C00000001 keeps its stale stamp.
+        assert rows["C00000002"] > "2020-06-01T00:00:00Z"
+        assert rows["C00000001"] == "2020-06-01T00:00:00Z"

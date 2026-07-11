@@ -211,7 +211,7 @@ jobs:
 
   committees_refresh:
     # Enrich committees + committee_totals + filings + committee_disbursements_by_recipient
-    # for any recipient newly seen or whose last refresh is > FRESHNESS_DAYS (30 days).
+    # for any recipient newly seen or whose last refresh is > FRESHNESS_DAYS (45 days).
     # Runs after consolidate so it sees the merged master.db.
     #
     # Steady-state weekly cost: ~30 min (only stale committees get re-fetched).
@@ -224,10 +224,12 @@ jobs:
     # freshness window. The timeout-minutes cap sits just under the 6h GHA
     # ceiling so we fail-fast with logs rather than getting silently killed.
     #
-    # 350 (not 330) gives ~20 min of headroom for the one convergence run each
-    # time the whole committee cohort's stamps go stale on the same day and get
-    # re-fetched together (~5h) alongside filings + beneficiaries (~25 min). At
-    # 330 that run landed at ~5h27m — 3 min of slack; 350 keeps it safe.
+    # The committee cohort used to share one refreshed_at stamp, so the whole set
+    # went stale on the same day and got re-fetched together (~5h) — a sawtooth
+    # that ratcheted the timeout toward the 6h ceiling. §4.3: ingest-committees
+    # now fetches the OLDEST first and caps fetches per run (--max-fetch), so a
+    # convergence is spread across runs (each bounded to ~2-3h) and the stamps
+    # permanently de-synchronize. 350 stays as a safety ceiling.
     needs: consolidate
     runs-on: ubuntu-latest
     timeout-minutes: 350
@@ -256,7 +258,11 @@ jobs:
       - name: Ingest committees (identity + per-cycle totals)
         env:
           FEC_API_KEY: ${{ secrets.FEC_API_KEY }}
-        run: python -m scripts.cli ingest-committees
+        # --max-fetch bounds a convergence run and de-syncs the cohort (§4.3):
+        # oldest-refreshed committees are fetched first, the rest deferred to the
+        # next run. ~500 keeps this step well under the 6h ceiling; the cohort
+        # converges over a few monthly runs, then stays de-synchronized.
+        run: python -m scripts.cli ingest-committees --max-fetch 500
 
       - name: Apply curated external links
         run: python -m scripts.cli apply-committee-external-links

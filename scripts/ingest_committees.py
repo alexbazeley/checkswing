@@ -221,20 +221,48 @@ def list_committees_from_donations(db_path: Path = MASTER_DB) -> list[str]:
     return [r["recipient_committee_id"] for r in rows]
 
 
+def _order_by_staleness(conn: sqlite3.Connection, committee_ids: list[str]) -> list[str]:
+    """Return committee_ids oldest-refreshed first (never-refreshed first).
+
+    §4.3: all committees share one `refreshed_at` stamp, so with a 45-day window
+    ≈ 31-day cadence the whole cohort expires together — a run either skips all
+    (~27 min) or re-fetches all (~5.5h convergence, a ratchet toward GitHub's 6h
+    ceiling). Fetching the OLDEST-first + capping how many are fetched per run
+    (max_fetch) refreshes the cohort in slices at different times, which both
+    bounds each run's wall-clock AND permanently de-synchronizes the stamps."""
+    order = {
+        r["committee_id"]: r["refreshed_at"]
+        for r in conn.execute("SELECT committee_id, refreshed_at FROM committees")
+    }
+    # Never-seen committees (not in the table) sort first via the "" sentinel.
+    return sorted(committee_ids, key=lambda cid: order.get(cid) or "")
+
+
 def ingest_all_committees(
     *,
     only: list[str] | None = None,
     force_refresh: bool = False,
     max_count: int | None = None,
+    max_fetch: int | None = None,
     db_path: Path = MASTER_DB,
 ) -> dict:
     """Ingest every committee referenced by donations.
+
+    `max_fetch` caps how many committees are actually FETCHED from FEC this run
+    (skipped-fresh ones don't count) — the oldest are fetched first, the rest
+    deferred to the next run, so a full convergence is spread across runs and no
+    single run approaches the 6h ceiling (§4.3).
 
     Returns a summary dict. Per-committee failures are caught and recorded;
     they do NOT abort the run (GOVERNANCE.md §1.9 — prefer try-again-next-time).
     """
     started_at = _utc_now_iso()
     candidates = only or list_committees_from_donations(db_path)
+    # Oldest-refreshed first so max_fetch trims the freshest tail, not arbitrary
+    # committees (skip for an explicit `only` set — caller controls that order).
+    if not only:
+        with db.connect(db_path) as conn:
+            candidates = _order_by_staleness(conn, candidates)
     if max_count is not None:
         candidates = candidates[:max_count]
 
@@ -246,6 +274,7 @@ def ingest_all_committees(
         "skipped_fresh": 0,
         "failed": 0,
         "failed_ids": [],
+        "deferred": 0,  # §4.3: stale committees left for the next run (max_fetch)
         "totals_rows_written": 0,
         "snapshot_path": None,
     }
@@ -261,6 +290,17 @@ def ingest_all_committees(
     with _acquire_lock():
         client: FECClient | None = None
         for cid in candidates:
+            # §4.3: once this run has fetched its cap, defer the rest (they're the
+            # freshest of the stale, safe to pick up next run). A cheap freshness
+            # pre-check still lets us tally skips without a fetch.
+            if max_fetch is not None and summary["fetched"] >= max_fetch:
+                with db.connect(db_path) as conn:
+                    if _committee_is_fresh(conn, cid):
+                        summary["attempted"] += 1
+                        summary["skipped_fresh"] += 1
+                        continue
+                summary["deferred"] += 1
+                continue
             summary["attempted"] += 1
             try:
                 # Lazily construct the FEC client so an all-fresh dry run (where
