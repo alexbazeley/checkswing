@@ -106,6 +106,20 @@ general to the multi-state layer.)
   those safely needs fuzzy matching and is deferred, so a small residue of
   cross-form duplicate dollars may remain. Dollar totals are "as filed, de-duped to
   the high-confidence degree"; attribution (which owner) is unaffected.
+- **IL / TX / AZ content-key dedup (§1.2).** IL/TX re-file the same contribution
+  across multiple filings (different `source_filing_id`, same donor+date+amount+
+  recipient), and AZ returns it several times with DIFFERENT `source_tran_id`s (a
+  ×N fetcher fan-out) — cases a native-id dedup can't fold. The IL/TX/AZ fetchers
+  now dedup on the content key `(donor, date, amount, recipient)` keeping the
+  latest filing (`scripts/state_dedup.content_key_dedupe`), and the one-time
+  `cli dedupe-state-crossfilings` migration marked the pre-existing duplicates
+  `SUPERSEDED` (never deleted; ~$2.28M of double-counted dollars removed:
+  IL −$665k, TX −$359k, AZ −$1.25M). As with CAL-ACCESS, a genuinely separate
+  same-day/same-amount/same-recipient gift is collapsed too — the accepted
+  trade-off for these portals. **CA and WA are deferred**: their duplicates are
+  same-filing rows with distinct tran-ids, exactly what the CAL-ACCESS dedup
+  deliberately preserves; collapsing them would override that design and awaits
+  sign-off.
 - **Recipient party/office** are usually NULL — CAL-ACCESS receipts don't carry
   them; only the filer name/type is resolved (from the cover page).
 - **Coverage is partial and per-state.** Live jurisdictions: CA (CAL-ACCESS), NY

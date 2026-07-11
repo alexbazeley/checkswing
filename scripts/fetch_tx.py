@@ -169,12 +169,23 @@ def bucket_rows_by_owner(
 
 
 def dedupe(rows: Iterable[dict]) -> list[dict]:
-    """Dedup on the native contributionInfoId (idempotent across re-exports)."""
-    seen: dict[str, dict] = {}
-    for row in rows:
-        key = _clean(row.get("contributionInfoId")) or id(row)
-        seen.setdefault(key, row)
-    return list(seen.values())
+    """Content-key dedup (§1.2): collapse the same contribution re-filed across
+    multiple reports (different reportInfoIdent) — same donor+date+amount+
+    recipient — keeping the latest report. A native-ID dedup kept them all and
+    inflated TX totals (~$359k)."""
+    from . import tx_adapter
+    from .state_dedup import content_key_dedupe, filing_rank
+
+    return content_key_dedupe(
+        rows,
+        key_fn=lambda r: (
+            tx_adapter._composed_name(r).lower(),
+            _clean(r.get("contributionDt")),
+            _clean(r.get("contributionAmount")),
+            _clean(r.get("filerIdent")),
+        ),
+        rank_fn=lambda r: filing_rank(tx_adapter.filing_id_of(r), tx_adapter.tran_id_of(r)),
+    )
 
 
 def download_latest(dest: Path | None = None, url: str | None = None) -> Path:  # pragma: no cover - network

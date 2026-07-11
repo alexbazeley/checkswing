@@ -158,9 +158,24 @@ def test_stream_and_bucket_with_prejoin(tmp_path):
     assert row["_recipient_type"] == "candidate"
 
 
-def test_dedupe_on_native_id(tmp_path):
-    rows = [_contrib(contributionInfoId="100000001"), _contrib(contributionInfoId="100000001")]
-    assert len(fetch_tx.dedupe(rows)) == 1
+def test_dedupe_collapses_cross_filing(tmp_path):
+    """§1.2: the same contribution re-reported (different reportInfoIdent and
+    contributionInfoId, same donor+date+amount+recipient) collapses to one."""
+    rows = [
+        _contrib(contributionInfoId="100000001", reportInfoIdent="730"),
+        _contrib(contributionInfoId="100000002", reportInfoIdent="815"),  # later report
+    ]
+    out = fetch_tx.dedupe(rows)
+    assert len(out) == 1
+    assert tx_adapter.filing_id_of(out[0]) == "815"  # latest report kept
+
+
+def test_dedupe_keeps_distinct_contributions(tmp_path):
+    rows = [
+        _contrib(contributionInfoId="1", contributionAmount="5000.00"),
+        _contrib(contributionInfoId="2", contributionAmount="2500.00"),  # different amount
+    ]
+    assert len(fetch_tx.dedupe(rows)) == 2
 
 
 def test_contrib_member_detection():

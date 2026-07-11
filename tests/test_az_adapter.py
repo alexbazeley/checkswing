@@ -163,6 +163,20 @@ def test_parse_search_and_detail_responses():
     assert len(dr) == 2
 
 
-def test_dedupe_on_public_transaction_id():
-    rows = [_txn(), _txn(), _txn(PublicTransactionId=999)]
-    assert len(fetch_az.dedupe(rows)) == 2
+def test_dedupe_collapses_fanout_with_different_tran_ids():
+    """§1.2: AZ returns the same contribution several times with DIFFERENT
+    PublicTransactionIds (a ×N fan-out). Content-key dedup (donor+date+amount+
+    recipient) collapses them to one — a native-id dedup could not."""
+    rows = [_txn(), _txn(), _txn(PublicTransactionId=999, TransactionId=1)]
+    out = fetch_az.dedupe(rows)
+    assert len(out) == 1
+
+
+def test_dedupe_keeps_genuinely_different_contributions():
+    """Different recipient or amount = different content key = preserved."""
+    rows = [
+        _txn(),
+        _txn(PublicTransactionId=999, CommitteeUniqueId=20099, CommitteeName="Other PAC"),
+        _txn(PublicTransactionId=1000, Amount=2500.0),
+    ]
+    assert len(fetch_az.dedupe(rows)) == 3

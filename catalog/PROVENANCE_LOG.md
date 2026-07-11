@@ -24728,3 +24728,13 @@ generated end-to-end from the joined data") is satisfied.
 - **published CONFIRMED+PROBABLE total**: `$35,023,001.26` (4154 rows) → `$34,339,865.91` (4046 rows)
 - **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-10T23-15-02Z__backfill_memo_fields.db`
 - **note**: rows are never deleted (§1.10); the excluded legs stay queryable (counted=0). Mirrors FEC's own is_individual dedup convention.
+
+### 2026-07-10 — CORRECTION — state cross-filing/fan-out dedup (§1.2)
+
+- **what**: collapsed content-key duplicates (same donor+date+amount+recipient) in IL/TX (cross-filing re-reports) and AZ (×N fetcher fan-out); losers marked SUPERSEDED (never deleted, §1.10), highest filing kept.
+- **rows superseded**: `321` / `$2,275,792.33`
+- **IL**: 78 rows / $665,101.25 removed — $1,090,202.50 (142) → $425,101.25 (64)
+- **TX**: 30 rows / $359,397.80 removed — $1,599,716.60 (116) → $1,240,318.80 (86)
+- **AZ**: 213 rows / $1,251,293.28 removed — $1,882,939.92 (321) → $631,646.64 (108)
+- **deferred**: CA + WA (same-filing distinct-tran rows CA's fetch dedup preserves — needs sign-off).
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-10T23-57-30Z__dedupe_state_crossfilings.db`

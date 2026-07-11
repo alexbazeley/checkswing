@@ -343,6 +343,27 @@ def reclassify_state_cmd(slug, zip_path, reason):
     )
 
 
+@cli.command(name="dedupe-state-crossfilings")
+@click.option("--jurisdictions", default="IL,TX,AZ",
+              help="Comma-separated jurisdiction codes to dedupe (default: IL,TX,AZ).")
+@click.option("--dry-run", is_flag=True, help="Report what would be superseded; write nothing.")
+def dedupe_state_crossfilings_cmd(jurisdictions, dry_run):
+    """One-shot (GATED): collapse state cross-filing / fan-out duplicates (§1.2).
+
+    Groups CONFIRMED/PROBABLE state_donations by content key (donor+date+amount+
+    recipient) and marks all but the latest-filing row SUPERSEDED, so a
+    contribution re-filed across filings (IL/TX) or fanned out with different
+    tran-ids (AZ) is counted once. Never deletes (§1.10). Snapshots state.db and
+    appends a CORRECTION entry to PROVENANCE_LOG. CA/WA are excluded by default
+    (their same-filing distinct-tran rows are deliberately preserved — needs sign-off).
+    """
+    from .dedupe_state_crossfilings import dedupe
+
+    juris = tuple(j.strip().upper() for j in jurisdictions.split(",") if j.strip())
+    summary = dedupe(jurisdictions=juris, dry_run=dry_run)
+    click.echo(json.dumps(summary, indent=2, default=str))
+
+
 def _load_state_owners(slugs: str | None):
     """[(slug, owner_dict)] for the given --slugs, or every pilot/active owner."""
     import yaml as _yaml
