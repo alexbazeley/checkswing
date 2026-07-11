@@ -132,7 +132,8 @@ def _opener():  # pragma: no cover - network
 
 
 def _get_json(opener, url: str, body: bytes | None = None) -> dict:  # pragma: no cover - network
-    raw = opener.open(url, body, timeout=120).read()
+    from .state_http import retry_call
+    raw = retry_call(lambda: opener.open(url, body, timeout=120)).read()
     return json.loads(raw.decode("utf-8", "replace"))
 
 
@@ -154,7 +155,11 @@ def entity_detail(opener, entity_id) -> list[dict]:  # pragma: no cover - networ
         "ChartName": 80, "IsLessActive": "false", "ShowOfficeHolder": "false",
     })
     payload = _get_json(opener, f"{BASE}/Reporting/GetNEWDetailedTableData/?{q}", _dt_body("", 5000))
-    return parse_detail_response(payload)
+    rows = parse_detail_response(payload)
+    if len(rows) >= 5000:  # §4.4: the TableLength cap — output may be truncated
+        print(f"::warning::AZ entity {entity_id} returned {len(rows)} rows = the 5000 cap; "
+              f"detail may be truncated (consider paging by year).")
+    return rows
 
 
 def candidate_rows_by_owner(_input, owners: list[tuple[str, dict]]) -> dict[str, list[dict]]:  # pragma: no cover - network
