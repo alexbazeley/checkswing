@@ -840,6 +840,15 @@ def main() -> None:
         print(f"WARNING: build_state_data failed ({e}); state_data.json not refreshed.",
               file=sys.stderr)
 
+    # Phase 3: also build the legislation-index payload (separate, small) from
+    # data/legislation.db. Non-fatal for the same reason as the state build.
+    try:
+        import build_legislation_data  # same dir
+        build_legislation_data.main()
+    except Exception as e:  # noqa: BLE001
+        print(f"WARNING: build_legislation_data failed ({e}); legislation.json not refreshed.",
+              file=sys.stderr)
+
 
 def write_beneficiary_chunks(chunks: dict[str, dict[str, list[dict]]]) -> int:
     """Write one mockup/beneficiaries/<committee_id>.json per committee.
