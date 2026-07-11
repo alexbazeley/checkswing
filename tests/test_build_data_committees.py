@@ -176,7 +176,11 @@ def test_committee_scale_block_emitted_with_cycles(patched_build):
     cycle_2024 = next(c for c in cycles if c["cycle"] == 2024)
     assert cycle_2024["receipts"] == 5000000.0
     assert cycle_2024["disbursements"] == 4800000.0
-    assert cycle_2024["cash_on_hand_end_period"] == 200000.0
+    # §6.1 Stage 1: each scale block ships only the 3 columns the committee page
+    # reads (cycle · receipts · disbursements); the rest are dropped from data.json.
+    assert set(cycle_2024.keys()) == {"cycle", "receipts", "disbursements"}
+    assert "cash_on_hand_end_period" not in cycle_2024
+    assert "committee_id" not in cycle_2024  # redundant with the dict key
 
 
 def test_legacy_render_when_committees_empty(patched_build):

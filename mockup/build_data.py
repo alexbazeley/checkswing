@@ -301,7 +301,6 @@ def main() -> None:
         pdf_url = d.get("pdf_url") or extra.get("pdf_url")
         filing_form = d.get("filing_form") or extra.get("filing_form")
         line_number = d.get("line_number") or extra.get("line_number")
-        receipt_type = d.get("receipt_type_full") or extra.get("receipt_type_full")
         committee_type = d.get("recipient_committee_type") or extra.get("committee_type")
         donations.append(
             {
@@ -339,7 +338,10 @@ def main() -> None:
                 "pdf_url": pdf_url,
                 "filing_form": filing_form,
                 "line_number": line_number,
-                "receipt_type": receipt_type,
+                # §6.1 Stage 1: `receipt_type` (DB receipt_type_full) was shipped on
+                # every donation but read nowhere on the frontend — dropped (~104 KB).
+                # It remains in master.db; the §1.4-deferred refund badge can re-add
+                # it to the lazy drawer payload if/when that ships.
                 "committee_type": committee_type,
                 "recipient_type": committee_type_label(committee_type),
                 # The donation card prefers the real PDF (filing_pdf_url) when
@@ -650,12 +652,15 @@ def main() -> None:
             for row in cur.fetchall():
                 enrichment_by_cid[row["committee_id"]] = dict(row)
 
+            # §6.1 Stage 1: ship only the three columns the committee page reads
+            # (cycle · receipts · disbursements — see renderCommittee's scale band
+            # + "Owner share" KPI). The other 7 committee_totals columns
+            # (cash_on_hand, itemized contribution buckets, coverage dates) were
+            # never read on the frontend and inflated committee_scale by ~1.6 MB.
+            # committee_id is the dict key, so it's redundant inside each block.
             cur.execute(
                 f"""
-                SELECT committee_id, cycle, receipts, disbursements,
-                       cash_on_hand_end_period, individual_contributions,
-                       other_political_committee_contributions, independent_expenditures,
-                       coverage_start_date, coverage_end_date
+                SELECT committee_id, cycle, receipts, disbursements
                   FROM committee_totals
                  WHERE committee_id IN ({placeholders})
                  ORDER BY committee_id, cycle
@@ -663,7 +668,10 @@ def main() -> None:
                 relevant_cids,
             )
             for row in cur.fetchall():
-                scale_by_cid.setdefault(row["committee_id"], []).append(dict(row))
+                scale_by_cid.setdefault(row["committee_id"], []).append(
+                    {"cycle": row["cycle"], "receipts": row["receipts"],
+                     "disbursements": row["disbursements"]}
+                )
         except sqlite3.OperationalError as e:
             # Schema v1 DB — committees tables don't exist yet. That's fine for
             # the legacy render path. Run `python -m scripts.cli init` to bump.
