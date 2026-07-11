@@ -46,8 +46,8 @@ OWNER = {
 # Addr1, Addr2, City, State, Zip, D2Part, Desc
 def _row(rid="236630", cmte="10353", last="Reinsdorf", first="Jerry M", date="2022-09-10 00:00:00",
          amount="50000", occ="Chairman", emp="Chicago White Sox", city="Chicago", state="IL",
-         zip_="60616", d2="1A"):
-    return (f"{rid}\t{cmte}\t82298\t\t{last}\t{first}\t{date}\t{amount}\t0\t0\t{occ}\t{emp}\t"
+         zip_="60616", d2="1A", doc="82298"):
+    return (f"{rid}\t{cmte}\t{doc}\t\t{last}\t{first}\t{date}\t{amount}\t0\t0\t{occ}\t{emp}\t"
             f"1 Main\t\t{city}\t{state}\t{zip_}\t{d2}\tcontribution")
 
 
@@ -99,9 +99,31 @@ def test_bucket_streams_and_prejoins_recipient(tmp_path):
     assert rows[0]["_recipient_party"] == "Democratic"
 
 
-def test_dedupe_on_native_id(tmp_path):
-    buckets = _bucketed(tmp_path, _row(rid="9"), _row(rid="9"))  # same ID twice
-    assert len(fetch_il.dedupe(buckets["reinsdorf-jerry"])) == 1
+def test_dedupe_collapses_cross_filing(tmp_path):
+    """§1.2: the same contribution re-filed across filings (different FiledDocID,
+    different receipt ID, same donor+date+amount+recipient) collapses to one —
+    the native-id dedup kept them and inflated IL totals."""
+    buckets = _bucketed(
+        tmp_path,
+        _row(rid="9", doc="551825"),
+        _row(rid="10", doc="558250"),  # later filing, same contribution
+        _row(rid="11", doc="567111"),
+    )
+    out = fetch_il.dedupe(buckets["reinsdorf-jerry"])
+    assert len(out) == 1
+    assert il_adapter.filing_id_of(out[0]) == "567111"  # latest filing kept
+
+
+def test_dedupe_keeps_distinct_contributions(tmp_path):
+    """Different amount or recipient = different content key = preserved."""
+    buckets = _bucketed(
+        tmp_path,
+        _row(rid="9", doc="551825", amount="50000"),
+        _row(rid="10", doc="551825", amount="25000"),   # different amount
+        _row(rid="11", doc="551825", cmte="99999"),      # different recipient
+        owners=None,
+    )
+    assert len(fetch_il.dedupe(buckets["reinsdorf-jerry"])) == 3
 
 
 def test_missing_receipts_file_raises(tmp_path):

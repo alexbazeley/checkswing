@@ -195,9 +195,20 @@ def make_recipient_resolver(_input=None) -> Callable[[dict], dict]:
 
 
 def dedupe(rows: Iterable[dict]) -> list[dict]:
-    """Dedup on the stable PublicTransactionId (fall back to TransactionId)."""
-    seen: dict = {}
-    for row in rows:
-        key = _clean(row.get("PublicTransactionId")) or _clean(row.get("TransactionId")) or id(row)
-        seen.setdefault(key, row)
-    return list(seen.values())
+    """Content-key dedup (§1.2): AZ returns the same contribution several times
+    with DIFFERENT PublicTransactionIds (a ×N fan-out — 104/105 dup-groups are
+    exactly ×3), so a transaction-id dedup can't fold them and AZ totals inflated
+    (~$1.25M). Collapse by donor+date+amount+recipient, keeping the latest filing."""
+    from . import az_adapter
+    from .state_dedup import content_key_dedupe, filing_rank
+
+    return content_key_dedupe(
+        rows,
+        key_fn=lambda r: (
+            az_adapter.contributor_full_name(r).lower(),
+            _clean(r.get("TransactionDate")),
+            _clean(r.get("Amount")),
+            _clean(r.get("CommitteeUniqueId")) or _clean(r.get("CommitteeId")),
+        ),
+        rank_fn=lambda r: filing_rank(az_adapter.filing_id_of(r), az_adapter.tran_id_of(r)),
+    )
