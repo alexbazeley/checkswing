@@ -32,6 +32,7 @@ import yaml
 
 from . import calaccess_adapter, state_db
 from .paths import OWNERS_DIR, PROVENANCE_LOG, relpath
+from .provenance import append_provenance
 from .resolve_entities import CONFIRMED, EXCLUDED, PROBABLE, UNCERTAIN, classify
 
 # A recipient resolver maps a raw receipt row → recipient identity dict:
@@ -458,7 +459,6 @@ def _result_note(res: IngestStateResult) -> str:
 
 def _append_state_provenance(res: IngestStateResult, run_id: str, extract_label: str) -> None:
     PROVENANCE_LOG.parent.mkdir(parents=True, exist_ok=True)
-    existing = PROVENANCE_LOG.read_text(encoding="utf-8") if PROVENANCE_LOG.exists() else ""
     ts = _utc_now_iso()
     block = [f"\n### {ts[:10]} — STATE_INGESTION", ""]
     fields = [
@@ -478,17 +478,16 @@ def _append_state_provenance(res: IngestStateResult, run_id: str, extract_label:
     note = _result_note(res)
     if note:
         block.append(f"- **notes**: {note}")
-    PROVENANCE_LOG.write_text(existing + "\n".join(block) + "\n", encoding="utf-8")
+    append_provenance("\n".join(block) + "\n", PROVENANCE_LOG)
 
 
 def _append_supersession_log(events: list[tuple[str, str, str]], run_id: str) -> None:
     if not events:
         return
     PROVENANCE_LOG.parent.mkdir(parents=True, exist_ok=True)
-    existing = PROVENANCE_LOG.read_text(encoding="utf-8") if PROVENANCE_LOG.exists() else ""
     ts = _utc_now_iso()
     block = [f"\n### {ts[:10]} — STATE_SUPERSESSION — run {run_id}", ""]
     for txn, slug, reason in events:
         block.append(f"- `{txn}` ({slug}): {reason}")
     block.append("")
-    PROVENANCE_LOG.write_text(existing + "\n".join(block), encoding="utf-8")
+    append_provenance("\n".join(block), PROVENANCE_LOG)

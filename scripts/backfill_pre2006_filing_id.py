@@ -20,6 +20,7 @@ from datetime import datetime, timezone
 from . import db
 from .ingest import SENTINEL_FILING_ID
 from .paths import PROVENANCE_LOG
+from .provenance import append_provenance
 
 
 def _utc_now_iso() -> str:
@@ -71,8 +72,7 @@ def backfill(db_path=None) -> dict:
         "makes the gap explicit (GOVERNANCE.md §1.3). Rows retain raw_payload_path.",
         "",
     ]
-    existing = PROVENANCE_LOG.read_text(encoding="utf-8") if PROVENANCE_LOG.exists() else ""
-    PROVENANCE_LOG.write_text(existing + "\n".join(block), encoding="utf-8")
+    append_provenance("\n".join(block), PROVENANCE_LOG)
 
     return {
         "updated": updated,

@@ -28,6 +28,7 @@ from ruamel.yaml import YAML as _RoundTripYAML
 from . import db
 from .fetch_fec import DEFAULT_MIN_DATE, FECClient, load_raw_payloads
 from .paths import OWNERS_DIR, PROVENANCE_LOG, REPO_ROOT, REVIEW_QUEUE_MD
+from .provenance import append_provenance
 from .resolve_entities import (
     CONFIRMED,
     EXCLUDED,
@@ -302,7 +303,6 @@ def _append_review_queue_md(items: list[tuple[dict, Classification]], run_id: st
 
 def _append_provenance_log(run_summary: dict) -> None:
     PROVENANCE_LOG.parent.mkdir(parents=True, exist_ok=True)
-    existing = PROVENANCE_LOG.read_text(encoding="utf-8") if PROVENANCE_LOG.exists() else ""
     block = []
     ts = _utc_now_iso()
     block.append(f"\n### {ts[:10]} — INGESTION")
@@ -326,7 +326,7 @@ def _append_provenance_log(run_summary: dict) -> None:
             block.append(f"- **{k}**: `{v}`")
     if run_summary.get("notes"):
         block.append(f"- **notes**: {run_summary['notes']}")
-    PROVENANCE_LOG.write_text(existing + "\n".join(block) + "\n", encoding="utf-8")
+    append_provenance("\n".join(block) + "\n", PROVENANCE_LOG)
 
 
 def _append_supersession_log(events: list[tuple[str, str, str]], run_id: str) -> None:
@@ -338,13 +338,12 @@ def _append_supersession_log(events: list[tuple[str, str, str]], run_id: str) ->
     if not events:
         return
     PROVENANCE_LOG.parent.mkdir(parents=True, exist_ok=True)
-    existing = PROVENANCE_LOG.read_text(encoding="utf-8") if PROVENANCE_LOG.exists() else ""
     ts = _utc_now_iso()
     block = [f"\n### {ts[:10]} — SUPERSESSION — run {run_id}", ""]
     for txn, slug, reason in events:
         block.append(f"- `{txn}` ({slug}): {reason}")
     block.append("")
-    PROVENANCE_LOG.write_text(existing + "\n".join(block), encoding="utf-8")
+    append_provenance("\n".join(block), PROVENANCE_LOG)
 
 
 def ingest_entity(
@@ -832,7 +831,6 @@ def reclassify_entity(
 
     # Log the deletion (DELETION entry — distinct from the INGESTION entry
     # that ingest_entity will append for the re-classification itself).
-    existing = PROVENANCE_LOG.read_text(encoding="utf-8") if PROVENANCE_LOG.exists() else ""
     ts = _utc_now_iso()
     block = [
         f"\n### {ts[:10]} — DELETION — reclassify {slug}",
@@ -846,7 +844,7 @@ def reclassify_entity(
         f"- **note**: Rows are recoverable from the snapshot above and from data/raw/{slug}/ payloads. Re-classification follows in the next INGESTION entry.",
         "",
     ]
-    PROVENANCE_LOG.write_text(existing + "\n".join(block), encoding="utf-8")
+    append_provenance("\n".join(block), PROVENANCE_LOG)
 
     # Run the classify-from-raw path.
     summary = ingest_entity(slug, from_raw=True, process_related_entities=include_related)
@@ -1011,7 +1009,6 @@ def reclassify_in_place(slug: str, *, reason: str = "", db_path=None) -> dict:
         f"delete-rebuild); rows recoverable from the snapshot above.",
         "",
     ]
-    existing = PROVENANCE_LOG.read_text(encoding="utf-8") if PROVENANCE_LOG.exists() else ""
-    PROVENANCE_LOG.write_text(existing + "\n".join(block), encoding="utf-8")
+    append_provenance("\n".join(block), PROVENANCE_LOG)
     res["snapshot_path"] = str(snap_path) if snap_path else None
     return res

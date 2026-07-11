@@ -26,6 +26,7 @@ from pathlib import Path
 
 from . import db
 from .paths import MASTER_DB, PROVENANCE_LOG, RAW_DIR
+from .provenance import append_provenance
 
 
 def _scan_owner_dir(slug_dir: Path) -> dict[str, dict]:
@@ -155,7 +156,6 @@ def backfill(db_path: Path = MASTER_DB, raw_dir: Path = RAW_DIR) -> dict:
 
 def _append_provenance(summary: dict) -> None:
     PROVENANCE_LOG.parent.mkdir(parents=True, exist_ok=True)
-    existing = PROVENANCE_LOG.read_text(encoding="utf-8") if PROVENANCE_LOG.exists() else ""
     ts = db._utc_now_iso()
     b = summary["counted_before"]
     a = summary["counted_after"]
@@ -178,4 +178,4 @@ def _append_provenance(summary: dict) -> None:
         "(counted=0). Mirrors FEC's own is_individual dedup convention.",
         "",
     ]
-    PROVENANCE_LOG.write_text(existing + "\n".join(block), encoding="utf-8")
+    append_provenance("\n".join(block), PROVENANCE_LOG)
