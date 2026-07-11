@@ -181,9 +181,79 @@ def validate_bill_file(path: Path, issue_keys: set[str], known_bill_ids: set[str
     return res
 
 
+# Chamber rosters — a roll call with far fewer recorded positions than the
+# chamber's size is likely an incomplete parse rather than mass absence.
+_CHAMBER_SIZE = {"house": 435, "senate": 100}
+_CHAMBER_MIN_POSITIONS = {"house": 400, "senate": 90}
+
+
+def validate_legislation_db(
+    bills_dir: Path = LEGISLATION_BILLS_DIR,
+    db_path: Path | None = None,
+) -> list[LegValidation]:
+    """DB-vs-curated-YAML consistency checks (§5.6). Read-only; skipped cleanly if
+    legislation.db doesn't exist yet.
+
+    - **bill-set parity:** a `bills` row with no `legislation/bills/<id>.yaml` is an
+      orphan — the curated YAML is the source of truth, but ingest is upsert-only,
+      so deleting a YAML silently leaves its DB row behind. Warn so it's re-noticed.
+    - **vote completeness:** a roll call whose `vote_positions` count is far below the
+      chamber roster (e.g. the 1992 PASPA Senate vote holds 55/100) is likely a
+      partial parse; flag it rather than let an undercount pass silently."""
+    import sqlite3
+
+    from .paths import LEGISLATION_DB
+
+    db_path = db_path or LEGISLATION_DB
+    results: list[LegValidation] = []
+    if not db_path.exists():
+        return results
+
+    conn = sqlite3.connect(db_path)
+    conn.row_factory = sqlite3.Row
+    try:
+        parity = LegValidation(yaml_path=Path("legislation.db"), ident="db-yaml-parity")
+        yaml_ids = {p.stem for p in bills_dir.glob("*.yaml") if not p.name.startswith("_")}
+        try:
+            db_ids = {r["bill_id"] for r in conn.execute("SELECT bill_id FROM bills")}
+        except sqlite3.OperationalError:
+            return results  # schema not initialized
+        for bid in sorted(db_ids - yaml_ids):
+            parity.warnings.append(
+                f"bills row {bid!r} has no legislation/bills/{bid}.yaml — deleted YAML? "
+                f"(ingest is upsert-only; re-ingest won't remove the orphaned DB row)"
+            )
+        results.append(parity)
+
+        votes = LegValidation(yaml_path=Path("legislation.db"), ident="vote-completeness")
+        try:
+            rows = conn.execute(
+                """
+                SELECT v.vote_id, v.chamber, v.bill_id, COUNT(vp.vote_id) AS n
+                  FROM votes v LEFT JOIN vote_positions vp ON vp.vote_id = v.vote_id
+                 GROUP BY v.vote_id
+                """
+            ).fetchall()
+        except sqlite3.OperationalError:
+            rows = []
+        for r in rows:
+            floor = _CHAMBER_MIN_POSITIONS.get((r["chamber"] or "").lower())
+            if floor is not None and r["n"] < floor:
+                size = _CHAMBER_SIZE.get((r["chamber"] or "").lower())
+                votes.warnings.append(
+                    f"roll call {r['vote_id']} ({r['bill_id']}) has only {r['n']} recorded "
+                    f"positions of ~{size} {r['chamber']} seats — likely an incomplete parse"
+                )
+        results.append(votes)
+    finally:
+        conn.close()
+    return results
+
+
 def validate_all(
     bills_dir: Path = LEGISLATION_BILLS_DIR,
     issues_path: Path | None = None,
+    db_path: Path | None = None,
 ) -> list[LegValidation]:
     results: list[LegValidation] = [validate_issues_file(issues_path)]
     issue_keys = load_issue_keys(issues_path)
@@ -191,6 +261,7 @@ def validate_all(
     known_bill_ids = {p.stem for p in bill_paths}
     for path in bill_paths:
         results.append(validate_bill_file(path, issue_keys, known_bill_ids))
+    results.extend(validate_legislation_db(bills_dir, db_path))
     return results
 
 
