@@ -153,3 +153,55 @@ def test_no_bucket_dbs_returns_error(tmp_path):
     _make_db(cons)
     rc = merge_main(["--consolidated", str(cons)])
     assert rc == 2
+
+
+def _related_donation_row(txn: str, owner: str, spouse: str) -> dict:
+    row = _donation_row(txn, spouse)
+    row["entity_kind"] = "spouse"
+    row["parent_owner_slug"] = owner
+    return row
+
+
+def _add_entity(path: Path, slug: str, parent_slug: str | None) -> None:
+    with db.connect(path) as conn:
+        conn.execute(
+            """INSERT OR REPLACE INTO entities
+               (slug, kind, parent_slug, name, yaml_path, yaml_sha256, refreshed_at)
+               VALUES (?, ?, ?, ?, 'owners/x.yaml', 'h', '2026-07-11T00:00:00Z')""",
+            (slug, "spouse" if parent_slug else "owner", parent_slug, slug),
+        )
+
+
+def test_household_related_rows_replaced_with_owner(tmp_path):
+    """§5.1: a --include-related run logs its ingestion_run under the OWNER slug,
+    but the spouse's rows carry her own entity_slug (parent_owner_slug=owner). The
+    merge must purge + re-copy the related entity too, or her stale rows survive
+    and her fresh rows never arrive."""
+    cons = tmp_path / "cons.db"
+    b0 = tmp_path / "b0.db"
+    _make_db(cons)
+    _make_db(b0)
+
+    # Consolidated already holds a STALE spouse row (from a prior merge).
+    _add_entity(cons, "owner-a", None)
+    _add_entity(cons, "spouse-a", "owner-a")
+    with db.connect(cons) as conn:
+        db.insert_donation(conn, _related_donation_row("STALE", "owner-a", "spouse-a"))
+
+    # Bucket: one owner run (logged under owner-a) with fresh owner + spouse rows,
+    # and the entities mirror declaring spouse-a's parent as owner-a.
+    _add_entity(b0, "owner-a", None)
+    _add_entity(b0, "spouse-a", "owner-a")
+    _add_run(b0, "R0", "owner-a")
+    _add_donation(b0, "T-OWNER", "owner-a")
+    with db.connect(b0) as conn:
+        db.insert_donation(conn, _related_donation_row("T-SPOUSE", "owner-a", "spouse-a"))
+
+    rc = merge_main(["--consolidated", str(cons), "--bucket-db", str(b0)])
+    assert rc == 0
+    assert _count(cons, "owner-a") == 1        # fresh owner row
+    assert _count(cons, "spouse-a") == 1       # spouse row present…
+    with db.connect(cons) as conn:
+        txns = {r["transaction_id"] for r in conn.execute(
+            "SELECT transaction_id FROM donations WHERE entity_slug='spouse-a'")}
+    assert txns == {"T-SPOUSE"}                 # …and it's the FRESH one, not STALE

@@ -24789,3 +24789,91 @@ days). No data or code change — recording the finding so it isn't re-derived
   contribution remains the $100,000 on 2025-06-26; his giving clusters in bursts,
   so a 2026 gift will likely land closer to the November 2026 general. The
   freshness flag is correct data drift, not an adapter bug.
+
+### 2026-07-11 — INGESTION
+
+- **run_id**: `0c2a7717`
+- **entity_slug**: `cohen-steven`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2026-05-28`
+- **name_variants_queried**: `["Steven A Cohen", "Steven A. Cohen", "Steven Cohen", "Steve Cohen", "Cohen, Steven", "Cohen, Steven A", "Cohen, Steven A."]`
+- **api_calls_made**: `169`
+- **records_fetched**: `3902`
+- **confirmed_count**: `168`
+- **probable_count**: `101`
+- **uncertain_count**: `3201`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-11T05-11-10Z__0c2a7717.db`
+- **notes**: skipped(no-name-match)=432 · min_date=--full-refetch · states=['CT', 'NY'] · +related: cohen-alexandra
+
+### 2026-07-11 — SUPERSESSION — run 0c2a7717
+
+- `2080620181582691347` (cohen-steven): FEC restatement: image_number
+- `2080620181582691247` (cohen-steven): FEC restatement: image_number
+- `2080220181582330133` (cohen-steven): FEC restatement: image_number
+- `2080220181582329984` (cohen-steven): FEC restatement: image_number
+- `2071920171426271773` (cohen-steven): FEC restatement: image_number
+- `2071920171426271772` (cohen-steven): FEC restatement: image_number
+- `1071720170035539494` (cohen-steven): FEC restatement: image_number
+- `1071720170035539493` (cohen-steven): FEC restatement: image_number
+- `2032120171380377295` (cohen-steven): FEC restatement: image_number
+- `2102120161344533816` (cohen-steven): FEC restatement: image_number
+- `1060320130014126299` (cohen-steven): FEC restatement: image_number
+- `2021520111135948933` (cohen-steven): FEC restatement: image_number
+- `2103020091120290700` (cohen-steven): FEC restatement: image_number
+- `1020220110005290047` (cohen-steven): FEC restatement: image_number
+- `1020220110005289916` (cohen-steven): FEC restatement: image_number
+- `1010720100003821393` (cohen-steven): FEC restatement: image_number
+- `1032520100004029807` (cohen-steven): FEC restatement: image_number
+- `1032520100004029806` (cohen-steven): FEC restatement: image_number
+- `1032520100004029805` (cohen-steven): FEC restatement: image_number
+- `1101620090001116398` (cohen-steven): FEC restatement: image_number
+- `1121520090001236709` (cohen-steven): FEC restatement: image_number
+- `1121520090001236708` (cohen-steven): FEC restatement: image_number
+- `1121520090001320996` (cohen-steven): FEC restatement: image_number
+- `2042620071077009230` (cohen-steven): FEC restatement: image_number
+- `1070820110006432343` (cohen-steven): FEC restatement: image_number
+- `1070820110007809029` (cohen-steven): FEC restatement: image_number
+- `1070820110007809028` (cohen-steven): FEC restatement: image_number
+- `1070820110006620625` (cohen-steven): FEC restatement: image_number
+- `1070820110007815281` (cohen-steven): FEC restatement: image_number
+- `1070820110007325861` (cohen-steven): FEC restatement: image_number
+- `1070820110007327750` (cohen-steven): FEC restatement: image_number
+- `1070820110007325224` (cohen-steven): FEC restatement: image_number
+- `1070820110006591363` (cohen-steven): FEC restatement: image_number
+- `1070820110006591362` (cohen-steven): FEC restatement: image_number
+- `2020920091107172203` (cohen-steven): FEC restatement: image_number
+- `1121520090002048676` (cohen-steven): FEC restatement: image_number
+- `2020920091107173453` (cohen-steven): FEC restatement: image_number
+- `2042320091114167651` (cohen-steven): FEC restatement: image_number
+- `2102820081099632611` (cohen-steven): FEC restatement: image_number
+- `2120920081102147522` (cohen-steven): FEC restatement: image_number
+- `2120920081102147521` (cohen-steven): FEC restatement: image_number
+- `1121520090001664748` (cohen-steven): FEC restatement: image_number
+- `2111920101131638956` (cohen-steven): FEC restatement: image_number
+- `2111920101131638985` (cohen-steven): FEC restatement: image_number
+- `1061520110005862295` (cohen-steven): FEC restatement: image_number
+- `2040720111138004370` (cohen-steven): FEC restatement: image_number
+- `2040720111138004369` (cohen-steven): FEC restatement: image_number
+- `2040720111138004368` (cohen-steven): FEC restatement: image_number
+- `2110420091120490830` (cohen-steven): FEC restatement: image_number
+- `2072920091116762311` (cohen-steven): FEC restatement: image_number
+
+### 2026-07-11 — INGESTION — cohen-alexandra household add (§5.1, Cohen pilot resolved)
+
+Resolved the long-open household pilot (PR #27) onto current main by re-cutting its
+single feature commit and adding Alexandra Cohen as a tracked related entity
+(spouse), WITHOUT disturbing Steven Cohen's calibrated federal attribution.
+
+- cohen-alexandra (kind=spouse, parent_owner_slug=cohen-steven): 36 CONFIRMED
+  ($100,010) + 94 PROBABLE-counted ($57,819); 393 UNCERTAIN in the review queue.
+  Fetched fresh from FEC (full history, states CT/NY) under her own name_variants
+  via --include-related (a spouse files under her own name). Never folded into
+  Steve's totals (VERIFICATION.md anti-pattern); the dashboard shows a household panel.
+- cohen-steven UNCHANGED at main's published 124 CONFIRMED ($8,155,550) / 9 PROBABLE.
+  The full-refetch's incidental churn on Steve (50 image_number-only FEC re-images +
+  7 reclassification tier moves) was DELIBERATELY EXCLUDED — Steve restored to main's
+  committed state, only Alexandra added. A genuine Steve refresh is left to the
+  monthly cron's incremental path.
+- Snapshot taken before the add; schema migrated v8->v10 (code-driven). GOVERNANCE
+  §1.6/§1.7/§1.10 honored.
