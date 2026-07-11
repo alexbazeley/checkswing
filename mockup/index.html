@@ -823,7 +823,9 @@ section.block:last-child { border-bottom: 0; }
 }
 @media (max-width: 880px) {
   .recent-row { grid-template-columns: 80px minmax(0, 1fr) 100px; gap: 12px; }
-  .recent-chips { display: none; }
+  /* Keep the status chip visible — it folds onto line 2 of the grid rather than
+     being hidden (README: chips are never hidden). */
+  .recent-chips { justify-content: flex-start; font-size: 9px; }
 }
 @media (max-width: 560px) {
   /* Two-line stack — the donor→recipient flow gets the full width (so the
@@ -3392,12 +3394,12 @@ function renderHome() {
       <div class="sb-cell">
         <div class="sb-k">Contributions</div>
         <div class="sb-v">${fmtInt(combinedDonations)}</div>
-        <div class="sb-foot">verified records</div>
+        <div class="sb-foot">classified (confirmed + probable)</div>
       </div>
       <div class="sb-cell">
         <div class="sb-k">Owners covered</div>
         <div class="sb-v">${L.n_owners}</div>
-        <div class="sb-foot">of 30 principal owners</div>
+        <div class="sb-foot">owners tracked (incl. former)</div>
       </div>
       <div class="sb-cell">
         <div class="sb-k">Jurisdictions</div>
@@ -3451,8 +3453,8 @@ function renderHome() {
     <div class="trust-strip">
       <div class="trust-cell">
         <span class="tc-tier confirmed">Confirmed</span>
-        <h4>Two or more signals</h4>
-        <p>Donor name plus corroborating evidence — employer, occupation, a documented address — independently tie the gift to the owner.</p>
+        <h4>Two signals — or one that's decisive</h4>
+        <p>Donor name plus two corroborating signals — employer, occupation, a documented address — or a single uniquely-identifying one (e.g. the owner's own holding company as employer) independently tie the gift to the owner.</p>
       </div>
       <div class="trust-cell">
         <span class="tc-tier probable">Probable</span>
@@ -3517,7 +3519,7 @@ function renderLeague() {
       <div class="kpi">
         <div class="kpi-label">Owners covered</div>
         <div class="kpi-value">${L.n_owners}</div>
-        <div class="kpi-foot">of 30 principal owners</div>
+        <div class="kpi-foot">owners tracked (incl. former)</div>
       </div>
       <div class="kpi">
         <div class="kpi-label">Cycles</div>
@@ -5666,7 +5668,7 @@ function renderCommitteeBeneficiariesSection(committeeId) {
         <div>
           <span class="eyebrow">Who this committee funded</span>
           <h2 style="margin-top:6px">Top recipients of this committee's Schedule B disbursements</h2>
-          <p class="caption">FEC <code>/schedules/schedule_b/by_recipient/</code> — every recipient the committee disbursed funds to in the selected cycle, ordered by total amount. Includes operational disbursements as well as political ones, since Schedule B aggregates both.</p>
+          <p class="caption">FEC <code>/schedules/schedule_b/by_recipient/</code> — the <strong>top 25 recipients</strong> by total amount for the selected cycle (the full list lives at the FEC endpoint linked below). Includes operational disbursements as well as political ones, since Schedule B aggregates both.</p>
         </div>
       </div>
 
@@ -6686,12 +6688,13 @@ function renderMethodology() {
             <li>Donations by owners' spouses, where the relationship is publicly documented</li>
             <li>Named adult family members publicly identified as donors</li>
             <li>PACs directly affiliated with teams or their corporate parents (case-by-case)</li>
+            <li>State campaign finance from official state portals (Phase 4) — a <em>separate</em> database, held to the same three-tier standard; coverage and signal strength vary by state (e.g. New York resolves on ZIP only; Florida discloses no employer)</li>
           </ul>
         </div>
         <div>
           <h4>Out</h4>
           <ul>
-            <li>State and local campaign finance (different sources per state)</li>
+            <li>Local (municipal/county) campaign finance</li>
             <li>501(c)(4) "dark money" (not in FEC data)</li>
             <li>Federal lobbying disclosures (separate LD-1/LD-2 system)</li>
             <li>Charitable donations (separate IRS 990 system)</li>
@@ -7048,9 +7051,11 @@ function bindChangelogHandlers() {
 /* ──────────── /#/states (Phase-4 state campaign finance) ──────────── */
 
 function stateStatusBadge(status) {
+  // §3.6: use the SAME green (confirmed) / amber (probable) as the federal chips —
+  // the old DEM-blue read as a party color next to the party-tinted rows.
   const conf = status === "CONFIRMED";
-  const bg = conf ? "var(--dem-bg, #e8f0fe)" : "#fdf0e3";
-  const fg = conf ? "var(--dem, #1a56b3)" : "#9a5b1b";
+  const bg = conf ? "var(--ok-bg, #e6f4ea)" : "var(--warn-bg, #fdf0e3)";
+  const fg = conf ? "var(--ok-fg, #1a7f37)" : "var(--warn-fg, #9a5b1b)";
   const label = conf ? "Confirmed" : "Probable";
   return `<span style="display:inline-block;font:600 10px/1.4 var(--sans);letter-spacing:.04em;text-transform:uppercase;color:${fg};background:${bg};border-radius:var(--radius-sm);padding:1px 6px">${label}</span>`;
 }
@@ -7183,7 +7188,7 @@ function stateContribSection(donations, opts = {}) {
               ${showOwner ? `<td style="font-family:var(--serif)">${escapeHtml(d.owner_name)}</td>` : ""}
               <td class="muted" style="font-size:12px">${escapeHtml(d.employer || "—")}</td>
               <td class="muted" style="font-size:12px">${escapeHtml([d.city, d.state].filter(Boolean).join(", ") || "—")}</td>
-              <td class="num" style="font-variant-numeric:tabular-nums;font-weight:600">${fmtMoney(amt(d))}</td>
+              <td class="num" style="font-variant-numeric:tabular-nums;font-weight:600">${fmtMoneyExact(amt(d))}</td>
               <td class="muted" style="font-size:12px">${escapeHtml((d.date || "").slice(0, 10))}</td>
               <td style="font-size:13px">${escapeHtml(d.recipient || "")}</td>
             </tr>`).join("")}
@@ -7308,7 +7313,7 @@ function renderStates() {
       <div class="sb-cell">
         <div class="sb-k">Owners with state activity</div>
         <div class="sb-v">${fmtInt(owners.length)}</div>
-        <div class="sb-foot">of 30 principal owners</div>
+        <div class="sb-foot">owners tracked (incl. former)</div>
       </div>
       <a class="sb-cell" href="#/state-recipients">
         <div class="sb-k">State recipients</div>
@@ -7577,7 +7582,7 @@ function renderStateJurisdiction(code) {
       <div class="kpi">
         <div class="kpi-label">Owners active here</div>
         <div class="kpi-value">${fmtInt(j.n_owners)}</div>
-        <div class="kpi-foot">of 30 principal owners</div>
+        <div class="kpi-foot">owners tracked (incl. former)</div>
       </div>
       <div class="kpi">
         <div class="kpi-label">Source</div>
