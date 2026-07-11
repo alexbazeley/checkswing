@@ -2596,6 +2596,28 @@ const fmtMoneyExact = (n) => "$" + Math.round(n).toLocaleString();
 const fmtInt = (n) => (n ?? 0).toLocaleString();
 
 /* ──────────────────────────────────────────────────────────────────────
+   §6.2 Keyboard accessibility. Row/header navigation across the app is
+   click-only; makeRowNavigable() adds the keyboard half mechanically —
+   tabindex + a role + Enter/Space activation — and binds the click too, so
+   one call fully wires an element. Idempotent: re-binds are guarded so a
+   re-render (which re-runs the bind functions on fresh nodes) is safe, and a
+   stray double-call on the same node won't double-fire.
+   ────────────────────────────────────────────────────────────────────── */
+function makeRowNavigable(el, onActivate, role = "button") {
+  if (!el || el.dataset.kbdBound === "1") return;
+  el.dataset.kbdBound = "1";
+  el.setAttribute("tabindex", "0");
+  el.setAttribute("role", role);
+  el.addEventListener("click", onActivate);
+  el.addEventListener("keydown", (ev) => {
+    if (ev.key === "Enter" || ev.key === " " || ev.key === "Spacebar") {
+      ev.preventDefault();      // Space would otherwise scroll the page
+      onActivate(ev);
+    }
+  });
+}
+
+/* ──────────────────────────────────────────────────────────────────────
    B.4 — Inflation toggle (Nominal $ vs CPI-adjusted Real $)
    Per-donation `amount_2026` and per-aggregate `*_2026` fields are
    pre-baked into data.json (see scripts/dollars.py). The frontend
@@ -3190,6 +3212,8 @@ function route() {
     if (document.getElementById("drawer").classList.contains("open")) {
       document.getElementById("drawer").classList.remove("open");
       document.getElementById("drawer-scrim").classList.remove("open");
+      document.getElementById("drawer").setAttribute("aria-hidden", "true");
+      deactivateDrawerFocus();
     }
   }
 }
@@ -4285,7 +4309,7 @@ function bindIndexHandlers() {
   if (tilt) tilt.addEventListener("change", (e) => { state.indexFilters.tilt = e.target.value; rerenderOwnersTableOnly(); });
 
   document.querySelectorAll(".owners-table th[data-sort]").forEach((th) => {
-    th.addEventListener("click", () => {
+    makeRowNavigable(th, () => {
       const k = th.getAttribute("data-sort");
       if (state.indexSort.key === k) state.indexSort.dir = state.indexSort.dir === "asc" ? "desc" : "asc";
       else { state.indexSort.key = k; state.indexSort.dir = k === "name" || k === "team" || k === "tenure" ? "asc" : "desc"; }
@@ -4294,7 +4318,7 @@ function bindIndexHandlers() {
   });
 
   document.querySelectorAll(".owners-table tbody tr").forEach((tr) => {
-    tr.addEventListener("click", () => {
+    makeRowNavigable(tr, () => {
       const slug = tr.getAttribute("data-slug");
       window.location.hash = `#/owner/${slug}`;
     });
@@ -4332,7 +4356,7 @@ function bindIndexHandlers() {
   });
 
   document.querySelectorAll(".recent-row").forEach((row) => {
-    row.addEventListener("click", () => openDrawer(row.getAttribute("data-id")));
+    makeRowNavigable(row, () => openDrawer(row.getAttribute("data-id")));
   });
 
   document.querySelectorAll(".cycle-bar[data-cycle]").forEach((bar) => {
@@ -5085,7 +5109,7 @@ function bindOwnerHandlers() {
   if (s) s.addEventListener("change", (e) => { state.ownerFilters.status = e.target.value; rerenderOwnerTable(); });
 
   document.querySelectorAll(".donations-table tbody tr").forEach((tr) => {
-    tr.addEventListener("click", () => openDrawer(tr.getAttribute("data-id")));
+    makeRowNavigable(tr, () => openDrawer(tr.getAttribute("data-id")));
   });
 
   document.querySelectorAll('.load-all-btn[data-load-all="owner"]').forEach((btn) => {
@@ -5093,7 +5117,7 @@ function bindOwnerHandlers() {
   });
 
   document.querySelectorAll(".timeline-svg circle[data-id]").forEach((c) => {
-    c.addEventListener("click", () => openDrawer(c.getAttribute("data-id")));
+    makeRowNavigable(c, () => openDrawer(c.getAttribute("data-id")));
   });
 
   /* Recipient links → committee pages */
@@ -5132,7 +5156,7 @@ function rerenderOwnerTable() {
   if (!wrap) return;
   wrap.innerHTML = renderDonationsTable(donations);
   document.querySelectorAll(".donations-table tbody tr").forEach((tr) => {
-    tr.addEventListener("click", () => openDrawer(tr.getAttribute("data-id")));
+    makeRowNavigable(tr, () => openDrawer(tr.getAttribute("data-id")));
   });
   document.querySelectorAll('.load-all-btn[data-load-all="owner"]').forEach((btn) => {
     btn.addEventListener("click", () => { state.ownerFilters.showAll = true; rerenderOwnerTable(); });
@@ -5435,7 +5459,7 @@ function bindCycleHandlers() {
     });
   });
   document.querySelectorAll(".donations-table tbody tr").forEach((tr) => {
-    tr.addEventListener("click", () => openDrawer(tr.getAttribute("data-id")));
+    makeRowNavigable(tr, () => openDrawer(tr.getAttribute("data-id")));
   });
   document.querySelectorAll('.load-all-btn[data-load-all="cycle"]').forEach((btn) => {
     btn.addEventListener("click", () => { state.cycleFilters.showAll = true; rerenderCycleTable(); });
@@ -5471,7 +5495,7 @@ function rerenderCycleTable() {
   if (!wrap) return;
   wrap.innerHTML = renderCycleDonationsTable(donations);
   document.querySelectorAll(".donations-table tbody tr").forEach((tr) => {
-    tr.addEventListener("click", () => openDrawer(tr.getAttribute("data-id")));
+    makeRowNavigable(tr, () => openDrawer(tr.getAttribute("data-id")));
   });
   document.querySelectorAll('.load-all-btn[data-load-all="cycle"]').forEach((btn) => {
     btn.addEventListener("click", () => { state.cycleFilters.showAll = true; rerenderCycleTable(); });
@@ -5945,7 +5969,7 @@ function bindCommitteeHandlers() {
     });
   });
   document.querySelectorAll(".donations-table tbody tr").forEach((tr) => {
-    tr.addEventListener("click", () => openDrawer(tr.getAttribute("data-id")));
+    makeRowNavigable(tr, () => openDrawer(tr.getAttribute("data-id")));
   });
   document.querySelectorAll('.load-all-btn[data-load-all="committee"]').forEach((btn) => {
     btn.addEventListener("click", () => { state.committeeFilters.showAll = true; rerenderCommitteeTable(); });
@@ -5976,7 +6000,7 @@ function rerenderCommitteeTable() {
   if (!wrap) return;
   wrap.innerHTML = renderCommitteeDonationsTable(donations);
   document.querySelectorAll(".donations-table tbody tr").forEach((tr) => {
-    tr.addEventListener("click", () => openDrawer(tr.getAttribute("data-id")));
+    makeRowNavigable(tr, () => openDrawer(tr.getAttribute("data-id")));
   });
   document.querySelectorAll('.load-all-btn[data-load-all="committee"]').forEach((btn) => {
     btn.addEventListener("click", () => { state.committeeFilters.showAll = true; rerenderCommitteeTable(); });
@@ -6358,7 +6382,7 @@ function bindTeamHandlers() {
   if (s) s.addEventListener("change", (e) => { state.teamFilters.status = e.target.value; rerenderTeamTable(); });
 
   document.querySelectorAll(".donations-table tbody tr").forEach((tr) => {
-    tr.addEventListener("click", () => openDrawer(tr.getAttribute("data-id")));
+    makeRowNavigable(tr, () => openDrawer(tr.getAttribute("data-id")));
   });
   document.querySelectorAll('.load-all-btn[data-load-all="team"]').forEach((btn) => {
     btn.addEventListener("click", () => { state.teamFilters.showAll = true; rerenderTeamTable(); });
@@ -6380,7 +6404,7 @@ function bindTeamHandlers() {
   });
 
   document.querySelectorAll(".timeline-svg circle[data-id]").forEach((c) => {
-    c.addEventListener("click", () => openDrawer(c.getAttribute("data-id")));
+    makeRowNavigable(c, () => openDrawer(c.getAttribute("data-id")));
   });
 }
 
@@ -6393,7 +6417,7 @@ function rerenderTeamTable() {
   if (!wrap) return;
   wrap.innerHTML = renderTeamDonationsTable(donations);
   document.querySelectorAll(".donations-table tbody tr").forEach((tr) => {
-    tr.addEventListener("click", () => openDrawer(tr.getAttribute("data-id")));
+    makeRowNavigable(tr, () => openDrawer(tr.getAttribute("data-id")));
   });
   document.querySelectorAll('.load-all-btn[data-load-all="team"]').forEach((btn) => {
     btn.addEventListener("click", () => { state.teamFilters.showAll = true; rerenderTeamTable(); });
@@ -6476,6 +6500,7 @@ function openDrawer(id) {
     `;
     document.getElementById("drawer").classList.add("open");
     document.getElementById("drawer-scrim").classList.add("open");
+    activateDrawerFocus();
     document.getElementById("drawer").setAttribute("aria-hidden", "false");
     /* Clear the bad ?d= so a refresh doesn't re-open this dead-end. */
     setDrawerParam(null);
@@ -6660,16 +6685,53 @@ function openDrawer(id) {
 
   document.getElementById("drawer").classList.add("open");
   document.getElementById("drawer-scrim").classList.add("open");
+  activateDrawerFocus();
   document.getElementById("drawer").setAttribute("aria-hidden", "false");
 
   /* Reflect drawer state in URL for shareable permalinks */
   setDrawerParam(id);
 }
 
+/* §6.2 Drawer focus management. The drawer is role="dialog" aria-modal, but
+   opening it never moved focus in, never trapped Tab, and left focus stranded on
+   the page behind — so a keyboard/screen-reader user couldn't reach its content
+   and Tab leaked to the background. activate/deactivate below move focus into the
+   drawer, trap Tab within it, and restore focus to the trigger on close. */
+let _drawerReturnFocus = null;
+function _drawerFocusables() {
+  const d = document.getElementById("drawer");
+  return [...d.querySelectorAll('a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])')]
+    .filter((el) => !el.disabled && el.offsetParent !== null);
+}
+function _drawerTrap(e) {
+  if (e.key !== "Tab") return;
+  const f = _drawerFocusables();
+  if (!f.length) { e.preventDefault(); return; }
+  const first = f[0], last = f[f.length - 1];
+  if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+  else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+}
+function activateDrawerFocus() {
+  const d = document.getElementById("drawer");
+  d.setAttribute("aria-hidden", "false");   // defensive — every open path also sets it
+  _drawerReturnFocus = document.activeElement;
+  d.setAttribute("tabindex", "-1");
+  const f = _drawerFocusables();
+  (f[0] || d).focus();
+  d.addEventListener("keydown", _drawerTrap);
+}
+function deactivateDrawerFocus() {
+  document.getElementById("drawer").removeEventListener("keydown", _drawerTrap);
+  const t = _drawerReturnFocus;
+  _drawerReturnFocus = null;
+  if (t && typeof t.focus === "function" && document.contains(t)) t.focus();
+}
+
 function closeDrawer() {
   document.getElementById("drawer").classList.remove("open");
   document.getElementById("drawer-scrim").classList.remove("open");
   document.getElementById("drawer").setAttribute("aria-hidden", "true");
+  deactivateDrawerFocus();
   setDrawerParam(null);
 }
 
@@ -8106,7 +8168,7 @@ function bindStatesHandlers() {
   /* Recent-contributions rows on the State overview (mirror of the Federal
      overview). openDrawer auto-routes the state id to openStateDrawer. */
   document.querySelectorAll(".recent-row").forEach((row) => {
-    row.addEventListener("click", () => openDrawer(row.getAttribute("data-id")));
+    makeRowNavigable(row, () => openDrawer(row.getAttribute("data-id")));
   });
 
   /* ── #/states by-owner table sort (state.stateOwnerSort) ── */
@@ -8183,6 +8245,7 @@ function openStateDrawer(id) {
   const openIt = () => {
     document.getElementById("drawer").classList.add("open");
     document.getElementById("drawer-scrim").classList.add("open");
+    activateDrawerFocus();
     document.getElementById("drawer").setAttribute("aria-hidden", "false");
   };
   const d = state.stateData && (state.stateData.donations || []).find((x) => x.id === id);
@@ -8800,7 +8863,7 @@ function renderWhatsNew() {
 function bindWhatsNewHandlers() {
   if (state.view.name !== "whats-new") return;
   document.querySelectorAll(".wn-donation-row").forEach((row) => {
-    row.addEventListener("click", () => openDrawer(row.getAttribute("data-id")));
+    makeRowNavigable(row, () => openDrawer(row.getAttribute("data-id")));
   });
 }
 
