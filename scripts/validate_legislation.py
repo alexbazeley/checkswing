@@ -199,7 +199,16 @@ def validate_legislation_db(
       so deleting a YAML silently leaves its DB row behind. Warn so it's re-noticed.
     - **vote completeness:** a roll call whose `vote_positions` count is far below the
       chamber roster (e.g. the 1992 PASPA Senate vote holds 55/100) is likely a
-      partial parse; flag it rather than let an undercount pass silently."""
+      partial parse; flag it rather than let an undercount pass silently.
+    - **vote XML congress/session cross-check:** a `votes` row carries the
+      congress/session declared in the curated YAML (the vote_id is built from them),
+      but the House clerk XML is fetched by *year+roll only* — so a typo'd
+      `congress`/`session` in a House roll_call fetches the right XML yet stores the
+      wrong identity. When the raw vote XML is on disk, re-parse its embedded
+      congress/session and warn on any disagreement. `data/raw/` is gitignored, so
+      this fires locally (at curation time) and skips cleanly in CI where raw is
+      absent — never a false alarm from a missing file."""
+    import os
     import sqlite3
 
     from .paths import LEGISLATION_DB
@@ -245,6 +254,50 @@ def validate_legislation_db(
                     f"positions of ~{size} {r['chamber']} seats — likely an incomplete parse"
                 )
         results.append(votes)
+
+        # Cross-check the YAML-declared congress/session against the authoritative
+        # XML. Only for votes whose raw XML is on disk (gitignored → local-only).
+        from .fetch_votes import parse_house_vote, parse_senate_vote
+
+        xmlcheck = LegValidation(yaml_path=Path("legislation.db"), ident="vote-xml-congress-session")
+        try:
+            vrows = conn.execute(
+                "SELECT vote_id, bill_id, chamber, congress, session, raw_payload_path "
+                "FROM votes"
+            ).fetchall()
+        except sqlite3.OperationalError:
+            vrows = []
+        for r in vrows:
+            raw = r["raw_payload_path"]
+            if not raw or not os.path.exists(raw):
+                continue  # raw absent (e.g. CI) — honest skip, not a failure
+            chamber = (r["chamber"] or "").lower()
+            try:
+                text = Path(raw).read_text()
+                if chamber == "house":
+                    meta, _ = parse_house_vote(text)
+                elif chamber == "senate":
+                    meta, _ = parse_senate_vote(text)
+                else:
+                    continue
+            except Exception as e:  # noqa: BLE001 — a malformed raw file shouldn't crash validate
+                xmlcheck.warnings.append(
+                    f"roll call {r['vote_id']} ({r['bill_id']}): could not parse raw XML "
+                    f"{raw} ({e})"
+                )
+                continue
+            xc, xs = meta.get("congress"), meta.get("session")
+            if xc is not None and xc != r["congress"]:
+                xmlcheck.errors.append(
+                    f"roll call {r['vote_id']} ({r['bill_id']}): YAML congress {r['congress']} "
+                    f"≠ XML congress {xc} — the curated roll_call's congress is wrong"
+                )
+            if xs is not None and xs != r["session"]:
+                xmlcheck.errors.append(
+                    f"roll call {r['vote_id']} ({r['bill_id']}): YAML session {r['session']} "
+                    f"≠ XML session {xs} — the curated roll_call's session is wrong"
+                )
+        results.append(xmlcheck)
     finally:
         conn.close()
     return results
