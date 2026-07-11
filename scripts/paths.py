@@ -44,6 +44,12 @@ STATE_RAW_DIR = RAW_DIR / "state"
 OWNERS_DIR = REPO_ROOT / "owners"
 CATALOG_DIR = REPO_ROOT / "catalog"
 PROVENANCE_LOG = CATALOG_DIR / "PROVENANCE_LOG.md"
+# §2.2: sealed prior-year archives of the provenance log live here as
+# PROVENANCE_LOG-<YYYY>.md. `cli rotate-provenance` moves completed years out of
+# the active PROVENANCE_LOG.md into this dir so the active file (and every append
+# to it) stays bounded; the dashboard build parses the active log + all archives
+# together, so provenance.json stays complete.
+PROVENANCE_ARCHIVE_DIR = CATALOG_DIR / "provenance"
 REVIEW_QUEUE_MD = CATALOG_DIR / "REVIEW_QUEUE.md"
 
 REPORTS_DIR = REPO_ROOT / "reports"
