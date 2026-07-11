@@ -39,3 +39,13 @@ jobs:
 
       - name: Validate owner YAMLs
         run: python -m scripts.cli validate
+
+      # §6.4: the JS test floor — unit-tests mockup/lib.js's pure helpers
+      # (formatting / escaping / CSV building) that the SPA loads as globals.
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run JS unit tests
+        run: node --test tests/js/*.test.js

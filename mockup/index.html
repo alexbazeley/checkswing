@@ -2531,6 +2531,10 @@ a.leg-vote:hover { text-decoration: underline; }
 <!-- ════════════════════════════════════════════════════════════════════
      APP LOGIC
      ════════════════════════════════════════════════════════════════════ -->
+<!-- §6.4: pure helpers (formatting / escaping / CSV) extracted to a
+     <script>-loadable, Node-testable module (tests/js/lib.test.mjs). Loaded
+     first so fmtMoney/fmtInt/escapeHtml/csvEscape/buildCSV are globals below. -->
+<script src="lib.js"></script>
 <script>
 "use strict";
 
@@ -2584,16 +2588,9 @@ const state = {
   provenanceError: null,
 };
 
-const fmtMoney = (n) => {
-  if (n == null || isNaN(n)) return "—";
-  const a = Math.abs(n);
-  if (a >= 1_000_000) return "$" + (n / 1_000_000).toFixed(n >= 10_000_000 ? 1 : 2) + "M";
-  if (a >= 10_000)    return "$" + Math.round(n / 1000) + "K";
-  if (a >= 1000)      return "$" + (n / 1000).toFixed(1) + "K";
-  return "$" + Math.round(n).toLocaleString();
-};
-const fmtMoneyExact = (n) => "$" + Math.round(n).toLocaleString();
-const fmtInt = (n) => (n ?? 0).toLocaleString();
+// §6.4: fmtMoney / fmtMoneyExact / fmtInt now live in lib.js (loaded above) as
+// globals, so they can be unit-tested in Node. Definitions intentionally removed
+// here to keep a single source of truth.
 
 /* ──────────────────────────────────────────────────────────────────────
    §6.2 Keyboard accessibility. Row/header navigation across the app is
@@ -6489,23 +6486,9 @@ const STATE_CSV_COLS = [
 ];
 
 function downloadDonationsCSV(rows, filename, cols = FEDERAL_CSV_COLS) {
-  const escape = (v) => {
-    if (v == null) return "";
-    let s = String(v);
-    // Neutralize spreadsheet formula injection: a leading = + - @ (or tab/CR)
-    // makes Excel/Sheets evaluate a donor-filed cell (e.g. employer
-    // "=HYPERLINK(...)"). Prefix with ' to force the cell to be treated as text.
-    if (/^[=+\-@\t\r]/.test(s)) s = "'" + s;
-    if (s.includes('"') || s.includes(",") || s.includes("\n")) {
-      return '"' + s.replace(/"/g, '""') + '"';
-    }
-    return s;
-  };
-  const lines = [cols.join(",")];
-  for (const r of rows) {
-    lines.push(cols.map((c) => escape(r[c])).join(","));
-  }
-  const blob = new Blob([lines.join("\n")], { type: "text/csv;charset=utf-8" });
+  // §6.4: the pure CSV assembly (incl. the §3.8 formula-injection guard) lives in
+  // lib.js's buildCSV; only the DOM blob/download stays here.
+  const blob = new Blob([buildCSV(rows, cols)], { type: "text/csv;charset=utf-8" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
@@ -8982,13 +8965,7 @@ function renderAbout() {
 }
 
 /* ────────── Utils ────────── */
-function escapeHtml(s) {
-  if (s == null) return "";
-  return String(s).replace(/[&<>"']/g, (c) => ({
-    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
-  }[c]));
-}
-function escapeAttr(s) { return escapeHtml(s); }
+// §6.4: escapeHtml / escapeAttr now live in lib.js (loaded above) as globals.
 /* Only allow absolute https: URLs into an href. FEC-provided URL fields
    (pdf_url, filing_pdf_url, filing_page_url) are interpolated into links;
    validating the scheme blocks javascript:/data: injection, and callers still
