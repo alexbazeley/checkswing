@@ -4372,11 +4372,13 @@ function bindIndexHandlers() {
       if (slug) window.location.hash = `#/owner/${slug}`;
     });
   });
+  /* §6.2: heatmap ROW LABELS are keyboard-navigable (one per owner). The ~400
+     individual cells are deliberately NOT tab stops — that many stops harms
+     keyboard nav; each cell keeps its <title> tooltip and the data is also in the
+     keyboard-navigable owners table. */
   document.querySelectorAll(".hm-row-label").forEach((el) => {
-    el.addEventListener("click", () => {
-      const slug = el.getAttribute("data-slug");
-      if (slug) window.location.hash = `#/owner/${slug}`;
-    });
+    const slug = el.getAttribute("data-slug");
+    if (slug) makeRowNavigable(el, () => { window.location.hash = `#/owner/${slug}`; });
   });
 
   /* Team links in the owners table — stop propagation so the team cell
@@ -4393,9 +4395,9 @@ function bindIndexHandlers() {
   });
 
   document.querySelectorAll(".cycle-bar[data-cycle]").forEach((bar) => {
-    bar.addEventListener("click", () => {
-      window.location.hash = `#/cycle/${bar.getAttribute("data-cycle")}`;
-    });
+    const cyc = bar.getAttribute("data-cycle");
+    bar.setAttribute("aria-label", `${cyc} cycle — view donations`);
+    makeRowNavigable(bar, () => { window.location.hash = `#/cycle/${cyc}`; });
     bar.style.cursor = "pointer";
   });
 
@@ -4405,15 +4407,19 @@ function bindIndexHandlers() {
     });
   });
 
-  /* Alignment scatter dots → click navigates to owner; hover shows tooltip */
+  /* Alignment scatter dots → click/Enter navigates to owner; hover/focus shows
+     tooltip. §6.2: interactive SVG dots are keyboard-operable (one per owner). */
   const tooltip = document.getElementById("scatter-tooltip");
   document.querySelectorAll("circle.scatter-dot").forEach((c) => {
-    c.addEventListener("click", () => {
+    c.setAttribute("aria-label", `${c.getAttribute("data-name") || "owner"} — open owner page`);
+    makeRowNavigable(c, () => {
       hideScatterTooltip(tooltip);
       window.location.hash = `#/owner/${c.getAttribute("data-slug")}`;
     });
     c.addEventListener("mouseenter", () => showScatterTooltip(c, tooltip));
     c.addEventListener("mouseleave", () => hideScatterTooltip(tooltip));
+    c.addEventListener("focus", () => showScatterTooltip(c, tooltip));
+    c.addEventListener("blur", () => hideScatterTooltip(tooltip));
   });
 }
 
