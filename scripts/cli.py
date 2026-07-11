@@ -378,6 +378,7 @@ def reclassify_state_cmd(slug, zip_path, reason):
     res = ingest_state.reclassify_state_entity(
         slug,
         rcpt_rows=rows,
+        jurisdiction="CA",  # this command re-ingests a CAL-ACCESS extract
         recipient_resolver=resolver,
         reason=reason or "calibration",
         raw_payload_path=raw_path,
@@ -386,6 +387,227 @@ def reclassify_state_cmd(slug, zip_path, reason):
         f"{slug}: {res.confirmed} CONFIRMED, {res.probable} PROBABLE, "
         f"{res.uncertain} UNCERTAIN (scanned {res.records_scanned})"
     )
+
+
+# ─── State review-queue adjudication (§5.4) ──────────────────────────────────
+# The state-side mirror of the federal resolve/bulk-discard/attribute/exclude
+# trio, keyed on (state_txn_id, entity_slug). resolve-state / bulk-discard-state
+# are queue-only and take effect immediately (they set the resolution on the
+# open state_review_queue item, so it drops out of the burndown). attribute-state
+# / exclude-state write a durable override to state_manual_attributions; unlike
+# the federal side (which reclassifies from stored per-owner raw), state can't
+# re-score without the bulk portal extract, so those apply on the next
+# `ingest-state` / `reclassify-state`. All are gated (snapshot + PROVENANCE_LOG)
+# and reversible with their un* counterpart.
+
+
+def _state_now_iso() -> str:
+    from datetime import datetime, timezone
+    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+@cli.command(name="resolve-state")
+@click.argument("state_txn_id")
+@click.argument("entity_slug")
+@click.option("--reason", default="", help="Why this item is discarded (recorded in state_review_resolutions).")
+@click.option("--resolution", default="DISCARDED", show_default=True, help="Verdict to record.")
+def resolve_state_cmd(state_txn_id, entity_slug, reason, resolution):
+    """Record a standing verdict for one STATE review-queue item (STATE_TXN_ID ENTITY_SLUG).
+
+    A DISCARDED verdict permanently suppresses the transaction from re-entering the
+    state review queue on future ingests/reclassifies (GOVERNANCE.md §2.5, §1.11).
+    Queue-only and immediate — does NOT affect attribution. Undo with `unresolve-state`.
+    """
+    from . import state_db
+    state_db.init()
+    ts = _state_now_iso()
+    with state_db.connect() as conn:
+        state_db.upsert_state_review_resolution(
+            conn, state_txn_id=state_txn_id, entity_slug=entity_slug,
+            resolution=resolution, resolution_reason=reason or None, resolved_at=ts,
+        )
+        conn.execute(
+            "UPDATE state_review_queue SET resolution=?, resolution_reason=?, resolution_at=? "
+            "WHERE state_txn_id=? AND entity_slug=?",
+            (resolution, reason or None, ts, state_txn_id, entity_slug),
+        )
+    click.echo(f"Recorded {resolution} for {state_txn_id} ({entity_slug}).")
+
+
+@cli.command(name="unresolve-state")
+@click.argument("state_txn_id")
+@click.argument("entity_slug")
+def unresolve_state_cmd(state_txn_id, entity_slug):
+    """Remove a standing state verdict (undo resolve-state). The item re-queues on
+    the next ingest/reclassify if it still classifies UNCERTAIN."""
+    from . import state_db
+    state_db.init()
+    with state_db.connect() as conn:
+        n = state_db.delete_state_review_resolution(
+            conn, state_txn_id=state_txn_id, entity_slug=entity_slug)
+        conn.execute(
+            "UPDATE state_review_queue SET resolution=NULL, resolution_reason=NULL, resolution_at=NULL "
+            "WHERE state_txn_id=? AND entity_slug=?",
+            (state_txn_id, entity_slug),
+        )
+    click.echo(f"Removed {n} standing verdict(s) for {state_txn_id} ({entity_slug}).")
+
+
+@cli.command(name="bulk-discard-state")
+@click.argument("entity_slug")
+@click.option("--jurisdiction", default=None, help="Restrict to one jurisdiction (e.g. TX). Default: all.")
+@click.option("--reason-like", default=None, help="Only discard items whose reason LIKE this pattern.")
+@click.option("--note", default="bulk discard", help="Reason recorded on each resolution.")
+@click.option("--yes", is_flag=True, help="Skip confirmation.")
+def bulk_discard_state_cmd(entity_slug, jurisdiction, reason_like, note, yes):
+    """Discard every OPEN state review-queue item for an owner (STATE burndown, §5.4).
+
+    GATED — snapshots state.db and logs to PROVENANCE_LOG. Optionally scope to one
+    --jurisdiction and/or a --reason-like SQL pattern. Queue-only (never touches
+    state_donations); each discarded item gets a DISCARDED resolution so it won't
+    re-queue. Reverse individual items with `unresolve-state`.
+    """
+    from . import state_db
+    from .paths import PROVENANCE_LOG
+    state_db.init()
+    where = "entity_slug = ? AND resolution IS NULL"
+    params: list = [entity_slug]
+    if jurisdiction:
+        where += " AND jurisdiction = ?"; params.append(jurisdiction)
+    if reason_like:
+        where += " AND reason LIKE ?"; params.append(reason_like)
+    with state_db.connect() as conn:
+        n = conn.execute(f"SELECT COUNT(*) FROM state_review_queue WHERE {where}", params).fetchone()[0]
+    if n == 0:
+        click.echo(f"No open state review items match for {entity_slug}.")
+        return
+    scope = f" jurisdiction={jurisdiction}" if jurisdiction else ""
+    scope += f" reason~{reason_like!r}" if reason_like else ""
+    click.echo(f"Will DISCARD {n} open state review item(s) for {entity_slug}{scope}. "
+               f"state.db is snapshotted first; logged to PROVENANCE_LOG.")
+    if not yes and not click.confirm("Continue?", default=False):
+        click.echo("Aborted."); return
+    ts = _state_now_iso()
+    snap = state_db.snapshot("bulk_discard_state")
+    with state_db.connect() as conn:
+        rows = list(conn.execute(f"SELECT state_txn_id FROM state_review_queue WHERE {where}", params))
+        for r in rows:
+            state_db.upsert_state_review_resolution(
+                conn, state_txn_id=r["state_txn_id"], entity_slug=entity_slug,
+                resolution="DISCARDED", resolution_reason=note, resolved_at=ts)
+        conn.execute(
+            f"UPDATE state_review_queue SET resolution='DISCARDED', resolution_reason=?, resolution_at=? WHERE {where}",
+            [note, ts, *params])
+    append_provenance(
+        f"\n### {ts[:10]} — REVIEW_RESOLUTION — {entity_slug} (state bulk-discard)\n\n"
+        f"Discarded **{n}** open state review-queue item(s) for `{entity_slug}`"
+        f"{scope} as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. "
+        f"Reason: {note}. Snapshot: `{snap}`.\n",
+        PROVENANCE_LOG,
+    )
+    click.echo(f"Discarded {n} state review item(s) for {entity_slug}.")
+
+
+@cli.command(name="attribute-state")
+@click.argument("state_txn_id")
+@click.argument("entity_slug")
+@click.option("--reason", required=True, help="Documented justification (recorded in state_manual_attributions).")
+@click.option("--source", default="", help="Evidence/source supporting the attribution.")
+@click.option("--status", default="CONFIRMED", show_default=True, help="Status to force (CONFIRMED or PROBABLE).")
+@click.option("--yes", is_flag=True, help="Skip confirmation.")
+def attribute_state_cmd(state_txn_id, entity_slug, reason, source, status, yes):
+    """Manually attribute one STATE transaction to an owner (STATE_TXN_ID ENTITY_SLUG).
+
+    GATED — records a durable override in state_manual_attributions (snapshot +
+    PROVENANCE_LOG). Unlike the federal `attribute` (which reclassifies from stored
+    raw), state can't re-score without the bulk portal extract, so the override
+    APPLIES ON THE NEXT `ingest-state` / `reclassify-state` for this owner. Survives
+    reclassify; undo with `unattribute-state`.
+    """
+    from . import state_db
+    from .paths import PROVENANCE_LOG
+    status = status.upper()
+    if status not in ("CONFIRMED", "PROBABLE"):
+        click.echo("--status must be CONFIRMED or PROBABLE.", err=True); raise SystemExit(1)
+    state_db.init()
+    click.echo(f"Will attribute {state_txn_id} → {entity_slug} as {status} (applies on next ingest-state).\n"
+               f"  reason: {reason}\n  source: {source or '(none)'}")
+    if not yes and not click.confirm("Continue?", default=False):
+        click.echo("Aborted."); return
+    ts = _state_now_iso()
+    snap = state_db.snapshot("pre-state-attribute")
+    with state_db.connect() as conn:
+        state_db.upsert_state_manual_attribution(
+            conn, state_txn_id=state_txn_id, entity_slug=entity_slug, status=status,
+            reason=reason, source=source or None, attributed_at=ts)
+        # A manually-attributed txn must not also carry a DISCARDED verdict.
+        state_db.delete_state_review_resolution(conn, state_txn_id=state_txn_id, entity_slug=entity_slug)
+    append_provenance(
+        f"\n### {ts[:10]} — MANUAL_ATTRIBUTION — {entity_slug} (state)\n\n"
+        f"Forced `{state_txn_id}` → **{status}** for `{entity_slug}` (state). Reason: {reason}. "
+        f"Source: {source or '(none)'}. Applies on the next state ingest/reclassify. Snapshot: `{snap}`.\n",
+        PROVENANCE_LOG,
+    )
+    click.echo(f"Attributed {state_txn_id} → {entity_slug} as {status} (applies on next ingest-state).")
+
+
+@cli.command(name="exclude-state")
+@click.argument("state_txn_id")
+@click.argument("entity_slug")
+@click.option("--reason", required=True, help="Why this txn is NOT this owner (e.g. same-named relative).")
+@click.option("--source", default="", help="Evidence/source.")
+@click.option("--yes", is_flag=True, help="Skip confirmation.")
+def exclude_state_cmd(state_txn_id, entity_slug, reason, source, yes):
+    """Exclude one STATE transaction from an owner (STATE_TXN_ID ENTITY_SLUG).
+
+    GATED — records a durable EXCLUDED override in state_manual_attributions so the
+    txn is dropped (not even queued) on the next state ingest/reclassify. The state
+    analog of `exclude`, for a same-named relative's record a signal edit can't
+    cleanly separate. Undo with `unexclude-state`.
+    """
+    from . import state_db
+    from .paths import PROVENANCE_LOG
+    state_db.init()
+    click.echo(f"Will EXCLUDE {state_txn_id} from {entity_slug} (applies on next ingest-state).\n  reason: {reason}")
+    if not yes and not click.confirm("Continue?", default=False):
+        click.echo("Aborted."); return
+    ts = _state_now_iso()
+    snap = state_db.snapshot("pre-state-exclude")
+    with state_db.connect() as conn:
+        state_db.upsert_state_manual_attribution(
+            conn, state_txn_id=state_txn_id, entity_slug=entity_slug, status="EXCLUDED",
+            reason=reason, source=source or None, attributed_at=ts)
+    append_provenance(
+        f"\n### {ts[:10]} — MANUAL_ATTRIBUTION — {entity_slug} (state EXCLUDED)\n\n"
+        f"Excluded `{state_txn_id}` from `{entity_slug}` (state). Reason: {reason}. "
+        f"Dropped on the next state ingest/reclassify. Snapshot: `{snap}`.\n",
+        PROVENANCE_LOG,
+    )
+    click.echo(f"Excluded {state_txn_id} from {entity_slug} (applies on next ingest-state).")
+
+
+@cli.command(name="unattribute-state")
+@click.argument("state_txn_id")
+@click.argument("entity_slug")
+def unattribute_state_cmd(state_txn_id, entity_slug):
+    """Remove a manual state attribution (undo attribute-state)."""
+    from . import state_db
+    state_db.init()
+    with state_db.connect() as conn:
+        n = state_db.delete_state_manual_attribution(conn, state_txn_id=state_txn_id, entity_slug=entity_slug)
+    click.echo(f"Removed {n} manual attribution(s) for {state_txn_id} ({entity_slug}).")
+
+
+@cli.command(name="unexclude-state")
+@click.argument("state_txn_id")
+@click.argument("entity_slug")
+def unexclude_state_cmd(state_txn_id, entity_slug):
+    """Remove a manual state exclusion (undo exclude-state)."""
+    from . import state_db
+    state_db.init()
+    with state_db.connect() as conn:
+        n = state_db.delete_state_manual_attribution(conn, state_txn_id=state_txn_id, entity_slug=entity_slug)
+    click.echo(f"Removed {n} manual exclusion(s) for {state_txn_id} ({entity_slug}).")
 
 
 @cli.command(name="dedupe-state-crossfilings")
