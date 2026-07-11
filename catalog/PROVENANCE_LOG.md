@@ -24938,3 +24938,14 @@ Tier-2-sourced promotion was found and applied.
   = 5,730 records) AND would materially change a published total, so it is left as a
   decision point rather than done unilaterally. Same option applies to any thin owner
   whose residence differs from where they may file.
+
+### 2026-07-11 — INGESTION (bills)
+
+- **source**: `congress.gov` (api.congress.gov v3)
+- **fetched_at**: `2026-07-11T15:35:24Z`
+- **curated_bills_in_set**: `22`
+- **bills_enriched**: `22`
+- **sponsor_rows**: `201`
+- **errors**: `[]`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-11T15-35-24Z__pre-ingest-bills.db`
+- **note**: Curated fields (mlb_issue_area, relevance_basis, carried_by_bill_id) sourced from legislation/bills/*.yaml; identity/sponsors/action from Congress.gov (Tier-1). Raw payloads under data/raw/legislation/.

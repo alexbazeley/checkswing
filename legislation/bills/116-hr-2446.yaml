@@ -1,0 +1,22 @@
+bill_id: 116-hr-2446
+congress: 116
+bill_type: hr
+number: 2446
+mlb_issue_area: stadium_financing
+relevance_basis: >-
+  No Tax Subsidies for Stadiums Act of 2019. Would amend the Internal Revenue
+  Code so that bonds issued to finance professional sports stadiums fail the
+  private-security-or-payment test, ending their eligibility for tax-exempt
+  status — the federal subsidy for stadium construction. Sponsored by Rep. Earl
+  Blumenauer (D-OR-3); introduced 2019-05-01 and referred to the House Committee
+  on Ways and Means, with no further action and no roll-call vote. The
+  116th-Congress entry in the recurring House "No Tax Subsidies for Stadiums Act"
+  line (H.R.811, 115th → H.R.2434, 119th).
+relevance_source_url: "https://www.congress.gov/bill/116th-congress/house-bill/2446"
+sources:
+  - description: "Congress.gov bill page — No Tax Subsidies for Stadiums Act of 2019, H.R.2446 (116th)"
+    url: "https://www.congress.gov/bill/116th-congress/house-bill/2446"
+    accessed: 2026-07-11
+change_log:
+  - date: 2026-07-11
+    change: "Indexed as a Phase 3 curated bill (stadium_financing) — fills the 116th-Congress gap in the House stadium-bond lineage; verified sponsor + latest action against api.congress.gov v3."

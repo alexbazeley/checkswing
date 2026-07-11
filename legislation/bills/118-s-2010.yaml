@@ -1,0 +1,21 @@
+bill_id: 118-s-2010
+congress: 118
+bill_type: s
+number: 2010
+mlb_issue_area: antitrust_exemption
+relevance_basis: >-
+  Competition in Professional Baseball Act (118th). Reintroduction of the effort
+  to remove professional baseball's antitrust exemption, applying the antitrust
+  laws to the business of organized professional baseball. Sponsored by Sen. Mike
+  Lee (R-UT); introduced 2023-06-15 and read twice and referred to the Committee
+  on the Judiciary, with no committee action and no roll-call vote. The
+  118th-Congress successor to S.1111 (117th) and the most recent standalone
+  antitrust-exemption repeal bill indexed here.
+relevance_source_url: "https://www.congress.gov/bill/118th-congress/senate-bill/2010"
+sources:
+  - description: "Congress.gov bill page — Competition in Professional Baseball Act, S.2010 (118th)"
+    url: "https://www.congress.gov/bill/118th-congress/senate-bill/2010"
+    accessed: 2026-07-11
+change_log:
+  - date: 2026-07-11
+    change: "Indexed as a Phase 3 curated bill (antitrust_exemption) — 118th-Congress reintroduction of the antitrust-exemption repeal; verified sponsor + latest action against api.congress.gov v3."
