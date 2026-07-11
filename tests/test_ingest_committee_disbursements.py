@@ -195,6 +195,38 @@ class TestIngestCommitteeDisbursements:
             assert rows[0]["total_amount"] == 5000.0
             assert rows[1]["recipient_party"] == "REP"
 
+    def test_per_page_raw_path_attribution(self, tmp_master, fec_responses):
+        """§2.1: each beneficiary row points at the pagination page it came from,
+        not the cycle's last page. Two pages → the two rows carry distinct raw
+        paths (_p1 vs _p2)."""
+        fec_responses.add(
+            responses.GET, BASE_URL + BY_RECIPIENT_ENDPOINT,
+            json={"results": [{"candidate_id": "H1", "recipient_name": "PAGE1ONE",
+                               "total": 9000.0, "count": 1, "recipient_party": "DEM"}],
+                  "pagination": {"last_indexes": {"last_index": "200"}}},
+            status=200,
+        )
+        fec_responses.add(
+            responses.GET, BASE_URL + BY_RECIPIENT_ENDPOINT,
+            json={"results": [{"candidate_id": "H2", "recipient_name": "PAGE2TWO",
+                               "total": 8000.0, "count": 1, "recipient_party": "REP"}],
+                  "pagination": {"last_indexes": None}},
+            status=200,
+        )
+        ingest_committee_disbursements.ingest_committee_disbursements(
+            "C00000001", cycles=[2024], db_path=tmp_master,
+        )
+        with db.connect(tmp_master) as conn:
+            paths = {r["recipient_id"]: r["raw_payload_path"] for r in conn.execute(
+                "SELECT recipient_id, raw_payload_path FROM "
+                "committee_disbursements_by_recipient WHERE committee_id = ?",
+                ("C00000001",),
+            )}
+        assert set(paths) == {"H1", "H2"}
+        assert paths["H1"].endswith("_p1.json")   # page-1 row → page-1 raw
+        assert paths["H2"].endswith("_p2.json")   # page-2 row → page-2 raw
+        assert paths["H1"] != paths["H2"]
+
     def test_idempotent_re_run_replaces_rows(self, tmp_master, fec_responses):
         """Running again with fresh FEC data replaces the prior cycle snapshot
         — no duplicate rows, retracted recipients vanish."""

@@ -56,7 +56,19 @@ The committed **`data/master.db` is the durable source of truth** for the archiv
 and the dashboard. Raw payloads live outside git (`.gitignore`) and are **not
 guaranteed to be preserved** — they may exist only on the machine or CI runner
 that fetched them (a minority of historical rows reference raw files no longer on
-disk). Consequences that are load-bearing:
+disk).
+
+> **Known gap (2026-07, automation-era rows):** the monthly refresh workflows
+> fetch on ephemeral GitHub runners and commit **only `master.db`** — the raw
+> payloads they fetch are **destroyed with the runner**, so any row ingested by
+> the cron references a `raw_payload_path` that exists nowhere. Until off-runner
+> raw archival ships (design: [docs/DESIGN_raw_archival_2026-07.md](docs/DESIGN_raw_archival_2026-07.md),
+> plan §2.1), treat the "re-verify from raw" guarantee as **best-effort and
+> present-only for locally-fetched rows**. `master.db` remains authoritative; the
+> `reclassify` guard (below) still refuses to silently drop a row whose raw is
+> missing.
+
+Consequences that are load-bearing:
 
 - Do **not** assume the DB is fully reconstructible from `data/raw/` alone. master.db is authoritative; raw is a re-verification aid, not a guaranteed backup.
 - `reclassify` is **guarded**: it refuses to delete-and-reload an entity when any currently-attributed row's raw payload is missing on disk (those rows would be silently lost), unless `--force`. Run `python -m scripts.cli raw-coverage` to see the gap.

@@ -212,17 +212,27 @@ def ingest_committee_disbursements(
             print(f"[beneficiaries] {committee_id} cycle {cycle} ERROR: {e}")
             continue
 
-        # Project to schema. _last_ raw_path is the one we point rows at —
-        # the per-cycle envelope is sufficient to rebuild the cycle from §1.4
-        # if needed; FEC reads are deterministic given the same params.
+        # Project to schema. Each row points at the pagination page it actually
+        # came from (§2.1 — tagged in fetch_by_recipient), falling back to the
+        # cycle's last page only if a row is somehow untagged.
+        fallback_path = relpath(raw_paths[-1]) if raw_paths else ""
+
+        def _row_raw(r):
+            p = r.get("_raw_page_path")
+            if not p:
+                return fallback_path
+            try:
+                return relpath(p)
+            except (ValueError, TypeError):
+                return fallback_path
+
         parsed: list[dict] = []
         for r in rows:
             row = parse_by_recipient_row(committee_id, cycle, r)
             if row is None:
                 continue
+            row["_raw_page_path"] = _row_raw(r)
             parsed.append(row)
-
-        raw_payload_path = relpath(raw_paths[-1]) if raw_paths else ""
 
         with db.connect(db_path) as conn:
             # Replace this cycle's rows wholesale — FEC may have dropped a
@@ -254,7 +264,7 @@ def ingest_committee_disbursements(
                     """,
                     {
                         **p,
-                        "raw_payload_path": raw_payload_path,
+                        "raw_payload_path": p.get("_raw_page_path", ""),
                         "fetched_at": now,
                     },
                 )
