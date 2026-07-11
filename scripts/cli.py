@@ -917,6 +917,24 @@ def backfill_memo_fields_cmd():
     click.echo(json.dumps(summary, indent=2, default=str))
 
 
+@cli.command(name="prune-snapshots")
+@click.option("--keep-days", type=int, default=30, help="Keep every snapshot younger than this (default 30).")
+@click.option("--apply", "do_apply", is_flag=True, help="Actually delete (default is a dry-run preview).")
+def prune_snapshots_cmd(keep_days, do_apply):
+    """Prune old data/snapshots/*.db (§2.3): keep all < keep-days + newest per op group.
+
+    Snapshots are gitignored, regenerable rollback aids that accrete ~130MB per
+    gated op. Defaults to a DRY-RUN preview; pass --apply to delete. Deletes local
+    files only (never anything committed) and logs a PRUNE entry to PROVENANCE_LOG.
+    """
+    from .prune_snapshots import prune
+
+    summary = prune(keep_days=keep_days, dry_run=not do_apply)
+    click.echo(json.dumps(summary, indent=2, default=str))
+    if not do_apply and summary["pruned"]:
+        click.echo(f"\nDry run — pass --apply to free {summary['mb_freed']} MB.")
+
+
 @cli.command(name="backfill-sub-id")
 def backfill_subid_cmd():
     """One-shot (GATED): populate the v9 sub_id column on existing donation rows.
