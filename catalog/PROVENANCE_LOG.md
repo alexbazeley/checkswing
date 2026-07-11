@@ -24877,3 +24877,64 @@ single feature commit and adding Alexandra Cohen as a tracked related entity
   monthly cron's incremental path.
 - Snapshot taken before the add; schema migrated v8->v10 (code-driven). GOVERNANCE
   §1.6/§1.7/§1.10 honored.
+
+### 2026-07-11 — DELETION — reclassify steinbrenner-hal
+
+- **entity_slug**: `steinbrenner-hal`
+- **reason**: §5.3: Tier-2-sourced Transmarine Management employer signal (Sunbiz: Hal officer/director)
+- **rows_deleted_donations**: `15`
+- **rows_deleted_review_queue**: `0` (of which 0 had resolutions)
+- **include_related**: `False`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-11T06-28-51Z__pre-reclassify-steinbrenner-hal.db`
+- **note**: Rows are recoverable from the snapshot above and from data/raw/steinbrenner-hal/ payloads. Re-classification follows in the next INGESTION entry.
+
+### 2026-07-11 — INGESTION
+
+- **run_id**: `06db78f9`
+- **entity_slug**: `steinbrenner-hal`
+- **dry_run**: `0`
+- **period_start**: `2025-01-01`
+- **period_end**: `2025-12-22`
+- **name_variants_queried**: `["Harold Z Steinbrenner", "Harold Z. Steinbrenner", "Harold Steinbrenner", "Hal Steinbrenner", "Steinbrenner, Harold", "Steinbrenner, Harold Z", "Steinbrenner, Harold Z.", "Steinbrenner, Hal"]`
+- **api_calls_made**: `0`
+- **records_fetched**: `15`
+- **confirmed_count**: `14`
+- **probable_count**: `1`
+- **uncertain_count**: `0`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-11T06-28-51Z__06db78f9.db`
+- **notes**: skipped(no-name-match)=0 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-07-11 — NOTE — §5.3 thin-owner calibration audit (6 owners)
+
+Ran the CALIBRATION_PLAYBOOK read-only audit across the six §5.3 "suspiciously thin"
+owners. Key finding: **five of the six were ALREADY calibrated** (their change_logs
+carry prior maintainer-approved passes), so §5.3's "calibration never got a pass"
+premise is largely incorrect — their thinness is the DELIBERATE result of
+conservative classification on common names, not a skipped pass. One genuine,
+Tier-2-sourced promotion was found and applied.
+
+- **steinbrenner-hal — +1 CONFIRMED ($7,700), applied.** The 2026-05-25 pass had
+  "conservatively left PROBABLE pending Tier 2 research" the record STEINBRENNER,
+  HAROLD / TRANSMARINE MANAGEMENT / Tampa 33614 → Republican Party of FL, 2008.
+  Tier-2 research done: FL Division of Corporations (Sunbiz) lists Harold Z.
+  Steinbrenner as an officer/director of Trans-Marine Management Corp at that exact
+  Tampa 33614 address (a Steinbrenner-family maritime firm). Added "Transmarine
+  Management" to verifying_signals.employers (not strong — a family entity; the name
+  gate excludes the differently-named siblings and the record already carries
+  city_state Tampa/FL). Reclassify: 13→14 CONFIRMED, 2→1 PROBABLE; guard dropped 0.
+- **henry-john — no change (already handled).** The 3 PROBABLE at Boca Raton 33431
+  were DELIBERATELY left PROBABLE by the 2026-05-25 pass ("33431 is broader and
+  name_variants include bare 'John Henry' which over-confirms"). Not undone.
+- **rubenstein-david — no change.** The 5 PROBABLE sit at dense DC ZIPs (20004 is
+  his Carlyle office; 20009 SELF). Promoting a dense-metro business ZIP would risk
+  strangers (the fisher lesson); prior calibration left them PROBABLE. Correct.
+- **ilitch-chris (12 CONF Detroit, 0 PROBABLE, empty queue), seidler-john (1 CONF,
+  new owner Feb-2025), walter-mark (21 CONF Chicago, 0 PROBABLE) — verified thin.**
+  All correctly classified within their name-anchored, state-filtered fetch scope.
+- **Surfaced, NOT done — broadened re-fetch (USER DECISION).** walter-mark is
+  fetched with a state filter of IL only; his known larger Dem giving from other
+  states (if any) is excluded at the FEC-query level and cannot be recovered without
+  a broadened (state-filter-off) re-fetch. That is expensive (name-only "Mark Walter"
+  = 5,730 records) AND would materially change a published total, so it is left as a
+  decision point rather than done unilaterally. Same option applies to any thin owner
+  whose residence differs from where they may file.
