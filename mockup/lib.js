@@ -46,7 +46,23 @@
     return lines.join("\n");
   };
 
-  const api = { fmtMoney, fmtMoneyExact, fmtInt, escapeHtml, escapeAttr, csvEscape, buildCSV };
+  // Two-party lean label from DEM/REP dollars (owner page). OTH is ignored — this
+  // is the D-vs-R tilt. Each side's percent is rounded independently (so the two
+  // may sum to 99/101, matching the original inline math exactly); the 60% line
+  // buckets into leaning-vs-mixed. No party-classified giving → the neutral label.
+  // §6.4: pure + unit-tested — this is exactly the kind of untested share-math §1.6
+  // bugs hid in.
+  const partyTiltLabel = (dem, rep) => {
+    const denom = (dem || 0) + (rep || 0);
+    if (!(denom > 0)) return "No party-classified giving";
+    const demPct = Math.round((dem / denom) * 100);
+    const repPct = Math.round((rep / denom) * 100);
+    if (demPct >= 60) return `Democratic-leaning (${demPct}% DEM)`;
+    if (repPct >= 60) return `Republican-leaning (${repPct}% REP)`;
+    return `Mixed (${demPct}% DEM / ${repPct}% REP)`;
+  };
+
+  const api = { fmtMoney, fmtMoneyExact, fmtInt, escapeHtml, escapeAttr, csvEscape, buildCSV, partyTiltLabel };
   if (typeof module !== "undefined" && module.exports) module.exports = api;  // Node
   else Object.assign(root, api);                                              // browser globals
 })(typeof globalThis !== "undefined" ? globalThis : this);

@@ -4596,12 +4596,7 @@ function renderOwner(slug) {
 
   const dem = aggParty(o, "DEM");
   const rep = aggParty(o, "REP");
-  const denom = dem + rep;
-  const partyTilt = denom > 0
-    ? (Math.round((dem / denom) * 100) >= 60 ? `Democratic-leaning (${Math.round((dem / denom) * 100)}% DEM)`
-       : Math.round((rep / denom) * 100) >= 60 ? `Republican-leaning (${Math.round((rep / denom) * 100)}% REP)`
-       : `Mixed (${Math.round((dem / denom) * 100)}% DEM / ${Math.round((rep / denom) * 100)}% REP)`)
-    : "No party-classified giving";
+  const partyTilt = partyTiltLabel(dem, rep);   // §6.4: pure helper in lib.js
 
   const cyclesSpanned = Object.keys(o.cycle_dollars).length;
 
@@ -5556,12 +5551,12 @@ function bindCycleHandlers() {
   if (s) s.addEventListener("change", (e) => { state.cycleFilters.status = e.target.value; rerenderCycleTable(); });
 
   document.querySelectorAll(".cycle-owner-row").forEach((row) => {
-    row.addEventListener("click", () => {
+    makeRowNavigable(row, () => {
       window.location.hash = `#/owner/${row.getAttribute("data-slug")}`;
     });
   });
   document.querySelectorAll(".cycle-recipient-row").forEach((row) => {
-    row.addEventListener("click", () => {
+    makeRowNavigable(row, () => {
       window.location.hash = `#/committee/${encodeURIComponent(row.getAttribute("data-cid"))}`;
     });
   });
@@ -6078,7 +6073,7 @@ function bindCommitteeHandlers() {
   if (s) s.addEventListener("change", (e) => { state.committeeFilters.status = e.target.value; rerenderCommitteeTable(); });
 
   document.querySelectorAll(".cycle-owner-row").forEach((row) => {
-    row.addEventListener("click", () => {
+    makeRowNavigable(row, () => {
       window.location.hash = `#/owner/${row.getAttribute("data-slug")}`;
     });
   });
@@ -8345,7 +8340,7 @@ function bindStatesHandlers() {
   const stMore = document.getElementById("st-load-more");
   if (stMore) stMore.addEventListener("click", () => { f.visibleN += 100; render(); });
   document.querySelectorAll(".st-row").forEach((row) => {
-    row.addEventListener("click", () => openStateDrawer(row.getAttribute("data-state-id")));
+    makeRowNavigable(row, () => openStateDrawer(row.getAttribute("data-state-id")));
   });
   /* Recent-contributions rows on the State overview (mirror of the Federal
      overview). openDrawer auto-routes the state id to openStateDrawer. */
@@ -8364,8 +8359,8 @@ function bindStatesHandlers() {
     });
   });
   document.querySelectorAll(".st-owner-row").forEach((row) => {
-    row.addEventListener("click", (e) => {
-      if (e.target.closest("a")) return;  // let the owner-name link do its thing
+    makeRowNavigable(row, (e) => {
+      if (e && e.target && e.target.closest("a")) return;  // let the owner-name link do its thing
       const slug = row.getAttribute("data-owner");
       if (slug) window.location.hash = `#/owner/${slug}`;
     });
@@ -8411,7 +8406,7 @@ function bindStatesHandlers() {
   const srMore = document.getElementById("sr-load-more");
   if (srMore) srMore.addEventListener("click", () => { rf.visibleN += 100; render(); });
   document.querySelectorAll(".sr-row").forEach((row) => {
-    row.addEventListener("click", () => {
+    makeRowNavigable(row, () => {
       const key = row.getAttribute("data-key");
       if (key) window.location.hash = `#/state-recipient/${encodeURIComponent(key)}`;
     });
