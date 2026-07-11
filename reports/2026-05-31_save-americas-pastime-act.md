@@ -133,6 +133,7 @@ a standing arrangement.
   --sponsors-of 114-hr-5580 --sponsors-of 115-hr-1625 --out save-americas-pastime-act`.
   Reproducible neutral output in [`reports/data/`](data/). `days_before_vote` is
   arithmetic, not a causal claim.
+- **Join scope / denominator:** this join covers **direct-to-candidate giving only**. Only contributions carrying an FEC `recipient_candidate_id` are joinable to a legislator — about **$366K of the archive's ~$35M** (~1%). Party committees and leadership PACs — the bulk of owner money — are **excluded by construction**, because the money reaches candidates indirectly (a pass-through the archive does not yet resolve). So this brief describes a small, cleanly-attributable slice, not the full flow of owner money to these legislators.
 - **Honesty note:** every figure above is from that output. Where the data
   undercuts a tempting narrative (timing, Yea/Nay split, zero-to-authors), this
   brief reports the undercut rather than burying it. That restraint is the product.
