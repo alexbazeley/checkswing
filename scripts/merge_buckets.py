@@ -102,48 +102,64 @@ def _merge_one_bucket(consolidated_db: Path, bucket_db: Path) -> dict:
         return {"bucket_db": str(bucket_db), "touched_slugs": [], "new_runs": 0,
                 "donations_replaced": 0, "review_queue_replaced": 0}
 
+    # Households (§5.1): a `--include-related` run logs its ingestion_run under the
+    # OWNER slug, but a related entity's rows land under its OWN entity_slug (with
+    # parent_owner_slug = the owner). So the per-owner replace below must also purge
+    # and re-copy the owner's related entities, or a spouse's stale rows survive the
+    # merge (and her fresh rows never arrive). Expand each touched owner to its
+    # related slugs from the bucket's entities mirror.
+    def _group_slugs(owner_slug: str) -> list[str]:
+        related = [
+            r["slug"]
+            for r in bucket.execute(
+                "SELECT slug FROM entities WHERE parent_slug = ?", (owner_slug,)
+            )
+        ]
+        return [owner_slug, *related]
+
     # Per-slug replace donations + review_queue from bucket DB.
     n_donations = 0
     n_review = 0
     cons.execute("BEGIN")
     try:
-        for slug in touched_slugs:
-            cons.execute("DELETE FROM donations WHERE entity_slug = ?", (slug,))
-            cons.execute("DELETE FROM review_queue WHERE entity_slug = ?", (slug,))
+        for owner_slug in touched_slugs:
+            for slug in _group_slugs(owner_slug):
+                cons.execute("DELETE FROM donations WHERE entity_slug = ?", (slug,))
+                cons.execute("DELETE FROM review_queue WHERE entity_slug = ?", (slug,))
 
-            don_rows = list(bucket.execute(
-                "SELECT * FROM donations WHERE entity_slug = ?", (slug,)
-            ))
-            for row in don_rows:
-                cols = row.keys()
-                placeholders = ",".join("?" * len(cols))
-                cons.execute(
-                    f"INSERT INTO donations ({','.join(cols)}) VALUES ({placeholders})",
-                    tuple(row[c] for c in cols),
-                )
-            n_donations += len(don_rows)
+                don_rows = list(bucket.execute(
+                    "SELECT * FROM donations WHERE entity_slug = ?", (slug,)
+                ))
+                for row in don_rows:
+                    cols = row.keys()
+                    placeholders = ",".join("?" * len(cols))
+                    cons.execute(
+                        f"INSERT INTO donations ({','.join(cols)}) VALUES ({placeholders})",
+                        tuple(row[c] for c in cols),
+                    )
+                n_donations += len(don_rows)
 
-            rq_rows = list(bucket.execute(
-                "SELECT * FROM review_queue WHERE entity_slug = ?", (slug,)
-            ))
-            for row in rq_rows:
-                cols = row.keys()
-                placeholders = ",".join("?" * len(cols))
-                cons.execute(
-                    f"INSERT INTO review_queue ({','.join(cols)}) VALUES ({placeholders})",
-                    tuple(row[c] for c in cols),
-                )
-            n_review += len(rq_rows)
+                rq_rows = list(bucket.execute(
+                    "SELECT * FROM review_queue WHERE entity_slug = ?", (slug,)
+                ))
+                for row in rq_rows:
+                    cols = row.keys()
+                    placeholders = ",".join("?" * len(cols))
+                    cons.execute(
+                        f"INSERT INTO review_queue ({','.join(cols)}) VALUES ({placeholders})",
+                        tuple(row[c] for c in cols),
+                    )
+                n_review += len(rq_rows)
 
-            # Adopt the bucket's entities.refreshed_at for this slug.
-            ent = bucket.execute(
-                "SELECT refreshed_at FROM entities WHERE slug = ?", (slug,)
-            ).fetchone()
-            if ent is not None and ent["refreshed_at"] is not None:
-                cons.execute(
-                    "UPDATE entities SET refreshed_at = ? WHERE slug = ?",
-                    (ent["refreshed_at"], slug),
-                )
+                # Adopt the bucket's entities.refreshed_at for this slug.
+                ent = bucket.execute(
+                    "SELECT refreshed_at FROM entities WHERE slug = ?", (slug,)
+                ).fetchone()
+                if ent is not None and ent["refreshed_at"] is not None:
+                    cons.execute(
+                        "UPDATE entities SET refreshed_at = ? WHERE slug = ?",
+                        (ent["refreshed_at"], slug),
+                    )
 
         # Insert the new ingestion_runs.
         for row in new_runs:
