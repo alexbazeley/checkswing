@@ -29,7 +29,7 @@ from .fetch_committees import (
     parse_committee_detail,
     parse_committee_totals_row,
 )
-from .fetch_fec import FECClient
+from .fetch_fec import FECClient, FECPermanentError
 from .enrichment_base import fresh_within_days
 from .paths import DATA_DIR, MASTER_DB, relpath
 
@@ -82,6 +82,51 @@ def _committee_is_fresh(conn: sqlite3.Connection, committee_id: str) -> bool:
         "SELECT refreshed_at FROM committees WHERE committee_id = ?", (committee_id,)
     ).fetchone()
     return row is not None and fresh_within_days(row["refreshed_at"])
+
+
+# ─── Committee tombstones (§4.4) ─────────────────────────────────────────────
+#
+# A committee_id that permanently fails (dissolved/merged — 404, or a 200 with
+# zero results) has no `committees` row to carry a freshness stamp, so it is a
+# candidate every convergence run and fails every run. Recording it in
+# `committee_tombstones` lets `ingest_all_committees` skip it. A force_refresh run
+# re-attempts and clears the tombstone on success (in case FEC restores the id).
+
+
+def _tombstoned_committee_ids(conn: sqlite3.Connection) -> set[str]:
+    return {
+        r["committee_id"]
+        for r in conn.execute("SELECT committee_id FROM committee_tombstones")
+    }
+
+
+def _record_committee_tombstone(
+    conn: sqlite3.Connection,
+    committee_id: str,
+    *,
+    http_status: int | None,
+    reason: str,
+) -> None:
+    conn.execute(
+        """
+        INSERT OR REPLACE INTO committee_tombstones
+            (committee_id, not_found_at, http_status, endpoint, reason)
+        VALUES (?, ?, ?, ?, ?)
+        """,
+        (
+            committee_id,
+            _utc_now_iso(),
+            http_status,
+            f"/committee/{committee_id}/",
+            reason,
+        ),
+    )
+
+
+def _clear_committee_tombstone(conn: sqlite3.Connection, committee_id: str) -> None:
+    conn.execute(
+        "DELETE FROM committee_tombstones WHERE committee_id = ?", (committee_id,)
+    )
 
 
 # ─── Per-committee ingest ────────────────────────────────────────────────────
@@ -190,6 +235,10 @@ def ingest_committee(
                 },
             )
 
+        # A previously-tombstoned id that now fetches (FEC restored it, or a
+        # force_refresh re-attempt succeeded) is no longer a permanent failure.
+        _clear_committee_tombstone(conn, committee_id)
+
     return {
         "committee_id": committee_id,
         "status": "fetched",
@@ -257,6 +306,7 @@ def ingest_all_committees(
     they do NOT abort the run (GOVERNANCE.md §1.9 — prefer try-again-next-time).
     """
     started_at = _utc_now_iso()
+    db.init(db_path)  # ensure schema (incl. committee_tombstones, v10) exists
     candidates = only or list_committees_from_donations(db_path)
     # Oldest-refreshed first so max_fetch trims the freshest tail, not arbitrary
     # committees (skip for an explicit `only` set — caller controls that order).
@@ -275,9 +325,26 @@ def ingest_all_committees(
         "failed": 0,
         "failed_ids": [],
         "deferred": 0,  # §4.3: stale committees left for the next run (max_fetch)
+        "tombstoned_skipped": 0,  # §4.4: known-dissolved ids skipped without a fetch
+        "tombstoned_new": 0,      # §4.4: ids newly tombstoned this run
+        "tombstoned_ids": [],
         "totals_rows_written": 0,
         "snapshot_path": None,
     }
+
+    if not candidates:
+        summary["completed_at"] = _utc_now_iso()
+        return summary
+
+    # §4.4: skip ids already tombstoned as permanent failures — unless the caller
+    # forced a refresh (which re-attempts them and clears the tombstone on success).
+    if not force_refresh:
+        with db.connect(db_path) as conn:
+            tombstoned = _tombstoned_committee_ids(conn)
+        if tombstoned:
+            kept = [cid for cid in candidates if cid not in tombstoned]
+            summary["tombstoned_skipped"] = len(candidates) - len(kept)
+            candidates = kept
 
     if not candidates:
         summary["completed_at"] = _utc_now_iso()
@@ -326,6 +393,18 @@ def ingest_all_committees(
                         f"[committees] {cid} ✓ "
                         f"({result['totals_rows']} cycle rows) {result.get('name') or ''}"
                     )
+            except FECPermanentError as e:
+                # §4.4: dissolved/merged id — tombstone it so future convergence
+                # runs skip it instead of re-failing every month.
+                with db.connect(db_path) as conn:
+                    _record_committee_tombstone(
+                        conn, cid, http_status=e.status, reason=str(e)
+                    )
+                summary["failed"] += 1
+                summary["failed_ids"].append(cid)
+                summary["tombstoned_new"] += 1
+                summary["tombstoned_ids"].append(cid)
+                print(f"[committees] {cid} TOMBSTONED (permanent): {e}")
             except Exception as e:
                 summary["failed"] += 1
                 summary["failed_ids"].append(cid)

@@ -266,6 +266,22 @@ CREATE TABLE IF NOT EXISTS committee_disbursements_by_recipient (
 );
 CREATE INDEX IF NOT EXISTS idx_cdbr_committee_cycle
     ON committee_disbursements_by_recipient(committee_id, cycle);
+
+-- v10: committee tombstones. A committee_id that appears as a donation recipient
+-- but whose /committee/<id>/ endpoint permanently fails (404 dissolved id, 403,
+-- 422, or a 200 with zero results) has no row in `committees` to carry a
+-- `not_found_at` stamp — so the id is a candidate every convergence run and fails
+-- every run (§4.4). This table records the permanent failure so `ingest_all_committees`
+-- skips it. A `force_refresh` run re-attempts a tombstoned id and clears its row
+-- on success (in case FEC restores the record). Neutral provenance: status + the
+-- endpoint + the UTC stamp only, no interpretation.
+CREATE TABLE IF NOT EXISTS committee_tombstones (
+    committee_id  TEXT PRIMARY KEY,
+    not_found_at  TEXT NOT NULL,
+    http_status   INTEGER,
+    endpoint      TEXT,
+    reason        TEXT
+);
 """
 
 # v3 adds six per-transaction FEC fields (image_number, pdf_url, filing_form,
@@ -317,7 +333,7 @@ DONATION_DERIVED_COLS: list[tuple[str, str]] = [
     ("counted", "INTEGER NOT NULL DEFAULT 1"),
 ]
 
-SCHEMA_VERSION = 9
+SCHEMA_VERSION = 10
 
 
 def _utc_now_iso() -> str:

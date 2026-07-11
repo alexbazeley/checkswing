@@ -194,6 +194,38 @@ jobs:
       - name: Rebuild mockup/data.json
         run: python mockup/build_data.py
 
+      - name: LFS bandwidth budget check (monitor only)
+        # §4.4: master.db is a Git LFS object pulled by every `lfs: true` checkout
+        # in this workflow (4 refresh buckets + consolidate + committees_refresh),
+        # pushed by the two commit jobs, and pulled once more by the downstream
+        # Cloudflare deploy — roughly (transfers × its size) against GitHub's
+        # 1 GB/month free LFS bandwidth. This step does NOT gate the run (standing
+        # user directive: leave the LFS architecture as-is); it estimates this
+        # run's bandwidth and warns when the projection crosses 80% of the free
+        # tier, so an approaching overage is visible in the run summary before a
+        # checkout fails mid-pipeline rather than being discovered after the fact.
+        if: always()
+        run: |
+          set -euo pipefail
+          FREE_MB=1024
+          WARN_MB=$(( FREE_MB * 80 / 100 ))
+          DB_BYTES=$(stat -c%s data/master.db 2>/dev/null || echo 0)
+          DB_MB=$(( DB_BYTES / 1024 / 1024 ))
+          # Transfers/run ≈ 6 pulls (4 buckets + consolidate + committees_refresh)
+          # + 2 pushes (consolidate + committees_refresh) + 1 deploy pull = 9.
+          TRANSFERS=9
+          RUN_MB=$(( DB_MB * TRANSFERS ))
+          {
+            echo "### LFS bandwidth budget (monitor only)"
+            echo ""
+            echo "- master.db size: **${DB_MB} MB**"
+            echo "- estimated transfers this run: **${TRANSFERS}** (~${RUN_MB} MB)"
+            echo "- free tier: ${FREE_MB} MB/month · warn at ${WARN_MB} MB"
+          } >> "$GITHUB_STEP_SUMMARY"
+          if [ "$RUN_MB" -ge "$WARN_MB" ]; then
+            echo "::warning::Estimated LFS bandwidth this run (~${RUN_MB} MB) is >= 80% of the 1 GB/month free tier. A re-run this month may exhaust it and cause an LFS checkout to fail mid-pipeline. Monitor only — no action taken (LFS architecture intentionally left as-is)."
+          fi
+
       - name: Refresh citable CSV exports
         # §2.4/§2.5: data/donations/ is tracked — regenerate the per-owner +
         # aggregate CSVs from the refreshed master.db so the citable exports stay
