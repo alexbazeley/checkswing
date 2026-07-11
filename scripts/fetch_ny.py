@@ -68,7 +68,8 @@ def query(where: str, app_token: str | None = None, soda_url: str = SODA_URL) ->
         req.add_header("Accept", "application/json")
         if app_token:
             req.add_header("X-App-Token", app_token)
-        with urlopen(req, timeout=180) as resp:  # noqa: S310 (trusted gov data portal)
+        from .state_http import retry_call
+        with retry_call(lambda: urlopen(req, timeout=180)) as resp:  # noqa: S310 (trusted gov data portal)
             batch = json.load(resp)
         if not batch:
             return

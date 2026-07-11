@@ -171,8 +171,15 @@ def _opener():  # pragma: no cover - network
 
 
 def query_surname(opener, surname: str, *, namesearch: int = 1) -> list[dict]:  # pragma: no cover - network
-    raw = opener.open(CONTRIB_URL, build_form_body(surname, namesearch=namesearch), timeout=120).read()
-    return parse_tsv(raw.decode("utf-8", "replace"))
+    from .state_http import retry_call
+    raw = retry_call(
+        lambda: opener.open(CONTRIB_URL, build_form_body(surname, namesearch=namesearch), timeout=120)
+    ).read()
+    rows = parse_tsv(raw.decode("utf-8", "replace"))
+    if len(rows) >= 5000:  # §4.4: the rowlimit cap — output may be truncated
+        print(f"::warning::FL surname {surname!r} returned {len(rows)} rows = the 5000 rowlimit; "
+              f"results may be truncated (consider narrowing by date range).")
+    return rows
 
 
 def candidate_rows_by_owner(_input, owners: list[tuple[str, dict]]) -> dict[str, list[dict]]:  # pragma: no cover - network
