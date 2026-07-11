@@ -56,3 +56,18 @@ test("buildCSV — header + escaped rows, both amount columns", () => {
   assert.equal(lines[1], "Steven A. Cohen,5000,7562.28");
   assert.equal(lines[2], "'=EVIL(),'-100,");   // formula guard + null → empty
 });
+
+test("partyTiltLabel — leaning buckets, mixed, and no-giving", () => {
+  // Clear DEM lean (≥60%).
+  assert.equal(lib.partyTiltLabel(80, 20), "Democratic-leaning (80% DEM)");
+  // Clear REP lean (each side rounded independently).
+  assert.equal(lib.partyTiltLabel(20, 80), "Republican-leaning (80% REP)");
+  // Mixed band (40–60%).
+  assert.equal(lib.partyTiltLabel(50, 50), "Mixed (50% DEM / 50% REP)");
+  assert.equal(lib.partyTiltLabel(55, 45), "Mixed (55% DEM / 45% REP)");
+  // Independent rounding: 1 vs 2 → 33% / 67%; 67≥60 so it's a REP lean.
+  assert.equal(lib.partyTiltLabel(1, 2), "Republican-leaning (67% REP)");
+  // No two-party dollars → neutral label (OTH-only or zero).
+  assert.equal(lib.partyTiltLabel(0, 0), "No party-classified giving");
+  assert.equal(lib.partyTiltLabel(null, null), "No party-classified giving");
+});
