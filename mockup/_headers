@@ -17,6 +17,20 @@
 /state_data.json
   Cache-Control: public, max-age=300, must-revalidate
 
+# legislation.json (Phase-3 index) — same policy so a legislation refresh deploy
+# propagates promptly. Tiny file; regenerated at every build.
+/legislation.json
+  Cache-Control: public, max-age=300, must-revalidate
+
+# provenance.json (changelog page) — regenerated at every build; same policy.
+/provenance.json
+  Cache-Control: public, max-age=300, must-revalidate
+
+# Per-committee beneficiary chunks — regenerated at every build, lazy-loaded on a
+# committee page. Same 5-minute policy so a data refresh propagates to the edge.
+/beneficiaries/*
+  Cache-Control: public, max-age=300, must-revalidate
+
 # Always re-fetch index.html — small file, version-controlled, changes per deploy.
 /index.html
   Cache-Control: public, max-age=0, must-revalidate

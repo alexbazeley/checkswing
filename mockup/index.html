@@ -3002,7 +3002,17 @@ async function loadData() {
      nothing flashes in the wrong currency. */
   state.dollars = readDollarsPref();
   try {
-    const res = await fetch("./data.json", { cache: "no-cache" });
+    /* §6.1 Stage 2: fire all three payloads in parallel (they're independent)
+       instead of serially, and drop `cache:"no-cache"` so the browser honors the
+       `_headers` max-age=300 policy instead of forcing a revalidation round-trip
+       on every load. Only data.json is fatal; the two non-fatal fetches carry a
+       `.catch` so a state/legislation network error can't reject the whole batch
+       (which would abort data.json too). */
+    const [res, sres, lres] = await Promise.all([
+      fetch("./data.json"),
+      fetch("./state_data.json").catch(() => null),
+      fetch("./legislation.json").catch(() => null),
+    ]);
     if (!res.ok) throw new Error("HTTP " + res.status);
     state.data = await res.json();
     state.teams = buildTeamsIndex();
@@ -3011,8 +3021,7 @@ async function loadData() {
        absent — the federal dashboard works without it; the States section and
        the per-owner state panel simply don't appear. */
     try {
-      const sres = await fetch("./state_data.json", { cache: "no-cache" });
-      if (sres.ok) {
+      if (sres && sres.ok) {
         const sd = await sres.json();
         state.stateData = sd && !sd.empty ? sd : null;
         if (state.stateData) state.stateByOwner = indexStateByOwner(state.stateData);
@@ -3021,8 +3030,7 @@ async function loadData() {
     /* Phase-3 legislation index (separate, tiny). Non-fatal — the #/legislation
        section simply doesn't populate if absent. */
     try {
-      const lres = await fetch("./legislation.json", { cache: "no-cache" });
-      if (lres.ok) {
+      if (lres && lres.ok) {
         const ld = await lres.json();
         state.legData = ld && !ld.empty ? ld : null;
       }
@@ -5715,7 +5723,7 @@ async function loadCommitteeBeneficiaries(committeeId) {
   if (state.beneficiaries[committeeId] || state.beneficiariesLoading[committeeId]) return;
   state.beneficiariesLoading[committeeId] = true;
   try {
-    const res = await fetch(`./beneficiaries/${encodeURIComponent(committeeId)}.json`, { cache: "no-cache" });
+    const res = await fetch(`./beneficiaries/${encodeURIComponent(committeeId)}.json`);
     if (!res.ok) throw new Error("HTTP " + res.status);
     state.beneficiaries[committeeId] = await res.json();
   } catch (e) {
@@ -6967,7 +6975,7 @@ async function loadProvenance() {
   if (state.provenance || state.provenanceLoading) return;
   state.provenanceLoading = true;
   try {
-    const res = await fetch("./provenance.json", { cache: "no-cache" });
+    const res = await fetch("./provenance.json");
     if (!res.ok) throw new Error("HTTP " + res.status);
     state.provenance = await res.json();
   } catch (e) {
