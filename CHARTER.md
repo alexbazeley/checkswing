@@ -20,6 +20,7 @@ The conservative attribution standard is itself an editorial commitment: we'd ra
 
 - Federal political donations reported to the FEC, all years available.
 - Donations by principal/majority owners of all 30 MLB franchises, plus the highest-profile minority owners where they exert public influence (case by case, documented).
+- **Former principal owners**, retained after a control transfer when their giving is historically relevant and they were a principal owner during the covered period (e.g. `castellini-bob`, `angelos-john-p`, `pohlad-joe`). This is a deliberate, documented precedent: an owner does not leave the archive the day the team changes hands. Their status is marked in the registry; the dashboard labels them "incl. former".
 - Donations by owners' spouses, where publicly identified as such in major-press reporting.
 - Donations by named adult family members (children, parents) where the relationship is publicly disclosed and the family member is identified in FEC filings.
 - PACs directly affiliated with teams (rare — historically only one or two examples; document case by case).

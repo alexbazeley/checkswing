@@ -1,4 +1,4 @@
-name: Weekly FEC refresh
+name: Monthly FEC refresh
 
 # Runs the self-maintaining refresh layer (scripts/refresh.py) on a monthly
 # cron and commits any data changes (master.db + per-owner audit.last_ingestion
@@ -39,7 +39,7 @@ on:
         type: boolean
         default: false
       beneficiaries:
-        description: 'Pass --force-refresh to ingest-committee-beneficiaries: re-fetch every committee/cycle ignoring the 30-day freshness gate. Use for the initial Phase 2 backfill (~1054 committees × ~5-15 cycles × FEC throttle). Steady-state weekly runs do not need this.'
+        description: 'Pass --force-refresh to ingest-committee-beneficiaries: re-fetch every committee/cycle ignoring the 45-day freshness gate. Use for the initial Phase 2 backfill (~1054 committees × ~5-15 cycles × FEC throttle). Steady-state monthly runs do not need this.'
         required: false
         type: boolean
         default: false
@@ -120,8 +120,9 @@ jobs:
 
       - name: Backfill v3 image fields from raw payloads
         # After a full-refetch, fresh raw payloads sit on this runner with the
-        # per-transaction image fields. INSERT OR IGNORE in db.insert_donation
-        # leaves existing rows alone, so the v3 columns on previously-NULL
+        # per-transaction image fields. db.insert_donation is an idempotent upsert
+        # (unchanged substance → no-op; a restatement supersedes), so the v3
+        # columns on previously-NULL
         # rows stay NULL unless we explicitly rehydrate them. This step does
         # that — runs per bucket so the populated DB rides into consolidate.
         # Idempotent and cheap on incremental runs (no NULL rows to process).
@@ -205,7 +206,7 @@ jobs:
           if git diff --staged --quiet; then
             echo "No changes from refresh — nothing to commit."
           else
-            git commit -m "weekly refresh ($(date -u +%Y-%m-%d))"
+            git commit -m "monthly refresh ($(date -u +%Y-%m-%d))"
             # Rebase onto any commits that landed on main since checkout (e.g. a
             # manual push, or a re-run of an older run) so the push fast-forwards
             # instead of being rejected non-ff. The refresh only touches data
@@ -219,13 +220,13 @@ jobs:
     # for any recipient newly seen or whose last refresh is > FRESHNESS_DAYS (45 days).
     # Runs after consolidate so it sees the merged master.db.
     #
-    # Steady-state weekly cost: ~30 min (only stale committees get re-fetched).
+    # Steady-state monthly cost: ~30 min (only stale committees get re-fetched).
     #
     # Initial Phase 2 backfill (workflow_dispatch with beneficiaries=true):
     # the beneficiaries step alone needs 5-17 hours of FEC API time for the
     # full ~1054 committees × ~5-15 cycles. GitHub Actions caps a single job
     # at 6 hours, so the backfill completes incrementally across multiple
-    # weekly runs — each subsequent run skips what's already in the 45d
+    # monthly runs — each subsequent run skips what's already in the 45d
     # freshness window. The timeout-minutes cap sits just under the 6h GHA
     # ceiling so we fail-fast with logs rather than getting silently killed.
     #
@@ -276,13 +277,13 @@ jobs:
         env:
           FEC_API_KEY: ${{ secrets.FEC_API_KEY }}
         # Batches 50 file_numbers per FEC request. Steady-state ~10s — only
-        # filings outside the 30d freshness window get re-fetched, and the
-        # weekly cron typically adds ~50-100 new filings, well under the cap.
+        # filings outside the 45d freshness window get re-fetched, and the
+        # monthly cron typically adds ~50-100 new filings, well under the cap.
         run: python -m scripts.cli ingest-filings
 
       - name: Ingest committee beneficiaries (Schedule B by_recipient)
-        # Phase 2 — "Who this committee funded" data. Steady-state weekly cost
-        # is ~30 min (only (committee, cycle) pairs outside the 30d freshness
+        # Phase 2 — "Who this committee funded" data. Steady-state monthly cost
+        # is ~30 min (only (committee, cycle) pairs outside the 45d freshness
         # window are re-fetched). The initial backfill across ~1054 committees
         # × ~5-15 cycles takes 5-17 hours of FEC API time; triggered via
         # workflow_dispatch with beneficiaries=true. continue-on-error so per-
@@ -309,7 +310,7 @@ jobs:
           if git diff --staged --quiet; then
             echo "No committee enrichment deltas — nothing to commit."
           else
-            git commit -m "committees: weekly enrichment ($(date -u +%Y-%m-%d))"
+            git commit -m "committees: monthly enrichment ($(date -u +%Y-%m-%d))"
             # See note in the consolidate job: rebase onto any commits that
             # landed since checkout (the consolidate push just above is the
             # common case) so this push fast-forwards.

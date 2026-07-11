@@ -63,7 +63,6 @@ Reports are interpretation built on top of the data; the data files are not allo
 
 - `catalog/PROVENANCE_LOG.md` — append-only log of ingestion runs, signal changes, status promotions, review-queue resolutions.
 - `catalog/REVIEW_QUEUE.md` — optional, regenerable Markdown snapshot of open UNCERTAIN records (`python -m scripts.cli export-review-queue`). The canonical queue is the `review_queue` table in `master.db`; this file is not tracked in git.
-- `catalog/CHANGES.md` — Phase-level milestones (Phase 1 complete, Phase 2 started, etc.). Append-only.
 
 ## Slugs in code
 

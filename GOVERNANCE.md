@@ -180,7 +180,7 @@ contaminated data later. Open an issue or consult a maintainer.
 Specifically, **always** stop and confirm before:
 - Adding a new tracked entity (spouse, family member, business entity, PAC) to an owner profile.
 - Promoting an UNCERTAIN record to PROBABLE or CONFIRMED.
-- Adopting a new signal source. **California's CAL-ACCESS portal is approved** as of 2026-06-03 (CHARTER.md §Phase 4) under the hybrid policy in §1.11; adopting **any other** state's source (or an aggregator as more than a discovery pointer) remains a scope expansion that requires sign-off.
+- Adopting a new signal source. **Ten state portals are approved** under the hybrid policy in §1.11 (CHARTER.md §Phase 4): CA·CAL-ACCESS, TX·TEC, IL·ISBE, WA·PDC, CO·TRACER, AZ·SOS, MN·CFB, FL·FDOE, NY·NYSBOE, PA·DOS (see SOURCES.md). Adopting **any further** state's source (or an aggregator as more than a discovery pointer) remains a scope expansion that requires sign-off.
 - Re-classifying a previously CONFIRMED record.
 - Backfilling history beyond the period the owner held the team (whether to include pre-ownership giving is decided case by case).
 
@@ -213,7 +213,7 @@ including the publishable brief that is Phase 3's exit criterion — lives in
 `reports/`, never in a row, and never on the public dashboard.
 
 The **Phase 4 state campaign-finance layer** (`data/state.db`, sourced from official
-state portals — CHARTER.md §Phase 4, currently the California / CAL-ACCESS pilot) is
+state portals — CHARTER.md §Phase 4, now 10 adopted jurisdictions led by the California / CAL-ACCESS pilot) is
 likewise a *separate* database from `master.db`, held to the same attribution,
 verification, and provenance discipline (§1.1–§1.11). It stores neutral, sourced
 contribution facts only; the official portal is the record and any aggregator is a
