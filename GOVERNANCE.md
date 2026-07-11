@@ -151,6 +151,21 @@ an honest field, documented in STATE_DONATION_SCHEMA.md.
 - Put a note in the owner YAML's `notes` field if a pattern is emerging.
 - Leave it in the `review_queue` table for a human pass (`python -m scripts.cli review-queue` to list, `export-review-queue` for a Markdown snapshot).
 
+### 2.7 Enforcement floor
+`python -m scripts.cli validate` and `python -m pytest -q` must pass before every
+commit. This is enforced locally by a **pre-commit hook** (`.githooks/pre-commit`,
+which runs `cli validate`). Enable it once per clone:
+
+```
+git config core.hooksPath .githooks
+```
+
+Bypass deliberately (rare) with `git commit --no-verify`. CI runs the full
+`pytest` suite on every PR as the backstop; the hook catches data/schema drift
+before it is even committed. (This is the chosen §2.4 enforcement option — a
+lightweight local gate — over a required-status-check on `main`, which was
+removed so the refresh bot could push.)
+
 ## 3. Prohibited behaviors
 
 - Attributing a donation to an owner because the name matches and "it's probably them."
