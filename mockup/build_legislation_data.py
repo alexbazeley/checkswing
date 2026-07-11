@@ -31,41 +31,51 @@ import yaml
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT))
+from scripts import policy_join  # noqa: E402
 from scripts.paths import (  # noqa: E402
     LEGISLATION_DB,
     LEGISLATION_DIR,
+    MASTER_DB,
     REPORTS_DATA_DIR,
     REPORTS_DIR,
 )
 
 OUT_PATH = Path(__file__).resolve().parent / "legislation.json"
 
-# The single sentence that keeps the donations × legislation join honest: it can
-# only trace direct-to-candidate giving, a small slice of the archive's dollars
-# (IMPROVEMENT_PLAN_2026-07 §3.11). Party committees and leadership PACs — the bulk
-# of the money — are excluded by construction until the §5.6 pass-through join lands.
+# The sentence that keeps the donations × legislation join honest (§3.11, §5.6).
+# The rollup now spans two tiers: `direct` (the donation's own recipient_candidate_id)
+# and `indirect-authorized` (money to a legislator's OWN campaign committee, resolved
+# through committees.candidate_ids and gated on FEC designation P/A + a single
+# candidate — see DESIGN_passthrough_join_2026-07.md). Everything else — leadership
+# PACs, joint-fundraising committees, party and super PACs — is excluded from candidate
+# attribution BY CONSTRUCTION, because a donation to a PAC is not a donation to a
+# candidate's campaign.
 DENOMINATOR_NOTE = (
-    "This join covers direct-to-candidate and to-sponsor/committee-member giving only. "
-    "Party committees and leadership PACs — the bulk of the money — are excluded by "
-    "construction, so these rollups are a floor, not a total."
+    "This join covers two tiers: direct-to-candidate giving, and giving to a "
+    "legislator’s own campaign committee (indirect-authorized). Money to leadership "
+    "PACs, joint-fundraising committees, and party or super PACs is excluded from "
+    "candidate attribution by construction — so these rollups remain a floor, not a total."
 )
 
-# Which reports/data/*.json is the headline join for each published brief, and the
-# brief's title + source path. The rollup dedupes by transaction so a single donation
-# joined to several legislators is counted once (never multiplied by match count).
+# Each published brief's headline join, computed LIVE from policy_join with the
+# indirect-authorized tier included (§5.6). The rollup dedupes by transaction so a
+# single donation joined to several legislators is counted once, and splits the total
+# into the direct vs indirect tiers.
 BRIEFS = [
     {
         "slug": "save-americas-pastime-act",
         "title": "The “Save America’s Pastime Act” — minor-league pay",
         "issue_area": "minor_league_pay",
-        "primary_join": "save-americas-pastime-act.json",
+        "join_kind": "votes",
+        "bill_ids": ["115-hr-1625"],
         "report_md": "2026-05-31_save-americas-pastime-act.md",
     },
     {
         "slug": "no-tax-subsidies-for-stadiums",
         "title": "The stadium subsidy that won’t die — committees of referral",
         "issue_area": "stadium_financing",
-        "primary_join": "no-tax-subsidies-for-stadiums-committees.json",
+        "join_kind": "committee",
+        "bill_ids": ["119-s-1192", "119-hr-2434"],
         "report_md": "2026-06-08_no-tax-subsidies-for-stadiums.md",
     },
 ]
@@ -158,20 +168,29 @@ def _load_bills(conn: sqlite3.Connection) -> list[dict]:
     return bills
 
 
-def _brief_rollup(primary_join: str) -> dict | None:
-    """Per-owner arithmetic rollup of a brief's headline join, deduped by transaction.
+def _brief_rollup(spec: dict) -> dict | None:
+    """Per-owner rollup of a brief's headline join, computed LIVE from policy_join
+    with the indirect-authorized tier included (§5.6), deduped by transaction.
 
-    A single donation joined to several sponsors / committee members is counted once
-    (its amount is not multiplied by the number of matched legislators).
+    A single donation joined to several sponsors / committee members / votes is
+    counted once per owner (its amount is not multiplied by the match count), and the
+    total is split into the `direct` vs `indirect-authorized` tiers. Returns None if
+    master.db is absent (e.g. a legislation-only build) — the brief is then omitted.
     """
-    path = REPORTS_DATA_DIR / primary_join
-    if not path.exists():
+    if not MASTER_DB.exists():
         return None
-    doc = json.loads(path.read_text())
-    rows = doc.get("rows", []) or []
-    meta = doc.get("_meta", {}) or {}
+    join_kind = spec["join_kind"]
+    fn = (
+        policy_join.vote_donation_rows if join_kind == "votes"
+        else policy_join.committee_donation_rows if join_kind == "committee"
+        else policy_join.sponsor_donation_rows
+    )
+    try:
+        rows = fn(bill_ids=spec["bill_ids"], include_indirect=True)
+    except Exception:  # noqa: BLE001 — never let a join failure break the whole build
+        return None
     per_owner: dict[str, dict] = {}
-    seen: set[tuple[str, str]] = set()  # (owner_slug, transaction_id)
+    seen: set[tuple[str, str]] = set()  # (owner_slug, transaction_id) → count each gift once
     for r in rows:
         slug = r.get("owner_slug")
         txn = r.get("transaction_id")
@@ -184,19 +203,25 @@ def _brief_rollup(primary_join: str) -> dict | None:
                 "owner_name": r.get("owner_name"),
                 "owner_team": r.get("owner_team"),
                 "total_amount": 0.0,
+                "direct_amount": 0.0,
+                "indirect_amount": 0.0,
                 "n_donations": 0,
             },
         )
         if (slug, txn) in seen:
             continue
         seen.add((slug, txn))
-        o["total_amount"] += float(r.get("amount") or 0)
+        amt = float(r.get("amount") or 0)
+        o["total_amount"] += amt
+        if r.get("join_tier") == "indirect-authorized":
+            o["indirect_amount"] += amt
+        else:
+            o["direct_amount"] += amt
         o["n_donations"] += 1
     owners = sorted(per_owner.values(), key=lambda x: x["total_amount"], reverse=True)
     return {
-        "join": meta.get("join"),
-        "bill_ids": meta.get("bill_ids", []),
-        "generated_at": meta.get("generated_at"),
+        "join": f"donations_to_{join_kind}",
+        "bill_ids": spec["bill_ids"],
         "n_join_rows": len(rows),
         "owners": owners,
     }
@@ -205,7 +230,7 @@ def _brief_rollup(primary_join: str) -> dict | None:
 def _load_briefs() -> list[dict]:
     out = []
     for spec in BRIEFS:
-        rollup = _brief_rollup(spec["primary_join"])
+        rollup = _brief_rollup(spec)
         out.append(
             {
                 "slug": spec["slug"],
@@ -214,7 +239,6 @@ def _load_briefs() -> list[dict]:
                 "report_url": f"{GITHUB_REPORTS_URL}/{spec['report_md']}",
                 "join": (rollup or {}).get("join"),
                 "bill_ids": (rollup or {}).get("bill_ids", []),
-                "generated_at": (rollup or {}).get("generated_at"),
                 "n_join_rows": (rollup or {}).get("n_join_rows", 0),
                 "owners": (rollup or {}).get("owners", []),
             }

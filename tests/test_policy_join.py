@@ -218,3 +218,114 @@ class TestWriteOutputs:
         assert payload["_meta"]["n_rows"] == 2
         assert "neutrality_note" in payload["_meta"]
         assert len(payload["rows"]) == 2
+
+
+def _build_indirect(tmp_path):
+    """Fixture for the §5.6 pass-through join: three donations, each to a
+    DIFFERENT committee type, none carrying a direct recipient_candidate_id.
+    Only the one to the legislator's Principal (authorized, single-candidate)
+    committee should join in the indirect-authorized tier."""
+    master = tmp_path / "master.db"
+    db.init(master)
+    with db.connect(master) as conn:
+        conn.execute(
+            "INSERT INTO entities (slug, kind, name, team, yaml_path, yaml_sha256, refreshed_at) "
+            "VALUES ('owner-x','owner','Owner X','Test Team','owners/x.yaml','abc','2026-05-31T00:00:00Z')"
+        )
+        # committee_id, designation, candidate_ids
+        for cid, desig, cands in [
+            ("C_AUTH", "P", '["H_REP1"]'),                 # Principal, single → JOINS
+            ("C_LEAD", "D", '["H_REP1"]'),                 # Leadership PAC → excluded
+            ("C_MULTI", "P", '["H_REP1","S_SEN1"]'),      # multi-candidate → excluded
+            ("C_NOCAND", "P", None),                        # authorized but no candidate → excluded
+        ]:
+            conn.execute(
+                "INSERT INTO committees (committee_id, name, designation, candidate_ids, "
+                "is_terminated, raw_payload_path, fetched_at, refreshed_at) "
+                "VALUES (?,?,?,?,0,?,?,?)",
+                (cid, cid + " cmte", desig, cands, "data/raw/c.json",
+                 "2026-05-31T00:00:00Z", "2026-05-31T00:00:00Z"),
+            )
+        for txn, cid, amt in [
+            ("TA", "C_AUTH", 5000.0),
+            ("TL", "C_LEAD", 3000.0),
+            ("TM", "C_MULTI", 2000.0),
+            ("TN", "C_NOCAND", 1000.0),
+        ]:
+            conn.execute(
+                "INSERT INTO donations (transaction_id, entity_slug, entity_kind, status, "
+                "contributor_name_raw, recipient_committee_id, recipient_committee_name, "
+                "recipient_candidate_id, amount, date, filing_id, raw_payload_path, "
+                "ingested_at, counted) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,1)",
+                (txn, "owner-x", "owner", "CONFIRMED", "Owner X", cid, cid + " cmte",
+                 None, amt, "2018-01-01", "F1", "data/raw/x.json", "2026-05-31T00:00:00Z"),
+            )
+
+    leg = tmp_path / "legislation.db"
+    legislation_db.init(leg)
+    with legislation_db.connect(leg) as conn:
+        conn.execute(
+            "INSERT INTO legislators (bioguide_id, full_name, current_party, current_state, source, refreshed_at) "
+            "VALUES ('R000001','Rep One','Democrat','CA','test','2026-05-31T00:00:00Z')"
+        )
+        conn.execute(
+            "INSERT INTO legislator_fec_ids (fec_candidate_id, bioguide_id) VALUES ('H_REP1','R000001')"
+        )
+        conn.execute(
+            "INSERT INTO bills (bill_id, congress, bill_type, number, mlb_issue_area, "
+            "relevance_basis, refreshed_at) VALUES "
+            "('115-hr-1625',115,'hr',1625,'minor_league_pay','carrier','2026-05-31T00:00:00Z')"
+        )
+        conn.execute(
+            "INSERT INTO votes (vote_id, bill_id, chamber, vote_date, result, refreshed_at) "
+            "VALUES ('house-115-2-127','115-hr-1625','house','2018-03-22','Passed','2026-05-31T00:00:00Z')"
+        )
+        conn.execute(
+            "INSERT INTO vote_positions (vote_id, bioguide_id, position) "
+            "VALUES ('house-115-2-127','R000001','Yea')"
+        )
+    return master, leg
+
+
+class TestIndirectAuthorizedTier:
+    def test_off_by_default(self, tmp_path):
+        master, leg = _build_indirect(tmp_path)
+        rows = vote_donation_rows(bill_ids=["115-hr-1625"], master_db=master, leg_db=leg)
+        assert rows == []  # no direct recipient_candidate_id on any donation
+
+    def test_only_authorized_single_candidate_joins(self, tmp_path):
+        master, leg = _build_indirect(tmp_path)
+        rows = vote_donation_rows(
+            bill_ids=["115-hr-1625"], master_db=master, leg_db=leg, include_indirect=True
+        )
+        txns = {r["transaction_id"] for r in rows}
+        assert txns == {"TA"}                       # ONLY the Principal-committee gift
+        assert "TL" not in txns                     # leadership PAC excluded
+        assert "TM" not in txns                     # multi-candidate excluded
+        assert "TN" not in txns                     # authorized-but-no-candidate excluded
+        assert all(r["join_tier"] == "indirect-authorized" for r in rows)
+
+    def test_summarize_splits_tiers(self, tmp_path):
+        master, leg = _build_indirect(tmp_path)
+        rows = vote_donation_rows(
+            bill_ids=["115-hr-1625"], master_db=master, leg_db=leg, include_indirect=True
+        )
+        summ = summarize_by_owner(rows)
+        assert len(summ) == 1
+        a = summ[0]
+        assert a["indirect_authorized_amount"] == 5000.0
+        assert a["direct_amount"] == 0.0
+
+    def test_sponsor_and_committee_joins_respect_the_gate(self, tmp_path):
+        master, leg = _build_indirect(tmp_path)
+        # add a sponsor + committee membership for the legislator
+        with legislation_db.connect(leg) as conn:
+            conn.execute(
+                "INSERT INTO bill_sponsors (bill_id, bioguide_id, role) "
+                "VALUES ('115-hr-1625','R000001','sponsor')"
+            )
+        srows = sponsor_donation_rows(
+            bill_ids=["115-hr-1625"], master_db=master, leg_db=leg, include_indirect=True
+        )
+        assert {r["transaction_id"] for r in srows} == {"TA"}
+        assert all(r["join_tier"] == "indirect-authorized" for r in srows)
