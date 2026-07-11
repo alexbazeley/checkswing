@@ -28,6 +28,7 @@ concurrency:
 
 permissions:
   contents: write
+  issues: write   # §4.1: the skip-notify step opens/updates a tracking issue
 
 jobs:
   state-refresh:
@@ -262,6 +263,34 @@ jobs:
             python -m scripts.cli state-freshness --max-run-age-days 45
             echo '```'
           } | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Notify on a skipped state refresh
+        # §4.1: every ingest is continue-on-error, so the job stays green even
+        # when a state's fetch/ingest failed and it recorded no run this cycle.
+        # A state that ran this cycle has a last-run age < 2d; one that skipped
+        # keeps its prior-cycle stamp (~monthly), so --fail-on-stale flags it.
+        # We do NOT fail the job (the states that DID refresh should still commit)
+        # — instead we open/update a tracking issue so the skip is visible.
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -uo pipefail
+          if python -m scripts.cli state-freshness --max-run-age-days 2 --fail-on-stale > /tmp/fresh.txt 2>&1; then
+            echo "All live states refreshed this cycle."
+          else
+            RUN_URL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+            TITLE="State refresh skipped a jurisdiction (automated)"
+            BODY=$(printf 'One or more states did not refresh this cycle (a `continue-on-error` fetch/ingest hid the failure):\n\n```\n%s\n```\n\n- Run: %s\n- When: %s\n\nCheck the run logs for the failing state; close this issue once resolved.' \
+              "$(cat /tmp/fresh.txt)" "$RUN_URL" "$(date -u +%Y-%m-%dT%H:%MZ)")
+            existing=$(gh issue list --state open --search "$TITLE in:title" --json number,title \
+              --jq '[.[] | select(.title == "'"$TITLE"'")][0].number // empty')
+            if [ -n "$existing" ]; then
+              gh issue comment "$existing" --body "$BODY"
+            else
+              gh issue create --title "$TITLE" --body "$BODY"
+            fi
+          fi
 
       - name: Validate
         run: python -m scripts.cli validate

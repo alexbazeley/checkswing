@@ -311,3 +311,39 @@ jobs:
             git pull --rebase origin main
             git push
           fi
+
+  # §4.1: surface silent failures. The matrix `refresh` job (fail-fast:false),
+  # `consolidate`, and `committees_refresh` can each fail — and the committees
+  # freshness deadlock once rotted from 2026-06-20 until manually noticed because
+  # nothing notified. This job opens/updates a single tracking issue whenever any
+  # upstream job did not succeed, so a failed/timed-out run is visible.
+  notify:
+    needs: [refresh, consolidate, committees_refresh]
+    if: always() && (needs.refresh.result != 'success' || needs.consolidate.result != 'success' || needs.committees_refresh.result != 'success')
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Open or update the refresh-failure tracking issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          R_REFRESH: ${{ needs.refresh.result }}
+          R_CONSOLIDATE: ${{ needs.consolidate.result }}
+          R_COMMITTEES: ${{ needs.committees_refresh.result }}
+        run: |
+          set -euo pipefail
+          RUN_URL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          failed=""
+          [ "$R_REFRESH" != "success" ] && failed="$failed refresh($R_REFRESH)"
+          [ "$R_CONSOLIDATE" != "success" ] && failed="$failed consolidate($R_CONSOLIDATE)"
+          [ "$R_COMMITTEES" != "success" ] && failed="$failed committees_refresh($R_COMMITTEES)"
+          TITLE="FEC refresh failure (automated)"
+          BODY=$(printf '%s\n\n- Run: %s\n- When: %s\n\n`continue-on-error` and matrix `fail-fast:false` keep parts of the run green through sub-failures; check the run logs. Close this issue once resolved — a later clean run does not auto-close it.' \
+            "Monthly FEC refresh had failing job(s):$failed" "$RUN_URL" "$(date -u +%Y-%m-%dT%H:%MZ)")
+          existing=$(gh issue list --state open --search "$TITLE in:title" --json number,title \
+            --jq '[.[] | select(.title == "'"$TITLE"'")][0].number // empty')
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --body "$BODY"
+          else
+            gh issue create --title "$TITLE" --body "$BODY"
+          fi
