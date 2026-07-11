@@ -117,6 +117,11 @@ def fetch_by_recipient(
         )
         raw_paths.append(raw_path)
         results = payload.get("results") or []
+        # Tag each row with the page it came from so the ingest can point each
+        # beneficiary row at its OWN raw file, not the whole cycle's last page
+        # (§2.1). Private key; ignored by the parser and DB writer.
+        for _r in results:
+            _r["_raw_page_path"] = raw_path
         all_rows.extend(results)
         pagination = payload.get("pagination") or {}
         last_indexes = pagination.get("last_indexes")
