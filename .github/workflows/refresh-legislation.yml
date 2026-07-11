@@ -1,0 +1,88 @@
+name: Monthly legislation refresh
+
+# Phase-3 legislation refresh (§5.6). Re-fetches the curated bill set, the
+# congress-legislators crosswalk, and the roll-call votes, and commits any change
+# to data/legislation.db + the provenance log. Nothing else re-fetched it, so
+# `latest_action` had been frozen since the initial ingest.
+#
+# LFS-FREE and cheap: legislation.db is a small, normal (non-LFS) git blob; the
+# curated set is ~16 bills. The Congress.gov fetch uses the same api.data.gov key
+# as FEC — CONGRESS_API_KEY, falling back to FEC_API_KEY (scripts/fetch_congress.py),
+# so no new secret is needed. Cloudflare's deploy rebuilds any legislation surface
+# from the updated DB.
+#
+# Cadence: 3rd of the month, 12:00 UTC — staggered after the federal (1st) and
+# state (2nd) refreshes so the three never push concurrently; the shared
+# concurrency group + rebase-before-push absorb any residual race.
+
+on:
+  schedule:
+    - cron: '0 12 3 * *'
+  workflow_dispatch:
+
+concurrency:
+  # §4.5: shared with refresh.yml / refresh-state.yml / il-backfill.yml so no two
+  # refreshes push to main at once (see refresh.yml for the full rationale).
+  group: fec-archive-refresh
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  legislation-refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          # legislation.db is a normal git blob; this job never touches master.db (LFS).
+          lfs: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Refresh legislators crosswalk (congress-legislators)
+        # No API key needed — pulls the public congress-legislators dataset.
+        run: python -m scripts.cli ingest-legislators
+
+      - name: Refresh bills from Congress.gov
+        # Upserts latest_action/latest_action_date etc.; curated fields
+        # (mlb_issue_area, relevance_basis) always come from legislation/bills/*.yaml.
+        env:
+          # scripts/fetch_congress.py uses CONGRESS_API_KEY, falling back to
+          # FEC_API_KEY (an api.data.gov key works for both).
+          FEC_API_KEY: ${{ secrets.FEC_API_KEY }}
+        run: python -m scripts.cli ingest-bills
+
+      - name: Refresh roll-call votes (Clerk / Senate XML)
+        env:
+          FEC_API_KEY: ${{ secrets.FEC_API_KEY }}
+        run: python -m scripts.cli ingest-votes
+
+      - name: Validate
+        run: python -m scripts.cli validate
+
+      - name: Commit + push refreshed legislation data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # The legislation refresh is only allowed to touch its own DB + the log.
+          git add data/legislation.db catalog/PROVENANCE_LOG.md 2>/dev/null || true
+          if git diff --staged --quiet; then
+            echo "No changes from legislation refresh — nothing to commit."
+          else
+            git commit -m "Legislation refresh ($(date -u +%Y-%m-%d))"
+            # Rebase onto anything that landed since checkout (federal/state refresh)
+            # so the push fast-forwards; legislation touches only its own files.
+            git pull --rebase origin main
+            git push
+          fi
