@@ -60,6 +60,14 @@ verifying_signals:
   - "NY Yankees"
   - "Yankees"
   - "Steinbrenner Hotel Properties"
+  # Transmarine Management Corp — Steinbrenner-family maritime consulting firm,
+  # Tampa 33614, on which Harold Z. Steinbrenner is a listed officer/director
+  # (FL Div. of Corporations / Sunbiz). Kept in verifying_signals (not strong):
+  # it's a family entity other Steinbrenners could also file, so it needs a
+  # second signal — the name gate excludes the siblings, and the one live
+  # record already carries city_state Tampa/FL. Added 2026-07-11 after the
+  # Tier-2 research the 2026-05-25 pass flagged as pending. See change_log.
+  - "Transmarine Management"
   occupations:
   - "managing general partner"
   - "general partner"
@@ -171,8 +179,27 @@ change_log:
     Conservatively left PROBABLE pending Tier 2 research. Signal review
     date advanced.
   by: "automated pipeline (PR 4 Tier C light pass)"
+- date: 2026-07-11
+  change: |
+    §5.3 calibration — resolved the "pending Tier 2 research" the 2026-05-25
+    pass flagged for the TRANSMARINE MANAGEMENT record. Florida's Division of
+    Corporations (Sunbiz, official state registry — Tier 2) lists Harold Z.
+    Steinbrenner as an officer/director of Trans-Marine Management Corp, a
+    Steinbrenner-family maritime consulting firm at 3802 W. Dr. MLK Jr. Blvd,
+    Tampa FL 33614 — the exact ZIP the donation was filed from. Added
+    "Transmarine Management" to verifying_signals.employers (NOT strong: a
+    family entity other Steinbrenners could file, but the name gate excludes
+    the differently-named siblings and the live record already carries
+    city_state Tampa/FL as its second signal). Reclassify promotes the one
+    "STEINBRENNER, HAROLD / TRANSMARINE MANAGEMENT / Tampa 33614" record
+    ($7,700, 2008 → Republican Party of Florida) PROBABLE→CONFIRMED. The
+    other PROBABLE ("HAROLD Z MR." / REQUESTED / 33606) is at an unconfirmed
+    ZIP and stays PROBABLE. No other records move (verified by full delta).
+  by: "automated pipeline (Workstream D §5.3 calibration, Tier-2 sourced)"
+  references:
+  - "FL Division of Corporations (Sunbiz) — Trans-Marine Management Corporation, Tampa FL 33614, Harold Z. Steinbrenner officer/director"
 
 audit:
   created: 2026-05-22
   last_ingestion: '2026-07-05'
-  last_signal_review: 2026-05-25
+  last_signal_review: 2026-07-11
