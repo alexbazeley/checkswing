@@ -6322,7 +6322,11 @@ function downloadDonationsCSV(rows, filename) {
     "entity","entity_kind","parent",
     "donor_name","employer","occupation","city","state","zip",
     "committee_id","committee","candidate_id","candidate","party","party_raw","office",
-    "amount","report_type","filing_id","filing_form","line_number","image_number","pdf_url",
+    // §3.8: always export BOTH the as-filed nominal amount AND the CPI-adjusted
+    // 2026-dollar mirror, so the CSV matches the screen in either toggle state
+    // (real-$ mode shows amount_2026; the export used to omit it → CSV ≠ screen).
+    // amount_2026 is null on the handful of rows with no CPI factor for their year.
+    "amount","amount_2026","report_type","filing_id","filing_form","line_number","image_number","pdf_url",
     "filing_pdf_url","filing_page_url",
     "raw_payload","ingested_at",
   ];
