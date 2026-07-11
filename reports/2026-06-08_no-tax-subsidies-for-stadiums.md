@@ -50,8 +50,9 @@ They do. And the honest shape of *how* they do is more damning than a bribe.
   federal subsidy — the U.S. Treasury eats the cost so the local deal pencils out.
   Economists across the spectrum have called it a giveaway with no public return.
 - The **No Tax Subsidies for Stadiums Act** would close that exemption for pro
-  sports venues. It has been introduced, in one chamber or another, in the 115th,
-  116th, 117th, 118th, and 119th Congresses — by Republicans (Lankford, Russell,
+  sports venues. It has been introduced, in one chamber or another, across the 115th–119th
+  Congresses (the archive indexes the 115th and 119th versions directly; the
+  intervening 116th–118th introductions are cited here from public record) — by Republicans (Lankford, Russell,
   Grothman) and Democrats (Booker) alike.
 - It has **never received a roll-call vote.** Every version has been referred to a
   tax-writing committee (Senate Finance / House Ways and Means) and left there.
@@ -166,6 +167,7 @@ kept.
 - **External context** (the A's Las Vegas public financing) is widely reported
   public record; it is supporting color, not part of the neutral join, and is
   flagged as such.
+- **Join scope / denominator:** this join covers **direct-to-candidate giving only**. Only contributions carrying an FEC `recipient_candidate_id` are joinable to a legislator — about **$366K of the archive's ~$35M** (~1%). Party committees and leadership PACs — the bulk of owner money — are **excluded by construction**, because the money reaches candidates indirectly (a pass-through the archive does not yet resolve). So this brief describes a small, cleanly-attributable slice, not the full flow of owner money to these legislators.
 - **Honesty note:** every donation figure above is from that output. Where the
   data undercuts a tempting narrative — no votes, current-roster timing, Fisher's
   two-person cluster, zero-to-authors — this brief leads with the undercut. That
