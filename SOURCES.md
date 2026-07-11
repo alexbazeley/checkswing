@@ -80,6 +80,18 @@ Every owner YAML's `sources` block must record:
 
 Each source entry records: `description`, `url`, `accessed` (YYYY-MM-DD), and where applicable `archive_url` (Wayback Machine snapshot).
 
+### Raw-payload archive (durable, off-runner — §2.1)
+
+Every API/portal response is persisted verbatim to `data/raw/` before parsing
+(GOVERNANCE.md §1.4). Because `data/raw/` is gitignored and the monthly refresh
+runs on ephemeral runners, each run's `data/raw/` delta is also uploaded to a
+durable **Cloudflare R2** bucket (S3-compatible) via `scripts/archive_raw.sh`,
+keyed to mirror the on-disk path (`data/raw/…` → `s3://<bucket>/raw/…`). A stored
+`raw_payload_path` therefore resolves off-runner via `cli fetch-raw <txn>`. The
+bucket + credentials are held as the `RAW_ARCHIVE_*` GitHub Actions secrets (not
+in the repo); provisioning + one-time backfill steps are in
+[docs/DESIGN_raw_archival_2026-07.md](docs/DESIGN_raw_archival_2026-07.md).
+
 ## Phase 3 addendum — legislation, votes, legislators
 
 Phase 3 (CHARTER.md §Phase 3) builds a neutral index of MLB-relevant federal

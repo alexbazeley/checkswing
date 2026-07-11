@@ -58,15 +58,19 @@ guaranteed to be preserved** — they may exist only on the machine or CI runner
 that fetched them (a minority of historical rows reference raw files no longer on
 disk).
 
-> **Known gap (2026-07, automation-era rows):** the monthly refresh workflows
-> fetch on ephemeral GitHub runners and commit **only `master.db`** — the raw
-> payloads they fetch are **destroyed with the runner**, so any row ingested by
-> the cron references a `raw_payload_path` that exists nowhere. Until off-runner
-> raw archival ships (design: [docs/DESIGN_raw_archival_2026-07.md](docs/DESIGN_raw_archival_2026-07.md),
-> plan §2.1), treat the "re-verify from raw" guarantee as **best-effort and
-> present-only for locally-fetched rows**. `master.db` remains authoritative; the
-> `reclassify` guard (below) still refuses to silently drop a row whose raw is
-> missing.
+> **Off-runner raw archival (2026-07, plan §2.1):** the monthly refresh workflows
+> historically committed **only `master.db`**, so raw payloads fetched on the
+> ephemeral runner were destroyed with it and cron-ingested rows referenced a
+> `raw_payload_path` that existed nowhere. The workflows now upload each run's
+> `data/raw/` delta to **durable off-runner storage (Cloudflare R2, S3-compatible)**
+> via `scripts/archive_raw.sh`, keyed to mirror the on-disk path — so a stored
+> `raw_payload_path` resolves to an object by a prefix swap (`cli fetch-raw
+> <txn>`). The upload is **secret-guarded**: it is a no-op until the `RAW_ARCHIVE_*`
+> secrets are set (provisioning + one-time backfill of the historical local raw:
+> [docs/DESIGN_raw_archival_2026-07.md](docs/DESIGN_raw_archival_2026-07.md)). Until
+> that backfill runs, some historical rows' raw is still present-only-locally;
+> `master.db` remains authoritative regardless, and the `reclassify` guard (below)
+> still refuses to silently drop a row whose raw is missing.
 
 Consequences that are load-bearing:
 

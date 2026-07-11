@@ -1570,6 +1570,64 @@ def raw_coverage_cmd(slug):
     click.echo(json.dumps(raw_coverage_report(slug), indent=2, default=str))
 
 
+@cli.command(name="fetch-raw")
+@click.argument("transaction_id")
+@click.option("--download", is_flag=True, help="Fetch the object from R2 to a temp file (needs aws CLI + RAW_ARCHIVE_* env).")
+def fetch_raw_cmd(transaction_id, download):
+    """Resolve a donation's raw payload — locally, else in the off-runner archive (§2.1).
+
+    Maps the stored `raw_payload_path` to its Cloudflare R2 key (a prefix swap:
+    data/raw/… → s3://<bucket>/raw/…). Prints where the raw lives (on disk and/or in
+    the bucket); with --download and RAW_ARCHIVE_* set, pulls it from R2 via the aws
+    CLI. Read-only. See docs/DESIGN_raw_archival_2026-07.md.
+    """
+    import os
+    import subprocess
+    import tempfile
+
+    db.init()
+    with db.connect() as conn:
+        row = conn.execute(
+            "SELECT raw_payload_path FROM donations WHERE transaction_id = ?",
+            (transaction_id,),
+        ).fetchone()
+    if row is None:
+        raise click.ClickException(f"No donation with transaction_id {transaction_id!r}.")
+    rel = row["raw_payload_path"]
+    if not rel:
+        raise click.ClickException(f"{transaction_id} has no raw_payload_path recorded.")
+
+    local_exists = os.path.exists(rel)
+    bucket = os.environ.get("RAW_ARCHIVE_S3_BUCKET")
+    # data/raw/… → raw/… (mirror of the archive_raw.sh key layout)
+    key = rel[len("data/raw/"):] if rel.startswith("data/raw/") else rel
+    s3_uri = f"s3://{bucket}/raw/{key}" if bucket else f"s3://<RAW_ARCHIVE_S3_BUCKET>/raw/{key}"
+
+    click.echo(json.dumps({
+        "transaction_id": transaction_id,
+        "raw_payload_path": rel,
+        "local_exists": local_exists,
+        "r2_uri": s3_uri,
+        "bucket_configured": bool(bucket),
+    }, indent=2))
+
+    if download:
+        if local_exists:
+            click.echo(f"Already on disk: {rel}")
+            return
+        if not bucket:
+            raise click.ClickException("RAW_ARCHIVE_S3_BUCKET not set — cannot fetch from R2.")
+        endpoint = os.environ.get("RAW_ARCHIVE_S3_ENDPOINT")
+        dest = os.path.join(tempfile.gettempdir(), os.path.basename(rel))
+        cmd = ["aws", "s3", "cp", s3_uri, dest, "--endpoint-url", endpoint or ""]
+        env = {**os.environ, "AWS_DEFAULT_REGION": os.environ.get("AWS_DEFAULT_REGION", "auto")}
+        try:
+            subprocess.run(cmd, check=True, env=env)
+        except (subprocess.CalledProcessError, FileNotFoundError) as e:
+            raise click.ClickException(f"aws s3 cp failed ({e}). Is the aws CLI installed and are RAW_ARCHIVE_* set?")
+        click.echo(f"Downloaded to {dest}")
+
+
 @cli.command()
 def review():
     """List open review-queue items."""
