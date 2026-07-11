@@ -35,6 +35,9 @@ OUT_PATH = REPO_ROOT / "mockup" / "data.json"
 # backfill. Current baseline ≈ 7.6 MB.
 DATA_JSON_BUDGET_MB = 12.0
 PROVENANCE_SRC = REPO_ROOT / "catalog" / "PROVENANCE_LOG.md"
+# §2.2: sealed prior-year archives (PROVENANCE_LOG-<YYYY>.md) parsed alongside the
+# active log so provenance.json stays complete after a rotation.
+PROVENANCE_ARCHIVE_DIR = REPO_ROOT / "catalog" / "provenance"
 PROVENANCE_OUT = REPO_ROOT / "mockup" / "provenance.json"
 
 # Per-committee beneficiary chunks. After the Phase-2 backfill the full
@@ -61,7 +64,7 @@ from scripts.dollars import (  # noqa: E402
     committee_type_label,
     to_real,
 )
-from scripts.parse_provenance import parse_provenance_file  # noqa: E402
+from scripts.parse_provenance import parse_provenance_corpus  # noqa: E402
 
 
 def filing_page_url(filing_id) -> str | None:
@@ -828,7 +831,8 @@ def write_provenance() -> None:
     if not PROVENANCE_SRC.exists():
         print(f"warn: {PROVENANCE_SRC} not found; skipping provenance.json", file=sys.stderr)
         return
-    entries = parse_provenance_file(PROVENANCE_SRC)
+    # §2.2: active log + any sealed yearly archives, merged in chronological order.
+    entries = parse_provenance_corpus(PROVENANCE_SRC, PROVENANCE_ARCHIVE_DIR)
     out = {
         "generated_at": _utc_now_iso(),
         "source": "catalog/PROVENANCE_LOG.md",

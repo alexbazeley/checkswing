@@ -935,6 +935,45 @@ def prune_snapshots_cmd(keep_days, do_apply):
         click.echo(f"\nDry run — pass --apply to free {summary['mb_freed']} MB.")
 
 
+@cli.command(name="rotate-provenance")
+@click.option(
+    "--before-year",
+    type=int,
+    default=None,
+    help="Seal every year strictly before this (default: the current UTC year, so all completed prior years).",
+)
+@click.option("--apply", "do_apply", is_flag=True, help="Actually rotate (default is a dry-run preview).")
+def rotate_provenance_cmd(before_year, do_apply):
+    """Rotate completed years out of catalog/PROVENANCE_LOG.md into yearly archives (§2.2).
+
+    The append-only log grows without bound and the dashboard build parses the
+    whole file each deploy. This seals completed prior years into
+    catalog/provenance/PROVENANCE_LOG-<YYYY>.md so the active log stays bounded.
+    Entry text is MOVED verbatim, never deleted (§1.10); the build parses the
+    active log + all archives together, so provenance.json stays complete.
+    Defaults to a DRY-RUN preview; pass --apply to perform the move.
+    """
+    from .rotate_provenance import apply_rotation
+
+    plan = apply_rotation(cutoff_year=before_year, apply=do_apply)
+    summary = {
+        "cutoff_year": plan["cutoff_year"],
+        "years_to_seal": plan["years"],
+        "n_archived": plan["n_archived"],
+        "n_retained": plan["n_retained"],
+        "applied": plan["applied"],
+        "archive_files": plan.get("archive_files", {}),
+    }
+    click.echo(json.dumps(summary, indent=2, default=str))
+    if plan["n_archived"] == 0:
+        click.echo("\nNothing to rotate — no completed prior years in the active log.")
+    elif not do_apply:
+        click.echo(
+            f"\nDry run — pass --apply to seal {plan['n_archived']} entries "
+            f"into {len(plan['years'])} yearly archive(s)."
+        )
+
+
 @cli.command(name="backfill-sub-id")
 def backfill_subid_cmd():
     """One-shot (GATED): populate the v9 sub_id column on existing donation rows.

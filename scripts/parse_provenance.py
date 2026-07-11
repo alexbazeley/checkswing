@@ -171,3 +171,48 @@ def parse_provenance_log(text: str) -> list[dict]:
 def parse_provenance_file(path: str | Path) -> list[dict]:
     """Convenience wrapper that reads the file from disk."""
     return parse_provenance_log(Path(path).read_text(encoding="utf-8"))
+
+
+def entries_region(text: str) -> str:
+    """Return `text` from its first `### ` heading onward.
+
+    Everything before the first entry heading (the file's human-readable
+    preamble) is dropped. This is what lets several log files be concatenated
+    for a single parse: each file keeps its own preamble for human readers, but
+    only the entry regions are joined — so an interior file's preamble never
+    leaks into the previous file's last-entry body (§2.2 rotation)."""
+    lines = text.splitlines(keepends=True)
+    for i, line in enumerate(lines):
+        if line.startswith("### "):
+            return "".join(lines[i:])
+    return ""  # no entries
+
+
+def parse_provenance_corpus(
+    main_path: str | Path,
+    archive_dir: str | Path | None = None,
+) -> list[dict]:
+    """Parse the active provenance log plus any sealed yearly archives into one
+    forward-chronological entry list.
+
+    Archives are `PROVENANCE_LOG-<YYYY>.md` files under `archive_dir`; they hold
+    completed prior years moved out by `cli rotate-provenance` (§2.2). They are
+    parsed oldest-year-first, then the active log — which preserves the
+    append-only chronological order the renderer relies on. Only each file's
+    entries region is concatenated (see `entries_region`). With no archives this
+    is exactly `parse_provenance_file(main_path)`."""
+    main_path = Path(main_path)
+    regions: list[str] = []
+    if archive_dir is not None:
+        adir = Path(archive_dir)
+        if adir.is_dir():
+            # Sort by the YYYY in the filename so 2024 precedes 2025 precedes …
+            archives = sorted(
+                adir.glob("PROVENANCE_LOG-*.md"),
+                key=lambda p: p.stem,
+            )
+            for a in archives:
+                regions.append(entries_region(a.read_text(encoding="utf-8")))
+    if main_path.exists():
+        regions.append(entries_region(main_path.read_text(encoding="utf-8")))
+    return parse_provenance_log("\n".join(r for r in regions if r))
