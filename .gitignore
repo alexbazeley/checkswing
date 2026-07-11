@@ -56,6 +56,10 @@ mockup/provenance.json
 # mockup/build_state_data.py (invoked by build_data.py at build time).
 mockup/state_data.json
 
+# mockup/legislation.json — Phase-3 legislation index payload, generated from
+# data/legislation.db by mockup/build_legislation_data.py (invoked by build_data.py).
+mockup/legislation.json
+
 # Session-local state: handoff briefs, scratch notes, editor launch configs.
 .claude/
 
