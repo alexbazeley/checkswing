@@ -220,6 +220,10 @@ def _record_to_donation_row(
             if record.get("is_individual") is not None
             else None
         ),
+        # v9: FEC's globally-unique record id — the authoritative identity that
+        # distinguishes a genuine restatement from a cross-committee transaction_id
+        # collision (§1.3). transaction_id stays for display/citation.
+        "sub_id": str(record["sub_id"]) if record.get("sub_id") is not None else None,
     }
 
 
@@ -528,6 +532,7 @@ def ingest_entity(
 
     # ── Steps 6-7: write donations + review queue ──────────────────────────
     superseded_events: list[tuple[str, str, str]] = []  # (txn, entity_slug, reason)
+    collision_events: list[tuple[str, str, str]] = []    # (txn, entity_slug, reason)
     skipped_missing_provenance = 0
     skipped_missing_amount = 0
     with db.connect() as conn:
@@ -547,6 +552,10 @@ def ingest_entity(
             action, reason = db.insert_donation(conn, row)
             if action == "superseded":
                 superseded_events.append((row["transaction_id"], row["entity_slug"], reason or ""))
+            elif action == "collision":
+                # v9: transaction_id collided across sub_ids — a distinct record,
+                # not a restatement. Surfaced loudly rather than wrong-superseding.
+                collision_events.append((row["transaction_id"], row["entity_slug"], reason or ""))
         # v8: recompute the earmark/conduit dedup flag for this owner's rows now
         # that all legs are written (a passthrough leg is only detectable once its
         # countable sibling is present). GOVERNANCE.md §1.10: never deletes.
@@ -574,6 +583,16 @@ def ingest_entity(
     _append_supersession_log(superseded_events, run_id)
     if superseded_events:
         summary["superseded_count"] = len(superseded_events)
+    if collision_events:
+        summary["collision_count"] = len(collision_events)
+        _append_supersession_log(
+            [(t, s, f"COLLISION (not written): {r}") for t, s, r in collision_events], run_id
+        )
+        print(
+            f"[{slug}] WARNING: {len(collision_events)} transaction_id collision(s) across "
+            f"sub_ids — NOT written (distinct contributions, not restatements; §1.3). "
+            f"e.g. {collision_events[0][0]}"
+        )
     if skipped_missing_provenance:
         summary["skipped_missing_provenance"] = skipped_missing_provenance
         print(

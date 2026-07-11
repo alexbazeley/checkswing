@@ -424,3 +424,76 @@ def test_schema_v7_tables_present(db_path):
         names = {r["name"] for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")}
     assert {"review_resolutions", "manual_attributions"} <= names
     assert db.SCHEMA_VERSION >= 7
+
+
+class TestSubIdCollision:
+    """v9 (§1.3): sub_id distinguishes a genuine restatement from a
+    cross-committee transaction_id collision."""
+
+    def test_same_txn_different_subid_is_collision_not_supersede(self, db_path):
+        # Two DIFFERENT contributions that happen to share a filer-assigned
+        # transaction_id but carry different globally-unique sub_ids.
+        with db.connect(db_path) as conn:
+            assert db.insert_donation(conn, _row(sub_id="S1", recipient_committee_id="C1"))[0] == "inserted"
+        with db.connect(db_path) as conn:
+            action, reason = db.insert_donation(
+                conn, _row(sub_id="S2", recipient_committee_id="C2", amount=999.0))
+            assert action == "collision"
+            assert "S1" in reason and "S2" in reason
+        # Nothing was superseded or overwritten — the original stands alone.
+        assert _count(db_path) == 1
+        with db.connect(db_path) as conn:
+            r = conn.execute("SELECT sub_id, amount FROM donations").fetchone()
+            assert r["sub_id"] == "S1" and r["amount"] == 1000.0
+
+    def test_same_txn_same_subid_still_supersedes_on_restatement(self, db_path):
+        with db.connect(db_path) as conn:
+            db.insert_donation(conn, _row(sub_id="S1", amount=1000.0))
+        with db.connect(db_path) as conn:
+            action, _ = db.insert_donation(conn, _row(sub_id="S1", amount=2500.0))
+            assert action == "superseded"  # same record, FEC restated the amount
+
+    def test_missing_subid_falls_back_to_txn_identity(self, db_path):
+        # Legacy rows with NULL sub_id keep the prior transaction_id behavior.
+        with db.connect(db_path) as conn:
+            db.insert_donation(conn, _row(sub_id=None, amount=1000.0))
+        with db.connect(db_path) as conn:
+            action, _ = db.insert_donation(conn, _row(sub_id=None, amount=1000.0))
+            assert action == "unchanged"
+
+
+class TestReviewQueueCompositePK:
+    """v9 (§1.3): review_queue PK is (transaction_id, entity_slug) — two owners
+    can flag the same FEC transaction without one silently dropping the other."""
+
+    def test_two_owners_same_txn_both_kept(self, db_path):
+        with db.connect(db_path) as conn:
+            db.insert_review_queue(conn, {
+                "transaction_id": "T1", "entity_slug": "owner-a", "reason": "name only",
+                "raw_payload_path": "p", "queued_at": "2026-07-10T00:00:00Z"})
+            db.insert_review_queue(conn, {
+                "transaction_id": "T1", "entity_slug": "owner-b", "reason": "name only",
+                "raw_payload_path": "p", "queued_at": "2026-07-10T00:00:00Z"})
+            n = conn.execute("SELECT COUNT(*) FROM review_queue WHERE transaction_id='T1'").fetchone()[0]
+        assert n == 2  # both preserved (was 1 under the single-column PK)
+
+    def test_pk_migration_from_legacy_single_pk(self, tmp_path):
+        # Build a DB with the OLD single-column review_queue PK, populate it, then
+        # init() and confirm it's migrated to the composite PK with data preserved.
+        import sqlite3
+        p = tmp_path / "legacy.db"
+        conn = sqlite3.connect(p)
+        conn.executescript("""
+            CREATE TABLE review_queue (
+                transaction_id TEXT PRIMARY KEY, entity_slug TEXT NOT NULL,
+                reason TEXT NOT NULL, raw_payload_path TEXT NOT NULL, queued_at TEXT NOT NULL,
+                resolution TEXT, resolution_reason TEXT, resolution_at TEXT, resolved_by TEXT);
+            INSERT INTO review_queue VALUES ('T1','owner-a','r','p','t',NULL,NULL,NULL,NULL);
+        """)
+        conn.commit(); conn.close()
+        db.init(p)
+        with db.connect(p) as conn:
+            pk = {r["name"] for r in conn.execute("PRAGMA table_info(review_queue)") if r["pk"]}
+            row = conn.execute("SELECT transaction_id, entity_slug FROM review_queue").fetchone()
+        assert pk == {"transaction_id", "entity_slug"}
+        assert row["transaction_id"] == "T1" and row["entity_slug"] == "owner-a"  # data preserved

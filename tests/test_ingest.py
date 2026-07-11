@@ -305,6 +305,16 @@ class TestMemoFieldMapping:
         assert row["memo_text"].startswith("EARMARKED")
         assert row["is_individual"] == 0  # bool → INTEGER
 
+    def test_maps_sub_id(self):
+        rec = {
+            "transaction_id": "SA11AI.20387", "file_number": "12345",
+            "contribution_receipt_date": "2018-11-06",
+            "_raw_payload_path": "data/raw/owner-x/a.json",
+            "sub_id": 4010720191623666685,
+        }
+        row = _record_to_donation_row(rec, _classification(), "ts")
+        assert row["sub_id"] == "4010720191623666685"  # stringified
+
     def test_is_individual_true_becomes_one(self):
         rec = {
             "transaction_id": "T1",

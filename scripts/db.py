@@ -91,8 +91,13 @@ CREATE TABLE IF NOT EXISTS entities (
     refreshed_at TEXT NOT NULL
 );
 
+-- v9: PK is (transaction_id, entity_slug), not transaction_id alone — two owners
+-- can each flag the same FEC transaction as UNCERTAIN (same-named donors), and a
+-- single-column PK made INSERT OR IGNORE silently drop the second owner's item.
+-- Now consistent with review_resolutions / manual_attributions. Existing DBs are
+-- migrated in init() (table rebuild, data preserved).
 CREATE TABLE IF NOT EXISTS review_queue (
-    transaction_id TEXT PRIMARY KEY,
+    transaction_id TEXT NOT NULL,
     entity_slug TEXT NOT NULL,
     reason TEXT NOT NULL,
     raw_payload_path TEXT NOT NULL,
@@ -100,7 +105,8 @@ CREATE TABLE IF NOT EXISTS review_queue (
     resolution TEXT,
     resolution_reason TEXT,
     resolution_at TEXT,
-    resolved_by TEXT
+    resolved_by TEXT,
+    PRIMARY KEY (transaction_id, entity_slug)
 );
 
 -- v6: standing review-queue resolutions, keyed by (transaction_id, entity_slug).
@@ -288,6 +294,15 @@ DONATION_EXTRA_COLS: list[tuple[str, str]] = [
     ("memo_code", "TEXT"),
     ("memo_text", "TEXT"),
     ("is_individual", "INTEGER"),
+    # v9: FEC's globally-unique record id. `transaction_id` is FILER-assigned
+    # (e.g. "SA11AI.20387") and is NOT unique across committees, so two distinct
+    # contributions can share one — which insert_donation would otherwise treat as
+    # a restatement and supersede the wrong record. `sub_id` is FEC's own unique
+    # id; it is the authoritative identity used to tell a genuine restatement
+    # (same sub_id) from a cross-committee collision (different sub_id). Stored for
+    # every new row; NULL on legacy rows whose raw is gone (backfill via
+    # `cli backfill-sub-id`). transaction_id is kept for display/citation.
+    ("sub_id", "TEXT"),
 ]
 
 # v8: derived dedup flag. NOT an FEC field — it is neutral, mechanical arithmetic
@@ -302,7 +317,7 @@ DONATION_DERIVED_COLS: list[tuple[str, str]] = [
     ("counted", "INTEGER NOT NULL DEFAULT 1"),
 ]
 
-SCHEMA_VERSION = 8
+SCHEMA_VERSION = 9
 
 
 def _utc_now_iso() -> str:
@@ -330,6 +345,39 @@ def connect(db_path: Path = MASTER_DB) -> Iterator[sqlite3.Connection]:
         conn.close()
 
 
+def _migrate_review_queue_pk(conn: sqlite3.Connection) -> None:
+    """v9: rebuild review_queue with PK (transaction_id, entity_slug) if it still
+    has the legacy single-column PK. Idempotent, data-preserving. A pre-existing
+    DB created its review_queue via the old CREATE (transaction_id PRIMARY KEY);
+    SQLite can't ALTER a PK, so we rebuild. New DBs already get the composite PK
+    from SCHEMA_SQL and skip this."""
+    pk_cols = [r["name"] for r in conn.execute("PRAGMA table_info(review_queue)") if r["pk"]]
+    if set(pk_cols) == {"transaction_id", "entity_slug"}:
+        return  # already migrated
+    conn.executescript(
+        """
+        CREATE TABLE review_queue_v9 (
+            transaction_id TEXT NOT NULL,
+            entity_slug TEXT NOT NULL,
+            reason TEXT NOT NULL,
+            raw_payload_path TEXT NOT NULL,
+            queued_at TEXT NOT NULL,
+            resolution TEXT,
+            resolution_reason TEXT,
+            resolution_at TEXT,
+            resolved_by TEXT,
+            PRIMARY KEY (transaction_id, entity_slug)
+        );
+        INSERT OR IGNORE INTO review_queue_v9
+            SELECT transaction_id, entity_slug, reason, raw_payload_path, queued_at,
+                   resolution, resolution_reason, resolution_at, resolved_by
+              FROM review_queue;
+        DROP TABLE review_queue;
+        ALTER TABLE review_queue_v9 RENAME TO review_queue;
+        """
+    )
+
+
 def init(db_path: Path = MASTER_DB) -> None:
     """Create schema idempotently. Records a new schema_version row whenever
     SCHEMA_VERSION is bumped beyond the DB's current MAX(version), so the
@@ -343,11 +391,13 @@ def init(db_path: Path = MASTER_DB) -> None:
     ensure_data_dirs()
     with connect(db_path) as conn:
         conn.executescript(SCHEMA_SQL)
-        # v3/v8: per-transaction FEC fields + the derived counted flag on donations
+        # v3/v8/v9: per-transaction FEC fields + the derived counted flag on donations
         existing_donation_cols = {r["name"] for r in conn.execute("PRAGMA table_info(donations)")}
         for col_name, col_type in DONATION_EXTRA_COLS + DONATION_DERIVED_COLS:
             if col_name not in existing_donation_cols:
                 conn.execute(f"ALTER TABLE donations ADD COLUMN {col_name} {col_type}")
+        # v9: migrate review_queue to the composite PK (transaction_id, entity_slug).
+        _migrate_review_queue_pk(conn)
         existing = conn.execute("SELECT MAX(version) AS v FROM schema_version").fetchone()
         current = existing["v"] if existing else None
         if current is None or current < SCHEMA_VERSION:
@@ -474,7 +524,7 @@ def _insert_donation_row(conn: sqlite3.Connection, full_row: dict) -> None:
             filing_id, raw_payload_path, ingested_at,
             image_number, pdf_url, filing_form, line_number,
             receipt_type_full, recipient_committee_type,
-            memo_code, memo_text, is_individual
+            memo_code, memo_text, is_individual, sub_id
         ) VALUES (
             :transaction_id, :entity_slug, :entity_kind, :parent_owner_slug,
             :status, :status_reason, :signals_matched,
@@ -487,7 +537,7 @@ def _insert_donation_row(conn: sqlite3.Connection, full_row: dict) -> None:
             :filing_id, :raw_payload_path, :ingested_at,
             :image_number, :pdf_url, :filing_form, :line_number,
             :receipt_type_full, :recipient_committee_type,
-            :memo_code, :memo_text, :is_individual
+            :memo_code, :memo_text, :is_individual, :sub_id
         )
         """,
         full_row,
@@ -509,6 +559,12 @@ def insert_donation(conn: sqlite3.Connection, row: dict) -> tuple[str, str | Non
                                inserted under the canonical id. The old row is
                                never deleted (§1.10), and citations to
                                transaction_id resolve to the current version.
+      - ("collision", <reason>) — a live row shares this transaction_id but has a
+                               DIFFERENT globally-unique sub_id (a cross-committee
+                               filer-id collision, not a restatement). Nothing is
+                               written; the caller logs it (§1.3). Zero occurrences
+                               in the live DB — this converts a would-be silent
+                               wrong-supersession into a loud, auditable skip.
 
     Supersession compares only DONATION_SUBSTANCE_COLS (FEC-sourced fields), so
     a future reclassification — which changes our derived status/signals but not
@@ -529,6 +585,18 @@ def insert_donation(conn: sqlite3.Connection, row: dict) -> tuple[str, str | Non
         return ("inserted", None)
 
     existing_d = dict(existing)
+
+    # v9 collision guard: transaction_id is filer-assigned and NOT unique across
+    # committees. If the incoming row and the stored row carry DIFFERENT globally-
+    # unique sub_ids, they are DIFFERENT contributions that merely share a
+    # transaction_id — NOT a restatement. Superseding here would clobber the wrong
+    # record (the latent §1.3 bug). Refuse loudly rather than corrupt silently;
+    # the caller logs it. (Zero occurrences in the live DB — this closes the risk.)
+    inc_sub = full_row.get("sub_id")
+    old_sub = existing_d.get("sub_id")
+    if inc_sub and old_sub and str(inc_sub) != str(old_sub):
+        return ("collision", f"transaction_id {txn}: sub_id {old_sub} vs {inc_sub} (distinct contributions)")
+
     changed = [
         f
         for f in DONATION_SUBSTANCE_COLS
