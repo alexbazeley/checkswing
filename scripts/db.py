@@ -335,6 +335,10 @@ def connect(db_path: Path = MASTER_DB) -> Iterator[sqlite3.Connection]:
     conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA foreign_keys = ON")
+    # §4.5: wait up to 30s for a competing writer's lock instead of failing
+    # instantly — a manual CLI op during a scheduled refresh otherwise dies with
+    # "database is locked".
+    conn.execute("PRAGMA busy_timeout = 30000")
     try:
         yield conn
         conn.commit()

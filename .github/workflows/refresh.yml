@@ -47,7 +47,12 @@ on:
 # Queue overlapping runs rather than cancel — partial refresh state is
 # harder to recover from than a delayed full one.
 concurrency:
-  group: refresh
+  # §4.5: shared with refresh-state.yml + il-backfill.yml so the federal and
+  # state refreshes never run concurrently — both push to `main` and both append
+  # catalog/PROVENANCE_LOG.md, so overlapping runs could race the rebase/push
+  # (and, historically, a binary-DB rebase). Staggered crons (1st vs 2nd) rarely
+  # overlap; this serializes them when a delayed run would.
+  group: fec-archive-refresh
   cancel-in-progress: false
 
 jobs:

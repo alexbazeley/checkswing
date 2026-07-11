@@ -18,8 +18,9 @@ on:
   workflow_dispatch:
 
 concurrency:
-  # Share the state-refresh lane so this never pushes concurrently with the monthly job.
-  group: refresh-state
+  # §4.5: shared lane with refresh.yml + refresh-state.yml so this never pushes
+  # concurrently with either scheduled refresh.
+  group: fec-archive-refresh
   cancel-in-progress: false
 
 permissions:
