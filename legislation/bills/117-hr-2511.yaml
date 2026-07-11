@@ -1,0 +1,21 @@
+bill_id: 117-hr-2511
+congress: 117
+bill_type: hr
+number: 2511
+mlb_issue_area: antitrust_exemption
+relevance_basis: >-
+  Competition in Professional Baseball Act (117th) — House companion to S.1111.
+  Would apply the antitrust laws to the business of organized professional
+  baseball, removing the judicially-created exemption. Sponsored by Rep. Jeff
+  Duncan (R-SC-3); introduced 2021-04-14 and referred to the House Committee on
+  the Judiciary, then to its Subcommittee on Antitrust, Commercial, and
+  Administrative Law on 2021-10-19, with no further action and no roll-call vote.
+  The House leg of the 117th-Congress antitrust-exemption repeal effort.
+relevance_source_url: "https://www.congress.gov/bill/117th-congress/house-bill/2511"
+sources:
+  - description: "Congress.gov bill page — Competition in Professional Baseball Act, H.R.2511 (117th)"
+    url: "https://www.congress.gov/bill/117th-congress/house-bill/2511"
+    accessed: 2026-07-11
+change_log:
+  - date: 2026-07-11
+    change: "Indexed as a Phase 3 curated bill (antitrust_exemption) — House companion to S.1111; verified sponsor + latest action (Judiciary Antitrust Subcommittee referral) against api.congress.gov v3."

@@ -1,0 +1,23 @@
+bill_id: 117-s-1111
+congress: 117
+bill_type: s
+number: 1111
+mlb_issue_area: antitrust_exemption
+relevance_basis: >-
+  Competition in Professional Baseball Act (117th). Would remove the limited
+  antitrust exemption professional baseball has held since Federal Baseball Club
+  v. National League (1922), applying the antitrust laws to the business of
+  organized professional baseball. Sponsored by Sen. Mike Lee (R-UT) with
+  cosponsors Cruz, Hawley, Rubio, and Blackburn; introduced 2021-04-14 and read
+  twice and referred to the Committee on the Judiciary, with no committee action
+  and no roll-call vote. Companion to the House bill H.R.2511 (117th). The direct
+  antitrust-exemption challenge that bears on the 2026 CBA-era labor economics,
+  distinct from the single 1998 Curt Flood Act carve-out (S.53, 105th).
+relevance_source_url: "https://www.congress.gov/bill/117th-congress/senate-bill/1111"
+sources:
+  - description: "Congress.gov bill page — Competition in Professional Baseball Act, S.1111 (117th)"
+    url: "https://www.congress.gov/bill/117th-congress/senate-bill/1111"
+    accessed: 2026-07-11
+change_log:
+  - date: 2026-07-11
+    change: "Indexed as a Phase 3 curated bill (antitrust_exemption) — Senate antitrust-exemption repeal; verified sponsor + latest action against api.congress.gov v3."

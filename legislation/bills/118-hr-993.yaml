@@ -1,0 +1,21 @@
+bill_id: 118-hr-993
+congress: 118
+bill_type: hr
+number: 993
+mlb_issue_area: stadium_financing
+relevance_basis: >-
+  No Tax Subsidies for Stadiums Act of 2023. Would amend the Internal Revenue
+  Code to deny tax-exempt status to bonds used to finance professional sports
+  stadiums, ending the federal subsidy for stadium construction. Sponsored by
+  Rep. Earl Blumenauer (D-OR-3); introduced 2023-02-14 and referred to the House
+  Committee on Ways and Means, with no further action and no roll-call vote. The
+  118th-Congress entry in the recurring House "No Tax Subsidies for Stadiums Act"
+  line (H.R.811, 115th → H.R.2434, 119th).
+relevance_source_url: "https://www.congress.gov/bill/118th-congress/house-bill/993"
+sources:
+  - description: "Congress.gov bill page — No Tax Subsidies for Stadiums Act of 2023, H.R.993 (118th)"
+    url: "https://www.congress.gov/bill/118th-congress/house-bill/993"
+    accessed: 2026-07-11
+change_log:
+  - date: 2026-07-11
+    change: "Indexed as a Phase 3 curated bill (stadium_financing) — fills the 118th-Congress gap in the House stadium-bond lineage; verified sponsor + latest action against api.congress.gov v3."
