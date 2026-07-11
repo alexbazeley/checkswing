@@ -7651,22 +7651,30 @@ function renderLegislation() {
   // Donations × legislation: the two reproducible join rollups. Neutral arithmetic;
   // the editorial reading is in the linked brief, never inlined here.
   const briefPanels = (ld.briefs || []).filter((br) => (br.owners || []).length).map((br) => {
-    const rows = br.owners.map((o) => `
+    const rows = br.owners.map((o) => {
+      const ind = o.indirect_amount || 0;
+      return `
       <tr>
         <td><a href="#/owner/${escapeAttr(o.owner_slug)}" class="st-owner-name">${escapeHtml(o.owner_name || o.owner_slug)}</a>
             <span class="cov-dim">${escapeHtml(o.owner_team || "")}</span></td>
         <td class="num">${fmtInt(o.n_donations)}</td>
-        <td class="num">${fmtMoneyExact(o.total_amount)}</td>
-      </tr>`).join("");
+        <td class="num">${fmtMoneyExact(o.total_amount)}${ind > 0 ? `<span class="cov-dim" style="display:block;font-size:11px">${fmtMoneyExact(ind)} via campaign cmte</span>` : ""}</td>
+      </tr>`;
+    }).join("");
     const total = br.owners.reduce((s, o) => s + (o.total_amount || 0), 0);
+    const directTot = br.owners.reduce((s, o) => s + (o.direct_amount || 0), 0);
+    const indirectTot = br.owners.reduce((s, o) => s + (o.indirect_amount || 0), 0);
     const nOwners = br.owners.length;
+    const target = br.join === "donations_to_votes" ? "voting legislators"
+                 : br.join === "donations_to_committee" ? "committee-of-referral members"
+                 : "sponsors";
     return `
       <section class="block" style="border-bottom:0">
         <div class="sec-head-row"><h2>${escapeHtml(br.title)}</h2>
           <a class="sec-link" href="${escapeAttr(br.report_url)}" target="_blank" rel="noopener" style="font-weight:600;font-size:13px">Read the brief →</a></div>
         <p class="caption" style="margin:0 0 12px">
-          ${fmtInt(nOwners)} owner${nOwners === 1 ? "" : "s"} · ${fmtMoneyExact(total)} in traced giving to this bill's
-          ${br.join === "donations_to_votes" ? "voting legislators" : br.join === "donations_to_committee_members" ? "committee-of-referral members" : "sponsors"}.
+          ${fmtInt(nOwners)} owner${nOwners === 1 ? "" : "s"} · ${fmtMoneyExact(total)} in traced giving to this bill's ${target} —
+          <strong>${fmtMoneyExact(directTot)}</strong> direct to candidates${indirectTot > 0 ? ` (the linked brief's focus) + <strong>${fmtMoneyExact(indirectTot)}</strong> to their own campaign committees (the §5.6 pass-through tier)` : ""}.
           Amounts nominal, as filed; deduped by transaction. ${escapeHtml(ld.denominator_note || "")}
         </p>
         <div class="table-scroll">
