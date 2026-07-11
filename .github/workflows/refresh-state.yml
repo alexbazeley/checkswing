@@ -248,6 +248,21 @@ jobs:
         continue-on-error: true
         run: python -m scripts.cli ingest-state-bulk NY
 
+      - name: State freshness report
+        # §4.2: every ingest above is continue-on-error, so a skipped state is
+        # otherwise invisible. This surfaces per-jurisdiction last-run + newest-
+        # donation age into the run summary so a quietly-skipped or drifting state
+        # (e.g. TX's 12-month donation gap) is visible. Non-failing — a genuinely
+        # quiet owner also ages; a human reads the summary.
+        if: always()
+        run: |
+          {
+            echo '### State freshness'
+            echo '```'
+            python -m scripts.cli state-freshness --max-run-age-days 45
+            echo '```'
+          } | tee -a "$GITHUB_STEP_SUMMARY"
+
       - name: Validate
         run: python -m scripts.cli validate
 

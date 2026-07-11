@@ -502,3 +502,53 @@ def delete_donations_for_slug(
         cur = conn.execute("DELETE FROM state_donations WHERE entity_slug = ?", (entity_slug,))
         conn.execute("DELETE FROM state_review_queue WHERE entity_slug = ?", (entity_slug,))
     return cur.rowcount
+
+
+def _days_between(iso_a: str, iso_b: str) -> int | None:
+    """Whole days from date-ish `iso_a` to `iso_b` (both YYYY-MM-DD... ), or None."""
+    try:
+        from datetime import date
+        a = date.fromisoformat(str(iso_a)[:10])
+        b = date.fromisoformat(str(iso_b)[:10])
+        return (b - a).days
+    except (ValueError, TypeError):
+        return None
+
+
+def state_freshness(conn: sqlite3.Connection, now_iso: str) -> list[dict]:
+    """Per-jurisdiction freshness snapshot (read-only, §4.2).
+
+    For each jurisdiction with attributed state_donations: the last ingestion run
+    (max started_at from state_ingestion_runs — a state that SKIPPED its refresh
+    records no new run, so this ages), the newest donation date, live-row count,
+    and the age in days of each. Lets a cron step (and a human) tell a skipped or
+    quietly-drifting state from a healthy one — a skipped state was otherwise
+    indistinguishable from a healthy one."""
+    juris = [
+        r["jurisdiction"]
+        for r in conn.execute(
+            "SELECT DISTINCT jurisdiction FROM state_donations "
+            "WHERE status IN ('CONFIRMED','PROBABLE') ORDER BY jurisdiction"
+        )
+    ]
+    out: list[dict] = []
+    for j in juris:
+        run = conn.execute(
+            "SELECT MAX(started_at) AS last_run FROM state_ingestion_runs WHERE jurisdiction = ?",
+            (j,),
+        ).fetchone()
+        don = conn.execute(
+            "SELECT MAX(date) AS max_date, COUNT(*) AS n FROM state_donations "
+            "WHERE jurisdiction = ? AND status IN ('CONFIRMED','PROBABLE')",
+            (j,),
+        ).fetchone()
+        last_run = run["last_run"] if run else None
+        out.append({
+            "jurisdiction": j,
+            "live_rows": don["n"],
+            "last_run": last_run,
+            "last_run_age_days": _days_between(last_run, now_iso) if last_run else None,
+            "max_donation_date": don["max_date"],
+            "max_donation_age_days": _days_between(don["max_date"], now_iso) if don["max_date"] else None,
+        })
+    return out

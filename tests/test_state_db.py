@@ -171,3 +171,27 @@ def test_upsert_filer_overwrites(tmp_path):
         state_db.upsert_state_filer(conn, {**filer, "name": "Friends of X for Senate"})
         rows = conn.execute("SELECT name FROM state_filers").fetchall()
         assert len(rows) == 1 and rows[0]["name"] == "Friends of X for Senate"
+
+
+def test_state_freshness_reports_run_and_donation_age(tmp_path):
+    db_path = tmp_path / "state.db"
+    state_db.init(db_path)
+    with state_db.connect(db_path) as conn:
+        state_db.insert_state_donation(conn, _base_row(
+            state_txn_id="CA:x:1:1", jurisdiction="CA", date="2026-01-01", amount=100.0))
+        state_db.insert_state_donation(conn, _base_row(
+            state_txn_id="TX:y:1:1", jurisdiction="TX", date="2025-06-26", amount=200.0))
+        state_db.insert_state_ingestion_run(conn, {
+            "run_id": "r1", "entity_slug": "moreno-arte", "jurisdiction": "CA",
+            "source": "CAL-ACCESS", "started_at": "2026-07-02T00:00:00Z",
+            "completed_at": "2026-07-02T00:10:00Z", "extract_label": "x",
+            "name_variants_queried": "[]", "records_scanned": 1,
+            "confirmed_count": 1, "probable_count": 0, "uncertain_count": 0,
+            "snapshot_path": None, "notes": None, "dry_run": 0})
+        rows = state_db.state_freshness(conn, "2026-07-10T00:00:00Z")
+    by = {r["jurisdiction"]: r for r in rows}
+    assert by["CA"]["last_run_age_days"] == 8
+    assert by["CA"]["max_donation_age_days"] == 190
+    # TX has a donation but no recorded run → last_run None (a skipped/never-run state).
+    assert by["TX"]["last_run"] is None
+    assert by["TX"]["max_donation_date"] == "2025-06-26"
