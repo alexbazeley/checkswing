@@ -129,6 +129,18 @@ jobs:
         if: always() && steps.gate.outputs.run == 'true'
         run: python -m scripts.cli backfill-donation-image-fields
 
+      - name: Archive raw payloads to R2 (§2.1)
+        # Secret-guarded no-op until RAW_ARCHIVE_* is set. Uploads the owner raw
+        # this bucket fetched so cron-ingested rows' raw_payload_path resolves
+        # off-runner (GOVERNANCE.md §1.4). See docs/DESIGN_raw_archival_2026-07.md.
+        if: always() && steps.gate.outputs.run == 'true'
+        env:
+          RAW_ARCHIVE_S3_BUCKET: ${{ secrets.RAW_ARCHIVE_S3_BUCKET }}
+          RAW_ARCHIVE_S3_ENDPOINT: ${{ secrets.RAW_ARCHIVE_S3_ENDPOINT }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.RAW_ARCHIVE_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.RAW_ARCHIVE_SECRET_ACCESS_KEY }}
+        run: bash scripts/archive_raw.sh
+
       - name: Upload bucket artifact
         # always(): upload whatever progress we made even if the refresh step
         # reported a non-zero exit (per-owner failure).
@@ -336,6 +348,16 @@ jobs:
             extra_args="--force-refresh"
           fi
           python -m scripts.cli ingest-committee-beneficiaries $extra_args
+
+      - name: Archive raw payloads to R2 (§2.1)
+        # Committee identity/filings/Schedule-B raw fetched above. Secret-guarded.
+        if: always()
+        env:
+          RAW_ARCHIVE_S3_BUCKET: ${{ secrets.RAW_ARCHIVE_S3_BUCKET }}
+          RAW_ARCHIVE_S3_ENDPOINT: ${{ secrets.RAW_ARCHIVE_S3_ENDPOINT }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.RAW_ARCHIVE_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.RAW_ARCHIVE_SECRET_ACCESS_KEY }}
+        run: bash scripts/archive_raw.sh
 
       - name: Rebuild mockup/data.json with enrichment
         run: python mockup/build_data.py

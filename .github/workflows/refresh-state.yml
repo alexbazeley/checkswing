@@ -296,6 +296,17 @@ jobs:
       - name: Validate
         run: python -m scripts.cli validate
 
+      - name: Archive raw payloads to R2 (§2.1)
+        # State portal extracts under data/raw/state/ fetched above. Secret-guarded
+        # no-op until RAW_ARCHIVE_* is set. See docs/DESIGN_raw_archival_2026-07.md.
+        if: always()
+        env:
+          RAW_ARCHIVE_S3_BUCKET: ${{ secrets.RAW_ARCHIVE_S3_BUCKET }}
+          RAW_ARCHIVE_S3_ENDPOINT: ${{ secrets.RAW_ARCHIVE_S3_ENDPOINT }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.RAW_ARCHIVE_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.RAW_ARCHIVE_SECRET_ACCESS_KEY }}
+        run: bash scripts/archive_raw.sh
+
       - name: Commit + push refreshed state data
         run: |
           git config user.name "github-actions[bot]"

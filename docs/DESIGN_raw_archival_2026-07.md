@@ -1,6 +1,6 @@
 # Design / scoping — off-runner raw-payload archival
 
-**Status:** design-first proposal (IMPROVEMENT_PLAN_2026-07 §2.1, the (L) ★ item). **Blocked on one user decision** (storage backend + credentials — §3). Not yet implemented.
+**Status:** ✅ **plumbing implemented (PR #107)** — the secret-guarded R2 upload runs on all three fetch jobs, `cli fetch-raw` rehydrates, GOVERNANCE §1.4 updated. **Two maintainer actions remain to activate it:** add the four `RAW_ARCHIVE_*` GitHub secrets, and run the one-time backfill of the local 4.9 GB (§9 below). Backend chosen: **Cloudflare R2** (activated).
 **Author:** 2026-07-11 session. Grounded in live repo + `master.db` + `refresh.yml`.
 **Companion rules:** [GOVERNANCE.md §1.4](../GOVERNANCE.md) (raw is persisted before parsing; master.db is the source of truth).
 
@@ -116,3 +116,47 @@ Until the bucket exists, add a one-line caveat to GOVERNANCE §1.4 stating plain
 ## 8. Why this is design-first, not just-do-it
 
 The upload plumbing is ~20 lines of YAML. The blocker is entirely the **storage-backend + credentials decision (§3)**, which is the maintainer's to make — it commits an account and a (small) recurring cost and requires provisioning secrets. Everything downstream is backend-agnostic S3 API, so the decision is low-stakes and reversible, but it is a decision, and per the working rules a fresh credential/secret is provisioned by the maintainer, not the agent.
+
+---
+
+## 9. Activation checklist (Cloudflare R2 — maintainer actions)
+
+The plumbing (PR #107) is a no-op until these run. The agent must not create or
+handle the key values — you provision them.
+
+**A. Create an R2 bucket + API token** (Cloudflare dashboard → R2):
+- Create a bucket, e.g. `checkswing-raw`.
+- Create an R2 **API token** (Object Read & Write, scoped to that bucket). Note
+  the **Access Key ID**, **Secret Access Key**, and your **account id** (the
+  endpoint is `https://<ACCOUNT_ID>.r2.cloudflarestorage.com`).
+
+**B. Add four GitHub Actions secrets** (repo → Settings → Secrets and variables →
+Actions). The workflow steps already reference these exact names:
+
+| Secret | Value |
+|---|---|
+| `RAW_ARCHIVE_S3_BUCKET` | the bucket name, e.g. `checkswing-raw` |
+| `RAW_ARCHIVE_S3_ENDPOINT` | `https://<ACCOUNT_ID>.r2.cloudflarestorage.com` |
+| `RAW_ARCHIVE_ACCESS_KEY_ID` | the R2 token's Access Key ID |
+| `RAW_ARCHIVE_SECRET_ACCESS_KEY` | the R2 token's Secret Access Key |
+
+Once set, every `refresh` / `committees_refresh` / `refresh-state` run archives
+its raw automatically. Nothing else to wire.
+
+**C. One-time backfill of the existing 4.9 GB** (from the laptop that holds
+`data/raw/`, with the aws CLI installed):
+
+```bash
+export RAW_ARCHIVE_S3_BUCKET=checkswing-raw
+export RAW_ARCHIVE_S3_ENDPOINT=https://<ACCOUNT_ID>.r2.cloudflarestorage.com
+export AWS_ACCESS_KEY_ID=<r2 access key id>
+export AWS_SECRET_ACCESS_KEY=<r2 secret>
+bash scripts/archive_raw.sh            # uploads data/raw/ → s3://checkswing-raw/raw/
+```
+
+(`~4.9 GB`; R2 free tier is 10 GB storage + $0 egress, so this and the monthly
+deltas sit inside the free tier.) Log it as a one-line PROVENANCE_LOG entry.
+
+**D. Verify:** `cli fetch-raw <transaction_id> --download` (with the same env)
+should pull an object from R2. Optionally update the GOVERNANCE §1.4 note from
+"until that backfill runs…" to "preserved in R2" once C completes.
