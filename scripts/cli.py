@@ -209,6 +209,49 @@ def review_state_cmd(slug):
     click.echo(tabulate(table, headers=["owner", "juris", "state_txn_id", "reason"]))
 
 
+@cli.command(name="state-freshness")
+@click.option("--max-run-age-days", type=int, default=40,
+              help="Flag a jurisdiction whose last ingestion run is older than this (default 40 — one monthly cron cycle + slack).")
+@click.option("--fail-on-stale", is_flag=True,
+              help="Exit non-zero if any jurisdiction is flagged stale (for CI/cron gating).")
+def state_freshness_cmd(max_run_age_days, fail_on_stale):
+    """Read-only per-jurisdiction freshness — last ingestion run + newest donation (§4.2).
+
+    A state that SKIPPED its monthly refresh (e.g. a portal fetch failed under
+    continue-on-error) records no new run, so its last-run age climbs — this is
+    how a skipped state is told apart from a healthy one. `max_donation_age` is a
+    softer signal (a genuinely quiet owner also ages), surfaced for a human eye.
+    """
+    from datetime import datetime, timezone
+
+    from . import state_db
+    from .paths import STATE_DB
+
+    if not STATE_DB.exists():
+        click.echo("No data/state.db yet.")
+        return
+    now_iso = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    with state_db.connect() as conn:
+        rows = state_db.state_freshness(conn, now_iso)
+    stale = [r for r in rows if r["last_run_age_days"] is None or r["last_run_age_days"] > max_run_age_days]
+    table = [
+        [r["jurisdiction"], r["live_rows"],
+         (r["last_run"] or "—")[:10], r["last_run_age_days"],
+         (r["max_donation_date"] or "—"), r["max_donation_age_days"],
+         "STALE" if r in stale else ""]
+        for r in rows
+    ]
+    click.echo(tabulate(
+        table,
+        headers=["juris", "rows", "last_run", "run_age_d", "newest_donation", "don_age_d", "flag"],
+    ))
+    if stale:
+        click.echo(f"\n{len(stale)} jurisdiction(s) with last run > {max_run_age_days}d "
+                   f"(possible skipped refresh): {', '.join(r['jurisdiction'] for r in stale)}")
+    if fail_on_stale and stale:
+        sys.exit(1)
+
+
 @cli.command(name="ingest-state-ca")
 @click.option("--zip", "zip_path", required=True, type=click.Path(exists=True, path_type=Path),
               help="Path to the SoS CAL-ACCESS dbwebexport.zip (RCPT_CD streamed, not extracted).")
