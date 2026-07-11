@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Pre-commit gate (GOVERNANCE.md / plan §2.4): run `cli validate` before every
+# commit so a bad owner YAML / schema drift can't land. Enable once per clone:
+#     git config core.hooksPath .githooks
+# Bypass deliberately (rare) with:  git commit --no-verify
+set -e
+if [ -x ".venv/bin/python" ]; then PY=".venv/bin/python"
+elif command -v python3 >/dev/null 2>&1; then PY="python3"
+else PY="python"; fi
+echo "[pre-commit] python -m scripts.cli validate …"
+"$PY" -m scripts.cli validate
