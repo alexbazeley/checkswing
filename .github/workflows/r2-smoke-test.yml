@@ -1,0 +1,49 @@
+name: R2 smoke test
+
+# Manually validates the RAW_ARCHIVE_* Cloudflare R2 secrets (§2.1) WITHOUT
+# running a full refresh: writes a tiny object, reads it back, deletes it.
+# Run from the Actions tab ("Run workflow") or `gh workflow run r2-smoke-test.yml`.
+# Safe to run anytime; touches only a throwaway key under _smoke_test/.
+
+on:
+  workflow_dispatch:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: R2 put + get + delete round-trip
+        env:
+          RAW_ARCHIVE_S3_BUCKET: ${{ secrets.RAW_ARCHIVE_S3_BUCKET }}
+          RAW_ARCHIVE_S3_ENDPOINT: ${{ secrets.RAW_ARCHIVE_S3_ENDPOINT }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.RAW_ARCHIVE_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.RAW_ARCHIVE_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: auto
+          AWS_REQUEST_CHECKSUM_CALCULATION: when_required
+          AWS_RESPONSE_CHECKSUM_VALIDATION: when_required
+        run: |
+          set -euo pipefail
+          if [ -z "${RAW_ARCHIVE_S3_BUCKET:-}" ]; then
+            echo "::error::RAW_ARCHIVE_S3_BUCKET is empty — the 4 RAW_ARCHIVE_* secrets aren't set."
+            exit 1
+          fi
+          echo "Bucket present. Endpoint host: $(echo "$RAW_ARCHIVE_S3_ENDPOINT" | sed -E 's#https?://##; s#/.*##')"
+          key="_smoke_test/ci-$(date -u +%Y%m%dT%H%M%SZ).txt"
+          printf 'checkswing r2 smoke test\n' > /tmp/smoke.txt
+
+          echo "→ PUT   s3://$RAW_ARCHIVE_S3_BUCKET/$key"
+          aws s3 cp /tmp/smoke.txt "s3://$RAW_ARCHIVE_S3_BUCKET/$key" \
+            --endpoint-url "$RAW_ARCHIVE_S3_ENDPOINT" --only-show-errors
+
+          echo "→ GET   back and compare"
+          aws s3 cp "s3://$RAW_ARCHIVE_S3_BUCKET/$key" /tmp/smoke_back.txt \
+            --endpoint-url "$RAW_ARCHIVE_S3_ENDPOINT" --only-show-errors
+          diff /tmp/smoke.txt /tmp/smoke_back.txt
+
+          echo "→ DELETE cleanup (best-effort)"
+          aws s3 rm "s3://$RAW_ARCHIVE_S3_BUCKET/$key" \
+            --endpoint-url "$RAW_ARCHIVE_S3_ENDPOINT" --only-show-errors || \
+            echo "note: delete failed (token may be write-not-delete) — the test object remains, harmless."
+
+          echo "✅ R2 smoke test passed — the archival secrets work."

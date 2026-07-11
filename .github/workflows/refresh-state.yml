@@ -299,7 +299,9 @@ jobs:
       - name: Archive raw payloads to R2 (§2.1)
         # State portal extracts under data/raw/state/ fetched above. Secret-guarded
         # no-op until RAW_ARCHIVE_* is set. See docs/DESIGN_raw_archival_2026-07.md.
+        # continue-on-error: best-effort, must never skip the state-data commit.
         if: always()
+        continue-on-error: true
         env:
           RAW_ARCHIVE_S3_BUCKET: ${{ secrets.RAW_ARCHIVE_S3_BUCKET }}
           RAW_ARCHIVE_S3_ENDPOINT: ${{ secrets.RAW_ARCHIVE_S3_ENDPOINT }}

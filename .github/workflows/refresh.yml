@@ -133,7 +133,10 @@ jobs:
         # Secret-guarded no-op until RAW_ARCHIVE_* is set. Uploads the owner raw
         # this bucket fetched so cron-ingested rows' raw_payload_path resolves
         # off-runner (GOVERNANCE.md §1.4). See docs/DESIGN_raw_archival_2026-07.md.
+        # continue-on-error: raw archival is best-effort and must never fail the
+        # refresh (a bad R2 secret would otherwise skip the commit).
         if: always() && steps.gate.outputs.run == 'true'
+        continue-on-error: true
         env:
           RAW_ARCHIVE_S3_BUCKET: ${{ secrets.RAW_ARCHIVE_S3_BUCKET }}
           RAW_ARCHIVE_S3_ENDPOINT: ${{ secrets.RAW_ARCHIVE_S3_ENDPOINT }}
@@ -351,7 +354,9 @@ jobs:
 
       - name: Archive raw payloads to R2 (§2.1)
         # Committee identity/filings/Schedule-B raw fetched above. Secret-guarded.
+        # continue-on-error: best-effort, must never skip the enrichment commit.
         if: always()
+        continue-on-error: true
         env:
           RAW_ARCHIVE_S3_BUCKET: ${{ secrets.RAW_ARCHIVE_S3_BUCKET }}
           RAW_ARCHIVE_S3_ENDPOINT: ${{ secrets.RAW_ARCHIVE_S3_ENDPOINT }}
