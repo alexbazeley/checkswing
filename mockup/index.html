@@ -2673,7 +2673,14 @@ function cycleAmt(obj, baseKey, cycle) {
 /* Phase-4: group state_data.json donations by owner slug for the per-owner panel. */
 function indexStateByOwner(sd) {
   const idx = {};
-  for (const d of sd.donations || []) (idx[d.entity] = idx[d.entity] || []).push(d);
+  /* §6.3: roll up by `parent || entity` to match the federal rollup, so a
+     spouse/related-entity's state rows land on the owner's page instead of
+     silently vanishing. No-op until state household tracking lands (state rows
+     have no `parent` yet), but correct the moment they do. */
+  for (const d of sd.donations || []) {
+    const slug = d.parent || d.entity;
+    (idx[slug] = idx[slug] || []).push(d);
+  }
   return idx;
 }
 /* Read a party-map from an owner's party_dollars{,_2026}. */
@@ -2999,6 +3006,27 @@ function buildSearchIndex() {
     });
   }
 
+  /* State recipients (§6.3) — cmd-K previously indexed the federal layer only,
+     so a state-only name (e.g. "Newsom") found nothing. Index the state
+     recipient rollup when the Phase-4 payload is loaded; each hit routes to its
+     #/state-recipient detail page. Guarded because state_data.json loads
+     separately and may be absent — the loader rebuilds the index once it lands. */
+  if (state.stateData && Array.isArray(state.stateData.recipients)) {
+    for (const r of state.stateData.recipients) {
+      if (!r.name || !r.key) continue;
+      const jur = typeof jName === "function" ? jName(r.jurisdiction) : r.jurisdiction;
+      items.push({
+        type: "state",
+        label: r.name,
+        sub: `${jur} · ${r.recipient_type || "recipient"} · ${fmtInt(r.n_donations)} from MLB`,
+        key: (r.name + " " + (r.jurisdiction || "")).toLowerCase(),
+        url: `#/state-recipient/${encodeURIComponent(r.key)}`,
+        sortBy: r.total_amount || 0,
+        metaText: fmtMoney(r.total_amount || 0),
+      });
+    }
+  }
+
   return items;
 }
 
@@ -3046,7 +3074,12 @@ async function loadData() {
       if (sres && sres.ok) {
         const sd = await sres.json();
         state.stateData = sd && !sd.empty ? sd : null;
-        if (state.stateData) state.stateByOwner = indexStateByOwner(state.stateData);
+        if (state.stateData) {
+          state.stateByOwner = indexStateByOwner(state.stateData);
+          /* §6.3: now that the state layer is loaded, rebuild the cmd-K index so
+             it includes state recipients (buildSearchIndex ran before this). */
+          state.searchIndex = buildSearchIndex();
+        }
       }
     } catch (_) { state.stateData = null; }
     /* Phase-3 legislation index (separate, tiny). Non-fatal — the #/legislation
