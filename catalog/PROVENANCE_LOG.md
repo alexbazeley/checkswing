@@ -24949,3 +24949,30 @@ Tier-2-sourced promotion was found and applied.
 - **errors**: `[]`
 - **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-11T15-35-24Z__pre-ingest-bills.db`
 - **note**: Curated fields (mlb_issue_area, relevance_basis, carried_by_bill_id) sourced from legislation/bills/*.yaml; identity/sponsors/action from Congress.gov (Tier-1). Raw payloads under data/raw/legislation/.
+
+### 2026-07-11T20:15Z — NOTE — walter-mark broadened discovery probe (state-filter-off): null result, not persisted
+
+Per the 2026-07-11 user decision (plan §5.3), ran a broadened, state-filter-off
+federal re-fetch of **walter-mark** to test whether Mark Walter (LA Dodgers /
+Guggenheim) has out-of-state federal giving excluded by his `states: [IL]`
+pre-filter: `cli ingest walter-mark --no-state-filter --full-refetch`
+(a **discovery** fetch — the CLI documents `--no-state-filter` as "for discovery,
+not production").
+
+- **records_fetched**: `5659` (164 API calls, 7 name variants, 2000-01-01→present)
+- **classification**: CONFIRMED=`21` · PROBABLE=`0` · UNCERTAIN=`1401` · skipped(no-name-match)=`4237`
+- **result**: **0 new CONFIRMED/PROBABLE.** Published total UNCHANGED at 21 / $171,600.00.
+- The 1,401 UNCERTAIN are scattered same-name strangers (MD 548 · WA 139 · GA 90 ·
+  MI 80 · CA 80 · …); 0 in Crested Butte, 1 in CO. None carries a matching
+  employer/occupation/city/state signal — any such record would have classified
+  PROBABLE (name + 1 signal), and there are none. His giving is fully captured by
+  the existing IL-filtered fetch.
+- **Decision:** the discovery probe changed no published number and its only
+  production-relevant delta was 1 incidental FEC image_number restatement (which
+  the monthly cron picks up normally). The transient master.db mutation (the 1,360
+  new stranger-UNCERTAIN + supersession) was **reverted, not committed** — a
+  discovery fetch should not flood the production review queue or spend LFS
+  bandwidth for a null result. Pre-probe snapshot retained locally
+  (`data/snapshots/2026-07-11T19-55-28Z__378b16e4.db`). walter-mark `audit` left
+  at its production values; a `change_log` entry records the probe so it is not
+  repeated.

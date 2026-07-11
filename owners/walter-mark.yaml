@@ -122,6 +122,23 @@ change_log:
     TWG Global / TWG Global Holdings strong-signal employers. Signal
     review date advanced.
   by: "automated pipeline (PR 4 Tier C light pass)"
+- date: 2026-07-11
+  change: |
+    Broadened, state-filter-off DISCOVERY probe (user-approved, plan §5.3):
+    `cli ingest walter-mark --no-state-filter --full-refetch` to test whether
+    his `states: [IL]` pre-filter was excluding out-of-state federal giving.
+    Fetched 5,659 records (name-only) → CONFIRMED=21 (unchanged), PROBABLE=0,
+    UNCERTAIN=1,401. NO new attributable giving: the out-of-state same-name
+    matches are scattered strangers (MD 548, WA 139, GA 90, …; 0 Crested Butte,
+    1 CO) with none carrying a matching employer/occupation/city/state signal
+    (any such would have classified PROBABLE). His giving is fully captured by
+    the IL-filtered production fetch. Signals UNCHANGED; the discovery churn was
+    reverted, not persisted (a `--no-state-filter` fetch is a discovery tool, not
+    production — it should not flood the review queue for a null result). Logged
+    in PROVENANCE_LOG (2026-07-11 NOTE). Do not repeat.
+  by: "maintainer-directed discovery probe (Claude Code)"
+  references:
+  - "catalog/PROVENANCE_LOG.md 2026-07-11 NOTE (walter-mark broadened probe)"
 
 audit:
   created: 2026-05-22
