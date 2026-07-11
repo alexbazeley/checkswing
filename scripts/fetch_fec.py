@@ -39,6 +39,20 @@ SCHEDULE_A = "/schedules/schedule_a/"
 PER_PAGE = 100  # FEC max
 DEFAULT_MIN_DATE = "2000-01-01"
 
+
+class FECPermanentError(RuntimeError):
+    """A permanent client-side failure that will not succeed on retry — a 404
+    (dissolved committee), 403, or 422 (bad param), or an endpoint that returns
+    zero results for an id that should exist. Subclasses RuntimeError so existing
+    `except RuntimeError` / `pytest.raises(RuntimeError)` call sites are unchanged;
+    callers that want to *tombstone* the id (so a convergence run stops re-failing
+    it every month, §4.4) catch this type specifically. Carries the HTTP status
+    where one exists (None for the empty-results case)."""
+
+    def __init__(self, message: str, *, status: int | None = None):
+        super().__init__(message)
+        self.status = status
+
 # Polite spacing between requests. FEC's per-key cap is 1,000/hour ≈ 3.6s/req
 # PER KEY. Note the refresh runs as 4 parallel matrix jobs SHARING one key, so
 # 4 workers × ~4s each ≈ 3,600 req/hr combined — ABOVE the 1,000/hr cap. In
@@ -193,10 +207,13 @@ class FECClient:
                 if 400 <= resp.status_code < 500:
                     # Permanent client error (404 dissolved committee, 403, 422
                     # bad param): retrying just burns 5 backoff attempts every run.
-                    # Fail fast — RuntimeError isn't caught by the retry `except`.
-                    raise RuntimeError(
+                    # Fail fast — FECPermanentError (a RuntimeError) isn't caught
+                    # by the retry `except`; the committee ingest catches it to
+                    # tombstone the id (§4.4).
+                    raise FECPermanentError(
                         f"FEC {resp.status_code} (permanent, not retried): "
-                        f"{endpoint} {safe_params}"
+                        f"{endpoint} {safe_params}",
+                        status=resp.status_code,
                     )
                 resp.raise_for_status()
                 return resp.json()

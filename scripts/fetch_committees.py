@@ -21,7 +21,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from .fetch_fec import FECClient, _utc_now_filename, _utc_now_iso
+from .fetch_fec import FECClient, FECPermanentError, _utc_now_filename, _utc_now_iso
 from .paths import RAW_DIR, relpath
 
 
@@ -76,7 +76,10 @@ def fetch_committee_detail(
     raw_path = _persist_committee_raw(committee_id, "committee_detail", {}, payload)
     results = payload.get("results") or []
     if not results:
-        raise RuntimeError(f"FEC returned no committee record for {committee_id}")
+        # A 200 with zero results for a committee_id that appears as a donation
+        # recipient is a permanent "no such committee" (dissolved/merged id) — the
+        # ingest tombstones it so a convergence run stops re-fetching it (§4.4).
+        raise FECPermanentError(f"FEC returned no committee record for {committee_id}")
     return results[0], raw_path
 
 

@@ -317,6 +317,86 @@ class TestIngestAllCommittees:
             assert ids == ["C00000002"]
 
 
+class TestCommitteeTombstone:
+    """§4.4: a committee_id that permanently fails (dissolved — 404, or a 200 with
+    zero results) is tombstoned so future convergence runs skip it instead of
+    re-failing it every month."""
+
+    def _mock_empty_committee(self, rsps, cmte_id):
+        """A 200 with zero results — FEC's shape for a dissolved/merged id."""
+        rsps.add(
+            responses.GET,
+            BASE_URL + COMMITTEE_DETAIL_ENDPOINT.format(committee_id=cmte_id),
+            json={"results": []},
+            status=200,
+        )
+
+    def test_permanent_failure_records_tombstone(self, tmp_master, fec_responses):
+        _mock_committee(fec_responses, "C00000001")
+        self._mock_empty_committee(fec_responses, "C00000002")
+        summary = ingest_committees.ingest_all_committees(db_path=tmp_master)
+        assert summary["fetched"] == 1
+        assert summary["failed"] == 1
+        assert summary["tombstoned_new"] == 1
+        assert summary["tombstoned_ids"] == ["C00000002"]
+        with db.connect(tmp_master) as conn:
+            row = conn.execute(
+                "SELECT committee_id, not_found_at, reason FROM committee_tombstones"
+            ).fetchone()
+            assert row["committee_id"] == "C00000002"
+            assert row["not_found_at"]  # UTC stamp present
+            assert "no committee record" in row["reason"]
+
+    def test_http_4xx_records_tombstone_with_status(self, tmp_master, fec_responses):
+        _mock_committee(fec_responses, "C00000001")
+        fec_responses.add(
+            responses.GET,
+            BASE_URL + COMMITTEE_DETAIL_ENDPOINT.format(committee_id="C00000002"),
+            status=404,
+        )
+        summary = ingest_committees.ingest_all_committees(db_path=tmp_master)
+        assert summary["tombstoned_ids"] == ["C00000002"]
+        with db.connect(tmp_master) as conn:
+            row = conn.execute(
+                "SELECT http_status FROM committee_tombstones WHERE committee_id = 'C00000002'"
+            ).fetchone()
+            assert row["http_status"] == 404
+
+    def test_tombstoned_id_skipped_next_run(self, tmp_master, fec_responses):
+        # First run tombstones C00000002.
+        _mock_committee(fec_responses, "C00000001")
+        self._mock_empty_committee(fec_responses, "C00000002")
+        ingest_committees.ingest_all_committees(db_path=tmp_master)
+
+        # Second run: C00000001 is fresh (skipped), C00000002 is tombstoned. No
+        # FEC call is made for C00000002 — if one were, responses would raise on
+        # the un-registered request.
+        summary = ingest_committees.ingest_all_committees(db_path=tmp_master)
+        assert summary["tombstoned_skipped"] == 1
+        assert summary["failed"] == 0
+        assert "C00000002" not in summary["failed_ids"]
+
+    def test_force_refresh_reattempts_and_clears_tombstone(self, tmp_master, fec_responses):
+        # First run tombstones C00000002 (empty results).
+        _mock_committee(fec_responses, "C00000001")
+        self._mock_empty_committee(fec_responses, "C00000002")
+        ingest_committees.ingest_all_committees(db_path=tmp_master)
+        with db.connect(tmp_master) as conn:
+            assert conn.execute("SELECT COUNT(*) FROM committee_tombstones").fetchone()[0] == 1
+
+        # FEC now returns the committee; a force_refresh re-attempt clears it.
+        fec_responses.reset()
+        _mock_committee(fec_responses, "C00000001")
+        _mock_committee(fec_responses, "C00000002")
+        summary = ingest_committees.ingest_all_committees(
+            db_path=tmp_master, force_refresh=True
+        )
+        assert summary["tombstoned_skipped"] == 0  # force bypasses the skip
+        assert summary["failed"] == 0
+        with db.connect(tmp_master) as conn:
+            assert conn.execute("SELECT COUNT(*) FROM committee_tombstones").fetchone()[0] == 0
+
+
 class TestStalenessOrderingAndCap:
     """§4.3: fetch oldest-refreshed committees first and cap fetches per run so a
     convergence is bounded and the cohort de-synchronizes."""
