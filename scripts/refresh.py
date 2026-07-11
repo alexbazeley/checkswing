@@ -36,6 +36,7 @@ import yaml
 
 from .ingest import ingest_entity
 from .paths import DATA_DIR, OWNERS_DIR, PROVENANCE_LOG, RAW_DIR, REPO_ROOT
+from .provenance import append_provenance
 
 
 REFRESH_LOCK = DATA_DIR / ".refresh.lock"
@@ -231,7 +232,6 @@ def select_bucket(bucket_index: int, bucket_count: int) -> list[str]:
 def _append_refresh_log(summary: dict) -> None:
     """Append a REFRESH RUN block to catalog/PROVENANCE_LOG.md."""
     PROVENANCE_LOG.parent.mkdir(parents=True, exist_ok=True)
-    existing = PROVENANCE_LOG.read_text(encoding="utf-8") if PROVENANCE_LOG.exists() else ""
     lines: list[str] = []
     started = summary.get("started_at", "")
     lines.append(f"\n### {started[:10]} — REFRESH RUN {summary['refresh_id']}")
@@ -252,7 +252,7 @@ def _append_refresh_log(summary: dict) -> None:
         lines.append(f"- **failed_owners**: `{summary['failed_owners']}`")
     if summary.get("data_json_error"):
         lines.append(f"- **data_json_error**: `{summary['data_json_error']}`")
-    PROVENANCE_LOG.write_text(existing + "\n".join(lines) + "\n", encoding="utf-8")
+    append_provenance("\n".join(lines) + "\n", PROVENANCE_LOG)
 
 
 # ─── Data.json regen (subprocess to keep refresh decoupled) ──────────────────

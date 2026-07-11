@@ -23,6 +23,7 @@ from .ingest_committee_disbursements import (
 from .ingest_committees import ingest_all_committees
 from .ingest_filings import ingest_filings as ingest_filings_orchestrator
 from .paths import OWNERS_DIR
+from .provenance import append_provenance
 from .queue_stats import queue_stats_report
 from .refresh import refresh_all, select_bucket
 from .validate_owners import format_report, validate_all
@@ -517,8 +518,7 @@ def ingest_legislators_cmd(no_historical, all_legislators):
         "- **note**: Tier-2 entity identification (SOURCES.md Phase-3 addendum). Crosswalk tables are a pure projection of the upstream source — idempotent wipe-and-rebuild. Raw payloads persisted under data/raw/legislation/.",
         "",
     ]
-    existing = PROVENANCE_LOG.read_text(encoding="utf-8") if PROVENANCE_LOG.exists() else ""
-    PROVENANCE_LOG.write_text(existing + "\n".join(block), encoding="utf-8")
+    append_provenance("\n".join(block), PROVENANCE_LOG)
 
     click.echo(json.dumps(counts, indent=2))
 
@@ -557,8 +557,7 @@ def ingest_congress_committees_cmd():
         "- **note**: Current-congress committee membership only (upstream has no history). The committee→donation join (policy-join --via-committee) guards on committees.congress so a present-day member is never tied to a historical bill. Idempotent wipe-and-rebuild.",
         "",
     ]
-    existing = PROVENANCE_LOG.read_text(encoding="utf-8") if PROVENANCE_LOG.exists() else ""
-    PROVENANCE_LOG.write_text(existing + "\n".join(block), encoding="utf-8")
+    append_provenance("\n".join(block), PROVENANCE_LOG)
 
     click.echo(json.dumps(counts, indent=2))
 
@@ -631,8 +630,7 @@ def ingest_bills_cmd():
         "- **note**: Curated fields (mlb_issue_area, relevance_basis, carried_by_bill_id) sourced from legislation/bills/*.yaml; identity/sponsors/action from Congress.gov (Tier-1). Raw payloads under data/raw/legislation/.",
         "",
     ]
-    existing = PROVENANCE_LOG.read_text(encoding="utf-8") if PROVENANCE_LOG.exists() else ""
-    PROVENANCE_LOG.write_text(existing + "\n".join(block), encoding="utf-8")
+    append_provenance("\n".join(block), PROVENANCE_LOG)
 
     click.echo(json.dumps(counts, indent=2))
 
@@ -674,8 +672,7 @@ def ingest_votes_cmd():
         "- **note**: Vote positions are FEC-neutral facts (who voted Yea/Nay). Senate LIS ids mapped to Bioguide via legislators.lis_id. Raw XML under data/raw/legislation/.",
         "",
     ]
-    existing = PROVENANCE_LOG.read_text(encoding="utf-8") if PROVENANCE_LOG.exists() else ""
-    PROVENANCE_LOG.write_text(existing + "\n".join(block), encoding="utf-8")
+    append_provenance("\n".join(block), PROVENANCE_LOG)
 
     click.echo(json.dumps(counts, indent=2))
 
@@ -1357,8 +1354,7 @@ def attribute(transaction_id, entity_slug, reason, source, status, yes):
         f"- **note**: Override recorded in manual_attributions (survives reclassify). Bypasses the two-signal rule by documented human decision (GOVERNANCE.md §1.1). Reversible via `unattribute`. Reclassification follows below.",
         "",
     ]
-    existing = PROVENANCE_LOG.read_text(encoding="utf-8") if PROVENANCE_LOG.exists() else ""
-    PROVENANCE_LOG.write_text(existing + "\n".join(block), encoding="utf-8")
+    append_provenance("\n".join(block), PROVENANCE_LOG)
 
     summary = reclassify_entity(entity_slug, reason=f"apply manual attribution of {transaction_id}")
     click.echo(json.dumps({
@@ -1407,8 +1403,7 @@ def unattribute(transaction_id, entity_slug, yes):
         f"- **note**: Override removed; record reverts to its automated classification on the reclassify below.",
         "",
     ]
-    existing = PROVENANCE_LOG.read_text(encoding="utf-8") if PROVENANCE_LOG.exists() else ""
-    PROVENANCE_LOG.write_text(existing + "\n".join(block), encoding="utf-8")
+    append_provenance("\n".join(block), PROVENANCE_LOG)
     reclassify_entity(entity_slug, reason=f"remove manual attribution of {transaction_id}")
     click.echo(f"Removed manual attribution for {transaction_id} ({entity_slug}) and reclassified.")
 
@@ -1476,8 +1471,7 @@ def exclude(transaction_id, entity_slug, reason, source, yes):
         f"- **note**: Documented human decision that this txn is NOT this owner (GOVERNANCE.md §1.1/§1.9). Dropped from classification (not queued). Survives reclassify. Reversible via `unexclude`. Reclassification follows below.",
         "",
     ]
-    existing = PROVENANCE_LOG.read_text(encoding="utf-8") if PROVENANCE_LOG.exists() else ""
-    PROVENANCE_LOG.write_text(existing + "\n".join(block), encoding="utf-8")
+    append_provenance("\n".join(block), PROVENANCE_LOG)
 
     summary = reclassify_entity(entity_slug, reason=f"apply manual exclusion of {transaction_id}")
     click.echo(json.dumps({
@@ -1526,8 +1520,7 @@ def unexclude(transaction_id, entity_slug, yes):
         f"- **note**: EXCLUDED override removed; record reverts to its automated classification on the reclassify below.",
         "",
     ]
-    existing = PROVENANCE_LOG.read_text(encoding="utf-8") if PROVENANCE_LOG.exists() else ""
-    PROVENANCE_LOG.write_text(existing + "\n".join(block), encoding="utf-8")
+    append_provenance("\n".join(block), PROVENANCE_LOG)
     reclassify_entity(entity_slug, reason=f"remove manual exclusion of {transaction_id}")
     click.echo(f"Removed manual exclusion for {transaction_id} ({entity_slug}) and reclassified.")
 
@@ -1605,8 +1598,7 @@ def bulk_discard_cmd(reason_like, only, note, yes):
         f"- **note**: Standing DISCARDED verdicts recorded in review_resolutions (survive reclassify). Attribution unaffected (GOVERNANCE.md §2.5). Reversible via `unresolve`.",
         "",
     ]
-    existing = PROVENANCE_LOG.read_text(encoding="utf-8") if PROVENANCE_LOG.exists() else ""
-    PROVENANCE_LOG.write_text(existing + "\n".join(block), encoding="utf-8")
+    append_provenance("\n".join(block), PROVENANCE_LOG)
     click.echo(json.dumps({"discarded": len(rows), "open_queue_remaining": remaining, "snapshot_path": str(snap)}, indent=2, default=str))
 
 

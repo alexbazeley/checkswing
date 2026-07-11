@@ -31,6 +31,7 @@ from pathlib import Path
 
 from . import state_db
 from .paths import PROVENANCE_LOG, STATE_DB
+from .provenance import append_provenance
 
 DEFAULT_JURISDICTIONS = ("IL", "TX", "AZ")
 
@@ -129,7 +130,6 @@ def dedupe(
 
 def _append_provenance(summary: dict) -> None:
     PROVENANCE_LOG.parent.mkdir(parents=True, exist_ok=True)
-    existing = PROVENANCE_LOG.read_text(encoding="utf-8") if PROVENANCE_LOG.exists() else ""
     ts = state_db._utc_now_iso()
     block = [
         f"\n### {ts[:10]} — CORRECTION — state cross-filing/fan-out dedup (§1.2)",
@@ -148,4 +148,4 @@ def _append_provenance(summary: dict) -> None:
     block.append("- **deferred**: CA + WA (same-filing distinct-tran rows CA's fetch dedup preserves — needs sign-off).")
     block.append(f"- **snapshot_path**: `{summary.get('snapshot_path')}`")
     block.append("")
-    PROVENANCE_LOG.write_text(existing + "\n".join(block), encoding="utf-8")
+    append_provenance("\n".join(block), PROVENANCE_LOG)
