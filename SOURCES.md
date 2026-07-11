@@ -208,6 +208,30 @@ New York (NYSBOE), Texas (TEC), Pennsylvania (PA-DOS), Illinois (ISBE), Washingt
   second to TAP, and — because it is discovery-only — a dead aggregator degrades
   gracefully (CAL-ACCESS remains the Tier-1 spine).
 
+### State reconnaissance ledger (§5.5)
+
+Non-adopted states that were **assessed** during Phase-4 expansion, recorded here so
+the determinations survive the session memory they were made in. These are
+**recon notes, not exhaustive proofs of absence** — re-verify before acting, and a
+"walled" or "dead-for-roster" state can flip if a portal changes or the roster does.
+
+| State | Status | Why (as assessed) | Assessed |
+|---|---|---|---|
+| MA | dead-for-roster | no tracked owner surfaced ingestable state giving; deprioritized | 2026-06 |
+| WI | dead-for-roster | same — Brewers/Attanasio filings not found at a Tier-1 depth | 2026-06 |
+| DC | dead-for-roster | same; DC filings sparse for the roster | 2026-06 |
+| MI | dead-for-roster | portal recon did not yield a machine-readable owner-level ingest (Ilitch home state — a **coverage gap**, not a confirmed absence) | 2026-06 |
+| OH | portal-walled | no machine-readable bulk/API access found for a Tier-1 ingest (Castellini ×2, Dolan home state) | 2026-06 |
+| GA | portal-walled | same (McGuirk home state) | 2026-06 |
+| MO | postback/walled | export is postback-only, no clean bulk endpoint (Sherman-john, DeWitt home state) | 2026-06 |
+
+**Owner home states with zero state coverage anywhere** (adoption gaps, not
+determinations): **OH** (Castellini ×2, Dolan — Dolan has zero rows in the whole
+archive), **MI** (Ilitch), **MD/DC** (Rubenstein, Lerner, Angelos), **GA**
+(McGuirk), **MO** (Sherman-john, DeWitt), **WV** (Nutting), **CT**
+(Seidler/Feliciano). Adopting any of these remains a GOVERNANCE §5 scope expansion
+requiring sign-off.
+
 ### Explicitly OUT for Phase 4 (for now)
 
 - **Blending state rows into `master.db`.** State data lives only in `data/state.db`.
