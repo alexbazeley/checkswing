@@ -380,3 +380,70 @@ def test_solo_owner_has_no_household(patched_build):
     assert crane["has_household"] is False
     assert crane["household_members"] == []
     assert crane["owner_only_amount"] == crane["total_amount"] == 300.0
+
+
+# ─── §6.1 Stage 2: aggregate / donations split ───────────────────────────────
+
+
+def test_donations_split_to_sibling_file(patched_build):
+    """The heavy donations array ships in donations.json, not data.json; data.json
+    carries only the small `recent` + `search_candidates` pre-bakes."""
+    _seed_donations(patched_build["db_path"])
+    _seed_committee(patched_build["db_path"])
+
+    from mockup import build_data
+    build_data.main()
+
+    data = json.loads(patched_build["out_path"].read_text())
+    # The array is no longer inlined (this is the first-paint win).
+    assert "donations" not in data
+    # Pre-bakes that carry Home/Federal + cmd-K without the array.
+    assert isinstance(data["recent"], list)
+    assert isinstance(data["search_candidates"], list)
+
+    # The full array ships in the sibling file, next to data.json.
+    don_path = patched_build["out_path"].parent / "donations.json"
+    assert don_path.exists()
+    donations = json.loads(don_path.read_text())
+    assert len(donations) == 1
+    assert donations[0]["id"] == "txn1"
+    # recent is the dated head of the donations array (capped at RECENT_FEED_CAP).
+    assert len(data["recent"]) <= build_data.RECENT_FEED_CAP
+    assert data["recent"][0]["id"] == "txn1"
+
+
+def test_search_candidates_prebaked_and_routed(patched_build):
+    """A donation carrying a candidate_id yields one search_candidates entry
+    routed to the committee that got the most money on that candidate's behalf."""
+    _seed_donations(patched_build["db_path"])   # txn1: no candidate_id → skipped
+    _seed_committee(patched_build["db_path"])
+    from scripts import db
+    with db.connect(patched_build["db_path"]) as conn:
+        conn.execute(
+            """
+            INSERT INTO donations
+              (transaction_id, entity_slug, entity_kind, status, status_reason,
+               signals_matched, contributor_name_raw, recipient_committee_id,
+               recipient_committee_name, recipient_candidate_id,
+               recipient_candidate_name, recipient_party,
+               amount, date, election_cycle, filing_id,
+               raw_payload_path, ingested_at)
+            VALUES
+              ('txn2', 'owner-a', 'owner', 'CONFIRMED', '',
+               '[]', 'Owner A', 'C00000001', 'Cmte One (filer-typed)',
+               'H8XX00001', 'SOME CANDIDATE', 'REP',
+               2000, '2024-02-01', 2024, '5001',
+               'data/raw/owner-a/y.json', '2024-02-01T00:00:00Z')
+            """
+        )
+
+    from mockup import build_data
+    build_data.main()
+
+    cands = json.loads(patched_build["out_path"].read_text())["search_candidates"]
+    assert len(cands) == 1
+    c = cands[0]
+    assert c["name"] == "SOME CANDIDATE"
+    assert c["top_committee_id"] == "C00000001"
+    assert c["top_committee_name"] == "Cmte One (filer-typed)"
+    assert c["amount"] == 2000

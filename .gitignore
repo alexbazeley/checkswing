@@ -52,6 +52,10 @@ catalog/REVIEW_QUEUE.md
 mockup/data.json
 mockup/provenance.json
 
+# mockup/donations.json — §6.1 Stage 2: the full donations array, split out of
+# data.json and lazy-loaded after first paint. Same build-artifact status.
+mockup/donations.json
+
 # mockup/state_data.json — Phase-4 state payload, generated from data/state.db by
 # mockup/build_state_data.py (invoked by build_data.py at build time).
 mockup/state_data.json

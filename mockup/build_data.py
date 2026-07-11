@@ -26,6 +26,16 @@ def _utc_now_iso() -> str:
 REPO_ROOT = Path(__file__).resolve().parent.parent
 DB_PATH = REPO_ROOT / "data" / "master.db"
 OUT_PATH = REPO_ROOT / "mockup" / "data.json"
+# §6.1 Stage 2: the full donations array (the ~4.8 MB / 61%-of-payload bulk) is
+# written to its OWN file so Home/Federal + cmd-K render from the small
+# aggregates payload (data.json) at first paint and the donations array
+# lazy-loads in the background. Resolved from OUT_PATH at write time (like the
+# beneficiaries dir) so tests that monkeypatch OUT_PATH pick it up too.
+DONATIONS_FILE_NAME = "donations.json"
+# Pre-baked recent feed size — the Federal dashboard's "Recent contributions"
+# block (renderRecentDonations) reads exactly this many, so baking them into the
+# small payload lets that block render before donations.json lands.
+RECENT_FEED_CAP = 20
 
 # The SPA fetches all of data.json on load. Cloudflare gzips it on the wire
 # (~1/5th this size), but the uncompressed payload is the user-facing cost and
@@ -788,6 +798,57 @@ def main() -> None:
             else:
                 raise
 
+    # ── §6.1 Stage 2 pre-bakes: what Home/Federal + cmd-K need without the ──────
+    # full donations array, so those surfaces paint before donations.json lands.
+    #
+    # recent: the Federal dashboard's "Recent contributions" block. donations is
+    # already ORDER BY date DESC from SQL; take the first N with a date. Full row
+    # shape (renderRecentDonations reads many fields + the drawer opens from a
+    # recent row via its id), which is trivially small at N=20.
+    recent = [d for d in donations if d["date"]][:RECENT_FEED_CAP]
+
+    # search_candidates: cmd-K's candidate entries were derived from the donations
+    # array (dedup by candidate_id, route to the committee that got the most money
+    # on that candidate's behalf). Pre-bake the compact routing rollup so cmd-K is
+    # complete at first paint. Committee search entries are NOT baked here — the
+    # frontend derives them from the already-present recipients[] rollup.
+    cand_acc: dict[str, dict] = {}
+    for d in donations:
+        cid = d.get("candidate_id")
+        if not cid or not d.get("candidate"):
+            continue
+        c = cand_acc.get(cid)
+        if c is None:
+            c = cand_acc[cid] = {
+                "id": cid,
+                "name": d["candidate"],
+                "party": d["party"],
+                "amount": 0.0,
+                "count": 0,
+                "_by_committee": defaultdict(lambda: {"name": None, "amount": 0.0}),
+            }
+        c["amount"] += d["amount"]
+        c["count"] += 1
+        if d["committee_id"]:
+            slot = c["_by_committee"][d["committee_id"]]
+            slot["name"] = d["committee"]
+            slot["amount"] += d["amount"]
+    search_candidates = []
+    for c in cand_acc.values():
+        if not c["_by_committee"]:
+            continue  # no committee_id to route to — skip (matches frontend)
+        top_cid, top = max(c["_by_committee"].items(), key=lambda kv: kv[1]["amount"])
+        search_candidates.append({
+            "id": c["id"],
+            "name": c["name"],
+            "party": c["party"],
+            "amount": c["amount"],
+            "count": c["count"],
+            "top_committee_id": top_cid,
+            "top_committee_name": top["name"],
+        })
+    search_candidates.sort(key=lambda x: x["amount"], reverse=True)
+
     # Pipeline summary for the runs page
     completed_runs = [r for r in runs if r["completed_at"]]
     pipeline = {
@@ -808,7 +869,12 @@ def main() -> None:
         },
         "league": league,
         "owners": owners_summary,
-        "donations": donations,
+        # §6.1 Stage 2: the full `donations` array is NOT here — it ships in the
+        # sibling donations.json, lazy-loaded after first paint. `recent` and
+        # `search_candidates` are the small pre-bakes that let Home/Federal + cmd-K
+        # render without it. `n_donations` lives on `league` for the toplines.
+        "recent": recent,
+        "search_candidates": search_candidates,
         "recipients": recipients,
         "committee_scale": committee_scale,
         "committee_beneficiary_index": committee_beneficiary_index,
@@ -818,15 +884,23 @@ def main() -> None:
 
     OUT_PATH.write_text(json.dumps(out, indent=None, separators=(",", ":")))
     size_mb = OUT_PATH.stat().st_size / 1024 / 1024
+
+    # §6.1 Stage 2: the donations array as its own lazy file, next to data.json.
+    donations_path = OUT_PATH.parent / DONATIONS_FILE_NAME
+    donations_path.write_text(json.dumps(donations, indent=None, separators=(",", ":")))
+    don_mb = donations_path.stat().st_size / 1024 / 1024
+
     n_enriched = sum(1 for r in recipients if r.get("designation_label"))
     n_with_scale = len(committee_scale)
     n_chunks = write_beneficiary_chunks(committee_beneficiary_chunks)
-    print(f"wrote {OUT_PATH} ({size_mb:.2f} MB, {len(donations)} donations, "
+    print(f"wrote {OUT_PATH} ({size_mb:.2f} MB aggregates, "
           f"{len(owners_summary)} owners, {len(runs)} ingestion runs, "
           f"{n_enriched}/{len(recipients)} recipients enriched, "
           f"{n_with_scale} committee scale blocks, "
           f"{len(committee_beneficiary_index)} committee beneficiary index entries, "
-          f"{n_chunks} beneficiary chunk files)")
+          f"{n_chunks} beneficiary chunk files, "
+          f"{len(recent)} recent, {len(search_candidates)} candidate search entries)")
+    print(f"wrote {donations_path} ({don_mb:.2f} MB, {len(donations)} donations — lazy-loaded)")
     if size_mb > DATA_JSON_BUDGET_MB:
         print(
             f"WARNING: data.json is {size_mb:.2f} MB, over the {DATA_JSON_BUDGET_MB:.0f} MB "
