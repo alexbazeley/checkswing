@@ -194,15 +194,21 @@ jobs:
       - name: Rebuild mockup/data.json
         run: python mockup/build_data.py
 
+      - name: Refresh citable CSV exports
+        # §2.4/§2.5: data/donations/ is tracked — regenerate the per-owner +
+        # aggregate CSVs from the refreshed master.db so the citable exports stay
+        # current with the DB (they filter counted=1, matching the dashboard).
+        run: python -m scripts.cli export
+
       - name: Commit + push refreshed data
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           # Stage only what the refresh layer is allowed to touch: master DB,
-          # the rebuilt data.json, owner YAMLs (audit.last_ingestion only), and
-          # the provenance log. REVIEW_QUEUE.md is no longer tracked — its data
-          # lives in the review_queue table inside master.db.
-          git add data/master.db mockup/data.json owners/*.yaml catalog/PROVENANCE_LOG.md 2>/dev/null || true
+          # the rebuilt data.json, the citable CSV exports, owner YAMLs
+          # (audit.last_ingestion only), and the provenance log. REVIEW_QUEUE.md
+          # is no longer tracked — its data lives in review_queue inside master.db.
+          git add data/master.db mockup/data.json data/donations owners/*.yaml catalog/PROVENANCE_LOG.md 2>/dev/null || true
           if git diff --staged --quiet; then
             echo "No changes from refresh — nothing to commit."
           else

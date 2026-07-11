@@ -36,8 +36,9 @@ data/.committees_ingest.lock
 data/snapshots/
 data/raw/
 
-# CSV exports are derivative — regenerable
-data/donations/
+# CSV exports (data/donations/) ARE tracked now — they are the citable
+# per-owner/aggregate exports refreshed by the export step in refresh.yml
+# (§2.4/§2.5). Regenerate locally with `python -m scripts.cli export`.
 
 # REVIEW_QUEUE.md is a human-readable mirror of the review_queue table in
 # master.db (the queryable source of truth). It grew unbounded (~18 MB, never
