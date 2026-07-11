@@ -24770,3 +24770,22 @@ Registry/owner-YAML status hygiene, no data or signal changes.
   John Seidler REMAINS the MLB control person as of this date (Sportico/SI,
   2026-07-11). No tenure_end_date was set (the sale has not closed); seidler-john /
   feliciano-jose YAML + registry notes updated to the accurate pending state.
+
+### 2026-07-11 — NOTE — TX freshness spot-check: 2026 owner donations genuinely absent (§4.2)
+
+Verification of the TX state-freshness flag (newest TX donation 2025-06-26, 380
+days). No data or code change — recording the finding so it isn't re-derived
+(the check requires streaming a ~1 GB bulk zip).
+
+- **Source is current.** The TEC bulk export (`data/raw/state/tx/TEC_CF_CSV.zip`,
+  downloaded 2026-06-06) holds 35,220,515 itemized-contribution rows, of which
+  **697,866 are dated 2026+** (max contributionDt 2026-06-04). The adapter is not
+  dropping a populated year.
+- **TX-owner 2026 gifts are genuinely absent, not dropped.** Zero 2026 rows across
+  the whole feed carry employer "Avatar Investments" (davis-ray's strong_signal);
+  none of the 88 Davis/Crane/Simpson 2026 gifts ≥ $500 is Ray Davis (Dallas), Jim
+  Crane, or Bob Simpson (XTO/TXO) — all are unrelated same-surname donors.
+- **Conclusion:** the classifier can't ingest what isn't filed. Ray Davis's last TX
+  contribution remains the $100,000 on 2025-06-26; his giving clusters in bursts,
+  so a 2026 gift will likely land closer to the November 2026 general. The
+  freshness flag is correct data drift, not an adapter bug.
