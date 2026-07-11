@@ -1107,22 +1107,28 @@ def apply_committee_external_links_cmd():
 
 @cli.command(name="ingest-all-pilot")
 @click.option("--dry-run", is_flag=True)
-@click.option("--min-date", default=None, help="Explicit min_date for ALL pilots (overrides per-owner audit.last_ingestion).")
-@click.option("--full-refetch", is_flag=True, help="Ignore audit.last_ingestion for every pilot.")
+@click.option("--min-date", default=None, help="Explicit min_date for ALL owners (overrides per-owner audit.last_ingestion).")
+@click.option("--full-refetch", is_flag=True, help="Ignore audit.last_ingestion for every owner.")
 @click.option("--include-related", is_flag=True)
 def ingest_all_pilot(dry_run, min_date, full_refetch, include_related):
-    """Run ingestion for every entity marked status=pilot in owners/."""
+    """Run ingestion for every in-steady-state owner (status pilot OR active).
+
+    Selects the same set as the production `refresh` path (`ACTIVE_STATUSES`),
+    NOT just status=pilot — most owners have since been promoted from pilot to
+    active (they were all `pilot` when this command was named), and selecting
+    pilot-only would silently skip them. `paused`/`queued` owners are excluded.
+    """
     pilots = []
     for path in sorted(OWNERS_DIR.glob("*.yaml")):
         if path.name.startswith("_"):
             continue
         data = yaml.safe_load(path.read_text(encoding="utf-8"))
-        if isinstance(data, dict) and data.get("status") == "pilot":
+        if isinstance(data, dict) and data.get("status") in ("pilot", "active"):
             pilots.append(data["slug"])
     if not pilots:
-        click.echo("No owners with status=pilot found.")
+        click.echo("No owners with status pilot/active found.")
         return
-    click.echo(f"Pilots: {', '.join(pilots)}")
+    click.echo(f"Owners (pilot+active): {', '.join(pilots)}")
     for slug in pilots:
         click.echo(f"\n========== {slug} ==========")
         ingest_entity(

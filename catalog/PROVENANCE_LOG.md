@@ -24738,3 +24738,35 @@ generated end-to-end from the joined data") is satisfied.
 - **AZ**: 213 rows / $1,251,293.28 removed — $1,882,939.92 (321) → $631,646.64 (108)
 - **deferred**: CA + WA (same-filing distinct-tran rows CA's fetch dedup preserves — needs sign-off).
 - **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-10T23-57-30Z__dedupe_state_crossfilings.db`
+
+### 2026-07-11 — NOTE — owner status reconciliation + Padres sale still pending (§7 hygiene)
+
+Registry/owner-YAML status hygiene, no data or signal changes.
+
+- **Statuses reconciled to reality.** `owners/_registry.yaml` was 7 weeks stale
+  (e.g. it still listed fisher-john / middleton-john / dewitt-bill / nutting-bob /
+  reinsdorf-jerry as `queued` although each has a populated YAML ingesting monthly).
+  The registry statuses now match the per-owner YAMLs.
+- **28 steady-state owners promoted pilot→active** (angelos, attanasio, castellini-bob/-phil,
+  cohen, crane, davis-ray, dewitt, dolan, fisher, johnson-greg, kendrick, lerner,
+  malone, mcguirk, middleton, monfort, moreno, nutting, pohlad-joe/-tom, reinsdorf,
+  ricketts, sherman-bruce/-john, simpson-bob, stanton, zalupski). The federal
+  refresh (`refresh.py:ACTIVE_STATUSES = {pilot, active}`) already ingests both, so
+  this is a validation-maturity label change, not an ingestion change — no
+  re-ingest, no master.db mutation.
+- **Kept `pilot`** = the §5.3 thin-owner calibration queue whose full calibration
+  pass is still pending (walter, steinbrenner, ilitch, henry, rubenstein, seidler)
+  plus feliciano-jose (pre-approval — see below). `pilot` now cleanly denotes
+  "ingesting but calibration pending."
+- **`rogers-edward-iii` stays `paused`** (non-citizen, deliberately not ingested);
+  **`sternberg-stuart` stays `queued`** (former Rays owner, historical-only, YAML
+  deferred — kept rather than dropped so the former-owner record survives).
+- **`cli ingest-all-pilot` generalized** to select `status in {pilot, active}` (was
+  pilot-only) so the promotion doesn't turn it into a near-no-op; it now matches the
+  refresh path's owner set. Docstring updated.
+- **Padres sale status corrected (verified 2026-07-11).** The Seidler→Feliciano
+  $3.9B sale, previously noted as "MLB approval expected June 2026," is STILL
+  PENDING: the 75%-of-owners vote slipped from June to a hoped-for late July, and
+  John Seidler REMAINS the MLB control person as of this date (Sportico/SI,
+  2026-07-11). No tenure_end_date was set (the sale has not closed); seidler-john /
+  feliciano-jose YAML + registry notes updated to the accurate pending state.

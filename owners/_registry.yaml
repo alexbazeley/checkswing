@@ -2,10 +2,17 @@
 # This file is the single source of truth for who is in scope.
 #
 # Statuses:
-#   pilot   — currently being built out and validated (Phase 1 / 1.5)
-#   queued  — in scope for Phase 2; YAML not yet populated
+#   pilot   — populated + ingesting, but a full calibration pass is still pending
+#             (the §5.3 thin-owner watchlist), OR held pre-approval on purpose
+#   queued  — in scope; YAML not yet populated
 #   active  — fully populated, validated, in steady-state ingestion
-#   paused  — temporarily not ingesting (ownership transition, etc.)
+#   paused  — deliberately not ingesting (ownership transition / non-citizen, etc.)
+#
+# The federal refresh (scripts/refresh.py:ACTIVE_STATUSES) ingests BOTH pilot and
+# active every run, so pilot vs active is a validation-maturity label, not an
+# ingestion gate. As of 2026-07-11 the remaining `pilot` owners are exactly the
+# §5.3 calibration queue (walter, steinbrenner, ilitch, henry, rubenstein,
+# seidler) plus feliciano (pre-approval — see Padres note below).
 #
 # Adding a new owner:
 #   1. Add an entry here with status: queued
@@ -13,7 +20,8 @@
 #   3. Populate verifying_signals from at least two independent Tier 2 sources (SOURCES.md)
 #   4. Promote to status: pilot or active once validated
 #
-# Last updated: 2026-05-23
+# Last updated: 2026-07-11 (§7 hygiene: statuses reconciled to per-owner YAMLs;
+#   28 steady-state owners promoted pilot→active; Padres sale still pending)
 
 owners:
   # ─── PILOT (Phase 1 / 1.5) ─────────────────────────────────────────────────
@@ -22,7 +30,7 @@ owners:
     team: New York Mets
     role: Principal owner
     tenure_start_date: 2020-11-06
-    status: pilot
+    status: active
     notes: >
       Phase 1 pilot. Highest-profile, well-documented. Multiple unique-employer
       strong signals available (Point72, Cohen Private Ventures). Spouse Alexandra
@@ -34,7 +42,7 @@ owners:
     team: Houston Astros
     role: Principal owner
     tenure_start_date: 2011-11-17    # MLB approval date, not the 2011-05-16 sale-agreement date
-    status: pilot
+    status: active
     notes: >
       Phase 1.5 pilot. YAML created 2026-05-22 from Tier 2 sources. Cities=[houston],
       states=[TX], strong_signal=[Crane Capital Group].
@@ -56,7 +64,7 @@ owners:
     role: Principal owner (FORMER)
     tenure_start_date: 2006-01-20
     tenure_end_date: 2026-02-12    # MLB approved control transfer to son Phil
-    status: pilot
+    status: active
     notes: >
       Phase 1.5 pilot. YAML created 2026-05-22. tenure_end_date 2026-02-12 —
       Phil Castellini took team control (tracked under castellini-phil).
@@ -70,7 +78,7 @@ owners:
     team: Cincinnati Reds
     role: Principal owner / President & CEO
     tenure_start_date: 2026-02-12
-    status: pilot
+    status: active
     notes: >
       Phase 2 owner-roster-completion (2026-05-23). CURRENT MLB-approved
       control person of the Reds since 2026-02-12 (Fox19). Son of Bob
@@ -108,7 +116,7 @@ owners:
     role: Chairman and CEO (FORMER)
     tenure_start_date: 2020-11-03
     tenure_end_date: 2024-08-01
-    status: pilot
+    status: active
     notes: >
       Phase 2 batch 1 (2026-05-22). FORMER control person of the Orioles. Family
       sold to David Rubenstein in 2024 (initial closing 2024-03-27; final 60%
@@ -135,7 +143,7 @@ owners:
     team: Los Angeles Angels
     role: Principal owner
     tenure_start_date: 2003-05-15
-    status: pilot
+    status: active
     notes: >
       Phase 2 batch 1 (2026-05-22). Bought Angels from Disney in 2003 ($184M).
       Pulled sale exploration Jan 2023 — still owner as of 2026. Phoenix
@@ -147,7 +155,7 @@ owners:
     team: Milwaukee Brewers
     role: Principal owner
     tenure_start_date: 2005-01-14
-    status: pilot
+    status: active
     notes: >
       Phase 2 batch 1 (2026-05-22). Bought Brewers from Bud Selig & family
       Jan 2005 ($223M). Resides Brentwood (LA) primary + Malibu beach home +
@@ -160,7 +168,7 @@ owners:
     team: Arizona Diamondbacks
     role: Managing general partner / Principal owner
     tenure_start_date: 2004-01-01
-    status: pilot
+    status: active
     notes: >
       Phase 2 batch 1 (2026-05-22). Managing GP since 2004; founding owner since
       1995. Paradise Valley AZ residence. Rob Walton acquired 10% minority
@@ -183,7 +191,7 @@ owners:
     team: Atlanta Braves
     role: Principal owner / Chairman, President & CEO Atlanta Braves Holdings / MLB Control Person
     tenure_start_date: 2007-01-01
-    status: pilot
+    status: active
     notes: >
       Phase 2 special-case batch (2026-05-23). Chairman of Atlanta Braves
       since 2007 (Liberty Media era); continued as Chairman after the
@@ -202,7 +210,7 @@ owners:
     team: Atlanta Braves
     role: Principal shareholder (largest economic + voting interest)
     tenure_start_date: 2007-05-16
-    status: pilot
+    status: active
     notes: >
       Phase 2 special-case batch (2026-05-23). Largest individual economic
       + voting shareholder of Atlanta Braves Holdings (NASDAQ: BATRA/BATRK)
@@ -224,7 +232,7 @@ owners:
     team: Chicago Cubs
     role: Executive Chairman / Principal owner
     tenure_start_date: 2009-10-27
-    status: pilot
+    status: active
     notes: >
       Phase 2 batch 1 (2026-05-22). HARDEST sibling-collision case in MLB —
       father Joe (TD Ameritrade founder, GOP donor), mother Marlene (GOP),
@@ -238,14 +246,14 @@ owners:
     name: Jerry Reinsdorf
     team: Chicago White Sox
     role: Principal owner / Chairman
-    status: queued
+    status: active
 
   - slug: dolan-paul
     name: Paul J. Dolan
     team: Cleveland Guardians
     role: Chairman / Principal owner
     tenure_start_date: 2013-01-10
-    status: pilot
+    status: active
     notes: >
       Phase 2 batch 3 (2026-05-23). MLB-designated 'control person' since
       2013-01-10; family bought team in 2000 (father Larry Dolan, d.
@@ -259,7 +267,7 @@ owners:
     team: Colorado Rockies
     role: Owner / Chairman / CEO / Managing General Partner
     tenure_start_date: 2011-01-01
-    status: pilot
+    status: active
     notes: >
       Phase 2 batch 3 (2026-05-23). Chairman/CEO since 2011; family acquired
       controlling stake from Jerry McMorris in 2005. April 2026: Penner
@@ -292,7 +300,7 @@ owners:
     team: Kansas City Royals
     role: Principal owner / Chairman & CEO
     tenure_start_date: 2019-11-25
-    status: pilot
+    status: active
     notes: >
       Phase 2 batch 3 (2026-05-23). Closing 2019-11-25; MLB approval
       2019-11-21. Energy entrepreneur: Ferrellgas → LPG Services → Inergy
@@ -306,7 +314,7 @@ owners:
     name: Mark Walter
     team: Los Angeles Dodgers
     role: Chairman / Controlling owner
-    status: queued
+    status: pilot
     notes: Guggenheim Partners CEO; control group includes Magic Johnson, Stan Kasten, etc.
 
   - slug: sherman-bruce
@@ -314,7 +322,7 @@ owners:
     team: Miami Marlins
     role: Principal owner / Chairman
     tenure_start_date: 2017-10-03
-    status: pilot
+    status: active
     notes: >
       Phase 2 batch 3 (2026-05-23). Closing 2017-10-03; MLB approval
       2017-09-27 ($1.2B from Jeffrey Loria). Naples FL residence; family
@@ -330,7 +338,7 @@ owners:
     role: Executive chair / Principal owner (FORMER)
     tenure_start_date: 2022-11-29
     tenure_end_date: 2025-12-17
-    status: pilot
+    status: active
     notes: >
       Phase 2 batch 3 (2026-05-23). FORMER executive chair / controlling
       owner. Took over from uncle Jim Pohlad 2022-11-29; replaced by older
@@ -347,7 +355,7 @@ owners:
     team: Minnesota Twins
     role: Principal owner / Executive Chair
     tenure_start_date: 2025-12-17
-    status: pilot
+    status: active
     notes: >
       Phase 2 owner-roster-completion (2026-05-23). CURRENT MLB-approved
       controlling owner / executive chair of the Twins since 2025-12-17
@@ -365,7 +373,7 @@ owners:
     team: Washington Nationals
     role: Managing principal owner
     tenure_start_date: 2018-06-14
-    status: pilot
+    status: active
     notes: >
       Phase 2 batch 3 (2026-05-23). Took over from father Ted Lerner
       2018-06-14 (Ted d. 2023-02-12). Family bought the Nats from MLB in
@@ -381,26 +389,26 @@ owners:
     name: John Fisher
     team: Athletics
     role: Principal owner
-    status: queued
+    status: active
     notes: TP's recurring antagonist. Gap-family fortune. Track signals carefully — common first name.
 
   - slug: middleton-john
     name: John S. Middleton
     team: Philadelphia Phillies
     role: Principal owner / Managing partner
-    status: queued
+    status: active
 
   - slug: nutting-bob
     name: Robert Nutting
     team: Pittsburgh Pirates
     role: Principal owner / Chairman
-    status: queued
+    status: active
 
   - slug: dewitt-bill
     name: William DeWitt Jr.
     team: St. Louis Cardinals
     role: Chairman / Principal owner
-    status: queued
+    status: active
 
   # NOTE: The original `seidler-family` placeholder entry was retired
   # 2026-05-23 (logged in PROVENANCE_LOG). It was an anticipatory slug for
@@ -421,10 +429,14 @@ owners:
       of Walter O'Malley (Dodgers owner). Took over after younger brother
       Peter Seidler died 2023-11-14; Eric Kutsenda interim Nov 2023 - Feb
       2025 (not tracked). Concurrent role: Chairman & CEO O'Malley Seidler
-      Partners (family office). ANTICIPATED TRANSITION: Padres sale
-      announced 2026-05-02 ($3.9B) to Feliciano/Jones group; MLB approval
-      expected June 2026 owners meetings; close pre-2026 All-Star Break.
-      tenure_end_date should be set when close happens.
+      Partners (family office). PENDING TRANSITION (verified 2026-07-11):
+      Padres sale announced 2026-05-02 ($3.9B) to the Feliciano/Jones group
+      is STILL PENDING — the required 75%-of-owners vote slipped from the
+      June owners meetings to a hoped-for late July; John Seidler REMAINS
+      chairman / MLB control person as of this date (Sportico/SI, 2026-07-11).
+      No tenure_end_date set — set it only when the sale actually closes (do
+      not anticipate the date). Status stays pilot: the §5.3 calibration pass
+      (seidler shows only 1 CONFIRMED row) is still pending.
 
   - slug: feliciano-jose
     name: José E. Feliciano
@@ -437,8 +449,9 @@ owners:
       direction. Co-founder and Managing Partner of Clearlake Capital
       Group ($90B+ AUM, Santa Monica CA). Sale agreement to acquire ~40%
       of Padres at $3.9B (MLB-record) announced 2026-05-02 (with wife
-      Kwanza Jones). MLB approval expected June 2026 owners meetings;
-      close pre-2026 All-Star Break. tenure_start_date currently anchored
+      Kwanza Jones). STILL PENDING as of 2026-07-11 — the owners' approval
+      vote slipped from June to a hoped-for late July; Seidler remains the
+      control person until it closes. tenure_start_date currently anchored
       to sale-agreement date; update to actual close date when settled.
       HIGH DOPPELGANGER RISK — famous blind singer José Feliciano (b.
       1945, longtime Weston CT) shares the name with substantial
@@ -451,7 +464,7 @@ owners:
     team: San Francisco Giants
     role: Chairman / Control person
     tenure_start_date: 2019-11-21
-    status: pilot
+    status: active
     notes: >
       Phase 2 batch 3 (2026-05-23). MLB-approved control person since
       2019-11-21. Also Executive Chairman of Franklin Resources (parent of
@@ -469,7 +482,7 @@ owners:
     team: Seattle Mariners
     role: Chairman / Managing partner
     tenure_start_date: 2016-08-19
-    status: pilot
+    status: active
     notes: >
       Phase 2 batch 3 (2026-05-23). Closing 2016-08-19 of Nintendo majority-
       stake transfer to First Avenue Entertainment LLLP (Nintendo retained
@@ -501,7 +514,7 @@ owners:
     team: Tampa Bay Rays
     role: Principal owner / MLB Control Person
     tenure_start_date: 2025-09-30
-    status: pilot
+    status: active
     notes: >
       Phase 2 batch 4 (2026-05-23). MLB unanimously approved sale
       2025-09-22; closing 2025-09-30 at ~$1.7B. Founder/CEO/Chairman of
@@ -526,7 +539,7 @@ owners:
     team: Texas Rangers
     role: Managing Partner / Majority Owner / Chairman / MLB Control Person
     tenure_start_date: 2010-08-12
-    status: pilot
+    status: active
     notes: >
       Phase 2 batch 4 (2026-05-23). MLB-designated control person since
       2013-11-14 (after Nolan Ryan's Oct 2013 resignation). Tenure as
@@ -543,7 +556,7 @@ owners:
     team: Texas Rangers
     role: Co-Chairman / Principal Owner
     tenure_start_date: 2010-08-12
-    status: pilot
+    status: active
     notes: >
       Phase 2 batch 4 (2026-05-23). Co-chairman of the Rangers since the
       August 2010 Rangers Baseball Express acquisition out of Chapter 11
@@ -590,5 +603,5 @@ owners:
       PAC registered, US-resident Rogers family members surface).
 
 # Operational metadata
-last_updated: 2026-05-23
-last_updated_by: maintainer (Phase 2 special-case + owner-roster-completion)
+last_updated: 2026-07-11
+last_updated_by: maintainer (§7 hygiene — statuses reconciled to per-owner YAMLs; 28 promoted pilot→active; Padres sale still pending)
