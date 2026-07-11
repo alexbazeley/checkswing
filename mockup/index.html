@@ -6460,20 +6460,29 @@ function rerenderTeamTable() {
 /* ════════════════════════════════════════════════════════════════════════
    CSV DOWNLOAD UTILITY
    ══════════════════════════════════════════════════════════════════════ */
-function downloadDonationsCSV(rows, filename) {
-  const cols = [
-    "id","date","cycle","status","status_reason",
-    "entity","entity_kind","parent",
-    "donor_name","employer","occupation","city","state","zip",
-    "committee_id","committee","candidate_id","candidate","party","party_raw","office",
-    // §3.8: always export BOTH the as-filed nominal amount AND the CPI-adjusted
-    // 2026-dollar mirror, so the CSV matches the screen in either toggle state
-    // (real-$ mode shows amount_2026; the export used to omit it → CSV ≠ screen).
-    // amount_2026 is null on the handful of rows with no CPI factor for their year.
-    "amount","amount_2026","report_type","filing_id","filing_form","line_number","image_number","pdf_url",
-    "filing_pdf_url","filing_page_url",
-    "raw_payload","ingested_at",
-  ];
+// §3.8: always export BOTH the as-filed nominal amount AND the CPI-adjusted
+// 2026-dollar mirror, so the CSV matches the screen in either toggle state.
+const FEDERAL_CSV_COLS = [
+  "id","date","cycle","status","status_reason",
+  "entity","entity_kind","parent",
+  "donor_name","employer","occupation","city","state","zip",
+  "committee_id","committee","candidate_id","candidate","party","party_raw","office",
+  "amount","amount_2026","report_type","filing_id","filing_form","line_number","image_number","pdf_url",
+  "filing_pdf_url","filing_page_url",
+  "raw_payload","ingested_at",
+];
+// §6.3: the Phase-4 state donation shape (state_data.json), so state tables get
+// the same citable CSV export the federal tables have. Both amounts included.
+const STATE_CSV_COLS = [
+  "id","date","cycle","status","status_reason","jurisdiction","source",
+  "entity","entity_kind","parent","owner_name","team",
+  "donor_name","employer","occupation","city","state","zip",
+  "recipient","recipient_type","recipient_filer_id","office",
+  "amount","amount_2026","source_filing_id","source_tran_id","discovery_source",
+  "report_type","filing_url","dataset_url","raw_payload","ingested_at",
+];
+
+function downloadDonationsCSV(rows, filename, cols = FEDERAL_CSV_COLS) {
   const escape = (v) => {
     if (v == null) return "";
     let s = String(v);
@@ -7307,6 +7316,11 @@ function stateContribSection(donations, opts = {}) {
   const hasMore = total > visible.length;
   const sumDollars = rows.reduce((s, d) => s + amt(d), 0);
 
+  // §6.3: stash the CURRENT filtered rows so the CSV button exports exactly what's
+  // shown (the section is one-per-page and re-renders on every filter change).
+  state.stateCsvRows = rows;
+  state.stateCsvLabel = opts.csvLabel || "state";
+
   // Controls derive their option sets from the *input* list (pre-filter).
   const cycles = [...new Set(donations.map((d) => d.cycle).filter(Boolean))].sort((a, b) => b - a);
   const jurisInSet = [...new Set(donations.map((d) => d.jurisdiction).filter(Boolean))].sort();
@@ -7348,9 +7362,12 @@ function stateContribSection(donations, opts = {}) {
       </div>
     </div>
 
-    <p class="muted" style="font-size:12px;margin:4px 2px 10px">
-      Showing ${fmtInt(visible.length)} of ${fmtInt(total)}${filtered ? ` filtered (of ${fmtInt(donations.length)})` : ""} contribution${total === 1 ? "" : "s"} · ${fmtMoney(sumDollars)} total · click a row for the full provenance trail.
-    </p>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin:4px 2px 10px">
+      <p class="muted" style="font-size:12px;margin:0">
+        Showing ${fmtInt(visible.length)} of ${fmtInt(total)}${filtered ? ` filtered (of ${fmtInt(donations.length)})` : ""} contribution${total === 1 ? "" : "s"} · ${fmtMoney(sumDollars)} total · click a row for the full provenance trail.
+      </p>
+      ${total > 0 ? `<button class="csv-btn" data-csv="state">Download CSV</button>` : ""}
+    </div>
 
     <div class="table-scroll">
       <table class="donations-table">
@@ -8176,6 +8193,15 @@ function bindStatesHandlers() {
       const v = btn.getAttribute("data-juris");
       f.jurisdiction = f.jurisdiction === v ? "" : v;
       f.visibleN = 100; render();
+    });
+  });
+  /* §6.3: state-table CSV export — the currently filtered rows (state.stateCsvRows),
+     matching the federal tables' Download CSV. */
+  document.querySelectorAll('.csv-btn[data-csv="state"]').forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const date = (state.stateData && state.stateData.generated_at || "").slice(0, 10);
+      const label = state.stateCsvLabel || "state";
+      downloadDonationsCSV(state.stateCsvRows || [], `checkswing-${label}-${date}.csv`, STATE_CSV_COLS);
     });
   });
   document.querySelectorAll(".st-sort").forEach((th) => {
