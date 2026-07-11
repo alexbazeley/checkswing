@@ -179,12 +179,16 @@ def select_bucket(bucket_index: int, bucket_count: int) -> list[str]:
     """Pick this bucket's slugs from active owners, balanced by paginate volume.
 
     The GHA refresh runs as N parallel matrix jobs sharing one FEC API key. To
-    avoid one bucket hitting the 6h cap while others sit idle, we order owners
-    by how heavy their raw-payload history is (proxy for how slow their next
-    fetch will be) and round-robin into buckets. Heaviest owners (kendrick-ken,
-    cohen-steven, johnson-greg, sherman-john) land in different buckets.
+    avoid one bucket hitting the 6h cap while others sit idle, we order owners by
+    how heavy their fetch is likely to be and round-robin into buckets. Heaviest
+    owners (kendrick-ken, cohen-steven, johnson-greg, sherman-john) land in
+    different buckets.
 
-    Falls back to alphabetical ordering for owners with zero raw history yet.
+    Weight = the owner's committed donation-row count in master.db — a stable
+    proxy for fetch volume that is present on CI. (The old raw-file-count weight
+    was always 0 on the runner, because data/raw is gitignored, so every bucket
+    fell back to a pure alphabetical round-robin — §4.4.) Falls back to the local
+    raw-file count for an owner with no rows yet (first-ever ingest).
     """
     if bucket_count <= 0 or bucket_index < 0 or bucket_index >= bucket_count:
         raise RuntimeError(
@@ -193,7 +197,23 @@ def select_bucket(bucket_index: int, bucket_count: int) -> list[str]:
         )
     all_active = _list_active_owners()
 
+    # One pass over master.db for donation counts per owner (rolled up to the
+    # owner via entity_slug OR parent_owner_slug so spouse/family rows count).
+    counts: dict[str, int] = {}
+    try:
+        from . import db
+        with db.connect() as conn:
+            for r in conn.execute(
+                "SELECT COALESCE(parent_owner_slug, entity_slug) AS slug, COUNT(*) AS n "
+                "FROM donations GROUP BY COALESCE(parent_owner_slug, entity_slug)"
+            ):
+                counts[r["slug"]] = r["n"]
+    except Exception:
+        counts = {}
+
     def _weight(slug: str) -> int:
+        if counts.get(slug):
+            return counts[slug]
         slug_dir = RAW_DIR / slug
         if not slug_dir.is_dir():
             return 0

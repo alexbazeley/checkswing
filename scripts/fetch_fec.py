@@ -39,13 +39,16 @@ SCHEDULE_A = "/schedules/schedule_a/"
 PER_PAGE = 100  # FEC max
 DEFAULT_MIN_DATE = "2000-01-01"
 
-# Polite spacing between requests. FEC's per-key cap is 1,000/hour ≈ 3.6s/req.
-# We target ~4.0s between requests because the weekly refresh now runs as 4
-# parallel matrix jobs sharing one key — 4 workers × ~4s spacing ≈ 60 req/min
-# combined, comfortably under the cap with retry/backoff headroom. Single-owner
-# `cli ingest` invocations also use this spacing; the wall-clock penalty there
-# is small relative to FEC response time.
-MIN_REQUEST_INTERVAL_S = 4.0
+# Polite spacing between requests. FEC's per-key cap is 1,000/hour ≈ 3.6s/req
+# PER KEY. Note the refresh runs as 4 parallel matrix jobs SHARING one key, so
+# 4 workers × ~4s each ≈ 3,600 req/hr combined — ABOVE the 1,000/hr cap. In
+# practice the 429-retry loop below is the real limiter: FEC returns 429 with a
+# Retry-After when a worker exceeds the cap, and we back off. That's a deliberate
+# accept-and-back-off design (running 4 workers at a true ~16s spacing would 4×
+# the wall-clock). To enforce a hard per-worker cap instead, set
+# FEC_REQUEST_INTERVAL_S=16 in the matrix env. Single-owner `cli ingest` uses the
+# default; the wall-clock penalty there is small relative to FEC response time.
+MIN_REQUEST_INTERVAL_S = float(os.environ.get("FEC_REQUEST_INTERVAL_S", "4.0"))
 
 # Auto-switch to cycle chunking when a name variant's first page reports more
 # pages than this. Common-name + populous-state fetches (Cohen NY+CT, Malone
@@ -187,6 +190,14 @@ class FECClient:
                     # sync-hammer FEC.
                     time.sleep(2 ** attempt * 2 * random.uniform(0.7, 1.3))
                     continue
+                if 400 <= resp.status_code < 500:
+                    # Permanent client error (404 dissolved committee, 403, 422
+                    # bad param): retrying just burns 5 backoff attempts every run.
+                    # Fail fast — RuntimeError isn't caught by the retry `except`.
+                    raise RuntimeError(
+                        f"FEC {resp.status_code} (permanent, not retried): "
+                        f"{endpoint} {safe_params}"
+                    )
                 resp.raise_for_status()
                 return resp.json()
             except (requests.RequestException, ValueError) as e:

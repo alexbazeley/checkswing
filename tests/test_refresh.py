@@ -405,3 +405,60 @@ class TestRefreshAll:
         refresh_all(full_refetch=True, chunk_by_cycle=True)
         assert passthrough.get("full_refetch") is True
         assert passthrough.get("chunk_by_cycle") is True
+
+
+class TestSelectBucketWeighting:
+    """§4.4: weight owners by their committed master.db donation count (present
+    on CI), not by gitignored raw-file counts (always 0 on the runner → the old
+    weighting collapsed to a pure alphabetical round-robin)."""
+
+    def test_weights_by_donation_count(self, refresh_world, monkeypatch):
+        import contextlib
+
+        from scripts import db as dbmod
+
+        d = refresh_world["owners_dir"]
+        _make_owner(d, "owner-a", "active")
+        _make_owner(d, "owner-b", "active")
+        _make_owner(d, "owner-c", "active")
+
+        p = refresh_world["data_dir"] / "master.db"
+        dbmod.init(p)
+        with dbmod.connect(p) as conn:
+            from tests.test_db import _row
+            # owner-c heaviest (3), owner-b (2), owner-a (1).
+            for i in range(1):
+                conn.execute("INSERT INTO donations "
+                             "(transaction_id, entity_slug, entity_kind, status, status_reason, "
+                             " signals_matched, contributor_name_raw, recipient_committee_id, "
+                             " recipient_committee_name, amount, date, filing_id, raw_payload_path, ingested_at) "
+                             "VALUES (?, 'owner-a','owner','CONFIRMED','r','[]','A','C1','c',1,'2024-01-01','1','p','t')",
+                             (f"a{i}",))
+            for i in range(2):
+                conn.execute("INSERT INTO donations "
+                             "(transaction_id, entity_slug, entity_kind, status, status_reason, "
+                             " signals_matched, contributor_name_raw, recipient_committee_id, "
+                             " recipient_committee_name, amount, date, filing_id, raw_payload_path, ingested_at) "
+                             "VALUES (?, 'owner-b','owner','CONFIRMED','r','[]','B','C1','c',1,'2024-01-01','1','p','t')",
+                             (f"b{i}",))
+            for i in range(3):
+                conn.execute("INSERT INTO donations "
+                             "(transaction_id, entity_slug, entity_kind, status, status_reason, "
+                             " signals_matched, contributor_name_raw, recipient_committee_id, "
+                             " recipient_committee_name, amount, date, filing_id, raw_payload_path, ingested_at) "
+                             "VALUES (?, 'owner-c','owner','CONFIRMED','r','[]','C','C1','c',1,'2024-01-01','1','p','t')",
+                             (f"c{i}",))
+
+        orig_connect = dbmod.connect  # capture BEFORE patching (avoid recursion)
+
+        @contextlib.contextmanager
+        def _connect(db_path=p):
+            with orig_connect(p) as c:
+                yield c
+
+        monkeypatch.setattr(dbmod, "connect", _connect)
+        # weighted order = owner-c(3), owner-b(2), owner-a(1); round-robin into 3
+        # buckets puts each in its own bucket in weight order.
+        assert refresh.select_bucket(0, 3) == ["owner-c"]
+        assert refresh.select_bucket(1, 3) == ["owner-b"]
+        assert refresh.select_bucket(2, 3) == ["owner-a"]
