@@ -41,7 +41,7 @@ jobs:
       github.event.workflow_run.conclusion == 'success'
     steps:
       - name: Checkout main with the real DB
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           ref: main
           # Pull the actual 128 MB SQLite file, not the LFS pointer.
