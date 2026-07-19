@@ -329,3 +329,91 @@ class TestIndirectAuthorizedTier:
         )
         assert {r["transaction_id"] for r in srows} == {"TA"}
         assert all(r["join_tier"] == "indirect-authorized" for r in srows)
+
+
+class TestPolicyJoinCliTierFlag:
+    """The CLI must be able to reproduce what the dashboard renders.
+
+    `mockup/build_legislation_data.py` calls the row functions with
+    include_indirect=True, so before the flag existed the published dashboard
+    figures could not be regenerated from the CLI at all.
+    """
+
+    def _invoke(self, monkeypatch, args):
+        from click.testing import CliRunner
+
+        from scripts import cli as cli_mod
+
+        seen = {}
+
+        def _fake_rows(name):
+            def _inner(*, bill_ids, include_indirect=False, **kw):
+                seen[name] = {"bill_ids": list(bill_ids), "include_indirect": include_indirect}
+                return []
+
+            return _inner
+
+        import scripts.policy_join as pj
+
+        monkeypatch.setattr(pj, "vote_donation_rows", _fake_rows("votes"))
+        monkeypatch.setattr(pj, "sponsor_donation_rows", _fake_rows("sponsors"))
+        monkeypatch.setattr(pj, "committee_donation_rows", _fake_rows("committees"))
+        # write_outputs binds out_dir=REPORTS_DATA_DIR as a DEFAULT ARG at import
+        # time, so patching the module constant would not redirect it — the test
+        # would write into the real reports/data/. Stub the writer instead and
+        # keep the meta it was handed.
+        monkeypatch.setattr(
+            pj,
+            "write_outputs",
+            lambda rows, *, basename, meta, **kw: seen.setdefault("meta", []).append(meta) or {},
+        )
+        res = CliRunner().invoke(cli_mod.cli, args)
+        return res, seen
+
+    def test_flag_off_by_default(self, monkeypatch):
+        res, seen = self._invoke(monkeypatch, ["policy-join", "--bill", "115-hr-1625", "--out", "t"])
+        assert res.exit_code == 0, res.output
+        assert seen["votes"]["include_indirect"] is False
+        assert seen["meta"][0]["join_tiers"] == ["direct"]
+
+    def test_flag_threads_to_all_three_modes(self, monkeypatch):
+        res, seen = self._invoke(
+            monkeypatch,
+            [
+                "policy-join",
+                "--bill", "115-hr-1625",
+                "--sponsors-of", "115-hr-1625",
+                "--via-committee", "119-hr-2434",
+                "--out", "t",
+                "--include-indirect",
+            ],
+        )
+        assert res.exit_code == 0, res.output
+        assert seen["votes"]["include_indirect"] is True
+        assert seen["sponsors"]["include_indirect"] is True
+        assert seen["committees"]["include_indirect"] is True
+        # ...and every artifact declares the two-tier scope it was built with.
+        assert all(m["join_tiers"] == ["direct", "indirect-authorized"] for m in seen["meta"])
+
+
+class TestArtifactDeclaresItsTier:
+    """A direct-tier file and a two-tier file are both correct and are otherwise
+    indistinguishable from their contents — so the artifact has to say which."""
+
+    def test_meta_records_tier_selection(self, tmp_path):
+        master, leg = _build(tmp_path)
+        rows = vote_donation_rows(bill_ids=["115-hr-1625"], master_db=master, leg_db=leg)
+        write_outputs(
+            rows,
+            basename="t",
+            meta={"join": "donations_to_votes", "include_indirect": False, "join_tiers": ["direct"]},
+            out_dir=tmp_path / "rd",
+        )
+        meta = json.loads((tmp_path / "rd" / "t.json").read_text())["_meta"]
+        assert meta["include_indirect"] is False
+        assert meta["join_tiers"] == ["direct"]
+
+    def test_every_row_carries_a_join_tier(self, tmp_path):
+        master, leg = _build(tmp_path)
+        rows = vote_donation_rows(bill_ids=["115-hr-1625"], master_db=master, leg_db=leg)
+        assert rows and all(r.get("join_tier") for r in rows)

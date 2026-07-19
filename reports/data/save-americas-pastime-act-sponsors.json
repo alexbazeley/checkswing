@@ -1,12 +1,15 @@
 {
   "_meta": {
-    "generated_at": "2026-05-31T21:31:23Z",
+    "generated_at": "2026-07-19T23:08:43Z",
     "n_rows": 4,
     "neutrality_note": "Neutral sourced facts only (GOVERNANCE.md \u00a76). days_before_vote is arithmetic, not a causal claim. Interpretation lives in the brief.",
     "join": "donations_to_sponsors",
     "bill_ids": [
-      "114-hr-5580",
       "115-hr-1625"
+    ],
+    "include_indirect": false,
+    "join_tiers": [
+      "direct"
     ]
   },
   "rows": [
@@ -20,6 +23,7 @@
       "donation_status": "CONFIRMED",
       "recipient_committee_name": "NEW DEMOCRAT COALITION ACTION FUND",
       "recipient_candidate_name": "",
+      "join_tier": "direct",
       "bill_id": "115-hr-1625",
       "sponsor_role": "cosponsor",
       "legislator_bioguide": "S001190",
@@ -37,6 +41,7 @@
       "donation_status": "CONFIRMED",
       "recipient_committee_name": "NEW DEMOCRAT COALITION ACTION FUND",
       "recipient_candidate_name": "",
+      "join_tier": "direct",
       "bill_id": "115-hr-1625",
       "sponsor_role": "cosponsor",
       "legislator_bioguide": "S001190",
@@ -54,6 +59,7 @@
       "donation_status": "CONFIRMED",
       "recipient_committee_name": "ACTBLUE",
       "recipient_candidate_name": "",
+      "join_tier": "direct",
       "bill_id": "115-hr-1625",
       "sponsor_role": "cosponsor",
       "legislator_bioguide": "S001150",
@@ -71,6 +77,7 @@
       "donation_status": "CONFIRMED",
       "recipient_committee_name": "NEW DEMOCRAT COALITION ACTION FUND",
       "recipient_candidate_name": "",
+      "join_tier": "direct",
       "bill_id": "115-hr-1625",
       "sponsor_role": "cosponsor",
       "legislator_bioguide": "S001190",
