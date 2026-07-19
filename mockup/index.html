@@ -29,16 +29,49 @@
 <meta name="twitter:image" content="https://checkswing.pages.dev/assets/og-image.png?v=2">
 <meta name="twitter:image:alt" content="CheckSwing — Where MLB's owners spend in politics.">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preload" href="assets/fonts/libre-caslon-display-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/inter-var.woff2" as="font" type="font/woff2" crossorigin>
 
 <style>
 /* ════════════════════════════════════════════════════════════════════════
+   FONTS — self-hosted (GROUNDRULES §6: performance is design)
+   No Google Fonts link, no preconnects: three render-blocking cross-origin
+   round-trips removed. 156 KB total, latin subsets. Inter and JetBrains Mono
+   are variable and cover every weight used from a single file each.
+   Why Caslon: see DESIGN.md Phase B — Caslon is the typeface of American
+   public records and legal printing, which is what this archive is made of.
+   ══════════════════════════════════════════════════════════════════════ */
+@font-face {
+  font-family: "Libre Caslon Display"; font-style: normal; font-weight: 400;
+  font-display: swap; src: url("assets/fonts/libre-caslon-display-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Libre Caslon Text"; font-style: normal; font-weight: 400;
+  font-display: swap; src: url("assets/fonts/libre-caslon-text-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Libre Caslon Text"; font-style: italic; font-weight: 400;
+  font-display: swap; src: url("assets/fonts/libre-caslon-text-400i.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Libre Caslon Text"; font-style: normal; font-weight: 700;
+  font-display: swap; src: url("assets/fonts/libre-caslon-text-700.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Inter"; font-style: normal; font-weight: 100 900;
+  font-display: swap; src: url("assets/fonts/inter-var.woff2") format("woff2");
+}
+@font-face {
+  font-family: "JetBrains Mono"; font-style: normal; font-weight: 100 800;
+  font-display: swap; src: url("assets/fonts/jetbrains-mono-var.woff2") format("woff2");
+}
+
+/* ════════════════════════════════════════════════════════════════════════
    DESIGN TOKENS
-   The verification system *is* the design. The visual language is
-   journalistic — restrained chrome, charts as primary content, status
-   provenance carried on every record.
+   The verification system *is* the design. The visual language is that of
+   the document the archive is made of: the FEC itemized Schedule A line.
+   Ledger rules over cards, form coordinates on every record, tabular money.
+   Full rationale + the Phase A–C regression check live in DESIGN.md.
    ══════════════════════════════════════════════════════════════════════ */
 :root {
   --bg:           #FBFAF5;
@@ -47,7 +80,12 @@
   --bg-card:     #FFFFFF;
   --ink:         #17150F;
   --ink-2:       #46433A;
-  --ink-3:       #7C7666;
+  /* --ink-3 is the muted-text colour and it is used HEAVILY (labels, captions,
+     feet, metadata). At its previous #7C7666 it measured APCA Lc 68.4 on --bg,
+     61.8 on --bg-sunk and 71.4 on white — all short of the Lc 75 §3 requires
+     for body text, and it alone accounted for 10 of the 19 failing pairs.
+     #5C574B clears 75 on all three surfaces. Do not lighten it back. */
+  --ink-3:       #5C574B;
   --rule:        #E7E2D4;
   --rule-strong: #CBC5B2;
 
@@ -55,16 +93,28 @@
   --brand-2:     #6E1322;
   --brand-ink:   #5C0F1C;  /* deepest crimson — display headings on light */
   --brand-soft:  #F4E2E3;  /* subtle tinted background for brand surfaces */
-  --accent:      #B8552B;  /* burnt sienna — interactive UI (links, focus, CSV button) */
+  /* --accent is TEXT (links, CSV button) so it carries the Lc 75 bar; the
+     previous #B8552B measured 69.6 on --bg. --accent-line keeps the original
+     lighter sienna for borders/rules, where §3 only asks Lc ≥30. */
+  --accent:      #A44C26;  /* burnt sienna — interactive UI (links, focus, CSV button) */
+  --accent-line: #B8552B;  /* same hue, non-text use only (borders, underlines) */
   --accent-2:    #964322;
   --accent-soft: #FBF0E7;  /* tinted hover/selected surface for accent UI */
 
+  /* Party colours come in pairs: the base is the FILL (bars, dots, ramps), the
+     -ink shade is TEXT on the matching -soft background. Splitting them is the
+     §1B move — extend a hue via shades rather than inlining a new value — and
+     it is what lifts the DEM/REP chips over Lc 75. */
   --dem:         #1F4E89;
+  --dem-ink:     #1D487E;  /* text on --dem-soft */
   --dem-soft:    #DCE5F2;
   --dem-mid:     #5478A8;  /* 60–80% Democratic — scatter ramp + its legend */
+  --dem-on-ink:  #BACFE9;  /* text on the dark chart ground (--ink) */
   --rep:         #B53326;
+  --rep-ink:     #722018;  /* text on --rep-soft */
   --rep-soft:    #F3D9D5;
   --rep-mid:     #C16A55;  /* 60–80% Republican — scatter ramp + its legend */
+  --rep-on-ink:  #E7C5C0;  /* text on the dark chart ground (--ink) */
   --oth:         #8A8475;
   --oth-soft:    #E8E5DC;
 
@@ -95,12 +145,34 @@
   --state-2:      #14433F;
   --state-soft:   #DDEBE7;
 
-  --display: "Fraunces", "Source Serif 4", Georgia, "Times New Roman", serif;
-  --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --display: "Libre Caslon Display", "Libre Caslon Text", Georgia, "Times New Roman", serif;
+  --serif:   "Libre Caslon Text", Georgia, "Times New Roman", serif;
   --sans:  "Inter", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
   --mono:  "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
 
-  --measure: 64ch;
+  /* ── Type scale ── one ratio (~1.25), snapped to whole px. §1B wants ONE
+     scale and body ≥16px; the previous build had 12 distinct sizes on the home
+     page and computed body prose at 13px. Reach for a step, never a raw px. */
+  --t-xs:   12px;  /* chips, form coordinates, table micro-labels */
+  --t-sm:   13px;  /* dense table cells, secondary metadata */
+  --t-base: 16px;  /* body prose — the §1B floor, not a suggestion */
+  --t-md:   20px;  /* decks, card titles */
+  --t-lg:   25px;  /* section headings */
+  --t-xl:   31px;  /* page headings, stat values */
+  --t-2xl:  39px;  /* graphic-hero headings */
+  --t-3xl:  56px;  /* home photo hero only */
+
+  /* ── Space ── 8pt grid, 4px half-step (§3). Every padding/margin resolves to
+     a step. The previous build scattered 6/14/18/22/26/30/34px, which is why
+     only 5–59% of spacing values landed on the grid. */
+  --s1:  4px;   --s2:  8px;   --s3: 12px;  --s4: 16px;  --s5: 24px;
+  --s6: 32px;   --s7: 40px;   --s8: 48px;  --s9: 64px;  --s10: 80px;
+
+  /* Letter-spacing, governed. Previously ran .04–.13em ad hoc across 25 rules. */
+  --track-label: 0.08em;  /* small caps labels, chips, eyebrows */
+  --track-tight: -0.01em; /* large display settings */
+
+  --measure: 68ch;
 
   /* Corner radius scale — chips/inputs stay crisp; cards & surfaces soften
      for a more premium, less boxy feel. */
@@ -170,9 +242,9 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
   left: 12px;
   background: var(--ink);
   color: white;
-  padding: 10px 14px;
+  padding: 8px 16px;
   border-radius: 0 0 4px 4px;
-  font-size: 13px;
+  font-size: var(--t-sm);
   font-weight: 600;
   z-index: 1000;
   transition: top 120ms;
@@ -192,28 +264,41 @@ body {
   background: var(--bg);
   color: var(--ink);
   font-family: var(--sans);
-  font-size: 15px;
+  font-size: var(--t-base);
   line-height: 1.55;
   font-feature-settings: "ss01", "cv11";
-  font-optical-sizing: auto;     /* Fraunces picks its optical cut from the size:
-                                    finer, higher-contrast letterforms at display sizes */
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 /* ────────── Type ────────── */
-h1, h2, h3, h4 { font-family: var(--display); font-weight: 600; letter-spacing: -0.01em; margin: 0; }
-/* Balance ragged headline lines (modern, premium); body copy avoids orphans. */
+/* Libre Caslon Display ships ONE weight (400). That is a feature here: hierarchy
+   is carried by size and by the serif/sans contrast rather than by faux-bolding
+   a display face. Where real bold serif is needed, Libre Caslon Text 700 is
+   available via --serif. Never set --display above 400 — the browser will
+   synthesise it and the letterforms smear. */
+h1, h2, h4 { font-family: var(--display); font-weight: 400; letter-spacing: var(--track-tight); margin: 0; }
+/* Balance ragged headline lines; body copy avoids orphans. */
 h1, h2, .deck, .ghero h1, .section-head h2, .level-divider h2 { text-wrap: balance; }
 p, .caption, .footnote, .lvl-desc, .ld-sub { text-wrap: pretty; }
-h1 { font-size: 46px; line-height: 1.04; letter-spacing: -0.024em; font-weight: 600; }
-h2 { font-size: 25px; line-height: 1.16; letter-spacing: -0.018em; font-weight: 600; }
-h3 { font-size: 15px; font-family: var(--sans); font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-2); }
-.deck { font-family: var(--serif); font-size: 19px; line-height: 1.5; color: var(--ink-2); max-width: var(--measure); margin: 0; font-weight: 400; }
-.eyebrow { font-family: var(--sans); font-size: 11px; font-weight: 600; letter-spacing: 0.13em; text-transform: uppercase; color: var(--ink-3); }
-.caption { font-size: 13px; color: var(--ink-3); margin: 4px 0 0; }
-.footnote { font-size: 12px; color: var(--ink-3); margin-top: 10px; }
+h1 { font-size: var(--t-2xl); line-height: 1.06; letter-spacing: -0.018em; }
+h2 { font-size: var(--t-lg); line-height: 1.2; letter-spacing: -0.012em; }
+/* h3 is a small structural heading in the sans, NOT a decorative all-caps
+   label. Decorative labels use .label (see below) so they stop occupying
+   heading levels they don't earn — GROUNDRULES §6 semantic HTML. */
+h3 { font-size: var(--t-base); font-family: var(--sans); font-weight: 600; letter-spacing: 0; color: var(--ink); margin: 0; }
+.deck { font-family: var(--serif); font-size: var(--t-md); line-height: 1.5; color: var(--ink-2); max-width: var(--measure); margin: 0; font-weight: 400; }
+.eyebrow, .label {
+  font-family: var(--sans); font-size: var(--t-xs); font-weight: 600;
+  letter-spacing: var(--track-label); text-transform: uppercase; color: var(--ink-3);
+}
+.caption { font-size: var(--t-base); color: var(--ink-2); margin: var(--s1) 0 0; max-width: var(--measure); }
+.footnote { font-size: var(--t-xs); color: var(--ink-3); margin-top: var(--s3); max-width: var(--measure); }
+
+/* §1B measure: prose sits at 60–80ch. Previously --measure was applied to
+   exactly one selector (.deck) and body prose ran to a 213ch median. */
+p, .lvl-desc, .ld-sub, .method-body li, .about-body p { max-width: var(--measure); }
 
 .num, .mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
 
@@ -233,10 +318,10 @@ h3 { font-size: 15px; font-family: var(--sans); font-weight: 600; text-transform
 }
 .masthead-inner {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 14px 32px;
+  padding: 16px 32px;
   max-width: 1280px; margin: 0 auto;
 }
-.brand { display: flex; align-items: center; gap: 14px; cursor: pointer; }
+.brand { display: flex; align-items: center; gap: 16px; cursor: pointer; }
 .brand-mark {
   width: 44px; height: 44px;
   display: grid; place-items: center;
@@ -249,16 +334,16 @@ h3 { font-size: 15px; font-family: var(--sans); font-weight: 600; text-transform
   object-fit: contain;
 }
 .brand-title {
-  font-family: var(--display); font-weight: 600; font-size: 19px;
+  font-family: var(--display); font-weight: 400; font-size: var(--t-md);
   line-height: 1.05; color: var(--brand);
   letter-spacing: -0.012em;
 }
-.brand-sub   { font-size: 10px; color: var(--ink-3); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 2px; }
+.brand-sub   { font-size: var(--t-xs); color: var(--ink-3); letter-spacing: var(--track-label); text-transform: uppercase; margin-top: 4px; }
 .nav { display: flex; gap: 4px; align-items: center; }
 .nav a {
   color: var(--ink-2);
-  padding: 6px 12px;
-  font-size: 13px;
+  padding: 8px 12px;
+  font-size: var(--t-sm);
   font-weight: 500;
   border-radius: 4px;
 }
@@ -271,21 +356,21 @@ h3 { font-size: 15px; font-family: var(--sans); font-weight: 600; text-transform
    shrinks, tables get horizontal scroll wrappers, KPIs flow vertically.
    ══════════════════════════════════════════════════════════════════════ */
 @media (max-width: 880px) {
-  .container, .container-narrow { padding: 0 18px; }
-  .masthead-inner { padding: 10px 18px; }
+  .container, .container-narrow { padding: 0 16px; }
+  .masthead-inner { padding: 8px 16px; }
   .brand-sub { display: none; }              /* keep the wordmark, drop the subtitle */
-  .brand-title { font-size: 16px; }
+  .brand-title { font-size: var(--t-base); }
   .brand-mark { width: 36px; height: 36px; }
   .nav { gap: 0; }
-  .nav a { padding: 6px 8px; font-size: 12px; }
+  .nav a { padding: 8px 8px; font-size: var(--t-xs); }
   .nav .search-btn span:not(.search-btn-icon) { display: none; }   /* icon only */
-  .nav .search-btn { padding: 5px 8px; }
+  .nav .search-btn { padding: 4px 8px; }
   /* KPI strip stacks 2x2 on tablet, single col on phone */
   .kpis { grid-template-columns: repeat(2, 1fr); }
-  .kpi { padding: 12px 14px; border-right: 0; border-bottom: 1px solid var(--rule); }
+  .kpi { padding: 12px 16px; border-right: 0; border-bottom: 1px solid var(--rule); }
   .kpi:nth-child(2n) { border-right: 0; }
   .kpi:nth-last-child(-n+2) { border-bottom: 0; }
-  .kpi-value { font-size: 28px; }
+  .kpi-value { font-size: var(--t-xl); }
   /* Tables become horizontally scrollable instead of clipping the layout.
      The wrapper handles the scroll; the table keeps a min-width so columns
      don't compress to unreadable. */
@@ -304,9 +389,9 @@ h3 { font-size: 15px; font-family: var(--sans); font-weight: 600; text-transform
   /* Sections breathe less */
   section.block { padding: 32px 0; }
   .hero { padding: 36px 0 24px; }
-  h1 { font-size: 32px; }
-  h2 { font-size: 20px; }
-  .deck { font-size: 16px; }
+  h1 { font-size: var(--t-xl); }
+  h2 { font-size: var(--t-md); }
+  .deck { font-size: var(--t-base); }
 }
 @media (max-width: 560px) {
   .kpis { grid-template-columns: 1fr; }
@@ -314,7 +399,7 @@ h3 { font-size: 15px; font-family: var(--sans); font-weight: 600; text-transform
   .kpi:last-child { border-bottom: 0; }
   /* Drop the methodology tier grid to a stack */
   .method-tiers { grid-template-columns: 1fr; }
-  .method-scope { grid-template-columns: 1fr; gap: 18px; }
+  .method-scope { grid-template-columns: 1fr; gap: 16px; }
   /* Two-col owner-page layout stacks */
   .two-col { grid-template-columns: 1fr; gap: 28px; }
   /* Footer grid stacks too */
@@ -330,8 +415,8 @@ h3 { font-size: 15px; font-family: var(--sans); font-weight: 600; text-transform
   padding: 64px 0 36px;
   border-bottom: 1px solid var(--rule);
 }
-.hero h1 { max-width: 18ch; margin-bottom: 22px; }
-.hero .meta { display: flex; gap: 14px; align-items: center; margin-top: 22px; color: var(--ink-3); font-size: 13px; }
+.hero h1 { max-width: 18ch; margin-bottom: 24px; }
+.hero .meta { display: flex; gap: 16px; align-items: center; margin-top: 24px; color: var(--ink-3); font-size: var(--t-sm); }
 .hero .meta-dot { width: 3px; height: 3px; background: var(--ink-3); border-radius: 50%; }
 
 /* Photo hero — league index only */
@@ -376,29 +461,29 @@ h3 { font-size: 15px; font-family: var(--sans); font-weight: 600; text-transform
 .hero-photo h1 {
   color: white;
   max-width: 22ch;
-  margin-bottom: 22px;
-  font-size: 56px;
+  margin-bottom: 24px;
+  font-size: var(--t-3xl);
   line-height: 1.04;
   text-shadow: 0 2px 32px rgba(0,0,0,0.45);
 }
 .hero-photo .deck {
   color: rgba(255,255,255,0.92);
   max-width: 60ch;
-  font-size: 19px;
+  font-size: var(--t-md);
   text-shadow: 0 1px 18px rgba(0,0,0,0.4);
 }
 .hero-photo .meta {
-  display: flex; gap: 14px; align-items: center;
+  display: flex; gap: 16px; align-items: center;
   margin-top: 32px;
   color: rgba(255,255,255,0.7);
-  font-size: 13px;
+  font-size: var(--t-sm);
   font-family: var(--mono);
 }
 .hero-photo .meta-dot { width: 3px; height: 3px; background: rgba(255,255,255,0.5); border-radius: 50%; }
 .hero-photo .photo-credit {
   position: absolute; bottom: 8px; right: 14px;
-  font-size: 10px; color: rgba(255,255,255,0.5);
-  letter-spacing: 0.04em;
+  font-size: var(--t-xs); color: rgba(255,255,255,0.5);
+  letter-spacing: var(--track-label);
   text-shadow: 0 1px 4px rgba(0,0,0,0.6);
 }
 @media (max-width: 720px) {
@@ -408,11 +493,11 @@ h3 { font-size: 15px; font-family: var(--sans); font-weight: 600; text-transform
      substantial; the inner padding clears the masthead and matches the 18px
      mobile container gutter. */
   .hero-photo { min-height: 360px; height: auto; max-height: none; align-items: flex-start; }
-  .hero-photo-inner { padding: 36px 18px 34px; }
-  .hero-photo h1 { font-size: 34px; }
-  .hero-photo .deck { font-size: 16px; }
-  .hero-photo .eyebrow { margin-bottom: 14px; }
-  .hero-photo .meta { margin-top: 22px; }
+  .hero-photo-inner { padding: 36px 16px 32px; }
+  .hero-photo h1 { font-size: var(--t-xl); }
+  .hero-photo .deck { font-size: var(--t-base); }
+  .hero-photo .eyebrow { margin-bottom: 16px; }
+  .hero-photo .meta { margin-top: 24px; }
 }
 
 /* ════════════════════════════════════════════════════════════════════════
@@ -429,11 +514,11 @@ h3 { font-size: 15px; font-family: var(--sans); font-weight: 600; text-transform
   gap: 0;
   border-bottom: 1px solid var(--rule);
 }
-.kpi { padding: 20px 22px; border-right: 1px solid var(--rule); }
+.kpi { padding: 20px 24px; border-right: 1px solid var(--rule); }
 .kpi:last-child { border-right: 0; }
-.kpi-label { font: 600 11px/1 var(--sans); letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); }
-.kpi-value { font-family: var(--display); font-size: 32px; font-weight: 600; line-height: 1.05; margin-top: 8px; letter-spacing: -0.02em; font-variant-numeric: tabular-nums lining-nums; }
-.kpi-foot  { font-size: 12px; color: var(--ink-3); margin-top: 4px; }
+.kpi-label { font: 600 var(--t-xs)/1 var(--sans); letter-spacing: var(--track-label); text-transform: uppercase; color: var(--ink-3); }
+.kpi-value { font-family: var(--display); font-size: var(--t-xl); font-weight: 400; line-height: 1.05; margin-top: 8px; letter-spacing: -0.02em; font-variant-numeric: tabular-nums lining-nums; }
+.kpi-foot  { font-size: var(--t-xs); color: var(--ink-3); margin-top: 4px; }
 
 /* ════════════════════════════════════════════════════════════════════════
    SECTION CHROME
@@ -441,8 +526,8 @@ h3 { font-size: 15px; font-family: var(--sans); font-weight: 600; text-transform
 section.block { padding: 48px 0; border-bottom: 1px solid var(--rule); }
 section.block:last-child { border-bottom: 0; }
 .block-head { margin-bottom: 24px; }
-.block-head h2 { margin-bottom: 2px; }
-.block-head .caption { margin-top: 6px; }
+.block-head h2 { margin-bottom: 4px; }
+.block-head .caption { margin-top: 8px; }
 
 /* ════════════════════════════════════════════════════════════════════════
    LEAGUE CYCLE CHART
@@ -450,9 +535,9 @@ section.block:last-child { border-bottom: 0; }
 .cycle-chart {
   display: flex;
   align-items: flex-end;
-  gap: 6px;
+  gap: 8px;
   height: 260px;
-  padding: 18px 0 4px;
+  padding: 16px 0 4px;
   border-bottom: 1px solid var(--rule);
   position: relative;
   /* Contain tooltip spill past the chart's left/right edges so it never
@@ -489,8 +574,8 @@ section.block:last-child { border-bottom: 0; }
   transform: translate(-50%, 4px);
   background: #15130F; color: white;
   min-width: 200px;
-  font-size: 12px; line-height: 1.45;
-  padding: 12px 14px; border-radius: 4px;
+  font-size: var(--t-xs); line-height: 1.45;
+  padding: 12px 16px; border-radius: 4px;
   font-family: var(--sans);
   white-space: nowrap;
   opacity: 0; transition: opacity 100ms;
@@ -511,43 +596,43 @@ section.block:last-child { border-bottom: 0; }
 .cycle-bar:last-child:hover .cycle-bar-tooltip { transform: translate(0, 0); }
 .cycle-bar:last-child .cycle-bar-tooltip::after { left: auto; right: 14px; margin-left: 0; }
 .cycle-bar-tooltip .tt-head {
-  font-family: var(--serif); font-size: 16px; font-weight: 600;
+  font-family: var(--serif); font-size: var(--t-base); font-weight: 700;
   line-height: 1.15; margin-bottom: 8px;
   font-variant-numeric: lining-nums tabular-nums;
 }
 .cycle-bar-tooltip .row {
   display: flex; gap: 16px; justify-content: space-between;
-  padding: 2px 0;
+  padding: 4px 0;
   font-variant-numeric: tabular-nums;
 }
 .cycle-bar-tooltip .row .label { color: rgba(255,255,255,0.6); }
-.cycle-bar-tooltip .row .label.dem { color: #93B4DC; }
-.cycle-bar-tooltip .row .label.rep { color: #DBA9A3; }
+.cycle-bar-tooltip .row .label.dem { color: var(--dem-on-ink); }
+.cycle-bar-tooltip .row .label.rep { color: var(--rep-on-ink); }
 .cycle-bar-tooltip .row .label.oth { color: rgba(255,255,255,0.45); }
 .cycle-bar-tooltip .row .value { font-family: var(--mono); }
 .cycle-bar-tooltip .tt-divider {
   height: 1px; background: rgba(255,255,255,0.12); margin: 8px 0;
 }
 .cycle-bar-tooltip .tt-hint {
-  color: rgba(255,255,255,0.5); font-size: 10px;
-  letter-spacing: 0.08em; text-transform: uppercase;
+  color: rgba(255,255,255,0.5); font-size: var(--t-xs);
+  letter-spacing: var(--track-label); text-transform: uppercase;
   margin-top: 8px;
 }
 .cycle-bar-label {
-  text-align: center; font-size: 11px; font-family: var(--mono);
-  color: var(--ink-3); padding-top: 6px;
+  text-align: center; font-size: var(--t-xs); font-family: var(--mono);
+  color: var(--ink-3); padding-top: 8px;
 }
 .cycle-chart-axis {
-  display: flex; gap: 6px; padding-top: 0;
+  display: flex; gap: 8px; padding-top: 0;
 }
-.cycle-chart-axis > div { flex: 1; text-align: center; font-family: var(--mono); font-size: 11px; color: var(--ink-3); padding-top: 6px; }
+.cycle-chart-axis > div { flex: 1; text-align: center; font-family: var(--mono); font-size: var(--t-xs); color: var(--ink-3); padding-top: 8px; }
 
 .legend {
-  display: flex; flex-wrap: wrap; gap: 8px 18px;
-  font-size: 12px; color: var(--ink-2); margin-top: 16px;
+  display: flex; flex-wrap: wrap; gap: 8px 16px;
+  font-size: var(--t-xs); color: var(--ink-2); margin-top: 16px;
 }
-@media (max-width: 560px) { .legend { gap: 8px 14px; } }
-.legend-swatch { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 7px; vertical-align: -1px; }
+@media (max-width: 560px) { .legend { gap: 8px 16px; } }
+.legend-swatch { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 8px; vertical-align: -1px; }
 .legend-swatch.dem { background: var(--dem); }
 .legend-swatch.rep { background: var(--rep); }
 .legend-swatch.oth { background: var(--oth); }
@@ -556,24 +641,24 @@ section.block:last-child { border-bottom: 0; }
    FILTERS ROW
    ══════════════════════════════════════════════════════════════════════ */
 .filters {
-  display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
-  padding: 14px 0; margin-bottom: 0;
+  display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+  padding: 16px 0; margin-bottom: 0;
   border-bottom: 1px solid var(--rule);
 }
 .filters input[type="text"], .filters select {
-  font: 13px var(--sans);
+  font: var(--t-sm)None var(--sans);
   border: 1px solid var(--rule-strong);
   background: var(--bg-elev);
-  padding: 6px 10px;
+  padding: 8px 8px;
   border-radius: var(--radius-sm);
   color: var(--ink);
 }
 .filters input[type="text"] { min-width: 220px; }
 .filters input[type="text"]:focus, .filters select:focus { outline: 2px solid var(--accent); outline-offset: -1px; border-color: var(--accent); }
-.filters .filter-label { font-size: 12px; color: var(--ink-3); font-weight: 500; }
-.filter-toggle { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--ink-2); }
+.filters .filter-label { font-size: var(--t-xs); color: var(--ink-3); font-weight: 500; }
+.filter-toggle { display: inline-flex; align-items: center; gap: 8px; font-size: var(--t-sm); color: var(--ink-2); }
 .filter-spacer { flex: 1; }
-.filter-result { font-size: 12px; color: var(--ink-3); font-family: var(--mono); }
+.filter-result { font-size: var(--t-xs); color: var(--ink-3); font-family: var(--mono); }
 
 /* ════════════════════════════════════════════════════════════════════════
    OWNERS TABLE (the index)
@@ -582,14 +667,14 @@ section.block:last-child { border-bottom: 0; }
    lives on BOTH selectors; `.owners-table` is the default (roomy directory /
    overview) density, `.donations-table` is the compact density for dense,
    multi-column transaction lists (its overrides are in its own block). ── */
-.owners-table, .donations-table { width: 100%; font-size: 14px; }
+.owners-table, .donations-table { width: 100%; font-size: var(--t-sm); }
 .owners-table th, .owners-table td,
 .donations-table th, .donations-table td {
-  padding: 14px 12px; border-bottom: 1px solid var(--rule);
+  padding: 16px 12px; border-bottom: 1px solid var(--rule);
   text-align: left; vertical-align: middle;
 }
 .owners-table th, .donations-table th {
-  font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em;
+  font-size: var(--t-xs); text-transform: uppercase; letter-spacing: var(--track-label);
   color: var(--ink-3); font-weight: 600; font-family: var(--sans);
   border-bottom: 1px solid var(--rule-strong);
   background: var(--bg);
@@ -604,11 +689,11 @@ section.block:last-child { border-bottom: 0; }
 .owners-table tbody tr, .donations-table tbody tr { cursor: pointer; transition: background 80ms; }
 .owners-table tbody tr:hover, .donations-table tbody tr:hover { background: var(--bg-sunk); }
 .owners-table .col-owner { font-weight: 600; color: var(--ink); }
-.owners-table .col-owner-name { font-family: var(--serif); font-size: 16px; font-weight: 600; }
-.owners-table .col-tenure { font-family: var(--mono); font-size: 12px; color: var(--ink-3); }
-.owners-table .col-total { font-family: var(--mono); font-size: 15px; font-weight: 500; font-variant-numeric: tabular-nums; }
-.owners-table .col-count { font-family: var(--mono); font-size: 13px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
-.owners-table .col-team { color: var(--ink-2); font-size: 13px; }
+.owners-table .col-owner-name { font-family: var(--serif); font-size: var(--t-base); font-weight: 700; }
+.owners-table .col-tenure { font-family: var(--mono); font-size: var(--t-xs); color: var(--ink-3); }
+.owners-table .col-total { font-family: var(--mono); font-size: var(--t-base); font-weight: 500; font-variant-numeric: tabular-nums; }
+.owners-table .col-count { font-family: var(--mono); font-size: var(--t-sm); color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.owners-table .col-team { color: var(--ink-2); font-size: var(--t-sm); }
 
 /* Sparkline cell */
 .sparkline-cell { width: 200px; }
@@ -626,21 +711,21 @@ section.block:last-child { border-bottom: 0; }
 .tilt-seg.oth { background: var(--oth); }
 .tilt-labels {
   display: flex; justify-content: space-between; font-family: var(--mono);
-  font-size: 10px; color: var(--ink-3); margin-top: 4px;
+  font-size: var(--t-xs); color: var(--ink-3); margin-top: 4px;
 }
-.tilt-labels .dem { color: var(--dem); }
-.tilt-labels .rep { color: var(--rep); }
+.tilt-labels .dem { color: var(--dem-ink); }
+.tilt-labels .rep { color: var(--rep-ink); }
 
 /* Verified cell */
 .ver-cell { white-space: nowrap; }
-.ver-confirmed { font-family: var(--mono); font-size: 12px; color: var(--ok-fg); }
-.ver-probable  { font-family: var(--mono); font-size: 12px; color: var(--warn-fg); margin-left: 8px; }
+.ver-confirmed { font-family: var(--mono); font-size: var(--t-xs); color: var(--ok-fg); }
+.ver-probable  { font-family: var(--mono); font-size: var(--t-xs); color: var(--warn-fg); margin-left: 8px; }
 
 /* Freshness chip — used in owners table + runs page */
 .fresh-chip {
-  display: inline-flex; align-items: center; gap: 5px;
-  font-family: var(--mono); font-size: 11px;
-  padding: 2px 7px; border-radius: 2px;
+  display: inline-flex; align-items: center; gap: 4px;
+  font-family: var(--mono); font-size: var(--t-xs);
+  padding: 4px 8px; border-radius: 2px;
   white-space: nowrap;
 }
 .fresh-chip::before { content: "●"; font-size: 8px; }
@@ -654,8 +739,8 @@ section.block:last-child { border-bottom: 0; }
    OWNER DETAIL
    ══════════════════════════════════════════════════════════════════════ */
 .back {
-  display: inline-flex; align-items: center; gap: 6px;
-  font-size: 13px; color: var(--ink-2);
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: var(--t-sm); color: var(--ink-2);
   padding: 24px 0 0;
 }
 .back:hover { color: var(--accent); text-decoration: none; }
@@ -663,13 +748,13 @@ section.block:last-child { border-bottom: 0; }
 .owner-head {
   padding: 24px 0 36px; border-bottom: 1px solid var(--rule);
 }
-.owner-head h1 { max-width: none; margin-bottom: 10px; }
-.owner-meta { display: flex; gap: 14px; align-items: center; color: var(--ink-3); font-size: 14px; }
+.owner-head h1 { max-width: none; margin-bottom: 8px; }
+.owner-meta { display: flex; gap: 16px; align-items: center; color: var(--ink-3); font-size: var(--t-sm); }
 .owner-meta .dot { width: 3px; height: 3px; background: var(--ink-3); border-radius: 50%; }
 .owner-role { color: var(--ink-2); }
 
 /* Timeline */
-.timeline-wrap { padding: 18px 0 6px; }
+.timeline-wrap { padding: 16px 0 8px; }
 .timeline-svg { width: 100%; display: block; }
 
 /* On narrow viewports, alternating X-axis labels overlap. Hide the
@@ -693,21 +778,21 @@ section.block:last-child { border-bottom: 0; }
 .recipient {
   display: grid;
   grid-template-columns: 24px 1fr auto;
-  gap: 10px; align-items: center;
-  font-size: 13px;
+  gap: 8px; align-items: center;
+  font-size: var(--t-sm);
   padding-bottom: 12px;
   border-bottom: 1px solid var(--rule);
 }
 .recipient:last-child { border-bottom: 0; }
-.recipient-bar-track { position: relative; height: 5px; background: var(--bg-sunk); border-radius: 999px; margin-top: 6px; overflow: hidden; }
+.recipient-bar-track { position: relative; height: 5px; background: var(--bg-sunk); border-radius: 999px; margin-top: 8px; overflow: hidden; }
 .recipient-bar { position: absolute; left: 0; top: 0; height: 100%; border-radius: 999px; }
 .recipient-bar.dem { background: var(--dem); }
 .recipient-bar.rep { background: var(--rep); }
 .recipient-bar.oth { background: var(--oth); }
 .recipient-name { font-weight: 500; line-height: 1.25; }
-.recipient-rank { font-family: var(--mono); font-size: 11px; color: var(--ink-3); text-align: right; padding-top: 2px; }
-.recipient-amount { font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: 14px; font-weight: 500; text-align: right; }
-.recipient-count { font-family: var(--mono); font-size: 11px; color: var(--ink-3); text-align: right; }
+.recipient-rank { font-family: var(--mono); font-size: var(--t-xs); color: var(--ink-3); text-align: right; padding-top: 4px; }
+.recipient-amount { font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: var(--t-sm); font-weight: 500; text-align: right; }
+.recipient-count { font-family: var(--mono); font-size: var(--t-xs); color: var(--ink-3); text-align: right; }
 
 /* ════════════════════════════════════════════════════════════════════════
    SCATTER TOOLTIP (league political map)
@@ -719,12 +804,12 @@ section.block:last-child { border-bottom: 0; }
   z-index: 50;
   background: #15130F;
   color: #FFFFFF;
-  padding: 12px 14px;
+  padding: 12px 16px;
   border-radius: 4px;
   min-width: 220px;
   max-width: 280px;
   font-family: var(--sans);
-  font-size: 12px;
+  font-size: var(--t-xs);
   line-height: 1.45;
   pointer-events: none;
   opacity: 0;
@@ -744,25 +829,25 @@ section.block:last-child { border-bottom: 0; }
 }
 .scatter-tt-name {
   font-family: var(--serif);
-  font-size: 16px;
+  font-size: var(--t-base);
   font-weight: 600;
   line-height: 1.15;
-  margin-bottom: 1px;
+  margin-bottom: 0;
 }
 .scatter-tt-team {
   color: rgba(255,255,255,0.6);
-  font-size: 11px;
-  margin-bottom: 10px;
+  font-size: var(--t-xs);
+  margin-bottom: 8px;
   font-family: var(--mono);
 }
 .scatter-tt-row {
   display: flex; justify-content: space-between; gap: 16px;
-  padding: 3px 0;
+  padding: 4px 0;
   font-variant-numeric: tabular-nums;
 }
 .scatter-tt-row .label { color: rgba(255,255,255,0.6); }
-.scatter-tt-row .label.dem { color: #93B4DC; }
-.scatter-tt-row .label.rep { color: #DBA9A3; }
+.scatter-tt-row .label.dem { color: var(--dem-on-ink); }
+.scatter-tt-row .label.rep { color: var(--rep-on-ink); }
 .scatter-tt-row .label.oth { color: rgba(255,255,255,0.45); }
 .scatter-tt-row .value { font-family: var(--mono); }
 .scatter-tt-divider {
@@ -771,8 +856,8 @@ section.block:last-child { border-bottom: 0; }
 }
 .scatter-tt-hint {
   color: rgba(255,255,255,0.5);
-  font-size: 10px;
-  letter-spacing: 0.08em;
+  font-size: var(--t-xs);
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   margin-top: 8px;
 }
@@ -787,45 +872,45 @@ section.block:last-child { border-bottom: 0; }
   grid-template-columns: 100px minmax(0, 1fr) 130px 170px;
   align-items: center;
   gap: 20px;
-  padding: 12px 6px;
+  padding: 12px 8px;
   border-bottom: 1px solid var(--rule);
   cursor: pointer;
   transition: background 80ms;
 }
 .recent-row:hover { background: var(--bg-sunk); }
 .recent-date {
-  font-family: var(--mono); font-size: 12px; color: var(--ink-3);
+  font-family: var(--mono); font-size: var(--t-xs); color: var(--ink-3);
   white-space: nowrap;
 }
 .recent-flow {
   display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap;
-  font-size: 14px; line-height: 1.4;
+  font-size: var(--t-sm); line-height: 1.4;
   min-width: 0;       /* let the column shrink instead of pushing right neighbors */
 }
 .recent-flow .recent-donor {
-  font-family: var(--serif); font-weight: 600; font-size: 15px; color: var(--ink);
+  font-family: var(--serif); font-weight: 700; font-size: var(--t-base); color: var(--ink);
 }
 .recent-flow .recent-arrow { color: var(--ink-3); font-family: var(--mono); }
 .recent-flow .recent-recipient { color: var(--ink-2); font-weight: 500; }
-.recent-flow .recent-meta { font-size: 11px; color: var(--ink-3); font-family: var(--mono); margin-left: 4px; }
+.recent-flow .recent-meta { font-size: var(--t-xs); color: var(--ink-3); font-family: var(--mono); margin-left: 4px; }
 .recent-amount {
   font-family: var(--mono); font-variant-numeric: tabular-nums;
-  font-size: 16px; font-weight: 600;
+  font-size: var(--t-base); font-weight: 600;
   text-align: right;
   white-space: nowrap;
 }
 .recent-chips {
-  display: flex; gap: 6px; justify-content: flex-end; align-items: center;
+  display: flex; gap: 8px; justify-content: flex-end; align-items: center;
   white-space: nowrap;
 }
 @media (max-width: 1100px) {
-  .recent-row { grid-template-columns: 90px minmax(0, 1fr) 110px 150px; gap: 14px; }
+  .recent-row { grid-template-columns: 90px minmax(0, 1fr) 110px 150px; gap: 16px; }
 }
 @media (max-width: 880px) {
   .recent-row { grid-template-columns: 80px minmax(0, 1fr) 100px; gap: 12px; }
   /* Keep the status chip visible — it folds onto line 2 of the grid rather than
      being hidden (README: chips are never hidden). */
-  .recent-chips { justify-content: flex-start; font-size: 9px; }
+  .recent-chips { justify-content: flex-start; font-size: var(--t-xs); }
 }
 @media (max-width: 560px) {
   /* Two-line stack — the donor→recipient flow gets the full width (so the
@@ -834,11 +919,11 @@ section.block:last-child { border-bottom: 0; }
   .recent-row {
     grid-template-columns: 1fr auto;
     grid-template-areas: "flow flow" "date amount";
-    gap: 6px 12px;
-    padding: 14px 2px;
+    gap: 8px 12px;
+    padding: 16px 4px;
     align-items: baseline;
   }
-  .recent-flow   { grid-area: flow; font-size: 15px; }
+  .recent-flow   { grid-area: flow; font-size: var(--t-base); }
   .recent-date   { grid-area: date; align-self: center; }
   .recent-amount { grid-area: amount; align-self: center; }
 }
@@ -854,12 +939,12 @@ section.block:last-child { border-bottom: 0; }
   background: transparent;
   color: var(--accent);
   border: 1px solid var(--accent);
-  padding: 8px 14px;
+  padding: 8px 16px;
   border-radius: var(--radius-sm);
-  font-size: 12px;
+  font-size: var(--t-xs);
   font-weight: 500;
-  letter-spacing: 0.02em;
-  display: inline-flex; align-items: center; gap: 6px;
+  letter-spacing: var(--track-label);
+  display: inline-flex; align-items: center; gap: 8px;
   white-space: nowrap;
   transition: background 80ms, color 80ms;
 }
@@ -871,25 +956,25 @@ section.block:last-child { border-bottom: 0; }
   background: transparent;
   color: var(--accent);
   border: 1px solid var(--accent);
-  padding: 8px 14px;
+  padding: 8px 16px;
   border-radius: var(--radius-sm);
-  font-size: 12px;
+  font-size: var(--t-xs);
   font-weight: 500;
-  letter-spacing: 0.02em;
+  letter-spacing: var(--track-label);
   cursor: pointer;
   white-space: nowrap;
   transition: background 80ms, color 80ms;
 }
 .load-all-btn:hover { background: var(--accent); color: white; }
-.pagination-footer { margin-top: 14px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.pagination-footer { margin-top: 16px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
 .pagination-footer .footnote { margin: 0; }
 
 /* Cycle prev/next nav */
 .cycle-nav {
-  font-size: 13px;
+  font-size: var(--t-sm);
   font-family: var(--mono);
   color: var(--ink-2);
-  padding: 4px 10px;
+  padding: 4px 8px;
   border: 1px solid var(--rule-strong);
   border-radius: var(--radius-sm);
   text-decoration: none !important;
@@ -907,40 +992,40 @@ section.block:last-child { border-bottom: 0; }
 .team-owners-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
-  gap: 14px;
-  margin-top: 18px;
+  gap: 16px;
+  margin-top: 16px;
 }
 .team-owner-card {
   border: 1px solid var(--rule);
   border-radius: var(--radius-sm);
-  padding: 16px 18px;
+  padding: 16px 16px;
   background: var(--bg-elev);
   cursor: pointer;
   transition: border-color 90ms, background 90ms;  /* utility tier: no lift */
 }
 .team-owner-card:hover { border-color: var(--accent); background: var(--accent-soft); }
 .team-owner-card .team-owner-name {
-  font-family: var(--serif); font-size: 18px; font-weight: 600;
+  font-family: var(--serif); font-size: var(--t-md); font-weight: 700;
   line-height: 1.2; margin-bottom: 4px;
 }
-.team-owner-card .team-owner-role { font-size: 12px; color: var(--ink-3); }
+.team-owner-card .team-owner-role { font-size: var(--t-xs); color: var(--ink-3); }
 .team-owner-card .team-owner-tenure {
-  font-family: var(--mono); font-size: 11px; color: var(--ink-3); margin-top: 8px;
+  font-family: var(--mono); font-size: var(--t-xs); color: var(--ink-3); margin-top: 8px;
 }
 .team-owner-card .team-owner-stats {
   display: flex; justify-content: space-between; align-items: baseline;
-  margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--rule);
+  margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--rule);
 }
 .team-owner-card .team-owner-total {
   font-family: var(--mono); font-variant-numeric: tabular-nums;
-  font-size: 18px; font-weight: 600;
+  font-size: var(--t-md); font-weight: 600;
 }
 .team-owner-card .team-owner-count {
-  font-size: 11px; color: var(--ink-3); font-family: var(--mono);
+  font-size: var(--t-xs); color: var(--ink-3); font-family: var(--mono);
 }
 .team-owner-card .team-owner-tilt-bar {
   height: 4px; border-radius: 2px; overflow: hidden;
-  display: flex; background: var(--oth-soft); margin-top: 10px;
+  display: flex; background: var(--oth-soft); margin-top: 8px;
 }
 
 /* Team-clickable cell in owners table */
@@ -954,79 +1039,79 @@ section.block:last-child { border-bottom: 0; }
 .ver-card {
   background: var(--bg-sunk);
   border: 1px solid var(--rule);
-  padding: 18px;
+  padding: 16px;
   border-radius: var(--radius-sm);
-  font-size: 13px;
+  font-size: var(--t-sm);
 }
-.ver-card h4 { font-family: var(--serif); font-size: 16px; font-weight: 600; margin: 0 0 4px; }
-.ver-card .ver-meta { color: var(--ink-3); font-size: 12px; margin-bottom: 14px; font-family: var(--mono); }
+.ver-card h4 { font-family: var(--serif); font-size: var(--t-base); font-weight: 700; margin: 0 0 4px; }
+.ver-card .ver-meta { color: var(--ink-3); font-size: var(--t-xs); margin-bottom: 16px; font-family: var(--mono); }
 .ver-card .field { margin-bottom: 8px; }
-.ver-card .field-label { font-size: 11px; text-transform: uppercase; color: var(--ink-3); letter-spacing: 0.06em; font-weight: 600; }
-.ver-card .field-value { font-family: var(--mono); font-size: 13px; color: var(--ink); }
-.ver-card .signal-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.ver-card .field-label { font-size: var(--t-xs); text-transform: uppercase; color: var(--ink-3); letter-spacing: var(--track-label); font-weight: 600; }
+.ver-card .field-value { font-family: var(--mono); font-size: var(--t-sm); color: var(--ink); }
+.ver-card .signal-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
 
 /* ════════════════════════════════════════════════════════════════════════
    STATUS CHIPS
    These appear EVERYWHERE a donation is shown. Never hidden.
    ══════════════════════════════════════════════════════════════════════ */
 .chip {
-  display: inline-flex; align-items: center; gap: 5px;
-  font-family: var(--sans); font-size: 10px; font-weight: 600;
-  letter-spacing: 0.08em; text-transform: uppercase;
-  padding: 3px 7px; border-radius: 2px;
+  display: inline-flex; align-items: center; gap: 4px;
+  font-family: var(--sans); font-size: var(--t-xs); font-weight: 600;
+  letter-spacing: var(--track-label); text-transform: uppercase;
+  padding: 4px 8px; border-radius: 2px;
   white-space: nowrap;
 }
 .chip-confirmed { background: var(--ok-bg); color: var(--ok-fg); }
-.chip-confirmed::before { content: "●"; font-size: 10px; }
+.chip-confirmed::before { content: "●"; font-size: var(--t-xs); }
 .chip-probable  { background: var(--warn-bg); color: var(--warn-fg); }
-.chip-probable::before  { content: "◐"; font-size: 10px; }
+.chip-probable::before  { content: "◐"; font-size: var(--t-xs); }
 /* Household member tag — marks a donation/row attributed to a spouse/family
    member tracked as their own entity, never silently merged into the owner. */
 .chip-kin { background: var(--bg-sunk); color: var(--ink-3); border: 1px solid var(--rule); }
 
 /* Household panel on the owner profile (spouse/family rollup). */
-.household-grid { margin-top: 18px; border-top: 1px solid var(--rule); }
+.household-grid { margin-top: 16px; border-top: 1px solid var(--rule); }
 .household-row {
   display: grid; grid-template-columns: 1fr auto auto; gap: 16px; align-items: baseline;
   padding: 12px 0; border-bottom: 1px solid var(--rule);
 }
-.household-row .household-who { font-family: var(--serif); font-size: 15px; }
+.household-row .household-who { font-family: var(--serif); font-size: var(--t-base); }
 .household-row .household-who .chip { margin-left: 8px; }
-.household-row .household-amt { font-family: var(--mono); font-size: 15px; text-align: right; }
-.household-row .household-n { color: var(--ink-3); font-size: 12px; text-align: right; min-width: 92px; }
+.household-row .household-amt { font-family: var(--mono); font-size: var(--t-base); text-align: right; }
+.household-row .household-n { color: var(--ink-3); font-size: var(--t-xs); text-align: right; min-width: 92px; }
 .household-row.household-total { border-bottom: 0; font-weight: 600; }
-.household-row.household-total .household-who { font-family: var(--sans); text-transform: uppercase; letter-spacing: 0.06em; font-size: 12px; color: var(--ink-3); }
+.household-row.household-total .household-who { font-family: var(--sans); text-transform: uppercase; letter-spacing: var(--track-label); font-size: var(--t-xs); color: var(--ink-3); }
 
 /* 48-hour notice flag — high-urgency FEC report type, filed within 48 hours
    of a $1K+ contribution received in the final 20 days before an election. */
 .chip-48h {
   background: var(--flag-bg); color: var(--flag-fg);
   border: 1px solid var(--flag-border);
-  font-family: var(--mono); font-size: 9px; font-weight: 700;
-  letter-spacing: 0.06em;
-  padding: 2px 5px; border-radius: 2px;
+  font-family: var(--mono); font-size: var(--t-xs); font-weight: 700;
+  letter-spacing: var(--track-label);
+  padding: 4px 4px; border-radius: 2px;
   display: inline-flex; align-items: center; gap: 4px;
 }
-.chip-48h::before { content: "⚡"; font-size: 10px; }
+.chip-48h::before { content: "⚡"; font-size: var(--t-xs); }
 
 .chip-signal {
   background: var(--bg-elev);
   border: 1px solid var(--rule-strong);
   color: var(--ink-2);
-  font-family: var(--mono); font-size: 11px; font-weight: 400;
+  font-family: var(--mono); font-size: var(--t-xs); font-weight: 400;
   letter-spacing: 0; text-transform: none;
-  padding: 3px 7px; border-radius: 2px;
-  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 8px; border-radius: 2px;
+  display: inline-flex; align-items: center; gap: 4px;
 }
 .chip-signal::before { content: "✓"; color: var(--ok-fg); font-weight: 700; }
 
 .chip-party {
-  font-family: var(--sans); font-size: 10px; font-weight: 700;
-  letter-spacing: 0.08em;
-  padding: 2px 6px; border-radius: 2px;
+  font-family: var(--sans); font-size: var(--t-xs); font-weight: 700;
+  letter-spacing: var(--track-label);
+  padding: 4px 8px; border-radius: 2px;
 }
-.chip-party.dem { background: var(--dem-soft); color: var(--dem); }
-.chip-party.rep { background: var(--rep-soft); color: var(--rep); }
+.chip-party.dem { background: var(--dem-soft); color: var(--dem-ink); }
+.chip-party.rep { background: var(--rep-soft); color: var(--rep-ink); }
 .chip-party.oth { background: var(--oth-soft); color: var(--ink-2); }
 
 /* ════════════════════════════════════════════════════════════════════════
@@ -1035,12 +1120,12 @@ section.block:last-child { border-bottom: 0; }
 /* ── Compact density — dense, multi-column transaction lists. Tighter rows,
    13px text, and top-aligned cells so a wrapping recipient + candidate
    sub-label reads cleanly. All other chrome is shared with .owners-table. ── */
-.donations-table { font-size: 13px; }
-.donations-table th, .donations-table td { padding: 10px 10px; vertical-align: top; }
+.donations-table { font-size: var(--t-sm); }
+.donations-table th, .donations-table td { padding: 8px 8px; vertical-align: top; }
 .donations-table .col-date { font-family: var(--mono); white-space: nowrap; color: var(--ink-2); }
 .donations-table .col-amount { font-weight: 600; }
 .donations-table .col-recipient { line-height: 1.3; }
-.donations-table .col-recipient .candidate { color: var(--ink-3); font-size: 12px; display: block; margin-top: 2px; }
+.donations-table .col-recipient .candidate { color: var(--ink-3); font-size: var(--t-xs); display: block; margin-top: 4px; }
 
 /* ════════════════════════════════════════════════════════════════════════
    DRAWER (donation detail)
@@ -1062,25 +1147,25 @@ section.block:last-child { border-bottom: 0; }
 }
 .drawer.open { transform: translateX(0); }
 .drawer-head {
-  padding: 18px 28px;
+  padding: 16px 28px;
   border-bottom: 1px solid var(--rule);
   display: flex; justify-content: space-between; align-items: center;
   position: sticky; top: 0; background: var(--bg-elev); z-index: 2;
 }
-.drawer-head .eyebrow { font-size: 10px; }
+.drawer-head .eyebrow { font-size: var(--t-xs); }
 .drawer-close {
-  background: transparent; border: 0; font-size: 22px; color: var(--ink-2);
+  background: transparent; border: 0; font-size: var(--t-lg); color: var(--ink-2);
   width: 32px; height: 32px; border-radius: var(--radius-sm);
 }
 .drawer-close:hover { background: var(--bg-sunk); }
 
 .drawer-body { padding: 24px 28px 80px; }
-.drawer h2 { font-size: 24px; line-height: 1.2; margin-bottom: 6px; }
+.drawer h2 { font-size: var(--t-lg); line-height: 1.2; margin-bottom: 8px; }
 .drawer .donor-arrow { color: var(--ink-3); font-weight: 400; }
 
 .drawer-amount {
-  font-family: var(--display); font-size: 46px; font-weight: 600;
-  letter-spacing: -0.025em; line-height: 1; padding-top: 18px;
+  font-family: var(--display); font-size: var(--t-2xl); font-weight: 400;
+  letter-spacing: -0.025em; line-height: 1; padding-top: 16px;
   font-variant-numeric: tabular-nums lining-nums;
 }
 
@@ -1098,8 +1183,8 @@ section.block:last-child { border-bottom: 0; }
   border-bottom-style: solid;
 }
 .drawer-amount-meta {
-  margin-top: 8px; display: flex; gap: 10px; align-items: center;
-  font-size: 13px; color: var(--ink-3);
+  margin-top: 8px; display: flex; gap: 8px; align-items: center;
+  font-size: var(--t-sm); color: var(--ink-3);
   font-family: var(--mono);
 }
 .drawer-amount-meta .chip { font-family: var(--sans); }
@@ -1110,33 +1195,33 @@ section.block:last-child { border-bottom: 0; }
 }
 .drawer-section:first-of-type { border-top: 0; padding-top: 0; }
 .drawer-section h3 {
-  font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em;
-  color: var(--ink-3); margin-bottom: 14px;
+  font-size: var(--t-xs); font-weight: 600; text-transform: uppercase; letter-spacing: var(--track-label);
+  color: var(--ink-3); margin-bottom: 16px;
 }
 .drawer-grid {
-  display: grid; grid-template-columns: 110px 1fr; gap: 8px 18px;
-  font-size: 13px;
+  display: grid; grid-template-columns: 110px 1fr; gap: 8px 16px;
+  font-size: var(--t-sm);
 }
-.drawer-grid .label { color: var(--ink-3); font-size: 12px; padding-top: 2px; }
-.drawer-grid .value { color: var(--ink); font-family: var(--mono); font-size: 13px; word-break: break-word; }
-.drawer-grid .value-prose { font-family: var(--sans); font-size: 14px; line-height: 1.45; }
+.drawer-grid .label { color: var(--ink-3); font-size: var(--t-xs); padding-top: 4px; }
+.drawer-grid .value { color: var(--ink); font-family: var(--mono); font-size: var(--t-sm); word-break: break-word; }
+.drawer-grid .value-prose { font-family: var(--sans); font-size: var(--t-sm); line-height: 1.45; }
 
 .drawer-reason {
   background: var(--bg-sunk);
   border-left: 3px solid var(--ok-fg);
-  padding: 12px 14px;
-  font-size: 13px;
+  padding: 12px 16px;
+  font-size: var(--t-sm);
   line-height: 1.5;
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
   color: var(--ink-2);
 }
 .drawer-reason.probable { border-left-color: var(--warn-fg); }
 
-.drawer-signals { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+.drawer-signals { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
 
 .drawer-link {
-  display: inline-flex; align-items: center; gap: 6px;
-  font-family: var(--mono); font-size: 12px;
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--mono); font-size: var(--t-xs);
   color: var(--accent);
   word-break: break-all;
 }
@@ -1145,8 +1230,8 @@ section.block:last-child { border-bottom: 0; }
 /* FEC source-link cards in the drawer */
 .drawer-source-links { display: flex; flex-direction: column; gap: 8px; }
 .drawer-source-link {
-  display: flex; align-items: center; gap: 14px;
-  padding: 12px 14px;
+  display: flex; align-items: center; gap: 16px;
+  padding: 12px 16px;
   border: 1px solid var(--rule);
   background: var(--bg-elev);
   border-radius: var(--radius-sm);
@@ -1170,18 +1255,18 @@ section.block:last-child { border-bottom: 0; }
   pointer-events: none;
 }
 .drawer-source-icon {
-  font-size: 20px; line-height: 1;
+  font-size: var(--t-md); line-height: 1;
   flex-shrink: 0;
   filter: grayscale(0.2);
 }
 .drawer-source-title {
-  font-size: 14px; font-weight: 600; color: var(--ink); line-height: 1.2;
+  font-size: var(--t-sm); font-weight: 600; color: var(--ink); line-height: 1.2;
 }
 .drawer-source-link:not(.disabled) .drawer-source-title::after {
   content: " ↗"; color: var(--accent); font-weight: 400;
 }
 .drawer-source-sub {
-  font-size: 12px; color: var(--ink-3); margin-top: 2px; line-height: 1.3;
+  font-size: var(--t-xs); color: var(--ink-3); margin-top: 4px; line-height: 1.3;
   font-family: var(--mono);
 }
 
@@ -1203,12 +1288,12 @@ button.drawer-source-link {
 .drawer-source-link.copy-perma.copied .drawer-source-icon { color: var(--ok-fg); }
 
 .drawer-not-found {
-  font-family: var(--sans); font-size: 14px; line-height: 1.5;
+  font-family: var(--sans); font-size: var(--t-sm); line-height: 1.5;
   color: var(--ink-2); margin: 12px 0;
 }
 .drawer-not-found code {
-  font-family: var(--mono); font-size: 12px;
-  background: var(--bg-sunk); padding: 1px 6px; border-radius: 2px;
+  font-family: var(--mono); font-size: var(--t-xs);
+  background: var(--bg-sunk); padding: 0 8px; border-radius: 2px;
 }
 
 /* ════════════════════════════════════════════════════════════════════════
@@ -1223,9 +1308,9 @@ button.drawer-source-link {
 }
 .pipeline-tabs a {
   display: inline-block;
-  padding: 10px 16px;
+  padding: 8px 16px;
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--t-sm);
   font-weight: 500;
   color: var(--ink-3);
   text-decoration: none;
@@ -1249,12 +1334,12 @@ button.drawer-source-link {
   border-bottom: 1px solid var(--rule);
 }
 .changelog-type-row {
-  display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
+  display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
 }
 .changelog-type-filter {
-  display: inline-flex; align-items: center; gap: 6px;
-  font-family: var(--sans); font-size: 12px; font-weight: 500;
-  padding: 4px 10px;
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--sans); font-size: var(--t-xs); font-weight: 500;
+  padding: 4px 8px;
   border: 1px solid var(--rule);
   background: var(--bg-elev);
   color: var(--ink-3);
@@ -1265,11 +1350,11 @@ button.drawer-source-link {
 .changelog-type-filter:hover { color: var(--ink); }
 .changelog-type-filter.on { color: var(--ink); border-color: var(--ink-2); background: var(--bg); }
 .changelog-type-filter .ct-count {
-  font-family: var(--mono); font-size: 11px; color: var(--ink-3);
+  font-family: var(--mono); font-size: var(--t-xs); color: var(--ink-3);
 }
 .changelog-type-filter.on .ct-count { color: var(--ink-2); }
 .changelog-type-reset {
-  font-family: var(--sans); font-size: 12px;
+  font-family: var(--sans); font-size: var(--t-xs);
   padding: 4px 8px;
   background: transparent; border: 0;
   color: var(--accent); cursor: pointer;
@@ -1281,8 +1366,8 @@ button.drawer-source-link {
 }
 .changelog-search-row input {
   flex: 1; max-width: 360px;
-  padding: 6px 10px;
-  font: inherit; font-size: 13px;
+  padding: 8px 8px;
+  font: inherit; font-size: var(--t-sm);
   border: 1px solid var(--rule); border-radius: var(--radius-sm);
   background: var(--bg-elev); color: var(--ink);
 }
@@ -1292,49 +1377,49 @@ button.drawer-source-link {
   display: flex; flex-direction: column; gap: 0;
 }
 .changelog-entry {
-  padding: 18px 0;
+  padding: 16px 0;
   border-bottom: 1px solid var(--rule);
 }
 .changelog-entry:last-child { border-bottom: 0; }
 .changelog-entry-head {
-  display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
   margin-bottom: 8px;
 }
 .changelog-entry-date {
-  font-family: var(--mono); font-size: 12px; color: var(--ink-3);
+  font-family: var(--mono); font-size: var(--t-xs); color: var(--ink-3);
 }
 .changelog-entry-subject {
-  font-family: var(--serif); font-size: 16px; font-weight: 600; color: var(--ink);
+  font-family: var(--serif); font-size: var(--t-base); font-weight: 700; color: var(--ink);
 }
 .changelog-entry-body {
-  font-family: var(--sans); font-size: 14px; line-height: 1.55; color: var(--ink-2);
+  font-family: var(--sans); font-size: var(--t-sm); line-height: 1.55; color: var(--ink-2);
 }
-.changelog-entry-body p { margin: 0 0 10px; }
+.changelog-entry-body p { margin: 0 0 8px; }
 .changelog-entry-body p:last-child { margin-bottom: 0; }
-.changelog-entry-body ul { margin: 4px 0 10px; padding-left: 20px; }
-.changelog-entry-body li { margin: 2px 0; }
+.changelog-entry-body ul { margin: 4px 0 8px; padding-left: 20px; }
+.changelog-entry-body li { margin: 4px 0; }
 .changelog-entry-body code {
-  font-family: var(--mono); font-size: 12px;
-  background: var(--bg-sunk); padding: 1px 5px; border-radius: 2px;
+  font-family: var(--mono); font-size: var(--t-xs);
+  background: var(--bg-sunk); padding: 0 4px; border-radius: 2px;
   color: var(--ink);
 }
 .changelog-entry-body strong { color: var(--ink); font-weight: 600; }
 .changelog-entry-body h4 {
-  font-family: var(--serif); font-size: 14px; font-weight: 700;
-  color: var(--ink); margin: 16px 0 6px;
+  font-family: var(--serif); font-size: var(--t-sm); font-weight: 700;
+  color: var(--ink); margin: 16px 0 8px;
   letter-spacing: 0.01em;
 }
 .changelog-entry-body h5 {
-  font-family: var(--sans); font-size: 12px; font-weight: 600;
+  font-family: var(--sans); font-size: var(--t-xs); font-weight: 600;
   color: var(--ink-2); margin: 12px 0 4px;
-  text-transform: uppercase; letter-spacing: 0.04em;
+  text-transform: uppercase; letter-spacing: var(--track-label);
 }
 
 .changelog-type-chip {
   display: inline-block;
-  padding: 2px 8px;
-  font-family: var(--mono); font-size: 10px; font-weight: 500;
-  letter-spacing: 0.04em;
+  padding: 4px 8px;
+  font-family: var(--mono); font-size: var(--t-xs); font-weight: 500;
+  letter-spacing: var(--track-label);
   border-radius: 2px;
   background: var(--bg-sunk);
   color: var(--ink-2);
@@ -1360,7 +1445,7 @@ button.drawer-source-link {
 
 .changelog-load-more {
   display: flex; justify-content: center;
-  padding: 18px 0;
+  padding: 16px 0;
   border-top: 1px solid var(--rule);
 }
 
@@ -1368,24 +1453,24 @@ button.drawer-source-link {
    RECIPIENTS PAGE (B.1)
    ══════════════════════════════════════════════════════════════════════ */
 .recipients-filters {
-  display: flex; flex-direction: column; gap: 10px;
+  display: flex; flex-direction: column; gap: 8px;
   padding: 16px 0;
   border-bottom: 1px solid var(--rule);
 }
 .recipients-filter-row {
-  display: flex; flex-wrap: wrap; align-items: center; gap: 6px;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
 }
 .recipients-filter-label {
-  font-family: var(--sans); font-size: 12px; font-weight: 600;
-  color: var(--ink-3); letter-spacing: 0.04em;
+  font-family: var(--sans); font-size: var(--t-xs); font-weight: 600;
+  color: var(--ink-3); letter-spacing: var(--track-label);
   text-transform: uppercase;
   width: 56px;
   flex-shrink: 0;
 }
 .recipients-pill {
-  display: inline-flex; align-items: center; gap: 6px;
-  font-family: var(--sans); font-size: 12px; font-weight: 500;
-  padding: 4px 10px;
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--sans); font-size: var(--t-xs); font-weight: 500;
+  padding: 4px 8px;
   border: 1px solid var(--rule);
   background: var(--bg-elev);
   color: var(--ink-3);
@@ -1398,20 +1483,20 @@ button.drawer-source-link {
 .recipients-pill.on.party-dem { border-color: var(--dem); }
 .recipients-pill.on.party-rep { border-color: var(--rep); }
 .recipients-pill .re-count {
-  font-family: var(--mono); font-size: 11px; color: var(--ink-3);
+  font-family: var(--mono); font-size: var(--t-xs); color: var(--ink-3);
 }
 .recipients-pill.on .re-count { color: var(--ink-2); }
 .recipients-filter-row input {
   flex: 1; max-width: 360px;
-  padding: 6px 10px;
-  font: inherit; font-size: 13px;
+  padding: 8px 8px;
+  font: inherit; font-size: var(--t-sm);
   border: 1px solid var(--rule); border-radius: var(--radius-sm);
   background: var(--bg-elev); color: var(--ink);
   margin-left: 56px;  /* align with pills above */
 }
 .recipients-filter-row input:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
 .recipients-reset {
-  font-family: var(--sans); font-size: 12px;
+  font-family: var(--sans); font-size: var(--t-xs);
   padding: 4px 8px;
   background: transparent; border: 0;
   color: var(--accent); cursor: pointer;
@@ -1419,19 +1504,19 @@ button.drawer-source-link {
 .recipients-reset:hover { text-decoration: underline; }
 
 .recipients-table .re-name {
-  font-family: var(--serif); font-size: 14px; font-weight: 500;
+  font-family: var(--serif); font-size: var(--t-sm); font-weight: 700;
   color: var(--ink);
 }
 .recipients-table .re-sub {
-  font-family: var(--mono); font-size: 11px;
-  color: var(--ink-3); margin-top: 2px;
+  font-family: var(--mono); font-size: var(--t-xs);
+  color: var(--ink-3); margin-top: 4px;
 }
 .recipients-table tbody tr:hover { background: var(--bg-sunk); }
 .recipients-table th.re-sort:hover { color: var(--accent); }
 
 .recipients-load-more {
   display: flex; justify-content: center;
-  padding: 18px 0;
+  padding: 16px 0;
   border-top: 1px solid var(--rule);
 }
 
@@ -1440,7 +1525,7 @@ button.drawer-source-link {
    ══════════════════════════════════════════════════════════════════════ */
 .heatmap-wrap {
   overflow-x: auto;
-  padding-top: 14px;
+  padding-top: 16px;
 }
 .heatmap-wrap svg .hm-cell:hover {
   stroke: var(--ink);
@@ -1457,14 +1542,14 @@ button.drawer-source-link {
   border-radius: var(--radius-sm);
   background: var(--bg-sunk);
   overflow: hidden;
-  margin-top: 6px;
+  margin-top: 8px;
 }
 .heatmap-sort-pills button {
   background: transparent;
   border: 0;
-  padding: 6px 12px;
+  padding: 8px 12px;
   font-family: var(--sans);
-  font-size: 12px;
+  font-size: var(--t-xs);
   color: var(--ink-3);
   cursor: pointer;
   transition: background 80ms, color 80ms;
@@ -1478,15 +1563,15 @@ button.drawer-source-link {
 .heatmap-sort-pills button + button { border-left: 1px solid var(--rule); }
 
 .heatmap-legend {
-  display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
   padding: 12px 0 0;
-  font-family: var(--sans); font-size: 12px;
+  font-family: var(--sans); font-size: var(--t-xs);
   color: var(--ink-3);
 }
 .hm-legend-section {
   font-weight: 600; color: var(--ink-2);
-  text-transform: uppercase; letter-spacing: 0.04em;
-  font-size: 11px;
+  text-transform: uppercase; letter-spacing: var(--track-label);
+  font-size: var(--t-xs);
   margin-right: 4px;
 }
 .hm-legend-item { display: inline-flex; align-items: center; gap: 4px; }
@@ -1495,35 +1580,35 @@ button.drawer-source-link {
   border: 1px solid var(--rule);
   border-radius: 2px;
 }
-.hm-legend-lbl { font-family: var(--mono); font-size: 11px; color: var(--ink-2); }
+.hm-legend-lbl { font-family: var(--mono); font-size: var(--t-xs); color: var(--ink-2); }
 .hm-legend-sep {
   display: inline-block;
   border-left: 1px solid var(--rule);
   height: 16px;
-  margin: 0 6px;
+  margin: 0 8px;
 }
 
 /* ════════════════════════════════════════════════════════════════════════
    METHODOLOGY
    ══════════════════════════════════════════════════════════════════════ */
 .method-body { padding: 48px 0; }
-.method-body h2 { margin: 48px 0 14px; }
+.method-body h2 { margin: 48px 0 16px; }
 .method-body h2:first-of-type { margin-top: 0; }
-.method-body p { font-size: 16px; line-height: 1.65; color: var(--ink-2); max-width: 64ch; margin: 0 0 16px; }
+.method-body p { font-size: var(--t-base); line-height: 1.65; color: var(--ink-2); max-width: 64ch; margin: 0 0 16px; }
 .method-body p strong { color: var(--ink); font-weight: 600; }
-.method-tiers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin: 20px 0 32px; }
+.method-tiers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 20px 0 32px; }
 .method-tier { padding: 20px; border: 1px solid var(--rule); border-radius: var(--radius-sm); background: var(--bg-elev); }
 .method-tier.confirmed { border-top: 3px solid var(--ok-fg); }
 .method-tier.probable  { border-top: 3px solid var(--warn-fg); }
 .method-tier.uncertain { border-top: 3px solid var(--rule-strong); }
-.method-tier h3 { font-family: var(--serif); font-size: 18px; font-weight: 600; text-transform: none; letter-spacing: 0; color: var(--ink); margin-bottom: 6px; }
-.method-tier .tier-rule { font-family: var(--mono); font-size: 12px; color: var(--ink-3); margin-bottom: 12px; }
-.method-tier p { font-size: 14px; line-height: 1.5; margin: 0; }
+.method-tier h3 { font-family: var(--serif); font-size: var(--t-md); font-weight: 700; text-transform: none; letter-spacing: 0; color: var(--ink); margin-bottom: 8px; }
+.method-tier .tier-rule { font-family: var(--mono); font-size: var(--t-xs); color: var(--ink-3); margin-bottom: 12px; }
+.method-tier p { font-size: var(--t-sm); line-height: 1.5; margin: 0; }
 
 .method-scope { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin: 16px 0; }
-.method-scope ul { padding-left: 22px; margin: 0; }
-.method-scope li { font-size: 14px; color: var(--ink-2); margin-bottom: 6px; }
-.method-scope h4 { font-family: var(--sans); font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-3); font-weight: 600; margin-bottom: 8px; }
+.method-scope ul { padding-left: 24px; margin: 0; }
+.method-scope li { font-size: var(--t-sm); color: var(--ink-2); margin-bottom: 8px; }
+.method-scope h3 { font-family: var(--sans); font-size: var(--t-xs); text-transform: uppercase; letter-spacing: var(--track-label); color: var(--ink-3); font-weight: 600; margin-bottom: 8px; }
 
 /* ════════════════════════════════════════════════════════════════════════
    FOOTER
@@ -1533,7 +1618,7 @@ button.drawer-source-link {
   background: var(--bg-sunk);
   padding: 48px 0 64px;
   margin-top: 8px;
-  font-size: 13px;
+  font-size: var(--t-sm);
   color: var(--ink-3);
 }
 .site-footer .footer-grid {
@@ -1541,19 +1626,27 @@ button.drawer-source-link {
 }
 @media (max-width: 880px) { .site-footer .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; } }
 .site-footer h4 {
-  font-family: var(--sans); font-size: 11px; text-transform: uppercase;
-  letter-spacing: 0.1em; color: var(--ink-2); font-weight: 600;
-  margin-bottom: 14px;
+  font-family: var(--sans); font-size: var(--t-xs); text-transform: uppercase;
+  letter-spacing: var(--track-label); color: var(--ink-2); font-weight: 600;
+  margin-bottom: 16px;
 }
 .site-footer p { margin: 0 0 8px; }
 .site-footer a { color: var(--ink-2); }
 .site-footer a:hover { color: var(--accent); }
-.site-footer .colophon { font-size: 12.5px; line-height: 1.6; color: var(--ink-3); max-width: 46ch; margin-top: 14px; }
-.footer-brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; }
+.site-footer .colophon { font-size: var(--t-base); line-height: 1.6; color: var(--ink-3); max-width: 46ch; margin-top: 16px; }
+.footer-brand { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; }
 .footer-brand:hover { text-decoration: none; }
 .footer-mark { width: 30px; height: 30px; display: block; }
-.footer-wordmark { font-family: var(--display); font-size: 19px; font-weight: 600; letter-spacing: -0.01em; color: var(--brand); }
-.footer-mono { font-family: var(--mono); font-size: 12px; color: var(--ink-2); }
+.footer-wordmark { font-family: var(--display); font-size: var(--t-md); font-weight: 400; letter-spacing: -0.01em; color: var(--brand); }
+/* Footer column titles are <h2> so they can never skip a heading level from
+   whatever the page content ended on (§6). They are styled as small labels —
+   heading LEVEL is document structure, heading SIZE is a separate decision. */
+.footer-col-title {
+  font-family: var(--sans); font-size: var(--t-xs); font-weight: 600;
+  letter-spacing: var(--track-label); text-transform: uppercase;
+  color: var(--ink-3); margin: 0 0 12px;
+}
+.footer-mono { font-family: var(--mono); font-size: var(--t-xs); color: var(--ink-2); }
 .footer-mono-dim { color: var(--ink-3); }
 
 /* ════════════════════════════════════════════════════════════════════════
@@ -1582,29 +1675,29 @@ button.drawer-source-link {
 .cmdk-scrim.open .cmdk-modal { transform: translateY(0); }
 .cmdk-input-wrap {
   display: flex; align-items: center; gap: 12px;
-  padding: 14px 18px;
+  padding: 16px 16px;
   border-bottom: 1px solid var(--rule);
 }
 .cmdk-input-icon {
-  color: var(--ink-3); font-size: 18px;
+  color: var(--ink-3); font-size: var(--t-md);
 }
 .cmdk-input {
   flex: 1; border: 0; outline: none; background: transparent;
-  font: 17px var(--sans);
+  font: var(--t-md)None var(--sans);
   color: var(--ink);
 }
 .cmdk-input::placeholder { color: var(--ink-3); }
 .cmdk-results {
   max-height: 50vh; overflow-y: auto;
-  padding: 6px 0;
+  padding: 8px 0;
   margin: 0; list-style: none;
 }
 .cmdk-result {
   display: grid;
   grid-template-columns: 70px 1fr auto;
   align-items: center;
-  gap: 14px;
-  padding: 10px 18px;
+  gap: 16px;
+  padding: 8px 16px;
   cursor: pointer;
   border-left: 2px solid transparent;
 }
@@ -1613,9 +1706,9 @@ button.drawer-source-link {
   border-left-color: var(--accent);
 }
 .cmdk-result-type {
-  font-size: 9px; font-weight: 700; letter-spacing: 0.1em;
+  font-size: var(--t-xs); font-weight: 700; letter-spacing: var(--track-label);
   text-transform: uppercase; color: var(--ink-3);
-  padding: 3px 7px; background: var(--bg-sunk); border-radius: 2px;
+  padding: 4px 8px; background: var(--bg-sunk); border-radius: 2px;
   text-align: center;
   white-space: nowrap;  /* don't break the "cand. →" arrow onto a second line */
   min-width: 64px;      /* keep the badge column visually aligned */
@@ -1624,39 +1717,39 @@ button.drawer-source-link {
 /* Candidate-route badge: tint to hint at the redirect behavior. */
 .cmdk-result-type[data-kind="candidate"] { color: var(--accent); }
 .cmdk-result-label {
-  font-family: var(--serif); font-size: 15px; font-weight: 600;
+  font-family: var(--serif); font-size: var(--t-base); font-weight: 700;
   line-height: 1.25; color: var(--ink);
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 .cmdk-result-sub {
-  font-size: 12px; color: var(--ink-3); margin-top: 2px;
+  font-size: var(--t-xs); color: var(--ink-3); margin-top: 4px;
   font-family: var(--mono); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 .cmdk-result-meta {
   font-family: var(--mono); font-variant-numeric: tabular-nums;
-  font-size: 12px; color: var(--ink-3); text-align: right;
+  font-size: var(--t-xs); color: var(--ink-3); text-align: right;
   white-space: nowrap;
 }
 .cmdk-result mark {
   background: rgba(184, 85, 43, 0.16);
   color: var(--accent-2);
-  padding: 0 1px;
+  padding: 0 0;
   border-radius: 1px;
 }
 .cmdk-empty {
-  padding: 36px 18px; text-align: center; color: var(--ink-3); font-size: 13px;
+  padding: 36px 16px; text-align: center; color: var(--ink-3); font-size: var(--t-sm);
 }
 .cmdk-footer {
-  display: flex; gap: 18px; justify-content: flex-start;
-  padding: 10px 18px; border-top: 1px solid var(--rule);
-  font-size: 11px; color: var(--ink-3); font-family: var(--mono);
+  display: flex; gap: 16px; justify-content: flex-start;
+  padding: 8px 16px; border-top: 1px solid var(--rule);
+  font-size: var(--t-xs); color: var(--ink-3); font-family: var(--mono);
 }
 .cmdk-footer kbd {
   display: inline-block;
   background: var(--bg-sunk); border: 1px solid var(--rule);
   border-bottom-width: 2px;
-  padding: 1px 5px; border-radius: 2px;
-  font-family: var(--mono); font-size: 10px; color: var(--ink-2);
+  padding: 0 4px; border-radius: 2px;
+  font-family: var(--mono); font-size: var(--t-xs); color: var(--ink-2);
   margin-right: 4px;
 }
 
@@ -1666,18 +1759,18 @@ button.drawer-source-link {
   background: var(--bg-sunk);
   border: 1px solid var(--rule);
   color: var(--ink-2);
-  padding: 5px 10px;
+  padding: 4px 8px;
   border-radius: var(--radius-sm);
-  font-size: 12px;
+  font-size: var(--t-xs);
   cursor: pointer;
-  margin-left: 10px;
+  margin-left: 8px;
 }
 .search-btn:hover { border-color: var(--accent); color: var(--accent); }
-.search-btn .search-btn-icon { font-size: 13px; }
+.search-btn .search-btn-icon { font-size: var(--t-sm); }
 .search-btn .search-btn-kbd {
-  font-family: var(--mono); font-size: 10px;
+  font-family: var(--mono); font-size: var(--t-xs);
   background: var(--bg-elev); border: 1px solid var(--rule);
-  padding: 1px 5px; border-radius: 2px;
+  padding: 0 4px; border-radius: 2px;
   color: var(--ink-3);
 }
 
@@ -1692,14 +1785,14 @@ button.drawer-source-link {
   border-radius: var(--radius-sm);
   background: var(--bg-sunk);
   overflow: hidden;
-  margin-left: 6px;
+  margin-left: 8px;
   font-family: var(--mono);
 }
 .dollars-toggle button {
   background: transparent;
   border: 0;
-  padding: 4px 9px;
-  font: inherit; font-size: 12px;
+  padding: 4px 8px;
+  font: inherit; font-size: var(--t-xs);
   color: var(--ink-3);
   cursor: pointer;
   transition: background 80ms, color 80ms;
@@ -1718,26 +1811,43 @@ button.drawer-source-link {
 .dollars-footnote {
   background: var(--bg-sunk);
   border-bottom: 1px solid var(--rule);
-  padding: 6px 24px;
-  font-family: var(--mono); font-size: 11px;
+  padding: 8px 24px;
+  font-family: var(--mono); font-size: var(--t-xs);
   color: var(--ink-3);
   text-align: center;
 }
-.dollars-footnote .di { color: var(--brand); margin-right: 6px; }
+.dollars-footnote .di { color: var(--brand); margin-right: 8px; }
 
 @media (max-width: 760px) {
-  .nav { flex-wrap: wrap; row-gap: 6px; }
+  .nav { flex-wrap: wrap; row-gap: 8px; }
   .dollars-toggle { margin-left: auto; }
 }
 
 /* ════════════════════════════════════════════════════════════════════════
    LOADING / EMPTY STATES
    ══════════════════════════════════════════════════════════════════════ */
-.loading { padding: 80px 0; text-align: center; color: var(--ink-3); font-size: 14px; }
+.loading { padding: 80px 0; text-align: center; color: var(--ink-3); font-size: var(--t-sm); }
 /* Gentle pulse so the initial "Loading data…" reads as active, not stuck. */
 .loading { animation: cs-pulse 1.4s ease-in-out infinite; }
 @keyframes cs-pulse { 0%,100% { opacity: 0.5; } 50% { opacity: 1; } }
-@media (prefers-reduced-motion: reduce) { .loading { animation: none; } }
+/* GROUNDRULES §6: motion is OFF by default under prefers-reduced-motion — not
+   merely reduced, and not just the loading spinner. This kills all 27 hover
+   transitions, both translate effects and every animation, while leaving
+   layout and colour untouched. Durations go to 1ms rather than 0 so that
+   transitionend listeners still fire and nothing hangs waiting on them. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+  .loading { animation: none; }
+  /* The two motion affordances are position changes, so neutralise the
+     transform itself rather than just its timing. */
+  .level-card:hover, .juris-card:hover, .card:hover { transform: none; }
+  .lvl-cta::after, .level-card:hover .lvl-cta::after { transform: none; }
+}
 
 /* Brand-tinted text selection — a small premium detail. */
 ::selection { background: var(--brand-soft); color: var(--brand-ink); }
@@ -1750,15 +1860,15 @@ button.drawer-source-link {
   margin: 12px 0;
 }
 .empty-state-icon {
-  font-size: 28px; color: var(--ink-3);
-  display: block; margin-bottom: 10px;
+  font-size: var(--t-xl); color: var(--ink-3);
+  display: block; margin-bottom: 8px;
 }
 .empty-state-title {
-  font-family: var(--serif); font-size: 17px; font-weight: 600;
-  color: var(--ink); margin-bottom: 6px;
+  font-family: var(--serif); font-size: var(--t-md); font-weight: 700;
+  color: var(--ink); margin-bottom: 8px;
 }
 .empty-state-body {
-  font-size: 13px; color: var(--ink-3);
+  font-size: var(--t-sm); color: var(--ink-3);
   max-width: 48ch; margin: 0 auto;
 }
 .empty-state-body a {
@@ -1767,11 +1877,11 @@ button.drawer-source-link {
 .error-banner {
   background: #FDE8DD; color: #6D3216;
   padding: 16px 20px; border-radius: var(--radius-sm); margin: 24px 0;
-  font-size: 14px;
+  font-size: var(--t-sm);
 }
 .error-banner code {
   font-family: var(--mono); background: rgba(0,0,0,0.05);
-  padding: 1px 5px; border-radius: 2px;
+  padding: 0 4px; border-radius: 2px;
 }
 
 /* ════════════════════════════════════════════════════════════════════════
@@ -1797,16 +1907,16 @@ button.drawer-source-link {
      for print. Section heads still carry the eyebrow + H2 + caption. */
   .changelog-filters, .recipients-filters { display: none !important; }
   .container, .container-narrow { max-width: 100%; padding: 0; }
-  section.block { padding: 18px 0; border-bottom: 1px solid #ccc; page-break-inside: avoid; }
+  section.block { padding: 16px 0; border-bottom: 1px solid #ccc; page-break-inside: avoid; }
   .kpis { grid-template-columns: repeat(4, 1fr) !important; }
   .kpi { padding: 8px 14px !important; border-color: #ccc !important; }
-  table { font-size: 11px; }
+  table { font-size: var(--t-xs); }
   th, td { padding: 6px 8px !important; border-color: #ccc !important; }
   .owners-table, .donations-table { min-width: 0 !important; }
   /* Show URLs after external FEC links so a print reader can find them */
   a[href^="http"]::after {
     content: " (" attr(href) ")";
-    font-size: 10px; color: #666; font-family: var(--mono);
+    font-size: var(--t-xs); color: #666; font-family: var(--mono);
   }
   /* Don't show URLs after navigation hash links */
   a[href^="#"]::after { content: ""; }
@@ -1815,8 +1925,8 @@ button.drawer-source-link {
     background: white !important; color: black !important;
     border: 1px solid #666 !important;
   }
-  .chip-party.dem { color: #1F4E89 !important; background: white !important; }
-  .chip-party.rep { color: #B53326 !important; background: white !important; }
+  .chip-party.dem { color: var(--dem-ink) !important; background: white !important; }
+  .chip-party.rep { color: var(--rep-ink) !important; background: white !important; }
   h1, h2 { page-break-after: avoid; }
   /* Keep the timeline chart from breaking mid-figure across pages. */
   .timeline-wrap { page-break-inside: avoid; }
@@ -1857,16 +1967,16 @@ button.drawer-source-link {
 
 @media print {
   .print-header {
-    padding: 0 0 14px;
-    margin-bottom: 22px;
+    padding: 0 0 16px;
+    margin-bottom: 24px;
     border-bottom: 1px solid #999;
     font-family: var(--sans);
     color: black;
   }
   .print-header .ph-brand {
-    display: flex; align-items: center; gap: 10px;
+    display: flex; align-items: center; gap: 8px;
     font-family: var(--serif);
-    font-size: 18px; font-weight: 700;
+    font-size: var(--t-md); font-weight: 700;
   }
   .print-header .ph-mark {
     width: 22px; height: 22px;
@@ -1874,24 +1984,24 @@ button.drawer-source-link {
     color: white;
     display: inline-flex; align-items: center; justify-content: center;
     font-family: var(--serif); font-weight: 700;
-    font-size: 16px;
+    font-size: var(--t-base);
     border-radius: var(--radius-sm);
   }
   .print-header .ph-title {
     font-family: var(--serif);
-    font-size: 22px; font-weight: 700;
-    margin: 6px 0 4px;
+    font-size: var(--t-lg); font-weight: 700;
+    margin: 8px 0 4px;
   }
   .print-header .ph-meta {
     font-family: var(--mono);
-    font-size: 10px;
+    font-size: var(--t-xs);
     color: #555;
-    display: flex; flex-wrap: wrap; gap: 6px 14px;
+    display: flex; flex-wrap: wrap; gap: 8px 16px;
   }
   .print-header .ph-meta span:not(:last-child)::after {
     content: " ·";
     color: #999;
-    padding-left: 6px;
+    padding-left: 8px;
   }
 }
 
@@ -1901,11 +2011,11 @@ button.drawer-source-link {
   body::after {
     content: attr(data-printfooter);
     display: block;
-    padding-top: 18px;
+    padding-top: 16px;
     margin-top: 36px;
     border-top: 1px solid #ccc;
     font-family: var(--mono);
-    font-size: 10px;
+    font-size: var(--t-xs);
     color: #555;
     text-align: center;
   }
@@ -1981,11 +2091,11 @@ button.drawer-source-link {
   /* KPI strip: 2-up on tablet (the original override was dead — see header).
      Cells carry the padding (base moved it off the container), so no band pad. */
   .kpis { grid-template-columns: repeat(2, 1fr); }
-  .kpi  { padding: 16px 18px; border-right: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+  .kpi  { padding: 16px 16px; border-right: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
   .kpi:nth-child(2n) { border-right: 0; }
   .kpi:nth-last-child(-n+2) { border-bottom: 0; }
-  .kpi-value { font-size: 30px; }
-  section.block { padding: 34px 0; }
+  .kpi-value { font-size: var(--t-xl); }
+  section.block { padding: 32px 0; }
 }
 
 @media (max-width: 760px) {
@@ -1998,7 +2108,7 @@ button.drawer-source-link {
     top: calc(100% + 1px); left: 0; right: 0;
     flex-direction: column;
     align-items: stretch;
-    gap: 2px;
+    gap: 4px;
     flex-wrap: nowrap;
     background: var(--bg-elev);
     border-bottom: 1px solid var(--rule);
@@ -2009,7 +2119,7 @@ button.drawer-source-link {
   .masthead.menu-open .nav { display: flex; }
   .nav a {
     padding: 12px 12px;
-    font-size: 15px;
+    font-size: var(--t-base);
     border-radius: 6px;
   }
   /* Utilities drop to the foot of the open menu, above a thin divider. */
@@ -2023,7 +2133,7 @@ button.drawer-source-link {
     width: 100%;
     justify-content: flex-start;
     padding: 12px 12px;
-    font-size: 14px;
+    font-size: var(--t-sm);
     margin-top: 8px;
     border-top: 1px solid var(--rule);
     border-radius: 0 0 6px 6px;
@@ -2046,7 +2156,7 @@ button.drawer-source-link {
      committee/team pages): the inline "·"-separated row crams into cramped
      shrunk columns at phone width. Stack as a clean vertical list, drop dots. */
   .hero .meta, .hero-photo .meta, .owner-meta {
-    flex-direction: column; align-items: flex-start; gap: 5px;
+    flex-direction: column; align-items: flex-start; gap: 4px;
   }
   .hero .meta-dot, .hero-photo .meta-dot, .owner-meta .dot { display: none; }
 }
@@ -2058,12 +2168,12 @@ button.drawer-source-link {
 }
 
 @media (max-width: 560px) {
-  .kpis { grid-template-columns: 1fr; padding: 6px 0; }
-  .kpi  { padding: 16px 2px; border-right: 0; border-bottom: 1px solid var(--rule); }
+  .kpis { grid-template-columns: 1fr; padding: 8px 0; }
+  .kpi  { padding: 16px 4px; border-right: 0; border-bottom: 1px solid var(--rule); }
   .kpi:last-child { border-bottom: 0; }
-  .kpi-value { font-size: 32px; }
+  .kpi-value { font-size: var(--t-xl); }
   /* These grids share the same dead-override bug as .kpis — re-assert. */
-  .method-scope { grid-template-columns: 1fr; gap: 18px; }
+  .method-scope { grid-template-columns: 1fr; gap: 16px; }
   .site-footer .footer-grid { grid-template-columns: 1fr; gap: 24px; }
 }
 
@@ -2088,16 +2198,16 @@ button.drawer-source-link {
 .ghero.state   { --hero-accent: var(--state); }
 .ghero-inner {
   max-width: 1280px; margin: 0 auto;
-  padding: 60px 32px 30px;
+  padding: 60px 32px 32px;
 }
 .ghero .eyebrow { color: var(--hero-accent); display: block; margin-bottom: 16px; font-weight: 700; }
-.ghero h1 { color: var(--ink); font-size: 48px; line-height: 1.05; max-width: 20ch; margin-bottom: 18px; letter-spacing: -0.025em; }
+.ghero h1 { color: var(--ink); font-size: var(--t-3xl); line-height: 1.05; max-width: 20ch; margin-bottom: 16px; letter-spacing: -0.025em; }
 .ghero h1 em { font-style: italic; color: var(--hero-accent); }
-.ghero .deck { color: var(--ink-2); max-width: 62ch; font-size: 19px; }
+.ghero .deck { color: var(--ink-2); max-width: 62ch; font-size: var(--t-md); }
 .ghero .deck strong { color: var(--ink); font-weight: 600; }
-.ghero-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+.ghero-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
 .ghero-chip {
-  font: 600 12px/1.5 var(--sans);
+  font: 600 var(--t-xs)/1.5 var(--sans);
   border: 1px solid var(--rule-strong);
   background: var(--bg-elev);
   color: var(--ink-2);
@@ -2107,9 +2217,9 @@ button.drawer-source-link {
 }
 .ghero-chip:hover { border-color: var(--hero-accent); color: var(--hero-accent); text-decoration: none; }
 @media (max-width: 720px) {
-  .ghero-inner { padding: 44px 22px 26px; }
-  .ghero h1 { font-size: 34px; }
-  .ghero .deck { font-size: 16px; }
+  .ghero-inner { padding: 44px 24px 24px; }
+  .ghero h1 { font-size: var(--t-xl); }
+  .ghero .deck { font-size: var(--t-base); }
 }
 
 /* ── Section sub-nav — a quiet tab bar under a section hero that exposes that
@@ -2130,14 +2240,14 @@ button.drawer-source-link {
 }
 .subnav-inner::-webkit-scrollbar { display: none; }
 .subnav-label {
-  font: 700 11px/1 var(--sans); letter-spacing: 0.1em; text-transform: uppercase;
-  color: var(--ink-3); padding-right: 14px; margin-right: 6px;
+  font: 700 var(--t-xs)/1 var(--sans); letter-spacing: var(--track-label); text-transform: uppercase;
+  color: var(--ink-3); padding-right: 16px; margin-right: 8px;
   border-right: 1px solid var(--rule); white-space: nowrap;
 }
 .subnav a {
-  font: 500 13.5px/1 var(--sans);
+  font: 500 var(--t-sm)/1 var(--sans);
   color: var(--ink-2);
-  padding: 14px 12px;
+  padding: 16px 12px;
   border-bottom: 2px solid transparent;
   white-space: nowrap;
   transition: color 100ms, border-color 100ms;
@@ -2146,14 +2256,14 @@ button.drawer-source-link {
 .subnav a.active { color: var(--ink); border-bottom-color: var(--subnav-accent, var(--accent)); font-weight: 600; }
 .subnav.federal { --subnav-accent: var(--federal); }
 .subnav.state   { --subnav-accent: var(--state); }
-@media (max-width: 720px) { .subnav-inner { padding: 0 18px; } .subnav-label { display: none; } }
+@media (max-width: 720px) { .subnav-inner { padding: 0 16px; } .subnav-label { display: none; } }
 
 /* ── Generic card ── */
 .card {
   background: var(--bg-card);
   border: 1px solid var(--rule);
   border-radius: var(--radius);
-  padding: 22px 24px;
+  padding: 24px 24px;
   box-shadow: var(--shadow-card);
 }
 /* Elevated hover tier (see THE SYSTEM note): 140ms, lift 3px, shadow-md. */
@@ -2183,57 +2293,57 @@ button.drawer-source-link {
 .level-card.state   { --lvl: var(--state);   --lvl-soft: var(--state-soft); }
 .level-card-body { padding: 28px 28px 24px; display: flex; flex-direction: column; flex: 1; }
 .level-card .lvl-eyebrow {
-  font: 700 12px/1 var(--sans); letter-spacing: 0.02em;
+  font: 700 var(--t-xs)/1 var(--sans); letter-spacing: var(--track-label);
   color: var(--lvl); display: block; margin-bottom: 12px;
 }
-.level-card h2 { font-size: 27px; letter-spacing: -0.02em; margin-bottom: 8px; }
-.level-card .lvl-desc { font-family: var(--serif); font-size: 15.5px; line-height: 1.5; color: var(--ink-2); margin: 0 0 20px; }
-.level-card .lvl-stat-row { display: flex; gap: 28px; margin: 4px 0 18px; flex-wrap: wrap; }
+.level-card h2 { font-size: var(--t-lg); letter-spacing: -0.02em; margin-bottom: 8px; }
+.level-card .lvl-desc { font-family: var(--serif); font-size: var(--t-base); line-height: 1.5; color: var(--ink-2); margin: 0 0 20px; }
+.level-card .lvl-stat-row { display: flex; gap: 28px; margin: 4px 0 16px; flex-wrap: wrap; }
 .level-card .lvl-stat .n {
-  font-family: var(--display); font-size: 30px; font-weight: 600; line-height: 1;
+  font-family: var(--display); font-size: var(--t-xl); font-weight: 400; line-height: 1;
   letter-spacing: -0.02em; font-variant-numeric: tabular-nums lining-nums; display: block;
 }
-.level-card .lvl-stat .k { font: 600 11px/1.3 var(--sans); letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); margin-top: 6px; display: block; }
-.level-card .lvl-viz { margin: 2px 0 20px; }
+.level-card .lvl-stat .k { font: 600 var(--t-xs)/1.3 var(--sans); letter-spacing: var(--track-label); text-transform: uppercase; color: var(--ink-3); margin-top: 8px; display: block; }
+.level-card .lvl-viz { margin: 4px 0 20px; }
 .level-card .lvl-foot {
   margin-top: auto; padding-top: 16px; border-top: 1px solid var(--rule);
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
 }
-.level-card .lvl-finding { font-size: 13px; color: var(--ink-3); line-height: 1.4; }
+.level-card .lvl-finding { font-size: var(--t-sm); color: var(--ink-3); line-height: 1.4; }
 .level-card .lvl-finding strong { color: var(--ink-2); font-weight: 600; }
-.level-card .lvl-cta { font: 600 13px/1 var(--sans); color: var(--lvl); white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; }
+.level-card .lvl-cta { font: 600 var(--t-sm)/1 var(--sans); color: var(--lvl); white-space: nowrap; display: inline-flex; align-items: center; gap: 8px; }
 .level-card:hover .lvl-cta::after { transform: translateX(3px); }
 .level-card .lvl-cta::after { content: "→"; transition: transform 140ms; }
 
 /* ── Home layout helpers ── */
 .home-section { padding: 56px 0; border-bottom: 1px solid var(--rule); }
 .home-section:last-of-type { border-bottom: 0; }
-.section-head { max-width: 60ch; margin-bottom: 26px; }
-.section-head h2 { font-size: 28px; margin-bottom: 8px; }
-.section-head .caption { font-size: 15px; color: var(--ink-2); }
+.section-head { max-width: var(--measure); margin-bottom: var(--s5); }
+.section-head h2 { font-size: var(--t-xl); margin-bottom: var(--s2); }
+.section-head .caption { font-size: var(--t-base); color: var(--ink-2); }
 
 /* ── Trust / methodology strip ── */
 .trust-strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border: 1px solid var(--rule); border-radius: var(--radius); overflow: hidden; background: var(--bg-card); }
 @media (max-width: 760px) { .trust-strip { grid-template-columns: 1fr; } }
-.trust-cell { padding: 22px 24px; border-right: 1px solid var(--rule); }
+.trust-cell { padding: 24px 24px; border-right: 1px solid var(--rule); }
 .trust-cell:last-child { border-right: 0; }
 @media (max-width: 760px) { .trust-cell { border-right: 0; border-bottom: 1px solid var(--rule); } .trust-cell:last-child { border-bottom: 0; } }
-.trust-cell .tc-tier { font: 700 11px/1 var(--sans); letter-spacing: 0.1em; text-transform: uppercase; display: inline-flex; align-items: center; gap: 7px; margin-bottom: 12px; }
+.trust-cell .tc-tier { font: 700 var(--t-xs)/1 var(--sans); letter-spacing: var(--track-label); text-transform: uppercase; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 12px; }
 .trust-cell .tc-tier.confirmed { color: var(--ok-fg); }
 .trust-cell .tc-tier.probable  { color: var(--warn-fg); }
 .trust-cell .tc-tier.uncertain { color: var(--ink-3); }
 .trust-cell .tc-tier::before { content: "●"; font-size: 9px; }
 .trust-cell .tc-tier.uncertain::before { content: "○"; }
-.trust-cell h4 { font-family: var(--display); font-size: 18px; font-weight: 600; letter-spacing: -0.01em; text-transform: none; color: var(--ink); margin-bottom: 6px; }
-.trust-cell p { font-size: 13.5px; line-height: 1.5; color: var(--ink-2); margin: 0; }
+.trust-cell h3 { font-family: var(--display); font-size: var(--t-md); font-weight: 400; letter-spacing: -0.01em; text-transform: none; color: var(--ink); margin-bottom: 8px; }
+.trust-cell p { font-size: var(--t-base); line-height: 1.55; color: var(--ink-2); margin: 0; }
 
 /* ── Mini bar chart (used in the State level-card + state jurisdiction view) ── */
 .minibars { display: flex; flex-direction: column; gap: 8px; }
-.minibar-row { display: grid; grid-template-columns: 56px 1fr auto; gap: 10px; align-items: center; font-size: 12px; }
-.minibar-row .mb-label { font: 600 12px/1.2 var(--sans); color: var(--ink-2); white-space: nowrap; }
+.minibar-row { display: grid; grid-template-columns: 56px 1fr auto; gap: 8px; align-items: center; font-size: var(--t-xs); }
+.minibar-row .mb-label { font: 600 var(--t-xs)/1.2 var(--sans); color: var(--ink-2); white-space: nowrap; }
 .minibar-track { height: 8px; background: var(--bg-sunk); border-radius: 999px; overflow: hidden; }
 .minibar-fill { height: 100%; border-radius: 999px; background: var(--mb-color, var(--accent)); }
-.minibar-row .mb-val { font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: 12px; color: var(--ink-2); white-space: nowrap; }
+.minibar-row .mb-val { font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: var(--t-xs); color: var(--ink-2); white-space: nowrap; }
 
 /* ── Stat band — the canonical stat-tile component (see THE SYSTEM note).
    Default chrome is a bordered card; two modifiers change only the container:
@@ -2254,11 +2364,11 @@ button.drawer-source-link {
 .statband.cols-5 { grid-template-columns: repeat(5, 1fr); }
 @media (max-width: 860px) { .statband.cols-4, .statband.cols-5 { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 480px) { .statband.cols-4, .statband.cols-5 { grid-template-columns: 1fr; } }
-.statband .sb-cell { padding: 20px 22px; border-right: 1px solid var(--rule); }
+.statband .sb-cell { padding: 20px 24px; border-right: 1px solid var(--rule); }
 .statband .sb-cell:last-child { border-right: 0; }
-.statband .sb-k { font: 600 11px/1 var(--sans); letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); }
-.statband .sb-v { font-family: var(--display); font-size: 32px; font-weight: 600; line-height: 1.05; letter-spacing: -0.02em; margin-top: 8px; font-variant-numeric: tabular-nums lining-nums; }
-.statband .sb-foot { font-size: 12px; color: var(--ink-3); margin-top: 4px; }
+.statband .sb-k { font: 600 var(--t-xs)/1 var(--sans); letter-spacing: var(--track-label); text-transform: uppercase; color: var(--ink-3); }
+.statband .sb-v { font-family: var(--display); font-size: var(--t-xl); font-weight: 400; line-height: 1.05; letter-spacing: -0.02em; margin-top: 8px; font-variant-numeric: tabular-nums lining-nums; }
+.statband .sb-foot { font-size: var(--t-xs); color: var(--ink-3); margin-top: 4px; }
 .statband a.sb-cell { color: inherit; text-decoration: none; transition: background 100ms; }
 .statband a.sb-cell:hover { background: var(--bg-sunk); }
 @media (max-width: 860px) {
@@ -2277,36 +2387,36 @@ button.drawer-source-link {
 .juris-card {
   display: flex; flex-direction: column;
   border: 1px solid var(--rule); border-radius: var(--radius);
-  padding: 18px 20px; background: var(--bg-card);
+  padding: 16px 20px; background: var(--bg-card);
   box-shadow: var(--shadow-card);
   color: inherit; text-decoration: none;
   transition: border-color 140ms, box-shadow 140ms, transform 140ms;  /* elevated tier */
 }
 .juris-card:hover { text-decoration: none; border-color: var(--state); box-shadow: var(--shadow-md); transform: translateY(-3px); }
 .juris-card .jc-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
-.juris-card .jc-name { font-family: var(--display); font-size: 19px; font-weight: 600; letter-spacing: -0.01em; }
-.juris-card .jc-src { font: 500 10px/1 var(--mono); letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink-3); }
-.juris-card .jc-total { font-family: var(--display); font-size: 26px; font-weight: 600; letter-spacing: -0.02em; font-variant-numeric: tabular-nums lining-nums; margin: 8px 0 2px; }
-.juris-card .jc-meta { font-size: 12px; color: var(--ink-3); margin-bottom: 12px; }
-.juris-card .jc-recips { list-style: none; padding: 0; margin: 0 0 4px; font-size: 13px; }
+.juris-card .jc-name { font-family: var(--display); font-size: var(--t-md); font-weight: 400; letter-spacing: -0.01em; }
+.juris-card .jc-src { font: 500 var(--t-xs)/1 var(--mono); letter-spacing: var(--track-label); text-transform: uppercase; color: var(--ink-3); }
+.juris-card .jc-total { font-family: var(--display); font-size: var(--t-lg); font-weight: 400; letter-spacing: -0.02em; font-variant-numeric: tabular-nums lining-nums; margin: 8px 0 4px; }
+.juris-card .jc-meta { font-size: var(--t-xs); color: var(--ink-3); margin-bottom: 12px; }
+.juris-card .jc-recips { list-style: none; padding: 0; margin: 0 0 4px; font-size: var(--t-sm); }
 .juris-card .jc-recips li { margin: 0 0 4px; line-height: 1.35; }
 .juris-card .jc-recips .amt { font-variant-numeric: tabular-nums; font-weight: 600; font-family: var(--mono); }
 .juris-card .jc-recips .to { color: var(--ink-3); }
-.juris-card .jc-cta { margin-top: auto; padding-top: 12px; font: 600 13px/1 var(--sans); color: var(--state); display: inline-flex; gap: 6px; align-items: center; }
+.juris-card .jc-cta { margin-top: auto; padding-top: 12px; font: 600 var(--t-sm)/1 var(--sans); color: var(--state); display: inline-flex; gap: 8px; align-items: center; }
 .juris-card .jc-cta::after { content: "→"; }
 
 /* ── Tier-3 coverage panel (#/state-coverage) — the ingestion ledger ─────────── */
-.cov-src { display: inline-block; margin-left: 8px; font: 500 10px/1 var(--mono); letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink-3); }
+.cov-src { display: inline-block; margin-left: 8px; font: 500 var(--t-xs)/1 var(--mono); letter-spacing: var(--track-label); text-transform: uppercase; color: var(--ink-3); }
 .cov-dim { color: var(--ink-3); }
 /* Legislation view (#/legislation) */
 .leg-tags { white-space: nowrap; }
 .leg-tags .chip { margin-left: 4px; vertical-align: middle; }
 .leg-vote { text-decoration: none; }
 a.leg-vote:hover { text-decoration: underline; }
-.leg-action { font-size: 12px; color: var(--ink-2); max-width: 320px; }
-.cov-fresh { font-variant-numeric: tabular-nums; font-family: var(--mono); font-size: 12px; color: var(--ink-2); white-space: nowrap; }
+.leg-action { font-size: var(--t-xs); color: var(--ink-2); max-width: 320px; }
+.cov-fresh { font-variant-numeric: tabular-nums; font-family: var(--mono); font-size: var(--t-xs); color: var(--ink-2); white-space: nowrap; }
 .cov-table td { vertical-align: middle; }
-.cov-excl { font-size: 12px; color: var(--ink-2); max-width: 240px; }
+.cov-excl { font-size: var(--t-xs); color: var(--ink-2); max-width: 240px; }
 .cov-excl a { color: var(--state); }
 /* the keep-rate micro-bar behind the confirmed count */
 .cov-keep { white-space: nowrap; }
@@ -2314,17 +2424,17 @@ a.leg-vote:hover { text-decoration: underline; }
 .cov-bar > span { display: block; height: 100%; background: var(--state); }
 
 .cov-matrix { font-variant-numeric: tabular-nums; }
-.cov-matrix th.cov-jx { text-align: center; font: 600 11px/1 var(--mono); letter-spacing: 0.03em; color: var(--ink-2); padding: 8px 6px; }
+.cov-matrix th.cov-jx { text-align: center; font: 600 var(--t-xs)/1 var(--mono); letter-spacing: var(--track-label); color: var(--ink-2); padding: 8px 8px; }
 .cov-matrix td.cov-owner, .cov-matrix th.cov-owner { text-align: left; white-space: nowrap; position: sticky; left: 0; background: var(--bg-card); z-index: 1; }
 .cov-matrix td.cov-owner a { font-weight: 600; }
-.cov-matrix td.cov-owner .cov-dim { display: block; font-size: 11px; }
-.cov-matrix td.cov-cell { text-align: center; font-weight: 600; font-size: 13px; min-width: 34px; color: var(--ink-3); }
+.cov-matrix td.cov-owner .cov-dim { display: block; font-size: var(--t-xs); }
+.cov-matrix td.cov-cell { text-align: center; font-weight: 600; font-size: var(--t-sm); min-width: 34px; color: var(--ink-3); }
 .cov-c { color: var(--state); background: color-mix(in srgb, var(--state) 12%, transparent); }
 .cov-p { color: var(--ink-2); background: color-mix(in srgb, var(--state) 5%, transparent); }
 .cov-o { color: var(--ink-3); }
 .cov-x { color: #b4493b; font-weight: 700; }
 /* inline legend swatches */
-.cov-lg { display: inline-block; min-width: 18px; text-align: center; border-radius: 4px; padding: 1px 5px; margin: 0 2px; font-weight: 700; font-size: 12px; }
+.cov-lg { display: inline-block; min-width: 18px; text-align: center; border-radius: 4px; padding: 0 4px; margin: 0 4px; font-weight: 700; font-size: var(--t-xs); }
 
 /* ── Owner "by level" split — federal & state shown as equal halves at the
    top of an owner page. Two columns, level-coloured kickers, no decoration. ── */
@@ -2334,7 +2444,7 @@ a.leg-vote:hover { text-decoration: underline; }
   overflow: hidden; background: var(--bg-card);
 }
 @media (max-width: 760px) { .owner-split { grid-template-columns: 1fr; } }
-.owner-split .os-col { padding: 24px 26px; border-right: 1px solid var(--rule); }
+.owner-split .os-col { padding: 24px 24px; border-right: 1px solid var(--rule); }
 .owner-split .os-col:last-child { border-right: 0; }
 @media (max-width: 760px) {
   .owner-split .os-col { border-right: 0; border-bottom: 1px solid var(--rule); }
@@ -2342,48 +2452,48 @@ a.leg-vote:hover { text-decoration: underline; }
 }
 .owner-split .os-col.federal { --lvl: var(--federal); }
 .owner-split .os-col.state   { --lvl: var(--state); }
-.os-eyebrow { font: 700 12px/1 var(--sans); color: var(--lvl); margin-bottom: 16px; display: flex; align-items: baseline; gap: 8px; }
+.os-eyebrow { font: 700 var(--t-xs)/1 var(--sans); color: var(--lvl); margin-bottom: 16px; display: flex; align-items: baseline; gap: 8px; }
 .os-eyebrow .os-src { color: var(--ink-3); font-weight: 500; }
-.os-total { font-family: var(--display); font-size: 34px; font-weight: 600; letter-spacing: -0.02em; line-height: 1; font-variant-numeric: tabular-nums lining-nums; }
-.os-breakdown { font-size: 13px; color: var(--ink-3); margin-top: 8px; }
+.os-total { font-family: var(--display); font-size: var(--t-xl); font-weight: 400; letter-spacing: -0.02em; line-height: 1; font-variant-numeric: tabular-nums lining-nums; }
+.os-breakdown { font-size: var(--t-sm); color: var(--ink-3); margin-top: 8px; }
 .os-breakdown b { color: var(--ink-2); font-weight: 600; font-variant-numeric: tabular-nums; }
-.os-top { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--rule); font-size: 13px; line-height: 1.45; }
-.os-top .os-top-k { font: 600 11px/1 var(--sans); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); display: block; margin-bottom: 6px; }
+.os-top { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--rule); font-size: var(--t-sm); line-height: 1.45; }
+.os-top .os-top-k { font: 600 var(--t-xs)/1 var(--sans); letter-spacing: var(--track-label); text-transform: uppercase; color: var(--ink-3); display: block; margin-bottom: 8px; }
 .os-top .amt { font-family: var(--mono); font-variant-numeric: tabular-nums; font-weight: 600; }
 .os-top .to { color: var(--ink-2); }
-.os-chips { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 6px; }
-.os-empty { font-size: 14px; color: var(--ink-3); line-height: 1.5; }
+.os-chips { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px; }
+.os-empty { font-size: var(--t-sm); color: var(--ink-3); line-height: 1.5; }
 
 /* ── Level divider — section front for each half (Federal / State) of an
    owner page. Level-coloured kicker over a large title, separated by a rule. ── */
-.level-divider { border-top: 1px solid var(--rule-strong); padding-top: 30px; margin-top: 10px; }
-.level-divider .ld-kicker { font: 700 12px/1 var(--sans); color: var(--lvl); }
+.level-divider { border-top: 1px solid var(--rule-strong); padding-top: 32px; margin-top: 8px; }
+.level-divider .ld-kicker { font: 700 var(--t-xs)/1 var(--sans); color: var(--lvl); }
 .level-divider.federal { --lvl: var(--federal); }
 .level-divider.state   { --lvl: var(--state); }
-.level-divider h2 { font-size: 30px; margin-top: 10px; }
-.level-divider .ld-sub { font-size: 14px; color: var(--ink-2); margin-top: 8px; max-width: 60ch; }
+.level-divider h2 { font-size: var(--t-xl); margin-top: 8px; }
+.level-divider .ld-sub { font-size: var(--t-sm); color: var(--ink-2); margin-top: 8px; max-width: 60ch; }
 
 /* ── Provenance / note card (replaces the inline-styled methodology note) ── */
 .note-card {
   border: 1px solid var(--rule);
   border-radius: var(--radius); background: var(--bg-sunk);
-  padding: 18px 22px;
+  padding: 16px 24px;
 }
-.note-card h3 { font-family: var(--display); font-size: 17px; font-weight: 600; text-transform: none; letter-spacing: -0.01em; color: var(--ink); margin-bottom: 10px; }
-.note-card p { font-size: 13px; line-height: 1.6; color: var(--ink-2); margin: 0 0 8px; }
+.note-card h3 { font-family: var(--display); font-size: var(--t-md); font-weight: 400; text-transform: none; letter-spacing: -0.01em; color: var(--ink); margin-bottom: 8px; }
+.note-card p { font-size: var(--t-sm); line-height: 1.6; color: var(--ink-2); margin: 0 0 8px; }
 .note-card p:last-child { margin-bottom: 0; }
 
 /* Section intro row (heading + optional action), reused across State page */
-.sec-head-row { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px; margin: 30px 0 14px; }
-.sec-head-row h2 { font-size: 24px; margin: 0; }
-.sec-head-row .sec-link { font: 600 13px/1 var(--sans); }
+.sec-head-row { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px; margin: 32px 0 16px; }
+.sec-head-row h2 { font-size: var(--t-lg); margin: 0; }
+.sec-head-row .sec-link { font: 600 var(--t-sm)/1 var(--sans); }
 
 /* State "by owner" table cell treatments (replaces former inline styles) */
 .st-owner-table tbody tr { cursor: pointer; }
-.st-owner-name { color: inherit; font-family: var(--serif); font-weight: 600; }
-.st-owner-table .st-juris-cell { font-family: var(--mono); font-size: 12px; letter-spacing: 0.03em; color: var(--ink-3); }
+.st-owner-name { color: inherit; font-family: var(--serif); font-weight: 700; }
+.st-owner-table .st-juris-cell { font-family: var(--mono); font-size: var(--t-xs); letter-spacing: var(--track-label); color: var(--ink-3); }
 .st-owner-table .col-amount { font-weight: 600; font-variant-numeric: tabular-nums; }
-.st-owner-table .st-toprecip { font-size: 13px; color: var(--ink-2); max-width: 22ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.st-owner-table .st-toprecip { font-size: var(--t-sm); color: var(--ink-2); max-width: 22ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 </style>
 </head>
@@ -2452,7 +2562,7 @@ a.leg-vote:hover { text-decoration: underline; }
   <div class="cmdk-modal" role="dialog" aria-label="Search">
     <div class="cmdk-input-wrap">
       <span class="cmdk-input-icon">⌕</span>
-      <input id="cmdk-input" class="cmdk-input"
+      <input aria-label="Jump to owner, team, or recipient committee" id="cmdk-input" class="cmdk-input"
              placeholder="Jump to owner, team, or recipient committee…"
              autocomplete="off" spellcheck="false">
     </div>
@@ -2507,20 +2617,20 @@ a.leg-vote:hover { text-decoration: underline; }
       </p>
     </div>
     <div>
-      <h4>Explore</h4>
+      <h2 class="footer-col-title">Explore</h2>
       <p><a href="#/federal">Federal giving</a></p>
       <p><a href="#/states">State giving</a></p>
       <p><a href="#/recipients">Recipients</a></p>
       <p><a href="#/methodology">Methodology</a></p>
     </div>
     <div>
-      <h4>Project</h4>
+      <h2 class="footer-col-title">Project</h2>
       <p><a href="#/about">About the data</a></p>
       <p><a href="#/runs">Pipeline transparency</a></p>
       <p><a href="https://www.fec.gov" target="_blank" rel="noopener">FEC.gov ↗</a></p>
     </div>
     <div>
-      <h4>Snapshot</h4>
+      <h2 class="footer-col-title">Snapshot</h2>
       <p id="generated-at" class="footer-mono"></p>
       <p id="latest-run-at" class="footer-mono footer-mono-dim"></p>
     </div>
@@ -3609,17 +3719,17 @@ function renderHome() {
     <div class="trust-strip">
       <div class="trust-cell">
         <span class="tc-tier confirmed">Confirmed</span>
-        <h4>Two signals — or one that's decisive</h4>
+        <h3>Two signals — or one that's decisive</h3>
         <p>Donor name plus two corroborating signals — employer, occupation, a documented address — or a single uniquely-identifying one (e.g. the owner's own holding company as employer) independently tie the gift to the owner.</p>
       </div>
       <div class="trust-cell">
         <span class="tc-tier probable">Probable</span>
-        <h4>Strong but partial</h4>
+        <h3>Strong but partial</h3>
         <p>The match is compelling but rests on fewer signals. Shown openly and labeled — never hidden, never upgraded.</p>
       </div>
       <div class="trust-cell">
         <span class="tc-tier uncertain">Uncertain</span>
-        <h4>Held back</h4>
+        <h3>Held back</h3>
         <p>A name match with nothing more stays in the review queue and never enters the public dataset. We don't guess.</p>
       </div>
     </div>
@@ -3688,7 +3798,7 @@ function renderLeague() {
   <section class="container block">
     <div class="block-head">
       <span class="eyebrow">Latest activity</span>
-      <h2 style="margin-top:6px">Recent contributions</h2>
+      <h2 style="margin-top:8px">Recent contributions</h2>
       <p class="caption">The 20 most recently dated contributions in the archive. Each is one click from its FEC filing image.</p>
     </div>
     ${renderRecentDonations(state.data.recent || state.data.donations)}
@@ -3702,7 +3812,7 @@ function renderLeague() {
   <section class="container block">
     <div class="block-head">
       <span class="eyebrow">League political map</span>
-      <h2 style="margin-top:6px">MLB ownership at a glance</h2>
+      <h2 style="margin-top:8px">MLB ownership at a glance</h2>
       <p class="caption">Each dot is one owner. Horizontal position is how their party-classified giving splits (Republican on the left, Democratic on the right). Vertical position is total dollars given, on a log scale. Click a dot for that owner's record.</p>
     </div>
     ${renderAlignmentScatter()}
@@ -3719,7 +3829,7 @@ function renderLeague() {
   <section class="container block">
     <div class="block-head">
       <span class="eyebrow">League-wide</span>
-      <h2 style="margin-top:6px">Political giving by election cycle</h2>
+      <h2 style="margin-top:8px">Political giving by election cycle</h2>
       <p class="caption">Bars show total dollars given by MLB principal owners per cycle, colored by the recipient committee's party. <strong>Click a bar</strong> to see every donation in that cycle.</p>
     </div>
     ${renderCycleChart(L.by_cycle)}
@@ -3739,7 +3849,7 @@ function renderLeague() {
     <div class="block-head-row">
       <div>
         <span class="eyebrow">Owner × cycle heatmap</span>
-        <h2 style="margin-top:6px">Who gave when, at a glance</h2>
+        <h2 style="margin-top:8px">Who gave when, at a glance</h2>
         <p class="caption">
           Each cell is one owner's total federal giving in one election cycle.
           Cell brightness = dollars (log-banded). Cell hue = party majority
@@ -3766,20 +3876,20 @@ function renderLeague() {
     <div class="block-head-row">
       <div>
         <span class="eyebrow">The owners</span>
-        <h2 style="margin-top:6px">All ${L.n_owners} tracked owners</h2>
+        <h2 style="margin-top:8px">All ${L.n_owners} tracked owners</h2>
         <p class="caption">Click any row to drill down into that owner's complete giving record.</p>
       </div>
       <button class="csv-btn" data-csv="league">Download full dataset</button>
     </div>
 
     <div class="filters">
-      <input id="ix-q" type="text" placeholder="Search owner or team…" value="${state.indexFilters.q}">
-      <span class="filter-label">Team</span>
+      <input aria-label="Search owner or team" id="ix-q" type="text" placeholder="Search owner or team…" value="${state.indexFilters.q}">
+      <label class="filter-label" for="ix-team">Team</label>
       <select id="ix-team">
         <option value="">All</option>
         ${teams.map((t) => `<option value="${escapeHtml(t)}"${t === state.indexFilters.team ? " selected" : ""}>${escapeHtml(t)}</option>`).join("")}
       </select>
-      <span class="filter-label">Party tilt</span>
+      <label class="filter-label" for="ix-tilt">Party tilt</label>
       <select id="ix-tilt">
         <option value=""${state.indexFilters.tilt === "" ? " selected" : ""}>All</option>
         <option value="dem"${state.indexFilters.tilt === "dem" ? " selected" : ""}>Democratic-leaning (≥60%)</option>
@@ -4626,7 +4736,7 @@ function renderOwner(slug) {
     </header>
 
     ${hasState ? `
-    <div style="margin:26px 0 4px">
+    <div style="margin:24px 0 4px">
       <p class="caption" style="margin:0 0 12px">${escapeHtml(o.name)}'s political giving, by level — tracked in two separate databases that are never merged.</p>
       ${renderOwnerLevelSplit(o, slug)}
     </div>` : `
@@ -4656,7 +4766,7 @@ function renderOwner(slug) {
     ${o.has_household ? renderHouseholdPanel(o) : ""}
 
     ${hasState ? `
-    <div class="level-divider federal" style="margin-top:30px">
+    <div class="level-divider federal" style="margin-top:32px">
       <span class="ld-kicker">Federal</span>
       <h2>Federal giving</h2>
       <p class="ld-sub">Contributions to federal candidates, parties, and PACs — reported to the Federal Election Commission, 2000–present.</p>
@@ -4665,7 +4775,7 @@ function renderOwner(slug) {
     <section class="block"${hasState ? ' style="padding-top:28px"' : ""}>
       <div class="block-head">
         <span class="eyebrow">Timeline</span>
-        <h2 style="margin-top:6px">Every donation, plotted by date and amount</h2>
+        <h2 style="margin-top:8px">Every donation, plotted by date and amount</h2>
         <p class="caption">Each dot is one FEC-reported contribution. Y-axis is dollar amount (log scale). Color = recipient party. Hover for details, click for the full record.</p>
       </div>
       ${renderTimeline(donations, o)}
@@ -4680,9 +4790,9 @@ function renderOwner(slug) {
             ? `${escapeHtml(familyName)} family ownership of ${escapeHtml(o.team || "team")}`
             : `Tenure as owner of ${escapeHtml(o.team || "team")}`;
           const markerLabel = o.family_tenure_start
-            ? `<span style="display:inline-block;width:0;height:10px;border-left:2px dashed var(--accent-2);vertical-align:-1px;margin:0 7px 0 14px"></span>${escapeHtml(firstName)} as control person`
+            ? `<span style="display:inline-block;width:0;height:10px;border-left:2px dashed var(--accent-2);vertical-align:-1px;margin:0 8px 0 16px"></span>${escapeHtml(firstName)} as control person`
             : "";
-          return `<span style="margin-left:auto;color:var(--ink-3);font-size:12px"><span style="display:inline-block;width:18px;height:10px;background:var(--accent-soft);border:1px solid var(--accent);border-style:dashed;vertical-align:-1px;margin-right:6px"></span>${tenureLabel}${markerLabel}</span>`;
+          return `<span style="margin-left: auto;color:var(--ink-3);font-size: var(--t-xs)"><span style="display:inline-block;width:18px;height:10px;background:var(--accent-soft);border:1px solid var(--accent);border-style:dashed;vertical-align:-1px;margin-right:8px"></span>${tenureLabel}${markerLabel}</span>`;
         })() : ""}
       </div>
     </section>
@@ -4691,18 +4801,18 @@ function renderOwner(slug) {
       <div class="two-col">
         <div>
           <span class="eyebrow">Recipients</span>
-          <h2 style="margin-top:6px">Where the money went</h2>
+          <h2 style="margin-top:8px">Where the money went</h2>
           <p class="caption">Top recipient committees by total dollars, all cycles combined.</p>
-          <div class="recipients-list" style="margin-top:18px">
+          <div class="recipients-list" style="margin-top:16px">
             ${o.top_recipients.map((r, i) => renderRecipient(r, i, aggAmt(o, "total_amount"))).join("")}
           </div>
         </div>
 
         <div>
           <span class="eyebrow">Verification</span>
-          <h2 style="margin-top:6px">How a record gets attributed to ${escapeHtml(o.name.split(" ").slice(-1)[0])}</h2>
+          <h2 style="margin-top:8px">How a record gets attributed to ${escapeHtml(o.name.split(" ").slice(-1)[0])}</h2>
           <p class="caption">A name match alone is never enough. Every CONFIRMED record needs at least two of: documented residence, documented employer, documented occupation. PROBABLE means name + one signal.</p>
-          ${confirmedSample ? renderVerificationCard(confirmedSample) : `<p class="muted" style="font-size:14px;margin-top:18px">No sample available.</p>`}
+          ${confirmedSample ? renderVerificationCard(confirmedSample) : `<p class="muted" style="font-size: var(--t-sm);margin-top:16px">No sample available.</p>`}
         </div>
       </div>
     </section>
@@ -4711,27 +4821,27 @@ function renderOwner(slug) {
       <div class="block-head-row">
         <div>
           <span class="eyebrow">The data</span>
-          <h2 style="margin-top:6px">All donations</h2>
+          <h2 style="margin-top:8px">All donations</h2>
           <p class="caption">${fmtInt(donations.length)} records. Click any row for the full provenance trail.</p>
         </div>
         <button class="csv-btn" data-csv="owner">Download CSV</button>
       </div>
 
       <div class="filters">
-        <input id="od-q" type="text" placeholder="Search recipient or candidate…" value="${state.ownerFilters.q}">
-        <span class="filter-label">Cycle</span>
+        <input aria-label="Search recipient or candidate" id="od-q" type="text" placeholder="Search recipient or candidate…" value="${state.ownerFilters.q}">
+        <label class="filter-label" for="od-cycle">Cycle</label>
         <select id="od-cycle">
           <option value="">All</option>
           ${cycles.map((c) => `<option value="${c}"${state.ownerFilters.cycle == c ? " selected" : ""}>${c}</option>`).join("")}
         </select>
-        <span class="filter-label">Party</span>
+        <label class="filter-label" for="od-party">Party</label>
         <select id="od-party">
           <option value="">All</option>
           <option value="DEM"${state.ownerFilters.party === "DEM" ? " selected" : ""}>Democratic</option>
           <option value="REP"${state.ownerFilters.party === "REP" ? " selected" : ""}>Republican</option>
           <option value="OTH"${state.ownerFilters.party === "OTH" ? " selected" : ""}>Other / unaffiliated</option>
         </select>
-        <span class="filter-label">Status</span>
+        <label class="filter-label" for="od-status">Status</label>
         <select id="od-status">
           <option value="">Both</option>
           <option value="CONFIRMED"${state.ownerFilters.status === "CONFIRMED" ? " selected" : ""}>Confirmed only</option>
@@ -4817,10 +4927,10 @@ function renderOwnerStateSection(slug) {
       <div class="block-head-row">
         <div>
           <span class="eyebrow">The data</span>
-          <h2 style="margin-top:6px">All state contributions</h2>
+          <h2 style="margin-top:8px">All state contributions</h2>
           <p class="caption">${fmtInt(rows.length)} records. Click any row for the full provenance trail.</p>
         </div>
-        <a class="sec-link" href="#/states" style="font-weight:600;font-size:13px">Full state section →</a>
+        <a class="sec-link" href="#/states" style="font-weight:600;font-size: var(--t-sm)">Full state section →</a>
       </div>
       ${stateContribSection(rows, { showOwner: false })}
     </section>`;
@@ -4840,7 +4950,7 @@ function renderRecipient(r, i, totalAmount) {
           ${linkable
             ? `<span class="recipient-link" data-cid="${escapeAttr(cid)}">${escapeHtml(r.committee || "—")}</span>`
             : escapeHtml(r.committee || "—")}
-          <span class="chip-party ${partyClass}" style="margin-left:6px;font-size:9px">${r.party}</span>
+          <span class="chip-party ${partyClass}" style="margin-left: 8px">${r.party}</span>
         </div>
         <div class="recipient-bar-track"><div class="recipient-bar ${partyClass}" style="width:${pct.toFixed(1)}%"></div></div>
       </div>
@@ -4855,7 +4965,7 @@ function renderVerificationCard(d) {
   return `
     <div class="ver-card">
       <span class="chip chip-confirmed">Confirmed</span>
-      <h4 style="margin-top:10px">${fmtMoney(amt(d))} to ${escapeHtml(d.committee)}</h4>
+      <h4 style="margin-top:8px">${fmtMoney(amt(d))} to ${escapeHtml(d.committee)}</h4>
       <div class="ver-meta">${fmtDate(d.date)} · Transaction ${escapeHtml(d.id)}</div>
 
       <div class="field">
@@ -4865,7 +4975,7 @@ function renderVerificationCard(d) {
         <div class="field-value muted">${escapeHtml(d.city || "—")}, ${escapeHtml(d.state || "—")} ${escapeHtml(d.zip || "")}</div>
       </div>
 
-      <div class="field" style="margin-top:14px">
+      <div class="field" style="margin-top:16px">
         <div class="field-label">Signals matched (${d.signals.length})</div>
         <div class="signal-chips">${d.signals.map((s) => `<span class="chip-signal">${escapeHtml(s)}</span>`).join("")}</div>
       </div>
@@ -5165,7 +5275,7 @@ function renderHouseholdPanel(o) {
     <section class="block">
       <div class="block-head">
         <span class="eyebrow">Household</span>
-        <h2 style="margin-top:6px">The ${escapeHtml(ownerLast)} household</h2>
+        <h2 style="margin-top:8px">The ${escapeHtml(ownerLast)} household</h2>
         <p class="caption">FEC giving by ${escapeHtml(o.name)} and documented household members. Each member is tracked as their own entity with its own verifying signals; their donations are attributed to them and shown here joined — never silently folded into ${escapeHtml(ownerLast)}'s own total above.</p>
       </div>
       <div class="household-grid">
@@ -5338,14 +5448,14 @@ function renderCycle(year) {
 
     <header class="owner-head">
       <span class="eyebrow">Election cycle</span>
-      <div style="display:flex;align-items:baseline;gap:18px;flex-wrap:wrap;margin-top:8px">
+      <div style="display:flex;align-items:baseline;gap: 16px;flex-wrap:wrap;margin-top:8px">
         <h1 style="margin:0">${year}</h1>
         <div style="display:flex;gap:8px">
           ${prev ? `<a href="#/cycle/${prev}" class="cycle-nav">← ${prev}</a>` : ""}
           ${next ? `<a href="#/cycle/${next}" class="cycle-nav">${next} →</a>` : ""}
         </div>
       </div>
-      <div class="owner-meta" style="margin-top:14px">
+      <div class="owner-meta" style="margin-top:16px">
         <span>${fmtInt(donations.length)} donations</span>
         <span class="dot"></span>
         <span>${fmtMoneyExact(total)} total</span>
@@ -5362,12 +5472,12 @@ function renderCycle(year) {
       </div>
       <div class="kpi">
         <div class="kpi-label">To Democratic</div>
-        <div class="kpi-value" style="color:var(--dem)">${fmtMoney(totals.DEM)}</div>
+        <div class="kpi-value" style="color:var(--dem-ink)">${fmtMoney(totals.DEM)}</div>
         <div class="kpi-foot">${total > 0 ? Math.round((totals.DEM / total) * 100) : 0}% of cycle</div>
       </div>
       <div class="kpi">
         <div class="kpi-label">To Republican</div>
-        <div class="kpi-value" style="color:var(--rep)">${fmtMoney(totals.REP)}</div>
+        <div class="kpi-value" style="color:var(--rep-ink)">${fmtMoney(totals.REP)}</div>
         <div class="kpi-foot">${total > 0 ? Math.round((totals.REP / total) * 100) : 0}% of cycle</div>
       </div>
       <div class="kpi">
@@ -5381,9 +5491,9 @@ function renderCycle(year) {
       <div class="two-col">
         <div>
           <span class="eyebrow">Owners</span>
-          <h2 style="margin-top:6px">Biggest MLB-owner donors this cycle</h2>
+          <h2 style="margin-top:8px">Biggest MLB-owner donors this cycle</h2>
           <p class="caption">Click any owner for their full history.</p>
-          <div class="recipients-list" style="margin-top:18px">
+          <div class="recipients-list" style="margin-top:16px">
             ${topOwners.map((o, i) => {
               const ent = state.data.owners[o.slug];
               const partyDenom = o.partyDollars.DEM + o.partyDollars.REP;
@@ -5395,7 +5505,7 @@ function renderCycle(year) {
                 <div class="recipient cycle-owner-row" data-slug="${o.slug}" style="cursor:pointer">
                   <div class="recipient-rank">${(i + 1).toString().padStart(2, "0")}</div>
                   <div>
-                    <div class="recipient-name">${escapeHtml(ent.name)} <span class="muted" style="font-size:12px;font-weight:400">· ${escapeHtml(ent.team || "")}</span></div>
+                    <div class="recipient-name">${escapeHtml(ent.name)} <span class="muted" style="font-size: var(--t-xs);font-weight:400">· ${escapeHtml(ent.team || "")}</span></div>
                     <div class="recipient-bar-track"><div class="recipient-bar ${tilt}" style="width:${pct.toFixed(1)}%"></div></div>
                   </div>
                   <div>
@@ -5409,9 +5519,9 @@ function renderCycle(year) {
 
         <div>
           <span class="eyebrow">Recipients</span>
-          <h2 style="margin-top:6px">Where the money went this cycle</h2>
+          <h2 style="margin-top:8px">Where the money went this cycle</h2>
           <p class="caption">Top committees by MLB-owner dollars received. Click for cross-cut by owner.</p>
-          <div class="recipients-list" style="margin-top:18px">
+          <div class="recipients-list" style="margin-top:16px">
             ${topRecipients.map((r, i) => {
               const partyClass = r.party === "DEM" ? "dem" : r.party === "REP" ? "rep" : "oth";
               const pct = total > 0 ? (r.amount / total) * 100 : 0;
@@ -5419,7 +5529,7 @@ function renderCycle(year) {
                 <div class="recipient cycle-recipient-row" data-cid="${escapeAttr(r.committee_id)}" style="cursor:pointer">
                   <div class="recipient-rank">${(i + 1).toString().padStart(2, "0")}</div>
                   <div>
-                    <div class="recipient-name">${escapeHtml(r.committee || "—")} <span class="chip-party ${partyClass}" style="margin-left:6px;font-size:9px">${r.party}</span></div>
+                    <div class="recipient-name">${escapeHtml(r.committee || "—")} <span class="chip-party ${partyClass}" style="margin-left: 8px">${r.party}</span></div>
                     <div class="recipient-bar-track"><div class="recipient-bar ${partyClass}" style="width:${pct.toFixed(1)}%"></div></div>
                   </div>
                   <div>
@@ -5437,27 +5547,27 @@ function renderCycle(year) {
       <div class="block-head-row">
         <div>
           <span class="eyebrow">The data</span>
-          <h2 style="margin-top:6px">Every donation in the ${year} cycle</h2>
+          <h2 style="margin-top:8px">Every donation in the ${year} cycle</h2>
           <p class="caption">${fmtInt(donations.length)} records.</p>
         </div>
         <button class="csv-btn" data-csv="cycle">Download CSV</button>
       </div>
 
       <div class="filters">
-        <input id="cy-q" type="text" placeholder="Search recipient or candidate…" value="${state.cycleFilters.q}">
-        <span class="filter-label">Owner</span>
+        <input aria-label="Search recipient or candidate" id="cy-q" type="text" placeholder="Search recipient or candidate…" value="${state.cycleFilters.q}">
+        <label class="filter-label" for="cy-owner">Owner</label>
         <select id="cy-owner">
           <option value="">All</option>
           ${ownersInCycle.map((o) => `<option value="${o.slug}"${state.cycleFilters.owner === o.slug ? " selected" : ""}>${escapeHtml(o.name)}</option>`).join("")}
         </select>
-        <span class="filter-label">Party</span>
+        <label class="filter-label" for="cy-party">Party</label>
         <select id="cy-party">
           <option value="">All</option>
           <option value="DEM"${state.cycleFilters.party === "DEM" ? " selected" : ""}>Democratic</option>
           <option value="REP"${state.cycleFilters.party === "REP" ? " selected" : ""}>Republican</option>
           <option value="OTH"${state.cycleFilters.party === "OTH" ? " selected" : ""}>Other / unaffiliated</option>
         </select>
-        <span class="filter-label">Status</span>
+        <label class="filter-label" for="cy-status">Status</label>
         <select id="cy-status">
           <option value="">Both</option>
           <option value="CONFIRMED"${state.cycleFilters.status === "CONFIRMED" ? " selected" : ""}>Confirmed only</option>
@@ -5524,7 +5634,7 @@ function renderCycleDonationsTable(allDonations) {
           return `
             <tr data-id="${escapeAttr(d.id)}">
               <td class="col-date">${escapeHtml(d.date || "—")}</td>
-              <td><span style="font-family:var(--serif);font-weight:500">${escapeHtml(ownerName)}</span></td>
+              <td><span style="font-family:var(--serif);font-weight:700">${escapeHtml(ownerName)}</span></td>
               <td class="num col-amount">${fmtMoneyExact(amt(d))}</td>
               <td class="col-recipient">${escapeHtml(d.committee || "—")}${d.candidate ? `<span class="candidate">→ ${escapeHtml(d.candidate)}</span>` : ""}</td>
               <td><span class="chip-party ${partyClass}">${d.party}</span></td>
@@ -5666,8 +5776,8 @@ function renderCommittee(committeeId) {
     <a class="back" href="#/federal">← All committees</a>
 
     <header class="owner-head">
-      <span class="eyebrow">Recipient committee · <span class="chip-party ${partyClass}" style="margin-left:6px">${party}</span>${recipientRow && recipientRow.designation_label ? `<span class="chip-party oth" style="margin-left:6px">${escapeHtml(recipientRow.designation_label)}</span>` : ""}${recipientRow && recipientRow.is_terminated ? `<span class="chip-party oth" style="margin-left:6px;opacity:0.7">Terminated</span>` : ""}</span>
-      <h1 style="margin-top:10px;max-width:32ch">${escapeHtml(committeeName)}</h1>
+      <span class="eyebrow">Recipient committee · <span class="chip-party ${partyClass}" style="margin-left:8px">${party}</span>${recipientRow && recipientRow.designation_label ? `<span class="chip-party oth" style="margin-left:8px">${escapeHtml(recipientRow.designation_label)}</span>` : ""}${recipientRow && recipientRow.is_terminated ? `<span class="chip-party oth" style="margin-left: 8px;opacity:0.7">Terminated</span>` : ""}</span>
+      <h1 style="margin-top: 8px;max-width:32ch">${escapeHtml(committeeName)}</h1>
       <div class="owner-meta">
         <span style="font-family:var(--mono)">${escapeHtml(decoded)}</span>
         <span class="dot"></span>
@@ -5724,9 +5834,9 @@ function renderCommittee(committeeId) {
     ${recipientRow && (recipientRow.designation_label || recipientRow.treasurer_name || recipientRow.first_file_date) ? `
     <section class="block">
       <span class="eyebrow">What this committee is</span>
-      <h2 style="margin-top:6px">FEC record</h2>
+      <h2 style="margin-top:8px">FEC record</h2>
       <p class="caption">From OpenFEC <code>/committee/${escapeHtml(decoded)}/</code>${recipientRow.enriched_at ? ` · refreshed ${fmtDate(recipientRow.enriched_at.slice(0, 10))}` : ""}</p>
-      <div class="drawer-grid" style="margin-top:18px">
+      <div class="drawer-grid" style="margin-top:16px">
         ${recipientRow.designation_label ? `<div class="label">Designation</div><div class="value">${escapeHtml(recipientRow.designation_label)}</div>` : ""}
         ${recipientRow.committee_type_label ? `<div class="label">Type</div><div class="value">${escapeHtml(recipientRow.committee_type_label)}</div>` : ""}
         ${recipientRow.organization_type ? `<div class="label">Organization</div><div class="value">${escapeHtml(recipientRow.organization_type)}</div>` : ""}
@@ -5746,9 +5856,9 @@ function renderCommittee(committeeId) {
     ${scaleCycles.length ? `
     <section class="block">
       <span class="eyebrow">Scale</span>
-      <h2 style="margin-top:6px">Committee receipts vs. MLB-owner share, by cycle</h2>
+      <h2 style="margin-top:8px">Committee receipts vs. MLB-owner share, by cycle</h2>
       <p class="caption">FEC per-cycle totals from <code>/committee/${escapeHtml(decoded)}/totals/</code>. Bar = total receipts; colored sliver = MLB-owner contribution in that cycle.</p>
-      <div class="recipients-list" style="margin-top:18px">
+      <div class="recipients-list" style="margin-top:16px">
         ${(() => {
           const maxReceipts = Math.max(...scaleCycles.map((c) => c.receipts || 0)) || 1;
           // Per-cycle MLB-owner amounts, computed from the donations array
@@ -5768,7 +5878,7 @@ function renderCommittee(committeeId) {
               <div class="recipient">
                 <div class="recipient-rank">${c.cycle}</div>
                 <div>
-                  <div class="recipient-name">${fmtMoney(receipts)} <span class="muted" style="font-size:12px;font-weight:400">total receipts · ${fmtMoney(c.disbursements || 0)} disbursed</span></div>
+                  <div class="recipient-name">${fmtMoney(receipts)} <span class="muted" style="font-size: var(--t-xs);font-weight:400">total receipts · ${fmtMoney(c.disbursements || 0)} disbursed</span></div>
                   <div class="recipient-bar-track" style="position:relative">
                     <div class="recipient-bar oth" style="width:${barPct.toFixed(1)}%;opacity:0.45"></div>
                     ${owner > 0 ? `<div class="recipient-bar ${partyClass}" style="width:${(barPct * sliverPct / 100).toFixed(2)}%;position:absolute;top:0;left:0"></div>` : ""}
@@ -5786,9 +5896,9 @@ function renderCommittee(committeeId) {
 
     <section class="block">
       <span class="eyebrow">MLB owners who gave to this committee</span>
-      <h2 style="margin-top:6px">${ownersRanked.length} donor${ownersRanked.length === 1 ? "" : "s"}</h2>
+      <h2 style="margin-top:8px">${ownersRanked.length} donor${ownersRanked.length === 1 ? "" : "s"}</h2>
       <p class="caption">Ranked by total dollars to ${escapeHtml(committeeName)}, all cycles combined.</p>
-      <div class="recipients-list" style="margin-top:18px">
+      <div class="recipients-list" style="margin-top:16px">
         ${ownersRanked.slice(0, 30).map((o, i) => {
           const ent = state.data.owners[o.slug];
           const pct = total > 0 ? (o.amount / total) * 100 : 0;
@@ -5796,7 +5906,7 @@ function renderCommittee(committeeId) {
             <div class="recipient cycle-owner-row" data-slug="${o.slug}" style="cursor:pointer">
               <div class="recipient-rank">${(i + 1).toString().padStart(2, "0")}</div>
               <div>
-                <div class="recipient-name">${escapeHtml(ent.name)} <span class="muted" style="font-size:12px;font-weight:400">· ${escapeHtml(ent.team || "")}</span></div>
+                <div class="recipient-name">${escapeHtml(ent.name)} <span class="muted" style="font-size: var(--t-xs);font-weight:400">· ${escapeHtml(ent.team || "")}</span></div>
                 <div class="recipient-bar-track"><div class="recipient-bar ${partyClass}" style="width:${pct.toFixed(1)}%"></div></div>
               </div>
               <div>
@@ -5812,20 +5922,20 @@ function renderCommittee(committeeId) {
       <div class="block-head-row">
         <div>
           <span class="eyebrow">The data</span>
-          <h2 style="margin-top:6px">Every MLB-owner donation to ${escapeHtml(committeeName)}</h2>
+          <h2 style="margin-top:8px">Every MLB-owner donation to ${escapeHtml(committeeName)}</h2>
           <p class="caption">${fmtInt(donations.length)} records.</p>
         </div>
         <button class="csv-btn" data-csv="committee">Download CSV</button>
       </div>
 
       <div class="filters">
-        <input id="cm-q" type="text" placeholder="Search owner…" value="${state.committeeFilters.q}">
-        <span class="filter-label">Cycle</span>
+        <input aria-label="Search owner" id="cm-q" type="text" placeholder="Search owner…" value="${state.committeeFilters.q}">
+        <label class="filter-label" for="cm-cycle">Cycle</label>
         <select id="cm-cycle">
           <option value="">All</option>
           ${allCycles.map((c) => `<option value="${c}"${state.committeeFilters.cycle == c ? " selected" : ""}>${c}</option>`).join("")}
         </select>
-        <span class="filter-label">Status</span>
+        <label class="filter-label" for="cm-status">Status</label>
         <select id="cm-status">
           <option value="">Both</option>
           <option value="CONFIRMED"${state.committeeFilters.status === "CONFIRMED" ? " selected" : ""}>Confirmed only</option>
@@ -5887,13 +5997,13 @@ function renderCommitteeBeneficiariesSection(committeeId) {
       <div class="block-head-row">
         <div>
           <span class="eyebrow">Who this committee funded</span>
-          <h2 style="margin-top:6px">Top recipients of this committee's Schedule B disbursements</h2>
+          <h2 style="margin-top:8px">Top recipients of this committee's Schedule B disbursements</h2>
           <p class="caption">FEC <code>/schedules/schedule_b/by_recipient/</code> — the <strong>top 25 recipients</strong> by total amount for the selected cycle (the full list lives at the FEC endpoint linked below). Includes operational disbursements as well as political ones, since Schedule B aggregates both.</p>
         </div>
       </div>
 
       <div class="filters">
-        <span class="filter-label">Cycle</span>
+        <label class="filter-label" for="cb-cycle">Cycle</label>
         <select id="cb-cycle">
           ${cycles.map((c) => `<option value="${c}"${c === selected ? " selected" : ""}>${c}</option>`).join("")}
         </select>
@@ -5913,7 +6023,7 @@ function renderCommitteeBeneficiariesBody(committeeId, cycle) {
   const byCycle = state.beneficiaries[committeeId];
   if (!byCycle) {
     loadCommitteeBeneficiaries(committeeId); // fire-and-forget; re-renders on land
-    return `<div class="muted" style="padding:18px 4px">Loading recipients…</div>`;
+    return `<div class="muted" style="padding:16px 4px">Loading recipients…</div>`;
   }
   if (state.beneficiariesError[committeeId]) {
     return emptyState(
@@ -5952,7 +6062,7 @@ function renderCommitteeBeneficiariesTable(byCycle, cycle) {
                           : r.recipient_party === "REP" ? "rep" : "oth";
           const isCandidate = r.recipient_kind === "candidate";
           const partyChip = (isCandidate && r.recipient_party && r.recipient_party !== "OTH")
-            ? ` <span class="chip-party ${partyClass}" style="margin-left:6px">${escapeHtml(r.recipient_party)}</span>`
+            ? ` <span class="chip-party ${partyClass}" style="margin-left:8px">${escapeHtml(r.recipient_party)}</span>`
             : "";
           const officeLabel = isCandidate && r.recipient_office
             ? ` · ${escapeHtml(officeName(r.recipient_office))}`
@@ -5963,7 +6073,7 @@ function renderCommitteeBeneficiariesTable(byCycle, cycle) {
               <td class="num">${(i + 1).toString().padStart(2, "0")}</td>
               <td>
                 <div style="font-weight:500">${escapeHtml(r.recipient_name || r.recipient_id)}${partyChip}</div>
-                <div class="muted" style="font-size:12px;font-weight:400">${kindLabel}${officeLabel}</div>
+                <div class="muted" style="font-size: var(--t-xs);font-weight:400">${kindLabel}${officeLabel}</div>
               </td>
               <td class="num col-amount">${fmtMoneyExact(r.total_amount)}</td>
               <td class="num">${r.n_transactions == null ? "—" : fmtInt(r.n_transactions)}</td>
@@ -6034,7 +6144,7 @@ function renderCommitteeDonationsTable(allDonations) {
           return `
             <tr data-id="${escapeAttr(d.id)}">
               <td class="col-date">${escapeHtml(d.date || "—")}</td>
-              <td><span style="font-family:var(--serif);font-weight:500">${escapeHtml(ownerName)}</span></td>
+              <td><span style="font-family:var(--serif);font-weight:700">${escapeHtml(ownerName)}</span></td>
               <td class="num col-amount">${fmtMoneyExact(amt(d))}</td>
               <td class="num">${escapeHtml(String(d.cycle || "—"))}</td>
               <td style="white-space:nowrap">${statusChip} ${chip48H(d)}</td>
@@ -6230,7 +6340,7 @@ function renderTeam(slug) {
     </header>
 
     ${hasState ? `
-    <div style="margin:26px 0 4px">
+    <div style="margin:24px 0 4px">
       <p class="caption" style="margin:0 0 12px">${escapeHtml(team.name)}'s tracked owners, by level — federal and state are held in separate databases that are never merged.</p>
       <div class="owner-split">
         <div class="os-col federal">
@@ -6275,13 +6385,13 @@ function renderTeam(slug) {
 
     <section class="block">
       <span class="eyebrow">Tracked owners</span>
-      <h2 style="margin-top:6px">${team.owners.length === 1 ? "The principal owner" : "Principal owners, past and current"}</h2>
+      <h2 style="margin-top:8px">${team.owners.length === 1 ? "The principal owner" : "Principal owners, past and current"}</h2>
       <p class="caption">Click any card for that owner's complete giving record.</p>
       ${renderTeamOwnersGrid(team)}
     </section>
 
     ${hasState ? `
-    <div class="level-divider federal" style="margin-top:30px">
+    <div class="level-divider federal" style="margin-top:32px">
       <span class="ld-kicker">Federal</span>
       <h2>Federal giving</h2>
       <p class="ld-sub">Contributions to federal candidates, parties, and PACs across all tracked owners — reported to the Federal Election Commission.</p>
@@ -6290,7 +6400,7 @@ function renderTeam(slug) {
     <section class="block"${hasState ? ' style="padding-top:28px"' : ""}>
       <div class="block-head">
         <span class="eyebrow">Combined timeline</span>
-        <h2 style="margin-top:6px">Every donation across ${team.owners.length === 1 ? "this owner's tenure" : "all tracked owners"}</h2>
+        <h2 style="margin-top:8px">Every donation across ${team.owners.length === 1 ? "this owner's tenure" : "all tracked owners"}</h2>
         <p class="caption">Each dot is one FEC-reported contribution. ${team.owners.length > 1 ? "Stacked amber bars show each owner's tenure as principal — useful for spotting handoffs." : "Amber band shows tenure as principal."} Click any dot for the full record.</p>
       </div>
       ${renderTimeline(donations, tenureSegments)}
@@ -6303,9 +6413,9 @@ function renderTeam(slug) {
 
     <section class="block">
       <span class="eyebrow">Recipients</span>
-      <h2 style="margin-top:6px">Top recipient committees (combined)</h2>
+      <h2 style="margin-top:8px">Top recipient committees (combined)</h2>
       <p class="caption">Across all tracked owners of ${escapeHtml(team.name)}, all cycles. Click any recipient to see who else in MLB gave to them.</p>
-      <div class="recipients-list" style="margin-top:18px">
+      <div class="recipients-list" style="margin-top:16px">
         ${topRecipients.map((r, i) => renderRecipient(r, i, total)).join("")}
       </div>
     </section>
@@ -6314,32 +6424,32 @@ function renderTeam(slug) {
       <div class="block-head-row">
         <div>
           <span class="eyebrow">The data</span>
-          <h2 style="margin-top:6px">All donations</h2>
+          <h2 style="margin-top:8px">All donations</h2>
           <p class="caption">${fmtInt(donations.length)} records across ${team.owners.length} owner${team.owners.length === 1 ? "" : "s"}.</p>
         </div>
         <button class="csv-btn" data-csv="team">Download CSV</button>
       </div>
 
       <div class="filters">
-        <input id="tm-q" type="text" placeholder="Search recipient or candidate…" value="${state.teamFilters.q}">
-        <span class="filter-label">Owner</span>
+        <input aria-label="Search recipient or candidate" id="tm-q" type="text" placeholder="Search recipient or candidate…" value="${state.teamFilters.q}">
+        <label class="filter-label" for="tm-owner">Owner</label>
         <select id="tm-owner">
           <option value="">All</option>
           ${team.owners.map((o) => `<option value="${o.slug}"${state.teamFilters.owner === o.slug ? " selected" : ""}>${escapeHtml(o.name)}</option>`).join("")}
         </select>
-        <span class="filter-label">Cycle</span>
+        <label class="filter-label" for="tm-cycle">Cycle</label>
         <select id="tm-cycle">
           <option value="">All</option>
           ${cycles.map((c) => `<option value="${c}"${state.teamFilters.cycle == c ? " selected" : ""}>${c}</option>`).join("")}
         </select>
-        <span class="filter-label">Party</span>
+        <label class="filter-label" for="tm-party">Party</label>
         <select id="tm-party">
           <option value="">All</option>
           <option value="DEM"${state.teamFilters.party === "DEM" ? " selected" : ""}>Democratic</option>
           <option value="REP"${state.teamFilters.party === "REP" ? " selected" : ""}>Republican</option>
           <option value="OTH"${state.teamFilters.party === "OTH" ? " selected" : ""}>Other / unaffiliated</option>
         </select>
-        <span class="filter-label">Status</span>
+        <label class="filter-label" for="tm-status">Status</label>
         <select id="tm-status">
           <option value="">Both</option>
           <option value="CONFIRMED"${state.teamFilters.status === "CONFIRMED" ? " selected" : ""}>Confirmed only</option>
@@ -6365,10 +6475,10 @@ function renderTeam(slug) {
       <div class="block-head-row">
         <div>
           <span class="eyebrow">The data</span>
-          <h2 style="margin-top:6px">All state contributions</h2>
+          <h2 style="margin-top:8px">All state contributions</h2>
           <p class="caption">${fmtInt(st.rows.length)} records across ${st.ownersWithState.length} owner${st.ownersWithState.length === 1 ? "" : "s"}. Click any row for the full provenance trail.</p>
         </div>
-        <a class="sec-link" href="#/states" style="font-weight:600;font-size:13px">Full state section →</a>
+        <a class="sec-link" href="#/states" style="font-weight:600;font-size: var(--t-sm)">Full state section →</a>
       </div>
       ${stateContribSection(st.rows, { showOwner: st.ownersWithState.length > 1 })}
     </section>` : ""}
@@ -6460,7 +6570,7 @@ function renderTeamDonationsTable(allDonations) {
           return `
             <tr data-id="${escapeAttr(d.id)}">
               <td class="col-date">${escapeHtml(d.date || "—")}</td>
-              <td><span style="font-family:var(--serif);font-weight:500">${escapeHtml(ownerName)}</span></td>
+              <td><span style="font-family:var(--serif);font-weight:700">${escapeHtml(ownerName)}</span></td>
               <td class="num col-amount">${fmtMoneyExact(amt(d))}</td>
               <td class="col-recipient">${escapeHtml(d.committee || "—")}${d.candidate ? `<span class="candidate">→ ${escapeHtml(d.candidate)}</span>` : ""}</td>
               <td><span class="chip-party ${partyClass}">${d.party}</span></td>
@@ -6661,14 +6771,14 @@ function openDrawer(id) {
 
   document.getElementById("drawer-body").innerHTML = `
     <h2>${ownerNameHtml} <span class="donor-arrow">→</span> ${escapeHtml(d.committee || "—")}</h2>
-    ${d.candidate ? `<div class="muted" style="margin-top:4px;font-size:14px">For ${escapeHtml(d.candidate)}</div>` : ""}
+    ${d.candidate ? `<div class="muted" style="margin-top: 4px;font-size: var(--t-sm)">For ${escapeHtml(d.candidate)}</div>` : ""}
 
     <div class="drawer-amount">${fmtMoneyExact(amt(d))}</div>
     <div class="drawer-amount-meta">
       <span>${fmtDate(d.date)}</span>
       <span>·</span>
       <span>${d.cycle} cycle</span>
-      <span style="margin-left:6px">${statusChip}</span>
+      <span style="margin-left:8px">${statusChip}</span>
       <span class="chip-party ${partyClass}" style="margin-left:4px">${d.party}</span>
       ${is48HourNotice(d) ? `<span style="margin-left:4px">${chip48H(d)}</span>` : ""}
     </div>
@@ -6700,7 +6810,7 @@ function openDrawer(id) {
           <div class="value">${escapeHtml(d.office)}</div>` : ""}
       </div>
       ${d.committee_id ? `
-        <p style="margin-top:14px">
+        <p style="margin-top:16px">
           <a class="drawer-link" href="#/committee/${encodeURIComponent(d.committee_id)}" onclick="closeDrawer()">View all MLB-owner donations to this committee</a>
         </p>` : ""}
     </div>
@@ -6784,7 +6894,7 @@ function openDrawer(id) {
         <div class="label">Report type</div>
         <div class="value">${escapeHtml(d.report_type || "—")}</div>
         <div class="label">Raw payload</div>
-        <div class="value" style="font-size:11px">${escapeHtml(d.raw_payload || "—")}</div>
+        <div class="value" style="font-size: var(--t-xs)">${escapeHtml(d.raw_payload || "—")}</div>
         <div class="label">Ingested</div>
         <div class="value">${escapeHtml(d.ingested_at || "—")}</div>
       </div>
@@ -6803,7 +6913,7 @@ function openDrawer(id) {
         <div class="value">${escapeHtml(d.entity)}</div>
       </div>
       ${ownerPageSlug ? `
-        <p style="margin-top:14px">
+        <p style="margin-top:16px">
           <a class="drawer-link" href="#/owner/${ownerPageSlug}" onclick="closeDrawer()">View ${escapeHtml(ownerName)}'s full giving record</a>
         </p>` : ""}
     </div>
@@ -6944,7 +7054,7 @@ function renderMethodology() {
   <div class="container">
     <section class="hero" style="border-bottom:0">
       <span class="eyebrow">Methodology</span>
-      <h1 style="margin-top:14px;max-width:24ch">How this archive is built — and where we draw the line.</h1>
+      <h1 style="margin-top: 16px;max-width:24ch">How this archive is built — and where we draw the line.</h1>
       <p class="deck">
         The premise of this database is trustworthy attribution. A FEC record only
         enters the canonical dataset when it can be tied to a documented owner via
@@ -6965,19 +7075,19 @@ function renderMethodology() {
       <div class="method-tiers">
         <div class="method-tier confirmed">
           <span class="chip chip-confirmed">Confirmed</span>
-          <h3 style="margin-top:10px">CONFIRMED</h3>
+          <h3 style="margin-top:8px">CONFIRMED</h3>
           <div class="tier-rule">name + ≥2 signals · OR · name + 1 strong unique signal</div>
           <p>The default tier for export. Used in citations and reports.</p>
         </div>
         <div class="method-tier probable">
           <span class="chip chip-probable">Probable</span>
-          <h3 style="margin-top:10px">PROBABLE</h3>
+          <h3 style="margin-top:8px">PROBABLE</h3>
           <div class="tier-rule">name + exactly 1 confirming signal</div>
           <p>Shown in the dataset, always with the chip. Cited only with the qualifier "probable."</p>
         </div>
         <div class="method-tier uncertain">
-          <span style="display:inline-block;padding:3px 7px;background:var(--bg-sunk);font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-3);border-radius:2px">Uncertain</span>
-          <h3 style="margin-top:10px">UNCERTAIN</h3>
+          <span style="display:inline-block;padding: 4px 8px;background:var(--bg-sunk);font-size: var(--t-xs);font-weight:600;letter-spacing: var(--track-label);text-transform:uppercase;color:var(--ink-3);border-radius:2px">Uncertain</span>
+          <h3 style="margin-top:8px">UNCERTAIN</h3>
           <div class="tier-rule">name match only · OR · contradicting signals</div>
           <p>Routes to a manual review queue. Never appears in the canonical export.</p>
         </div>
@@ -6986,7 +7096,7 @@ function renderMethodology() {
       <h2>What's in scope</h2>
       <div class="method-scope">
         <div>
-          <h4>In</h4>
+          <h3>In</h3>
           <ul>
             <li>Federal donations reported to the FEC, all available years</li>
             <li>The principal owners of all 30 MLB franchises</li>
@@ -6997,7 +7107,7 @@ function renderMethodology() {
           </ul>
         </div>
         <div>
-          <h4>Out</h4>
+          <h3>Out</h3>
           <ul>
             <li>Local (municipal/county) campaign finance</li>
             <li>501(c)(4) "dark money" (not in FEC data)</li>
@@ -7029,7 +7139,7 @@ function renderMethodology() {
         contribution only at the conduit, that record is kept as the sole record of
         the gift.
       </p>
-      <p class="method-correction" style="font-size:13px;color:var(--ink-3)">
+      <p class="method-correction" style="font-size: var(--t-sm);color:var(--ink-3)">
         Correction (2026-07): earlier totals double-counted earmarked contributions
         routed through ActBlue/WinRed. Applying the dedup above removed 108
         duplicate pass-through rows ($683,135), lowering the published
@@ -7093,9 +7203,9 @@ function renderRunsBody() {
   };
 
   return `
-    <section class="hero" style="padding-bottom:18px">
+    <section class="hero" style="padding-bottom:16px">
       <span class="eyebrow">Pipeline</span>
-      <h1 style="margin-top:14px;max-width:24ch">Every ingestion run, every API call.</h1>
+      <h1 style="margin-top: 16px;max-width:24ch">Every ingestion run, every API call.</h1>
       <p class="deck">
         Ingestion runs against the FEC API. Each row records when the run started,
         which owner it targeted, how many records came back, and how they were
@@ -7121,7 +7231,7 @@ function renderRunsBody() {
       </div>
       <div class="kpi">
         <div class="kpi-label">Latest run</div>
-        <div class="kpi-value" style="font-size:22px">${fmtAgo(p.latest_run)}</div>
+        <div class="kpi-value" style="font-size: var(--t-lg)">${fmtAgo(p.latest_run)}</div>
         <div class="kpi-foot">${escapeHtml((p.latest_run || "").slice(0, 16).replace("T", " "))} UTC</div>
       </div>
     </div>
@@ -7129,7 +7239,7 @@ function renderRunsBody() {
     <section class="block">
       <div class="block-head">
         <span class="eyebrow">Ingestion runs</span>
-        <h2 style="margin-top:6px">All ${fmtInt(runs.length)} runs, most recent first</h2>
+        <h2 style="margin-top:8px">All ${fmtInt(runs.length)} runs, most recent first</h2>
         <p class="caption">
           Each row is one FEC API session for one owner. Records fetched is the raw
           count from the API before classification; CONFIRMED + PROBABLE + UNCERTAIN
@@ -7162,13 +7272,13 @@ function renderRunsBody() {
               <tr>
                 <td class="col-date" title="${escapeHtml(r.started_at)}">${escapeHtml((r.started_at || "").slice(0, 16).replace("T", " "))}</td>
                 <td class="col-date">${fmtDuration(r.started_at, r.completed_at)}</td>
-                <td><span style="font-family:var(--serif);font-weight:500">${ownerLink}</span></td>
+                <td><span style="font-family:var(--serif);font-weight:700">${ownerLink}</span></td>
                 <td class="num">${fmtInt(r.api_calls_made)}</td>
                 <td class="num">${fmtInt(r.records_fetched)}</td>
                 <td class="num" style="color:var(--ok-fg)">${fmtInt(r.confirmed_count)}</td>
                 <td class="num" style="color:var(--warn-fg)">${fmtInt(r.probable_count)}</td>
                 <td class="num" style="color:var(--ink-3)">${fmtInt(r.uncertain_count)}</td>
-                <td style="font-family:var(--mono);font-size:11px;color:var(--ink-3);max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${escapeHtml(r.notes || "")}">${escapeHtml((r.notes || "").slice(0, 60))}${r.notes && r.notes.length > 60 ? "…" : ""}</td>
+                <td style="font-family:var(--mono);font-size: var(--t-xs);color:var(--ink-3);max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${escapeHtml(r.notes || "")}">${escapeHtml((r.notes || "").slice(0, 60))}${r.notes && r.notes.length > 60 ? "…" : ""}</td>
               </tr>`;
           }).join("")}
         </tbody>
@@ -7207,9 +7317,9 @@ function renderChangelog() {
 function renderChangelogBody() {
   if (state.provenanceError) {
     return `
-      <section class="hero" style="padding-bottom:18px">
+      <section class="hero" style="padding-bottom:16px">
         <span class="eyebrow">Pipeline · Audit log</span>
-        <h1 style="margin-top:14px;max-width:24ch">Couldn't load the audit log.</h1>
+        <h1 style="margin-top: 16px;max-width:24ch">Couldn't load the audit log.</h1>
         <p class="deck">
           <code>provenance.json</code> failed to load: ${escapeHtml(state.provenanceError)}.
           Try a hard refresh or check the network tab.
@@ -7220,9 +7330,9 @@ function renderChangelogBody() {
     /* Kick off the fetch on the side; render returns immediately. */
     loadProvenance();
     return `
-      <section class="hero" style="padding-bottom:18px">
+      <section class="hero" style="padding-bottom:16px">
         <span class="eyebrow">Pipeline · Audit log</span>
-        <h1 style="margin-top:14px;max-width:24ch">Every change to the archive, on the record.</h1>
+        <h1 style="margin-top: 16px;max-width:24ch">Every change to the archive, on the record.</h1>
         <p class="deck">Loading audit trail…</p>
       </section>`;
   }
@@ -7258,9 +7368,9 @@ function renderChangelogBody() {
   };
 
   return `
-    <section class="hero" style="padding-bottom:18px">
+    <section class="hero" style="padding-bottom:16px">
       <span class="eyebrow">Pipeline · Audit log</span>
-      <h1 style="margin-top:14px;max-width:24ch">Every change to the archive, on the record.</h1>
+      <h1 style="margin-top: 16px;max-width:24ch">Every change to the archive, on the record.</h1>
       <p class="deck">
         Append-only log of every event that affects the data: ingestion runs,
         signal changes, status promotions, review-queue resolutions, schema
@@ -7274,14 +7384,14 @@ function renderChangelogBody() {
         <button type="button" class="changelog-type-reset" id="cl-reset">Reset</button>
       </div>
       <div class="changelog-search-row">
-        <input id="cl-q" type="text" placeholder="Search subject or body…" value="${escapeAttr(f.q)}" autocomplete="off">
+        <input aria-label="Search subject or body" id="cl-q" type="text" placeholder="Search subject or body…" value="${escapeAttr(f.q)}" autocomplete="off">
         <span class="filter-result" id="cl-result">
           ${fmtInt(filtered.length)} of ${fmtInt(all.length)} entries
         </span>
       </div>
     </div>
 
-    <section class="block" style="margin-top:18px">
+    <section class="block" style="margin-top:16px">
       <div class="changelog-list">
         ${visible.length === 0 ? `
           <p class="caption" style="padding:24px 0">No entries match the current filters.</p>
@@ -7362,7 +7472,7 @@ function stateStatusBadge(status) {
   const bg = conf ? "var(--ok-bg, #e6f4ea)" : "var(--warn-bg, #fdf0e3)";
   const fg = conf ? "var(--ok-fg, #1a7f37)" : "var(--warn-fg, #9a5b1b)";
   const label = conf ? "Confirmed" : "Probable";
-  return `<span style="display:inline-block;font:600 10px/1.4 var(--sans);letter-spacing:.04em;text-transform:uppercase;color:${fg};background:${bg};border-radius:var(--radius-sm);padding:1px 6px">${label}</span>`;
+  return `<span style="display:inline-block;font:600 var(--t-xs)/1.4 var(--sans);letter-spacing: var(--track-label);text-transform:uppercase;color:${fg};background:${bg};border-radius:var(--radius-sm);padding:0 8px">${label}</span>`;
 }
 
 /* Jurisdiction code → display name, shared across all state views. */
@@ -7462,9 +7572,9 @@ function stateContribSection(donations, opts = {}) {
           </button>`).join("")}
       </div>` : ""}
       <div class="recipients-filter-row">
-        <input id="st-q" type="text" placeholder="Search owner, donor, recipient, employer…" value="${escapeAttr(f.q)}" autocomplete="off">
+        <input aria-label="Search owner, donor, recipient, employer" id="st-q" type="text" placeholder="Search owner, donor, recipient, employer…" value="${escapeAttr(f.q)}" autocomplete="off">
         ${cycles.length > 1 ? `
-        <select id="st-cycle" class="st-select">
+        <select aria-label="Cycle" id="st-cycle" class="st-select">
           <option value="">All years</option>
           ${cycles.map((c) => `<option value="${c}" ${String(f.cycle) === String(c) ? "selected" : ""}>${c}</option>`).join("")}
         </select>` : ""}
@@ -7472,8 +7582,8 @@ function stateContribSection(donations, opts = {}) {
       </div>
     </div>
 
-    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin:4px 2px 10px">
-      <p class="muted" style="font-size:12px;margin:0">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap: 12px;flex-wrap:wrap;margin:4px 4px 8px">
+      <p class="muted" style="font-size: var(--t-xs);margin:0">
         Showing ${fmtInt(visible.length)} of ${fmtInt(total)}${filtered ? ` filtered (of ${fmtInt(donations.length)})` : ""} contribution${total === 1 ? "" : "s"} · ${fmtMoney(sumDollars)} total · click a row for the full provenance trail.
       </p>
       ${total > 0 ? `<button class="csv-btn" data-csv="state">Download CSV</button>` : ""}
@@ -7493,17 +7603,17 @@ function stateContribSection(donations, opts = {}) {
         </tr></thead>
         <tbody>
           ${visible.length === 0 ? `
-            <tr><td colspan="${colspan}" style="padding:24px 0;text-align:center;color:var(--ink-3)">${escapeHtml(opts.emptyMsg || "No contributions match the current filters.")}</td></tr>
+            <tr><td colspan="${colspan}" style="padding: 24px 0;text-align:center;color:var(--ink-3)">${escapeHtml(opts.emptyMsg || "No contributions match the current filters.")}</td></tr>
           ` : visible.map((d) => `
             <tr class="st-row" data-state-id="${escapeAttr(d.id)}" style="cursor:pointer">
               <td>${stateStatusBadge(d.status)}</td>
-              ${showJuris ? `<td class="muted" style="font-size:12px">${escapeHtml(jName(d.jurisdiction || ""))}</td>` : ""}
+              ${showJuris ? `<td class="muted" style="font-size: var(--t-xs)">${escapeHtml(jName(d.jurisdiction || ""))}</td>` : ""}
               ${showOwner ? `<td style="font-family:var(--serif)">${escapeHtml(d.owner_name)}</td>` : ""}
-              <td class="muted" style="font-size:12px">${escapeHtml(d.employer || "—")}</td>
-              <td class="muted" style="font-size:12px">${escapeHtml([d.city, d.state].filter(Boolean).join(", ") || "—")}</td>
+              <td class="muted" style="font-size: var(--t-xs)">${escapeHtml(d.employer || "—")}</td>
+              <td class="muted" style="font-size: var(--t-xs)">${escapeHtml([d.city, d.state].filter(Boolean).join(", ") || "—")}</td>
               <td class="num" style="font-variant-numeric:tabular-nums;font-weight:600">${fmtMoneyExact(amt(d))}</td>
-              <td class="muted" style="font-size:12px">${escapeHtml((d.date || "").slice(0, 10))}</td>
-              <td style="font-size:13px">${escapeHtml(d.recipient || "")}</td>
+              <td class="muted" style="font-size: var(--t-xs)">${escapeHtml((d.date || "").slice(0, 10))}</td>
+              <td style="font-size: var(--t-sm)">${escapeHtml(d.recipient || "")}</td>
             </tr>`).join("")}
         </tbody>
       </table>
@@ -7521,9 +7631,9 @@ function renderStates() {
   if (!sd || !(sd.donations || []).length) {
     return `
     <div class="container" style="padding:48px 0">
-      <section class="hero" style="padding-bottom:18px">
+      <section class="hero" style="padding-bottom:16px">
         <span class="eyebrow">State campaign finance</span>
-        <h1 style="margin-top:14px;max-width:22ch">State data isn't loaded.</h1>
+        <h1 style="margin-top: 16px;max-width:22ch">State data isn't loaded.</h1>
         <p class="deck">The Phase-4 state layer (<code>state_data.json</code>) wasn't found.
         It's generated from <code>data/state.db</code> by <code>mockup/build_state_data.py</code>.</p>
       </section>
@@ -7638,7 +7748,7 @@ function renderStates() {
     <section class="block" style="border-bottom:0">
       <div class="block-head">
         <span class="eyebrow">Latest activity</span>
-        <h2 style="margin-top:6px">Recent contributions</h2>
+        <h2 style="margin-top:8px">Recent contributions</h2>
         <p class="caption">The 20 most recently dated state contributions in the archive. Each is one click from its official filing.</p>
       </div>
       ${renderRecentStateDonations(sd.donations)}
@@ -7680,7 +7790,7 @@ function renderStates() {
       ${stateContribSection(sd.donations)}
     </section>
 
-    <section class="block" style="border-bottom:0;padding-top:8px;padding-bottom:48px">
+    <section class="block" style="border-bottom:0;padding-top: 8px;padding-bottom:48px">
       ${stateMethodologyNote()}
     </section>
   </div>`;
@@ -7785,7 +7895,7 @@ function renderLegislation() {
         <td><a href="#/owner/${escapeAttr(o.owner_slug)}" class="st-owner-name">${escapeHtml(o.owner_name || o.owner_slug)}</a>
             <span class="cov-dim">${escapeHtml(o.owner_team || "")}</span></td>
         <td class="num">${fmtInt(o.n_donations)}</td>
-        <td class="num">${fmtMoneyExact(o.total_amount)}${ind > 0 ? `<span class="cov-dim" style="display:block;font-size:11px">${fmtMoneyExact(ind)} via campaign cmte</span>` : ""}</td>
+        <td class="num">${fmtMoneyExact(o.total_amount)}${ind > 0 ? `<span class="cov-dim" style="display:block;font-size: var(--t-xs)">${fmtMoneyExact(ind)} via campaign cmte</span>` : ""}</td>
       </tr>`;
     }).join("");
     const total = br.owners.reduce((s, o) => s + (o.total_amount || 0), 0);
@@ -7798,7 +7908,7 @@ function renderLegislation() {
     return `
       <section class="block" style="border-bottom:0">
         <div class="sec-head-row"><h2>${escapeHtml(br.title)}</h2>
-          <a class="sec-link" href="${escapeAttr(br.report_url)}" target="_blank" rel="noopener" style="font-weight:600;font-size:13px">Read the brief →</a></div>
+          <a class="sec-link" href="${escapeAttr(br.report_url)}" target="_blank" rel="noopener" style="font-weight:600;font-size: var(--t-sm)">Read the brief →</a></div>
         <p class="caption" style="margin:0 0 12px">
           ${fmtInt(nOwners)} owner${nOwners === 1 ? "" : "s"} · ${fmtMoneyExact(total)} in traced giving to this bill's ${target} —
           <strong>${fmtMoneyExact(directTot)}</strong> direct to candidates${indirectTot > 0 ? ` (the linked brief's focus) + <strong>${fmtMoneyExact(indirectTot)}</strong> to their own campaign committees (the §5.6 pass-through tier)` : ""}.
@@ -7841,7 +7951,7 @@ function renderLegislation() {
     ${areaSections}
 
     ${briefPanels ? `
-    <div class="sec-head-row" style="margin-top:32px"><h2 style="font-size:22px">Donations × legislation</h2></div>
+    <div class="sec-head-row" style="margin-top:32px"><h2 style="font-size: var(--t-lg)">Donations × legislation</h2></div>
     <p class="caption" style="margin:0 0 4px">${escapeHtml(ld.neutrality_note || "")}</p>
     ${briefPanels}` : ""}
   </div>`;
@@ -7974,7 +8084,7 @@ function renderStateCoverage() {
       </div>
     </section>
 
-    <section class="block" style="border-bottom:0;padding-top:8px;padding-bottom:48px">
+    <section class="block" style="border-bottom:0;padding-top: 8px;padding-bottom:48px">
       ${stateMethodologyNote()}
     </section>
   </div>`;
@@ -8031,9 +8141,9 @@ function renderStateJurisdiction(code) {
   return `
   <div class="container">
     <a class="back" href="#/states">← All state finance</a>
-    <section class="hero" style="padding-bottom:14px">
+    <section class="hero" style="padding-bottom:16px">
       <span class="eyebrow">State campaign finance · ${escapeHtml(j.source)}</span>
-      <h1 style="margin-top:12px;max-width:24ch">MLB-owner giving in ${escapeHtml(jName(code))}</h1>
+      <h1 style="margin-top: 12px;max-width:24ch">MLB-owner giving in ${escapeHtml(jName(code))}</h1>
       <p class="deck">
         Every confirmed or probable contribution by an MLB principal owner recorded in
         ${escapeHtml(jName(code))}'s official disclosure system (${escapeHtml(j.source)}).
@@ -8059,21 +8169,21 @@ function renderStateJurisdiction(code) {
       </div>
       <div class="kpi">
         <div class="kpi-label">Source</div>
-        <div class="kpi-value" style="font-size:22px">${escapeHtml(j.source)}</div>
+        <div class="kpi-value" style="font-size: var(--t-lg)">${escapeHtml(j.source)}</div>
         <div class="kpi-foot">official system of record</div>
       </div>
     </div>
 
-    <div style="display:flex;flex-wrap:wrap;gap:24px;margin:26px 0 8px">
+    <div style="display:flex;flex-wrap:wrap;gap: 24px;margin:24px 0 8px">
       <section style="flex:1 1 320px">
-        <h2 style="font-family:var(--serif);font-size:20px;margin:0 0 10px">Top recipients</h2>
-        ${topR ? `<ul style="list-style:none;padding:0;margin:0;font-size:14px">${topR}</ul>` : `<p class="muted">—</p>`}
+        <h2 style="font-family:var(--serif);font-size: var(--t-md);margin:0 0 8px">Top recipients</h2>
+        ${topR ? `<ul style="list-style:none;padding: 0;margin: 0;font-size: var(--t-sm)">${topR}</ul>` : `<p class="muted">—</p>`}
       </section>
       <section style="flex:1 1 320px">
-        <h2 style="font-family:var(--serif);font-size:20px;margin:0 0 10px">Owners active in ${escapeHtml(jName(code))}</h2>
-        <ul style="list-style:none;padding:0;margin:0;font-size:14px">
+        <h2 style="font-family:var(--serif);font-size: var(--t-md);margin:0 0 8px">Owners active in ${escapeHtml(jName(code))}</h2>
+        <ul style="list-style:none;padding: 0;margin: 0;font-size: var(--t-sm)">
           ${ownersRanked.map((o) => `
-            <li style="margin:0 0 4px;display:flex;justify-content:space-between;gap:10px">
+            <li style="margin: 0 0 4px;display:flex;justify-content:space-between;gap:8px">
               <a href="#/owner/${escapeAttr(o.slug)}" style="color:inherit">${escapeHtml(o.name)}</a>
               <span style="font-variant-numeric:tabular-nums;font-weight:600">${fmtMoney(ownerHereAmt[o.slug] || 0)}</span>
             </li>`).join("")}
@@ -8082,7 +8192,7 @@ function renderStateJurisdiction(code) {
     </div>
 
     <section style="margin:24px 0 8px">
-      <h2 style="font-family:var(--serif);font-size:22px;margin:0 0 12px">All ${escapeHtml(jName(code))} contributions</h2>
+      <h2 style="font-family:var(--serif);font-size: var(--t-lg);margin:0 0 12px">All ${escapeHtml(jName(code))} contributions</h2>
       ${stateContribSection(donations, { showJurisdiction: false })}
     </section>
 
@@ -8110,9 +8220,9 @@ function renderStateRecipient(key) {
   return `
   <div class="container">
     <a class="back" href="#/state-recipients">← All state recipients</a>
-    <section class="hero" style="padding-bottom:14px">
+    <section class="hero" style="padding-bottom:16px">
       <span class="eyebrow">${escapeHtml(jName(rc.jurisdiction))} · ${escapeHtml(rc.source)}${rc.filer_id ? ` · filer ${escapeHtml(rc.filer_id)}` : ""}</span>
-      <h1 style="margin-top:12px;max-width:26ch">${escapeHtml(rc.name)}</h1>
+      <h1 style="margin-top: 12px;max-width:26ch">${escapeHtml(rc.name)}</h1>
       <p class="deck">
         MLB-owner contributions to this ${escapeHtml(rc.recipient_type || "recipient")} recorded in
         ${escapeHtml(jName(rc.jurisdiction))}'s ${escapeHtml(rc.source)} system.${meta ? ` <span class="muted">(${meta})</span>` : ""}
@@ -8137,16 +8247,16 @@ function renderStateRecipient(key) {
       </div>
       <div class="kpi">
         <div class="kpi-label">Date range</div>
-        <div class="kpi-value" style="font-size:18px">${escapeHtml((rc.first_date || "").slice(0, 10) || "—")}</div>
+        <div class="kpi-value" style="font-size: var(--t-md)">${escapeHtml((rc.first_date || "").slice(0, 10) || "—")}</div>
         <div class="kpi-foot">through ${escapeHtml((rc.last_date || "").slice(0, 10) || "—")}</div>
       </div>
     </div>
 
     <section style="margin:24px 0 8px">
-      <h2 style="font-family:var(--serif);font-size:20px;margin:0 0 10px">Owners who gave</h2>
-      <ul style="list-style:none;padding:0;margin:0;font-size:14px;max-width:480px">
+      <h2 style="font-family:var(--serif);font-size: var(--t-md);margin:0 0 8px">Owners who gave</h2>
+      <ul style="list-style:none;padding: 0;margin: 0;font-size: var(--t-sm);max-width:480px">
         ${ownersRanked.map((o) => `
-          <li style="margin:0 0 4px;display:flex;justify-content:space-between;gap:10px">
+          <li style="margin: 0 0 4px;display:flex;justify-content:space-between;gap:8px">
             <a href="#/owner/${escapeAttr(o.slug)}" style="color:inherit">${escapeHtml(o.name)}</a>
             <span style="font-variant-numeric:tabular-nums;font-weight:600">${fmtMoney(o.amount)} <span class="muted" style="font-weight:400">· ${fmtInt(o.n)}</span></span>
           </li>`).join("")}
@@ -8154,7 +8264,7 @@ function renderStateRecipient(key) {
     </section>
 
     <section style="margin:24px 0 8px">
-      <h2 style="font-family:var(--serif);font-size:22px;margin:0 0 12px">All contributions to ${escapeHtml(rc.name)}</h2>
+      <h2 style="font-family:var(--serif);font-size: var(--t-lg);margin:0 0 12px">All contributions to ${escapeHtml(rc.name)}</h2>
       ${stateContribSection(donations, { showJurisdiction: false })}
     </section>
   </div>`;
@@ -8203,9 +8313,9 @@ function renderStateRecipients() {
   return `
   ${sectionSubnav("state", "recipients")}
   <div class="container">
-    <section class="hero" style="padding-bottom:14px">
+    <section class="hero" style="padding-bottom:16px">
       <span class="eyebrow">State · Recipients</span>
-      <h1 style="margin-top:12px;max-width:24ch">Who received the state money.</h1>
+      <h1 style="margin-top: 12px;max-width:24ch">Who received the state money.</h1>
       <p class="deck">
         Every committee, candidate, or ballot-measure campaign that received at least one
         confirmed or probable contribution from an MLB principal owner in a covered state.
@@ -8226,12 +8336,12 @@ function renderStateRecipients() {
           <button type="button" class="recipients-pill sr-pill ${f.type === t ? "on" : ""}" data-type="${escapeAttr(t)}">${escapeHtml(t)}</button>`).join("")}
       </div>
       <div class="recipients-filter-row">
-        <input id="sr-q" type="text" placeholder="Search recipient name or filer ID…" value="${escapeAttr(f.q)}" autocomplete="off">
+        <input aria-label="Search recipient name or filer ID" id="sr-q" type="text" placeholder="Search recipient name or filer ID…" value="${escapeAttr(f.q)}" autocomplete="off">
         <button type="button" id="sr-reset" class="recipients-reset">Reset</button>
       </div>
     </div>
 
-    <p class="muted" style="font-size:12px;margin:4px 2px 10px">
+    <p class="muted" style="font-size: var(--t-xs);margin:4px 4px 8px">
       Showing ${fmtInt(visible.length)} of ${fmtInt(total)} recipient${total === 1 ? "" : "s"} · ${fmtMoney(sumDollars)} total received.
     </p>
 
@@ -8249,14 +8359,14 @@ function renderStateRecipients() {
           </tr></thead>
           <tbody>
             ${visible.length === 0 ? `
-              <tr><td colspan="7" style="padding:24px 0;text-align:center;color:var(--ink-3)">No recipients match the current filters.</td></tr>
+              <tr><td colspan="7" style="padding: 24px 0;text-align:center;color:var(--ink-3)">No recipients match the current filters.</td></tr>
             ` : visible.map((r) => `
               <tr class="sr-row" data-key="${escapeAttr(r.key)}" style="cursor:pointer">
                 <td>
                   <div class="re-name">${escapeHtml(r.name || "—")}</div>
                   <div class="re-sub">${escapeHtml(r.source)}${r.filer_id ? ` · ${escapeHtml(r.filer_id)}` : ""}</div>
                 </td>
-                <td class="muted" style="font-size:12px">${escapeHtml(jName(r.jurisdiction))}</td>
+                <td class="muted" style="font-size: var(--t-xs)">${escapeHtml(jName(r.jurisdiction))}</td>
                 <td>${escapeHtml(r.recipient_type || "—")}</td>
                 <td class="num"><strong>${fmtMoney(aggAmt(r, "total_amount"))}</strong></td>
                 <td class="num">${fmtInt(r.n_donations)}</td>
@@ -8449,14 +8559,14 @@ function openStateDrawer(id) {
 
   body.innerHTML = `
     <h2>${ownerNameHtml} <span class="donor-arrow">→</span> ${escapeHtml(d.recipient || "—")}</h2>
-    <div class="muted" style="margin-top:4px;font-size:14px">${escapeHtml(jName(d.jurisdiction))} · ${escapeHtml(d.source)}</div>
+    <div class="muted" style="margin-top: 4px;font-size: var(--t-sm)">${escapeHtml(jName(d.jurisdiction))} · ${escapeHtml(d.source)}</div>
 
     <div class="drawer-amount">${fmtMoneyExact(amt(d))}</div>
     <div class="drawer-amount-meta">
       <span>${fmtDate(d.date)}</span>
       <span>·</span>
       <span>${escapeHtml(String(d.cycle))} cycle</span>
-      <span style="margin-left:6px">${stateStatusBadge(d.status)}</span>
+      <span style="margin-left:8px">${stateStatusBadge(d.status)}</span>
     </div>
 
     <div class="drawer-section">
@@ -8480,7 +8590,7 @@ function openStateDrawer(id) {
         <div class="value">${escapeHtml(d.recipient_filer_id || "—")}</div>
       </div>
       ${recipKey ? `
-        <p style="margin-top:14px">
+        <p style="margin-top:16px">
           <a class="drawer-link" href="#/state-recipient/${encodeURIComponent(recipKey)}" onclick="closeDrawer()">View all MLB-owner contributions to this recipient</a>
         </p>` : ""}
     </div>
@@ -8539,7 +8649,7 @@ function openStateDrawer(id) {
       <h3>Provenance</h3>
       <div class="drawer-grid">
         <div class="label">Transaction ID</div>
-        <div class="value" style="font-size:11px">${escapeHtml(d.id)}</div>
+        <div class="value" style="font-size: var(--t-xs)">${escapeHtml(d.id)}</div>
         <div class="label">Jurisdiction</div>
         <div class="value">${escapeHtml(jName(d.jurisdiction))} · ${escapeHtml(d.source)}</div>
         <div class="label">Filing ID</div>
@@ -8551,7 +8661,7 @@ function openStateDrawer(id) {
         <div class="label">Report type</div>
         <div class="value">${escapeHtml(d.report_type || "—")}</div>
         <div class="label">Raw payload</div>
-        <div class="value" style="font-size:11px">${escapeHtml(d.raw_payload || "—")}</div>
+        <div class="value" style="font-size: var(--t-xs)">${escapeHtml(d.raw_payload || "—")}</div>
         <div class="label">Ingested</div>
         <div class="value">${escapeHtml(d.ingested_at || "—")}</div>
       </div>
@@ -8647,9 +8757,9 @@ function renderRecipients() {
   return `
   ${sectionSubnav("federal", "recipients")}
   <div class="container">
-    <section class="hero" style="padding-bottom:18px">
+    <section class="hero" style="padding-bottom:16px">
       <span class="eyebrow">Federal · Recipients</span>
-      <h1 style="margin-top:14px;max-width:24ch">Who received the money.</h1>
+      <h1 style="margin-top: 16px;max-width:24ch">Who received the money.</h1>
       <p class="deck">
         Every committee that received at least one CONFIRMED or PROBABLE
         federal donation from an MLB principal owner. Sortable by amount, donations,
@@ -8670,12 +8780,12 @@ function renderRecipients() {
       </div>
       <div class="kpi">
         <div class="kpi-label">To Democratic</div>
-        <div class="kpi-value" style="color:var(--dem)">${fmtMoney(partyDollars.DEM)}</div>
+        <div class="kpi-value" style="color:var(--dem-ink)">${fmtMoney(partyDollars.DEM)}</div>
         <div class="kpi-foot">${totalDollars > 0 ? Math.round((partyDollars.DEM / totalDollars) * 100) : 0}% of filtered</div>
       </div>
       <div class="kpi">
         <div class="kpi-label">To Republican</div>
-        <div class="kpi-value" style="color:var(--rep)">${fmtMoney(partyDollars.REP)}</div>
+        <div class="kpi-value" style="color:var(--rep-ink)">${fmtMoney(partyDollars.REP)}</div>
         <div class="kpi-foot">${totalDollars > 0 ? Math.round((partyDollars.REP / totalDollars) * 100) : 0}% of filtered</div>
       </div>
     </div>
@@ -8696,7 +8806,7 @@ function renderRecipients() {
           </button>`).join("")}
       </div>
       <div class="recipients-filter-row">
-        <input id="re-q" type="text" placeholder="Search committee name or ID…" value="${escapeAttr(f.q)}" autocomplete="off">
+        <input aria-label="Search committee name or ID" id="re-q" type="text" placeholder="Search committee name or ID…" value="${escapeAttr(f.q)}" autocomplete="off">
         <button type="button" id="re-reset" class="recipients-reset">Reset</button>
       </div>
     </div>
@@ -8717,7 +8827,7 @@ function renderRecipients() {
         </thead>
         <tbody>
           ${visible.length === 0 ? `
-            <tr><td colspan="7" style="padding:24px 0;text-align:center;color:var(--ink-3)">No recipients match the current filters.</td></tr>
+            <tr><td colspan="7" style="padding: 24px 0;text-align:center;color:var(--ink-3)">No recipients match the current filters.</td></tr>
           ` : visible.map((r) => {
             const partyClass = r.party === "DEM" ? "dem" : r.party === "REP" ? "rep" : "oth";
             const cyclesStr = (r.cycles_active && r.cycles_active.length)
@@ -8850,7 +8960,7 @@ function renderWhatsNew() {
     <div class="container">
       <section class="hero">
         <span class="eyebrow">What's new</span>
-        <h1 style="margin-top:14px;max-width:24ch">Archive initial snapshot.</h1>
+        <h1 style="margin-top: 16px;max-width:24ch">Archive initial snapshot.</h1>
         <p class="deck">
           Weekly diffs will appear here after the first scheduled refresh.
           The full archive is browsable now via the
@@ -8882,14 +8992,14 @@ function renderWhatsNew() {
     <div class="container">
       <section class="hero">
         <span class="eyebrow">What's new</span>
-        <h1 style="margin-top:14px;max-width:24ch">No new attributable activity.</h1>
+        <h1 style="margin-top: 16px;max-width:24ch">No new attributable activity.</h1>
         <p class="deck">
           The most recent refresh window (${escapeHtml(batch.date)}) added zero
           CONFIRMED or PROBABLE donations. ${fmtInt(sumRecordsFetched)} records
           were reviewed; ${fmtInt(sumUncertain)} routed to the manual review
           queue.
         </p>
-        <p class="caption" style="margin-top:18px">
+        <p class="caption" style="margin-top:16px">
           See <a href="#/runs" class="drawer-link" style="display:inline">Pipeline</a>
           for per-owner run details.
         </p>
@@ -8922,9 +9032,9 @@ function renderWhatsNew() {
   return `
   ${sectionSubnav("federal", "whatsnew")}
   <div class="container">
-    <section class="hero" style="padding-bottom:18px">
+    <section class="hero" style="padding-bottom:16px">
       <span class="eyebrow">Federal · What's new</span>
-      <h1 style="margin-top:14px;max-width:24ch">Latest refresh: ${escapeHtml(batch.date)}.</h1>
+      <h1 style="margin-top: 16px;max-width:24ch">Latest refresh: ${escapeHtml(batch.date)}.</h1>
       <p class="deck">
         Most recent multi-owner refresh window. Counts below reflect donations
         that landed in the canonical archive (CONFIRMED + PROBABLE) during this
@@ -8960,7 +9070,7 @@ function renderWhatsNew() {
     <section class="block">
       <div class="block-head">
         <span class="eyebrow">Biggest new donations</span>
-        <h2 style="margin-top:6px">Top ${top5.length} by amount, this refresh</h2>
+        <h2 style="margin-top:8px">Top ${top5.length} by amount, this refresh</h2>
         <p class="caption">Click a row to open the full FEC source record.</p>
       </div>
       <div class="table-scroll">
@@ -8984,7 +9094,7 @@ function renderWhatsNew() {
               <tr data-id="${escapeAttr(d.id)}" class="wn-donation-row" style="cursor:pointer">
                 <td class="col-date">${escapeHtml(fmtDate(d.date))}</td>
                 <td class="num"><strong>${escapeHtml(fmtMoneyExact(amt(d)))}</strong></td>
-                <td><span style="font-family:var(--serif);font-weight:500">${escapeHtml(ownerName)}</span></td>
+                <td><span style="font-family:var(--serif);font-weight:700">${escapeHtml(ownerName)}</span></td>
                 <td>${escapeHtml(d.committee || "—")}</td>
                 <td><span class="chip-party ${partyClass}">${escapeHtml(d.party || "OTH")}</span></td>
                 <td>${d.status === "CONFIRMED"
@@ -9000,7 +9110,7 @@ function renderWhatsNew() {
     <section class="block">
       <div class="block-head">
         <span class="eyebrow">Owner activity</span>
-        <h2 style="margin-top:6px">${fmtInt(ownerRows.length)} owners with new records this refresh</h2>
+        <h2 style="margin-top:8px">${fmtInt(ownerRows.length)} owners with new records this refresh</h2>
         <p class="caption">Sorted by dollars added.</p>
       </div>
       <div class="table-scroll">
@@ -9019,7 +9129,7 @@ function renderWhatsNew() {
             const name = owner ? owner.name : s.slug;
             return `
               <tr>
-                <td><a href="#/owner/${escapeAttr(s.slug)}" style="color:inherit;font-family:var(--serif);font-weight:500">${escapeHtml(name)}</a></td>
+                <td><a href="#/owner/${escapeAttr(s.slug)}" style="color:inherit;font-family:var(--serif);font-weight:700">${escapeHtml(name)}</a></td>
                 <td class="num">${fmtInt(s.count)}</td>
                 <td class="num">${fmtInt(s.recipients)}</td>
                 <td class="num">${escapeHtml(fmtMoneyExact(s.amount))}</td>
@@ -9050,7 +9160,7 @@ function renderAbout() {
   return `
     <div class="container-narrow" style="padding:48px 0">
       <span class="eyebrow">About the data</span>
-      <h1 style="margin-top:14px;max-width:22ch">The shape of the dataset, in numbers.</h1>
+      <h1 style="margin-top: 16px;max-width:22ch">The shape of the dataset, in numbers.</h1>
       <p class="deck">A snapshot of what's currently in the archive — coverage at both the federal and state level, freshness, and where you can find the underlying records.</p>
 
       <div style="margin-top:48px">
@@ -9071,15 +9181,15 @@ function renderAbout() {
 
       <div style="margin-top:32px">
         <h3>Top recipient committees (league-wide)</h3>
-        <div class="recipients-list" style="margin-top:14px">
+        <div class="recipients-list" style="margin-top:16px">
           ${L.top_recipients.slice(0, 15).map((r, i) => renderRecipient(r, i, aggAmt(L, "total_amount"))).join("")}
         </div>
       </div>
 
       <div style="margin-top:48px">
         <h3>Snapshot generated</h3>
-        <p style="font-family:var(--mono);font-size:13px;">${state.data.generated_at}</p>
-        <p style="font-size:13px;">This page is regenerated after every ingestion run. The underlying database, raw FEC payloads, and per-owner CSV exports live in the project repository.</p>
+        <p style="font-family:var(--mono);font-size: var(--t-sm);">${state.data.generated_at}</p>
+        <p style="font-size: var(--t-sm);">This page is regenerated after every ingestion run. The underlying database, raw FEC payloads, and per-owner CSV exports live in the project repository.</p>
       </div>
     </div>
   `;
