@@ -21,7 +21,29 @@ The conservative attribution standard is itself an editorial commitment: we'd ra
 - Federal political donations reported to the FEC, all years available.
 - Donations by principal/majority owners of all 30 MLB franchises, plus the highest-profile minority owners where they exert public influence (case by case, documented).
 - **Former principal owners**, retained after a control transfer when their giving is historically relevant and they were a principal owner during the covered period (e.g. `castellini-bob`, `angelos-john-p`, `pohlad-joe`). This is a deliberate, documented precedent: an owner does not leave the archive the day the team changes hands. Their status is marked in the registry; the dashboard labels them "incl. former".
-- Donations by owners' spouses, where publicly identified as such in major-press reporting.
+- **Co-owners in the ownership group — "the ownership-group rule" (adopted 2026-07-19).**
+  A person enters the archive as a **full owner entity** when the public record
+  documents an **ownership stake in, or a governance role over, the franchise's
+  ownership entity** — a board or director seat, a named partner/trustee position, or
+  a disclosed equity interest. Family relationship to the control person is **not**
+  sufficient, and stake *size* is not the test (percentages are rarely disclosed, and
+  a small stake can carry a board seat).
+  - **This is not a new mechanism.** `castellini-phil` and `pohlad-tom` were already
+    tracked this way; the rule states the precedent rather than inventing one. Such
+    people are *owners*, so they get owner slugs and flow through the existing federal
+    and state pipelines unchanged — they are **not** `related_entities`.
+  - **Evidence bar:** a Tier-2 sourced ownership claim (2+ independent citable public
+    sources — major press, team/league statement, or corporate registry), recorded in
+    the owner YAML. No entity is added on relationship alone. Where the ownership role
+    is ambiguous, the person stays **out**: the conservative attribution standard
+    (we'd rather miss a real donation than wrongly attribute one) governs *who* is
+    tracked, not just which rows classify.
+  - **Never auto-aggregate a family.** A "the X family gave $N" figure must be an
+    explicit, labeled join across slugs — never any single owner's own total. This is
+    the household rule (§3.9) applied to ownership groups.
+- Donations by owners' spouses, where publicly identified as such in major-press
+  reporting. A spouse with **no** ownership or governance role remains a
+  `related_entity` (the `cohen-alexandra` model), not an owner entity.
 - Donations by named adult family members (children, parents) where the relationship is publicly disclosed and the family member is identified in FEC filings.
 - PACs directly affiliated with teams (rare — historically only one or two examples; document case by case).
 - PACs of corporate parent companies for corporate-owned teams (e.g., Liberty Media for the Braves). Attribution only when the team-ownership link is documented.
@@ -154,7 +176,7 @@ two-signal CONFIRMED bar is reachable.
 
 ## Decision points the user should weigh in on
 
-- **Minority owners.** Currently out. The Brewers' Mark Attanasio is a principal; a Pohlad heir who's a 5% minority partner is not. But where do we draw the line? Recommendation: principal/managing owners only in Phase 1–2, revisit for Phase 3.
+- **Minority owners / ownership groups.** ~~Currently out.~~ **RESOLVED 2026-07-19 — see "The ownership-group rule" in the scope section above.** A co-owner enters the archive on a documented ownership stake or governance role, not on family relationship and not on stake size. The original framing ("a Pohlad heir who's a 5% minority partner is not [in]") is superseded: percentage was never the right test, since it is rarely disclosed and a small stake can carry a board seat. Documented participation in the ownership entity is the test.
 - **Pre-ownership donation history.** Do we want Cohen's donations from before he bought the Mets in 2020? Recommendation: yes, with a clear `tenure_start_date` field on the owner, so reports can filter to "post-ownership" donations when relevant.
 - **Spouses as separate entities.** Alexandra Cohen is a major donor in her own right. Recommendation: track as a related entity with her own verifying_signals — never auto-attribute her donations to him; always tag clearly.
 - **Backfill cadence.** FEC historical data goes back decades but with declining quality and coverage. Recommendation: aim for 2000 forward as a hard floor, opportunistic on pre-2000.

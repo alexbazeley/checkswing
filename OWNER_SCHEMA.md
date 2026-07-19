@@ -177,6 +177,21 @@ related_entities:
 
 A related entity creates **its own classification path** — its donations are classified against its own signals and tagged with its own slug. Reports that aggregate (e.g., "the Cohen family") join slugs explicitly.
 
+> **A co-owner is NOT a `related_entity` — give them their own owner file.**
+> Per the ownership-group rule (CHARTER.md), a family member who holds a documented
+> ownership stake or governance role in the franchise's ownership entity is tracked as
+> a **full owner entity**: their own `owners/<slug>.yaml`, their own `_registry.yaml`
+> entry, `role: Co-owner`. `castellini-phil` and `pohlad-tom` are the worked examples.
+>
+> The distinction is load-bearing, not cosmetic. Owner entities are picked up by the
+> state pipeline automatically (state fetchers bucket on owner `name_variants`);
+> related entities are **not** — they require `ingest --include-related`, which has no
+> state-side analog. Filing a co-owner as a `related_entity` would silently confine
+> them to the federal layer.
+>
+> Use `related_entities` for people and organizations *without* an ownership role — a
+> spouse who is a donor in her own right (`cohen-alexandra`), or an affiliated PAC.
+
 ### `sources` (required, ≥1 entry)
 
 Sources used to populate this file. Per SOURCES.md, these are Tier 2 (identity) sources, never used for donation facts.
