@@ -252,10 +252,13 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           # Stage only what the refresh layer is allowed to touch: master DB,
-          # the rebuilt data.json, the citable CSV exports, owner YAMLs
-          # (audit.last_ingestion only), and the provenance log. REVIEW_QUEUE.md
-          # is no longer tracked — its data lives in review_queue inside master.db.
-          git add data/master.db mockup/data.json data/donations owners/*.yaml catalog/PROVENANCE_LOG.md 2>/dev/null || true
+          # the citable CSV exports, owner YAMLs (audit.last_ingestion only),
+          # and the provenance log. REVIEW_QUEUE.md is no longer tracked — its
+          # data lives in review_queue inside master.db. NOTE: mockup/data.json
+          # is deliberately NOT staged — it is gitignored and regenerated from
+          # master.db by the Cloudflare build (README §Deployment), so listing
+          # it here only produced a dead `git add` of an ignored path.
+          git add data/master.db data/donations owners/*.yaml catalog/PROVENANCE_LOG.md 2>/dev/null || true
           if git diff --staged --quiet; then
             echo "No changes from refresh — nothing to commit."
           else
@@ -371,7 +374,9 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/master.db mockup/data.json catalog/PROVENANCE_LOG.md 2>/dev/null || true
+          # mockup/data.json is gitignored + build-generated on deploy, so it is
+          # intentionally not staged (see the consolidate job's note above).
+          git add data/master.db catalog/PROVENANCE_LOG.md 2>/dev/null || true
           if git diff --staged --quiet; then
             echo "No committee enrichment deltas — nothing to commit."
           else
