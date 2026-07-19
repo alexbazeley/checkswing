@@ -222,22 +222,23 @@ and `#/federal`, which the detector passes — it clears them only because their
 values start with `$`, which the detector reads as pricing. Adding a currency
 symbol to make it pass would be gaming a bug, not fixing a design.
 
-**2. `#/states`, `#/state-coverage` — "hue discipline," 4 families.** Two
-separate things, both worth stating.
+**2. `#/state-coverage` — "hue discipline," 4 families.** (Updated 2026-07-19.)
+This originally flagged on `#/states` too, from a genuine `groundcheck` bug: the
+detector sampled only the first 800 elements in DOM order, so an accent used
+late in the document dropped below its 3-use floor and shifted the family count.
+That bug was fixed upstream in the tool (it now samples the whole page), and
+`#/states` passes at 2 families. **`#/state-coverage` still flags, and correctly
+so** — it is *not* a sampling artifact. That page renders the coverage-status
+legend (good / stale / excluded markers) the other pages don't, which are
+genuinely additional hues.
 
-The first is a sampling artifact. The detector reads the first 800 elements in
-DOM order; within that prefix the sienna accent falls below its 3-use floor,
-which breaks the bin-0↔bin-11 wraparound merge that folds sienna and crimson
-into one family. Running the detector's own algorithm over the *whole* page
-gives bins `[0, 1, 4, 5, 11]` → **2 families**.
-
-The second is that §1B's budget is about *brand* hues, and it says so: "Semantic
-colors (success/warning/error/info) live outside the brand hues." The brand
-hues here are exactly three — crimson (federal), teal (state), sienna
-(interactive). Everything else the detector counts is semantic: green and amber
-encode the verification tier, blue and red encode recipient party. Collapsing
-those into the brand budget would mean giving up the encoding, which is the
-opposite of what §3 asks for.
+That is exactly the §1B carve-out: "Semantic colors (success/warning/error/info)
+live outside the brand hues." The brand hues here are three — crimson (federal),
+teal (state), sienna (interactive); everything else the detector counts is
+semantic (green/amber = verification tier and coverage freshness; blue/red =
+recipient party). The detector can't tell brand from semantic, so it flags and a
+human justifies (§7.10). Collapsing those into the brand budget would mean giving
+up the encoding, which is the opposite of what §3 asks for.
 
 ---
 
