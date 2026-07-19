@@ -523,8 +523,32 @@ p, .lvl-desc, .ld-sub, .method-body li, .about-body p { max-width: var(--measure
 /* ════════════════════════════════════════════════════════════════════════
    SECTION CHROME
    ══════════════════════════════════════════════════════════════════════ */
-section.block { padding: 48px 0; border-bottom: 1px solid var(--rule); }
-section.block:last-child { border-bottom: 0; }
+/* ── Section rhythm ────────────────────────────────────────────────────────
+   GROUNDRULES §3: "Vary section rhythm — if every section has identical
+   padding, the page is monotonous, not consistent." Every block used to be
+   48px with a bottom rule, which is why the squint test read the page as a
+   stack of equal boxes. Separation now runs the §3 ladder in order —
+   whitespace first, a background shift second, a rule only where two blocks of
+   the same density genuinely need a hard stop. */
+section.block { padding: 48px 0; }
+/* The first block after a hero is an entry point and breathes. */
+section.block:first-of-type { padding-top: 64px; }
+/* Consecutive blocks tighten: by the third one you are reading, not arriving. */
+section.block + section.block { padding-top: 32px; }
+/* The last block on a page carries the footer clear of the content. */
+section.block:last-child { padding-bottom: 80px; }
+/* Dense data blocks (long tables) close up — the density is the point. */
+section.block.block-dense { padding-top: 24px; padding-bottom: 32px; }
+/* A rule only between two blocks that both sit on the page background. */
+section.block + section.block:not(.block-sunk) { border-top: 1px solid var(--rule); }
+/* The §3 background shift, for blocks that should read as a separate register. */
+section.block.block-sunk, .section-band {
+  background: var(--bg-sunk);
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+/* Inside the band the section already has the band's padding context. */
+.section-band .home-section { padding: 56px 0; }
 .block-head { margin-bottom: 24px; }
 .block-head h2 { margin-bottom: 4px; }
 .block-head .caption { margin-top: 8px; }
@@ -1207,15 +1231,14 @@ section.block:last-child { border-bottom: 0; }
 .drawer-grid .value-prose { font-family: var(--sans); font-size: var(--t-sm); line-height: 1.45; }
 
 .drawer-reason {
-  background: var(--bg-sunk);
-  border-left: 3px solid var(--ok-fg);
+  background: var(--ok-bg);
   padding: 12px 16px;
   font-size: var(--t-sm);
   line-height: 1.5;
-  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  border-radius: var(--radius-sm);
   color: var(--ink-2);
 }
-.drawer-reason.probable { border-left-color: var(--warn-fg); }
+.drawer-reason.probable { background: var(--warn-bg); }
 
 .drawer-signals { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
 
@@ -1254,11 +1277,48 @@ section.block:last-child { border-bottom: 0; }
   cursor: not-allowed;
   pointer-events: none;
 }
+/* Short document-type tags rather than emoji (§2 imagery). Set in the mono
+   face so they read as filing-clerk shorthand, which is what they are. */
 .drawer-source-icon {
-  font-size: var(--t-md); line-height: 1;
-  flex-shrink: 0;
-  filter: grayscale(0.2);
+  font-family: var(--mono); font-size: var(--t-xs); font-weight: 500;
+  letter-spacing: var(--track-label); line-height: 1;
+  flex-shrink: 0; align-self: center;
+  color: var(--ink-3);
+  background: var(--bg-sunk);
+  border-radius: var(--radius-sm);
+  padding: 4px 8px; min-width: 44px; text-align: center;
 }
+
+/* ── The filing coordinate ──────────────────────────────────────────────────
+   The signature element. An FEC Schedule A line identifies itself by form,
+   line, transaction and image; this is that identification, set the way the
+   filing sets it — mono, tabular, quiet, and always adjacent to the money it
+   describes. See DESIGN.md Phase B. */
+.filing-coord {
+  font-family: var(--mono); font-size: var(--t-xs);
+  color: var(--ink-3); letter-spacing: 0;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.filing-coord-sep { padding: 0 8px; color: var(--rule-strong); }
+.filing-coord-strip {
+  display: flex; align-items: baseline; flex-wrap: wrap; gap: 12px;
+  margin-top: 12px; padding-top: 12px;
+  border-top: 1px solid var(--rule);
+}
+.filing-coord-strip .filing-coord { white-space: normal; }
+.filing-coord-key {
+  font-family: var(--sans); font-size: var(--t-xs); font-weight: 600;
+  letter-spacing: var(--track-label); text-transform: uppercase;
+  color: var(--ink-3);
+}
+.filing-coord-img {
+  font-family: var(--sans); font-size: var(--t-xs); font-weight: 600;
+  color: var(--accent); white-space: nowrap;
+}
+/* In a dense row the coordinate must not compete with the donor and the
+   amount — it wraps to its own line and holds the schedule's left edge. */
+.recent-flow .filing-coord { flex-basis: 100%; margin-top: 4px; }
 .drawer-source-title {
   font-size: var(--t-sm); font-weight: 600; color: var(--ink); line-height: 1.2;
 }
@@ -1594,13 +1654,13 @@ button.drawer-source-link {
 .method-body { padding: 48px 0; }
 .method-body h2 { margin: 48px 0 16px; }
 .method-body h2:first-of-type { margin-top: 0; }
-.method-body p { font-size: var(--t-base); line-height: 1.65; color: var(--ink-2); max-width: 64ch; margin: 0 0 16px; }
+.method-body p { font-size: var(--t-base); line-height: 1.65; color: var(--ink-2); max-width: var(--measure); margin: 0 0 16px; }
 .method-body p strong { color: var(--ink); font-weight: 600; }
 .method-tiers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 20px 0 32px; }
-.method-tier { padding: 20px; border: 1px solid var(--rule); border-radius: var(--radius-sm); background: var(--bg-elev); }
-.method-tier.confirmed { border-top: 3px solid var(--ok-fg); }
-.method-tier.probable  { border-top: 3px solid var(--warn-fg); }
-.method-tier.uncertain { border-top: 3px solid var(--rule-strong); }
+.method-tier { padding: 20px; border-radius: var(--radius-sm); background: var(--bg-elev); }
+.method-tier.confirmed { background: var(--ok-bg); }
+.method-tier.probable  { background: var(--warn-bg); }
+.method-tier.uncertain { background: var(--bg-sunk); }
 .method-tier h3 { font-family: var(--serif); font-size: var(--t-md); font-weight: 700; text-transform: none; letter-spacing: 0; color: var(--ink); margin-bottom: 8px; }
 .method-tier .tier-rule { font-family: var(--mono); font-size: var(--t-xs); color: var(--ink-3); margin-bottom: 12px; }
 .method-tier p { font-size: var(--t-sm); line-height: 1.5; margin: 0; }
@@ -2316,8 +2376,12 @@ button.drawer-source-link {
 .level-card .lvl-cta::after { content: "→"; transition: transform 140ms; }
 
 /* ── Home layout helpers ── */
-.home-section { padding: 56px 0; border-bottom: 1px solid var(--rule); }
-.home-section:last-of-type { border-bottom: 0; }
+/* Home alternates register rather than repeating one: the level choice sits on
+   the page ground and breathes; the verification standard drops to the sunk
+   surface and tightens, so the two read as different kinds of section. */
+.home-section { padding: 72px 0; }
+.home-section + .home-section { padding: 56px 0; }
+.home-section:last-of-type { padding-bottom: 80px; }
 .section-head { max-width: var(--measure); margin-bottom: var(--s5); }
 .section-head h2 { font-size: var(--t-xl); margin-bottom: var(--s2); }
 .section-head .caption { font-size: var(--t-base); color: var(--ink-2); }
@@ -2970,6 +3034,39 @@ const is48HourNotice = (d) => (d.report_type || "").toUpperCase() === "48H";
 const chip48H = (d) => is48HourNotice(d)
   ? `<span class="chip-48h" title="Filed under FEC 48-hour notice rule — $1K+ contribution received within 20 days of an election">48H</span>`
   : "";
+
+/* ── The filing coordinate ─────────────────────────────────────────────────
+   THE SIGNATURE ELEMENT (see DESIGN.md Phase B). Every record in this archive
+   is one line of an FEC itemized schedule, and the filing tells you exactly
+   where that line lives: which form, which line of it, which transaction, and
+   which scanned image the transaction was read off.
+
+   Those four fields were already sitting in donations.json and were being
+   thrown away at render time — only report_type ("M6") reached the page. This
+   helper is the one place that formats them, so the row, the drawer and the
+   verification card all speak the same coordinate.
+
+   `compact` is the row form: the FEC transaction id alone. That id already
+   encodes the schedule and line it came from ("SA11A" = Schedule A, line 11A)
+   AND is unique per record, so it reads as a genuine schedule locator. Form
+   and line are deliberately NOT repeated per row — within any one view they
+   are usually identical across every row, and a constant repeated twenty times
+   is wallpaper rather than information (§3: labels must say something true
+   about the content or be cut). The drawer, where the record stands alone,
+   gets the fully spelled-out coordinate. */
+function filingCoordinate(d, { compact = false } = {}) {
+  const parts = [];
+  if (compact) {
+    if (d.id) parts.push(escapeHtml(d.id));
+  } else {
+    if (d.filing_form) parts.push(escapeHtml(d.filing_form));
+    if (d.line_number) parts.push(`Line ${escapeHtml(d.line_number)}`);
+    if (d.id) parts.push(escapeHtml(d.id));
+    if (d.image_number) parts.push(`Image ${escapeHtml(d.image_number)}`);
+  }
+  if (!parts.length) return "";
+  return `<span class="filing-coord">${parts.join('<span class="filing-coord-sep">·</span>')}</span>`;
+}
 
 /* Relative time: returns a short compact string ("3d", "1w", "6mo", "2y") for
    table-cell freshness indicators. Returns "—" for null/invalid input. */
@@ -3677,7 +3774,6 @@ function renderHome() {
 
   <section class="container home-section">
     <div class="section-head">
-      <span class="eyebrow">Two levels, one archive</span>
       <h2>Follow the money up and down the ballot.</h2>
       <p class="caption">Federal filings record national giving; state systems capture contributions to candidates and ballot measures on stadium subsidies and statehouse races. Pick a level to dive in.</p>
     </div>
@@ -3710,9 +3806,9 @@ function renderHome() {
     </div>
   </section>
 
+  <div class="section-band">
   <section class="container home-section">
     <div class="section-head">
-      <span class="eyebrow">How we verify</span>
       <h2>A three-tier standard, applied to every record.</h2>
       <p class="caption">Identity is never assumed. Each contribution is classified by how strongly its signals tie it to a specific owner — and only the top two tiers are ever published.</p>
     </div>
@@ -3738,6 +3834,7 @@ function renderHome() {
       separate databases and are never mixed.
     </p>
   </section>
+  </div>
   `;
 }
 
@@ -3797,8 +3894,7 @@ function renderLeague() {
 
   <section class="container block">
     <div class="block-head">
-      <span class="eyebrow">Latest activity</span>
-      <h2 style="margin-top:8px">Recent contributions</h2>
+      <h2>Recent contributions</h2>
       <p class="caption">The 20 most recently dated contributions in the archive. Each is one click from its FEC filing image.</p>
     </div>
     ${renderRecentDonations(state.data.recent || state.data.donations)}
@@ -3811,8 +3907,7 @@ function renderLeague() {
 
   <section class="container block">
     <div class="block-head">
-      <span class="eyebrow">League political map</span>
-      <h2 style="margin-top:8px">MLB ownership at a glance</h2>
+      <h2>MLB ownership at a glance</h2>
       <p class="caption">Each dot is one owner. Horizontal position is how their party-classified giving splits (Republican on the left, Democratic on the right). Vertical position is total dollars given, on a log scale. Click a dot for that owner's record.</p>
     </div>
     ${renderAlignmentScatter()}
@@ -3828,8 +3923,7 @@ function renderLeague() {
 
   <section class="container block">
     <div class="block-head">
-      <span class="eyebrow">League-wide</span>
-      <h2 style="margin-top:8px">Political giving by election cycle</h2>
+      <h2>Political giving by election cycle</h2>
       <p class="caption">Bars show total dollars given by MLB principal owners per cycle, colored by the recipient committee's party. <strong>Click a bar</strong> to see every donation in that cycle.</p>
     </div>
     ${renderCycleChart(L.by_cycle)}
@@ -3848,8 +3942,7 @@ function renderLeague() {
   <section class="container block">
     <div class="block-head-row">
       <div>
-        <span class="eyebrow">Owner × cycle heatmap</span>
-        <h2 style="margin-top:8px">Who gave when, at a glance</h2>
+        <h2>Who gave when, at a glance</h2>
         <p class="caption">
           Each cell is one owner's total federal giving in one election cycle.
           Cell brightness = dollars (log-banded). Cell hue = party majority
@@ -3875,8 +3968,7 @@ function renderLeague() {
   <section class="container block">
     <div class="block-head-row">
       <div>
-        <span class="eyebrow">The owners</span>
-        <h2 style="margin-top:8px">All ${L.n_owners} tracked owners</h2>
+        <h2>All ${L.n_owners} tracked owners</h2>
         <p class="caption">Click any row to drill down into that owner's complete giving record.</p>
       </div>
       <button class="csv-btn" data-csv="league">Download full dataset</button>
@@ -3939,7 +4031,7 @@ function renderRecentDonations(allDonations) {
               <span class="recent-arrow">→</span>
               <span class="recent-recipient">${escapeHtml(d.committee || "—")}</span>
               ${d.candidate ? `<span class="recent-meta">for ${escapeHtml(d.candidate)}</span>` : ""}
-              ${d.report_type ? `<span class="recent-meta">· ${escapeHtml(d.report_type)}</span>` : ""}
+              ${filingCoordinate(d, { compact: true })}
             </div>
             <div class="recent-amount">${fmtMoneyExact(amt(d))}</div>
             <div class="recent-chips">
@@ -4774,8 +4866,7 @@ function renderOwner(slug) {
 
     <section class="block"${hasState ? ' style="padding-top:28px"' : ""}>
       <div class="block-head">
-        <span class="eyebrow">Timeline</span>
-        <h2 style="margin-top:8px">Every donation, plotted by date and amount</h2>
+        <h2>Every donation, plotted by date and amount</h2>
         <p class="caption">Each dot is one FEC-reported contribution. Y-axis is dollar amount (log scale). Color = recipient party. Hover for details, click for the full record.</p>
       </div>
       ${renderTimeline(donations, o)}
@@ -4800,8 +4891,7 @@ function renderOwner(slug) {
     <section class="block">
       <div class="two-col">
         <div>
-          <span class="eyebrow">Recipients</span>
-          <h2 style="margin-top:8px">Where the money went</h2>
+          <h2>Where the money went</h2>
           <p class="caption">Top recipient committees by total dollars, all cycles combined.</p>
           <div class="recipients-list" style="margin-top:16px">
             ${o.top_recipients.map((r, i) => renderRecipient(r, i, aggAmt(o, "total_amount"))).join("")}
@@ -4809,8 +4899,7 @@ function renderOwner(slug) {
         </div>
 
         <div>
-          <span class="eyebrow">Verification</span>
-          <h2 style="margin-top:8px">How a record gets attributed to ${escapeHtml(o.name.split(" ").slice(-1)[0])}</h2>
+          <h2>How a record gets attributed to ${escapeHtml(o.name.split(" ").slice(-1)[0])}</h2>
           <p class="caption">A name match alone is never enough. Every CONFIRMED record needs at least two of: documented residence, documented employer, documented occupation. PROBABLE means name + one signal.</p>
           ${confirmedSample ? renderVerificationCard(confirmedSample) : `<p class="muted" style="font-size: var(--t-sm);margin-top:16px">No sample available.</p>`}
         </div>
@@ -4820,8 +4909,7 @@ function renderOwner(slug) {
     <section class="block">
       <div class="block-head-row">
         <div>
-          <span class="eyebrow">The data</span>
-          <h2 style="margin-top:8px">All donations</h2>
+          <h2>All donations</h2>
           <p class="caption">${fmtInt(donations.length)} records. Click any row for the full provenance trail.</p>
         </div>
         <button class="csv-btn" data-csv="owner">Download CSV</button>
@@ -4926,8 +5014,7 @@ function renderOwnerStateSection(slug) {
     <section class="block">
       <div class="block-head-row">
         <div>
-          <span class="eyebrow">The data</span>
-          <h2 style="margin-top:8px">All state contributions</h2>
+          <h2>All state contributions</h2>
           <p class="caption">${fmtInt(rows.length)} records. Click any row for the full provenance trail.</p>
         </div>
         <a class="sec-link" href="#/states" style="font-weight:600;font-size: var(--t-sm)">Full state section →</a>
@@ -5274,8 +5361,7 @@ function renderHouseholdPanel(o) {
   return `
     <section class="block">
       <div class="block-head">
-        <span class="eyebrow">Household</span>
-        <h2 style="margin-top:8px">The ${escapeHtml(ownerLast)} household</h2>
+        <h2>The ${escapeHtml(ownerLast)} household</h2>
         <p class="caption">FEC giving by ${escapeHtml(o.name)} and documented household members. Each member is tracked as their own entity with its own verifying signals; their donations are attributed to them and shown here joined — never silently folded into ${escapeHtml(ownerLast)}'s own total above.</p>
       </div>
       <div class="household-grid">
@@ -5490,8 +5576,7 @@ function renderCycle(year) {
     <section class="block">
       <div class="two-col">
         <div>
-          <span class="eyebrow">Owners</span>
-          <h2 style="margin-top:8px">Biggest MLB-owner donors this cycle</h2>
+          <h2>Biggest MLB-owner donors this cycle</h2>
           <p class="caption">Click any owner for their full history.</p>
           <div class="recipients-list" style="margin-top:16px">
             ${topOwners.map((o, i) => {
@@ -5518,8 +5603,7 @@ function renderCycle(year) {
         </div>
 
         <div>
-          <span class="eyebrow">Recipients</span>
-          <h2 style="margin-top:8px">Where the money went this cycle</h2>
+          <h2>Where the money went this cycle</h2>
           <p class="caption">Top committees by MLB-owner dollars received. Click for cross-cut by owner.</p>
           <div class="recipients-list" style="margin-top:16px">
             ${topRecipients.map((r, i) => {
@@ -5546,8 +5630,7 @@ function renderCycle(year) {
     <section class="block">
       <div class="block-head-row">
         <div>
-          <span class="eyebrow">The data</span>
-          <h2 style="margin-top:8px">Every donation in the ${year} cycle</h2>
+          <h2>Every donation in the ${year} cycle</h2>
           <p class="caption">${fmtInt(donations.length)} records.</p>
         </div>
         <button class="csv-btn" data-csv="cycle">Download CSV</button>
@@ -5833,8 +5916,7 @@ function renderCommittee(committeeId) {
 
     ${recipientRow && (recipientRow.designation_label || recipientRow.treasurer_name || recipientRow.first_file_date) ? `
     <section class="block">
-      <span class="eyebrow">What this committee is</span>
-      <h2 style="margin-top:8px">FEC record</h2>
+      <h2>FEC record</h2>
       <p class="caption">From OpenFEC <code>/committee/${escapeHtml(decoded)}/</code>${recipientRow.enriched_at ? ` · refreshed ${fmtDate(recipientRow.enriched_at.slice(0, 10))}` : ""}</p>
       <div class="drawer-grid" style="margin-top:16px">
         ${recipientRow.designation_label ? `<div class="label">Designation</div><div class="value">${escapeHtml(recipientRow.designation_label)}</div>` : ""}
@@ -5855,8 +5937,7 @@ function renderCommittee(committeeId) {
 
     ${scaleCycles.length ? `
     <section class="block">
-      <span class="eyebrow">Scale</span>
-      <h2 style="margin-top:8px">Committee receipts vs. MLB-owner share, by cycle</h2>
+      <h2>Committee receipts vs. MLB-owner share, by cycle</h2>
       <p class="caption">FEC per-cycle totals from <code>/committee/${escapeHtml(decoded)}/totals/</code>. Bar = total receipts; colored sliver = MLB-owner contribution in that cycle.</p>
       <div class="recipients-list" style="margin-top:16px">
         ${(() => {
@@ -5895,8 +5976,7 @@ function renderCommittee(committeeId) {
     </section>` : ""}
 
     <section class="block">
-      <span class="eyebrow">MLB owners who gave to this committee</span>
-      <h2 style="margin-top:8px">${ownersRanked.length} donor${ownersRanked.length === 1 ? "" : "s"}</h2>
+      <h2>${ownersRanked.length} donor${ownersRanked.length === 1 ? "" : "s"}</h2>
       <p class="caption">Ranked by total dollars to ${escapeHtml(committeeName)}, all cycles combined.</p>
       <div class="recipients-list" style="margin-top:16px">
         ${ownersRanked.slice(0, 30).map((o, i) => {
@@ -5921,8 +6001,7 @@ function renderCommittee(committeeId) {
     <section class="block">
       <div class="block-head-row">
         <div>
-          <span class="eyebrow">The data</span>
-          <h2 style="margin-top:8px">Every MLB-owner donation to ${escapeHtml(committeeName)}</h2>
+          <h2>Every MLB-owner donation to ${escapeHtml(committeeName)}</h2>
           <p class="caption">${fmtInt(donations.length)} records.</p>
         </div>
         <button class="csv-btn" data-csv="committee">Download CSV</button>
@@ -5996,8 +6075,7 @@ function renderCommitteeBeneficiariesSection(committeeId) {
     <section class="block">
       <div class="block-head-row">
         <div>
-          <span class="eyebrow">Who this committee funded</span>
-          <h2 style="margin-top:8px">Top recipients of this committee's Schedule B disbursements</h2>
+          <h2>Top recipients of this committee's Schedule B disbursements</h2>
           <p class="caption">FEC <code>/schedules/schedule_b/by_recipient/</code> — the <strong>top 25 recipients</strong> by total amount for the selected cycle (the full list lives at the FEC endpoint linked below). Includes operational disbursements as well as political ones, since Schedule B aggregates both.</p>
         </div>
       </div>
@@ -6384,8 +6462,7 @@ function renderTeam(slug) {
     </div>`}
 
     <section class="block">
-      <span class="eyebrow">Tracked owners</span>
-      <h2 style="margin-top:8px">${team.owners.length === 1 ? "The principal owner" : "Principal owners, past and current"}</h2>
+      <h2>${team.owners.length === 1 ? "The principal owner" : "Principal owners, past and current"}</h2>
       <p class="caption">Click any card for that owner's complete giving record.</p>
       ${renderTeamOwnersGrid(team)}
     </section>
@@ -6399,8 +6476,7 @@ function renderTeam(slug) {
 
     <section class="block"${hasState ? ' style="padding-top:28px"' : ""}>
       <div class="block-head">
-        <span class="eyebrow">Combined timeline</span>
-        <h2 style="margin-top:8px">Every donation across ${team.owners.length === 1 ? "this owner's tenure" : "all tracked owners"}</h2>
+        <h2>Every donation across ${team.owners.length === 1 ? "this owner's tenure" : "all tracked owners"}</h2>
         <p class="caption">Each dot is one FEC-reported contribution. ${team.owners.length > 1 ? "Stacked amber bars show each owner's tenure as principal — useful for spotting handoffs." : "Amber band shows tenure as principal."} Click any dot for the full record.</p>
       </div>
       ${renderTimeline(donations, tenureSegments)}
@@ -6412,8 +6488,7 @@ function renderTeam(slug) {
     </section>
 
     <section class="block">
-      <span class="eyebrow">Recipients</span>
-      <h2 style="margin-top:8px">Top recipient committees (combined)</h2>
+      <h2>Top recipient committees (combined)</h2>
       <p class="caption">Across all tracked owners of ${escapeHtml(team.name)}, all cycles. Click any recipient to see who else in MLB gave to them.</p>
       <div class="recipients-list" style="margin-top:16px">
         ${topRecipients.map((r, i) => renderRecipient(r, i, total)).join("")}
@@ -6423,8 +6498,7 @@ function renderTeam(slug) {
     <section class="block">
       <div class="block-head-row">
         <div>
-          <span class="eyebrow">The data</span>
-          <h2 style="margin-top:8px">All donations</h2>
+          <h2>All donations</h2>
           <p class="caption">${fmtInt(donations.length)} records across ${team.owners.length} owner${team.owners.length === 1 ? "" : "s"}.</p>
         </div>
         <button class="csv-btn" data-csv="team">Download CSV</button>
@@ -6474,8 +6548,7 @@ function renderTeam(slug) {
     <section class="block">
       <div class="block-head-row">
         <div>
-          <span class="eyebrow">The data</span>
-          <h2 style="margin-top:8px">All state contributions</h2>
+          <h2>All state contributions</h2>
           <p class="caption">${fmtInt(st.rows.length)} records across ${st.ownersWithState.length} owner${st.ownersWithState.length === 1 ? "" : "s"}. Click any row for the full provenance trail.</p>
         </div>
         <a class="sec-link" href="#/states" style="font-weight:600;font-size: var(--t-sm)">Full state section →</a>
@@ -6782,6 +6855,11 @@ function openDrawer(id) {
       <span class="chip-party ${partyClass}" style="margin-left:4px">${d.party}</span>
       ${is48HourNotice(d) ? `<span style="margin-left:4px">${chip48H(d)}</span>` : ""}
     </div>
+    ${filingCoordinate(d) ? `<div class="filing-coord-strip">
+      <span class="filing-coord-key">As filed</span>
+      ${filingCoordinate(d)}
+      ${pdfUrl ? `<a class="filing-coord-img" href="${escapeAttr(pdfUrl)}" target="_blank" rel="noopener">View filing image</a>` : ""}
+    </div>` : ""}
 
     <div class="drawer-section">
       <h3>Why this is ${d.status === "CONFIRMED" ? "confirmed" : "probable"}</h3>
@@ -6834,14 +6912,12 @@ function openDrawer(id) {
       <div class="drawer-source-links">
         ${pdfUrl ? `
           <a class="drawer-source-link primary" href="${escapeAttr(pdfUrl)}" target="_blank" rel="noopener">
-            <span class="drawer-source-icon">📄</span>
             <div>
               <div class="drawer-source-title">Transaction image</div>
-              <div class="drawer-source-sub">The actual filed page${d.line_number ? ` · line ${escapeHtml(d.line_number)}` : ""}${d.filing_form ? ` · Form ${escapeHtml(d.filing_form)}` : ""}</div>
+              <div class="drawer-source-sub">The scanned page this line was read from</div>
             </div>
           </a>` : `
           <div class="drawer-source-link disabled">
-            <span class="drawer-source-icon">📄</span>
             <div>
               <div class="drawer-source-title">Transaction image</div>
               <div class="drawer-source-sub">Image link not available in this payload</div>
@@ -6849,14 +6925,14 @@ function openDrawer(id) {
           </div>`}
         ${filingPdfUrl ? `
           <a class="drawer-source-link" href="${escapeAttr(filingPdfUrl)}" target="_blank" rel="noopener">
-            <span class="drawer-source-icon">📑</span>
+            <span class="drawer-source-icon" aria-hidden="true">PDF</span>
             <div>
               <div class="drawer-source-title">Full filing PDF</div>
               <div class="drawer-source-sub">All transactions in filing #${escapeHtml(d.filing_id || "")}</div>
             </div>
           </a>` : filingPageUrl ? `
           <a class="drawer-source-link" href="${escapeAttr(filingPageUrl)}" target="_blank" rel="noopener">
-            <span class="drawer-source-icon">📑</span>
+            <span class="drawer-source-icon" aria-hidden="true">PDF</span>
             <div>
               <div class="drawer-source-title">Filing on FEC.gov</div>
               <div class="drawer-source-sub">Full filing record · #${escapeHtml(d.filing_id || "")}</div>
@@ -6864,14 +6940,14 @@ function openDrawer(id) {
           </a>` : ""}
         ${fecLink ? `
           <a class="drawer-source-link" href="${escapeAttr(fecLink)}" target="_blank" rel="noopener">
-            <span class="drawer-source-icon">🏛︎</span>
+            <span class="drawer-source-icon" aria-hidden="true">FEC</span>
             <div>
               <div class="drawer-source-title">Committee on FEC.gov</div>
               <div class="drawer-source-sub">${escapeHtml(d.committee_id || "")}</div>
             </div>
           </a>` : ""}
         <button type="button" class="drawer-source-link copy-perma" onclick="copyPermalink(this)">
-          <span class="drawer-source-icon">🔗</span>
+          <span class="drawer-source-icon" aria-hidden="true">URL</span>
           <div>
             <div class="drawer-source-title">Copy permalink</div>
             <div class="drawer-source-sub">Share this exact donation</div>
@@ -6883,14 +6959,8 @@ function openDrawer(id) {
     <div class="drawer-section">
       <h3>Provenance</h3>
       <div class="drawer-grid">
-        <div class="label">Transaction ID</div>
-        <div class="value">${escapeHtml(d.id)}</div>
         <div class="label">Filing ID</div>
         <div class="value">${escapeHtml(d.filing_id || "—")}</div>
-        <div class="label">Image #</div>
-        <div class="value">${escapeHtml(d.image_number || "—")}</div>
-        <div class="label">Filing form</div>
-        <div class="value">${escapeHtml(d.filing_form || "—")}${d.line_number ? ` · line ${escapeHtml(d.line_number)}` : ""}</div>
         <div class="label">Report type</div>
         <div class="value">${escapeHtml(d.report_type || "—")}</div>
         <div class="label">Raw payload</div>
@@ -7238,8 +7308,7 @@ function renderRunsBody() {
 
     <section class="block">
       <div class="block-head">
-        <span class="eyebrow">Ingestion runs</span>
-        <h2 style="margin-top:8px">All ${fmtInt(runs.length)} runs, most recent first</h2>
+        <h2>All ${fmtInt(runs.length)} runs, most recent first</h2>
         <p class="caption">
           Each row is one FEC API session for one owner. Records fetched is the raw
           count from the API before classification; CONFIRMED + PROBABLE + UNCERTAIN
@@ -7747,8 +7816,7 @@ function renderStates() {
 
     <section class="block" style="border-bottom:0">
       <div class="block-head">
-        <span class="eyebrow">Latest activity</span>
-        <h2 style="margin-top:8px">Recent contributions</h2>
+        <h2>Recent contributions</h2>
         <p class="caption">The 20 most recently dated state contributions in the archive. Each is one click from its official filing.</p>
       </div>
       ${renderRecentStateDonations(sd.donations)}
@@ -8614,14 +8682,12 @@ function openStateDrawer(id) {
       <div class="drawer-source-links">
         ${filingUrl ? `
           <a class="drawer-source-link primary" href="${escapeAttr(filingUrl)}" target="_blank" rel="noopener">
-            <span class="drawer-source-icon">📄</span>
             <div>
               <div class="drawer-source-title">${d.source === "CAL-ACCESS" ? "Filed document (PDF)" : "Official record"}</div>
               <div class="drawer-source-sub">${escapeHtml(d.source)}${d.source_filing_id ? ` · filing #${escapeHtml(d.source_filing_id)}` : ""}</div>
             </div>
           </a>` : `
           <div class="drawer-source-link disabled">
-            <span class="drawer-source-icon">📄</span>
             <div>
               <div class="drawer-source-title">Official record</div>
               <div class="drawer-source-sub">No reliable per-record link for ${escapeHtml(d.source)} yet</div>
@@ -8629,14 +8695,14 @@ function openStateDrawer(id) {
           </div>`}
         ${datasetUrl ? `
           <a class="drawer-source-link" href="${escapeAttr(datasetUrl)}" target="_blank" rel="noopener">
-            <span class="drawer-source-icon">🗄︎</span>
+            <span class="drawer-source-icon" aria-hidden="true">DATA</span>
             <div>
               <div class="drawer-source-title">Source dataset</div>
               <div class="drawer-source-sub">${escapeHtml(d.source)} public disclosure data</div>
             </div>
           </a>` : ""}
         <button type="button" class="drawer-source-link copy-perma" onclick="copyPermalink(this)">
-          <span class="drawer-source-icon">🔗</span>
+          <span class="drawer-source-icon" aria-hidden="true">URL</span>
           <div>
             <div class="drawer-source-title">Copy permalink</div>
             <div class="drawer-source-sub">Share this exact contribution</div>
@@ -9069,8 +9135,7 @@ function renderWhatsNew() {
 
     <section class="block">
       <div class="block-head">
-        <span class="eyebrow">Biggest new donations</span>
-        <h2 style="margin-top:8px">Top ${top5.length} by amount, this refresh</h2>
+        <h2>Top ${top5.length} by amount, this refresh</h2>
         <p class="caption">Click a row to open the full FEC source record.</p>
       </div>
       <div class="table-scroll">
@@ -9109,8 +9174,7 @@ function renderWhatsNew() {
 
     <section class="block">
       <div class="block-head">
-        <span class="eyebrow">Owner activity</span>
-        <h2 style="margin-top:8px">${fmtInt(ownerRows.length)} owners with new records this refresh</h2>
+        <h2>${fmtInt(ownerRows.length)} owners with new records this refresh</h2>
         <p class="caption">Sorted by dollars added.</p>
       </div>
       <div class="table-scroll">
