@@ -108,19 +108,32 @@ Pages → **checkswing** → Settings → **Environment variables** (Production)
 | `AWS_REQUEST_CHECKSUM_CALCULATION` | `when_required` |
 | `AWS_RESPONSE_CHECKSUM_VALIDATION` | `when_required` |
 
-Then Settings → **Builds & deployments** → **Build command**:
+Then Settings → **Builds & deployments** → **Build command** — paste as **one
+line, no backslashes** (see the gotcha below):
 
 ```
-python -m pip install -r requirements.txt awscli && \
-aws s3 cp "s3://$RAW_ARCHIVE_S3_BUCKET/deploy/master.db" data/master.db \
-  --endpoint-url "$RAW_ARCHIVE_S3_ENDPOINT" --only-show-errors && \
-python mockup/build_data.py
+python -m pip install -r requirements.txt boto3 && python scripts/fetch_deploy_db.py && python mockup/build_data.py
 ```
 
 `GIT_LFS_SKIP_SMUDGE=1` makes the clone leave `data/master.db` as its ~130-byte
-pointer; the `aws s3 cp` overwrites it with the real DB before the build reads
-it. `state.db` (3.7 MB) and `legislation.db` (1.8 MB) are **not** LFS objects, so
-they clone normally and need no fetch.
+pointer; `scripts/fetch_deploy_db.py` overwrites it with the real DB from R2
+before the build reads it, and refuses to proceed unless what it pulled is
+actually SQLite. `state.db` (3.7 MB) and `legislation.db` (1.8 MB) are **not**
+LFS objects, so they clone normally and need no fetch.
+
+> **Gotcha — why a script and not `aws s3 cp` (learned the hard way, 2026-07-19).**
+> The first attempt used a multi-line `aws s3 cp` command and failed twice over:
+>
+> 1. **Cloudflare's build-command field collapses multi-line input onto one
+>    line**, so `\` continuations survive as literal escaped spaces. The shell
+>    then looks for a command named `" aws"` — the log reads
+>    `/bin/sh: 1:  aws: not found` (note the double space). Keep the build
+>    command on a single line.
+> 2. **`pip install awscli` mid-build leaves `aws` off PATH.** The Python
+>    toolchain is asdf-managed and its shims are generated *before* the user
+>    command runs, so a console script installed during the build has no shim.
+>    Invoking `python` (always on PATH) with a repo script avoids this entirely
+>    — and makes the fetch reviewable and testable instead of a dashboard string.
 
 ### 4c. A read-only R2 token **[maintainer — Cloudflare R2]**
 
