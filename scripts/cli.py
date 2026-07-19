@@ -904,7 +904,18 @@ def ingest_votes_cmd():
 @click.option("--sponsors-of", "sponsor_bills", multiple=True, help="Bill_id(s): also join donations→sponsors/cosponsors of these.")
 @click.option("--via-committee", "committee_bills", multiple=True, help="Bill_id(s): also join donations→current members of the bill's committee(s) of referral (current-congress bills only).")
 @click.option("--out", "basename", required=True, help="Output basename written under reports/data/.")
-def policy_join_cmd(bills, sponsor_bills, committee_bills, basename):
+@click.option(
+    "--include-indirect",
+    "include_indirect",
+    is_flag=True,
+    help=(
+        "Also join the indirect-authorized tier — money to a legislator's OWN campaign "
+        "committee, gated on FEC designation P/A + a single candidate_ids (PR #106). "
+        "Default off: the published briefs are direct-tier deep-dives. The #/legislation "
+        "dashboard renders WITH this flag, so pass it to reproduce the dashboard's figures."
+    ),
+)
+def policy_join_cmd(bills, sponsor_bills, committee_bills, basename, include_indirect):
     """Read-only: write the neutral owner→donation→legislator→vote join to reports/data/.
 
     Produces a reproducible CSV + JSON of neutral facts (donation, legislator,
@@ -926,23 +937,41 @@ def policy_join_cmd(bills, sponsor_bills, committee_bills, basename):
         click.echo("Pass at least one --bill, --sponsors-of, or --via-committee.")
         return
 
+    # Declared in every artifact's _meta so a regenerated file states which tiers
+    # it covers — a direct-tier file and a two-tier file are both correct and are
+    # not otherwise distinguishable from their contents.
+    tier_meta = {
+        "include_indirect": include_indirect,
+        "join_tiers": (
+            ["direct", "indirect-authorized"] if include_indirect else ["direct"]
+        ),
+    }
+
     written = {}
-    vote_rows = vote_donation_rows(bill_ids=list(bills)) if bills else []
+    vote_rows = (
+        vote_donation_rows(bill_ids=list(bills), include_indirect=include_indirect)
+        if bills
+        else []
+    )
     if bills:
         written["votes"] = write_outputs(
             vote_rows,
             basename=basename,
-            meta={"join": "donations_to_votes", "bill_ids": list(bills)},
+            meta={"join": "donations_to_votes", "bill_ids": list(bills), **tier_meta},
         )
     if sponsor_bills:
-        sp_rows = sponsor_donation_rows(bill_ids=list(sponsor_bills))
+        sp_rows = sponsor_donation_rows(
+            bill_ids=list(sponsor_bills), include_indirect=include_indirect
+        )
         written["sponsors"] = write_outputs(
             sp_rows,
             basename=f"{basename}-sponsors",
-            meta={"join": "donations_to_sponsors", "bill_ids": list(sponsor_bills)},
+            meta={"join": "donations_to_sponsors", "bill_ids": list(sponsor_bills), **tier_meta},
         )
     if committee_bills:
-        cm_rows = committee_donation_rows(bill_ids=list(committee_bills))
+        cm_rows = committee_donation_rows(
+            bill_ids=list(committee_bills), include_indirect=include_indirect
+        )
         written["committees"] = write_outputs(
             cm_rows,
             basename=f"{basename}-committees",
@@ -950,6 +979,7 @@ def policy_join_cmd(bills, sponsor_bills, committee_bills, basename):
                 "join": "donations_to_committee_members",
                 "bill_ids": list(committee_bills),
                 "membership_note": "Current-congress committee membership only; restricted to bills of that congress.",
+                **tier_meta,
             },
         )
 

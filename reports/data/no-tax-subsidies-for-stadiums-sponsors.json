@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "generated_at": "2026-06-09T03:44:42Z",
+    "generated_at": "2026-07-19T23:09:34Z",
     "n_rows": 1,
     "neutrality_note": "Neutral sourced facts only (GOVERNANCE.md \u00a76). days_before_vote is arithmetic, not a causal claim. Interpretation lives in the brief.",
     "join": "donations_to_sponsors",
@@ -9,6 +9,10 @@
       "115-hr-811",
       "119-s-1192",
       "119-hr-2434"
+    ],
+    "include_indirect": false,
+    "join_tiers": [
+      "direct"
     ]
   },
   "rows": [
@@ -22,6 +26,7 @@
       "donation_status": "CONFIRMED",
       "recipient_committee_name": "ACTBLUE",
       "recipient_candidate_name": "",
+      "join_tier": "direct",
       "bill_id": "115-hr-811",
       "sponsor_role": "cosponsor",
       "legislator_bioguide": "R000606",
