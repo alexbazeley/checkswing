@@ -1,0 +1,83 @@
+name: Sync master.db to R2 (deploy)
+
+# Mirrors data/master.db → s3://<bucket>/deploy/master.db on Cloudflare R2 so the
+# Cloudflare Pages build can fetch it privately with GIT_LFS_SKIP_SMUDGE=1
+# instead of pulling the 128 MB LFS object on every build (the dominant Git-LFS
+# bandwidth cost — see docs/DEPLOY_lfs_r2_2026-07.md).
+#
+# Runs:
+#   • manually (workflow_dispatch) — use this once to seed R2 before flipping the
+#     Pages settings, and any time you want to force a re-sync.
+#   • automatically after a successful "Monthly FEC refresh" — that job is the
+#     only thing that updates master.db, so this keeps R2 at main's tip without
+#     touching the hands-off refresh workflow.
+#
+# Guarded no-op until the RAW_ARCHIVE_* secrets exist (they gate the same R2
+# bucket used for raw-payload archival — see docs/DESIGN_raw_archival_2026-07.md).
+#
+# NOTE: activating the deploy-side fetch is a separate, dashboard-only step
+# (Pages env vars + build command + a read-only R2 token). This workflow just
+# keeps the object in place; until the dashboard is switched it is harmless
+# (one 128 MB R2 write per refresh) and the deploy still builds from LFS.
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["Monthly FEC refresh"]
+    types: [completed]
+
+concurrency:
+  group: sync-deploy-db
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    # For the auto trigger, only run when the refresh actually succeeded (and so
+    # pushed a fresh master.db). The manual trigger always runs.
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      github.event.workflow_run.conclusion == 'success'
+    steps:
+      - name: Checkout main with the real DB
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          # Pull the actual 128 MB SQLite file, not the LFS pointer.
+          lfs: true
+
+      - name: Mirror master.db → R2 (deploy/master.db)
+        env:
+          RAW_ARCHIVE_S3_BUCKET: ${{ secrets.RAW_ARCHIVE_S3_BUCKET }}
+          RAW_ARCHIVE_S3_ENDPOINT: ${{ secrets.RAW_ARCHIVE_S3_ENDPOINT }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.RAW_ARCHIVE_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.RAW_ARCHIVE_SECRET_ACCESS_KEY }}
+          # R2 quirks vs. AWS S3: region is literally "auto", and the newer
+          # aws-cli integrity checksums must be requested only when required or
+          # R2 rejects the PUT. (Same env as scripts/archive_raw.sh.)
+          AWS_DEFAULT_REGION: auto
+          AWS_REQUEST_CHECKSUM_CALCULATION: when_required
+          AWS_RESPONSE_CHECKSUM_VALIDATION: when_required
+        run: |
+          set -euo pipefail
+          if [ -z "${RAW_ARCHIVE_S3_BUCKET:-}" ]; then
+            echo "RAW_ARCHIVE_* not set — skipping R2 mirror (deploy still on LFS)."
+            exit 0
+          fi
+          if [ ! -s data/master.db ]; then
+            echo "::error::data/master.db is missing or empty (LFS smudge failed?)."
+            exit 1
+          fi
+          # Guard against mirroring an un-smudged pointer: a real SQLite file
+          # starts with the "SQLite format 3" magic; the LFS pointer is text.
+          if ! head -c 16 data/master.db | grep -q "SQLite format 3"; then
+            echo "::error::data/master.db is not a SQLite file — refusing to mirror an LFS pointer."
+            exit 1
+          fi
+          size=$(du -h data/master.db | cut -f1)
+          echo "Mirroring master.db ($size) → s3://${RAW_ARCHIVE_S3_BUCKET}/deploy/master.db"
+          aws s3 cp data/master.db "s3://${RAW_ARCHIVE_S3_BUCKET}/deploy/master.db" \
+            --no-progress --only-show-errors \
+            --endpoint-url "${RAW_ARCHIVE_S3_ENDPOINT}"
+          echo "✅ Synced. The Pages build can now fetch it once GIT_LFS_SKIP_SMUDGE + the build command are set."
