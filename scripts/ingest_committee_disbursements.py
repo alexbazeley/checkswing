@@ -99,6 +99,49 @@ def _cycle_is_fresh(
     return row is not None and fresh_within_days(row["f"])
 
 
+def _order_by_staleness(
+    conn: sqlite3.Connection, committee_ids: list[str]
+) -> list[str]:
+    """Return committee_ids oldest-fetched first (never-fetched first).
+
+    §4.3, applied to beneficiaries. The whole cohort was backfilled in one pass,
+    so every (committee, cycle) pair shares a fetched_at stamp and the entire set
+    leaves the freshness window on the same day — a run then either skips
+    everything (~minutes) or re-fetches everything (5-17h), and the latter blows
+    the job timeout mid-step, which discards the enrichment commit along with the
+    committee work that ran before it. Oldest-first + a per-run fetch cap slices
+    the convergence across runs and permanently de-synchronizes the stamps.
+
+    Ranked on the committee's OLDEST cycle (MIN), so a committee with one ancient
+    cycle sorts ahead of one that's uniformly middle-aged.
+    """
+    order = {
+        r["committee_id"]: r["oldest"]
+        for r in conn.execute(
+            """
+            SELECT committee_id, MIN(fetched_at) AS oldest
+              FROM committee_disbursements_by_recipient
+             GROUP BY committee_id
+            """
+        )
+    }
+    # Never-fetched committees (absent from the table) sort first via "".
+    return sorted(committee_ids, key=lambda cid: order.get(cid) or "")
+
+
+def _count_stale_cycles(
+    conn: sqlite3.Connection, committee_id: str, cycles: list[int]
+) -> int:
+    """How many of this committee's cycles would need a fetch right now.
+
+    Used only once the run budget is spent, to tally deferred work without
+    spending an FEC call on it.
+    """
+    return sum(
+        0 if _cycle_is_fresh(conn, committee_id, cycle) else 1 for cycle in cycles
+    )
+
+
 # ─── Cycle enumeration per committee ────────────────────────────────────────
 
 
@@ -157,6 +200,7 @@ def ingest_committee_disbursements(
     top_n: int = DEFAULT_TOP_N,
     force_refresh: bool = False,
     client: FECClient | None = None,
+    max_cycle_fetches: int | None = None,
     db_path: Path = MASTER_DB,
 ) -> dict:
     """Fetch + upsert the top-N recipients per cycle for one committee.
@@ -167,11 +211,16 @@ def ingest_committee_disbursements(
 
     Per cycle:
       - skip if (committee, cycle) is fresh and not force_refresh
+      - stop fetching (defer the rest) once max_cycle_fetches is reached
       - fetch top_n FEC rows
       - DELETE existing rows for (committee_id, cycle) and re-INSERT — FEC
         amends aggregates retroactively, so the fresh fetch supersedes the
         prior snapshot. The delete-then-insert is wrapped in a single
         transaction (db.connect's commit-on-success).
+
+    `max_cycle_fetches` is the caller's remaining run budget (§4.3); the
+    freshness check runs BEFORE the budget check so a fresh cycle is never
+    miscounted as deferred work.
 
     Returns a per-committee summary dict.
     """
@@ -185,6 +234,7 @@ def ingest_committee_disbursements(
         "cycles_attempted": 0,
         "cycles_fetched": 0,
         "cycles_skipped_fresh": 0,
+        "cycles_deferred": 0,
         "cycles_failed": 0,
         "rows_written": 0,
     }
@@ -202,6 +252,15 @@ def ingest_committee_disbursements(
             if not force_refresh and _cycle_is_fresh(conn, committee_id, cycle):
                 summary["cycles_skipped_fresh"] += 1
                 continue
+
+        # §4.3: run budget spent — leave this (still stale) cycle for the next
+        # run rather than pushing the job past its timeout.
+        if (
+            max_cycle_fetches is not None
+            and summary["cycles_fetched"] >= max_cycle_fetches
+        ):
+            summary["cycles_deferred"] += 1
+            continue
 
         try:
             rows, raw_paths = fetch_by_recipient(
@@ -284,6 +343,7 @@ def ingest_all_committee_disbursements(
     top_n: int = DEFAULT_TOP_N,
     force_refresh: bool = False,
     max_count: int | None = None,
+    max_fetch: int | None = None,
     db_path: Path = MASTER_DB,
 ) -> dict:
     """Walk every enriched committee and ingest beneficiaries for each cycle.
@@ -292,10 +352,23 @@ def ingest_all_committee_disbursements(
     run (GOVERNANCE.md §1.9 — prefer try-again-next-time). A single timed-out
     FEC request shouldn't lose the rest of the batch.
 
+    `max_fetch` caps how much this run actually FETCHES from FEC, counted in
+    (committee, cycle) PAIRS — not committees, the unit ingest_all_committees
+    uses. A committee here costs one FEC round-trip per cycle (~6 on average,
+    up to ~15), so capping committees would leave per-run wall-clock varying by
+    an order of magnitude; pairs are what the runtime is actually proportional
+    to. Oldest-fetched committees go first and the remainder is deferred to the
+    next run (§4.3).
+
     Returns a summary dict suitable for emitting from the CLI.
     """
     started_at = _utc_now_iso()
     candidates = only or list_committees_for_beneficiaries(db_path)
+    # Oldest-first so max_fetch trims the freshest tail, not an arbitrary slice
+    # (skipped for an explicit `only` set — the caller controls that order).
+    if not only:
+        with db.connect(db_path) as conn:
+            candidates = _order_by_staleness(conn, candidates)
     if max_count is not None:
         candidates = candidates[:max_count]
 
@@ -307,6 +380,7 @@ def ingest_all_committee_disbursements(
         "skipped_no_fresh_cycles": 0,
         "failed": 0,
         "failed_ids": [],
+        "deferred": 0,  # §4.3: stale (committee, cycle) pairs left for next run
         "rows_written": 0,
         "snapshot_path": None,
     }
@@ -324,8 +398,25 @@ def ingest_all_committee_disbursements(
 
     with _acquire_lock():
         client: FECClient | None = None
+        remaining = max_fetch
         for cid in candidates:
             summary["attempted"] += 1
+            # §4.3: budget spent — tally what's left as deferred without
+            # spending an FEC call, then keep walking so the counts are honest.
+            if remaining is not None and remaining <= 0:
+                with db.connect(db_path) as conn:
+                    stale = _count_stale_cycles(
+                        conn,
+                        cid,
+                        cycles
+                        if cycles is not None
+                        else list_cycles_for_committee(cid, db_path),
+                    )
+                if stale:
+                    summary["deferred"] += stale
+                else:
+                    summary["skipped_no_fresh_cycles"] += 1
+                continue
             try:
                 # Lazy client construction so a "everything still fresh"
                 # dry-run doesn't even require FEC_API_KEY.
@@ -337,8 +428,12 @@ def ingest_all_committee_disbursements(
                     top_n=top_n,
                     force_refresh=force_refresh,
                     client=client,
+                    max_cycle_fetches=remaining,
                     db_path=db_path,
                 )
+                if remaining is not None:
+                    remaining -= result["cycles_fetched"]
+                summary["deferred"] += result["cycles_deferred"]
                 if result["cycles_fetched"] == 0 and result["cycles_skipped_fresh"] > 0:
                     summary["skipped_no_fresh_cycles"] += 1
                 if result["cycles_fetched"] > 0:
@@ -348,6 +443,7 @@ def ingest_all_committee_disbursements(
                     f"[beneficiaries] {cid} "
                     f"cycles_fetched={result['cycles_fetched']} "
                     f"skipped={result['cycles_skipped_fresh']} "
+                    f"deferred={result['cycles_deferred']} "
                     f"failed={result['cycles_failed']} "
                     f"rows={result['rows_written']}"
                 )
