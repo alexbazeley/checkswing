@@ -226,11 +226,48 @@ the determinations survive the session memory they were made in. These are
 | MO | postback/walled | export is postback-only, no clean bulk endpoint (Sherman-john, DeWitt home state) | 2026-06 |
 
 **Owner home states with zero state coverage anywhere** (adoption gaps, not
-determinations): **OH** (Castellini ×2, Dolan — Dolan has zero rows in the whole
-archive), **MI** (Ilitch), **MD/DC** (Rubenstein, Lerner, Angelos), **GA**
-(McGuirk), **MO** (Sherman-john, DeWitt), **WV** (Nutting), **CT**
-(Seidler/Feliciano). Adopting any of these remains a GOVERNANCE §5 scope expansion
-requiring sign-off.
+determinations): **OH** (Castellini ×2, Dolan), **MI** (Ilitch), **MD/DC**
+(Rubenstein, Lerner, Angelos), **GA** (McGuirk), **MO** (Sherman-john, DeWitt),
+**WV** (Nutting), **CT** (Seidler/Feliciano). Adopting any of these remains a
+GOVERNANCE §5 scope expansion requiring sign-off.
+
+**MD is the one home state never assessed at all** — it has no row in the table
+above, despite three tracked Orioles-side owners. Treat it as unevaluated, not as a
+negative finding.
+
+### Local / municipal campaign finance — DEFERRED (§ Phase 4)
+
+**Status: deferred, not out of scope.** CHARTER.md §Phase 4 is titled "State and
+local" and lists "pull stadium-relevant state and local donations"; no municipal
+adapter, fetcher, or registry entry has ever been built, and no local record exists
+in `data/state.db`. This entry records the deferral so the gap stops being an
+undocumented contradiction between the charter and the dashboard's methodology page.
+
+**Why deferred:** municipal and county campaign-finance disclosure is per-jurisdiction,
+frequently non-machine-readable, and has no registry analog to the state
+`StateSource` pattern — each city or county is its own source-and-adapter problem at a
+fraction of a state's dollar coverage. The Phase-4 exit criterion is stated in terms of
+*states*, and eight home states remain unadopted; local work would come after that.
+
+**What is being deferred, so the decision stays re-openable.** The stadium-subsidy
+fights — editorially the highest-value money in the project — are overwhelmingly
+municipal/county:
+
+| jurisdiction | fight | already annotated at |
+|---|---|---|
+| Clark County / Las Vegas, NV | Athletics relocation, $380M public financing | `owners/fisher-john.yaml` (NV filings flagged post-relocation) |
+| Jackson County, MO | Royals/Chiefs stadium sales-tax vote, April 2024 | `owners/sherman-john.yaml:80` |
+| Tampa / St. Petersburg, FL | Rays stadium plan | `owners/zalupski-patrick.yaml:122` |
+| Oakland, CA | Howard Terminal / Coliseum | — |
+| Chicago, IL | "The 78" riverfront stadium proposal | — |
+
+The editorial hooks are already recorded in the owner files; only the pipeline is
+absent. **Ballot-measure money is a separate case and IS captured** wherever a *state*
+portal reports it (`recipient_type='ballot_measure'`), e.g. Fisher's $1,180,000 against
+CA Prop 30 and $401,436 on "No on 82" — so "local is deferred" must not be read as
+"ballot measures are missing."
+
+Assessed 2026-07-19.
 
 ### Explicitly OUT for Phase 4 (for now)
 

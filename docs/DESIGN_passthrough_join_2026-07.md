@@ -1,6 +1,6 @@
 # Design — the legislation pass-through (committee → candidate) join
 
-**Status:** design-first proposal (IMPROVEMENT_PLAN_2026-07 §5.6, the (L) item). Not yet implemented.
+**Status:** ✅ **IMPLEMENTED** in PR #106 (was: design-first proposal, IMPROVEMENT_PLAN_2026-07 §5.6, the (L) item). `policy_join` carries the `include_indirect` flag and a `join_tier` label on every row; the indirect-authorized tier resolves ~1,298 donations / $2.76M. This document is retained as the design record — read it for the tier taxonomy and neutrality reasoning, not as a statement of pending work.
 **Author:** 2026-07-11 session. Grounded in live `master.db` (schema v10) + `legislation.db` counts, not estimates.
 **Companion rules:** [GOVERNANCE.md §6](../GOVERNANCE.md) (Phase-3 neutrality), [VERIFICATION.md](../VERIFICATION.md), §1.1 (earmark/conduit dedup), §3.11 (the join denominator caveat).
 
