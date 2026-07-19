@@ -75,7 +75,7 @@ The conservative attribution standard is itself an editorial commitment: we'd ra
 ### Phase 3 — Cross-referencing — **ACTIVE (machinery live, corpus early)**
 - *Status (2026-06): the join layer is wired in a separate `legislation.db` and
   has produced two end-to-end per-episode briefs (the exit criterion, met and
-  exceeded). The curated corpus is 16 bills across all 5 issue areas — antitrust
+  exceeded). The curated corpus is 22 bills across all 5 issue areas — antitrust
   exemption (Curt Flood Act), minor-league pay (Save America's Pastime Act +
   carrier), stadium financing ("No Tax Subsidies for Stadiums Act" line,
   115th→119th), sports betting (PASPA → Murphy v. NCAA → Sports Wagering Market
@@ -100,16 +100,24 @@ The conservative attribution standard is itself an editorial commitment: we'd ra
 - Enable queries like "donations from owner X to legislator Y in the 90 days before vote Z."
 - **Exit criteria:** at least one publishable per-episode brief generated end-to-end from the joined data.
 
-### Phase 4 — State and local — **ACTIVE (10 states live; CA pilot complete)**
+### Phase 4 — State (local DEFERRED) — **ACTIVE (10 states live; CA pilot complete)**
 - *Status (2026-06): the CA pilot is complete and has been generalized into a
   `StateSource` registry; 10 jurisdictions are live in `data/state.db` —
-  CA, NY, TX, PA, IL, WA, CO, AZ, MN, FL (1,011 matched rows). Coverage is
+  CA, NY, TX, PA, IL, WA, CO, AZ, MN, FL (916 counted CONFIRMED/PROBABLE rows,
+  ~$14.1M; a further 321 rows are SUPERSEDED by the §1.2 cross-filing dedup and
+  are correctly excluded from totals). Coverage is
   honestly partial and per-state; remaining teams' home states are tracked in
   the `#/state-coverage` ledger. See SOURCES.md §"Phase 4 addendum" for the
   per-portal source tiering.*
 - Identify each owner's primary state/local political exposure (team's home state, owner's residence state, stadium-deal jurisdictions).
 - Connect to that state's campaign finance database.
-- Pull stadium-relevant state and local donations.
+- Pull stadium-relevant state donations. **Local/municipal campaign finance is
+  DEFERRED** — each city/county is its own source-and-adapter problem with no
+  registry analog, and eight owner home *states* remain unadopted ahead of it. The
+  deferral, and the specific stadium fights it postpones (Clark County, Jackson
+  County, Tampa/St. Pete, Oakland, "The 78"), are recorded in SOURCES.md so the
+  decision stays re-openable. Ballot-measure money is unaffected — it is already
+  captured wherever a state portal reports it.
 - Merge under the same entity model and verification standard.
 - **Exit criteria:** at minimum, every team's home state covered.
 
