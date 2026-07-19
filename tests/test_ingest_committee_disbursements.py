@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+from datetime import datetime, timezone
 from pathlib import Path
 
 import pytest
@@ -469,3 +470,126 @@ class TestIngestAllCommitteeDisbursements:
             db_path=tmp_master, max_count=1,
         )
         assert summary["attempted"] == 1
+
+
+# ─── §4.3: per-run fetch cap (beneficiaries convergence) ────────────────────
+
+
+def _add_second_committee(db_path, cycle=2024):
+    with db.connect(db_path) as conn:
+        conn.execute(
+            "INSERT INTO committees (committee_id, name, raw_payload_path, fetched_at, refreshed_at) "
+            "VALUES ('C00000002', 'BETA PAC', 'x', '2024-10-15T00:00:00Z', '2024-10-15T00:00:00Z')"
+        )
+        conn.execute(
+            "INSERT INTO committee_totals (committee_id, cycle, raw_payload_path, fetched_at) "
+            "VALUES ('C00000002', ?, 'x', '2024-10-15T00:00:00Z')",
+            (cycle,),
+        )
+
+
+def _seed_beneficiary_row(db_path, committee_id, cycle, fetched_at):
+    """An existing (committee, cycle) row stamped at a chosen fetched_at."""
+    with db.connect(db_path) as conn:
+        conn.execute(
+            """
+            INSERT INTO committee_disbursements_by_recipient (
+                committee_id, cycle, recipient_id, recipient_kind,
+                recipient_name, total_amount, n_transactions,
+                raw_payload_path, fetched_at
+            ) VALUES (?, ?, 'SEED', 'candidate', 'SEEDED', 1.0, 1, 'x', ?)
+            """,
+            (committee_id, cycle, fetched_at),
+        )
+
+
+class TestBeneficiariesMaxFetch:
+    def test_max_fetch_caps_pairs_and_defers_the_rest(self, tmp_master, fec_responses):
+        """The cap counts (committee, cycle) PAIRS, not committees."""
+        _add_second_committee(tmp_master)
+        # C00000001 has 2 cycles and is walked first; the budget of 2 is spent
+        # on it, leaving C00000002's single cycle deferred.
+        _mock_by_recipient(fec_responses, {
+            2022: [{"candidate_id": "H22A", "recipient_name": "ALPHA", "total": 100.0}],
+            2024: [{"candidate_id": "H24A", "recipient_name": "BETA", "total": 200.0}],
+        })
+        summary = ingest_committee_disbursements.ingest_all_committee_disbursements(
+            db_path=tmp_master, max_fetch=2,
+        )
+        assert summary["fetched"] == 1          # committees that fetched anything
+        assert summary["deferred"] == 1         # pairs left for the next run
+        assert summary["attempted"] == 2        # both still walked, honestly counted
+        with db.connect(tmp_master) as conn:
+            got = [r[0] for r in conn.execute(
+                "SELECT DISTINCT committee_id FROM committee_disbursements_by_recipient"
+            )]
+        assert got == ["C00000001"]
+
+    def test_oldest_fetched_committee_goes_first(self, tmp_master, fec_responses):
+        """§4.3 ordering: the staler cohort member wins the scarce budget."""
+        _add_second_committee(tmp_master)
+        # C00000001 stale; C00000002 staler still — it should be fetched first.
+        _seed_beneficiary_row(tmp_master, "C00000001", 2022, "2024-01-01T00:00:00Z")
+        _seed_beneficiary_row(tmp_master, "C00000001", 2024, "2024-01-01T00:00:00Z")
+        _seed_beneficiary_row(tmp_master, "C00000002", 2024, "2020-01-01T00:00:00Z")
+
+        _mock_by_recipient(fec_responses, {
+            2024: [{"candidate_id": "H24A", "recipient_name": "BETA", "total": 200.0}],
+        })
+        summary = ingest_committee_disbursements.ingest_all_committee_disbursements(
+            db_path=tmp_master, max_fetch=1,
+        )
+        assert summary["fetched"] == 1
+        assert summary["deferred"] == 2  # C00000001's two cycles
+        with db.connect(tmp_master) as conn:
+            rows = dict(conn.execute(
+                "SELECT committee_id, MIN(fetched_at) FROM committee_disbursements_by_recipient "
+                "GROUP BY committee_id"
+            ).fetchall())
+        # The oldest was refreshed; the other keeps its stale stamp untouched.
+        assert rows["C00000002"] > "2020-01-01T00:00:00Z"
+        assert rows["C00000001"] == "2024-01-01T00:00:00Z"
+
+    def test_fresh_pairs_are_not_counted_as_deferred(self, tmp_master, fec_responses):
+        """A spent budget must not report already-fresh work as outstanding —
+        that would make the convergence look permanently unfinished."""
+        _add_second_committee(tmp_master)
+        _seed_beneficiary_row(
+            tmp_master, "C00000002", 2024,
+            datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        )
+        # max_fetch=0: no FEC call is legal here (no mocks registered).
+        summary = ingest_committee_disbursements.ingest_all_committee_disbursements(
+            db_path=tmp_master, max_fetch=0,
+        )
+        assert summary["fetched"] == 0
+        assert summary["deferred"] == 2              # C00000001's two stale cycles
+        assert summary["skipped_no_fresh_cycles"] == 1  # C00000002 was fresh
+
+    def test_deferred_pairs_converge_over_successive_runs(self, tmp_master, fec_responses):
+        """The whole point: what one capped run defers, the next one picks up."""
+        _add_second_committee(tmp_master)
+        _mock_by_recipient(fec_responses, {
+            2022: [{"candidate_id": "H22A", "recipient_name": "ALPHA", "total": 100.0}],
+            2024: [{"candidate_id": "H24A", "recipient_name": "BETA", "total": 200.0}],
+        })
+        first = ingest_committee_disbursements.ingest_all_committee_disbursements(
+            db_path=tmp_master, max_fetch=2,
+        )
+        assert first["deferred"] == 1
+
+        fec_responses.reset()
+        _mock_by_recipient(fec_responses, {
+            2024: [{"candidate_id": "X", "recipient_name": "X", "total": 50.0}],
+        })
+        second = ingest_committee_disbursements.ingest_all_committee_disbursements(
+            db_path=tmp_master, max_fetch=2,
+        )
+        # C00000001 is now fresh and skipped; the deferred committee converges.
+        assert second["deferred"] == 0
+        assert second["skipped_no_fresh_cycles"] == 1
+        with db.connect(tmp_master) as conn:
+            got = sorted(r[0] for r in conn.execute(
+                "SELECT DISTINCT committee_id FROM committee_disbursements_by_recipient"
+            ))
+        assert got == ["C00000001", "C00000002"]

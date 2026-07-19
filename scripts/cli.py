@@ -1280,7 +1280,20 @@ def ingest_filings_cmd(only, force_refresh, max_count):
     default=None,
     help="Cap the number of committees processed (for testing / smoke runs).",
 )
-def ingest_committee_beneficiaries_cmd(only, cycles, force_refresh, top_n, max_count):
+@click.option(
+    "--max-fetch",
+    "max_fetch",
+    type=int,
+    default=None,
+    help=(
+        "Cap how many (committee, cycle) pairs are actually FETCHED this run; "
+        "oldest first, the rest deferred to the next run (§4.3). Bounds a "
+        "convergence run so it can't outlive the CI job timeout."
+    ),
+)
+def ingest_committee_beneficiaries_cmd(
+    only, cycles, force_refresh, top_n, max_count, max_fetch
+):
     """Enrich committee_disbursements_by_recipient from OpenFEC Schedule B by_recipient.
 
     For each Phase-1-enriched committee, fetches the top-N recipients it disbursed
@@ -1304,6 +1317,7 @@ def ingest_committee_beneficiaries_cmd(only, cycles, force_refresh, top_n, max_c
         "cycles": cycles_list,
         "force_refresh": force_refresh,
         "max_count": max_count,
+        "max_fetch": max_fetch,
     }
     if top_n is not None:
         kwargs["top_n"] = top_n

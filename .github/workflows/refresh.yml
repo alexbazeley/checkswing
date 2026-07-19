@@ -43,6 +43,10 @@ on:
         required: false
         type: boolean
         default: false
+      beneficiary_max_fetch:
+        description: 'Cap on (committee, cycle) pairs the beneficiaries step fetches this run (default 600). Raise for a deliberate catch-up run — but the job dies at 350 min and takes the enrichment commit with it, so keep headroom.'
+        required: false
+        default: ''
 
 # Queue overlapping runs rather than cancel — partial refresh state is
 # harder to recover from than a delayed full one.
@@ -357,12 +361,25 @@ jobs:
         continue-on-error: true
         env:
           FEC_API_KEY: ${{ secrets.FEC_API_KEY }}
+          # §4.3, beneficiaries edition. The Phase-2 backfill stamped all ~6,270
+          # (committee, cycle) pairs at once, so they expire together and a
+          # convergence run is the full 5-17h — well past this job's 350-minute
+          # cap. A timeout kills the JOB, not just this continue-on-error step,
+          # so the commit+push below never runs and the committee enrichment
+          # fetched earlier in the job is discarded too (the June 2026 failure).
+          # ~600 pairs/run keeps this step inside the ~3h left after
+          # ingest-committees' own 500-committee slice, converges the cohort
+          # over several months, and de-synchronizes the stamps permanently so
+          # no future run ever faces the whole set again. Raise via the
+          # beneficiary_max_fetch dispatch input for a deliberate catch-up run.
+          BENEFICIARY_MAX_FETCH: ${{ github.event.inputs.beneficiary_max_fetch }}
         run: |
           extra_args=""
           if [ "${{ github.event.inputs.beneficiaries }}" = "true" ]; then
             extra_args="--force-refresh"
           fi
-          python -m scripts.cli ingest-committee-beneficiaries $extra_args
+          python -m scripts.cli ingest-committee-beneficiaries \
+            --max-fetch "${BENEFICIARY_MAX_FETCH:-600}" $extra_args
 
       - name: Archive raw payloads to R2 (§2.1)
         # Committee identity/filings/Schedule-B raw fetched above. Secret-guarded.
