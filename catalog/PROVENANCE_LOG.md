@@ -24976,3 +24976,38 @@ not production").
   (`data/snapshots/2026-07-11T19-55-28Z__378b16e4.db`). walter-mark `audit` left
   at its production values; a `change_log` entry records the probe so it is not
   repeated.
+
+### 2026-07-19 — INGESTION (legislators crosswalk)
+
+- **source**: `unitedstates/congress-legislators` (https://unitedstates.github.io/congress-legislators/legislators-current.yaml + https://unitedstates.github.io/congress-legislators/legislators-historical.yaml)
+- **fetched_at**: `2026-07-19T22:18:15Z`
+- **legislators**: `1530`
+- **fec_id_links**: `1714`
+- **terms**: `9049`
+- **only_with_fec**: `True`
+- **include_historical**: `True`
+- **snapshot_path**: `/home/runner/work/checkswing/checkswing/data/snapshots/2026-07-19T22-18-15Z__pre-ingest-legislators.db`
+- **note**: Tier-2 entity identification (SOURCES.md Phase-3 addendum). Crosswalk tables are a pure projection of the upstream source — idempotent wipe-and-rebuild. Raw payloads persisted under data/raw/legislation/.
+
+### 2026-07-19 — INGESTION (bills)
+
+- **source**: `congress.gov` (api.congress.gov v3)
+- **fetched_at**: `2026-07-19T22:18:50Z`
+- **curated_bills_in_set**: `22`
+- **bills_enriched**: `22`
+- **sponsor_rows**: `201`
+- **errors**: `[]`
+- **snapshot_path**: `/home/runner/work/checkswing/checkswing/data/snapshots/2026-07-19T22-18-50Z__pre-ingest-bills.db`
+- **note**: Curated fields (mlb_issue_area, relevance_basis, carried_by_bill_id) sourced from legislation/bills/*.yaml; identity/sponsors/action from Congress.gov (Tier-1). Raw payloads under data/raw/legislation/.
+
+### 2026-07-19 — INGESTION (votes)
+
+- **source**: `clerk.house.gov` (EVS XML) + `senate.gov` (LIS XML) — Tier-1 source of record
+- **fetched_at**: `2026-07-19T22:19:57Z`
+- **roll_calls_in_set**: `3`
+- **votes_ingested**: `3`
+- **vote_positions**: `585`
+- **senate_unmapped (no FEC-crosswalk lis_id)**: `45`
+- **errors**: `[]`
+- **snapshot_path**: `/home/runner/work/checkswing/checkswing/data/snapshots/2026-07-19T22-19-57Z__pre-ingest-votes.db`
+- **note**: Vote positions are FEC-neutral facts (who voted Yea/Nay). Senate LIS ids mapped to Bioguide via legislators.lis_id. Raw XML under data/raw/legislation/.
