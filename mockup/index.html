@@ -1661,7 +1661,17 @@ button.drawer-source-link {
 .method-tier.confirmed { background: var(--ok-bg); }
 .method-tier.probable  { background: var(--warn-bg); }
 .method-tier.uncertain { background: var(--bg-sunk); }
-.method-tier h3 { font-family: var(--serif); font-size: var(--t-md); font-weight: 700; text-transform: none; letter-spacing: 0; color: var(--ink); margin-bottom: 8px; }
+/* The tier name carries the same status dot the record chips use, so the
+   legend and the records read as one system without naming the tier twice. */
+.method-tier .tier-name {
+  font-family: var(--serif); font-size: var(--t-md); font-weight: 700;
+  letter-spacing: var(--track-label); color: var(--ink);
+  margin-bottom: 8px; display: flex; align-items: baseline; gap: 8px;
+}
+.method-tier .tier-name::before { font-size: var(--t-xs); }
+.method-tier .tier-name-confirmed::before { content: "\25CF"; color: var(--ok-fg); }
+.method-tier .tier-name-probable::before  { content: "\25D0"; color: var(--warn-fg); }
+.method-tier .tier-name-uncertain::before { content: "\25CB"; color: var(--ink-3); }
 .method-tier .tier-rule { font-family: var(--mono); font-size: var(--t-xs); color: var(--ink-2); margin-bottom: 12px; }
 .method-tier p { font-size: var(--t-sm); line-height: 1.5; margin: 0; }
 
@@ -7166,20 +7176,17 @@ function renderMethodology() {
 
       <div class="method-tiers">
         <div class="method-tier confirmed">
-          <span class="chip chip-confirmed">Confirmed</span>
-          <h3 style="margin-top:8px">CONFIRMED</h3>
+          <h3 class="tier-name tier-name-confirmed">CONFIRMED</h3>
           <div class="tier-rule">name + ≥2 signals · OR · name + 1 strong unique signal</div>
           <p>The default tier for export. Used in citations and reports.</p>
         </div>
         <div class="method-tier probable">
-          <span class="chip chip-probable">Probable</span>
-          <h3 style="margin-top:8px">PROBABLE</h3>
+          <h3 class="tier-name tier-name-probable">PROBABLE</h3>
           <div class="tier-rule">name + exactly 1 confirming signal</div>
-          <p>Shown in the dataset, always with the chip. Cited only with the qualifier "probable."</p>
+          <p>Shown in the dataset, always labeled as probable. Cited only with that qualifier.</p>
         </div>
         <div class="method-tier uncertain">
-          <span style="display:inline-block;padding: 4px 8px;background:var(--bg-sunk);font-size: var(--t-xs);font-weight:600;letter-spacing: var(--track-label);text-transform:uppercase;color:var(--ink-3);border-radius:2px">Uncertain</span>
-          <h3 style="margin-top:8px">UNCERTAIN</h3>
+          <h3 class="tier-name tier-name-uncertain">UNCERTAIN</h3>
           <div class="tier-rule">name match only · OR · contradicting signals</div>
           <p>Routes to a manual review queue. Never appears in the canonical export.</p>
         </div>
@@ -8515,7 +8522,7 @@ function bindStatesHandlers() {
     });
   });
   document.querySelectorAll(".st-sort").forEach((th) => {
-    th.addEventListener("click", () => {
+    makeRowNavigable(th, () => {
       const k = th.getAttribute("data-sort");
       if (f.sort.key === k) f.sort.dir = f.sort.dir === "asc" ? "desc" : "asc";
       else { f.sort.key = k; f.sort.dir = ["status", "owner", "recipient", "jurisdiction", "date"].includes(k) ? "asc" : "desc"; }
@@ -8551,7 +8558,7 @@ function bindStatesHandlers() {
   /* ── #/states by-owner table sort (state.stateOwnerSort) ── */
   const os = state.stateOwnerSort;
   document.querySelectorAll(".so-sort").forEach((th) => {
-    th.addEventListener("click", () => {
+    makeRowNavigable(th, () => {
       const k = th.getAttribute("data-sort");
       if (os.key === k) os.dir = os.dir === "asc" ? "desc" : "asc";
       else { os.key = k; os.dir = ["name", "team"].includes(k) ? "asc" : "desc"; }
@@ -8583,7 +8590,7 @@ function bindStatesHandlers() {
     });
   });
   document.querySelectorAll(".sr-sort").forEach((th) => {
-    th.addEventListener("click", () => {
+    makeRowNavigable(th, () => {
       const k = th.getAttribute("data-sort");
       if (rf.sort.key === k) rf.sort.dir = rf.sort.dir === "asc" ? "desc" : "asc";
       else { rf.sort.key = k; rf.sort.dir = ["name", "recipient_type", "last_date"].includes(k) ? "asc" : "desc"; }
@@ -8974,7 +8981,7 @@ function bindRecipientsHandlers() {
     });
   });
   document.querySelectorAll(".re-sort").forEach((th) => {
-    th.addEventListener("click", () => {
+    makeRowNavigable(th, () => {
       const k = th.getAttribute("data-sort");
       if (f.sort.key === k) {
         f.sort.dir = f.sort.dir === "asc" ? "desc" : "asc";
