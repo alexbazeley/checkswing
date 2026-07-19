@@ -83,7 +83,7 @@ jobs:
 
       - name: Checkout
         if: steps.gate.outputs.run == 'true'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           # master.db is tracked via Git LFS — pull the real DB, not the
           # pointer, or the incremental ingest would read a text file as SQLite.
@@ -91,7 +91,7 @@ jobs:
 
       - name: Set up Python
         if: steps.gate.outputs.run == 'true'
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.11'
           cache: 'pip'
@@ -166,7 +166,7 @@ jobs:
       contents: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           # LFS-tracked master.db — merge_buckets + build_data read it as SQLite,
@@ -175,7 +175,7 @@ jobs:
           lfs: true
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.11'
           cache: 'pip'
@@ -184,6 +184,15 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Download bucket artifacts
+        # PINNED TO v4 ON PURPOSE. The upload/download pair above and here is
+        # matched, and the merge step below globs
+        # `artifacts/refresh-bucket-*/data/master.db` — i.e. it depends on
+        # download-artifact's v4 behaviour of unpacking each matched artifact
+        # into its OWN subdirectory (merge-multiple: false). A newer major that
+        # changes that default would flatten the layout and the bucket merge
+        # would silently find no databases. v4 emits a Node-20 deprecation
+        # warning, which is cosmetic (the runner force-runs it on Node 24);
+        # bump only with a real end-to-end refresh run to verify the layout.
         uses: actions/download-artifact@v4
         with:
           path: artifacts/
@@ -299,7 +308,7 @@ jobs:
       contents: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           # Pull the freshly-pushed master.db from `consolidate` so we enrich
@@ -309,7 +318,7 @@ jobs:
           lfs: true
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.11'
           cache: 'pip'
