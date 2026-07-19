@@ -113,6 +113,12 @@ Content-Security-Policy, cache controls, and `X-Frame-Options: DENY`.
 The only secret is a GitHub Actions secret `FEC_API_KEY`, used by the refresh
 workflow. It never appears in the Cloudflare environment.
 
+Because each build clones the repo with Git LFS, it pulls the 128 MB
+`master.db` every time — the dominant consumer of the free LFS bandwidth tier.
+A raised LFS budget covers this today; the durable fix (fetch the DB privately
+from R2 and skip the LFS smudge) is a ready-to-run runbook in
+[`docs/DEPLOY_lfs_r2_2026-07.md`](docs/DEPLOY_lfs_r2_2026-07.md).
+
 ## Continuous integration & refresh
 
 - **CI** ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) runs `pytest` and `validate` on every pull request and push to `main`.
