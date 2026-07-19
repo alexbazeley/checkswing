@@ -96,7 +96,7 @@
   /* --accent is TEXT (links, CSV button) so it carries the Lc 75 bar; the
      previous #B8552B measured 69.6 on --bg. --accent-line keeps the original
      lighter sienna for borders/rules, where §3 only asks Lc ≥30. */
-  --accent:      #A44C26;  /* burnt sienna — interactive UI (links, focus, CSV button) */
+  --accent:      #8B4120;  /* burnt sienna — links, focus, CSV button. Lc 81.8 on --bg, 75.2 on --bg-sunk, 84.9 on white */
   --accent-line: #B8552B;  /* same hue, non-text use only (borders, underlines) */
   --accent-2:    #964322;
   --accent-soft: #FBF0E7;  /* tinted hover/selected surface for accent UI */
@@ -121,7 +121,7 @@
   --ok-bg:       #E6EFE6;
   --ok-fg:       #1F5635;
   --warn-bg:     #F6E9CA;
-  --warn-fg:     #7A5614;
+  --warn-fg:     #6A4B11;  /* Lc 75.0 on --warn-bg, 79.5 on --stale-bg */
 
   /* Status extensions — kept distinct from the confirmed/probable (--ok/--warn)
      set so they don't read as a verification tier.
@@ -1662,7 +1662,7 @@ button.drawer-source-link {
 .method-tier.probable  { background: var(--warn-bg); }
 .method-tier.uncertain { background: var(--bg-sunk); }
 .method-tier h3 { font-family: var(--serif); font-size: var(--t-md); font-weight: 700; text-transform: none; letter-spacing: 0; color: var(--ink); margin-bottom: 8px; }
-.method-tier .tier-rule { font-family: var(--mono); font-size: var(--t-xs); color: var(--ink-3); margin-bottom: 12px; }
+.method-tier .tier-rule { font-family: var(--mono); font-size: var(--t-xs); color: var(--ink-2); margin-bottom: 12px; }
 .method-tier p { font-size: var(--t-sm); line-height: 1.5; margin: 0; }
 
 .method-scope { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin: 16px 0; }
