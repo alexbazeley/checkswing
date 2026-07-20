@@ -18,7 +18,18 @@ The conservative attribution standard is itself an editorial commitment: we'd ra
 
 ## In scope (Phase 1)
 
-- Federal political donations reported to the FEC, all years available.
+- Federal political donations reported to the FEC, **from 2000-01-01 forward** —
+  a hard floor, not "all years available." It is enforced in code
+  (`DEFAULT_MIN_DATE` in `scripts/fetch_fec.py`); the earliest record of any kind
+  in `master.db` is 2000-01-13. The floor exists because FEC data quality and
+  coverage decline sharply pre-2000, and because a uniform start date is what
+  makes owner totals **comparable to one another** — a single owner fetched from
+  an earlier year would silently mix two temporal scopes into every cross-owner
+  view and dashboard figure. **Consequence to keep in mind:** an owner whose
+  federal giving predates 2000 yields **$0**, which is indistinguishable from an
+  owner who never gave unless you probe below the floor (e.g. `steinbrenner-hank`,
+  whose real 1985–1999 history sits entirely beneath it). Lowering the floor is
+  an **archive-wide** decision made here, never a per-owner override.
 - Donations by principal/majority owners of all 30 MLB franchises, plus the highest-profile minority owners where they exert public influence (case by case, documented).
 - **Former principal owners**, retained after a control transfer when their giving is historically relevant and they were a principal owner during the covered period (e.g. `castellini-bob`, `angelos-john-p`, `pohlad-joe`). This is a deliberate, documented precedent: an owner does not leave the archive the day the team changes hands. Their status is marked in the registry; the dashboard labels them "incl. former".
 - **Co-owners in the ownership group — "the ownership-group rule" (adopted 2026-07-19).**
@@ -179,7 +190,13 @@ two-signal CONFIRMED bar is reachable.
 - **Minority owners / ownership groups.** ~~Currently out.~~ **RESOLVED 2026-07-19 — see "The ownership-group rule" in the scope section above.** A co-owner enters the archive on a documented ownership stake or governance role, not on family relationship and not on stake size. The original framing ("a Pohlad heir who's a 5% minority partner is not [in]") is superseded: percentage was never the right test, since it is rarely disclosed and a small stake can carry a board seat. Documented participation in the ownership entity is the test.
 - **Pre-ownership donation history.** Do we want Cohen's donations from before he bought the Mets in 2020? Recommendation: yes, with a clear `tenure_start_date` field on the owner, so reports can filter to "post-ownership" donations when relevant.
 - **Spouses as separate entities.** Alexandra Cohen is a major donor in her own right. Recommendation: track as a related entity with her own verifying_signals — never auto-attribute her donations to him; always tag clearly.
-- **Backfill cadence.** FEC historical data goes back decades but with declining quality and coverage. Recommendation: aim for 2000 forward as a hard floor, opportunistic on pre-2000.
+- **Backfill cadence.** ~~Recommendation: aim for 2000 forward as a hard floor.~~
+  **RESOLVED / IMPLEMENTED** — the 2000-01-01 floor is in force
+  (`DEFAULT_MIN_DATE`, `scripts/fetch_fec.py`) and documented in the scope
+  section above. Pre-2000 giving is currently out of reach, by design and for
+  comparability. Any pre-2000 backfill remains a live option, but it is an
+  archive-wide scope change to be decided here — with a plan for how mixed-scope
+  totals would be labeled — not a quiet per-owner `--min-date`.
 
 ## Success looks like
 
