@@ -26741,3 +26741,13 @@ not production").
 - **updated**: `626` · **demoted→queue**: `0` · **suppressed (DISCARDED)**: `0` · **forced**: `0` · **excluded**: `0` · **unchanged**: `521`
 - **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T14-20-40Z__pre-reclassify-inplace-johnson-charles.db`
 - **note**: in-place re-score from stored donations columns (no raw read, no delete-rebuild); rows recoverable from the snapshot above.
+
+### 2026-07-20 — RESOLUTION — bulk-discard review-queue items
+
+- **reason_like**: `%`
+- **scope**: `walter-mark`
+- **items_discarded**: `1360`
+- **per_owner**: walter-mark=1360
+- **open_queue_remaining**: `671`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T15-19-26Z__pre-bulk-discard.db`
+- **note**: Standing DISCARDED verdicts recorded in review_resolutions (survive reclassify). Attribution unaffected (GOVERNANCE.md §2.5). Reversible via `unresolve`.
