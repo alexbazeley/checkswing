@@ -25011,3 +25011,13 @@ not production").
 - **errors**: `[]`
 - **snapshot_path**: `/home/runner/work/checkswing/checkswing/data/snapshots/2026-07-19T22-19-57Z__pre-ingest-votes.db`
 - **note**: Vote positions are FEC-neutral facts (who voted Yea/Nay). Senate LIS ids mapped to Bioguide via legislators.lis_id. Raw XML under data/raw/legislation/.
+
+### 2026-07-19 — REPAIR (wrong supersessions from the §1.3 transaction_id gap)
+
+- **what**: two donations were marked SUPERSEDED with a fabricated "FEC restatement" reason and dropped out of all published totals, because a filer-assigned `transaction_id` was reused across owners and the collision guard could not fire without `sub_id` on both rows.
+- **rows repaired**:
+  - `kendrick-ken` $2,800 2020-05-30 → GOP WINNING WOMEN; status restored to `CONFIRMED`, false reason cleared (`FEC restatement: amount, date, recipient_committee_id, filin`), re-keyed `SA11AI.4319~superseded~2026-05-30T22-53-46Z` → `SA11AI.4319~collision~kendrick-ken`
+  - `dewitt-bill` $5,000 2020-07-10 → SENATE MAJORITY FIREWALL 2020; status restored to `CONFIRMED`, false reason cleared (`FEC restatement: date, recipient_committee_id, filing_id, im`), re-keyed `SA11AI.4164~superseded~2026-05-30T22-53-46Z` → `SA11AI.4164~collision~dewitt-bill`
+- **not a re-fetch**: no FEC data was retrieved; the rows were never deleted (§1.10), so this restores status and provenance only.
+- **guard**: `insert_donation` now detects a collision without `sub_id` (differing `entity_slug`, or committee+date+amount all differing), so this class of corruption cannot recur.
+- **follow-up**: the durable fix is a composite primary key `(transaction_id, entity_slug)` — which `review_queue` already uses — so both real contributions can hold the same filer-assigned id. The `~collision~` re-key here is a workaround until that migration lands.
