@@ -1,0 +1,236 @@
+# Todd Matthew Ricketts — Chicago Cubs
+# Co-owner and member of the Cubs Board of Directors since the Ricketts family
+# purchased the club from Tribune Co in October 2009. Added under the
+# ownership-group rule (CHARTER.md): documented equity stake AND governance
+# role, so he is a full owner entity — not a related_entity of ricketts-tom.
+#
+# CRITICAL — SHARES THE HARDEST SIBLING-COLLISION CASE IN MLB with ricketts-tom
+# and ricketts-laura. Same-surname federal donors:
+#   - Joe Ricketts (father, TD Ameritrade founder) — major Republican donor.
+#     DELIBERATELY NOT TRACKED and used as negative signals (see notes).
+#   - Marlene Ricketts (mother) — major Republican donor, not tracked
+#   - Pete Ricketts (brother, U.S. Senator R-NE) — deferred, not tracked
+#   - Tom Ricketts (brother, Executive Chairman) — owners/ricketts-tom.yaml
+#   - Laura Ricketts (sister, co-owner) — owners/ricketts-laura.yaml
+#
+# Todd is the hardest of the three tracked siblings to isolate: he shares
+# Wilmette with Tom and Laura, "Chicago Cubs" with both, AND "Ending Spending"
+# with his father Joe. Strict first-name name_variants are the firewall.
+#
+# Read OWNER_SCHEMA.md before editing. Read GOVERNANCE.md §1.7 before adding entities.
+
+slug: ricketts-todd
+name: Todd Matthew Ricketts
+team: Chicago Cubs
+role: Co-owner / Director
+status: active
+tenure_start_date: 2009-10-27    # Sale closed — same date as ricketts-tom
+tenure_end_date:
+
+# Every entry requires a full unambiguous first name. Excludes bare "Ricketts"
+# and every first-initial-only form (T./L./P./J./M.) — note "T. Ricketts"
+# collides directly with Tom.
+name_variants:
+- "Todd Ricketts"
+- "Todd M Ricketts"
+- "Todd M. Ricketts"
+- "Todd Matthew Ricketts"
+- "Ricketts, Todd"
+- "Ricketts, Todd M"
+- "Ricketts, Todd M."
+
+verifying_signals:
+  cities:
+    # Wilmette IL residence; Cubs offices in Chicago; Higher Gear had a
+    # Highland Park IL location. CAUTION: Wilmette is a three-way sibling
+    # collision (Tom, Laura, Todd) — name variants are the only firewall.
+  - "wilmette"
+  - "chicago"
+  - "highland park"
+  states:
+    # IL only. NOT NE — Joe and Pete file from Nebraska.
+  - "IL"
+  employers:
+    # Documented affiliations. DELIBERATE OMISSIONS, both load-bearing:
+    #   - "TD Ameritrade" / "Ameritrade": Todd genuinely worked there and sat
+    #     on its board, but it is the single highest-leakage string in this
+    #     family (Joe founded it; Pete was an executive there). Including it
+    #     would pull their records in. Let calibration decide, not creation.
+    #   - "Republican National Committee": a finance chairmanship is not an
+    #     employment relationship people report on FEC Schedule A.
+  - "Chicago Cubs"
+  - "Cubs"
+  - "Higher Gear"
+  - "Ending Spending"
+    # ^ CAUTION: shared with father Joe, who founded Ending Spending. Kept as
+    # a VERIFYING signal only (needs a second signal to CONFIRM) and must
+    # NEVER be promoted to strong_signals.
+  occupations:
+  - "owner"
+  - "co-owner"
+  - "director"
+  - "businessman"
+  - "executive"
+  - "entrepreneur"
+
+strong_signals:
+  # Intentionally EMPTY at creation, per the ricketts-tom precedent.
+  # "Higher Gear" / "Higher Gear Group" is the promotion candidate — it is
+  # uniquely Todd's — but no FEC filing carrying it has been observed yet.
+  # Promote only after a clean calibration audit shows zero false positives.
+  employers: []
+  zip_codes: []
+  # Wilmette ZIP 60091 is shared with Tom AND Laura — DO NOT promote ZIP alone.
+
+negative_signals:
+  employers:
+    # Father Joe Ricketts's vehicles. Joe is deliberately NOT tracked (no board
+    # seat, no title — see notes) and is a prolific Republican donor.
+    # NOTE: "Ending Spending" is deliberately ABSENT here even though Joe
+    # founded it, because Todd is its documented CEO/board member — a negative
+    # signal would demote Todd's own legitimate records. It stays a verifying
+    # signal, never a strong one, and audit resolves the overlap by name.
+  - "TD Ameritrade"
+  - "Ameritrade"
+  - "Opportunity Education"
+  - "High Plains Bison"
+  - "DNAinfo"
+  - "Ricketts Conservation Foundation"
+
+related_entities: []
+# Each Ricketts is its OWN slug — never a related_entity here.
+# Spouse Sylvie Légère has a different surname (no classifier collision) and no
+# documented Cubs ownership or governance role, so she is out of scope under the
+# ownership-group rule. Do NOT add without GOVERNANCE.md §1.7 sign-off.
+
+sources:
+- description: "MLB.com Chicago Cubs front office — ownership block lists Todd Ricketts under 'Board of Directors' (independently re-verified 2026-07-19; Pete and Joe Ricketts appear nowhere on the page)"
+  url: "https://www.mlb.com/cubs/team/front-office"
+  accessed: "2026-07-19"
+  archive_url: ""
+- description: "Chicago Sun-Times (2021-11-07) — 'Cubs co-owner Todd Ricketts' stepping down as RNC finance chair; establishes co-owner status in major press"
+  url: "https://chicago.suntimes.com/politics/2021/11/7/22768768/cubs-co-owner-todd-ricketts-trump-fundraiser-republican-national-committee-finance-chair"
+  accessed: "2026-07-19"
+  archive_url: ""
+- description: "NPR (2018-01-31) — headline 'Chicago Cubs Co-Owner Todd Ricketts Named New RNC Finance Chairman' (headline-level corroboration of co-owner status; body not retrieved)"
+  url: "https://www.npr.org/2018/01/31/582262824/chicago-cubs-co-owner-todd-ricketts-named-new-rnc-finance-chairman"
+  accessed: "2026-07-19"
+  archive_url: ""
+
+notes: |
+  Todd Ricketts is a co-owner and director of the Chicago Cubs, tracked as a
+  full owner entity under the ownership-group rule (CHARTER.md). The team's own
+  front-office page lists him under Board of Directors, and both the Chicago
+  Sun-Times and NPR style him "Cubs co-owner" in major-press reporting.
+
+  Roles: co-owner of Higher Gear bike shops (Wilmette + Highland Park IL; the
+  Wilmette store closed Dec 2017); board member and CEO of Ending Spending Inc.
+  (since 2013); RNC Finance Chair 2018-01-31 to 2022-01-31; nominated Deputy
+  Secretary of Commerce Nov 2016, withdrew Apr 2017; former TD Ameritrade board
+  member and business-development employee.
+
+  COLLISION POSTURE — the hardest of the three tracked siblings. Wilmette +
+  "Chicago Cubs" is a two-signal CONFIRMED that Tom, Laura, and Todd all
+  satisfy, and Todd additionally shares "Ending Spending" with his father Joe.
+  Strict first-name name_variants are the only firewall; ZIP 60091 is a
+  three-way collision and must never be promoted.
+
+  The "Ending Spending" overlap is handled asymmetrically on purpose: it is a
+  VERIFYING signal (so it can never CONFIRM on its own) but is deliberately NOT
+  a negative signal, because Todd is the organization's documented CEO — a
+  negative signal there would demote his own legitimate records. TD Ameritrade
+  gets the opposite treatment: omitted from employers AND listed as a negative
+  signal, because Todd's genuine association with it is outweighed by its
+  leakage from Joe and Pete.
+
+  FATHER JOE IS DELIBERATELY NOT TRACKED. Maintainer decision 2026-07-19: MLB's
+  ownership block omits him; Tom Ricketts stated "My father is not involved with
+  the operation of the Chicago Cubs in any way" (ESPN, 2019-02-04); Forbes
+  attributes majority ownership to "his four children." Funding the purchase is
+  not a stake of record. A residual beneficial interest via the "Joe & Marlene
+  Ricketts Grandchildren's Education Fund" (RPTC Inc., Wyoming) is exactly what
+  the public record does not establish, which under GOVERNANCE.md §1.9 resolves
+  to "do not attribute."
+
+  BROTHER PETE IS DEFERRED, not rejected — see owners/ricketts-laura.yaml notes
+  for the full reasoning (former board seat 2009–2019, imprecise end date,
+  unverified equity, worst-in-family name collision with father John Joseph
+  Ricketts).
+
+  Expected calibration-round-1 questions:
+    - Do any records carry "Ending Spending" WITHOUT an explicit "Todd"? Those
+      are likely Joe's and must not confirm.
+    - Do any CONFIRMED records predate 2009? Expect Higher Gear-era strings.
+    - Should "Higher Gear" be promoted to strong_signals after a clean audit?
+    - Does any TD Ameritrade record surface that is genuinely Todd's? If so,
+      the negative signal needs a documented exception rather than removal.
+
+change_log:
+- date: 2026-07-19
+  change: |
+    Created under the ownership-group rule adopted in CHARTER.md (2026-07-19).
+
+    Tier-2 sourcing: MLB.com Cubs front office (ownership block, independently
+    re-verified this session), Chicago Sun-Times 2021-11-07 ("Cubs co-owner
+    Todd Ricketts"), NPR 2018-01-31 (headline-level only — the body was not
+    retrieved, and the source description says so rather than implying a full
+    read).
+
+    tenure_start_date 2009-10-27 matches ricketts-tom (sale close).
+
+    strong_signals empty pending calibration. "TD Ameritrade"/"Ameritrade"
+    deliberately excluded from employers despite Todd's genuine association,
+    and added as negative signals — the leakage risk from Joe and Pete
+    outweighs the recall loss. "Ending Spending" kept as verifying-only
+    because Todd is its CEO but Joe founded it.
+  by: "automated research (maintainer-directed, per-person verdicts approved by alex)"
+  references:
+  - "CHARTER.md — the ownership-group rule"
+  - "owners/ricketts-tom.yaml — the collision posture this file inherits"
+- date: 2026-07-19
+  change: |
+    First ingestion — 398 records (IL state filter) → 23 CONFIRMED / 258
+    PROBABLE / 15 UNCERTAIN, $1,896,784.
+
+    P/C RATIO IS 11.2 — the highest in the archive — AND IT IS NOT LEAKAGE.
+    All 399 raw records are "RICKETTS, TODD" in its variants, and the city
+    field is Wilmette on 384 of them (plus the typo cluster WIMETTE 6,
+    WILMATTE 2, WILMETTEE 1 — same address, misspelled by filers). Occupation
+    is INVESTMENT MANAGER (176) / INVESTMENTS (107). Employer is SELF (169) /
+    SELF EMPLOYED (48) / SELF-EMPLOYED (45), none of which are matchable, so
+    the bulk matches on city alone → PROBABLE. Correct conservatism, not a
+    doppelgänger.
+
+    SIBLING-LEAKAGE CHECK PASSED: party mix is 247 REP / 0 DEM against Laura's
+    647 DEM / 2 REP, with Tom unchanged. The strict first-name name_variants
+    firewall is holding across the shared Wilmette + "Chicago Cubs" overlap.
+
+    TWO FINDINGS FOR FUTURE CALIBRATION, neither applied here:
+      - "ACTIVE CHAOS LLC" (38) / "ACTIVE CHAOS, LLC" (9) / "ACTIVE CHAOS" (2)
+        and "JBE RIDING GROUP LLC" (7) are Todd-only vehicles absent from
+        verifying_signals. All sit at ZIP 60091 / 600912812 / 600912742 —
+        his documented Wilmette address — so they are promotion candidates on
+        the same address-confirmation basis ricketts-tom used in its
+        2026-05-25 pass.
+      - "RAM INVESTMENT" / "RAM INVESTMENTS" appears on ~32 of TODD's records
+        (ZIPs 60091 / 600912811 / 600912812). ricketts-tom.yaml carries it as
+        a verifying employer described as "Tom's personal investment vehicle",
+        added 2026-05-25 on the basis it was uniquely his — Tom has only 7
+        such records. It is evidently a SHARED family vehicle, so that
+        characterization on Tom's file should be corrected. No cross-
+        attribution risk today (the name gate separates them), but it means
+        RAM must never be promoted to strong_signals on either brother.
+
+    2 records deliberately NOT attributed: they collided with existing
+    castellini-bob and lerner-mark transaction_ids and the §1.3 guard (PR #126)
+    refused them rather than clobbering. ~$22,800 of documented recall loss in
+    preference to silent corruption of two other owners; recoverable when the
+    composite-primary-key migration lands.
+  by: "automated pipeline (ingest --from-raw, behind the PR #126 collision guard)"
+  references:
+  - "data/snapshots/2026-07-20T01-31-52Z__94f1ac55.db (pre-ingest)"
+
+audit:
+  created: 2026-07-19
+  last_ingestion: '2026-07-19'
+  last_signal_review:

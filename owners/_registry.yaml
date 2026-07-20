@@ -241,6 +241,43 @@ owners:
       (Cubs co-owner, former RNC Finance Chair). name_variants strictly
       exclude bare "Ricketts" and all first-initial-only forms. strong_signals
       empty until calibration. Each sibling/parent gets its OWN slug if added.
+      2026-07-19: Laura and Todd now ADDED as their own slugs under the
+      ownership-group rule; Wilmette ZIP 60091 is now a THREE-way collision.
+
+  - slug: ricketts-laura
+    name: Laura Marie Ricketts
+    team: Chicago Cubs
+    role: Co-owner / Director
+    tenure_start_date: 2009-10-27
+    status: active
+    notes: >
+      Added 2026-07-19 under the ownership-group rule (CHARTER.md) — the first
+      entity admitted under it. Documented equity AND governance: MLB.com's
+      ownership block lists her under Board of Directors, and Crain's Who's Who
+      2024 prints "Co-owner and director, Chicago Cubs Baseball Club". Shares
+      the ricketts-tom collision case: Wilmette + "Chicago Cubs" is a two-signal
+      CONFIRMED that Tom, Laura and Todd all satisfy, so strict first-name
+      name_variants are the only firewall and ZIP 60091 must never be promoted.
+      Politically the family outlier (major Democratic donor, LPAC founder),
+      which makes leakage obvious on audit. Father Joe's employers seeded as
+      negative signals — he was assessed and deliberately EXCLUDED (no board
+      seat, no title).
+
+  - slug: ricketts-todd
+    name: Todd Matthew Ricketts
+    team: Chicago Cubs
+    role: Co-owner / Director
+    tenure_start_date: 2009-10-27
+    status: active
+    notes: >
+      Added 2026-07-19 under the ownership-group rule (CHARTER.md). MLB.com
+      lists him under Board of Directors; Sun-Times and NPR both style him
+      "Cubs co-owner". HARDEST of the three tracked siblings to isolate — he
+      shares Wilmette and "Chicago Cubs" with Tom and Laura AND "Ending
+      Spending" with father Joe. "Ending Spending" is verifying-only and
+      deliberately NOT a negative signal (Todd is its CEO); TD Ameritrade gets
+      the opposite treatment — omitted from employers and listed as a negative
+      signal, because leakage from Joe/Pete outweighs the recall loss.
 
   - slug: reinsdorf-jerry
     name: Jerry Reinsdorf

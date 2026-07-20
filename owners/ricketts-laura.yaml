@@ -1,0 +1,235 @@
+# Laura Marie Ricketts — Chicago Cubs
+# Co-owner and member of the Cubs Board of Directors since the Ricketts family
+# purchased the club from Tribune Co in October 2009. Added under the
+# ownership-group rule (CHARTER.md): she holds BOTH a documented equity stake
+# and a documented governance role, so she is a full owner entity — not a
+# related_entity of ricketts-tom.
+#
+# CRITICAL — SHARES THE HARDEST SIBLING-COLLISION CASE IN MLB with ricketts-tom.
+# Six same-surname federal donors with conflicting political alignments:
+#   - Joe Ricketts (father, TD Ameritrade founder) — major Republican donor.
+#     DELIBERATELY NOT TRACKED (see below) and used as negative signals.
+#   - Marlene Ricketts (mother) — major Republican donor, not tracked
+#   - Pete Ricketts (brother, U.S. Senator R-NE) — deferred, not tracked
+#   - Tom Ricketts (brother, Executive Chairman) — owners/ricketts-tom.yaml
+#   - Todd Ricketts (brother, co-owner) — owners/ricketts-todd.yaml
+#
+# Laura is politically the family's outlier — a major Democratic donor and LGBTQ
+# political organizer — which makes leakage in EITHER direction obvious on audit
+# but also makes a misattribution unusually consequential. Strict first-name
+# name_variants are the firewall; no first-initial-only forms anywhere.
+#
+# Read OWNER_SCHEMA.md before editing. Read GOVERNANCE.md §1.7 before adding entities.
+
+slug: ricketts-laura
+name: Laura Marie Ricketts
+team: Chicago Cubs
+role: Co-owner / Director
+status: active
+tenure_start_date: 2009-10-27    # Sale closed — same date as ricketts-tom
+tenure_end_date:
+
+# Every entry requires a full unambiguous first name. Excludes bare "Ricketts"
+# and every first-initial-only form (L./T./P./J./M.), which would collide with
+# siblings and parents.
+name_variants:
+- "Laura Ricketts"
+- "Laura M Ricketts"
+- "Laura M. Ricketts"
+- "Laura Marie Ricketts"
+- "Ricketts, Laura"
+- "Ricketts, Laura M"
+- "Ricketts, Laura M."
+
+verifying_signals:
+  cities:
+    # Wilmette IL residence; Cubs offices in Chicago.
+    # CAUTION: brother Tom ALSO lives in Wilmette ("less than a mile north"
+    # per Crain's), and Todd is documented there too. Wilmette is a
+    # three-way sibling collision — name variants are the only firewall.
+  - "wilmette"
+  - "chicago"
+  states:
+    # IL only. NOT NE — the family's Nebraska origins are where Joe and Pete
+    # file from; including NE would invite their records in.
+  - "IL"
+  employers:
+    # Documented affiliations. NOT including "TD Ameritrade" / "Ameritrade" —
+    # the family wealth source, but Laura never worked there and those strings
+    # are the highest-leakage in this family (Joe and Pete both file them).
+  - "Chicago Cubs"
+  - "Cubs"
+  - "Ecotravel"
+  - "Chicago Red Stars"
+  - "Chicago Stars"
+  - "Beyond Barriers"
+  occupations:
+  - "attorney"
+  - "lawyer"
+  - "owner"
+  - "co-owner"
+  - "director"
+  - "investor"
+  - "businesswoman"
+
+strong_signals:
+  # Intentionally EMPTY at creation, per the ricketts-tom precedent.
+  # "Ecotravel" is the promotion candidate — Tier 2 sources associate it
+  # uniquely with Laura — but no FEC filing carrying it has been observed yet.
+  # Promote only after a clean calibration audit shows zero false positives.
+  employers: []
+  zip_codes: []
+  # Wilmette ZIP 60091 is shared with Tom AND Todd — DO NOT promote ZIP alone.
+  # This trap is now three-way; it was already documented as two-way on
+  # ricketts-tom.yaml.
+
+negative_signals:
+  employers:
+    # Father Joe Ricketts's vehicles. Joe is deliberately NOT tracked (he holds
+    # no board seat and no title — see notes), and he is a prolific Republican
+    # donor, so any record filed under his employers must not land on Laura.
+  - "TD Ameritrade"
+  - "Ameritrade"
+  - "Opportunity Education"
+  - "High Plains Bison"
+  - "DNAinfo"
+  - "Ricketts Conservation Foundation"
+
+related_entities: []
+# Each Ricketts is its OWN slug — never a related_entity here.
+# Spouse Brooke Skinner Ricketts (m. 2015-06-06, Chicago) shares the surname
+# but has no documented Cubs ownership or governance role, so she is out of
+# scope under the ownership-group rule. Different first name, so no classifier
+# collision. Do NOT add her without GOVERNANCE.md §1.7 sign-off.
+
+sources:
+- description: "MLB.com Chicago Cubs front office — ownership block lists Laura Ricketts under 'Board of Directors' (independently re-verified 2026-07-19; Pete and Joe Ricketts appear nowhere on the page)"
+  url: "https://www.mlb.com/cubs/team/front-office"
+  accessed: "2026-07-19"
+  archive_url: ""
+- description: "Crain's Chicago Business, Who's Who in Chicago Business 2024 — Laura Ricketts listed as 'Owner, Chicago Red Stars; Co-owner and director, Chicago Cubs Baseball Club' (establishes BOTH equity and governance in one line)"
+  url: "https://www.chicagobusiness.com/awards/laura-ricketts-whos-who-chicago-business-2024"
+  accessed: "2026-07-19"
+  archive_url: ""
+- description: "Chicago Stars FC press release (2023-09-01) — Laura Ricketts described as Cubs co-owner while leading the investor group purchasing the Chicago Red Stars"
+  url: "https://chicagostars.com/news/laura-ricketts-led-group-of-diverse-investors-buys-chicago-red-stars-in-60-million-deal/"
+  accessed: "2026-07-19"
+  archive_url: ""
+
+notes: |
+  Laura Ricketts is a co-owner and director of the Chicago Cubs, tracked as a
+  full owner entity under the ownership-group rule (CHARTER.md): the rule
+  requires a documented ownership stake OR governance role, and the Crain's
+  Who's Who 2024 listing documents both in a single line ("Co-owner and
+  director, Chicago Cubs Baseball Club"), corroborated by the team's own
+  front-office page listing her under Board of Directors.
+
+  She is the family's political outlier: a major Democratic donor, founder and
+  chair of LPAC, and a longtime LGBTQ political organizer, in a family whose
+  other prolific donors give Republican. That asymmetry is an audit ASSET — a
+  Republican-recipient record surfacing under this slug is a strong leakage
+  signal worth investigating rather than confirming.
+
+  Career: corporate attorney (Schiff Hardin & Waite; IL bar 1999, license
+  lapsed 2015) → co-founder, Ecotravel LLC → Cubs board 2009– → majority owner
+  of the Chicago Red Stars / Chicago Stars FC since 2023 → minority owner,
+  Chicago Sky → co-founder and director, Beyond Barriers → board, Lambda Legal.
+
+  COLLISION POSTURE. Wilmette + "Chicago Cubs" is a two-signal CONFIRMED that
+  Tom, Laura, and Todd ALL satisfy. The only firewall is strict first-name
+  name_variants — no bare "Ricketts", no first-initial-only forms. ZIP 60091 is
+  now a three-way collision and must never be promoted to a strong signal.
+
+  FATHER JOE IS DELIBERATELY NOT TRACKED. Maintainer decision 2026-07-19 after
+  research: MLB.com's ownership block omits him; Tom Ricketts stated publicly
+  "My father is not involved with the operation of the Chicago Cubs in any way"
+  (ESPN, 2019-02-04); Forbes attributes majority ownership to "his four
+  children." He funded the purchase, but funding is not a stake of record, and
+  the ownership-group rule requires a documented stake or role. The one thing
+  that could change this — a documented residual beneficial interest through
+  the "Joe & Marlene Ricketts Grandchildren's Education Fund" (managed by RPTC
+  Inc., Wyoming) — is precisely what the public record does not establish.
+  Under GOVERNANCE.md §1.9 that resolves to "do not attribute." His employers
+  are recorded above as negative signals instead.
+
+  BROTHER PETE IS DEFERRED, not rejected. He held a Cubs board seat from 2009
+  until 2019 (his own Senate biography describes it in the past tense; Chicago
+  Sun-Times, 2020-06-02, dates the departure to 2019), which satisfies the
+  governance prong as a FORMER co-owner under the castellini-bob / pohlad-joe
+  precedent. Deferred to a separate PR because the departure date is not yet
+  date-precise, his equity is unverified, and he presents the worst name
+  collision in the family — his legal name is John Peter Ricketts and his
+  father's is John Joseph Ricketts, both with Omaha NE history and TD Ameritrade
+  as an employer, leaving him with no possible strong_signal.
+
+  Expected calibration-round-1 questions:
+    - Do any CONFIRMED records predate 2009 (pre-Cubs)? Expect Ecotravel-era
+      or attorney-era employer strings.
+    - Are any records leaking from Tom or Todd via shared city + employer?
+      Check that every matched record carries an explicit "Laura".
+    - Should "Ecotravel" be promoted to strong_signals after a clean audit?
+    - Do any Republican-recipient records appear? Investigate before confirming.
+
+change_log:
+- date: 2026-07-19
+  change: |
+    Created under the ownership-group rule adopted in CHARTER.md (2026-07-19),
+    which resolves the charter's long-open "minority owners" decision point.
+
+    Tier-2 sourcing: MLB.com Cubs front office (ownership block, independently
+    re-verified this session — it lists exactly Tom as Chairman and Laura and
+    Todd as Board of Directors, with Pete and Joe absent), Crain's Who's Who in
+    Chicago Business 2024 ("Co-owner and director, Chicago Cubs Baseball Club"),
+    and the 2023 Chicago Stars FC purchase release.
+
+    tenure_start_date 2009-10-27 matches ricketts-tom (sale close).
+
+    strong_signals empty pending calibration, per the ricketts-tom precedent.
+    negative_signals seeded with father Joe's employer vehicles at creation
+    rather than after an audit — unusual for this project, and justified
+    because Joe was assessed and deliberately excluded in the same session, so
+    the doppelgänger is already traced rather than hypothetical.
+  by: "automated research (maintainer-directed, per-person verdicts approved by alex)"
+  references:
+  - "CHARTER.md — the ownership-group rule"
+  - "owners/ricketts-tom.yaml — the collision posture this file inherits"
+- date: 2026-07-19
+  change: |
+    First ingestion — 917 records (IL state filter) → 299 CONFIRMED / 504
+    PROBABLE / 1 UNCERTAIN, $7,955,474.
+
+    THE HIGH P/C RATIO (1.7) IS NOT LEAKAGE — checked against the raw before
+    accepting the run. All 919 raw records are "RICKETTS, LAURA" (571) /
+    "RICKETTS, LAURA M." (269) / "RICKETTS, LAURA M" (77) in Wilmette (608) or
+    Chicago (310) IL; there is no competing Laura Ricketts in the fetched set.
+    The PROBABLE tier is dominated by SELF-EMPLOYED (290) / SELF (178) / SELF
+    EMPLOYED (72) / NOT EMPLOYED (31) — she is an owner and investor, not
+    salaried, so most filings carry no matchable employer and match on city
+    alone. One signal → PROBABLE is the classifier being correctly
+    conservative, not a doppelgänger problem.
+
+    SIBLING-LEAKAGE CHECK PASSED via the political asymmetry this file was
+    designed around: party mix is 647 DEM / 2 REP, against Todd's 247 REP / 0
+    DEM, with Tom unchanged. Leakage across the shared Wilmette + "Chicago
+    Cubs" two-signal overlap would show as party mixing. It does not.
+
+    CALIBRATION CANDIDATE OBSERVED, NOT APPLIED: "ECOTRAVEL, LLC" (89) /
+    "ECOTRAVEL LLC" (59) / "ECOTRAVEL" (11) = 159 filings, so the strong_signal
+    promotion anticipated at creation is now evidenced in real FEC data. Left
+    for a separate calibration pass (docs/CALIBRATION_PLAYBOOK.md); it would
+    move no published total — CONFIRMED and PROBABLE are both counted — only
+    the confidence tier.
+
+    1 record deliberately NOT attributed: it collided with an existing
+    kendrick-ken transaction_id and the §1.3 guard (PR #126) refused it rather
+    than clobbering. ~$1,000 of documented recall loss in preference to silent
+    corruption of another owner; recoverable when the composite-primary-key
+    migration lands.
+  by: "automated pipeline (ingest --from-raw, behind the PR #126 collision guard)"
+  references:
+  - "data/snapshots/2026-07-20T01-31-45Z__4c14c474.db (pre-ingest)"
+
+audit:
+  created: 2026-07-19
+  last_ingestion: '2026-07-19'
+  last_signal_review:

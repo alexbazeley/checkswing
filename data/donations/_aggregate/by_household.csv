@@ -14,7 +14,7 @@ crane-jim,crane-jim,owner,CONFIRMED,35,275000.0
 crane-jim,crane-jim,owner,PROBABLE,2,6000.0
 davis-ray,davis-ray,owner,CONFIRMED,71,1094000.0
 davis-ray,davis-ray,owner,PROBABLE,9,536.0
-dewitt-bill,dewitt-bill,owner,CONFIRMED,230,1102986.5
+dewitt-bill,dewitt-bill,owner,CONFIRMED,231,1107986.5
 dewitt-bill,dewitt-bill,owner,PROBABLE,6,9300.0
 dolan-paul,dolan-paul,owner,CONFIRMED,68,169356.0
 feliciano-jose,feliciano-jose,owner,CONFIRMED,19,1098400.0
@@ -25,7 +25,7 @@ henry-john,henry-john,owner,PROBABLE,3,16250.0
 ilitch-chris,ilitch-chris,owner,CONFIRMED,12,44900.0
 johnson-greg,johnson-greg,owner,CONFIRMED,103,469450.0
 johnson-greg,johnson-greg,owner,PROBABLE,3,15100.0
-kendrick-ken,kendrick-ken,owner,CONFIRMED,640,3886600.99
+kendrick-ken,kendrick-ken,owner,CONFIRMED,641,3889400.99
 kendrick-ken,kendrick-ken,owner,PROBABLE,68,653560.0
 lerner-mark,lerner-mark,owner,CONFIRMED,68,74737.5
 lerner-mark,lerner-mark,owner,PROBABLE,10,9437.5
@@ -44,6 +44,10 @@ pohlad-tom,pohlad-tom,owner,CONFIRMED,108,435709.89
 pohlad-tom,pohlad-tom,owner,PROBABLE,1,500.0
 reinsdorf-jerry,reinsdorf-jerry,owner,CONFIRMED,418,2570095.0
 reinsdorf-jerry,reinsdorf-jerry,owner,PROBABLE,2,3000.0
+ricketts-laura,ricketts-laura,owner,CONFIRMED,299,3207000.02
+ricketts-laura,ricketts-laura,owner,PROBABLE,504,4748474.44
+ricketts-todd,ricketts-todd,owner,CONFIRMED,23,137300.0
+ricketts-todd,ricketts-todd,owner,PROBABLE,258,1759484.01
 ricketts-tom,ricketts-tom,owner,CONFIRMED,59,1459975.0
 ricketts-tom,ricketts-tom,owner,PROBABLE,1,250.0
 rubenstein-david,rubenstein-david,owner,CONFIRMED,2,11000.0
