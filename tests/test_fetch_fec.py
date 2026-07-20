@@ -373,3 +373,97 @@ class TestPermanent4xxFailFast:
             out = client._request(SCHEDULE_A, {"contributor_name": "x"})
             assert out == {"results": []}
             assert len(rsps.calls) == 2            # retried past the 500
+
+
+class TestDedupeKeyPrefersSubId:
+    """§1.3, one layer earlier than the donations identity.
+
+    `transaction_id` is filer-assigned and unique only WITHIN a filing, so
+    committees reuse it. Keying dedup on it collapses genuinely distinct
+    contributions and silently discards one BEFORE the classifier or the
+    database ever sees it — which no downstream guard can catch, because the
+    record never reaches insert_donation.
+
+    Found live 2026-07-20: Ken Kendrick's 2018 $2,700 to Antony Ghee for
+    Congress was discarded because his wife Randy Kendrick's 2020 $56,000 to a
+    Cruz victory fund carried the same filer id `SA11AI.4306`. 132 distinct
+    contributions were being discarded across 24 owners.
+
+    This could only be fixed once the DB could store the result — schema v12,
+    which keys donations on (record_uid, entity_slug).
+    """
+
+    def test_sub_id_is_preferred_over_transaction_id(self):
+        r = {"transaction_id": "SA11AI.4306", "sub_id": "4052520181569527424"}
+        assert fetch_fec._dedupe_key(r) == "4052520181569527424"
+
+    def test_falls_back_to_transaction_id_when_no_sub_id(self):
+        assert fetch_fec._dedupe_key({"transaction_id": "SA11AI.4306"}) == "SA11AI.4306"
+        assert fetch_fec._dedupe_key({"transaction_id": "X", "sub_id": None}) == "X"
+
+    def test_returns_none_when_neither_id_present(self):
+        assert fetch_fec._dedupe_key({}) is None
+        assert fetch_fec._dedupe_key({"transaction_id": None, "sub_id": None}) is None
+
+    def test_agrees_with_db_record_uid_for(self):
+        """The two must stay in lockstep — they are the same decision made at
+        two layers. A divergence would silently drop or duplicate rows."""
+        from scripts import db as _db
+        for rec in (
+            {"transaction_id": "T", "sub_id": "S"},
+            {"transaction_id": "T", "sub_id": None},
+            {"transaction_id": "T", "sub_id": "  "},
+        ):
+            assert fetch_fec._dedupe_key(rec) == _db.record_uid_for(
+                rec.get("sub_id"), rec["transaction_id"]
+            )
+
+    def test_shared_transaction_id_survives_as_two_records(self, tmp_path, monkeypatch):
+        """The regression itself: two distinct contributions sharing one
+        filer-assigned transaction_id must BOTH survive the load."""
+        raw = tmp_path / "kendrick-ken"
+        raw.mkdir()
+        payload = {
+            "_meta": {"name_variant": "Kendrick"},
+            "response": {
+                "results": [
+                    {
+                        "transaction_id": "SA11AI.4306",
+                        "sub_id": "4052520181569527424",
+                        "contributor_name": "KENDRICK, EARL G JR.",
+                        "contribution_receipt_amount": 2700.0,
+                    },
+                    {
+                        "transaction_id": "SA11AI.4306",   # same filer id …
+                        "sub_id": "4102820201887125905",   # … different FEC row
+                        "contributor_name": "KENDRICK, RANDY",
+                        "contribution_receipt_amount": 56000.0,
+                    },
+                ]
+            },
+        }
+        (raw / "2026-01-01T00-00-00Z__schedule_a.json").write_text(json.dumps(payload))
+        monkeypatch.setattr(fetch_fec, "relpath", lambda p: str(p))
+
+        records, _paths = fetch_fec.load_raw_payloads("kendrick-ken", raw_dir=raw)
+
+        assert len(records) == 2, "a shared filer id must not collapse two contributions"
+        assert {r["sub_id"] for r in records} == {
+            "4052520181569527424",
+            "4102820201887125905",
+        }
+
+    def test_same_sub_id_across_files_still_dedupes(self, tmp_path, monkeypatch):
+        """The same FEC row surfacing in two raw files (overlapping pages, or two
+        name-variant searches) must still collapse to one record."""
+        raw = tmp_path / "owner"
+        raw.mkdir()
+        rec = {"transaction_id": "T1", "sub_id": "999", "contributor_name": "SMITH, JOHN"}
+        for i, name in enumerate(("a", "b")):
+            (raw / f"2026-01-0{i+1}T00-00-00Z__schedule_a.json").write_text(
+                json.dumps({"_meta": {"name_variant": name}, "response": {"results": [rec]}})
+            )
+        monkeypatch.setattr(fetch_fec, "relpath", lambda p: str(p))
+        records, paths = fetch_fec.load_raw_payloads("owner", raw_dir=raw)
+        assert len(paths) == 2
+        assert len(records) == 1

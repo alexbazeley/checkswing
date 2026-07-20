@@ -433,21 +433,70 @@ class TestSubIdCollision:
     """v9 (§1.3): sub_id distinguishes a genuine restatement from a
     cross-committee transaction_id collision."""
 
-    def test_same_txn_different_subid_is_collision_not_supersede(self, db_path):
-        # Two DIFFERENT contributions that happen to share a filer-assigned
-        # transaction_id but carry different globally-unique sub_ids.
+    def test_same_txn_different_subid_now_stores_BOTH(self, db_path):
+        """v12: two real contributions sharing a filer id are BOTH kept.
+
+        This inverts the v9/v11 expectation, which was 'collision' — a loud
+        refusal that protected the stored row but still lost the incoming one.
+        Refusing was the best available answer while the PK was
+        (transaction_id, entity_slug); it could not represent two rows sharing
+        an id within one owner. v12 keys on record_uid (= sub_id when present),
+        so both are simply stored, which is what FEC actually published.
+
+        Observed live 2026-07-20: dewitt-bill SA18.1160868 was $300 to John
+        McCain 2008 AND $2,300 to the McCain-Palin Compliance Fund on the same
+        day; reinsdorf-jerry SA17A.939857 likewise.
+        """
         with db.connect(db_path) as conn:
             assert db.insert_donation(conn, _row(sub_id="S1", recipient_committee_id="C1"))[0] == "inserted"
         with db.connect(db_path) as conn:
-            action, reason = db.insert_donation(
+            action, _reason = db.insert_donation(
                 conn, _row(sub_id="S2", recipient_committee_id="C2", amount=999.0))
-            assert action == "collision"
-            assert "S1" in reason and "S2" in reason
-        # Nothing was superseded or overwritten — the original stands alone.
-        assert _count(db_path) == 1
+            assert action == "inserted"
+        # BOTH survive, under one transaction_id but distinct record_uids.
+        assert _count(db_path) == 2
         with db.connect(db_path) as conn:
-            r = conn.execute("SELECT sub_id, amount FROM donations").fetchone()
-            assert r["sub_id"] == "S1" and r["amount"] == 1000.0
+            rows = conn.execute(
+                "SELECT sub_id, record_uid, amount FROM donations ORDER BY sub_id"
+            ).fetchall()
+            assert [r["sub_id"] for r in rows] == ["S1", "S2"]
+            assert [r["record_uid"] for r in rows] == ["S1", "S2"]
+            assert [r["amount"] for r in rows] == [1000.0, 999.0]
+            # Neither was superseded — nothing was archived or overwritten.
+            assert all(r["record_uid"] is not None for r in rows)
+
+    def test_record_uid_falls_back_to_txn_when_no_sub_id(self, db_path):
+        with db.connect(db_path) as conn:
+            db.insert_donation(conn, _row(sub_id=None))
+            r = conn.execute("SELECT record_uid, transaction_id FROM donations").fetchone()
+            assert r["record_uid"] == r["transaction_id"]
+
+    def test_legacy_row_is_adopted_when_sub_id_arrives(self, db_path):
+        """The v12 migration bridge. 58% of the archive predates sub_id capture,
+        so those rows have record_uid = transaction_id. The same contribution
+        re-ingested WITH a sub_id must UPDATE that row, not duplicate it."""
+        with db.connect(db_path) as conn:
+            db.insert_donation(conn, _row(sub_id=None, amount=1000.0))
+        with db.connect(db_path) as conn:
+            action, _ = db.insert_donation(conn, _row(sub_id="S9", amount=1000.0))
+            assert action == "unchanged"          # adopted, same substance
+        assert _count(db_path) == 1               # NOT duplicated
+        with db.connect(db_path) as conn:
+            r = conn.execute("SELECT sub_id, record_uid FROM donations").fetchone()
+            assert r["sub_id"] == "S9"            # upgraded in place
+            assert r["record_uid"] == "S9"
+
+    def test_legacy_bridge_does_not_adopt_a_different_contribution(self, db_path):
+        """The bridge must not swallow a genuine sibling. A row sharing the
+        transaction_id but differing in substance is a distinct contribution and
+        must insert alongside, not overwrite the legacy row."""
+        with db.connect(db_path) as conn:
+            db.insert_donation(conn, _row(sub_id=None, amount=1000.0, recipient_committee_id="C1"))
+        with db.connect(db_path) as conn:
+            action, _ = db.insert_donation(
+                conn, _row(sub_id="S9", amount=777.0, recipient_committee_id="C2"))
+            assert action == "inserted"
+        assert _count(db_path) == 2
 
     def test_same_txn_same_subid_still_supersedes_on_restatement(self, db_path):
         with db.connect(db_path) as conn:
@@ -872,3 +921,44 @@ class TestDonationsPkMigration:
         )
         assert conn.execute(
             "SELECT COUNT(*) c FROM donations WHERE transaction_id='T1'").fetchone()["c"] == 2
+
+
+class TestRecordUidIntegrityCheck:
+    """v12: `cli validate` asserts the identity guarantee that the DDL cannot
+    (record_uid is nullable so raw-SQL fixtures need not carry it)."""
+
+    def test_clean_db_reports_no_errors(self, db_path):
+        with db.connect(db_path) as conn:
+            db.insert_donation(conn, _row(sub_id="S1"))
+        assert db.check_record_uid_integrity(db_path) == []
+
+    def test_missing_record_uid_is_reported(self, db_path):
+        with db.connect(db_path) as conn:
+            db.insert_donation(conn, _row(sub_id="S1"))
+            conn.execute("UPDATE donations SET record_uid = NULL")
+        errs = db.check_record_uid_integrity(db_path)
+        assert errs and "no record_uid" in errs[0]
+
+    def test_uid_disagreeing_with_its_own_ids_is_reported(self, db_path):
+        """Catches a writer that bypassed db.record_uid_for()."""
+        with db.connect(db_path) as conn:
+            db.insert_donation(conn, _row(sub_id="S1"))
+            conn.execute("UPDATE donations SET record_uid = 'something-else'")
+        errs = db.check_record_uid_integrity(db_path)
+        assert any("bypassed" in e for e in errs)
+
+    def test_lfs_pointer_is_not_an_integrity_failure(self, tmp_path):
+        """In CI master.db is checked out as a Git LFS pointer, not a database.
+        sqlite3.connect() is lazy, so this surfaces on the first query as
+        'file is not a database'. That is an absent DB, not a failure — without
+        this branch `cli validate` crashed in CI while passing locally."""
+        pointer = tmp_path / "master.db"
+        pointer.write_text(
+            "version https://git-lfs.github.com/spec/v1\n"
+            "oid sha256:0000000000000000000000000000000000000000000000000000000000000000\n"
+            "size 123\n"
+        )
+        assert db.check_record_uid_integrity(pointer) == []
+
+    def test_absent_db_is_not_an_integrity_failure(self, tmp_path):
+        assert db.check_record_uid_integrity(tmp_path / "nope.db") == []

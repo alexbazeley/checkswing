@@ -535,11 +535,77 @@ in ascending order of correctness:
 Recommend **3**, with **2** landing first as an immediate safety net. Both are
 out of scope for this PR.
 
+> **✅ RESOLVED — schema v12 shipped 2026-07-20.** Options 2 and 3 landed
+> together; see §12.
+
 **The pattern worth naming: this is the same defect at three layers** — the
 donations PK (§1.3, fixed v11), the load-time dedup key (here, blocked), and the
 guard's differ-on-all-three condition (here, hole identified). Each was invisible
 until the layer above it was fixed. When a root cause is "an identifier that isn't
 unique," check *every* place that identifier is used as a key.
+
+---
+
+## 12. 2026-07-20 — schema v12: `record_uid`, and the end of the collision class
+
+**Closes §11.2.** The donations identity is now `record_uid = COALESCE(sub_id,
+transaction_id)`, PK `(record_uid, entity_slug)`. `transaction_id` stays as the
+citation field and the join key for `review_queue` / `review_resolutions` /
+`manual_attributions`, and gains `idx_donations_txn` since it is no longer the PK.
+
+**Why this and not more PK columns:** `sub_id` is FEC's own globally-unique row
+id. It was already stored (v9) and already known to be the authoritative
+identity — it simply was not used as one. v11 added `entity_slug` to the PK, which
+fixed *cross-owner* id reuse; it could not fix *within-owner* reuse because the
+filer id remained the key. v12 uses the field that actually identifies the record.
+
+**Three changes landed together, in dependency order:**
+
+1. **The migration** (`_migrate_donations_record_uid`). Backfills `record_uid`,
+   refuses to rebuild if the new key is not unique, rebuilds via SQLite's own
+   stored CREATE, verifies the row count, and recreates all indexes. Verified on
+   the live DB: **6,963 rows in, 6,963 out, totals byte-identical**
+   ($68,626,724.94 before and after), zero null uids.
+2. **The guard tightening.** `insert_donation` now declares a collision when
+   recipient committee **AND** amount differ — previously it required committee
+   AND date AND amount to *all* differ, so the real same-day pairs slipped
+   through to the supersede path and fabricated a restatement. Under v12 this is
+   mostly a backstop: rows with distinct `sub_id`s no longer share an identity.
+3. **The dedup-key fix**, unblocked at last. `fetch_fec._dedupe_key` prefers
+   `sub_id`, and a lockstep test asserts it agrees with `db.record_uid_for` —
+   a divergence between those two silently drops or duplicates rows.
+
+**A legacy bridge** handles the 58% of the archive written before `sub_id` was
+captured: those rows have `record_uid = transaction_id`, so the same contribution
+re-arriving *with* a `sub_id` would look brand-new. `insert_donation` adopts such
+a row instead — but only when committee, date and amount all match and it carries
+no `sub_id` of its own, so a genuine sibling still inserts cleanly. Both cases
+are tested.
+
+**Result of re-ingesting the 24 affected owners: +74 rows, +$428,587.50.**
+Archive **$68,626,724.94 → $69,055,312.44**. No owner lost a row; **zero**
+fabricated restatements; **45 within-owner shared transaction_ids are now stored,
+which was previously unrepresentable**. Largest recoveries: `johnson-charles`
++46/$240,050, `pohlad-tom` +$67,800, `fisher-john` +$32,400, `ricketts-laura`
++$28,000.
+
+Per-record spot-checks held: the one genuinely-new `middleton-john` row is
+"MIDDLETON, JOHN S. MR. SR." / Bradford Holdings — the **father**, to the
+McCain-Palin Compliance Fund, i.e. exactly the pattern v12 exists to recover. The
+son's 14 EXCLUDED overrides are intact and **zero** John P. rows attributed.
+
+**Enforcement.** `record_uid` is nullable in DDL only so raw-SQL test fixtures
+need not carry it (SQLite permits NULL in a non-INTEGER PK). The real guarantee
+is asserted by `db.check_record_uid_integrity()`, wired into `cli validate`: every
+live row has a uid, pairs are unique, and no row's uid disagrees with its own
+`sub_id`/`transaction_id` — which would mean a writer bypassed the helper.
+
+**The generalizable lesson, now three-for-three:** when a root cause is "an
+identifier that isn't unique," fix it *at every layer that uses it as a key*, and
+fix them bottom-up — the storage layer first, because the layers above cannot be
+corrected until the bottom one can represent the result. Each defect here was
+invisible until the one below it was fixed, and the attempted top-down fix
+(§11.2) actively corrupted data.
 
 ---
 

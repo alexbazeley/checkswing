@@ -19,13 +19,19 @@ from .paths import MASTER_DB, OWNERS_DIR, SNAPSHOTS_DIR, ensure_data_dirs, relpa
 
 
 SCHEMA_SQL = """
--- v11: PK is (transaction_id, entity_slug), not transaction_id alone. FEC
--- transaction ids are FILER-assigned and unique only within a filing, so two
--- owners' contributions can legitimately share one. Under the old single-column
--- PK the second one collided with the first, and before the §1.3 guard it was
--- recorded as a fabricated "FEC restatement" that silently removed the first
--- owner's donation from every total. review_queue got this same composite PK in
--- v9 for exactly this reason.
+-- v12: PK is (record_uid, entity_slug), where record_uid = COALESCE(sub_id,
+-- transaction_id). FEC transaction ids are FILER-assigned and unique only within
+-- a single filing, so they cannot identify a row at all:
+--   * ACROSS owners — two owners' contributions can share one id. Fixed in v11
+--     by adding entity_slug to the PK. Before that, and before the §1.3 guard,
+--     the second was recorded as a fabricated "FEC restatement" that silently
+--     removed the first owner's donation from every total.
+--   * WITHIN one owner — the SAME owner can have two real contributions sharing
+--     an id (observed: same-day pairs to a campaign and its compliance fund).
+--     v11 could not represent this; v12 keys on FEC's globally-unique `sub_id`,
+--     falling back to transaction_id only for older records that carry none.
+-- transaction_id remains as the citation field and the join key used by
+-- review_queue / review_resolutions / manual_attributions; it is indexed.
 CREATE TABLE IF NOT EXISTS donations (
     transaction_id TEXT NOT NULL,
     entity_slug TEXT NOT NULL,
@@ -55,7 +61,15 @@ CREATE TABLE IF NOT EXISTS donations (
     ingested_at TEXT NOT NULL,
     superseded_by TEXT,
     superseded_reason TEXT,
-    PRIMARY KEY (transaction_id, entity_slug)
+    sub_id TEXT,
+    -- Deliberately not NOT NULL. SQLite permits NULL in a non-INTEGER PRIMARY
+    -- KEY column, and test fixtures that insert donation rows by raw SQL do not
+    -- care about identity. Every production write goes through
+    -- _insert_donation_row, which always populates it, and `cli validate`
+    -- asserts that no live row is missing one — so the guarantee is enforced
+    -- where it matters without forcing every fixture to carry the column.
+    record_uid TEXT,
+    PRIMARY KEY (record_uid, entity_slug)
 );
 
 CREATE INDEX IF NOT EXISTS idx_donations_entity_date
@@ -339,9 +353,26 @@ DONATION_EXTRA_COLS: list[tuple[str, str]] = [
 # (GOVERNANCE.md §1.10) and stays queryable.
 DONATION_DERIVED_COLS: list[tuple[str, str]] = [
     ("counted", "INTEGER NOT NULL DEFAULT 1"),
+    # v12: the row's identity. COALESCE(sub_id, transaction_id) — see
+    # _migrate_donations_record_uid for why transaction_id alone cannot be it.
+    ("record_uid", "TEXT"),
 ]
 
-SCHEMA_VERSION = 11
+SCHEMA_VERSION = 12
+
+
+def record_uid_for(sub_id, transaction_id) -> str:
+    """The donations identity key: FEC's globally-unique `sub_id` when present,
+    else the filer-assigned `transaction_id`.
+
+    `transaction_id` is unique only WITHIN one filing — different committees
+    reuse it — so it cannot identify a row. `sub_id` is FEC's own row id and is
+    globally unique, but it is absent on older (largely pre-2006) records, hence
+    the fallback. Keep this in lockstep with `fetch_fec._dedupe_key`, which
+    picks the same field in the same order one layer earlier in the pipeline.
+    """
+    s = (str(sub_id).strip() if sub_id is not None else "")
+    return s or str(transaction_id)
 
 
 def _utc_now_iso() -> str:
@@ -421,7 +452,13 @@ def _migrate_donations_pk(conn: sqlite3.Connection) -> None:
     """
     pk_cols = [r["name"] for r in conn.execute("PRAGMA table_info(donations)") if r["pk"]]
     if set(pk_cols) == {"transaction_id", "entity_slug"}:
-        return  # already migrated (or a fresh DB built from SCHEMA_SQL)
+        return  # already migrated
+    if set(pk_cols) == {"record_uid", "entity_slug"}:
+        # Already at v12 (a fresh DB built from SCHEMA_SQL, or one that has run
+        # _migrate_donations_record_uid). v12 supersedes this migration; without
+        # this branch the rewrite below would not find the v10 PK clause and
+        # would raise.
+        return
 
     cols = [r["name"] for r in conn.execute("PRAGMA table_info(donations)")]
     col_list = ", ".join(f'"{c}"' for c in cols)
@@ -475,6 +512,170 @@ def _migrate_donations_pk(conn: sqlite3.Connection) -> None:
     )
 
 
+def _migrate_donations_record_uid(conn: sqlite3.Connection) -> None:
+    """v12: rebuild `donations` with PK (record_uid, entity_slug).
+
+    WHY. v11 made the PK (transaction_id, entity_slug), which fixed *cross-owner*
+    reuse of a filer-assigned id. It left *within-owner* reuse unrepresentable —
+    and that case is real. Two examples found live on 2026-07-20, both same-day
+    pairs to related committees:
+
+        dewitt-bill      SA18.1160868    $300 → John McCain 2008
+                                       $2,300 → McCain-Palin Compliance Fund
+        reinsdorf-jerry  SA17A.939857  −$2,300 → John McCain 2008
+                                       $2,300 → McCain-Palin Compliance Fund
+
+    Each pair is two genuine contributions distinguished only by `sub_id`. Under
+    the v11 PK the second one superseded the first with a fabricated
+    "FEC restatement: …" — the §1.3 corruption class. Keying on `record_uid`
+    (= sub_id when present) lets both exist, which is what FEC actually published.
+
+    `transaction_id` is KEPT as a plain column: it is the citation people quote
+    and what `review_queue` / `review_resolutions` / `manual_attributions` key on.
+    It gains an index here because it is no longer the PK.
+
+    Idempotent and data-preserving. Follows _migrate_donations_pk's two hard-won
+    rules: read the column list from PRAGMA and reuse SQLite's own stored CREATE
+    (never a literal — `donations` gains columns via ALTER in init()), and
+    recreate the indexes afterwards, because init() runs SCHEMA_SQL *before* this
+    migration so the DROP TABLE takes them with it.
+    """
+    pk_cols = [r["name"] for r in conn.execute("PRAGMA table_info(donations)") if r["pk"]]
+    if set(pk_cols) == {"record_uid", "entity_slug"}:
+        return  # already migrated
+
+    cols = [r["name"] for r in conn.execute("PRAGMA table_info(donations)")]
+    if "record_uid" not in cols:
+        conn.execute("ALTER TABLE donations ADD COLUMN record_uid TEXT")
+        cols.append("record_uid")
+
+    # Backfill before the rebuild so the new NOT NULL PK column is fully populated.
+    conn.execute(
+        "UPDATE donations SET record_uid = COALESCE(NULLIF(TRIM(sub_id), ''), transaction_id) "
+        "WHERE record_uid IS NULL OR TRIM(record_uid) = ''"
+    )
+    dupes = conn.execute(
+        "SELECT COUNT(*) AS n FROM (SELECT record_uid, entity_slug FROM donations "
+        "GROUP BY record_uid, entity_slug HAVING COUNT(*) > 1)"
+    ).fetchone()["n"]
+    if dupes:
+        raise RuntimeError(
+            f"donations record_uid migration: {dupes} (record_uid, entity_slug) pairs "
+            "are not unique — refusing to rebuild, since the new PK would drop rows. "
+            "Inspect before retrying."
+        )
+
+    col_list = ", ".join(f'"{c}"' for c in cols)
+    create_sql = conn.execute(
+        "SELECT sql FROM sqlite_master WHERE type='table' AND name='donations'"
+    ).fetchone()["sql"]
+
+    rebuilt = create_sql.replace(
+        "PRIMARY KEY (transaction_id, entity_slug)", "PRIMARY KEY (record_uid, entity_slug)", 1
+    )
+    if rebuilt == create_sql:
+        raise RuntimeError(
+            "donations record_uid migration: could not find the v11 composite PK clause "
+            "in the stored CREATE statement — refusing to rebuild blindly."
+        )
+    rebuilt = rebuilt.replace("CREATE TABLE donations", "CREATE TABLE donations_v12", 1)
+    rebuilt = rebuilt.replace('"donations"', "donations_v12", 1)
+
+    conn.execute(rebuilt)
+    # INSERT, not INSERT OR IGNORE: a silently dropped row here is exactly the
+    # data loss this migration exists to prevent.
+    conn.execute(f"INSERT INTO donations_v12 ({col_list}) SELECT {col_list} FROM donations")
+    moved = conn.execute("SELECT COUNT(*) AS n FROM donations_v12").fetchone()["n"]
+    original = conn.execute("SELECT COUNT(*) AS n FROM donations").fetchone()["n"]
+    if moved != original:
+        raise RuntimeError(
+            f"donations record_uid migration: copied {moved} of {original} rows — aborting."
+        )
+    conn.execute("DROP TABLE donations")
+    conn.execute("ALTER TABLE donations_v12 RENAME TO donations")
+    # DROP TABLE took the indexes; init() already ran SCHEMA_SQL before this.
+    conn.executescript(
+        """
+        CREATE INDEX IF NOT EXISTS idx_donations_entity_date
+            ON donations(entity_slug, date);
+        CREATE INDEX IF NOT EXISTS idx_donations_status
+            ON donations(status);
+        CREATE INDEX IF NOT EXISTS idx_donations_candidate
+            ON donations(recipient_candidate_id, date);
+        CREATE INDEX IF NOT EXISTS idx_donations_cycle_entity
+            ON donations(election_cycle, entity_slug);
+        -- v12: transaction_id is no longer the PK but is still the citation key
+        -- and the join key for review_queue / manual_attributions.
+        CREATE INDEX IF NOT EXISTS idx_donations_txn
+            ON donations(transaction_id, entity_slug);
+        """
+    )
+
+
+def check_record_uid_integrity(db_path: Path = MASTER_DB) -> list[str]:
+    """v12 integrity: every donations row must carry a record_uid, and
+    (record_uid, entity_slug) must be unique.
+
+    The column is nullable in SCHEMA_SQL so that test fixtures inserting rows by
+    raw SQL need not carry it (SQLite permits NULL in a non-INTEGER PK). That
+    convenience must not leak into real data, so the guarantee is asserted here
+    instead and wired into `cli validate`. Returns a list of error strings;
+    empty means clean. A missing DB is not an error — nothing to check.
+    """
+    errors: list[str] = []
+    if not Path(db_path).exists():
+        return errors
+    conn = sqlite3.connect(db_path)
+    conn.row_factory = sqlite3.Row
+    try:
+        try:
+            cols = {r["name"] for r in conn.execute("PRAGMA table_info(donations)")}
+        except sqlite3.DatabaseError:
+            # In CI the checked-out master.db is a **Git LFS pointer**, not a
+            # database (the workflow does not smudge it — the test job only needs
+            # the repo). sqlite3.connect() is lazy, so the failure surfaces on the
+            # first query as "file is not a database". That is not an integrity
+            # failure, it is an absent database: report nothing, exactly as the
+            # not-exists branch above does. Without this, `cli validate` crashes
+            # in CI while passing locally.
+            return errors
+        if "record_uid" not in cols:
+            return ["donations.record_uid is missing — run `cli init` to apply the v12 migration"]
+        missing = conn.execute(
+            "SELECT COUNT(*) AS n FROM donations "
+            "WHERE record_uid IS NULL OR TRIM(record_uid) = ''"
+        ).fetchone()["n"]
+        if missing:
+            errors.append(
+                f"{missing} donations row(s) have no record_uid — every row needs an "
+                "identity (COALESCE(sub_id, transaction_id)); re-run `cli init`"
+            )
+        dupes = conn.execute(
+            "SELECT COUNT(*) AS n FROM (SELECT record_uid, entity_slug FROM donations "
+            "WHERE record_uid IS NOT NULL GROUP BY record_uid, entity_slug HAVING COUNT(*) > 1)"
+        ).fetchone()["n"]
+        if dupes:
+            errors.append(
+                f"{dupes} (record_uid, entity_slug) pair(s) are duplicated — the v12 "
+                "identity is not unique, which means two rows are claiming one FEC record"
+            )
+        # A stored uid that disagrees with its own sub_id/transaction_id means a
+        # writer bypassed record_uid_for(); catch the drift rather than the symptom.
+        drift = conn.execute(
+            "SELECT COUNT(*) AS n FROM donations WHERE record_uid IS NOT NULL "
+            "AND superseded_by IS NULL "
+            "AND record_uid <> COALESCE(NULLIF(TRIM(sub_id), ''), transaction_id)"
+        ).fetchone()["n"]
+        if drift:
+            errors.append(
+                f"{drift} live donations row(s) have a record_uid that is neither their "
+                "sub_id nor their transaction_id — a writer bypassed db.record_uid_for()"
+            )
+    finally:
+        conn.close()
+    return errors
+
+
 def init(db_path: Path = MASTER_DB) -> None:
     """Create schema idempotently. Records a new schema_version row whenever
     SCHEMA_VERSION is bumped beyond the DB's current MAX(version), so the
@@ -497,6 +698,10 @@ def init(db_path: Path = MASTER_DB) -> None:
         _migrate_review_queue_pk(conn)
         # v11: same migration for donations — see _migrate_donations_pk.
         _migrate_donations_pk(conn)
+        # v12: re-key donations onto record_uid (= sub_id when present) so two
+        # contributions sharing one filer-assigned transaction_id can coexist.
+        # Must run AFTER the v11 rebuild, whose PK clause it rewrites.
+        _migrate_donations_record_uid(conn)
         existing = conn.execute("SELECT MAX(version) AS v FROM schema_version").fetchone()
         current = existing["v"] if existing else None
         if current is None or current < SCHEMA_VERSION:
@@ -659,7 +864,7 @@ def _insert_donation_row(conn: sqlite3.Connection, full_row: dict) -> None:
             filing_id, raw_payload_path, ingested_at,
             image_number, pdf_url, filing_form, line_number,
             receipt_type_full, recipient_committee_type,
-            memo_code, memo_text, is_individual, sub_id
+            memo_code, memo_text, is_individual, sub_id, record_uid
         ) VALUES (
             :transaction_id, :entity_slug, :entity_kind, :parent_owner_slug,
             :status, :status_reason, :signals_matched,
@@ -672,10 +877,11 @@ def _insert_donation_row(conn: sqlite3.Connection, full_row: dict) -> None:
             :filing_id, :raw_payload_path, :ingested_at,
             :image_number, :pdf_url, :filing_form, :line_number,
             :receipt_type_full, :recipient_committee_type,
-            :memo_code, :memo_text, :is_individual, :sub_id
+            :memo_code, :memo_text, :is_individual, :sub_id, :record_uid
         )
         """,
-        full_row,
+        {**full_row, "record_uid": full_row.get("record_uid")
+         or record_uid_for(full_row.get("sub_id"), full_row["transaction_id"])},
     )
 
 
@@ -727,15 +933,53 @@ def insert_donation(conn: sqlite3.Connection, row: dict) -> tuple[str, str | Non
     payload = {col: row.get(col) for col, _ in DONATION_EXTRA_COLS}
     full_row = {**row, **payload}
     txn = full_row["transaction_id"]
+    uid = record_uid_for(full_row.get("sub_id"), txn)
+    full_row["record_uid"] = uid
+    slug = full_row["entity_slug"]
 
-    # v11: scoped by entity_slug, matching the composite PK. Before v11 this
-    # lookup was transaction_id-only, so an incoming row whose id happened to be
-    # reused by ANOTHER owner's filing found that owner's row and treated it as a
-    # prior version of itself — the §1.3 collision class.
+    # v12: identity is (record_uid, entity_slug), where record_uid is FEC's
+    # globally-unique sub_id when present. v11 scoped the lookup by entity_slug,
+    # which fixed CROSS-owner reuse of a filer id; keying on record_uid fixes
+    # WITHIN-owner reuse, where two real same-day contributions share one
+    # transaction_id and the second used to supersede the first with a fabricated
+    # restatement.
     existing = conn.execute(
-        "SELECT * FROM donations WHERE transaction_id = ? AND entity_slug = ?",
-        (txn, full_row["entity_slug"]),
+        "SELECT * FROM donations WHERE record_uid = ? AND entity_slug = ?",
+        (uid, slug),
     ).fetchone()
+
+    if existing is None and uid != txn:
+        # Legacy bridge. Rows written before sub_id was captured (58% of the
+        # archive at v12) have record_uid = transaction_id. The same contribution
+        # arriving now WITH a sub_id would look brand-new and duplicate. Adopt
+        # such a row instead — but only when it is unambiguously the same
+        # contribution (same committee, date and amount) and carries no sub_id of
+        # its own, so a genuine within-owner id collision still falls through to
+        # a clean insert.
+        legacy = conn.execute(
+            """
+            SELECT * FROM donations
+             WHERE transaction_id = ? AND entity_slug = ?
+               AND (sub_id IS NULL OR TRIM(sub_id) = '')
+               AND record_uid = transaction_id
+               AND recipient_committee_id IS ?
+               AND date IS ?
+               AND amount IS ?
+            """,
+            (txn, slug, full_row.get("recipient_committee_id"),
+             full_row.get("date"), full_row.get("amount")),
+        ).fetchall()
+        if len(legacy) == 1:
+            conn.execute(
+                "UPDATE donations SET record_uid = ?, sub_id = ? "
+                "WHERE record_uid = ? AND entity_slug = ?",
+                (uid, full_row.get("sub_id"), txn, slug),
+            )
+            existing = conn.execute(
+                "SELECT * FROM donations WHERE record_uid = ? AND entity_slug = ?",
+                (uid, slug),
+            ).fetchone()
+
     if existing is None:
         _insert_donation_row(conn, full_row)
         return ("inserted", None)
@@ -770,18 +1014,32 @@ def insert_donation(conn: sqlite3.Connection, row: dict) -> tuple[str, str | Non
     #     simultaneously change who received it, when, and how much. Requiring all
     #     three to diverge keeps ordinary restatements (amount fix, re-image,
     #     amended filing) on the supersede path.
-    triple = [
+    # v12 tightening. This test previously required committee AND date AND amount
+    # to ALL differ. That was too weak: the real within-owner collisions found on
+    # 2026-07-20 were SAME-DAY pairs (a campaign and its compliance fund), so the
+    # date matched, the guard stayed silent, and the supersede path fabricated a
+    # restatement. Requiring committee AND amount to differ — with date free —
+    # catches those while still leaving ordinary restatements alone: a genuine
+    # restatement corrects the amount OR re-designates the recipient, not both at
+    # once. (Re-images change filing_id/image_number only and never reach here.)
+    #
+    # Under v12 this guard is mostly a backstop: two contributions with distinct
+    # sub_ids now have distinct record_uids and simply insert alongside each
+    # other. It still fires for older rows where NEITHER side carries a sub_id,
+    # which is the only case that can still share an identity.
+    differing = [
         f
         for f in ("recipient_committee_id", "date", "amount")
         if not _donation_values_equal(existing_d.get(f), full_row.get(f))
     ]
-    if len(triple) == 3:
+    if "recipient_committee_id" in differing and "amount" in differing:
         return (
             "collision",
-            f"transaction_id {txn}: committee/date/amount all differ "
+            f"transaction_id {txn}: committee AND amount differ "
             f"({existing_d.get('recipient_committee_id')}/{existing_d.get('date')}/"
             f"{existing_d.get('amount')} vs {full_row.get('recipient_committee_id')}/"
-            f"{full_row.get('date')}/{full_row.get('amount')}) — distinct contributions",
+            f"{full_row.get('date')}/{full_row.get('amount')}) — distinct contributions, "
+            "not a restatement",
         )
 
     changed = [
@@ -795,13 +1053,19 @@ def insert_donation(conn: sqlite3.Connection, row: dict) -> tuple[str, str | Non
     # FEC restated this transaction — archive the old row, insert the new one.
     reason = f"FEC restatement: {', '.join(changed)}"
     archived_key = f"{txn}~superseded~{_utc_now_filename()}"
+    # v12: scope the archive UPDATE by record_uid (the PK), not transaction_id —
+    # the latter is no longer unique within an owner, so a transaction_id-scoped
+    # UPDATE could archive a *sibling* contribution that merely shares the id.
+    # record_uid is re-keyed alongside transaction_id so the archived row keeps a
+    # distinct identity and the canonical uid is freed for the restated payload.
     conn.execute(
         """
         UPDATE donations
-           SET transaction_id = ?, status = ?, superseded_by = ?, superseded_reason = ?
-         WHERE transaction_id = ? AND entity_slug = ?
+           SET transaction_id = ?, record_uid = ?, status = ?,
+               superseded_by = ?, superseded_reason = ?
+         WHERE record_uid = ? AND entity_slug = ?
         """,
-        (archived_key, "SUPERSEDED", txn, reason, txn, full_row["entity_slug"]),
+        (archived_key, archived_key, "SUPERSEDED", txn, reason, uid, slug),
     )
     _insert_donation_row(conn, full_row)
     return ("superseded", reason)
