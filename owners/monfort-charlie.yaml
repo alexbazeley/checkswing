@@ -1,0 +1,283 @@
+# Charles K. ("Charlie") Monfort — Colorado Rockies
+# Co-owner and General Partner; the FIRST Monfort into the ownership group
+# (1992, five years before brother Dick) and the franchise's Managing General
+# Partner / Chairman / CEO until he handed those roles to Dick in 2011. Added
+# under the ownership-group rule (CHARTER.md): the team's own April 2026
+# ownership-transaction announcement — issued jointly BY Dick and Charlie —
+# states he "will remain as owner and general partner", which satisfies the
+# stake prong and the governance prong independently of his relationship to Dick.
+#
+# CRITICAL — THIS FILE SITS INSIDE THE DENSEST NAME CLUSTER IN THE ARCHIVE.
+# Greeley/Eaton CO holds at least eleven same-surname filers, and unlike the
+# Ricketts case the usual firewalls DO NOT work here:
+#   - ZIP is NOT a discriminator. Charlie files from 80631/80632/80634/80615 —
+#     and 80631/80632/80615 are all promoted as strong_signals.zip_codes on
+#     monfort-dick. Dick's promotion is safe only because his name_variants are
+#     tight. THIS FILE MUST NEVER PROMOTE A GREELEY ZIP.
+#   - EMPLOYER is NOT a discriminator. Both brothers file "Colorado Rockies";
+#     so do Karen Monfort (Dick's wife, occupation OWNER) and Walker Monfort
+#     (Dick's son, occupation OWNER).
+#   - PARTY IS NOT A DISCRIMINATOR. The Ricketts audit technique — prove the
+#     sibling firewall by political asymmetry — does NOT transfer. Charlie is
+#     overwhelmingly Republican but has real Democratic giving (ActBlue $3,100
+#     and Dale Romans for Kentucky $3,000 across 2025-11-11 / 2026-02-04, plus
+#     Tim Wirth 1991, Ben Nelson 1996, Campbell Victory Fund 1998).
+# The FIRST NAME is the only reliable firewall: every variant below carries a
+# full "Charles" or "Charlie". No bare "Monfort", and NO first-initial-only
+# form — "C. Monfort" would collide with his own wife (Christine A. "Chris").
+#
+# Read OWNER_SCHEMA.md before editing. Read GOVERNANCE.md §1.7 before adding entities.
+
+slug: monfort-charlie
+name: Charles K. Monfort
+team: Colorado Rockies
+role: Co-owner / General Partner
+status: active
+tenure_start_date: 1992-01-01      # year-precision — bought into the group in 1992
+tenure_end_date:
+# Charlie IS the family's entry point — he bought in first and Dick joined five
+# years later (Westword) — so family tenure equals his own. The brothers' buyout
+# of Jerry McMorris for FULL control came later, on 2005-12-15 (DenverSports).
+family_tenure_start_date: 1992-01-01
+
+name_variants:
+- "Charles K Monfort"
+- "Charles K. Monfort"
+- "Charles Monfort"
+- "Charlie Monfort"
+- "Charlie K Monfort"
+- "Monfort, Charles"
+- "Monfort, Charles K"
+- "Monfort, Charles K."
+- "Monfort, Charlie"
+
+verifying_signals:
+  cities:
+    # Greeley is the family base and his documented residence. "eaton" and the
+    # clerk misspelling "greenley" are inherited from the monfort-dick audit —
+    # ZIP 80615 spans both Greeley and Eaton labels and FEC clerks fill either.
+  - "greeley"
+  - "eaton"
+  - "greenley"
+  - "denver"
+  states:
+  - "CO"
+  employers:
+    # NOTE: "Colorado Rockies" is verifying-only and is SHARED with Dick, Karen
+    # and Walker Monfort — it can never separate them. The name gate does that.
+  - "Colorado Rockies"
+  - "Colorado Rockies Baseball"
+  - "CO Rockies Baseball"
+  - "Monfort International Sales"    # he was president from 1988
+  - "Refrigerated Foods"             # ConAgra Refrigerated Foods International (1990–1997)
+  - "ConAgra"
+  - "Con Agra"
+  - "Monfort of Colorado"
+  - "Monfort Packing"
+  occupations:
+  - "general partner"
+  - "owner"
+  - "co-owner"
+  - "chairman"
+  - "ceo"
+  - "vice-chairman"
+  - "vice chairman"
+  - "executive"
+  - "businessman"
+
+strong_signals:
+  # DELIBERATELY EMPTY, and this is not the usual "pending calibration" note —
+  # it is a hard constraint of this family:
+  #   * NO ZIP may be promoted. 80631/80632/80615 are Dick's strong ZIPs and
+  #     Charlie files from all of them; 80634 is the deceased father Kenneth's.
+  #     A ZIP promotion here would cross-contaminate two tracked owners.
+  #   * NO employer is unique to Charlie. Unlike Dick — who has "West Lot LLC"
+  #     (McGregor Square, named to him by Westword and the Denver Gazette) —
+  #     research found NO personal vehicle for Charlie. "Refrigerated Foods
+  #     International" is the closest candidate but is a 1990s ConAgra title,
+  #     not a personal entity, and is not diagnostic.
+  # Leave both empty unless a genuinely unique string is documented.
+  employers: []
+  zip_codes: []
+
+negative_signals:
+  employers:
+    # Son Kenny Monfort's vehicles (Denver 80202, post-2011). He is a DIFFERENT
+    # first name so the name gate already excludes him; these are belt-and-braces
+    # because "Monfort Companies" contains the family surname and could be added
+    # to a verifying list by a future editor without noticing the overlap.
+  - "Monfort Companies"
+  - "Cactus Land"
+  - "Ciara Dawn"
+
+related_entities: []
+# Each Monfort is its OWN slug or is out — never a related_entity here.
+# Spouse Christine A. ("Chris") Benson Monfort has no documented Rockies
+# ownership or governance role, so she is out of scope under the
+# ownership-group rule. See the MRS. hazard in notes before reconsidering.
+
+sources:
+- description: "Denver7 (KMGH, ABC Denver), April 2026 — Penner minority-stake announcement, issued jointly by Dick and Charlie Monfort: 'Charlie Monfort will remain as owner and general partner'. Establishes BOTH the stake and the governance role, post-transaction."
+  url: "https://www.denver7.com/sports/rockies/greg-and-carrie-penner-become-minority-owners-of-colorado-rockies-dick-and-charlie-monfort-announce"
+  accessed: "2026-07-20"
+  archive_url: ""
+- description: "Front Office Sports (2026-04-10), 'Billionaire Broncos Owners Buy 40% of Rockies' — identifies Charlie Monfort as managing partner and one of three Monforts in leadership who 'will continue to run the team'"
+  url: "https://frontofficesports.com/billionaire-broncos-owners-buy-40-of-rockies/"
+  accessed: "2026-07-20"
+  archive_url: ""
+- description: "DenverSports.com — '18 years ago today, Monfort brothers took full control of the Rockies'. Dates the McMorris buyout to 2005-12-15 and records that 'Dick Monfort took over the roles of managing general partner, chairman and CEO from Charlie in 2011'"
+  url: "https://denversports.com/mlb/colorado-rockies/18-years-ago-today-monfort-brothers-took-full-control-of-the-rockies/2109664"
+  accessed: "2026-07-20"
+  archive_url: ""
+- description: "Denver Westword, 'Every Property Connected to the Monfort Family in Denver' — 'Charlie Monfort bought into the Colorado Rockies in 1992 … Five years later, his brother Dick Monfort joined him in the ownership group.' Establishes he preceded Dick."
+  url: "https://www.westword.com/news/every-property-connected-to-the-monfort-family-in-denver-24843171/"
+  accessed: "2026-07-20"
+  archive_url: ""
+
+notes: |
+  Charles K. ("Charlie") Monfort — co-owner and General Partner of the Colorado
+  Rockies. He entered the ownership group in 1992, five years before Dick; the
+  brothers bought out co-founder Jerry McMorris on 2005-12-15 for full control;
+  Charlie held Managing General Partner / Chairman / CEO until 2011, when those
+  roles passed to Dick. He remains owner and general partner after the April
+  2026 sale of a ~40% minority stake to Penner Sports Group.
+
+  His own FEC filings corroborate the arc: occupation reads
+  "COLORADO ROCKIES/VICE-CHAIRMAN" on 2000-05-17 and 2002-03-31 records,
+  "CHAIRMAN/C.E.O." from 2003-07-17 through 2007-06-15, "CEO" through
+  2008-02-11, and "GENERAL PARTNER" on the 2021–2023 records. The self-reported
+  title tracks the documented succession, which is corroboration rather than
+  coincidence.
+
+  ── THE "MRS." HAZARD — READ BEFORE ANY CALIBRATION PASS ──
+  His wife Christine A. ("Chris") Benson Monfort files under HER OWN first name
+  ("MONFORT, CHRIS" / "CHRISTINE" / "CHRISTINE A"), which the name gate
+  correctly excludes — BUT she is also recorded filing as
+  "MONFORT, CHARLES MRS". The archive's name normalization strips "MRS." as an
+  honorific, so that string normalizes to "charles monfort" — IDENTICAL to her
+  husband. The classifier cannot tell them apart by name.
+
+  This is a general defect, not a Monfort quirk: the same pattern was found
+  already live elsewhere in the archive ("CASTELLINI, ROBERT H MRS" attributed
+  to castellini-bob; "REINSDORF, MRS. JERRY" attributed to reinsdorf-jerry).
+  It cannot be fixed by blanket-dropping "MRS", because a woman owner may
+  legitimately carry it on her own name (e.g. "STEINBRENNER, JESSICA S MRS.").
+  Any MRS.-form record surfacing under this slug must be inspected and, if it
+  is Christine's, EXCLUDED via manual_attributions with a documented reason.
+
+  ── OTHER FAMILY IN THE SAME ZIPs (name gate is the only firewall) ──
+    Richard L. "Dick"  — brother, tracked as monfort-dick. Greeley 80631/80632,
+                         Eaton 80615, Denver 80202.
+    Kenneth W. "Ken"   — father, d. 2001. Greeley 80634. Monfort of Colorado /
+                         ConAgra / RETIRED. NOTE: a Colorado Democratic
+                         legislator and 1968 Senate candidate, yet his FEC rows
+                         here go to Republicans — party separates nobody here.
+    Kenneth "Kenny"    — CHARLIE'S SON. Denver 80202, Monfort Companies /
+                         Cactus Land / Ciara Dawn (real estate, founded 2011,
+                         unaffiliated with the Rockies). "KENNETH MONFORT" is
+                         therefore TWO PEOPLE separated only by ZIP + employer
+                         + date, never by name.
+    Walker L.          — Dick's son, Rockies president since Jan 2026. Denver
+                         80209 and Greeley 80631, employer COLORADO ROCKIES,
+                         occupation OWNER — the same employer+occupation pair
+                         both brothers file.
+    Karen              — Dick's wife. Greeley 80615, COLORADO ROCKIES / OWNER.
+                         The highest-risk spouse row for either brother.
+    Christine A./Chris — Charlie's wife. Greeley 80631/80632. HOMEMAKER,
+                         RETIRED, "KISS THE MOON/OWNER". See the MRS. hazard.
+    Myra H.            — attorney, Fort Collins 80524 (hist. Greeley 80634).
+    Kaye C.            — Monfort Family Foundation president. Timnath 80547 /
+                         Windsor 80550.
+    Vanessa R., Susan  — Greeley 80631 / Eaton 80615, HOMEMAKER.
+    MONFORT FAMILY LTD PRNTRSHP I — an ENTITY at Greeley 80631, not a person;
+                         must never be attributed to an individual.
+    Joe MONFORTON      — unrelated near-miss surname, Denver 80218, DocuSign.
+
+  Expected calibration-round-1 questions:
+    - Do any "MONFORT, CHARLES MRS" records appear? Exclude them if so.
+    - Do any records at Denver 80202 carry Monfort Companies / Cactus Land /
+      Ciara Dawn? Those are son Kenny's and are negative-signalled above.
+    - The 2000–2008 "VICE-CHAIRMAN" / "CHAIRMAN/CEO" occupations overlap a
+      period when monfort-dick's audit also recorded "VICE CHAIRMAN" (2012–13
+      records). Title alone never separates the brothers.
+    - Is there an out-of-state residence? The research fetch was CO-filtered;
+      one LIVERMORE CO 80536 record was observed but no second-state base.
+
+  UNVERIFIED, recorded honestly: birth date 1959-10-30 appears only in
+  encyclopedic sources and was NOT re-grounded — treat as year-precision 1959 at
+  best. The 2003-03-31 CEO-appointment date and the 2011 handoff month/day are
+  likewise unverified; tenure_start_date is year-precision. mlb.com's Rockies
+  executive bio returned HTTP 406 to this project's fetchers and its contents are
+  NOT represented here (note: mlb.com does return 200 to a browser User-Agent —
+  re-verify on the next pass). The Colorado Secretary of State business registry
+  is Cloudflare-walled to automated requests, so no registry-level confirmation
+  of the ownership entity's officers was obtained, and no percentage stake is
+  documented for either brother.
+
+change_log:
+- date: 2026-07-20
+  change: |
+    Created under the ownership-group rule (CHARTER.md). Tier-2 sourcing:
+    Denver7's April 2026 ownership-transaction announcement ("Charlie Monfort
+    will remain as owner and general partner", and issued BY him), Front Office
+    Sports (managing partner), DenverSports (2005-12-15 McMorris buyout; 2011
+    handoff of managing GP/chairman/CEO to Dick), Westword (bought in 1992,
+    before Dick).
+
+    strong_signals left EMPTY as a hard constraint rather than a pending
+    calibration: no ZIP may be promoted because Dick's three strong ZIPs are all
+    shared with Charlie, and no employer string is unique to him.
+
+    negative_signals seeded at creation with son Kenny's real-estate vehicles —
+    unusual for this project, and justified because the doppelgänger is already
+    traced rather than hypothetical (the Ricketts/Joe precedent).
+  by: "automated research (maintainer-directed), user-approved verdict"
+  references:
+  - "CHARTER.md — the ownership-group rule"
+  - "owners/monfort-dick.yaml — flags this slug as a 'definite separate-slug candidate' and documents the shared-ZIP trap"
+- date: 2026-07-20
+  change: |
+    First ingestion — 118 records (CO state filter) → 102 CONFIRMED / 15
+    PROBABLE / 1 UNCERTAIN, $170,821.90 gross. 23 of those are ActBlue/WinRed
+    conduit legs (is_individual=0) correctly flagged counted=0 by the §1.1
+    earmark rule, so the archive gained 94 counted rows / $162,571.90.
+
+    PRE-INGEST DOPPELGÄNGER AUDIT PASSED (run against the raw, before any
+    write, per the archive's standing rule):
+      - ZERO "MONFORT, CHARLES MRS" records reached CONFIRMED/PROBABLE. The
+        hazard documented in notes is real — the string normalizes to
+        "charles monfort", identical to his own — but his wife did not surface
+        in the CO-filtered fetch under that form. Re-check every calibration.
+      - ZERO records at Denver 80202 or carrying Monfort Companies / Cactus
+        Land / Ciara Dawn — son Kenny is excluded by the name gate, and the
+        negative_signals were never needed.
+      - EVERY one of the 118 filed names carries a full "Charles" or "Charlie".
+        No bare "Monfort" and no first-initial-only form appeared, so the
+        first-name firewall — the ONLY firewall available in this family — held
+        on real data.
+      - monfort-dick's totals are UNCHANGED by this ingest. That is the
+        cross-contamination check that matters here, and it is the reason no
+        ZIP was promoted: the brothers share 80631/80632/80615.
+
+    Filed addresses: Greeley 80631 (91), Eaton 80615 (19), Greeley 806319427
+    (24 — ZIP+4 of the same address), one Livermore CO 80536. No out-of-state
+    base appeared, though the fetch was CO-filtered so that is not conclusive.
+
+    Recipients corroborate the independent research to the dollar: RNC $50,610,
+    Colorado Republican Federal Campaign Committee $45,000, "RNC" $15,000,
+    Trump Save America JFC $5,411 across 22 conduit legs, and **$5,000 to the
+    Office of the Commissioner of Major League Baseball PAC on 2022-07-07** —
+    the league PAC that is the archive's most broadly-funded recipient.
+
+    PARTY MIX 48 REP / 2 DEM / 67 uncoded. Recorded because it CONFIRMS the
+    caution in this file's header rather than resolving it: he does give
+    Democratic, so the Ricketts-style political-asymmetry audit cannot be used
+    to prove the sibling firewall here. The name gate is doing all the work.
+  by: "automated pipeline (ingest --dry-run for the audit, then --from-raw)"
+  references:
+  - "data/snapshots/2026-07-20T06-44-56Z__pre-monfort-charlie.db (pre-ingest)"
+
+audit:
+  created: 2026-07-20
+  last_ingestion: '2026-07-20'
+  last_signal_review:
