@@ -281,4 +281,36 @@ Do not start these without explicit approval; recorded so the shape is agreed be
 
 ---
 
+## 9. 2026-07-19/20 expansion pass — what landed, and two corrections to this plan
+
+- **§1.3 transaction_id collision class — FOUND AND FIXED.** `donations.transaction_id`
+  was the PK, but FEC ids are filer-assigned and unique only within a filing. The v9
+  guard could only fire when BOTH rows carried a `sub_id` (3.4% of rows), so it was
+  inert and collisions were recorded as fabricated "FEC restatements" of one owner's
+  donation into another's. **Two were live in main** (kendrick-ken $2,800,
+  dewitt-bill $5,000, both "restated into" reinsdorf-jerry). Guard widened + rows
+  repaired (PR #126), then **schema v11** gave `donations` the composite PK
+  `(transaction_id, entity_slug)` that `review_queue` has had since v9 (`8aa629b`).
+  Caught by diffing an ingest against its pre-ingest snapshot — the run summary
+  reported success. **Diff owner totals against the snapshot after every ingest.**
+- **Ownership-group rule adopted** (PR #125) and applied: `ricketts-laura` $7.96M +
+  `ricketts-todd` $1.90M (PR #127). Archive $34.5M → **$44.38M**, 36 → 38 entities.
+  Joe Ricketts assessed and excluded on the evidence; Pete deferred.
+- **§5.5 correction:** the claim that `dolan-paul` "has zero rows in the whole
+  archive" was wrong and had propagated into SOURCES.md — he has 68 CONFIRMED /
+  $169,356 federal. OH's value is Castellini ×2.
+- **MD assessed** (2026-07-19) and is **adoptable** pending §5 sign-off — the first
+  non-dead, non-walled verdict in the recon ledger. See SOURCES.md for endpoints and
+  the doppelgänger hazard.
+- **A "conduit view" was scoped and then CLOSED AS ALREADY BUILT** — worth recording
+  so it isn't re-proposed. `#/committee/<id>` already renders owner inflows *and* the
+  lazy-loaded "Who this committee funded" beneficiary outflows on one page, and
+  `#/recipients` already ranks committees by owner money with an `n_owners` column.
+  The finding it was meant to expose is reachable today: the **MLB Commissioner's PAC
+  is the most broadly-funded recipient in the archive — 29 of 38 entities,
+  $1,330,432**, more owners than give to the RNC. Residual gap (low value, not built):
+  no comparative inflow-vs-outflow ranking, and the league PAC is not a named object.
+
+---
+
 *Review conducted 2026-07-10. Findings verified against main `4c7925c`, master.db (schema v7), state.db, legislation.db, and the live GitHub PR/workflow state. Line numbers drift — re-verify before editing.*

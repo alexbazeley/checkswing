@@ -224,6 +224,7 @@ the determinations survive the session memory they were made in. These are
 | OH | portal-walled | no machine-readable bulk/API access found for a Tier-1 ingest (Castellini ×2, Dolan home state) | 2026-06 |
 | GA | portal-walled | same (McGuirk home state) | 2026-06 |
 | MO | postback/walled | export is postback-only, no clean bulk endpoint (Sherman-john, DeWitt home state) | 2026-06 |
+| MD | **adoptable — pending §5 sign-off** | MDCRIS (campaignfinance.maryland.gov) exposes an unauthenticated public JSON API — `POST api-campaignfinance.maryland.gov/api/PublicGrid/GetContributionList` with server-side `contributorName` filtering — plus per-year bulk CSV via `ExportPublicData/GetExportPublicDownloadData` (`{"Type":"CSV","TransactionTypeCode":"TCON","FilingYear":"YYYY"}`; 195 MB for 2024), refreshed daily. **The bare-curl 403 is a User-Agent check, not a wall** — adding a browser UA returns 200 (the FL lesson again). **ZIP/address-grade: no employer or occupation field** (MD does not collect them), but full street address, which corroborates better than NY's ZIP-only. Presence-check: angelos-john-p 16 recs / $62,000 (filed from 333 W. Camden St — Oriole Park — and his documented Nashville address); lerner-mark 20 recs / $19,917 (Lerner Enterprises HQ, Rockville 20852); **rubenstein-david zero** (94 Rubenstein records, no David). Coverage is **~2018→present only** — the rebuilt portal does not appear to expose the pre-2018 history the SBE page describes. **Known hazard:** the documented Chesapeake Partners "Mark Lerner" doppelgänger files $31,250 from Pikesville 21208 and is separable here **only by address**, because MD data cannot feed the employer negative-signal block that guards him federally. | 2026-07-19 |
 
 **Owner home states with zero state coverage anywhere** (adoption gaps, not
 determinations): **OH** (Castellini ×2, Dolan), **MI** (Ilitch), **MD/DC**
@@ -231,9 +232,17 @@ determinations): **OH** (Castellini ×2, Dolan), **MI** (Ilitch), **MD/DC**
 **WV** (Nutting), **CT** (Seidler/Feliciano). Adopting any of these remains a
 GOVERNANCE §5 scope expansion requiring sign-off.
 
-**MD is the one home state never assessed at all** — it has no row in the table
-above, despite three tracked Orioles-side owners. Treat it as unevaluated, not as a
-negative finding.
+**MD was assessed 2026-07-19** and is the first entry in the table above to come
+back **adoptable** rather than dead or walled — see its row for the endpoints, the
+grade, and the doppelgänger hazard. Adoption itself still requires GOVERNANCE §5
+sign-off and has not been done.
+
+**A finding worth generalizing from the MD check:** the bare-`curl` 403 that would
+have read as a wall was a **User-Agent check**. Between that and the FL precedent
+(believed Cloudflare-walled, actually a plain `curl` + POST), two of the states in
+the table above were declared walled on evidence of this exact shape. **OH, GA and
+MO deserve a re-probe with a browser UA and a real POST before their verdicts are
+treated as settled.**
 
 ### Local / municipal campaign finance — DEFERRED (§ Phase 4)
 
