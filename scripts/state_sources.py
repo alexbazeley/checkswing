@@ -29,6 +29,7 @@ from . import (
     fetch_co,
     fetch_fl,
     fetch_il,
+    fetch_md,
     fetch_mn,
     fetch_ny,
     fetch_pa,
@@ -36,6 +37,7 @@ from . import (
     fetch_wa,
     fl_adapter,
     il_adapter,
+    md_adapter,
     mn_adapter,
     ny_adapter,
     pa_adapter,
@@ -200,6 +202,29 @@ WA = StateSource(
 )
 
 
+# ── Maryland (MDCRIS public JSON API — no input file) ───────────────────────
+#
+# ZIP/address-grade: MD collects NO employer and NO occupation field, so the
+# two-signal CONFIRMED bar has to be reached through address/city/ZIP. See
+# md_adapter's docstring for the consequence — lerner-mark's federal defense
+# against the Chesapeake Partners doppelganger is an employer negative-signal
+# block that this source cannot feed, and that doppelganger is live in MD.
+# Seed strong ZIP signals BEFORE ingesting, and audit immediately after.
+
+MD = StateSource(
+    code="MD", source="MD-SBE", label="MD · MD SBE (MDCRIS)",
+    candidate_rows_by_owner=fetch_md.candidate_rows_by_owner,
+    recipient_resolver=fetch_md.make_recipient_resolver,
+    record_adapter=md_adapter.to_classifier_record,
+    row_builder=md_adapter.to_state_donation_row,
+    filing_id_of=md_adapter.filing_id_of,
+    tran_id_of=md_adapter.tran_id_of,
+    dedupe=fetch_md.dedupe,
+    requires_input=False,
+    raw_ref=fetch_md.CONTRIBUTION_URL,
+)
+
+
 # ── Colorado (TRACER per-year CSV zip — streamed, recipient inline) ──────────
 
 def _co_candidates(input_dir: Path, owners: list[tuple[str, dict]]) -> dict[str, list[dict]]:
@@ -289,7 +314,7 @@ FL = StateSource(
 )
 
 
-REGISTRY: dict[str, StateSource] = {s.code: s for s in (CA, PA, NY, TX, IL, WA, CO, AZ, MN, FL)}
+REGISTRY: dict[str, StateSource] = {s.code: s for s in (CA, PA, NY, TX, IL, WA, CO, AZ, MN, FL, MD)}
 
 
 def get_source(code: str) -> StateSource:
