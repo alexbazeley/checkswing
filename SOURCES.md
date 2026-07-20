@@ -221,9 +221,9 @@ the determinations survive the session memory they were made in. These are
 | WI | dead-for-roster | same — Brewers/Attanasio filings not found at a Tier-1 depth | 2026-06 |
 | DC | dead-for-roster | same; DC filings sparse for the roster | 2026-06 |
 | MI | dead-for-roster | portal recon did not yield a machine-readable owner-level ingest (Ilitch home state — a **coverage gap**, not a confirmed absence) | 2026-06 |
-| OH | portal-walled | no machine-readable bulk/API access found for a Tier-1 ingest (Castellini ×2, Dolan home state) | 2026-06 |
-| GA | portal-walled | same (McGuirk home state) | 2026-06 |
-| MO | postback/walled | export is postback-only, no clean bulk endpoint (Sherman-john, DeWitt home state) | 2026-06 |
+| OH | **portal-walled — CONFIRMED by header evidence** | Re-probed 2026-07-20 with a browser User-Agent + full browser headers after the MD finding. Still **403**, and the response carries `server: cloudflare` + **`cf-mitigated: challenge`** with `critical-ch: Sec-CH-UA-*` — a genuine Cloudflare **managed challenge** requiring client hints and JS, not a UA check. This is a real wall, now evidenced rather than inferred. (Castellini ×2 — *current* Reds owners — and Dolan home state; the most valuable blocked state.) | 2026-06, re-probed 2026-07-20 |
+| GA | **DISPUTED — reachable, needs a real bulk/API probe** | Re-probed 2026-07-20: `https://media.ethics.ga.gov/search/Campaign/Campaign_Name.aspx` returns **HTTP 200** to a plain `curl` with a browser UA, with **no Cloudflare headers at all**. So "portal-walled" is not supported at the HTTP layer. The original verdict may have meant "no machine-readable bulk export found", which is a different (and still possible) finding — but it should not be recorded as a wall. **Needs a proper probe of whether a bulk/API path exists** before GA is written off. (McGuirk home state.) | 2026-06, re-probed 2026-07-20 |
+| MO | postback-only (reachable) | Re-probed 2026-07-20: mec.mo.gov returns 200 and the contribution search 302s — **reachable, not walled**. The recorded reason (ASP.NET postback-only export, no clean bulk endpoint) is about form mechanics rather than access control, so the "walled" half of the original label was misleading. (Sherman-john, DeWitt home state.) | 2026-06, re-probed 2026-07-20 |
 | MD | **adoptable — pending §5 sign-off** | MDCRIS (campaignfinance.maryland.gov) exposes an unauthenticated public JSON API — `POST api-campaignfinance.maryland.gov/api/PublicGrid/GetContributionList` with server-side `contributorName` filtering — plus per-year bulk CSV via `ExportPublicData/GetExportPublicDownloadData` (`{"Type":"CSV","TransactionTypeCode":"TCON","FilingYear":"YYYY"}`; 195 MB for 2024), refreshed daily. **The bare-curl 403 is a User-Agent check, not a wall** — adding a browser UA returns 200 (the FL lesson again). **ZIP/address-grade: no employer or occupation field** (MD does not collect them), but full street address, which corroborates better than NY's ZIP-only. Presence-check: angelos-john-p 16 recs / $62,000 (filed from 333 W. Camden St — Oriole Park — and his documented Nashville address); lerner-mark 20 recs / $19,917 (Lerner Enterprises HQ, Rockville 20852); **rubenstein-david zero** (94 Rubenstein records, no David). Coverage is **~2018→present only** — the rebuilt portal does not appear to expose the pre-2018 history the SBE page describes. **Known hazard:** the documented Chesapeake Partners "Mark Lerner" doppelgänger files $31,250 from Pikesville 21208 and is separable here **only by address**, because MD data cannot feed the employer negative-signal block that guards him federally. | 2026-07-19 |
 
 **Owner home states with zero state coverage anywhere** (adoption gaps, not
@@ -239,10 +239,24 @@ sign-off and has not been done.
 
 **A finding worth generalizing from the MD check:** the bare-`curl` 403 that would
 have read as a wall was a **User-Agent check**. Between that and the FL precedent
-(believed Cloudflare-walled, actually a plain `curl` + POST), two of the states in
-the table above were declared walled on evidence of this exact shape. **OH, GA and
-MO deserve a re-probe with a browser UA and a real POST before their verdicts are
-treated as settled.**
+(believed Cloudflare-walled, actually a plain `curl` + POST), several states here
+were declared walled on evidence of exactly that shape.
+
+**That re-probe has now been run (2026-07-20), and it split three ways** — which is
+the useful part, because it shows "walled" was doing too much work as a label:
+
+- **OH is genuinely walled**, and now provably so: `cf-mitigated: challenge` +
+  `critical-ch: Sec-CH-UA-*` from Cloudflare. A browser UA is not enough; it wants
+  client hints and JS. This is the expensive one — Castellini ×2 are current owners.
+- **GA is reachable** (HTTP 200, no Cloudflare headers). Its "walled" verdict does
+  not hold at the HTTP layer and should be re-opened.
+- **MO is reachable** too; its real obstacle is ASP.NET postback-only export, which
+  is a *form-mechanics* problem, not access control.
+
+**The lesson to carry forward: record the mechanism, not the symptom.** "403" and
+"walled" are symptoms that turned out to mean three different things — a UA check
+(MD), a Cloudflare challenge (OH), and a postback form (MO). Only the second is a
+wall, and only the header evidence distinguishes them.
 
 ### Local / municipal campaign finance — DEFERRED (§ Phase 4)
 
