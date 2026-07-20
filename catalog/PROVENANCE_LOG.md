@@ -26668,3 +26668,19 @@ not production").
 - **updated**: `0` · **demoted→queue**: `1` · **suppressed (DISCARDED)**: `0` · **forced**: `2` · **excluded**: `0` · **unchanged**: `426`
 - **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T06-55-55Z__pre-reclassify-inplace-reinsdorf-jerry.db`
 - **note**: in-place re-score from stored donations columns (no raw read, no delete-rebuild); rows recoverable from the snapshot above.
+
+### 2026-07-20 — INGESTION
+
+- **run_id**: `be879594`
+- **entity_slug**: `monfort-charlie`
+- **dry_run**: `0`
+- **period_start**: `2025-01-16`
+- **period_end**: `2026-02-04`
+- **name_variants_queried**: `["Charles K Monfort", "Charles K. Monfort", "Charles Monfort", "Charlie Monfort", "Charlie K Monfort", "Monfort, Charles", "Monfort, Charles K", "Monfort, Charles K.", "Monfort, Charlie"]`
+- **api_calls_made**: `0`
+- **records_fetched**: `118`
+- **confirmed_count**: `102`
+- **probable_count**: `15`
+- **uncertain_count**: `1`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T13-25-21Z__be879594.db`
+- **notes**: skipped(no-name-match)=0 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW

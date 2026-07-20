@@ -15,7 +15,10 @@ role: Principal owner
 status: active
 tenure_start_date: 2011-01-01    # Chairman/CEO; family control of franchise since 2005
 tenure_end_date:
-family_tenure_start_date: 2005-01-01    # Monfort family acquired controlling stake from Jerry McMorris
+# Corrected 2026-07-20: the FAMILY entered the ownership group in 1992, when
+# brother Charlie bought in; Dick joined five years later and the brothers bought
+# out Jerry McMorris for full control on 2005-12-15 (Westword; DenverSports).
+family_tenure_start_date: 1992-01-01
 
 name_variants:
 - "Richard L Monfort"
@@ -71,10 +74,11 @@ strong_signals:
   # "Colorado Rockies" stays in verifying — team employees would also report it.
 
 related_entities: []
+# ✅ DONE 2026-07-20: sibling Charles K. ("Charlie") Monfort is now tracked as
+#    his own owner entity, `owners/monfort-charlie.yaml`, under the
+#    ownership-group rule. He shares ALL THREE of this file's strong ZIPs
+#    (80631/80632/80615), so his file promotes none — see its header.
 # Future candidates (do NOT add without user approval per GOVERNANCE.md §1.7):
-#   - sibling: Charles K. ("Charlie") Monfort — co-owner / GP / Vice Chairman.
-#     Born 1959. Primary residence Greeley CO. Definite separate-slug
-#     candidate (`monfort-charlie`).
 #   - child: Walker Monfort — Rockies team president since Jan 2026
 #     (previously EVP since June 2025; VP Corporate Partnerships since 2015).
 #     Separate slug candidate.
