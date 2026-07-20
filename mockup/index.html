@@ -2840,6 +2840,21 @@ function aggAmt(obj, key) {
   }
   return obj[key] ?? 0;
 }
+/* Share of DOLLARS (not records) carrying two confirming signals.
+   The record counts shown beside "Donations" and this figure diverge — by ~11
+   points archive-wide — and the counts are the flattering half, because the
+   largest checks are the ones filed with employer RETIRED, leaving city as the
+   only signal. Quoting a total without this reads every dollar as equally
+   corroborated. Returns "" when the split isn't in the payload (older data.json)
+   or when there is nothing to describe. */
+function confirmedDollarShare(obj) {
+  if (!obj) return "";
+  const c = obj.amount_confirmed, p = obj.amount_probable;
+  if (c == null || p == null) return "";
+  const total = c + p;
+  if (total <= 0) return "";
+  return `${Math.round((c / total) * 100)}% of dollars confirmed`;
+}
 /* Read a per-cycle bucket like league.by_cycle[year].dollars_by_party. */
 function aggCycleParty(bucket) {
   if (!bucket) return {};
@@ -3904,7 +3919,7 @@ function renderLeague() {
       <div class="kpi">
         <div class="kpi-label">Total tracked</div>
         <div class="kpi-value">${fmtMoney(aggAmt(L, "total_amount"))}</div>
-        <div class="kpi-foot">${fmtMoneyExact(aggAmt(L, "total_amount"))}</div>
+        <div class="kpi-foot">${fmtMoneyExact(aggAmt(L, "total_amount"))}${confirmedDollarShare(L) ? ` · ${confirmedDollarShare(L)}` : ""}</div>
       </div>
       <div class="kpi">
         <div class="kpi-label">Donations</div>
@@ -4851,7 +4866,7 @@ function renderOwner(slug) {
       ${o.team ? `<a class="owner-team-link" href="#/team/${teamSlug(o.team)}">${escapeHtml(o.team)} <span aria-hidden="true">→</span></a>` : ""}
       <h1 style="margin-top:8px">${escapeHtml(o.name)}</h1>
       <div class="owner-meta">
-        <span class="owner-role">Principal owner</span>
+        <span class="owner-role">${escapeHtml(o.role || "Principal owner")}</span>
         <span class="dot"></span>
         <span>Tenure ${o.tenure_start ? o.tenure_start.slice(0,4) : "—"}${o.tenure_end ? "–" + o.tenure_end.slice(0,4) : "–present"}</span>
         <span class="dot"></span>
@@ -4868,7 +4883,7 @@ function renderOwner(slug) {
       <div class="kpi">
         <div class="kpi-label">${o.has_household ? "Household total" : "Total tracked"}</div>
         <div class="kpi-value">${fmtMoney(aggAmt(o, "total_amount"))}</div>
-        <div class="kpi-foot">${fmtMoneyExact(aggAmt(o, "total_amount"))}${o.has_household ? ` · incl. ${fmtMoney(aggAmt(o, "owner_only_amount"))} from ${escapeHtml(o.name.split(" ").slice(-1)[0])}` : ""}</div>
+        <div class="kpi-foot">${fmtMoneyExact(aggAmt(o, "total_amount"))}${o.has_household ? ` · incl. ${fmtMoney(aggAmt(o, "owner_only_amount"))} from ${escapeHtml(o.name.split(" ").slice(-1)[0])}` : ""}${confirmedDollarShare(o) ? ` · ${confirmedDollarShare(o)}` : ""}</div>
       </div>
       <div class="kpi">
         <div class="kpi-label">Donations</div>
@@ -6602,7 +6617,7 @@ function renderTeamOwnersGrid(team) {
         return `
           <a class="team-owner-card" href="#/owner/${o.slug}" style="text-decoration:none;color:inherit;display:block">
             <div class="team-owner-name">${escapeHtml(o.name)}</div>
-            <div class="team-owner-role">Principal owner${o.tenure_end ? " (former)" : ""}</div>
+            <div class="team-owner-role">${escapeHtml(o.role || "Principal owner")}${o.tenure_end ? " (former)" : ""}</div>
             <div class="team-owner-tenure">Tenure ${tenureStr} · ${o.n_total} donation${o.n_total === 1 ? "" : "s"}</div>
             ${tot > 0 ? `
               <div class="team-owner-tilt-bar">
