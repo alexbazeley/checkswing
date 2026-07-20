@@ -25105,3 +25105,19 @@ not production").
 - **records recovered**: the 3 Ricketts contributions the §1.3 guard had to refuse (1 laura / 2 todd) now ingest normally. ricketts-laura +$1,000, ricketts-todd +$22,800; archive $44,357,753 → **$44,381,553**.
 - **snapshots**: `data/snapshots/2026-07-20T01-42-18Z__pre-v11-donations-pk.db` (pre-migration), `…__pre-v11-restore-canonical.db` (pre-restore).
 - 5 transaction_ids are now shared by two owners each — previously unrepresentable.
+
+### 2026-07-20 — INGESTION
+
+- **run_id**: `d8bc054f`
+- **entity_slug**: `johnson-charles`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2026-03-31`
+- **name_variants_queried**: `["Charles B Johnson", "Charles B. Johnson", "Charles Bartlett Johnson", "Johnson, Charles B", "Johnson, Charles B.", "Johnson, Charles Bartlett"]`
+- **api_calls_made**: `0`
+- **records_fetched**: `1197`
+- **confirmed_count**: `188`
+- **probable_count**: `913`
+- **uncertain_count**: `80`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T03-28-56Z__d8bc054f.db`
+- **notes**: skipped(no-name-match)=16 · min_date=default (no prior ingestion) · FROM-RAW

@@ -1,0 +1,319 @@
+# Charles B. Johnson — San Francisco Giants
+# LARGEST INDIVIDUAL SHAREHOLDER of San Francisco Baseball Associates LLC, the
+# Giants' ownership entity, since the Magowan group's 1993 purchase. Added under
+# the ownership-group rule (CHARTER.md) on the DOCUMENTED EQUITY prong — not on a
+# governance role, and not on his relationship to johnson-greg.
+#
+# HE IS NOT THE CONTROL PERSON. His son Gregory E. Johnson is MLB's designated
+# control person and chairman (owners/johnson-greg.yaml, approved 2019-11-21).
+# Press routinely styles Charles "principal owner"; that is journalistic
+# shorthand, not the MLB designation, and this file does not adopt it.
+#
+# ⚠ HARDEST NAME CASE IN THE ARCHIVE — harder than fisher-john, for a reason that
+# is structural rather than merely statistical: his own SON is also named Charles
+# Johnson and also filed from Franklin's San Mateo address. See notes.
+#
+# Read OWNER_SCHEMA.md before editing. Read GOVERNANCE.md §1.7 before adding entities.
+
+slug: johnson-charles
+name: Charles B. Johnson
+team: San Francisco Giants
+role: Co-owner
+status: active
+tenure_start_date: 1993-01-12    # Owners approved the Magowan group 27-0 (see sources)
+tenure_end_date:
+
+# Every variant carries "B" or "Bartlett". Bare "Charles Johnson" and "C. Johnson"
+# are DELIBERATELY EXCLUDED — "JOHNSON, CHARLES" returns ~15,800 FEC records in the
+# 2020+2022 cycles alone. The documented recall cost is recorded in notes; it is
+# accepted rather than bought off by loosening the gate.
+name_variants:
+- "Charles B Johnson"
+- "Charles B. Johnson"
+- "Charles Bartlett Johnson"
+- "Johnson, Charles B"
+- "Johnson, Charles B."
+- "Johnson, Charles Bartlett"
+
+verifying_signals:
+  cities:
+    # Palm Beach FL — primary residence since ~2013 (first FL-filed record
+    # 2013-03-04). Hillsborough CA — prior residence. San Mateo CA — Franklin
+    # Resources HQ, used as his filing address 1984–2012.
+    # CAUTION: hillsborough + san mateo are SHARED with johnson-greg, and san
+    # mateo is also where his other son (Charles E., Tano Capital) files. The
+    # name variants plus the Tano negative signal are the firewall.
+  - "palm beach"
+  - "hillsborough"
+  - "san mateo"
+  states:
+  - "FL"
+  - "CA"
+  employers:
+    # All observed in live FEC data during sourcing, including clerk typos.
+    # NONE of these may ever be promoted to strong_signals — see strong_signals.
+  - "Franklin Resources"
+  - "Franklin Templeton"
+  - "Franklin Distributors"
+  - "Franklin Group of Funds"
+  - "Franklin Investments"
+  - "Franklin Resource"           # observed typo (missing trailing s), 1990-91
+  - "Franklin Distibutors"        # observed typo (missing r), 1986
+  occupations:
+    # "retired" is DELIBERATELY OMITTED despite dominating his modern filings: it
+    # is among the commonest occupation strings in FEC, and paired with a city it
+    # would auto-CONFIRM any same-named Palm Beach filer. Those rows land PROBABLE
+    # on city_state alone instead — which costs NO published total (CONFIRMED and
+    # PROBABLE are both counted), only the confidence tier.
+    # "retired chairman" IS included: specific, and observed paired with
+    # FRANKLIN TEMPLETON INVESTMENTS.
+  - "retired chairman"
+  - "chairman"
+  - "ceo"
+  - "chief executive officer"
+  - "principal owner"             # matches "PRINCIPAL OWNER SAN FRANCISCO GIANTS"
+  - "investor"
+
+strong_signals:
+  employers: []
+  zip_codes: []
+  # BOTH INTENTIONALLY EMPTY, and this is the core of the design rather than an
+  # omission to fix later:
+  #  - "Franklin Resources"/"Franklin Templeton": a public company with thousands
+  #    of employees, filed by FOUR family members (Charles B., Greg, Jennifer,
+  #    Rupert Jr.) AND by son Charles E., who shares Charles B.'s first name.
+  #    Promoting it would hand this slug his son's records.
+  #  - ZIP 33480: zip_match() truncates to ZIP5, so his house-level ZIP+4s are
+  #    invisible to the classifier — a "strong" ZIP here means the whole of Palm
+  #    Beach, and a same-initial "JOHNSON, CHARLES B." / WESTERN NATIONAL GROUP
+  #    filer was already observed inside it. This is the fisher-john 94111 lesson.
+
+negative_signals:
+  employers:
+    # Every entry traced to a live FEC record during sourcing — not hypothesized.
+  - "Tano Capital"                # SON Charles E. Johnson, San Mateo CA — the
+                                  # single most dangerous collision in this file
+  - "Johnsons Garbage Service"    # "JOHNSON, CHARLES B", Columbia SC, 12+ records
+  - "Johnson Garbage Servicing"   # same filer, variant spelling
+  - "B and S Builders"            # "B JOHNSON, CHARLES", Portland OR
+  - "Neville, Rodie & Shaw"       # "JOHNSON II, CHARLES B", Montclair NJ
+  - "Western National Group"      # "JOHNSON, CHARLES B.", PALM BEACH FL 33480 —
+                                  # a same-initial filer inside his own ZIP
+
+related_entities: []
+# Do NOT add without GOVERNANCE.md §1.7 sign-off:
+#   - Wife Ann Johnson — no documented Giants stake or governance role, so she is
+#     OUT under the ownership-group rule. Different first name, no collision.
+#   - Son Charles E. Johnson (Tano Capital) — a NEGATIVE signal, not an entity.
+#     No documented Giants stake.
+#   - Son Gregory E. Johnson — already tracked (owners/johnson-greg.yaml).
+#   - Daughter Jennifer M. Johnson, brother Rupert H. Johnson Jr. — Franklin
+#     executives; no documented Giants stake. Out.
+
+sources:
+- description: "Forbes, Kerry A. Dolan (2011-09-26) — 'Report: Forbes 400 Member Charles Johnson Now San Francisco Giants' Largest Shareholder.' Reports he is believed to own more than 25% after acquiring the late Harmon 'Buzz' Burns's daughters' stake, and that Giants ownership had been spread across 32 principal partners. Full article retrieved."
+  url: "https://www.forbes.com/sites/kerryadolan/2011/09/26/report-forbes-400-member-charles-johnson-now-san-francisco-giants-largest-shareholder/"
+  accessed: "2026-07-19"
+  archive_url: ""
+- description: "San Francisco Examiner (2022-10-14) — 'Giants owner still donating to election deniers despite pledge.' Describes him as 'principal owner of the San Francisco Giants' and 'the Giants' largest shareholder', and itemizes his 2021-22 federal giving. Full article retrieved."
+  url: "https://www.sfexaminer.com/news/giants-owner-still-donating-to-election-deniers-despite-pledge/article_3e48bf46-4f08-11ed-9627-cfef49c1b136.html"
+  accessed: "2026-07-19"
+  archive_url: ""
+- description: "The Washington Post (1993-01-13) — 'Sale of Giants Wins Unanimous Approval.' Establishes tenure_start_date: owners approved the sale of the Giants to the Peter Magowan-led investor group 27-0 on 1993-01-12, for $100 million. HEADLINE + SEARCH-INDEX LEVEL ONLY — washingtonpost.com returned HTTP 403 and the body was not retrieved."
+  url: "https://www.washingtonpost.com/archive/sports/1993/01/13/sale-of-giants-wins-unanimous-approval/b9862f66-0b80-4664-ab60-29e024c42479/"
+  accessed: "2026-07-20"
+  archive_url: ""
+
+notes: |
+  Charles Bartlett Johnson holds the largest single equity interest in San
+  Francisco Baseball Associates LLC, the Giants' ownership entity, acquired in
+  the Magowan group's 1993 purchase and enlarged around 2011 by buying the late
+  Harmon "Buzz" Burns's daughters' stake. He is tracked under the
+  ownership-group rule on the EQUITY prong.
+
+  THE GOVERNANCE PRONG IS NOT ESTABLISHED, deliberately. Forbes (2011) says he
+  "will be de facto chairman of the board"; no retrieved source places him on a
+  Giants board or names him a managing or general partner. Under GOVERNANCE.md
+  §1.9, "de facto" is not a documented role. This does not affect the verdict —
+  the rule is stake OR role, and the stake is well documented — but this file
+  must not imply a board seat he may not hold.
+
+  NO EXIT. The 2025 sale of a reported ~10% Giants stake was made by the club to
+  Sixth Street; it did not change control and was not Charles B. divesting.
+
+  SOURCING GAPS, recorded rather than papered over:
+    - mlb.com returns HTTP 406 to this project's fetchers (both the Giants
+      front-office page and its 1992-sale retrospective), so unlike the Ricketts
+      files the team's OWN ownership block could not be used to corroborate. The
+      equity claim rests on two independently retrieved Tier-2 press sources.
+      A maintainer with browser access should confirm whether MLB lists him — his
+      ABSENCE from that block would corroborate the "no governance role" finding.
+    - The Washington Post source for tenure_start_date was reachable only at
+      headline/search-index level (HTTP 403 on the body); it is cited as such.
+    - Wikipedia corroborates the stake (~26%), his birth year, the Palm Beach
+      residence and the family relationships, but SOURCES.md forbids citing it in
+      a YAML, so it is deliberately absent from `sources` above and no claim here
+      rests on it alone.
+
+  FILING PROFILE, from a read-only OpenFEC sourcing pass (2026-07-19):
+    - CA era 1984-2012: Hillsborough 94010 and San Mateo 94402/94403/94404
+      (Franklin HQ). Employers FRANKLIN RESOURCES / DISTRIBUTORS / GROUP OF
+      FUNDS, plus typos. Occupation usually blank pre-2000, then CHAIRMAN & CEO.
+    - FL era from 2013-03-04: PALM BEACH FL 33480. Employer overwhelmingly
+      RETIRED / NONE / N/A / SEMI-RETIRED, occasionally FRANKLIN TEMPLETON
+      INVESTMENTS with occupation RETIRED CHAIRMAN.
+    - The residence switch is datable from the filings themselves: last CA-filed
+      records ~2012, first Palm Beach record 2013-03-04. This matters beyond the
+      federal layer — FL is a live state jurisdiction and Palm Beach has been his
+      primary residence for over a decade, so his FL state giving is a real
+      target rather than an afterthought.
+
+  THE CENTRAL DIFFICULTY: he has no usable employer signal on modern filings.
+  Most post-2013 rows report RETIRED. Any design leaning on "Franklin" misses
+  most of his money; any design leaning on "retired" leans on one of the
+  commonest strings in FEC. This file resolves that by accepting PROBABLE
+  (city_state only) as the normal tier for his modern giving. EXPECT A HIGH P/C
+  RATIO AT FIRST INGEST AND DO NOT TREAT IT AS LEAKAGE WITHOUT CHECKING THE RAW
+  — see the ricketts-laura precedent, where a 1.7 ratio turned out to be correct
+  conservatism rather than contamination.
+
+  city_state_alone_insufficient IS NOT SET, against first instinct, because the
+  fisher-john situation does not replicate. San Francisco is a city of ~800,000
+  where four documented same-named filers swept in on city alone; Palm Beach is a
+  town of roughly 9,000, and the observed "Charles Johnson" + Palm Beach FEC set
+  resolves to a single person. Setting the flag would push the bulk of his
+  post-2013 giving out of the archive to defend against a doppelganger that was
+  looked for and not found. FLIP IT if calibration surfaces a second distinct
+  Charles Johnson filing from Palm Beach.
+
+  DOPPELGANGER LANDSCAPE (all observed in live FEC data, not hypothesized):
+    1. SON CHARLES E. JOHNSON — Tano Capital LLC, San Mateo CA, MANAGING
+       DIRECTOR; former Franklin Resources co-president 1999-2003. Shares first
+       name, surname, city and employer-family with his father. THIS COLLISION IS
+       NOT ANTICIPATED IN owners/johnson-greg.yaml, whose notes reason only that
+       different first names protect Greg from Charles B., Jennifer and Rupert —
+       reasoning that does not cover Charles E. Greg's own file is not at risk
+       (his variants are all Greg/Gregory), but that note is misleading and
+       should be corrected.
+    2. "JOHNSON, CHARLES B" / JOHNSONS GARBAGE SERVICE INC / SANITATION /
+       Columbia SC — same first name AND middle initial, 12+ records.
+    3. "JOHNSON, CHARLES B." / WESTERN NATIONAL GROUP / EXECUTIVE / PALM BEACH FL
+       33480 — a same-initial filer inside his own ZIP. This single record is why
+       33480 must never become a strong signal.
+    4. Retired same-initial CA filers (San Jose 95136, Norco 92860);
+       "B JOHNSON, CHARLES" / B AND S BUILDERS / Portland OR; "JOHNSON II,
+       CHARLES B" / NEVILLE, RODIE & SHAW / Montclair NJ; "JOHNSON, CHARLES B." /
+       RETIRED / New Orleans LA. The CA and LA ones are caught by the
+       address-contradiction rule; the rest by negative signals.
+    5. CHARLES C. JOHNSON (b. 1988) — the GotNews/WeSearchr publisher, found
+       liable for civil racketeering in 2025. A DIFFERENT PERSON with no
+       documented significant FEC contributor footprint. He is a citation-
+       confusion risk for downstream research, not an ingest risk. Never conflate
+       the two in a report.
+
+  NAME-GATE LIMITATION, important for whoever calibrates this. name_variants
+  excludes bare "Charles Johnson", but per VERIFICATION.md the middle-initial
+  rule treats a MISSING initial as COMPATIBLE — so a record filed bare "JOHNSON,
+  CHARLES" still name-matches "Charles B. Johnson" if it reaches the classifier.
+  The strict list suppresses the name QUERY, not the MATCH. That is why the
+  negative signals are load-bearing here rather than belt-and-braces, and why
+  Franklin must never be strong: a bare-name FRANKLIN RESOURCES + San Mateo row
+  would otherwise score employer + city = two signals = CONFIRMED, and such a row
+  is as likely to be Charles E. as Charles B.
+
+  DOCUMENTED RECALL LOSS, accepted deliberately: a San Mateo 94403 cluster filed
+  as bare "JOHNSON, CHARLES" / FRANKLIN RESOURCES / CHAIRMAN & C.E.O. across
+  2004-2012 is almost certainly his, and strict variants will not fetch it.
+  Recoverable later through an audited calibration pass with its own change_log
+  entry; not worth loosening the gate at creation.
+
+  OPEN CALIBRATION QUESTION, flagged BEFORE first ingest: rows reading "JOHNSON,
+  CHARLES BARTLETT MR." / FRANKLIN RESOURCES, INC. / PRESIDENT/CEO / San Mateo
+  recur roughly annually 2014-2020. The name is his exact legal name, but
+  PRESIDENT/CEO is a title he has not held since 2004 and the address is
+  corporate HQ rather than a residence. Under these signals they would score
+  employer + city_state = CONFIRMED. Audit them by hand before accepting.
+
+change_log:
+- date: 2026-07-20
+  change: |
+    Created under the ownership-group rule (CHARTER.md, adopted 2026-07-19),
+    following the ricketts-laura / ricketts-todd wave. Admitted on the EQUITY
+    prong; the governance prong is explicitly NOT claimed.
+
+    Tier-2 sourcing: Forbes 2011-09-26 (>25% stake, largest shareholder) and SF
+    Examiner 2022-10-14 ("the Giants' largest shareholder"), both fully
+    retrieved. tenure_start_date 1993-01-12 from the Washington Post's
+    1993-01-13 report of the owners' 27-0 approval of the Magowan group —
+    headline/index level only, cited as such. Wikipedia corroborates but is not
+    cited (SOURCES.md forbids it in YAMLs). mlb.com 406s for this project's
+    fetchers, so the team's own ownership block could NOT corroborate — recorded
+    as a gap rather than skipped over.
+
+    strong_signals INTENTIONALLY EMPTY and documented as a design decision, not
+    a to-do: Franklin is shared with four relatives INCLUDING a son with the same
+    first name, and ZIP 33480 already contains an observed same-initial filer.
+
+    negative_signals seeded at creation from doppelgangers observed in live FEC
+    data during sourcing, following the ricketts precedent of tracing the
+    doppelganger before writing the rule rather than after an audit.
+
+    NOT INGESTED in this change — see the PR. The open calibration question about
+    the "PRESIDENT/CEO / San Mateo" rows should be adjudicated against real
+    classified output, not predicted.
+  by: "automated research (maintainer-directed; verdict + signal design reviewed)"
+  references:
+  - "CHARTER.md — the ownership-group rule"
+  - "owners/johnson-greg.yaml — the tracked Giants control person (his son)"
+  - "owners/fisher-john.yaml — the common-name precedent this case exceeds"
+- date: 2026-07-20
+  change: |
+    First ingestion — 1,197 records fetched (FL+CA filter) → 188 CONFIRMED /
+    913 PROBABLE / 80 UNCERTAIN, $24,057,751. He is now by a wide margin the
+    largest single donor in the archive.
+
+    ⚠ READ THE TIER SPLIT BEFORE QUOTING THE TOTAL: $2,892,265 CONFIRMED vs
+    $21,165,486 PROBABLE — 88% of the dollars are ONE-SIGNAL (city_state:
+    palm beach/FL) matches, including every seven-figure check (Right to Rise
+    USA $1M, Senate Leadership Fund $1M ×2, Congressional Leadership Fund $1M
+    ×2). That is the predicted consequence of his filings reporting employer
+    RETIRED, and it is correct conservative behaviour, not a defect — but any
+    report citing "$24M" must carry the split, because the confidence behind
+    that figure is materially lower than behind, say, kendrick-ken's.
+
+    THE SIGNAL DESIGN WAS VERIFIED AGAINST THE RAW BEFORE INGEST, by classifying
+    in-process without writing. Every stranger cluster was correctly excluded:
+      - SAN JOSE CA (62 rows) → all UNCERTAIN (address contradiction)
+      - NORCO CA (5) → UNCERTAIN
+      - "JOHNSON, BASIL CHARLES MR." (11) → no name match; the strict variant
+        list held
+      - ARCADIA CA (11) → no name match
+      - "JOHNSON, CHARLES B." / WESTERN NATIONAL GROUP / PALM BEACH FL (1) →
+        UNCERTAIN. THE NEGATIVE SIGNAL FIRED, inside his own ZIP. This is the
+        single best evidence that ZIP 33480 must never become a strong signal.
+    CONFIRMED rows landed ONLY in his three documented cities: Palm Beach (91),
+    San Mateo (56), Hillsborough (44). Party mix 886 REP / 5 DEM, consistent
+    with his documented profile.
+
+    Son Charles E. Johnson (Tano Capital) produced ZERO rows in this fetch — the
+    strict name_variants excluded him at the query stage, so the Tano negative
+    signal was never exercised. It is retained as insurance for any future
+    broadened fetch, not because it did work here.
+
+    THE OPEN CALIBRATION QUESTION IS RESOLVED, with a caveat recorded: the 25
+    "PRESIDENT/CEO + FRANKLIN RESOURCES + San Mateo" rows CONFIRMED, $265,400.
+    Accepted as his — they carry his exact legal name ("JOHNSON, CHARLES
+    BARTLETT MR." / "JOHNSON, CHARLES B MR."), and Franklin HQ is his
+    documented filing address for the CA era. The caveat: some are dated
+    2019-2020, when the Franklin President/CEO was his son GREG, so the
+    occupation string is stale-or-wrong on those rows. The NAME is the
+    discriminator here, not the title. If a later pass finds a Greg-filed row
+    under Charles's legal name, revisit.
+  by: "automated pipeline (ingest --from-raw), raw audited pre-ingest"
+  references:
+  - "data/snapshots/2026-07-20T03-28-56Z__d8bc054f.db (pre-ingest)"
+
+audit:
+  created: 2026-07-20
+  last_ingestion: '2026-07-20'
+  last_signal_review:
