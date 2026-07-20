@@ -921,3 +921,44 @@ class TestDonationsPkMigration:
         )
         assert conn.execute(
             "SELECT COUNT(*) c FROM donations WHERE transaction_id='T1'").fetchone()["c"] == 2
+
+
+class TestRecordUidIntegrityCheck:
+    """v12: `cli validate` asserts the identity guarantee that the DDL cannot
+    (record_uid is nullable so raw-SQL fixtures need not carry it)."""
+
+    def test_clean_db_reports_no_errors(self, db_path):
+        with db.connect(db_path) as conn:
+            db.insert_donation(conn, _row(sub_id="S1"))
+        assert db.check_record_uid_integrity(db_path) == []
+
+    def test_missing_record_uid_is_reported(self, db_path):
+        with db.connect(db_path) as conn:
+            db.insert_donation(conn, _row(sub_id="S1"))
+            conn.execute("UPDATE donations SET record_uid = NULL")
+        errs = db.check_record_uid_integrity(db_path)
+        assert errs and "no record_uid" in errs[0]
+
+    def test_uid_disagreeing_with_its_own_ids_is_reported(self, db_path):
+        """Catches a writer that bypassed db.record_uid_for()."""
+        with db.connect(db_path) as conn:
+            db.insert_donation(conn, _row(sub_id="S1"))
+            conn.execute("UPDATE donations SET record_uid = 'something-else'")
+        errs = db.check_record_uid_integrity(db_path)
+        assert any("bypassed" in e for e in errs)
+
+    def test_lfs_pointer_is_not_an_integrity_failure(self, tmp_path):
+        """In CI master.db is checked out as a Git LFS pointer, not a database.
+        sqlite3.connect() is lazy, so this surfaces on the first query as
+        'file is not a database'. That is an absent DB, not a failure — without
+        this branch `cli validate` crashed in CI while passing locally."""
+        pointer = tmp_path / "master.db"
+        pointer.write_text(
+            "version https://git-lfs.github.com/spec/v1\n"
+            "oid sha256:0000000000000000000000000000000000000000000000000000000000000000\n"
+            "size 123\n"
+        )
+        assert db.check_record_uid_integrity(pointer) == []
+
+    def test_absent_db_is_not_an_integrity_failure(self, tmp_path):
+        assert db.check_record_uid_integrity(tmp_path / "nope.db") == []

@@ -628,7 +628,17 @@ def check_record_uid_integrity(db_path: Path = MASTER_DB) -> list[str]:
     conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
     try:
-        cols = {r["name"] for r in conn.execute("PRAGMA table_info(donations)")}
+        try:
+            cols = {r["name"] for r in conn.execute("PRAGMA table_info(donations)")}
+        except sqlite3.DatabaseError:
+            # In CI the checked-out master.db is a **Git LFS pointer**, not a
+            # database (the workflow does not smudge it — the test job only needs
+            # the repo). sqlite3.connect() is lazy, so the failure surfaces on the
+            # first query as "file is not a database". That is not an integrity
+            # failure, it is an absent database: report nothing, exactly as the
+            # not-exists branch above does. Without this, `cli validate` crashes
+            # in CI while passing locally.
+            return errors
         if "record_uid" not in cols:
             return ["donations.record_uid is missing — run `cli init` to apply the v12 migration"]
         missing = conn.execute(
