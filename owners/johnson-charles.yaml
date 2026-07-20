@@ -76,17 +76,35 @@ verifying_signals:
 
 strong_signals:
   employers: []
-  zip_codes: []
-  # BOTH INTENTIONALLY EMPTY, and this is the core of the design rather than an
-  # omission to fix later:
-  #  - "Franklin Resources"/"Franklin Templeton": a public company with thousands
-  #    of employees, filed by FOUR family members (Charles B., Greg, Jennifer,
-  #    Rupert Jr.) AND by son Charles E., who shares Charles B.'s first name.
-  #    Promoting it would hand this slug his son's records.
-  #  - ZIP 33480: zip_match() truncates to ZIP5, so his house-level ZIP+4s are
-  #    invisible to the classifier — a "strong" ZIP here means the whole of Palm
-  #    Beach, and a same-initial "JOHNSON, CHARLES B." / WESTERN NATIONAL GROUP
-  #    filer was already observed inside it. This is the fisher-john 94111 lesson.
+  # employers STAYS INTENTIONALLY EMPTY, and this is the core of the design
+  # rather than an omission to fix later: "Franklin Resources"/"Franklin
+  # Templeton" is a public company with thousands of employees, filed by FOUR
+  # family members (Charles B., Greg, Jennifer, Rupert Jr.) AND by son Charles
+  # E., who shares Charles B.'s first name. Promoting it would hand this slug
+  # his son's records.
+
+  zip_codes:
+    # HOUSEHOLD-LEVEL ZIP+4s ONLY. Added 2026-07-20 once zip_match() learned to
+    # honour ZIP+4 precision (see OWNER_SCHEMA.md → "ZIP precision"). Before
+    # that, both sides were truncated to ZIP5, so these were unrepresentable and
+    # this block was necessarily empty — the note that used to live here said so.
+    #
+    # Each of these is EVIDENCED, not guessed: both already carry CONFIRMED
+    # records corroborated by a DIFFERENT signal (Franklin employers), which is
+    # what distinguishes a documented household from a narrower guess.
+    #   334805016 — 46 CONFIRMED (Franklin Templeton/Resources/Investments)
+    #                alongside 557 records whose employer is RETIRED/NONE/N/A
+    #   334804742 — 11 CONFIRMED (Franklin Resources/Investments) alongside 12
+    #
+    # ⚠ NEVER ADD BARE "33480". It is the whole of Palm Beach and it is where the
+    # documented same-initial "JOHNSON, CHARLES B." / WESTERN NATIONAL GROUP
+    # filer lives (see negative_signals). Adding the ZIP5 parent alongside these
+    # would silently re-widen both back to town level and defeat the entire
+    # point — the 381 bare-33480 PROBABLE rows are SUPPOSED to stay PROBABLE.
+    # This is the fisher-john 94111 lesson, kept intact at ZIP5 while the
+    # household level is used where it is actually earned.
+  - "334805016"
+  - "334804742"
 
 negative_signals:
   employers:

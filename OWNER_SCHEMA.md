@@ -87,6 +87,23 @@ strong_signals:
 
 A string belongs in `strong_signals.employers` only if it is **virtually never filed by anyone else** as their employer. "Hedge fund manager" is not a strong signal. "Point72 Asset Management" is. When in doubt, leave it in `verifying_signals.employers` and require a second signal.
 
+#### ZIP precision: ZIP5 vs ZIP+4
+
+**A ZIP signal's own length decides how narrowly it matches.**
+
+| signal | matches |
+|---|---|
+| `"33480"` (5-digit) | any record in that ZIP5, ZIP+4 records included |
+| `"334805016"` (9-digit) | **only** that exact ZIP+4 — a record carrying just the ZIP5 does **not** satisfy it |
+
+A ZIP+4 signal is therefore **strictly narrower** than its ZIP5 parent: it can never match something the ZIP5 would have missed, so adding one can only remove matches, never create them.
+
+**Why this exists.** A ZIP5 can be an entire town, and promoting one to `strong_signals` confirms every same-named filer in it — the `fisher-john` 94111 lesson. But a ZIP+4 is a delivery segment, effectively a household. Before this distinction existed, `zip_match()` truncated both sides to 5 digits, so a household-level ZIP silently widened into a town-level one and the only safe choice was to promote no ZIP at all.
+
+`johnson-charles` is the case that forced it: Palm Beach `33480` holds both him *and* a documented same-initial `JOHNSON, CHARLES B.` / Western National Group filer, so `33480` is not promotable — while `334805016` is his household and carries 46 employer-corroborated CONFIRMED records of his own alongside 557 that had no employer to corroborate.
+
+**Use a ZIP+4 only when the household is evidenced**, i.e. the same ZIP+4 already carries CONFIRMED records corroborated by a *different* signal (typically an employer). A ZIP+4 that only ever appears on uncorroborated records proves nothing — it is just a narrower guess. Promoting the ZIP5 parent as well defeats the entire purpose; list one or the other, deliberately.
+
 ### `negative_signals` (optional, may be omitted entirely)
 
 Anti-patterns. Identifying strings for a **different person who shares a name** with the owner and is known to confuse the classifier. A record whose employer matches a negative-signal string is automatically demoted to UNCERTAIN with reason "negative employer signal", regardless of any other signals that matched. Use sparingly — this is for cases where audit has identified a same-name doppelgänger.

@@ -12,6 +12,7 @@ from scripts.resolve_entities import (
     employer_match,
     names_match,
     normalize_name,
+    zip_match,
 )
 
 
@@ -960,3 +961,86 @@ class TestMrsHonorificRule:
         )
         result = classify(r, owner, process_related_entities=True)
         assert result.status == UNCERTAIN
+
+
+# ─── zip_match: ZIP+4 precision ─────────────────────────────────────────────
+#
+# A signal's own length decides how narrowly it matches. The rule exists so a
+# household-level ZIP (johnson-charles' 334805016) can be promoted to a strong
+# signal without silently widening into its whole town (Palm Beach 33480), which
+# holds a documented same-initial doppelganger.
+
+
+class TestZipMatchZip5Signal:
+    """5-digit signals keep their old, deliberately broad behaviour."""
+
+    def test_zip5_signal_matches_exact_zip5_record(self):
+        assert zip_match("33480", ["33480"]) == "33480"
+
+    def test_zip5_signal_still_matches_a_zip4_record(self):
+        # The pre-existing contract: signals written as ZIP5 match everyone in
+        # that ZIP5, however precisely the record happens to be filed.
+        assert zip_match("334805016", ["33480"]) == "33480"
+
+    def test_zip5_signal_rejects_a_different_zip5(self):
+        assert zip_match("94111", ["33480"]) is None
+
+
+class TestZipMatchZip4Signal:
+    """9-digit signals match ONLY themselves — strictly narrower than ZIP5."""
+
+    def test_zip4_signal_matches_the_same_zip4(self):
+        assert zip_match("334805016", ["334805016"]) == "334805016"
+
+    def test_zip4_signal_rejects_a_bare_zip5_record(self):
+        # THE POINT OF THE RULE. A record filed as plain "33480" could be any
+        # address in Palm Beach, so it must not satisfy a household signal.
+        assert zip_match("33480", ["334805016"]) is None
+
+    def test_zip4_signal_rejects_a_neighbouring_zip4(self):
+        # Same ZIP5, different delivery segment — the old truncating comparison
+        # treated these as identical.
+        assert zip_match("334804742", ["334805016"]) is None
+
+    def test_zip4_signal_rejects_a_different_zip5_entirely(self):
+        assert zip_match("94111", ["334805016"]) is None
+
+
+class TestZipMatchMixedAndBackCompat:
+    """Mixed lists, and the one owner who already ships a 9-digit signal."""
+
+    def test_zip5_parent_alongside_zip4_still_matches_broadly(self):
+        # reinsdorf-jerry ships ['60616', '606163621']. The ZIP5 parent keeps
+        # every match it had, so this change is a no-op for that owner.
+        signals = ["60616", "606163621"]
+        assert zip_match("60616", signals) == "60616"
+        assert zip_match("606163621", signals) == "60616"
+        assert zip_match("606169999", signals) == "60616"
+
+    def test_zip4_only_list_does_not_match_the_wider_zip5(self):
+        assert zip_match("60616", ["606163621"]) is None
+
+    def test_first_matching_signal_wins_across_precisions(self):
+        assert zip_match("334805016", ["334805016", "33480"]) == "334805016"
+
+    def test_empty_and_missing_inputs(self):
+        assert zip_match(None, ["33480"]) is None
+        assert zip_match("", ["33480"]) is None
+        assert zip_match("33480", []) is None
+        assert zip_match("33480", None) is None
+
+    def test_whitespace_is_tolerated_on_both_sides(self):
+        assert zip_match(" 334805016 ", [" 334805016 "]) == "334805016"
+
+
+class TestZipMatchNarrowingInvariant:
+    """A ZIP+4 signal can only ever remove matches, never add one."""
+
+    @pytest.mark.parametrize(
+        "record",
+        ["33480", "334805016", "334804742", "94111", "606163621", ""],
+    )
+    def test_zip4_signal_never_matches_where_its_zip5_parent_would_not(self, record):
+        zip4, parent = "334805016", "33480"
+        if zip_match(record, [zip4]) is not None:
+            assert zip_match(record, [parent]) is not None
