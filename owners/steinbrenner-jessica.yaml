@@ -1,0 +1,170 @@
+# Jessica S. Steinbrenner — New York Yankees
+# General partner. Added under the ownership-group rule (CHARTER.md): ESPN's
+# long-form profile of the family states that "all four share in the baseball
+# responsibilities as general partners", and Forbes' staff profile independently
+# calls her a general partner of the club. That satisfies the governance prong
+# on its own, independent of her relationship to Hal.
+#
+# The MLB.com Yankees front-office directory lists a per-sibling ownership-stake
+# holding entity for each of the four — "JJS NYY, LLC" is hers (Martinique
+# Holdings is Hal's, Marsh Harbor is Jennifer's).
+#
+# CRITICAL — ZIP CANNOT SEPARATE HER FROM HAL.
+# She files from Tampa 33614, which is ALSO the ZIP of Trans-Marine Management
+# Corp — the family maritime firm whose employer string is a verifying signal on
+# steinbrenner-hal, and the exact ZIP of Hal's own promoted Trans-Marine record.
+# THIS FILE MUST NEVER PROMOTE A TAMPA ZIP TO strong_signals.
+#
+# EMPLOYER WILL NEVER CORROBORATE HER. She files occupation/employer HOMEMAKER,
+# so the employer axis is dead for this entity by construction. Her attribution
+# rests on the FIRST NAME plus city/state — which is precisely why the
+# city_state_alone_insufficient posture and the Mrs guard below matter.
+#
+# Read OWNER_SCHEMA.md before editing. Read GOVERNANCE.md §1.7 before adding entities.
+
+slug: steinbrenner-jessica
+name: Jessica S. Steinbrenner
+team: New York Yankees
+role: General partner
+status: pilot
+tenure_start_date: 2007-01-01      # year-precision — the post-George generational transfer
+tenure_end_date:
+family_tenure_start_date: 1973-01-03    # George Steinbrenner-led group acquired the Yankees from CBS
+
+# "Jessica" is the firewall. No bare "Steinbrenner" and no "J. Steinbrenner" —
+# the latter would collide with her sister Jennifer AND with Joan (their late
+# mother, a prolific pre-2018 donor).
+#
+# DELIBERATELY NOT ENCODED: "Jessica Steinbrenner Molloy". The alternate married
+# surname surfaced in research but could NOT be corroborated by a Tier 2 source,
+# and a wrong surname variant silently harvests a stranger's records. Add it only
+# with a citation and a change_log entry.
+name_variants:
+- "Jessica S Steinbrenner"
+- "Jessica S. Steinbrenner"
+- "Jessica Steinbrenner"
+- "Steinbrenner, Jessica"
+- "Steinbrenner, Jessica S"
+- "Steinbrenner, Jessica S."
+
+# She is a woman who may legitimately file as "Mrs. Jessica Steinbrenner", so the
+# default Mrs guard would wrongly route her own filings to UNCERTAIN. Opting out
+# is correct HERE and would be WRONG on any of her male relatives' files: for
+# them, a "Mrs. <name>" row is the wife, not the owner (OWNER_SCHEMA.md).
+mrs_honorific_is_self: true
+
+# Her attribution rests on name + city/state because the employer axis is dead
+# (HOMEMAKER). That is exactly the configuration that let a lone city_state
+# promote every same-named stranger in the Fisher case, so the lone-city_state
+# promotion is disabled here from the start rather than after an audit finds it.
+city_state_alone_insufficient: true
+
+verifying_signals:
+  cities:
+    # Tampa is the documented family base. Ocala appears via Kinsman Farm, the
+    # Steinbrenner family horse-breeding operation she has been associated with.
+  - "tampa"
+  - "ocala"
+  states:
+  - "FL"
+  employers:
+    # HOMEMAKER is deliberately ABSENT. It is the single most common
+    # self-reported occupation in FEC data and would corroborate any Tampa
+    # stranger named Jessica Steinbrenner — it is an anti-signal here, not a
+    # signal. Kinsman Farm / Kinsman Stables is the family's own vehicle and is
+    # discriminating in a way "homemaker" can never be.
+  - "Kinsman Farm"
+  - "Kinsman Stables"
+  - "Kinsman"
+  occupations:
+    # Note the asymmetry with the employers list: "homemaker" is safe as an
+    # occupation-side corroborator ONLY in combination with a second signal,
+    # which the classifier requires for verifying_signals. Still, it is weak.
+  - "homemaker"
+  - "general partner"
+  - "partner"
+  - "owner"
+
+strong_signals:
+  # Intentionally empty at creation, and the ZIP list must STAY empty until an
+  # audit proves a ZIP that Hal does not share. 33614 is disqualified by
+  # construction (Trans-Marine / Hal). 33609 is a dense Tampa residential ZIP
+  # with no corroborating employer available on this entity — precisely the
+  # "strong-ZIP-only confirmed in an employer-less context" pattern that
+  # produced 27 false confirmeds in the Florida state ingest.
+  employers: []
+  zip_codes: []
+
+negative_signals:
+  # No negative signals at creation. The sibling collisions are handled by the
+  # name gate (every variant carries a full "Jessica"). Audit will tighten.
+  employers: []
+  zip_codes: []
+
+related_entities: []
+# Her siblings each get their own slug (steinbrenner-hal, steinbrenner-hank,
+# steinbrenner-jennifer) — NOT related_entities under one another. Per
+# GOVERNANCE §1.7 a related_entity is a household member whose giving is
+# reported alongside the owner's, not a co-equal general partner.
+
+sources:
+- description: "MLB.com / New York Yankees official Front Office Staff Directory — lists the four siblings' per-sibling ownership-stake holding entities; 'JJS NYY' is Jessica's (Martinique Holdings is Hal's, Marsh Harbor is Jennifer's)"
+  url: "https://www.mlb.com/yankees/team/front-office"
+  accessed: "2026-05-22"
+  archive_url: ""
+- description: "ESPN long-form profile of Hal Steinbrenner (March 2016) — 'All four share in the baseball responsibilities as general partners', establishing the governance prong for each sibling"
+  url: "https://www.espn.com/mlb/story/_/page/springtraining_halsteinbrenner/who-exactly-new-york-yankees-owner-hal-steinbrenner"
+  accessed: "2026-07-20"
+  archive_url: ""
+
+notes: |
+  EXPECTED YIELD AT CREATION: 5 federal records, $10,100 — the highest of the
+  three siblings added in this wave, and strongly Republican (incl. Thune 2025).
+  Small enough that a single misattributed stranger would be a material error,
+  which is why both guards above are on from the start.
+
+  WHY THE EMPLOYER AXIS IS DEAD. She files HOMEMAKER. Unlike Hal — whose
+  Trans-Marine and Yankee Global strings carry real discriminating power — there
+  is no employer string that distinguishes Jessica from any other Tampa woman of
+  the same name. Attribution therefore rests on the name gate plus city/state,
+  and the archive has already been burned once by exactly that configuration
+  (see the Fisher city_state calibration). Hence city_state_alone_insufficient.
+
+  WHY NO STRONG ZIP, EVER, WITHOUT AN AUDIT. 33614 is Trans-Marine's ZIP and
+  therefore Hal's. Promoting it here would let Hal's records satisfy Jessica's
+  strong-signal test and vice versa — the two entities would begin trading
+  records on a signal neither of them owns exclusively.
+
+  THE Mrs FLAG IS LOAD-BEARING AND DIRECTIONAL. It is set true here because
+  Jessica is a woman filing under her own given name. The same flag must NOT be
+  set on steinbrenner-hal or steinbrenner-hank: on a man's file, a
+  "STEINBRENNER, MRS. <his name>" row is his WIFE, and the default guard
+  correctly routes it to review.
+
+  LATENT HAZARD RECORDED FOR THE FAMILY, NOT JUST THIS FILE — GEORGE III vs
+  GEORGE IV. George M. Steinbrenner III (d. 2010) was a prolific donor; George
+  IV (b. ~1996, Steinbrenner Racing) has zero FEC records today, so every
+  "George Steinbrenner" row in the data is currently III. That is a fact about
+  today's data, not a durable property. If a george slug is ever created, encode
+  a post-2010 date guard at creation rather than discovering the collision after
+  the fact.
+
+change_log:
+- date: 2026-07-20
+  change: |
+    Created under the ownership-group rule as part of the Wave 3 co-owner pass.
+    Tier 2 sources: MLB.com Yankees front-office directory (per-sibling holding
+    entities) and the ESPN family profile ("all four ... as general partners").
+    Tampa/Ocala + FL only; strong_signals empty at creation and ZIP promotion
+    explicitly barred pending an audit that finds a ZIP Hal does not share.
+    Set mrs_honorific_is_self: true (she is a woman filing under her own given
+    name) and city_state_alone_insufficient: true (the employer axis is dead
+    because she files HOMEMAKER, leaving name + city/state as the only basis —
+    the configuration that caused the Fisher false-promotion class).
+    Deliberately did NOT encode the uncorroborated married surname "Molloy".
+  by: "automated research (maintainer-directed, Wave 3)"
+  references:
+  - "https://www.mlb.com/yankees/team/front-office"
+  - "https://www.espn.com/mlb/story/_/page/springtraining_halsteinbrenner/who-exactly-new-york-yankees-owner-hal-steinbrenner"
+audit:
+  last_ingestion: '2026-07-20'

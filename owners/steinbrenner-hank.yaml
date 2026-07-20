@@ -1,0 +1,193 @@
+# Henry G. ("Hank") Steinbrenner — New York Yankees
+# FORMER general partner and co-chairperson. 1957-04-02 – 2020-04-14.
+# Added under the ownership-group rule (CHARTER.md): ESPN's family profile
+# states that "all four share in the baseball responsibilities as general
+# partners", and he held the co-chairperson title alongside Hal after the
+# 2007–08 generational transfer from George.
+#
+# THIS IS A CLOSED RECORD. He died 2020-04-14, so tenure_end_date is set and no
+# new filings can appear under this slug. Its purpose is completeness of the
+# ownership group during his tenure, not future yield.
+#
+# CRITICAL — "H. STEINBRENNER" IS BANNED AS A VARIANT.
+# Hank and Hal share an initial. steinbrenner-hal's file already excludes
+# "H. Steinbrenner" for exactly this reason; the exclusion only works if BOTH
+# files honor it. Every variant below carries a full "Henry" or "Hank".
+#
+# Read OWNER_SCHEMA.md before editing. Read GOVERNANCE.md §1.7 before adding entities.
+
+slug: steinbrenner-hank
+name: Henry G. Steinbrenner
+team: New York Yankees
+role: General partner / Co-chairperson (former)
+status: pilot
+# Year-precision only. The generational transfer from George ran across 2007–08
+# and no Tier 2 source pins a day for Hank's assumption of the co-chair role;
+# 2007-01-01 is the conservative earliest-plausible boundary, not a known date.
+tenure_start_date: 2007-01-01
+tenure_end_date: 2020-04-14        # date of death — DAY PRECISION, widely reported
+family_tenure_start_date: 1973-01-03    # George Steinbrenner-led group acquired the Yankees from CBS
+
+# "Henry"/"Hank" is the firewall. NO bare "Steinbrenner"; NO "H. Steinbrenner"
+# (collides with Hal); NO "Henry Steinbrenner III"-style generational suffix —
+# the suffixed forms belong to the George line, not to Hank.
+#
+# The spelled-out middle name "HENRY GEORGE" is a REAL filed form (FEC, 1985) —
+# added after the creation-day probe below found it. "Hank" is NOT a filed form:
+# both "Hank" variants returned zero at FEC. They are retained anyway, since a
+# future filer could use the nickname and an unused variant costs nothing.
+name_variants:
+- "Henry G Steinbrenner"
+- "Henry G. Steinbrenner"
+- "Henry George Steinbrenner"
+- "Henry Steinbrenner"
+- "Hank Steinbrenner"
+- "Steinbrenner, Henry"
+- "Steinbrenner, Henry G"
+- "Steinbrenner, Henry G."
+- "Steinbrenner, Henry George"
+- "Steinbrenner, Hank"
+
+# NOT set — and the omission is deliberate. Hank is a man, so a record filed as
+# "STEINBRENNER, MRS. HENRY" is his WIFE, not him. The default Mrs guard
+# correctly routes such a row to review. Setting this flag true here would
+# reintroduce precisely the castellini/reinsdorf defect (OWNER_SCHEMA.md).
+# mrs_honorific_is_self: false   [default]
+
+verifying_signals:
+  cities:
+    # Clearwater (34618) is his documented filing base. Palm Harbor and Ocala are
+    # his ACTUAL earlier filing cities, confirmed by the creation-day FEC probe;
+    # Ocala is also the family's Kinsman Farm base and appears on Jessica's file.
+    # Tampa is the family's base but is shared with Hal and Jessica — it can only
+    # ever be one half of a two-signal match here, never the whole case.
+  - "clearwater"
+  - "palm harbor"
+  - "ocala"
+  - "tampa"
+  states:
+  - "FL"
+  employers:
+  - "New York Yankees"
+  - "NY Yankees"
+  - "Yankees"
+  - "Yankee Global Enterprises"
+  - "Yankee Global"
+  occupations:
+  - "general partner"
+  - "co-chairperson"
+  - "chairperson"
+  - "partner"
+  - "owner"
+
+strong_signals:
+  # Empty at creation and expected to STAY empty. The Yankees employer strings
+  # are shared with Hal (and with any Yankees executive who files them), and the
+  # Clearwater ZIP rests on only ~2 records — far too thin a base to promote a
+  # signal that would then confirm on its own.
+  employers: []
+  zip_codes: []
+
+negative_signals:
+  employers: []
+  zip_codes: []
+
+related_entities: []
+
+sources:
+- description: "ESPN long-form profile of Hal Steinbrenner (March 2016) — 'All four share in the baseball responsibilities as general partners'; identifies Hank as the older brother"
+  url: "https://www.espn.com/mlb/story/_/page/springtraining_halsteinbrenner/who-exactly-new-york-yankees-owner-hal-steinbrenner"
+  accessed: "2026-07-20"
+  archive_url: ""
+- description: "MLB.com / New York Yankees official Front Office Staff Directory — the sibling ownership structure and per-sibling holding entities"
+  url: "https://www.mlb.com/yankees/team/front-office"
+  accessed: "2026-05-22"
+  archive_url: ""
+
+notes: |
+  ACTUAL YIELD: ZERO — AND THE REASON IS SCOPE, NOT CONFIGURATION.
+  His entire federal giving history predates the archive's 2000-01-01 fetch
+  floor (DEFAULT_MIN_DATE in scripts/fetch_fec.py; the archive's earliest record
+  of any kind is 2000-01-13). He died in 2020, but his last federal contribution
+  was in 1999, so there is no window in which this slug can yield anything.
+
+  This was NOT assumed. The creation-day ingest returned 0 records, which was
+  checked rather than accepted: a --no-state-filter --full-refetch re-probe also
+  returned 0, and a direct FEC query with min_date=1980-01-01 then found his
+  real history sitting entirely below the floor:
+
+    1985-09-24  STEINBRENNER, HENRY          Palm Harbor FL 33563    $500
+    1985-12-05  STEINBRENNER, HENRY GEORGE   Palm Harbor FL 33563    $500
+    1990-10-05  STEINBRENNER, HENRY          Ocala FL 32674          $500
+    1992-02-28  STEINBRENNER, HENRY G        Clearwater FL 34618   $1,000
+    1999-06-30  STEINBRENNER, HENRY G        Clearwater FL 34618   $1,000
+
+  The two Clearwater 34618 records are the "~2 records / ~$2,000" the Wave 3
+  research predicted; the prediction was right about the records and silent
+  about the fact that none of them are reachable.
+
+  DO NOT "FIX" THIS BY LOWERING THE FLOOR FOR THIS OWNER. Every other owner in
+  the archive is 2000-plus. A slug fetched from 1980 would produce a total that
+  is not comparable to any other owner's, and the dashboard's cross-owner
+  comparisons would silently mix two different temporal scopes. If pre-2000
+  coverage is ever wanted, it is an archive-wide scope change with its own
+  charter decision — not a per-owner override.
+
+  The signals below are therefore configured for a window in which no records
+  exist. They are kept accurate anyway (the probe corrected two filing cities
+  and one name form) so that this file states what is true about him rather than
+  what happened to be convenient.
+
+  A CLOSED RECORD. Death 2020-04-14 sets a hard upper bound on legitimate
+  filings. Any record dated after 2020-04-14 that matches these variants is by
+  definition NOT him and indicates either a filer error or a namesake — treat it
+  as an audit finding, not a new donation.
+
+  THE SHARED-INITIAL FIREWALL IS A TWO-FILE INVARIANT. steinbrenner-hal excludes
+  "H. Steinbrenner" so that Hank's records cannot leak into Hal's. That exclusion
+  is only half the guarantee — this file must never introduce the initial form
+  either, or the leak simply runs the other direction. If a future calibration is
+  ever tempted to add "H. Steinbrenner" to either file, the correct answer is no.
+
+  WHY THE Mrs FLAG IS ABSENT HERE BUT PRESENT ON JESSICA. The flag opts out of a
+  default-ON guard, and the guard is correct for men: on Hank's file a
+  "Mrs. Henry Steinbrenner" row is his wife's money. Jessica's file sets it true
+  because she is a woman who may legitimately file under her own given name with
+  the honorific. The asymmetry is the whole point of the rule.
+
+  GEORGE III vs GEORGE IV — latent family hazard, recorded here too so it is
+  found from any sibling file. George M. Steinbrenner III (d. 2010) was a
+  prolific donor; George IV (b. ~1996) has zero FEC records today, so every
+  "George Steinbrenner" row is currently III. If a george slug is ever created,
+  encode a post-2010 date guard at creation.
+
+change_log:
+- date: 2026-07-20
+  change: |
+    Created under the ownership-group rule as part of the Wave 3 co-owner pass.
+    Enters as a FORMER owner: tenure_end_date 2020-04-14 (date of death, day
+    precision); tenure_start_date 2007-01-01 is year-precision only — no Tier 2
+    source pins a day for the George-to-siblings transfer, so the conservative
+    earliest-plausible boundary is used rather than a fabricated date.
+    Clearwater/Tampa + FL only. strong_signals empty and expected to remain so:
+    the ~2-record base is too thin to support promotion, and the Yankees employer
+    strings are shared with Hal. mrs_honorific_is_self deliberately NOT set (he
+    is a man; a "Mrs. Henry" row is his wife and the default guard should catch
+    it). "H. Steinbrenner" deliberately excluded to preserve the two-file
+    shared-initial firewall with steinbrenner-hal.
+
+    CREATION-DAY PROBE — the ingest returned 0 records and that zero was
+    investigated rather than accepted. A --no-state-filter --full-refetch
+    re-probe also returned 0; a direct FEC query at min_date=1980-01-01 then
+    found 5 real records, ALL of them pre-2000 (1985–1999) and therefore below
+    the archive's 2000-01-01 floor. Yield for this slug is structurally zero.
+    The probe also corrected the file: added the filed form "Henry George
+    Steinbrenner" (FEC 1985) and the filing cities Palm Harbor and Ocala, and
+    established that neither "Hank" variant is a filed form at all. Signals kept
+    accurate despite yielding nothing, so the file describes him truthfully.
+  by: "automated research (maintainer-directed, Wave 3)"
+  references:
+  - "https://www.espn.com/mlb/story/_/page/springtraining_halsteinbrenner/who-exactly-new-york-yankees-owner-hal-steinbrenner"
+  - "https://www.mlb.com/yankees/team/front-office"
+audit:
+  last_ingestion: '2026-07-20'

@@ -26684,3 +26684,51 @@ not production").
 - **uncertain_count**: `1`
 - **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T13-25-21Z__be879594.db`
 - **notes**: skipped(no-name-match)=0 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-07-20 — INGESTION
+
+- **run_id**: `12f76c1c`
+- **entity_slug**: `steinbrenner-jessica`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2025-05-22`
+- **name_variants_queried**: `["Jessica S Steinbrenner", "Jessica S. Steinbrenner", "Jessica Steinbrenner", "Steinbrenner, Jessica", "Steinbrenner, Jessica S", "Steinbrenner, Jessica S."]`
+- **api_calls_made**: `10`
+- **records_fetched**: `5`
+- **confirmed_count**: `4`
+- **probable_count**: `0`
+- **uncertain_count**: `1`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T13-32-31Z__12f76c1c.db`
+- **notes**: skipped(no-name-match)=0 · min_date=default (no prior ingestion) · states=['FL']
+
+### 2026-07-20 — INGESTION
+
+- **run_id**: `05010718`
+- **entity_slug**: `steinbrenner-hank`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `None`
+- **name_variants_queried**: `["Henry G Steinbrenner", "Henry G. Steinbrenner", "Henry Steinbrenner", "Hank Steinbrenner", "Steinbrenner, Henry", "Steinbrenner, Henry G", "Steinbrenner, Henry G.", "Steinbrenner, Hank"]`
+- **api_calls_made**: `7`
+- **records_fetched**: `0`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T13-47-45Z__05010718.db`
+- **notes**: skipped(no-name-match)=0 · min_date=default (no prior ingestion) · states=['FL']
+
+### 2026-07-20 — INGESTION
+
+- **run_id**: `87e54762`
+- **entity_slug**: `steinbrenner-jennifer`
+- **dry_run**: `0`
+- **period_start**: `2000-01-01`
+- **period_end**: `2009-09-30`
+- **name_variants_queried**: `["Jennifer Steinbrenner Swindal", "Jennifer S Swindal", "Jennifer S. Swindal", "Jennifer Steinbrenner", "Jennifer Swindal", "Swindal, Jennifer", "Swindal, Jennifer S", "Swindal, Jennifer S.", "Swindal, Jennifer Steinbrenner", "Steinbrenner, Jennifer", "Steinbrenner Swindal, Jennifer"]`
+- **api_calls_made**: `15`
+- **records_fetched**: `3`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `2`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T13-55-53Z__87e54762.db`
+- **notes**: skipped(no-name-match)=1 · min_date=default (no prior ingestion) · states=['FL']

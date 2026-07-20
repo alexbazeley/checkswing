@@ -1,0 +1,224 @@
+# Jennifer Steinbrenner Swindal — New York Yankees
+# General partner. Added under the ownership-group rule (CHARTER.md): ESPN's
+# family profile states that "all four share in the baseball responsibilities as
+# general partners", and Forbes' staff profile independently calls her a general
+# partner. The MLB.com front-office directory lists "Marsh Harbor" as her
+# per-sibling ownership-stake holding entity.
+#
+# ADMITTED ON GOVERNANCE, NOT YIELD — AND HER COUNTED TOTAL IS $0.
+# She is added for COMPLETENESS AND FUTURE-PROOFING. The ownership group is only
+# meaningfully documented if all four general partners are represented, and a
+# slug that exists is what causes a FUTURE filing to be picked up automatically
+# instead of quietly missed.
+#
+# NOTE: the Wave 3 research premise that she has ZERO federal records is FALSE —
+# the creation-day ingest found three name-matching Tampa records filed under
+# SWINDAL. Her counted total is $0 all the same, because two went to the review
+# queue for want of a corroborating employer and the third is a JOINT filing
+# with her untracked ex-husband. See `notes` for the full disposition; do not
+# "restore" the zero-records claim.
+#
+# CRITICAL — THE TWO-SURNAME PROBLEM.
+# She may file as Swindal, as Steinbrenner, or as both. Both surnames are encoded
+# below, which makes this the widest name gate of the three siblings — and
+# therefore the one most in need of the guards set here.
+#
+# Read OWNER_SCHEMA.md before editing. Read GOVERNANCE.md §1.7 before adding entities.
+
+slug: steinbrenner-jennifer
+name: Jennifer Steinbrenner Swindal
+team: New York Yankees
+role: General partner
+status: pilot
+tenure_start_date: 2007-01-01      # year-precision — the post-George generational transfer
+tenure_end_date:
+family_tenure_start_date: 1973-01-03    # George Steinbrenner-led group acquired the Yankees from CBS
+
+# "Jennifer" is the firewall on the Steinbrenner side. NO bare "Steinbrenner",
+# and NO "J. Steinbrenner" — that initial form collides with her sister Jessica
+# AND with their late mother Joan, a prolific donor through 2018.
+#
+# DELIBERATELY NOT ENCODED: "Jennifer Steinbrenner Sweeney". The alternate
+# surname surfaced in research but could NOT be corroborated by a Tier 2 source.
+# An uncorroborated surname variant does not merely fail to help — it silently
+# harvests a stranger's records. Add only with a citation and a change_log entry.
+#
+# NOTE ON THE BARE-SWINDAL FORMS: "Jennifer Swindal" is included because she may
+# well file under her married surname alone. It is a REAL risk that this matches
+# another Jennifer Swindal; that risk is contained by city/state + the guards
+# below, and by the fact that no strong signal can ever fire on this entity.
+name_variants:
+- "Jennifer Steinbrenner Swindal"
+- "Jennifer S Swindal"
+- "Jennifer S. Swindal"
+- "Jennifer Steinbrenner"
+- "Jennifer Swindal"
+- "Swindal, Jennifer"
+- "Swindal, Jennifer S"
+- "Swindal, Jennifer S."
+- "Swindal, Jennifer Steinbrenner"
+- "Steinbrenner, Jennifer"
+- "Steinbrenner Swindal, Jennifer"
+
+# She is a woman who may legitimately file as "Mrs. Jennifer ...", so opting out
+# of the default Mrs guard is correct HERE. It would be WRONG on her brothers'
+# files, where a "Mrs. <his name>" row is the wife rather than the owner.
+mrs_honorific_is_self: true
+
+# The widest name gate of the three siblings (two surnames, incl. a bare-married
+# form), and no CONFIRMED record base to audit against. The first records this
+# slug matched had nothing to corroborate them — employers of "N/A" and
+# "RETIRED" — so a lone city/state must not be sufficient to confirm. This guard
+# is why those two are in the review queue instead of in her total.
+city_state_alone_insufficient: true
+
+verifying_signals:
+  cities:
+  - "tampa"
+  states:
+  - "FL"
+  employers:
+  - "New York Yankees"
+  - "NY Yankees"
+  - "Yankees"
+  - "Yankee Global Enterprises"
+  - "Yankee Global"
+  occupations:
+  - "general partner"
+  - "partner"
+  - "owner"
+
+strong_signals:
+  # MUST STAY EMPTY. This entity has no CONFIRMED records against which a
+  # promotion could be validated, so any strong signal added here would be an
+  # untested rule that confirms on its own the moment it first fires. Note the
+  # temptation this file will attract: Tampa ZIPs 33606/33611 appear on the two
+  # queued records. Promoting either would auto-confirm the very rows a human is
+  # supposed to adjudicate. Promote only after the queue is resolved by hand AND
+  # an audit clears the result.
+  employers: []
+  zip_codes: []
+
+negative_signals:
+  employers: []
+  zip_codes: []
+
+related_entities: []
+# Steve Swindal — her former husband — is deliberately NOT tracked, here or
+# anywhere: his stake was bought out in 2007, so he fails the stake prong of the
+# ownership-group rule. Felix Lopez is likewise excluded as an executive with no
+# ownership interest.
+
+sources:
+- description: "MLB.com / New York Yankees official Front Office Staff Directory — lists 'Marsh Harbor' as Jennifer's per-sibling ownership-stake holding entity, alongside Martinique Holdings (Hal) and JJS NYY (Jessica)"
+  url: "https://www.mlb.com/yankees/team/front-office"
+  accessed: "2026-05-22"
+  archive_url: ""
+- description: "ESPN long-form profile of Hal Steinbrenner (March 2016) — 'All four share in the baseball responsibilities as general partners', establishing the governance prong for each sibling"
+  url: "https://www.espn.com/mlb/story/_/page/springtraining_halsteinbrenner/who-exactly-new-york-yankees-owner-hal-steinbrenner"
+  accessed: "2026-07-20"
+  archive_url: ""
+
+notes: |
+  THE "ZERO FEDERAL RECORDS" PREMISE WAS WRONG — CORRECTED ON CREATION DAY.
+  The Wave 3 research concluded she had no federal history. The creation-day
+  ingest found THREE name-matching records, all Tampa, all filed under SWINDAL:
+
+    2009-09-30  SWINDAL, JENNIFER S            33611  emp N/A       $2,400
+                -> Charlie Crist for US Senate                    [QUEUED]
+    2003-06-30  SWINDAL, JENNIFER S MR.        33606  emp RETIRED  $2,000
+                -> Bush-Cheney '04                                [QUEUED]
+    2003-12-06  SWINDAL, STEPHEN AND JENNIFER  33606  emp NY Yankees  $250
+                -> Jim Davis for Congress              [NAME NO-MATCH, skipped]
+
+  COUNTED YIELD IS STILL ZERO, but for a different and better reason than
+  "she never gave": the two singly-filed records went to the REVIEW QUEUE rather
+  than into her total, because neither carries an employer that could corroborate
+  the name (N/A and RETIRED), leaving city/state as the only signal — which
+  city_state_alone_insufficient refuses to accept on its own.
+
+  THIS IS THE GUARD EARNING ITS PLACE. Both guards were set at creation
+  specifically because there would be no existing records to audit against, and
+  the very first records to arrive are exactly the ambiguous kind that argument
+  anticipated. Had the file been configured on the "she has nothing anyway"
+  premise, these two would have been auto-confirmed on a lone Tampa match.
+
+  THE JOINT RECORD IS THE MOST INTERESTING OF THE THREE. "SWINDAL, STEPHEN AND
+  JENNIFER" is a joint filing with her then-husband Steve Swindal, who is
+  deliberately NOT tracked (stake bought out 2007 — fails the stake prong). The
+  name gate rejected it, which is the correct outcome twice over: it is not
+  solely her money, and folding a joint filing into an owner's total is the same
+  class of error as the "Mrs. <husband>" defect. If it is ever attributed, it
+  should be split or attributed with an explicit note, never silently counted.
+
+  A DATA-QUALITY CURIOSITY WORTH RECORDING: the 2003 Bush-Cheney row is filed
+  "JENNIFER S MR." — a male honorific on a woman's name, i.e. a filer error.
+  It confirms the deliberate scoping of the Mrs rule to "mrs" only: "Mr" carries
+  no wife-of sense, so the honorific guard correctly did nothing here and the
+  record was queued on its own (lack of) merits.
+
+  NEXT ACTION FOR A REVIEWER: these two are plausibly hers on era, city, and
+  surname. The field that would actually settle them is contributor_street_1,
+  which the classifier does not read — the same gap that decided the Middleton
+  and false-discard cases. Resolve them by hand; do not loosen the config.
+
+  WHY ADD AN OWNER WITH NO DONATIONS. Two reasons, both structural. First,
+  completeness: the ownership-group rule admits her on documented governance, and
+  a group documented with three of four general partners misrepresents the group.
+  Second, future-proofing: the slug is what makes a future filing land
+  automatically. Without it, a 2027 donation from a Yankees general partner would
+  be invisible — not flagged, just absent.
+
+  THIS ENTITY'S RISK PROFILE IS THE INVERSE OF THE OTHERS. Hank's risk is a thin
+  record base; Jessica's is a dead employer axis. Jennifer's is the NAME GATE
+  ITSELF — two surnames, including a bare "Jennifer Swindal" that could belong to
+  an unrelated person anywhere in the country. Because there are no existing
+  records to audit against, the guards must be set BEFORE the first record
+  arrives rather than after: hence city_state_alone_insufficient and a
+  permanently empty strong_signals block. The first record this slug ever matches
+  should be reviewed by a human, and the configuration is deliberately arranged
+  so that it will be.
+
+  THE Mrs FLAG. Set true because she is a woman filing under her own given name.
+  Not set on steinbrenner-hank, where the default guard correctly reads a
+  "Mrs. Henry" row as his wife's money.
+
+  GEORGE III vs GEORGE IV — latent family hazard, recorded on every sibling file
+  so it surfaces from whichever one is opened. George M. Steinbrenner III
+  (d. 2010) was a prolific donor; George IV (b. ~1996) has zero FEC records
+  today, so every "George Steinbrenner" row is currently III. If a george slug is
+  ever created, encode a post-2010 date guard at creation rather than
+  rediscovering the collision later.
+
+change_log:
+- date: 2026-07-20
+  change: |
+    Created under the ownership-group rule as part of the Wave 3 co-owner pass.
+    Admitted on the governance prong (ESPN: all four siblings are general
+    partners; MLB.com lists her holding entity "Marsh Harbor"), NOT on yield.
+    CORRECTION ON CREATION DAY: the research premise that she has ZERO federal
+    records proved FALSE — the ingest found 3 name-matching Tampa records filed
+    under SWINDAL (2003 Bush-Cheney $2,000; 2009 Charlie Crist $2,400; and a
+    2003 JOINT "STEPHEN AND JENNIFER" $250). Counted yield is nonetheless zero:
+    the two singly-filed rows carry no corroborating employer (N/A, RETIRED) and
+    were routed to the review queue by city_state_alone_insufficient, and the
+    joint row was rejected by the name gate. See notes for the full disposition.
+    Both surnames encoded (Steinbrenner and Swindal), making this the widest name
+    gate of the three siblings; the uncorroborated alternate "Sweeney" was
+    deliberately NOT encoded. Because the gate is wide AND there are no records
+    to audit against, both guards are set at creation rather than after an
+    incident: mrs_honorific_is_self (she is a woman filing under her own given
+    name) and city_state_alone_insufficient. strong_signals must stay empty until
+    real records exist and an audit clears them — a strong signal here would be
+    an untested rule that self-confirms the first time it fires.
+    Steve Swindal (stake bought out 2007) explicitly excluded — fails the stake
+    prong; the joint 2003 filing bearing both their names was correctly rejected
+    by the name gate rather than counted for either of them.
+    The guards were vindicated immediately: the first records this slug ever saw
+    were precisely the ambiguous kind they were set to catch.
+  by: "automated research (maintainer-directed, Wave 3)"
+  references:
+  - "https://www.mlb.com/yankees/team/front-office"
+  - "https://www.espn.com/mlb/story/_/page/springtraining_halsteinbrenner/who-exactly-new-york-yankees-owner-hal-steinbrenner"
+audit:
+  last_ingestion: '2026-07-20'
