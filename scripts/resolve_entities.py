@@ -407,9 +407,30 @@ def _classify_against_entity_signals(
         confirming_signals_matched.append(f"city_state:{cs_hit}")
 
     # Address contradiction: city is filled but not in our documented list.
-    # Demotes to UNCERTAIN regardless of other signals (VERIFICATION.md
-    # negative-signal rule). This catches family-name collisions.
-    if address_contradicts(rf["city"], rf["state"], vs_cities, vs_states):
+    # Demotes to UNCERTAIN (VERIFICATION.md negative-signal rule) — but ONLY
+    # when no strong signal matched.
+    #
+    # Why the strong-signal carve-out: this rule exists to catch family-name
+    # collisions "where the employer might still match but the donor is a
+    # relative elsewhere" (see address_contradicts). That reasoning applies to
+    # VERIFYING employers — strings like "Chicago Cubs" that a relative or any
+    # of thousands of employees could also file. It does NOT apply to a STRONG
+    # signal, which is by definition "unique enough that a match is by itself
+    # diagnostic" (VERIFICATION.md): a record naming the owner AND reporting
+    # the owner's own family office or holding company identifies the person,
+    # and an unrecognized city label is then far likelier to be a second
+    # address or an FEC clerk's spelling than a different human being.
+    #
+    # Before this carve-out the ordering silently discarded real giving: rows
+    # were stamped `strong_employer:...` in signals_matched and filed UNCERTAIN
+    # anyway — e.g. Christopher Ilitch filing "ILITCH HOLDINGS/PRESIDENT" from
+    # Birmingham MI, and Steven Cohen filing "POINT72" from ZIP 10001, a ZIP
+    # already trusted as a strong signal on his own file.
+    #
+    # The anomaly is preserved in the status_reason rather than dropped, so any
+    # promoted-over-contradiction row stays auditable from the row alone.
+    address_anomaly = address_contradicts(rf["city"], rf["state"], vs_cities, vs_states)
+    if address_anomaly and not strong_signals_matched:
         all_signals = strong_signals_matched + confirming_signals_matched
         return (
             UNCERTAIN,
@@ -420,11 +441,16 @@ def _classify_against_entity_signals(
     all_signals = strong_signals_matched + confirming_signals_matched
 
     if strong_signals_matched:
-        return (
-            CONFIRMED,
-            f"strong signal: {', '.join(strong_signals_matched)}",
-            all_signals,
-        )
+        reason = f"strong signal: {', '.join(strong_signals_matched)}"
+        if address_anomaly:
+            # Confirmed on the strong signal despite an unrecognized city label.
+            # Recorded explicitly so this class is greppable in the archive and
+            # a maintainer can re-audit it without re-deriving the address set.
+            reason += (
+                f" (address outside documented residences: "
+                f"city={rf['city']!r}, state={rf['state']!r})"
+            )
+        return (CONFIRMED, reason, all_signals)
     if len(confirming_signals_matched) >= 2:
         return (
             CONFIRMED,

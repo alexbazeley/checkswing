@@ -148,8 +148,74 @@ change_log:
     his Ilitch Holdings / Ilitch Sports + Entertainment strong-signal
     employers. Signal review date advanced.
   by: "automated pipeline (PR 4 Tier C light pass)"
+- date: 2026-07-20
+  change: |
+    RECOVERED 13 falsely-discarded records, +$50,800 (44,900 → 95,700).
+    No signal-block change; this owner's YAML is unmodified. The records were
+    restored by a CLASSIFIER fix (VERIFICATION.md — "a matched strong signal
+    survives an address contradiction"), not by widening his documented cities.
+
+    What had happened: 18 records filed from BIRMINGHAM, MI 48009 hit the
+    address-contradiction rule, which fired BEFORE the strong-signal check and
+    returned UNCERTAIN even though the rows carried
+    `strong_employer:Ilitch Holdings` in signals_matched. The 2026-05-30 bulk
+    review-queue triage then discarded all 18 under a blanket reason —
+    "same-name stranger in undocumented city/state" — which is factually wrong
+    for these: every one reports ILITCH HOLDINGS / ILITCH HOLDINGS INC. as
+    employer, one of them literally as "ILITCH HOLDINGS/PRESIDENT".
+
+    Why these are Christopher Ilitch and not a stranger:
+      - Ilitch Holdings is the family's private holding company; he has been
+        its President & CEO since 2004 (Crain's Detroit, 2004-07-26, already
+        cited in this file).
+      - The filed OCCUPATION tracks his documented career: "EXECUTIVE" on the
+        2002–2003 records, "PRESIDENT" from 2005 — i.e. it changes at exactly
+        the point the public record says he took the title. A same-named
+        stranger's occupation would not follow his résumé.
+      - Recipients are consistent Michigan-Republican giving (RNC, Bush-Cheney
+        '04, Knollenberg, Candice Miller, Don Young), matching the pattern of
+        his 12 pre-existing CONFIRMED records.
+      - Birmingham MI is an Oakland County suburb adjacent to Bloomfield Hills,
+        already documented in verifying_signals.cities for this family.
+
+    CORROBORATED BY STREET ADDRESS (checked after the ingest, same session):
+    the Birmingham records carry street 235 TOWNSEND ST — and his wife KELLE
+    ILITCH files from the IDENTICAL address as "HOMEMAKER" (2003-07-31
+    Bush-Cheney '04 $2,000; 2003-12-30 Knollenberg $2,000). Chris and Kelle
+    married in 2001; a married couple filing from one street address, one as
+    EXECUTIVE at Ilitch Holdings and one as HOMEMAKER, is a household. Kelle's
+    2002 filing even reports employer "BIRMINGHAM PUBLIC SCHOOLS/TEACHER". The
+    Birmingham period is coherent and bounded (2002–2005).
+
+    Further: 235 Townsend is NOT an Ilitch business address — Mike, Marian and
+    the later Chris records all file from 2211 WOODWARD AVE, DETROIT 48201
+    (the corporate HQ), so Birmingham 48009 can only be residential. And
+    sibling Denise Ilitch files from a DIFFERENT Birmingham street (779 Lake
+    Park Dr), so "Birmingham" is not a shared family catch-all — two siblings
+    lived there at different addresses.
+
+    Doppelgänger check: the ENTIRE FEC Ilitch corpus is 993 records and every
+    one belongs to this Detroit family. There is no second Christopher Ilitch
+    in federal campaign finance.
+
+    NOT DONE deliberately: "birmingham" was NOT added to verifying_signals.
+    cities. The archive has not documented it as his residence, and the
+    honest representation is that these rows are confirmed on the strength of
+    the employer signal — which is what the stored status_reason now says
+    ("strong signal: strong_employer:Ilitch Holdings (address outside
+    documented residences: city='BIRMINGHAM', state='MI')"). Widening the city
+    list would assert a residence the sources do not establish.
+
+    NOTE FOR §5.3: this owner was recorded as "genuinely thin — 12 Detroit
+    CONFIRMED, empty queue". The queue was empty BY DISPOSAL, not by absence.
+    A queue emptied by bulk discard is indistinguishable from a queue with
+    nothing in it.
+  by: "automated pipeline (ingest --from-raw, behind the strong-signal carve-out)"
+  references:
+  - "VERIFICATION.md — strong signal survives an address contradiction"
+  - "data/snapshots/2026-07-20T05-31-17Z__pre-strong-signal-carveout.db (pre-ingest)"
 
 audit:
   created: 2026-05-23
-  last_ingestion: '2026-07-05'
+  last_ingestion: '2026-07-20'
   last_signal_review: 2026-05-25

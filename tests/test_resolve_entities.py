@@ -386,10 +386,18 @@ class TestClassify:
         assert result.status == CONFIRMED
 
     def test_address_contradiction_without_documentation_uncertain(self, owner):
-        # Employer matches, but city is "Chicago" (not in our docs).
-        # Per VERIFICATION.md, this demotes to UNCERTAIN.
+        # A VERIFYING employer matches, but city is "Chicago" (not in our docs).
+        # Per VERIFICATION.md, this demotes to UNCERTAIN — a verifying employer
+        # is a string a relative or any employee could also file, so it cannot
+        # outweigh an unrecognized address.
+        #
+        # NB: this record previously used "Point72 Asset Management LLC", which
+        # is a STRONG signal in the fixture — so the test asserted the strong-
+        # signal path while its name and comment described the verifying path.
+        # Bare "Point72" is verifying-only (the strong string is not a substring
+        # of it), which is what this case is actually about.
         r = _record(
-            contributor_employer="Point72 Asset Management LLC",
+            contributor_employer="Point72",
             contributor_city="Chicago",
             contributor_state="IL",
         )
@@ -408,10 +416,17 @@ class TestClassify:
         assert result is not None
         assert result.status == CONFIRMED
 
-    def test_one_strong_signal_with_address_contradiction_is_uncertain(self, owner):
-        # Even a strong signal should be overridden by address contradiction —
-        # the rule's purpose is to catch family-name collisions where the
-        # employer is shared but the donor lives elsewhere.
+    def test_strong_signal_survives_address_contradiction(self, owner):
+        # A STRONG signal is by definition diagnostic on its own
+        # (VERIFICATION.md), so an unrecognized city does not defeat it: a
+        # record naming the owner AND reporting the owner's own family office
+        # identifies the person, and the odd city is likelier a second address
+        # or a clerk's spelling than a different human being.
+        #
+        # This inverts the previous expectation. The old ordering discarded
+        # real giving — Christopher Ilitch filing "ILITCH HOLDINGS/PRESIDENT"
+        # from Birmingham MI was stamped `strong_employer:...` and filed
+        # UNCERTAIN anyway, then bulk-discarded as a "same-name stranger".
         r = _record(
             contributor_employer="Cohen Private Ventures",
             contributor_city="Boston",
@@ -419,8 +434,43 @@ class TestClassify:
         )
         result = classify(r, owner)
         assert result is not None
+        assert result.status == CONFIRMED
+        assert "strong signal" in result.status_reason
+        # The anomaly must survive into the reason so the class stays auditable
+        # from the row alone rather than being silently swallowed.
+        assert "address outside documented residences" in result.status_reason
+        assert "Boston" in result.status_reason
+
+    def test_strong_zip_survives_address_contradiction(self, owner):
+        # The Fisher case: ZIP 94111 is a trusted strong signal, but the FEC
+        # clerk typed "SAN FRANSISCO". ZIP and city are tightly coupled, so a
+        # mismatch is nearly always a spelling artifact.
+        o = dict(owner)
+        o["strong_signals"] = {"employers": [], "zip_codes": ["94111"]}
+        r = _record(
+            contributor_employer="",
+            contributor_city="San Fransisco",
+            contributor_state="CA",
+            contributor_zip="94111",
+        )
+        result = classify(r, o)
+        assert result is not None
+        assert result.status == CONFIRMED
+        assert "strong_zip:94111" in result.signals_matched
+
+    def test_negative_signal_still_beats_strong_signal_and_address(self, owner):
+        # The carve-out must not weaken the negative-signal rule, which is
+        # checked first and stays absolute — a manually-identified doppelganger
+        # is not rescued by also matching a strong employer.
+        r = _record(
+            contributor_employer="Elliott Management",
+            contributor_city="Boston",
+            contributor_state="MA",
+        )
+        result = classify(r, owner)
+        assert result is not None
         assert result.status == UNCERTAIN
-        assert "city/state outside documented residences" in result.status_reason
+        assert "negative employer signal" in result.status_reason
 
     def test_last_first_format_matches(self, owner):
         r = _record(

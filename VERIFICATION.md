@@ -57,7 +57,11 @@ Compare against `name_variants` after the following normalization:
 
 **Suffix mismatch.** "John W. Henry" vs "John W. Henry Jr." are different people. Suffix mismatch is automatic UNCERTAIN regardless of other signals — log to review and inspect.
 
-**Address contradiction without secondary-residence documentation.** City + state is the unit (mirroring the positive City+State signal). If a record carries both a city and a state and that pair is not a documented residence — city in `verifying_signals.cities` **and** state in `verifying_signals.states` — the record drops to UNCERTAIN even if employer also matches. A same-named city in the wrong state (e.g., Greenwich, KS for a Greenwich, CT owner) is therefore flagged rather than slipping through on a generic employer match. When the record has a city but no state, city-only membership is used. (Why: this catches family-name collisions where Owner X's signal employer is also held by a relative who lives elsewhere.)
+**Address contradiction without secondary-residence documentation.** City + state is the unit (mirroring the positive City+State signal). If a record carries both a city and a state and that pair is not a documented residence — city in `verifying_signals.cities` **and** state in `verifying_signals.states` — the record drops to UNCERTAIN even if a *verifying* employer also matches. A same-named city in the wrong state (e.g., Greenwich, KS for a Greenwich, CT owner) is therefore flagged rather than slipping through on a generic employer match. When the record has a city but no state, city-only membership is used. (Why: this catches family-name collisions where Owner X's verifying employer is also held by a relative who lives elsewhere.)
+
+**Exception — a matched strong signal survives an address contradiction.** The rule above is scoped to *verifying* signals. It does **not** demote a record that matched a `strong_signals` employer or ZIP, because a strong signal is by definition "unique enough that a match is by itself diagnostic": a record that names the owner *and* reports the owner's own family office, holding company, or private ZIP identifies the person, and an unrecognized city label is then far likelier to be a second address, a business address, or an FEC clerk's spelling than a different human being. Such a record is CONFIRMED, and its `status_reason` records the anomaly explicitly (`strong signal: … (address outside documented residences: city=…, state=…)`) so the class stays auditable from the row alone and can be re-reviewed without re-deriving the address set.
+
+> **Why this exception exists (added 2026-07-20).** The original ordering evaluated the address contradiction *before* the strong-signal check while still recording the matched strong signal in `signals_matched`. Rows were therefore stamped `strong_employer:…` and filed UNCERTAIN anyway — and a bulk review-queue triage then discarded 20 of them as "same-name stranger" across six owners, $77,500 of real giving. The clearest example: Christopher Ilitch filing employer `ILITCH HOLDINGS/PRESIDENT` from Birmingham MI, and Steven A. Cohen filing `POINT72` from ZIP 10001 — a ZIP already trusted as a strong signal on his own file. The negative-employer rule is unaffected and still absolute: it is evaluated first and a manually-identified doppelgänger is never rescued by also matching a strong signal.
 
 **Spouse-name collision.** If a record matches a name in the owner's `related_entities` (e.g., the spouse), it is attributed to the spouse entity, not to the owner. Spouse records carry the spouse's slug, not the owner's. Never silently fold spouse donations into the owner's totals.
 
@@ -85,11 +89,16 @@ def classify(record, owner):
     strong_hits = count_strong_signal_matches(record, owner.strong_signals)
     confirming_hits = count_confirming_signal_matches(record, owner.verifying_signals)
     
-    if address_contradicts_without_documentation(record, owner):
+    address_anomaly = address_contradicts_without_documentation(record, owner)
+    # A strong signal is diagnostic on its own, so it survives the contradiction;
+    # only verifying-signal records are demoted here.
+    if address_anomaly and strong_hits == 0:
         return UNCERTAIN, "city/state outside documented residences"
     
     if strong_hits >= 1:
-        return CONFIRMED, "strong signal: <details>"
+        # The anomaly, when present, is appended to the reason so the promotion
+        # stays auditable from the row alone.
+        return CONFIRMED, "strong signal: <details>" + optional_address_anomaly_note
     if confirming_hits >= 2:
         return CONFIRMED, "two confirming signals: <details>"
     if confirming_hits == 1:

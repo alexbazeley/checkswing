@@ -25121,3 +25121,417 @@ not production").
 - **uncertain_count**: `80`
 - **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T03-28-56Z__d8bc054f.db`
 - **notes**: skipped(no-name-match)=16 · min_date=default (no prior ingestion) · FROM-RAW
+
+### 2026-07-20 — INGESTION
+
+- **run_id**: `5f433b66`
+- **entity_slug**: `ilitch-chris`
+- **dry_run**: `0`
+- **period_start**: `2025-01-01`
+- **period_end**: `2025-12-26`
+- **name_variants_queried**: `["Christopher P Ilitch", "Christopher P. Ilitch", "Christopher Ilitch", "Chris Ilitch", "Christopher Paul Ilitch", "Ilitch, Christopher", "Ilitch, Christopher P", "Ilitch, Christopher P.", "Ilitch, Chris"]`
+- **api_calls_made**: `0`
+- **records_fetched**: `30`
+- **confirmed_count**: `25`
+- **probable_count**: `0`
+- **uncertain_count**: `5`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T05-31-25Z__5f433b66.db`
+- **notes**: skipped(no-name-match)=0 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-07-20 — INGESTION
+
+- **run_id**: `418fbe14`
+- **entity_slug**: `cohen-steven`
+- **dry_run**: `0`
+- **period_start**: `2025-01-07`
+- **period_end**: `2026-05-28`
+- **name_variants_queried**: `["Steven A Cohen", "Steven A. Cohen", "Steven Cohen", "Steve Cohen", "Cohen, Steven", "Cohen, Steven A", "Cohen, Steven A."]`
+- **api_calls_made**: `0`
+- **records_fetched**: `2986`
+- **confirmed_count**: `137`
+- **probable_count**: `4`
+- **uncertain_count**: `2803`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T05-31-26Z__418fbe14.db`
+- **notes**: skipped(no-name-match)=42 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-07-20 — SUPERSESSION — run 418fbe14
+
+- `2080620181582691347` (cohen-steven): FEC restatement: image_number
+- `2080620181582691247` (cohen-steven): FEC restatement: image_number
+- `2080220181582330133` (cohen-steven): FEC restatement: image_number
+- `2080220181582329984` (cohen-steven): FEC restatement: image_number
+- `2071920171426271773` (cohen-steven): FEC restatement: image_number
+- `2071920171426271772` (cohen-steven): FEC restatement: image_number
+- `1071720170035539494` (cohen-steven): FEC restatement: image_number
+- `1071720170035539493` (cohen-steven): FEC restatement: image_number
+- `2032120171380377295` (cohen-steven): FEC restatement: image_number
+- `2102120161344533816` (cohen-steven): FEC restatement: image_number
+- `1060320130014126299` (cohen-steven): FEC restatement: image_number
+- `2021520111135948933` (cohen-steven): FEC restatement: image_number
+- `2103020091120290700` (cohen-steven): FEC restatement: image_number
+- `1020220110005290047` (cohen-steven): FEC restatement: image_number
+- `1020220110005289916` (cohen-steven): FEC restatement: image_number
+- `1010720100003821393` (cohen-steven): FEC restatement: image_number
+- `1032520100004029807` (cohen-steven): FEC restatement: image_number
+- `1032520100004029806` (cohen-steven): FEC restatement: image_number
+- `1032520100004029805` (cohen-steven): FEC restatement: image_number
+- `1101620090001116398` (cohen-steven): FEC restatement: image_number
+- `1121520090001236709` (cohen-steven): FEC restatement: image_number
+- `1121520090001236708` (cohen-steven): FEC restatement: image_number
+- `1121520090001320996` (cohen-steven): FEC restatement: image_number
+- `2042620071077009230` (cohen-steven): FEC restatement: image_number
+- `1070820110006432343` (cohen-steven): FEC restatement: image_number
+- `1070820110007809029` (cohen-steven): FEC restatement: image_number
+- `1070820110007809028` (cohen-steven): FEC restatement: image_number
+- `1070820110006620625` (cohen-steven): FEC restatement: image_number
+- `2111920101131638956` (cohen-steven): FEC restatement: image_number
+- `2111920101131638985` (cohen-steven): FEC restatement: image_number
+- `1061520110005862295` (cohen-steven): FEC restatement: image_number
+- `2040720111138004370` (cohen-steven): FEC restatement: image_number
+- `2040720111138004369` (cohen-steven): FEC restatement: image_number
+- `2040720111138004368` (cohen-steven): FEC restatement: image_number
+- `2110420091120490830` (cohen-steven): FEC restatement: image_number
+- `2072920091116762311` (cohen-steven): FEC restatement: image_number
+- `2020920091107172203` (cohen-steven): FEC restatement: image_number
+- `1121520090002048676` (cohen-steven): FEC restatement: image_number
+- `2020920091107173453` (cohen-steven): FEC restatement: image_number
+- `2042320091114167651` (cohen-steven): FEC restatement: image_number
+- `2102820081099632611` (cohen-steven): FEC restatement: image_number
+- `2120920081102147522` (cohen-steven): FEC restatement: image_number
+- `2120920081102147521` (cohen-steven): FEC restatement: image_number
+- `1121520090001664748` (cohen-steven): FEC restatement: image_number
+- `1070820110007815281` (cohen-steven): FEC restatement: image_number
+- `1070820110007325861` (cohen-steven): FEC restatement: image_number
+- `1070820110007327750` (cohen-steven): FEC restatement: image_number
+- `1070820110007325224` (cohen-steven): FEC restatement: image_number
+- `1070820110006591363` (cohen-steven): FEC restatement: image_number
+- `1070820110006591362` (cohen-steven): FEC restatement: image_number
+
+### 2026-07-20 — INGESTION
+
+- **run_id**: `b50fb21d`
+- **entity_slug**: `fisher-john`
+- **dry_run**: `0`
+- **period_start**: `2025-01-01`
+- **period_end**: `2026-04-30`
+- **name_variants_queried**: `["John Fisher", "John J. Fisher", "John J Fisher", "John Joseph Fisher", "Fisher, John", "Fisher, John J", "Fisher, John J."]`
+- **api_calls_made**: `0`
+- **records_fetched**: `3946`
+- **confirmed_count**: `574`
+- **probable_count**: `0`
+- **uncertain_count**: `3279`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T05-31-27Z__b50fb21d.db`
+- **notes**: skipped(no-name-match)=93 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-07-20 — SUPERSESSION — run b50fb21d
+
+- `IA13` (fisher-john): FEC restatement: image_number
+- `IA19456` (fisher-john): FEC restatement: image_number
+- `3061920110008177836` (fisher-john): FEC restatement: image_number
+- `3061920110008066611` (fisher-john): FEC restatement: image_number
+- `3061920110007453564` (fisher-john): FEC restatement: image_number
+- `3061920110007426764` (fisher-john): FEC restatement: image_number
+- `3061920110009701334` (fisher-john): FEC restatement: image_number
+- `3061920110009640306` (fisher-john): FEC restatement: image_number
+- `3061920110009037030` (fisher-john): FEC restatement: image_number
+- `3061920110008614631` (fisher-john): FEC restatement: image_number
+- `2110820041045290008` (fisher-john): FEC restatement: image_number
+- `2051820071077390483` (fisher-john): FEC restatement: image_number
+- `1070820110007402579` (fisher-john): FEC restatement: image_number
+- `1070820110006782411` (fisher-john): FEC restatement: image_number
+- `2061220071077937941` (fisher-john): FEC restatement: image_number
+- `2081020041041240137` (fisher-john): FEC restatement: image_number
+- `2050720041038194732` (fisher-john): FEC restatement: image_number
+- `1070820110008033357` (fisher-john): FEC restatement: image_number
+- `1070820110008002870` (fisher-john): FEC restatement: image_number
+- `1070820110007995349` (fisher-john): FEC restatement: image_number
+- `1070820110006110802` (fisher-john): FEC restatement: image_number
+- `2121920061073117280` (fisher-john): FEC restatement: image_number
+- `1070820110008120530` (fisher-john): FEC restatement: image_number
+- `1070820110007461441` (fisher-john): FEC restatement: image_number
+- `1070820110006099311` (fisher-john): FEC restatement: image_number
+- `1070820110007774903` (fisher-john): FEC restatement: image_number
+- `2103120061071456669` (fisher-john): FEC restatement: image_number
+- `1070820110006266172` (fisher-john): FEC restatement: image_number
+- `1070820110008320901` (fisher-john): FEC restatement: image_number
+- `2030620091110212145` (fisher-john): FEC restatement: image_number
+- `1121520090001216709` (fisher-john): FEC restatement: image_number
+- `2121520081102434288` (fisher-john): FEC restatement: image_number
+- `2012220091104671005` (fisher-john): FEC restatement: image_number
+- `1121520090001976513` (fisher-john): FEC restatement: image_number
+- `2021220091107613820` (fisher-john): FEC restatement: image_number
+- `1121520090001979369` (fisher-john): FEC restatement: image_number
+- `2110720081100568757` (fisher-john): FEC restatement: image_number
+- `1121520090001983382` (fisher-john): FEC restatement: image_number
+- `1121520090001854090` (fisher-john): FEC restatement: image_number
+- `2103020081099864178` (fisher-john): FEC restatement: image_number
+- `2103020081099864177` (fisher-john): FEC restatement: image_number
+- `1121520090001797049` (fisher-john): FEC restatement: image_number
+- `2102320081098411785` (fisher-john): FEC restatement: image_number
+- `2030520091108962333` (fisher-john): FEC restatement: image_number
+- `1121520090001827886` (fisher-john): FEC restatement: image_number
+- `1121520090001736705` (fisher-john): FEC restatement: image_number
+- `2103020081099864176` (fisher-john): FEC restatement: image_number
+- `2012220091104665234` (fisher-john): FEC restatement: image_number
+- `1121520090001640205` (fisher-john): FEC restatement: image_number
+- `1121520090001199865` (fisher-john): FEC restatement: image_number
+- `2021920081084897921` (fisher-john): FEC restatement: image_number
+- `1121520090001802400` (fisher-john): FEC restatement: image_number
+- `1042620110005724347` (fisher-john): FEC restatement: image_number
+- `1062820110005889474` (fisher-john): FEC restatement: image_number
+- `2051920111140062250` (fisher-john): FEC restatement: image_number
+- `2120120101132065393` (fisher-john): FEC restatement: image_number
+- `2120120101132065041` (fisher-john): FEC restatement: image_number
+- `2120120101132062894` (fisher-john): FEC restatement: image_number
+- `2041320121154794787` (fisher-john): FEC restatement: image_number
+- `1021520110005349830` (fisher-john): FEC restatement: image_number
+- `2040720111138010165` (fisher-john): FEC restatement: image_number
+- `2020720111135397231` (fisher-john): FEC restatement: image_number
+- `1032220120009535877` (fisher-john): FEC restatement: image_number
+- `1111520100004858083` (fisher-john): FEC restatement: image_number
+- `2082420111142417335` (fisher-john): FEC restatement: image_number
+- `2042820101125887741` (fisher-john): FEC restatement: image_number
+- `2042820101125887740` (fisher-john): FEC restatement: image_number
+- `2051320101126316579` (fisher-john): FEC restatement: image_number
+- `2041120111138036394` (fisher-john): FEC restatement: image_number
+- `2041120111138036393` (fisher-john): FEC restatement: image_number
+- `2021820101123494253` (fisher-john): FEC restatement: image_number
+- `2103020091120295543` (fisher-john): FEC restatement: image_number
+- `1021220100003889540` (fisher-john): FEC restatement: image_number
+- `1112420200264123760` (fisher-john): FEC restatement: image_number
+- `2102420111144112692` (fisher-john): FEC restatement: image_number
+- `2072720111141740939` (fisher-john): FEC restatement: image_number
+- `2072720111141740938` (fisher-john): FEC restatement: image_number
+- `2061520111140811844` (fisher-john): FEC restatement: image_number
+- `2050420111139653845` (fisher-john): FEC restatement: image_number
+- `1120720170036045193` (fisher-john): FEC restatement: image_number
+- `1120720170036040138` (fisher-john): FEC restatement: image_number
+- `2122220141233554716` (fisher-john): FEC restatement: image_number
+- `2061020151245491565` (fisher-john): FEC restatement: image_number
+- `2012920151237594011` (fisher-john): FEC restatement: image_number
+- `1121920140016514492` (fisher-john): FEC restatement: image_number
+- `1052220150017579853` (fisher-john): FEC restatement: image_number
+- `1050120150017430994` (fisher-john): FEC restatement: image_number
+- `2110620141226866451` (fisher-john): FEC restatement: image_number
+- `2091120141221587528` (fisher-john): FEC restatement: image_number
+- `2081320141220833373` (fisher-john): FEC restatement: image_number
+- `2081320141220833369` (fisher-john): FEC restatement: image_number
+- `2081120141220582992` (fisher-john): FEC restatement: image_number
+- `2081120141220582991` (fisher-john): FEC restatement: image_number
+- `2081120141220582990` (fisher-john): FEC restatement: image_number
+- `1010620150016546138` (fisher-john): FEC restatement: image_number
+- `2081820141220946468` (fisher-john): FEC restatement: image_number
+- `2060220141213970757` (fisher-john): FEC restatement: image_number
+- `2050620141212323129` (fisher-john): FEC restatement: image_number
+- `2050620141212323083` (fisher-john): FEC restatement: image_number
+- `2022720141206113961` (fisher-john): FEC restatement: image_number
+- `2022720141206113960` (fisher-john): FEC restatement: image_number
+- `2030420141206290068` (fisher-john): FEC restatement: image_number
+- `1022520140015221348` (fisher-john): FEC restatement: image_number
+- `1022520140015221347` (fisher-john): FEC restatement: image_number
+- `2100920141225912546` (fisher-john): FEC restatement: image_number
+- `2041620151241955135` (fisher-john): FEC restatement: image_number
+- `2111920131199147663` (fisher-john): FEC restatement: image_number
+- `1112420200263888944` (fisher-john): FEC restatement: image_number
+- `1103120160032410532` (fisher-john): FEC restatement: image_number
+- `1103120160032407596` (fisher-john): FEC restatement: image_number
+- `1103120160032407595` (fisher-john): FEC restatement: image_number
+- `2120220161356604367` (fisher-john): FEC restatement: image_number
+- `1110720160032608293` (fisher-john): FEC restatement: image_number
+- `2052620161293506618` (fisher-john): FEC restatement: image_number
+- `2052620161293505250` (fisher-john): FEC restatement: image_number
+- `2050420161291363642` (fisher-john): FEC restatement: image_number
+- `2051120161292586269` (fisher-john): FEC restatement: image_number
+- `2051620161292826623` (fisher-john): FEC restatement: image_number
+- `2031220161276386766` (fisher-john): FEC restatement: image_number
+- `2032520161277057028` (fisher-john): FEC restatement: image_number
+- `2021320161262948745` (fisher-john): FEC restatement: image_number
+- `2062220161300060797` (fisher-john): FEC restatement: image_number
+- `2022520161272894574` (fisher-john): FEC restatement: image_number
+- `2022520161272894573` (fisher-john): FEC restatement: image_number
+- `2022520161272894572` (fisher-john): FEC restatement: image_number
+- `1042820160018641815` (fisher-john): FEC restatement: image_number
+- `1042820160018639555` (fisher-john): FEC restatement: image_number
+- `2022520161272892048` (fisher-john): FEC restatement: image_number
+- `2021820161272526720` (fisher-john): FEC restatement: image_number
+- `2021120161262926389` (fisher-john): FEC restatement: image_number
+- `1072120160028290475` (fisher-john): FEC restatement: image_number
+- `2102920151256717078` (fisher-john): FEC restatement: image_number
+- `2110220151256749686` (fisher-john): FEC restatement: image_number
+- `1012920160018295010` (fisher-john): FEC restatement: image_number
+- `2072420151247911226` (fisher-john): FEC restatement: image_number
+- `1022520160018429066` (fisher-john): FEC restatement: image_number
+- `2072420151247911668` (fisher-john): FEC restatement: image_number
+- `2111520151257165497` (fisher-john): FEC restatement: image_number
+- `2101420151255588064` (fisher-john): FEC restatement: image_number
+- `2073020151248067240` (fisher-john): FEC restatement: image_number
+- `2072920151248020358` (fisher-john): FEC restatement: image_number
+- `1101920150017958937` (fisher-john): FEC restatement: image_number
+- `1112420200263995295` (fisher-john): FEC restatement: image_number
+- `1110720180037418737` (fisher-john): FEC restatement: image_number
+- `1110720180037418446` (fisher-john): FEC restatement: image_number
+- `2072020181576526656` (fisher-john): FEC restatement: image_number
+- `2071920181576442315` (fisher-john): FEC restatement: image_number
+- `2051020181552120881` (fisher-john): FEC restatement: image_number
+- `2051020181552119660` (fisher-john): FEC restatement: image_number
+- `2032220181519806962` (fisher-john): FEC restatement: image_number
+- `2032220181519805785` (fisher-john): FEC restatement: image_number
+- `2080720171442831525` (fisher-john): FEC restatement: image_number
+- `2080720171442831524` (fisher-john): FEC restatement: image_number
+- `2080520171442763729` (fisher-john): FEC restatement: image_number
+- `2080520171442763728` (fisher-john): FEC restatement: image_number
+- `2080320171442549631` (fisher-john): FEC restatement: image_number
+- `2080320171442549630` (fisher-john): FEC restatement: image_number
+- `2080220171442481096` (fisher-john): FEC restatement: image_number
+- `2080220171442480944` (fisher-john): FEC restatement: image_number
+- `2072820171442304586` (fisher-john): FEC restatement: image_number
+- `2072820171442304476` (fisher-john): FEC restatement: image_number
+- `1072120170035559028` (fisher-john): FEC restatement: image_number
+- `2102720171461394668` (fisher-john): FEC restatement: image_number
+- `2071920171426271820` (fisher-john): FEC restatement: image_number
+- `2071920171426271819` (fisher-john): FEC restatement: image_number
+- `2042620171400504254` (fisher-john): FEC restatement: image_number
+- `2042620171400504253` (fisher-john): FEC restatement: image_number
+- `2042620171400504252` (fisher-john): FEC restatement: image_number
+- `1071720170035539512` (fisher-john): FEC restatement: image_number
+- `1071720170035539511` (fisher-john): FEC restatement: image_number
+- `2042620171400509007` (fisher-john): FEC restatement: image_number
+- `2042620171400509006` (fisher-john): FEC restatement: image_number
+- `2022220171372036337` (fisher-john): FEC restatement: image_number
+
+### 2026-07-20 — INGESTION
+
+- **run_id**: `02690414`
+- **entity_slug**: `feliciano-jose`
+- **dry_run**: `0`
+- **period_start**: `2025-01-01`
+- **period_end**: `2026-03-22`
+- **name_variants_queried**: `["Jose E Feliciano", "Jose E. Feliciano", "Jose Feliciano", "Jos\u00e9 E. Feliciano", "Feliciano, Jose", "Feliciano, Jose E", "Feliciano, Jose E."]`
+- **api_calls_made**: `0`
+- **records_fetched**: `63`
+- **confirmed_count**: `25`
+- **probable_count**: `1`
+- **uncertain_count**: `13`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T05-31-29Z__02690414.db`
+- **notes**: skipped(no-name-match)=24 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-07-20 — SUPERSESSION — run 02690414
+
+- `1070820110006959884` (feliciano-jose): FEC restatement: image_number
+
+### 2026-07-20 — INGESTION
+
+- **run_id**: `5a64bc70`
+- **entity_slug**: `zalupski-patrick`
+- **dry_run**: `0`
+- **period_start**: `2025-01-01`
+- **period_end**: `2025-12-22`
+- **name_variants_queried**: `["Patrick O Zalupski", "Patrick O. Zalupski", "Patrick Zalupski", "Zalupski, Patrick", "Zalupski, Patrick O", "Zalupski, Patrick O."]`
+- **api_calls_made**: `0`
+- **records_fetched**: `20`
+- **confirmed_count**: `17`
+- **probable_count**: `2`
+- **uncertain_count**: `1`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T05-31-29Z__5a64bc70.db`
+- **notes**: skipped(no-name-match)=0 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-07-20 — MANUAL_EXCLUSION — fisher-john
+
+- **transaction_id**: `A-TI471`
+- **entity_slug**: `fisher-john`
+- **forced_status**: `EXCLUDED`
+- **reason**: NOT John J. Fisher. Street address on both records is 2180 SAND HILL ROAD SUITE 100, Menlo Park — the office of FISHER & CO LLC, whose principal files 6+ FEC records as 'FISHER, JOHN | FISHER & CO LLC | INV. BANKER' at that exact suite. John J. Fisher's own filings are ONE MARITIME PLAZA STE 1400 and 101A CLAY ST STE 147, both SF 94111, and his Pisces title is PRESIDENT (SEC 13D/A 2011) whereas these say CHAIRMAN. The 'PISCES INC' employer string is a committee data error, not an identification. Excluded under the conservative attribution standard (GOVERNANCE.md 1.9) - would rather miss a real donation than wrongly attribute one.
+- **source**: SEC Schedule 13D/A, The Gap Inc., 2011: 'John J. Fisher is principally employed as President of Pisces, Inc. ... The business address of Pisces, Inc. is One Maritime Plaza, Suite 1400, San Francisco, CA 94111' (https://www.sec.gov/Archives/edgar/data/39911/000110465911052367/a11-26623_1sc13da.htm); plus FEC contributor_street_1 comparison at 2180 vs 2882 vs One Maritime Plaza
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T05-44-17Z__pre-manual-exclude.db`
+- **note**: Documented human decision that this txn is NOT this owner (GOVERNANCE.md §1.1/§1.9). Dropped from classification (not queued). Survives reclassify. Reversible via `unexclude`. Reclassification follows below.
+
+### 2026-07-20 — MANUAL_EXCLUSION — fisher-john
+
+- **transaction_id**: `A-TI470`
+- **entity_slug**: `fisher-john`
+- **forced_status**: `EXCLUDED`
+- **reason**: NOT John J. Fisher. Street address on both records is 2180 SAND HILL ROAD SUITE 100, Menlo Park — the office of FISHER & CO LLC, whose principal files 6+ FEC records as 'FISHER, JOHN | FISHER & CO LLC | INV. BANKER' at that exact suite. John J. Fisher's own filings are ONE MARITIME PLAZA STE 1400 and 101A CLAY ST STE 147, both SF 94111, and his Pisces title is PRESIDENT (SEC 13D/A 2011) whereas these say CHAIRMAN. The 'PISCES INC' employer string is a committee data error, not an identification. Excluded under the conservative attribution standard (GOVERNANCE.md 1.9) - would rather miss a real donation than wrongly attribute one.
+- **source**: SEC Schedule 13D/A, The Gap Inc., 2011: 'John J. Fisher is principally employed as President of Pisces, Inc. ... The business address of Pisces, Inc. is One Maritime Plaza, Suite 1400, San Francisco, CA 94111' (https://www.sec.gov/Archives/edgar/data/39911/000110465911052367/a11-26623_1sc13da.htm); plus FEC contributor_street_1 comparison at 2180 vs 2882 vs One Maritime Plaza
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T05-44-19Z__pre-manual-exclude.db`
+- **note**: Documented human decision that this txn is NOT this owner (GOVERNANCE.md §1.1/§1.9). Dropped from classification (not queued). Survives reclassify. Reversible via `unexclude`. Reclassification follows below.
+
+### 2026-07-20 — RECLASSIFY-IN-PLACE — fisher-john
+
+- **entity_slug**: `fisher-john`
+- **reason**: Apply manual_attributions EXCLUDED for the two 2012-04-13 Menlo Park records (A-TI470/A-TI471). Used in-place rather than from-raw reclassify because the divergence guard correctly blocked the latter: 1 attributed row (SA11AI.10561) has no recoverable raw payload and would have been silently dropped.
+- **rows_scored**: `575`
+- **updated**: `0` · **demoted→queue**: `0` · **suppressed (DISCARDED)**: `0` · **forced**: `0` · **excluded**: `2` · **unchanged**: `573`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T05-44-50Z__pre-reclassify-inplace-fisher-john.db`
+- **note**: in-place re-score from stored donations columns (no raw read, no delete-rebuild); rows recoverable from the snapshot above.
+
+### 2026-07-20 — MANUAL_EXCLUSION — lerner-mark
+
+- **transaction_id**: `2022620131184540993`
+- **entity_slug**: `lerner-mark`
+- **forced_status**: `EXCLUDED`
+- **reason**: NOT Mark D. Lerner of the Washington Nationals. Both records give street 3606 ANTON FARMS RD, Baltimore/Pikesville MD 21208 — the residence of a DIFFERENT Mark D. Lerner, co-founder of Chesapeake Partners Management / CP Management LLC, who has 84+ FEC records at that address under employer 'CHESAPEAKE PARTNERS' from 1994 to present, and whose wife Traci Lerner files from the same address. The 'LERNER ENTERPRISES / OWNER' employer string appears on exactly 2 of those 84+ records, both to VIRGINIA Democratic Senate campaigns (Kaine 2012, Warner 2019) — a recurring committee donor-lookup error auto-filling the famous same-named donor's employer. Lerner Enterprises has no Baltimore-area office; every one of its six MD properties is Montgomery County. The Nationals owner's own 47 Lerner-Enterprises-employer records are all Montgomery County or Stevensville. Excluded under GOVERNANCE.md 1.9.
+- **source**: SEC SC 13G, Chesapeake Partners Management Co. Inc./MD (CIK 0000919165), filed 2012-03-30: 'This Statement is filed on behalf of each of the following persons ... iii) Mark D. Lerner ... The address of the principal business office ... is 2800 Quarry Lake Drive, Suite 300, Baltimore, MD 21209' (https://www.sec.gov/Archives/edgar/data/919165/000090514812000885/efc12-323_sc13g.htm). Lerner Enterprises official MD portfolio, all Rockville/North Bethesda (https://lerner.com/office/maryland/).
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T05-45-08Z__pre-manual-exclude.db`
+- **note**: Documented human decision that this txn is NOT this owner (GOVERNANCE.md §1.1/§1.9). Dropped from classification (not queued). Survives reclassify. Reversible via `unexclude`. Reclassification follows below.
+
+### 2026-07-20 — DELETION — reclassify lerner-mark
+
+- **entity_slug**: `lerner-mark`
+- **reason**: apply manual exclusion of 2022620131184540993
+- **rows_deleted_donations**: `78`
+- **rows_deleted_review_queue**: `160` (of which 160 had resolutions)
+- **include_related**: `False`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T05-45-09Z__pre-reclassify-lerner-mark.db`
+- **note**: Rows are recoverable from the snapshot above and from data/raw/lerner-mark/ payloads. Re-classification follows in the next INGESTION entry.
+
+### 2026-07-20 — INGESTION
+
+- **run_id**: `6420ee33`
+- **entity_slug**: `lerner-mark`
+- **dry_run**: `0`
+- **period_start**: `2024-12-28`
+- **period_end**: `2026-03-17`
+- **name_variants_queried**: `["Mark D Lerner", "Mark D. Lerner", "Mark Lerner", "Lerner, Mark", "Lerner, Mark D", "Lerner, Mark D."]`
+- **api_calls_made**: `0`
+- **records_fetched**: `240`
+- **confirmed_count**: `69`
+- **probable_count**: `10`
+- **uncertain_count**: `158`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T05-45-09Z__6420ee33.db`
+- **notes**: skipped(no-name-match)=2 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-07-20 — MANUAL_EXCLUSION — lerner-mark
+
+- **transaction_id**: `C7470281`
+- **entity_slug**: `lerner-mark`
+- **forced_status**: `EXCLUDED`
+- **reason**: NOT Mark D. Lerner of the Washington Nationals. Both records give street 3606 ANTON FARMS RD, Baltimore/Pikesville MD 21208 — the residence of a DIFFERENT Mark D. Lerner, co-founder of Chesapeake Partners Management / CP Management LLC, who has 84+ FEC records at that address under employer 'CHESAPEAKE PARTNERS' from 1994 to present, and whose wife Traci Lerner files from the same address. The 'LERNER ENTERPRISES / OWNER' employer string appears on exactly 2 of those 84+ records, both to VIRGINIA Democratic Senate campaigns (Kaine 2012, Warner 2019) — a recurring committee donor-lookup error auto-filling the famous same-named donor's employer. Lerner Enterprises has no Baltimore-area office; every one of its six MD properties is Montgomery County. The Nationals owner's own 47 Lerner-Enterprises-employer records are all Montgomery County or Stevensville. Excluded under GOVERNANCE.md 1.9.
+- **source**: SEC SC 13G, Chesapeake Partners Management Co. Inc./MD (CIK 0000919165), filed 2012-03-30: 'This Statement is filed on behalf of each of the following persons ... iii) Mark D. Lerner ... The address of the principal business office ... is 2800 Quarry Lake Drive, Suite 300, Baltimore, MD 21209' (https://www.sec.gov/Archives/edgar/data/919165/000090514812000885/efc12-323_sc13g.htm). Lerner Enterprises official MD portfolio, all Rockville/North Bethesda (https://lerner.com/office/maryland/).
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T05-45-10Z__pre-manual-exclude.db`
+- **note**: Documented human decision that this txn is NOT this owner (GOVERNANCE.md §1.1/§1.9). Dropped from classification (not queued). Survives reclassify. Reversible via `unexclude`. Reclassification follows below.
+
+### 2026-07-20 — DELETION — reclassify lerner-mark
+
+- **entity_slug**: `lerner-mark`
+- **reason**: apply manual exclusion of C7470281
+- **rows_deleted_donations**: `79`
+- **rows_deleted_review_queue**: `0` (of which 0 had resolutions)
+- **include_related**: `False`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T05-45-10Z__pre-reclassify-lerner-mark.db`
+- **note**: Rows are recoverable from the snapshot above and from data/raw/lerner-mark/ payloads. Re-classification follows in the next INGESTION entry.
+
+### 2026-07-20 — INGESTION
+
+- **run_id**: `e04629b4`
+- **entity_slug**: `lerner-mark`
+- **dry_run**: `0`
+- **period_start**: `2024-12-28`
+- **period_end**: `2026-03-17`
+- **name_variants_queried**: `["Mark D Lerner", "Mark D. Lerner", "Mark Lerner", "Lerner, Mark", "Lerner, Mark D", "Lerner, Mark D."]`
+- **api_calls_made**: `0`
+- **records_fetched**: `240`
+- **confirmed_count**: `68`
+- **probable_count**: `10`
+- **uncertain_count**: `158`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T05-45-10Z__e04629b4.db`
+- **notes**: skipped(no-name-match)=2 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW

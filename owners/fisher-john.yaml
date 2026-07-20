@@ -308,7 +308,63 @@ change_log:
   references:
   - "data/master.db pre-fix: 569 CONFIRMED / 99 PROBABLE (≈all city_state:san francisco/CA)"
 
+- date: 2026-07-20
+  change: |
+    RECOVERED 5 falsely-discarded records, +$12,100. No signal-block change.
+    Restored by the classifier fix (VERIFICATION.md — "a matched strong signal
+    survives an address contradiction").
+
+    Three of the five are FEC clerk MISSPELLINGS of this owner's own
+    documented city — the city string was mangled, so it failed exact
+    membership in verifying_signals.cities and tripped the contradiction rule:
+      - "SAN FRANSISCO" (transposed) 94111, 2006-10-23, $1,000, PISCES INC.
+      - "SAN FRANCISCO CA" (state doubled into the city field) 2009-12-18,
+        $5,000, "PISES, INC" (employer also misspelled)
+      - "SANFRANCISCO" (no space) 2017-04-30, $1,100, "PISCES, INC."
+    This is the same class the Monfort file already resolved by adding
+    "greenley" as a documented clerk-typo city label.
+
+    TWO FURTHER RECORDS WERE PROMOTED BY THE SAME FIX AND THEN EXCLUDED — a
+    same-named stranger the strong-employer signal alone would have swept in.
+    The 2012-04-13 $2,500 ×2 records to CANTOR FOR CONGRESS from MENLO PARK,
+    CA 94025 (employer PISCES INC, occupation CHAIRMAN, txns A-TI470/A-TI471)
+    are NOT John J. Fisher:
+      - Their street address is 2180 SAND HILL ROAD SUITE 100 — the office of
+        FISHER & CO LLC, whose principal files 6+ FEC records as
+        "FISHER, JOHN | FISHER & CO LLC | INV. BANKER" from that exact suite,
+        with a hard-right federal giving profile consistent with Cantor.
+      - John J. Fisher's own filings carry ONE MARITIME PLAZA STE 1400 and
+        101A CLAY ST STE 147, both San Francisco 94111.
+      - His Pisces title is PRESIDENT (SEC Schedule 13D/A, The Gap Inc., 2011,
+        the year before these records); these say CHAIRMAN.
+      - A third John Fisher (JOHN H N, Draper Fisher Jurvetson) occupies
+        2882 SAND HILL RD — so Sand Hill Road holds two same-named non-owners.
+    The "PISCES INC" employer on those two rows is a committee data-entry
+    error, not an identification. Excluded via manual_attributions (§1.9
+    conservative tie-break); undo with `unexclude` if better evidence appears.
+
+    THE LESSON, worth keeping: a strong employer signal is diagnostic but not
+    infallible — a committee can type the wrong employer. The STREET ADDRESS
+    (contributor_street_1) is the tiebreaker the classifier does not use and
+    the review process should. It resolved this case and the parallel
+    lerner-mark case in the same pass.
+
+    Applying the exclusion required `reclassify-inplace`, not `exclude`'s
+    default from-raw reclassify: the divergence guard correctly aborted the
+    latter because 1 attributed row (SA11AI.10561) has no recoverable raw on
+    disk and would have been silently dropped. --force was NOT used.
+
+    CAUTION PRESERVED: this owner carries `city_state_alone_insufficient` for
+    good reason — "John Fisher" is a high-frequency name and a lone
+    San-Francisco city match sweeps in strangers. That protection is untouched
+    by this change, which keys on the Pisces Inc / 94111 strong signals, not
+    on city. 3,279 of this owner's records remain UNCERTAIN, as they should.
+  by: "automated pipeline (ingest --from-raw, behind the strong-signal carve-out)"
+  references:
+  - "VERIFICATION.md — strong signal survives an address contradiction"
+  - "data/snapshots/2026-07-20T05-31-17Z__pre-strong-signal-carveout.db (pre-ingest)"
+
 audit:
   created: 2026-05-22
-  last_ingestion: '2026-07-05'
+  last_ingestion: '2026-07-20'
   last_signal_review: 2026-06-06

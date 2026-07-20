@@ -214,7 +214,44 @@ change_log:
   - "https://en.wikipedia.org/wiki/Jos%C3%A9_E._Feliciano"
   - "https://www.bloomberg.com/profile/person/7083529"
 
+- date: 2026-07-20
+  change: |
+    RECOVERED 2 falsely-discarded records, +$5,800. No signal-block change.
+    Restored by the classifier fix (VERIFICATION.md — "a matched strong signal
+    survives an address contradiction").
+
+    Both are 2021-09-27 $2,900 contributions to ALEX PADILLA FOR SENATE, filed
+    from WEST HOLLYWOOD, CA 90069 with employer CLEARLAKE CAPITAL GROUP and
+    occupation FOUNDER. Clearlake Capital Group is the firm he co-founded and
+    is already in this file's strong_signals.employers; "FOUNDER" is the
+    matching self-reported title. West Hollywood is not in
+    verifying_signals.cities (which lists Santa Monica, Pacific Palisades,
+    Marina del Rey, Los Angeles) — all LA-basin cities adjacent to it.
+
+    The 2026-05-30 bulk triage discarded them as "same-name stranger in
+    undocumented city/state". A stranger does not report the owner's own firm
+    with the owner's own founding title.
+
+    CORROBORATED BY STREET ADDRESS (checked after the ingest, same session):
+    both records carry street "233 WILSHIRE BLVD # 800" — Clearlake Capital
+    Group's Los Angeles-area office. That address is in SANTA MONICA (90401),
+    which IS already in this file's verifying_signals.cities; the filer paired
+    the correct office street with the wrong city/ZIP (West Hollywood 90069).
+    So this is an FEC filer error on the city field, not evidence of an
+    undocumented residence — the same artifact class as Fisher's
+    "SAN FRANSISCO" and Zalupski's "JAX BEACH" in this pass.
+
+    NOT DONE: "west hollywood" was NOT added to verifying_signals.cities — the
+    street address indicates the record belongs to a city already documented,
+    so adding the erroneous label would encode the filer's mistake. The
+    strong-employer signal carries these rows and the status_reason records
+    the anomaly.
+  by: "automated pipeline (ingest --from-raw, behind the strong-signal carve-out)"
+  references:
+  - "VERIFICATION.md — strong signal survives an address contradiction"
+  - "data/snapshots/2026-07-20T05-31-17Z__pre-strong-signal-carveout.db (pre-ingest)"
+
 audit:
   created: 2026-05-23
-  last_ingestion: '2026-07-05'
+  last_ingestion: '2026-07-20'
   last_signal_review: 2026-06-04
