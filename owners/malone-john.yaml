@@ -209,7 +209,39 @@ change_log:
   references:
   - "data/master.db pre-calibration: 40 CONFIRMED / 7 PROBABLE / 7 UNCERTAIN-open"
 
+- date: 2026-07-20
+  change: |
+    RECOVERED 1 record, +$100,000 (101 → 102 CONFIRMED, $1,270,750 →
+    $1,370,750). No signal-block change.
+
+    `SA11AI.4120` — 2012-08-16, $100,000 to FUND FOR FREEDOM INC, filed as
+    "MALONE, JOHN C." at 12300 LIBERTY BLVD, Englewood CO 80112 (Liberty
+    Media's HQ), employer LIBERTY MEDIA, occupation EXECUTIVE. Confirmed on
+    strong_zip:80112.
+
+    WHY IT WAS MISSING: the same filer-assigned transaction_id `SA11AI.4120`
+    is held by a reinsdorf-jerry row ($300,000, 2017-11-28, UNITED TOGETHER).
+    FEC transaction ids are assigned by the filer and unique only WITHIN a
+    filing, so two owners' contributions can legitimately share one. Under the
+    pre-v11 schema the donations PK was `transaction_id` alone, which could not
+    represent that — the collision guard (PR #126) correctly REFUSED to write
+    rather than clobber the other owner's row, and the record was left
+    unattributed.
+
+    Schema v11 gave donations the composite PK `(transaction_id, entity_slug)`,
+    which CAN hold both. This owner had not been re-ingested since, so the
+    refusal was still standing. `ingest --from-raw` recovered it; both rows now
+    hold their canonical id, which is what the FEC filings actually say.
+
+    This is the same recovery that was applied to the Ricketts records when v11
+    landed (+$23,800); malone-john and pohlad-tom were the remaining owners
+    still carrying an un-retried refusal.
+  by: "automated pipeline (ingest --from-raw, post-v11 composite PK)"
+  references:
+  - "catalog/PROVENANCE_LOG.md — 2026-07-19 schema v11 migration"
+  - "data/snapshots/2026-07-20T05-55-51Z__pre-orphan-recovery.db (pre-ingest)"
+
 audit:
   created: 2026-05-23
-  last_ingestion: '2026-06-20'
+  last_ingestion: '2026-07-20'
   last_signal_review: 2026-05-25

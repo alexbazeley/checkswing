@@ -439,4 +439,108 @@ that could not fire looked like a guard finding nothing.
 
 ---
 
+## 11. 2026-07-20 — the raw-orphan pass, and a THIRD layer of the collision class
+
+### 11.1 What landed: 2 collision-refusal orphans recovered (+$102,700)
+
+The §10.1 "14 orphans" figure was wrong in a reassuring direction. Re-scanned
+while honoring `manual_attributions` EXCLUDED, the real class was **3 records**:
+
+- **All 8 `middleton-john` Bryn Mawr rows are ALREADY correctly excluded** as
+  John Powers Middleton, the son. The prior father/son work (PRs #12/#14) holds;
+  the §10.1 warning was overcautious. Good news, recorded so it isn't re-feared.
+- `johnson-charles`'s $2,900 is an **open review-queue item**, not an orphan.
+
+Of the 3 real orphans, **2 were recovered**: `malone-john` **+$100,000** (2012,
+Liberty Media → Fund For Freedom) and `pohlad-tom` **+$2,700** (2018, Carousel
+Motor Group). Both were **standing collision-guard refusals**: their
+filer-assigned `transaction_id`s (`SA11AI.4120`, `SA11AI.4277`) are also held by
+`reinsdorf-jerry` and `kendrick-ken` rows. Pre-v11 the PK was `transaction_id`
+alone and could not represent that, so PR #126's guard correctly refused to write
+rather than clobber. Schema v11's composite PK can hold both; these two owners had
+simply never been re-ingested since. (The Ricketts refusals were recovered when
+v11 landed; these were the remaining ones.)
+
+**Archive $68,524,024.94 → $68,626,724.94.**
+
+**Lesson: a schema migration does not retroactively heal rows it refused.** After
+a PK migration, re-ingest every owner that ever hit the guard — the fix is only
+realized on the next write.
+
+### 11.2 What did NOT land: the dedup key is inverted, and it is BLOCKED ★
+
+The third orphan — `kendrick-ken`'s 2018 **$2,700** to Antony Ghee for Congress —
+led to a defect one layer earlier than §1.3, in `fetch_fec.load_raw_payloads`
+(and the fetch path, and `ingest._dedupe_records_by_txn`):
+
+```python
+key = r.get("transaction_id") or r.get("sub_id")   # WRONG ORDER
+```
+
+`sub_id` is FEC's globally-unique row id; `transaction_id` is **filer-assigned and
+unique only within a filing**. Preferring `transaction_id` collapses genuinely
+distinct contributions and **silently discards one before the classifier or the
+database ever sees it** — so no downstream guard can catch it, because the record
+never reaches `insert_donation`. Kendrick's $2,700 was discarded because his wife
+**Randy Kendrick's** 2020 $56,000 to a Cruz victory fund carried the same filer id
+`SA11AI.4306`.
+
+**Measured: 132 distinct contributions discarded across 24 owners.**
+
+**The fix was written, tested (5 new regression tests), applied — and then
+REVERTED, because it corrupts data at the storage layer.** Re-ingesting with the
+corrected key produced **fabricated restatements**, the exact §1.3 corruption:
+
+| owner | shared filer id | contribution A | contribution B |
+|---|---|---|---|
+| `dewitt-bill` | `SA18.1160868` | $300 → John McCain 2008 | $2,300 → McCain-Palin Compliance Fund |
+| `reinsdorf-jerry` | `SA17A.939857` | −$2,300 → John McCain 2008 | $2,300 → McCain-Palin Compliance Fund |
+
+Both pairs are **two real contributions, same date, same owner, distinct
+`sub_id`s**. Once both survive dedup they collide on the composite PK
+`(transaction_id, entity_slug)` — which still cannot represent them — and the
+second one *supersedes* the first with a fabricated
+`"FEC restatement: amount, recipient_committee_id, filing_id…"`.
+
+**The v11 guard has a hole:** it only declares a collision when recipient
+committee **AND** date **AND** amount all differ. These pairs share a date, so the
+guard stayed silent and the supersede path ran. Requiring all three was deliberate
+(to protect legitimate FEC re-images) but it is too weak for same-day pairs.
+
+`master.db` was restored from `data/snapshots/2026-07-20T06-02-26Z__pre-dedupe-key-fix.db`;
+zero fabricated restatements remain. **Caught by diffing against the pre-ingest
+snapshot — the ingest reported success.**
+
+#### The real fix is schema v12, and it needs sign-off
+
+**`sub_id` must be part of the donations identity.** The v11 composite PK
+`(transaction_id, entity_slug)` was the right direction but the wrong column: it
+solved *cross-owner* reuse and left *within-owner* reuse unrepresentable. Options,
+in ascending order of correctness:
+
+1. **Do nothing.** The 132 stay discarded, silently. Not recommended — it is a
+   known, measured, ongoing recall loss.
+2. **Tighten the v11 guard** (collision when committee **OR** amount differs, not
+   AND) *without* changing the dedup key. Converts silent fabrication into a loud
+   refusal. Cheap, safe, recovers nothing.
+3. **Schema v12: PK → `(sub_id, entity_slug)`**, keeping `transaction_id` as the
+   display/citation field it was always meant to be, with a documented fallback
+   for the pre-2006 rows that carry no `sub_id`. This is the honest model of what
+   FEC actually publishes, and the only option that recovers the records. It is a
+   full table rebuild — note the two migration gotchas from v11: `init()` runs
+   `SCHEMA_SQL` before the migration so a `DROP TABLE` silently takes the indexes
+   with it, and the replacement table must be built from `PRAGMA table_info` plus
+   SQLite's stored CREATE, never a hard-coded literal.
+
+Recommend **3**, with **2** landing first as an immediate safety net. Both are
+out of scope for this PR.
+
+**The pattern worth naming: this is the same defect at three layers** — the
+donations PK (§1.3, fixed v11), the load-time dedup key (here, blocked), and the
+guard's differ-on-all-three condition (here, hole identified). Each was invisible
+until the layer above it was fixed. When a root cause is "an identifier that isn't
+unique," check *every* place that identifier is used as a key.
+
+---
+
 *Review conducted 2026-07-10. Findings verified against main `4c7925c`, master.db (schema v7), state.db, legislation.db, and the live GitHub PR/workflow state. Line numbers drift — re-verify before editing.*

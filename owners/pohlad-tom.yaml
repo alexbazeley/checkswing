@@ -207,7 +207,31 @@ change_log:
   references:
   - "data/master.db pre-calibration: 71 CONFIRMED / 24 PROBABLE / 24 UNCERTAIN-open"
 
+- date: 2026-07-20
+  change: |
+    RECOVERED 1 record, +$2,700 (119 → 120 counted rows). No signal-block
+    change.
+
+    `SA11AI.4277` — 2018-05-20, $2,700 to 2018 MINNESOTA SENATORS VICTORY
+    COMMITTEE, filed as "POHLAD, TOM" at 20570 Park Place, Deephaven MN 55331,
+    employer CAROUSEL MOTOR GROUP, occupation PRESIDENT. Confirmed on
+    strong_employer:Carousel Motor Group.
+
+    WHY IT WAS MISSING: the same filer-assigned transaction_id `SA11AI.4277`
+    is held by a kendrick-ken row ($92,800, 2022-05-03). FEC transaction ids
+    are filer-assigned and unique only within a filing, so the pre-v11 PK
+    (transaction_id alone) could not represent both; the collision guard
+    correctly refused to write rather than clobber Kendrick's row.
+
+    Schema v11's composite PK `(transaction_id, entity_slug)` can hold both.
+    This owner had not been re-ingested since v11, so the refusal was still
+    standing; `ingest --from-raw` recovered it.
+  by: "automated pipeline (ingest --from-raw, post-v11 composite PK)"
+  references:
+  - "catalog/PROVENANCE_LOG.md — 2026-07-19 schema v11 migration"
+  - "data/snapshots/2026-07-20T05-55-51Z__pre-orphan-recovery.db (pre-ingest)"
+
 audit:
   created: 2026-05-23
-  last_ingestion: '2026-07-05'
+  last_ingestion: '2026-07-20'
   last_signal_review: 2026-05-25
