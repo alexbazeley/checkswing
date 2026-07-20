@@ -124,6 +124,48 @@ def repair(db_path=MASTER_DB, *, dry_run: bool = False) -> list[dict]:
     return repaired
 
 
+def restore_canonical_keys(db_path=MASTER_DB, *, dry_run: bool = False) -> list[dict]:
+    """v11 follow-up: give the repaired rows their real transaction_id back.
+
+    `repair()` had to re-key its rows to `<canonical>~collision~<slug>` because
+    `transaction_id` was a single-column PRIMARY KEY and the colliding row held
+    the canonical id. The v11 composite PK `(transaction_id, entity_slug)` lifts
+    that constraint: both contributions can now hold the same filer-assigned id,
+    which is what the FEC data actually says. This undoes the workaround.
+
+    Idempotent, and safe to run before the migration — it verifies the composite
+    PK is in place and refuses otherwise, since re-keying under the old PK would
+    raise a UNIQUE violation.
+    """
+    db.init(db_path)
+    restored: list[dict] = []
+    with db.connect(db_path) as conn:
+        conn.row_factory = sqlite3.Row
+        pk = {r["name"] for r in conn.execute("PRAGMA table_info(donations)") if r["pk"]}
+        if pk != {"transaction_id", "entity_slug"}:
+            raise RuntimeError(
+                f"donations PK is {sorted(pk)}, not the v11 composite key — run the "
+                "migration (db.init) before restoring canonical transaction ids."
+            )
+        rows = conn.execute(
+            "SELECT transaction_id, entity_slug, amount, date FROM donations "
+            "WHERE transaction_id LIKE '%~collision~%'"
+        ).fetchall()
+        for r in rows:
+            canonical = r["transaction_id"].split("~collision~", 1)[0]
+            restored.append({
+                "from": r["transaction_id"], "to": canonical,
+                "entity_slug": r["entity_slug"], "amount": r["amount"], "date": r["date"],
+            })
+            if not dry_run:
+                conn.execute(
+                    "UPDATE donations SET transaction_id = ? "
+                    " WHERE transaction_id = ? AND entity_slug = ?",
+                    (canonical, r["transaction_id"], r["entity_slug"]),
+                )
+    return restored
+
+
 def main() -> None:
     dry = "--dry-run" in sys.argv
     if not dry:

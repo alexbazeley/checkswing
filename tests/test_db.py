@@ -1,6 +1,7 @@
 """Supersession + idempotency tests for db.insert_donation (GOVERNANCE.md §1.5, §1.10)."""
 from __future__ import annotations
 
+import sqlite3
 from pathlib import Path
 
 import pytest
@@ -472,24 +473,46 @@ class TestCollisionWithoutSubId:
     were found live on 2026-07-19. These cases carry NO sub_id on either side.
     """
 
-    def test_different_entity_is_a_collision_not_a_restatement(self, db_path):
-        # Exactly the live bug: kendrick-ken $2,800 was "restated" into a
-        # reinsdorf-jerry row because both filings reused one transaction_id.
+    def test_two_owners_may_share_a_transaction_id(self, db_path):
+        """v11: the composite PK makes the cross-owner case a non-event.
+
+        This is the live bug — kendrick-ken $2,800 was "restated" into a
+        reinsdorf-jerry row because both filings reused one transaction_id.
+        Under the v11 PK (transaction_id, entity_slug) both contributions are
+        simply stored; neither is refused and neither is superseded.
+        """
         with db.connect(db_path) as conn:
-            db.insert_donation(conn, _row(
+            a, _ = db.insert_donation(conn, _row(
                 sub_id=None, entity_slug="kendrick-ken",
                 contributor_name_raw="KENDRICK, EARL", amount=2800.0))
         with db.connect(db_path) as conn:
-            action, reason = db.insert_donation(conn, _row(
+            b, _ = db.insert_donation(conn, _row(
                 sub_id=None, entity_slug="reinsdorf-jerry",
                 contributor_name_raw="REINSDORF, JERRY M.", amount=8400.0))
-        assert action == "collision"
-        assert "kendrick-ken" in reason and "reinsdorf-jerry" in reason
-        # The first owner's donation is untouched — not superseded, not reattributed.
-        assert _count(db_path) == 1
+        assert (a, b) == ("inserted", "inserted")
+        assert _count(db_path) == 2
         with db.connect(db_path) as conn:
-            r = conn.execute("SELECT entity_slug, amount, status FROM donations").fetchone()
-            assert (r["entity_slug"], r["amount"], r["status"]) == ("kendrick-ken", 2800.0, "CONFIRMED")
+            rows = {r["entity_slug"]: dict(r) for r in conn.execute(
+                "SELECT entity_slug, amount, status, superseded_by FROM donations")}
+        assert rows["kendrick-ken"]["amount"] == 2800.0
+        assert rows["reinsdorf-jerry"]["amount"] == 8400.0
+        assert all(r["status"] == "CONFIRMED" and r["superseded_by"] is None
+                   for r in rows.values())
+
+    def test_each_owners_own_row_still_supersedes_independently(self, db_path):
+        """Two owners on one id must not interfere when one IS restated."""
+        with db.connect(db_path) as conn:
+            db.insert_donation(conn, _row(sub_id=None, entity_slug="owner-a", amount=1000.0))
+            db.insert_donation(conn, _row(sub_id=None, entity_slug="owner-b", amount=7000.0))
+        with db.connect(db_path) as conn:
+            action, _ = db.insert_donation(conn, _row(
+                sub_id=None, entity_slug="owner-a", amount=1500.0))
+        assert action == "superseded"
+        with db.connect(db_path) as conn:
+            # owner-b is untouched by owner-a's supersession.
+            b = conn.execute(
+                "SELECT amount, status FROM donations WHERE entity_slug='owner-b'").fetchone()
+            assert (b["amount"], b["status"]) == (7000.0, "CONFIRMED")
 
     def test_same_owner_wholly_different_contribution_is_a_collision(self, db_path):
         # One owner, one reused transaction_id, but committee AND date AND
@@ -759,3 +782,93 @@ class TestRepairTxnCollisions:
             still = conn.execute(
                 "SELECT status FROM donations WHERE superseded_by = 'SA11AI.4319'").fetchone()
         assert still["status"] == "SUPERSEDED"
+
+
+class TestDonationsPkMigration:
+    """v11: rebuild donations with PK (transaction_id, entity_slug)."""
+
+    def _legacy_db(self, tmp_path):
+        """A DB with the pre-v11 single-column PK, as a real archive has."""
+        p = tmp_path / "legacy.db"
+        conn = sqlite3.connect(p)
+        conn.row_factory = sqlite3.Row
+        conn.executescript(
+            """
+            CREATE TABLE donations (
+                transaction_id TEXT PRIMARY KEY,
+                entity_slug TEXT NOT NULL,
+                entity_kind TEXT NOT NULL,
+                status TEXT NOT NULL,
+                contributor_name_raw TEXT NOT NULL,
+                recipient_committee_id TEXT NOT NULL,
+                recipient_committee_name TEXT NOT NULL,
+                recipient_candidate_id TEXT,
+                amount REAL NOT NULL,
+                date TEXT NOT NULL,
+                election_cycle INTEGER,
+                filing_id TEXT NOT NULL,
+                raw_payload_path TEXT NOT NULL,
+                ingested_at TEXT NOT NULL
+            );
+            INSERT INTO donations VALUES
+              ('T1','owner-a','owner','CONFIRMED','A','C1','Cmte','',100.0,'2020-01-01',2020,'F','r','t'),
+              ('T2','owner-b','owner','PROBABLE','B','C2','Cmte','',200.0,'2020-01-02',2020,'F','r','t');
+            """
+        )
+        conn.commit()
+        return p, conn
+
+    def test_rebuild_preserves_every_row_and_sets_composite_pk(self, tmp_path):
+        p, conn = self._legacy_db(tmp_path)
+        assert [r["name"] for r in conn.execute("PRAGMA table_info(donations)") if r["pk"]] == ["transaction_id"]
+
+        db._migrate_donations_pk(conn)
+
+        pk = {r["name"] for r in conn.execute("PRAGMA table_info(donations)") if r["pk"]}
+        assert pk == {"transaction_id", "entity_slug"}
+        rows = {(r["transaction_id"], r["entity_slug"]): r["amount"]
+                for r in conn.execute("SELECT transaction_id, entity_slug, amount FROM donations")}
+        assert rows == {("T1", "owner-a"): 100.0, ("T2", "owner-b"): 200.0}
+
+    def test_preserves_columns_added_by_later_alters(self, tmp_path):
+        # donations grows columns via ALTER in init(); a hard-coded CREATE in the
+        # migration would silently drop them.
+        p, conn = self._legacy_db(tmp_path)
+        conn.execute("ALTER TABLE donations ADD COLUMN sub_id TEXT")
+        conn.execute("UPDATE donations SET sub_id = 'S9' WHERE transaction_id = 'T1'")
+
+        db._migrate_donations_pk(conn)
+
+        cols = {r["name"] for r in conn.execute("PRAGMA table_info(donations)")}
+        assert "sub_id" in cols
+        assert conn.execute(
+            "SELECT sub_id FROM donations WHERE transaction_id='T1'").fetchone()["sub_id"] == "S9"
+
+    def test_recreates_indexes_the_drop_removed(self, tmp_path):
+        p, conn = self._legacy_db(tmp_path)
+        conn.execute("CREATE INDEX idx_donations_status ON donations(status)")
+        db._migrate_donations_pk(conn)
+        idx = {r["name"] for r in conn.execute(
+            "SELECT name FROM sqlite_master WHERE type='index' AND tbl_name='donations'"
+            " AND name NOT LIKE 'sqlite_%'")}
+        assert "idx_donations_status" in idx
+        assert "idx_donations_entity_date" in idx
+
+    def test_is_idempotent(self, tmp_path):
+        p, conn = self._legacy_db(tmp_path)
+        db._migrate_donations_pk(conn)
+        db._migrate_donations_pk(conn)   # second call is a no-op
+        assert conn.execute("SELECT COUNT(*) c FROM donations").fetchone()["c"] == 2
+
+    def test_two_owners_sharing_an_id_survive_the_rebuild(self, tmp_path):
+        """The whole point: post-migration the table can hold what the old PK could not."""
+        p, conn = self._legacy_db(tmp_path)
+        db._migrate_donations_pk(conn)
+        conn.execute(
+            "INSERT INTO donations (transaction_id, entity_slug, entity_kind, status,"
+            " contributor_name_raw, recipient_committee_id, recipient_committee_name,"
+            " recipient_candidate_id, amount, date, election_cycle, filing_id, raw_payload_path, ingested_at)"
+            " VALUES ('T1','owner-z','owner','CONFIRMED','Z','C9','Other','',900.0,'2021-01-01',2020,'F','r','t')"
+        )
+        assert conn.execute(
+            "SELECT COUNT(*) c FROM donations WHERE transaction_id='T1'").fetchone()["c"] == 2

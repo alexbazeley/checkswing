@@ -19,8 +19,15 @@ from .paths import MASTER_DB, OWNERS_DIR, SNAPSHOTS_DIR, ensure_data_dirs, relpa
 
 
 SCHEMA_SQL = """
+-- v11: PK is (transaction_id, entity_slug), not transaction_id alone. FEC
+-- transaction ids are FILER-assigned and unique only within a filing, so two
+-- owners' contributions can legitimately share one. Under the old single-column
+-- PK the second one collided with the first, and before the §1.3 guard it was
+-- recorded as a fabricated "FEC restatement" that silently removed the first
+-- owner's donation from every total. review_queue got this same composite PK in
+-- v9 for exactly this reason.
 CREATE TABLE IF NOT EXISTS donations (
-    transaction_id TEXT PRIMARY KEY,
+    transaction_id TEXT NOT NULL,
     entity_slug TEXT NOT NULL,
     entity_kind TEXT NOT NULL,
     parent_owner_slug TEXT,
@@ -47,7 +54,8 @@ CREATE TABLE IF NOT EXISTS donations (
     raw_payload_path TEXT NOT NULL,
     ingested_at TEXT NOT NULL,
     superseded_by TEXT,
-    superseded_reason TEXT
+    superseded_reason TEXT,
+    PRIMARY KEY (transaction_id, entity_slug)
 );
 
 CREATE INDEX IF NOT EXISTS idx_donations_entity_date
@@ -333,7 +341,7 @@ DONATION_DERIVED_COLS: list[tuple[str, str]] = [
     ("counted", "INTEGER NOT NULL DEFAULT 1"),
 ]
 
-SCHEMA_VERSION = 10
+SCHEMA_VERSION = 11
 
 
 def _utc_now_iso() -> str:
@@ -398,6 +406,75 @@ def _migrate_review_queue_pk(conn: sqlite3.Connection) -> None:
     )
 
 
+def _migrate_donations_pk(conn: sqlite3.Connection) -> None:
+    """v11: rebuild `donations` with PK (transaction_id, entity_slug).
+
+    Idempotent, data-preserving. SQLite cannot ALTER a primary key, so this
+    rebuilds — mirroring _migrate_review_queue_pk, which did the same for
+    review_queue in v9.
+
+    Unlike that one, the column list is read from PRAGMA rather than hard-coded:
+    `donations` gains columns through DONATION_EXTRA_COLS / DONATION_DERIVED_COLS
+    ALTERs in init(), so a literal CREATE here would silently drop whatever a
+    future version adds. We copy the CREATE statement SQLite already has, swap
+    only the PK clause, and copy every column by name.
+    """
+    pk_cols = [r["name"] for r in conn.execute("PRAGMA table_info(donations)") if r["pk"]]
+    if set(pk_cols) == {"transaction_id", "entity_slug"}:
+        return  # already migrated (or a fresh DB built from SCHEMA_SQL)
+
+    cols = [r["name"] for r in conn.execute("PRAGMA table_info(donations)")]
+    col_list = ", ".join(f'"{c}"' for c in cols)
+
+    create_sql = conn.execute(
+        "SELECT sql FROM sqlite_master WHERE type='table' AND name='donations'"
+    ).fetchone()["sql"]
+    # Swap the single-column PK for a NOT NULL column + a table-level composite PK.
+    rebuilt = create_sql.replace(
+        "transaction_id TEXT PRIMARY KEY", "transaction_id TEXT NOT NULL", 1
+    )
+    if rebuilt == create_sql:
+        raise RuntimeError(
+            "donations PK migration: could not find 'transaction_id TEXT PRIMARY KEY' "
+            "in the stored CREATE statement — refusing to rebuild blindly."
+        )
+    rebuilt = rebuilt.replace(
+        "CREATE TABLE donations", "CREATE TABLE donations_v11", 1
+    ).rstrip().rstrip(";")
+    # Append the composite PK just inside the closing paren.
+    assert rebuilt.endswith(")"), rebuilt[-40:]
+    rebuilt = rebuilt[:-1].rstrip().rstrip(",") + ", PRIMARY KEY (transaction_id, entity_slug))"
+
+    conn.execute(rebuilt)
+    # INSERT (not INSERT OR IGNORE): a row silently dropped here would be exactly
+    # the data loss this migration exists to prevent, so let it fail loudly.
+    conn.execute(f"INSERT INTO donations_v11 ({col_list}) SELECT {col_list} FROM donations")
+    moved = conn.execute("SELECT COUNT(*) AS n FROM donations_v11").fetchone()["n"]
+    original = conn.execute("SELECT COUNT(*) AS n FROM donations").fetchone()["n"]
+    if moved != original:
+        raise RuntimeError(
+            f"donations PK migration: copied {moved} of {original} rows — aborting."
+        )
+    conn.execute("DROP TABLE donations")
+    conn.execute("ALTER TABLE donations_v11 RENAME TO donations")
+    # DROP TABLE takes the table's indexes with it, and init() already ran
+    # SCHEMA_SQL (which creates them) BEFORE this migration — so without this
+    # they would silently be gone until some later init(). Recreate them here so
+    # the migration is self-contained.
+    conn.executescript(
+        """
+        CREATE INDEX IF NOT EXISTS idx_donations_entity_date
+            ON donations(entity_slug, date);
+        CREATE INDEX IF NOT EXISTS idx_donations_status
+            ON donations(status);
+        CREATE INDEX IF NOT EXISTS idx_donations_candidate
+            ON donations(recipient_candidate_id, date);
+        CREATE INDEX IF NOT EXISTS idx_donations_cycle_entity
+            ON donations(election_cycle, entity_slug);
+        """
+    )
+
+
 def init(db_path: Path = MASTER_DB) -> None:
     """Create schema idempotently. Records a new schema_version row whenever
     SCHEMA_VERSION is bumped beyond the DB's current MAX(version), so the
@@ -418,6 +495,8 @@ def init(db_path: Path = MASTER_DB) -> None:
                 conn.execute(f"ALTER TABLE donations ADD COLUMN {col_name} {col_type}")
         # v9: migrate review_queue to the composite PK (transaction_id, entity_slug).
         _migrate_review_queue_pk(conn)
+        # v11: same migration for donations — see _migrate_donations_pk.
+        _migrate_donations_pk(conn)
         existing = conn.execute("SELECT MAX(version) AS v FROM schema_version").fetchone()
         current = existing["v"] if existing else None
         if current is None or current < SCHEMA_VERSION:
@@ -649,8 +728,13 @@ def insert_donation(conn: sqlite3.Connection, row: dict) -> tuple[str, str | Non
     full_row = {**row, **payload}
     txn = full_row["transaction_id"]
 
+    # v11: scoped by entity_slug, matching the composite PK. Before v11 this
+    # lookup was transaction_id-only, so an incoming row whose id happened to be
+    # reused by ANOTHER owner's filing found that owner's row and treated it as a
+    # prior version of itself — the §1.3 collision class.
     existing = conn.execute(
-        "SELECT * FROM donations WHERE transaction_id = ?", (txn,)
+        "SELECT * FROM donations WHERE transaction_id = ? AND entity_slug = ?",
+        (txn, full_row["entity_slug"]),
     ).fetchone()
     if existing is None:
         _insert_donation_row(conn, full_row)
@@ -676,16 +760,11 @@ def insert_donation(conn: sqlite3.Connection, row: dict) -> tuple[str, str | Non
     # into another's. Two such rows were found live in the archive (2026-07-19).
     # These two tests need no sub_id.
     #
-    # (a) Different entity_slug. A single FEC transaction has exactly one
-    #     contributor, so two entities claiming the same transaction_id is
-    #     filer-id reuse by construction — never a restatement.
-    if str(existing_d.get("entity_slug")) != str(full_row.get("entity_slug")):
-        return (
-            "collision",
-            f"transaction_id {txn}: entity {existing_d.get('entity_slug')} vs "
-            f"{full_row.get('entity_slug')} (filer-assigned id reused across owners)",
-        )
-
+    # (a) The cross-owner case no longer reaches here at all: since v11 the PK is
+    #     (transaction_id, entity_slug) and the lookup above is scoped to this
+    #     entity, so another owner reusing the id simply inserts alongside. That
+    #     is the fix; the guard below covers what remains.
+    #
     # (b) Same entity, but the contribution's whole identity differs. A genuine
     #     FEC restatement corrects a field or two of ONE contribution; it does not
     #     simultaneously change who received it, when, and how much. Requiring all
@@ -720,9 +799,9 @@ def insert_donation(conn: sqlite3.Connection, row: dict) -> tuple[str, str | Non
         """
         UPDATE donations
            SET transaction_id = ?, status = ?, superseded_by = ?, superseded_reason = ?
-         WHERE transaction_id = ?
+         WHERE transaction_id = ? AND entity_slug = ?
         """,
-        (archived_key, "SUPERSEDED", txn, reason, txn),
+        (archived_key, "SUPERSEDED", txn, reason, txn, full_row["entity_slug"]),
     )
     _insert_donation_row(conn, full_row)
     return ("superseded", reason)
