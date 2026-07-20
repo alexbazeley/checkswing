@@ -26760,3 +26760,267 @@ not production").
 - **updated**: `51` · **demoted→queue**: `0` · **suppressed (DISCARDED)**: `0` · **forced**: `0` · **excluded**: `0` · **unchanged**: `331`
 - **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T15-38-16Z__pre-reclassify-inplace-ricketts-todd.db`
 - **note**: in-place re-score from stored donations columns (no raw read, no delete-rebuild); rows recoverable from the snapshot above.
+
+### 2026-07-20 — REVIEW_RESOLUTION — johnson-greg (state bulk-discard)
+
+Discarded **1851** open state review-queue item(s) for `johnson-greg` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4). johnson-greg = Gregory E. Johnson (SF Giants), documented residence Hillsborough/San Mateo CA only. Verified 0 of these are from a documented city — all are same-named strangers (Fort Worth TX, Maple Valley WA, Alpharetta GA, Santee CA, etc.). 'Greg/Gregory Johnson' is a hyper-common name; state fetch matches on name+geography only. Geographic contradiction = not him. Queue-only, no counted total affected; reversible via unresolve-state.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-15-27Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — johnson-greg (state bulk-discard)
+
+Discarded **499** open state review-queue item(s) for `johnson-greg` reason~'name match only%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4). 'name match only — no confirming signals' = a state record matching the hyper-common name 'Greg/Gregory Johnson' with NO city, employer, or other corroborating signal (a documented-city match would itself be a confirming signal, so these are not from San Mateo/Hillsborough). Unconfirmable as the owner; the conservative standard leaves them uncounted. Queue-only; reversible via unresolve-state if evidence emerges.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-16-30Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — sherman-john (state bulk-discard)
+
+Discarded **1395** open state review-queue item(s) for `sherman-john` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): geographic contradiction — the owner's documented residence city would itself confirm; every 'outside' record is from a non-residence city, and for these (mostly common) names that means a same-named stranger. Closest calls (henry/Milton MA, fisher/Redwood City CA, stanton/Nine Mile Falls WA) are distinct towns from the documented homes; reversible via unresolve-state if a YAML residence gap is later found.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-23Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — sherman-john (state bulk-discard)
+
+Discarded **83** open state review-queue item(s) for `sherman-john` reason~'name match only%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): name matched with NO city/employer/other signal; a documented-city match would itself be a confirming signal, so these are not from the owner's cities. Unconfirmable; conservative standard leaves them uncounted.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-23Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — sherman-john (state bulk-discard)
+
+Discarded **17** open state review-queue item(s) for `sherman-john` reason~'suffix mismatch%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): name canonically matches but the suffix (Jr/Sr/III) differs — a different person.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-23Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — cohen-steven (state bulk-discard)
+
+Discarded **808** open state review-queue item(s) for `cohen-steven` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): geographic contradiction — the owner's documented residence city would itself confirm; every 'outside' record is from a non-residence city, and for these (mostly common) names that means a same-named stranger. Closest calls (henry/Milton MA, fisher/Redwood City CA, stanton/Nine Mile Falls WA) are distinct towns from the documented homes; reversible via unresolve-state if a YAML residence gap is later found.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-23Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — cohen-steven (state bulk-discard)
+
+Discarded **605** open state review-queue item(s) for `cohen-steven` reason~'name match only%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): name matched with NO city/employer/other signal; a documented-city match would itself be a confirming signal, so these are not from the owner's cities. Unconfirmable; conservative standard leaves them uncounted.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-23Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — henry-john (state bulk-discard)
+
+Discarded **1080** open state review-queue item(s) for `henry-john` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): geographic contradiction — the owner's documented residence city would itself confirm; every 'outside' record is from a non-residence city, and for these (mostly common) names that means a same-named stranger. Closest calls (henry/Milton MA, fisher/Redwood City CA, stanton/Nine Mile Falls WA) are distinct towns from the documented homes; reversible via unresolve-state if a YAML residence gap is later found.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-23Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — henry-john (state bulk-discard)
+
+Discarded **62** open state review-queue item(s) for `henry-john` reason~'name match only%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): name matched with NO city/employer/other signal; a documented-city match would itself be a confirming signal, so these are not from the owner's cities. Unconfirmable; conservative standard leaves them uncounted.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-24Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — henry-john (state bulk-discard)
+
+Discarded **28** open state review-queue item(s) for `henry-john` reason~'suffix mismatch%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): name canonically matches but the suffix (Jr/Sr/III) differs — a different person.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-24Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — fisher-john (state bulk-discard)
+
+Discarded **790** open state review-queue item(s) for `fisher-john` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): geographic contradiction — the owner's documented residence city would itself confirm; every 'outside' record is from a non-residence city, and for these (mostly common) names that means a same-named stranger. Closest calls (henry/Milton MA, fisher/Redwood City CA, stanton/Nine Mile Falls WA) are distinct towns from the documented homes; reversible via unresolve-state if a YAML residence gap is later found.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-24Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — fisher-john (state bulk-discard)
+
+Discarded **3** open state review-queue item(s) for `fisher-john` reason~'name match only%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): name matched with NO city/employer/other signal; a documented-city match would itself be a confirming signal, so these are not from the owner's cities. Unconfirmable; conservative standard leaves them uncounted.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-24Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — fisher-john (state bulk-discard)
+
+Discarded **52** open state review-queue item(s) for `fisher-john` reason~'suffix mismatch%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): name canonically matches but the suffix (Jr/Sr/III) differs — a different person.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-24Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — fisher-john (state bulk-discard)
+
+Discarded **27** open state review-queue item(s) for `fisher-john` reason~'matches negative employer signal%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): affirmatively flagged by a negative_signal as a DIFFERENT same-named person (e.g. Draper Fisher Jurvetson ≠ John Fisher). Confident stranger.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-24Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — middleton-john (state bulk-discard)
+
+Discarded **349** open state review-queue item(s) for `middleton-john` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): geographic contradiction — the owner's documented residence city would itself confirm; every 'outside' record is from a non-residence city, and for these (mostly common) names that means a same-named stranger. Closest calls (henry/Milton MA, fisher/Redwood City CA, stanton/Nine Mile Falls WA) are distinct towns from the documented homes; reversible via unresolve-state if a YAML residence gap is later found.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-24Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — middleton-john (state bulk-discard)
+
+Discarded **108** open state review-queue item(s) for `middleton-john` reason~'name match only%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): name matched with NO city/employer/other signal; a documented-city match would itself be a confirming signal, so these are not from the owner's cities. Unconfirmable; conservative standard leaves them uncounted.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-25Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — middleton-john (state bulk-discard)
+
+Discarded **1** open state review-queue item(s) for `middleton-john` reason~'suffix mismatch%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): name canonically matches but the suffix (Jr/Sr/III) differs — a different person.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-25Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — stanton-john (state bulk-discard)
+
+Discarded **345** open state review-queue item(s) for `stanton-john` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): geographic contradiction — the owner's documented residence city would itself confirm; every 'outside' record is from a non-residence city, and for these (mostly common) names that means a same-named stranger. Closest calls (henry/Milton MA, fisher/Redwood City CA, stanton/Nine Mile Falls WA) are distinct towns from the documented homes; reversible via unresolve-state if a YAML residence gap is later found.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-25Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — stanton-john (state bulk-discard)
+
+Discarded **31** open state review-queue item(s) for `stanton-john` reason~'name match only%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): name matched with NO city/employer/other signal; a documented-city match would itself be a confirming signal, so these are not from the owner's cities. Unconfirmable; conservative standard leaves them uncounted.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-25Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — stanton-john (state bulk-discard)
+
+Discarded **3** open state review-queue item(s) for `stanton-john` reason~'suffix mismatch%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): name canonically matches but the suffix (Jr/Sr/III) differs — a different person.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-25Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — malone-john (state bulk-discard)
+
+Discarded **206** open state review-queue item(s) for `malone-john` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): geographic contradiction — the owner's documented residence city would itself confirm; every 'outside' record is from a non-residence city, and for these (mostly common) names that means a same-named stranger. Closest calls (henry/Milton MA, fisher/Redwood City CA, stanton/Nine Mile Falls WA) are distinct towns from the documented homes; reversible via unresolve-state if a YAML residence gap is later found.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-25Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — malone-john (state bulk-discard)
+
+Discarded **28** open state review-queue item(s) for `malone-john` reason~'name match only%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): name matched with NO city/employer/other signal; a documented-city match would itself be a confirming signal, so these are not from the owner's cities. Unconfirmable; conservative standard leaves them uncounted.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-25Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — malone-john (state bulk-discard)
+
+Discarded **5** open state review-queue item(s) for `malone-john` reason~'suffix mismatch%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): name canonically matches but the suffix (Jr/Sr/III) differs — a different person.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-25Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — moreno-arte (state bulk-discard)
+
+Discarded **221** open state review-queue item(s) for `moreno-arte` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): geographic contradiction — the owner's documented residence city would itself confirm; every 'outside' record is from a non-residence city, and for these (mostly common) names that means a same-named stranger. Closest calls (henry/Milton MA, fisher/Redwood City CA, stanton/Nine Mile Falls WA) are distinct towns from the documented homes; reversible via unresolve-state if a YAML residence gap is later found.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-26Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — moreno-arte (state bulk-discard)
+
+Discarded **15** open state review-queue item(s) for `moreno-arte` reason~'suffix mismatch%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): name canonically matches but the suffix (Jr/Sr/III) differs — a different person.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-26Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — davis-ray (state bulk-discard)
+
+Discarded **180** open state review-queue item(s) for `davis-ray` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): geographic contradiction — the owner's documented residence city would itself confirm; every 'outside' record is from a non-residence city, and for these (mostly common) names that means a same-named stranger. Closest calls (henry/Milton MA, fisher/Redwood City CA, stanton/Nine Mile Falls WA) are distinct towns from the documented homes; reversible via unresolve-state if a YAML residence gap is later found.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-26Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — davis-ray (state bulk-discard)
+
+Discarded **12** open state review-queue item(s) for `davis-ray` reason~'name match only%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): name matched with NO city/employer/other signal; a documented-city match would itself be a confirming signal, so these are not from the owner's cities. Unconfirmable; conservative standard leaves them uncounted.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-26Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — davis-ray (state bulk-discard)
+
+Discarded **23** open state review-queue item(s) for `davis-ray` reason~'suffix mismatch%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): name canonically matches but the suffix (Jr/Sr/III) differs — a different person.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-26Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — crane-jim (state bulk-discard)
+
+Discarded **155** open state review-queue item(s) for `crane-jim` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): geographic contradiction — the owner's documented residence city would itself confirm; every 'outside' record is from a non-residence city, and for these (mostly common) names that means a same-named stranger. Closest calls (henry/Milton MA, fisher/Redwood City CA, stanton/Nine Mile Falls WA) are distinct towns from the documented homes; reversible via unresolve-state if a YAML residence gap is later found.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-26Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — crane-jim (state bulk-discard)
+
+Discarded **38** open state review-queue item(s) for `crane-jim` reason~'name match only%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): name matched with NO city/employer/other signal; a documented-city match would itself be a confirming signal, so these are not from the owner's cities. Unconfirmable; conservative standard leaves them uncounted.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-26Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — sherman-bruce (state bulk-discard)
+
+Discarded **108** open state review-queue item(s) for `sherman-bruce` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): geographic contradiction — the owner's documented residence city would itself confirm; every 'outside' record is from a non-residence city, and for these (mostly common) names that means a same-named stranger. Closest calls (henry/Milton MA, fisher/Redwood City CA, stanton/Nine Mile Falls WA) are distinct towns from the documented homes; reversible via unresolve-state if a YAML residence gap is later found.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-27Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — sherman-bruce (state bulk-discard)
+
+Discarded **76** open state review-queue item(s) for `sherman-bruce` reason~'name match only%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): name matched with NO city/employer/other signal; a documented-city match would itself be a confirming signal, so these are not from the owner's cities. Unconfirmable; conservative standard leaves them uncounted.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-27Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — dolan-paul (state bulk-discard)
+
+Discarded **39** open state review-queue item(s) for `dolan-paul` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): geographic contradiction — the owner's documented residence city would itself confirm; every 'outside' record is from a non-residence city, and for these (mostly common) names that means a same-named stranger. Closest calls (henry/Milton MA, fisher/Redwood City CA, stanton/Nine Mile Falls WA) are distinct towns from the documented homes; reversible via unresolve-state if a YAML residence gap is later found.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-27Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — dolan-paul (state bulk-discard)
+
+Discarded **103** open state review-queue item(s) for `dolan-paul` reason~'name match only%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): name matched with NO city/employer/other signal; a documented-city match would itself be a confirming signal, so these are not from the owner's cities. Unconfirmable; conservative standard leaves them uncounted.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-27Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — dolan-paul (state bulk-discard)
+
+Discarded **6** open state review-queue item(s) for `dolan-paul` reason~'suffix mismatch%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): name canonically matches but the suffix (Jr/Sr/III) differs — a different person.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-27Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — dolan-paul (state bulk-discard)
+
+Discarded **1** open state review-queue item(s) for `dolan-paul` reason~'matches negative employer signal%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): affirmatively flagged by a negative_signal as a DIFFERENT same-named person (e.g. Draper Fisher Jurvetson ≠ John Fisher). Confident stranger.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-27Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — walter-mark (state bulk-discard)
+
+Discarded **89** open state review-queue item(s) for `walter-mark` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): geographic contradiction — the owner's documented residence city would itself confirm; every 'outside' record is from a non-residence city, and for these (mostly common) names that means a same-named stranger. Closest calls (henry/Milton MA, fisher/Redwood City CA, stanton/Nine Mile Falls WA) are distinct towns from the documented homes; reversible via unresolve-state if a YAML residence gap is later found.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-27Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — walter-mark (state bulk-discard)
+
+Discarded **15** open state review-queue item(s) for `walter-mark` reason~'name match only%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): name matched with NO city/employer/other signal; a documented-city match would itself be a confirming signal, so these are not from the owner's cities. Unconfirmable; conservative standard leaves them uncounted.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-27Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — lerner-mark (state bulk-discard)
+
+Discarded **58** open state review-queue item(s) for `lerner-mark` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): geographic contradiction — the owner's documented residence city would itself confirm; every 'outside' record is from a non-residence city, and for these (mostly common) names that means a same-named stranger. Closest calls (henry/Milton MA, fisher/Redwood City CA, stanton/Nine Mile Falls WA) are distinct towns from the documented homes; reversible via unresolve-state if a YAML residence gap is later found.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-27Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — lerner-mark (state bulk-discard)
+
+Discarded **14** open state review-queue item(s) for `lerner-mark` reason~'name match only%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): name matched with NO city/employer/other signal; a documented-city match would itself be a confirming signal, so these are not from the owner's cities. Unconfirmable; conservative standard leaves them uncounted.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-28Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — nutting-bob (state bulk-discard)
+
+Discarded **64** open state review-queue item(s) for `nutting-bob` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): geographic contradiction — the owner's documented residence city would itself confirm; every 'outside' record is from a non-residence city, and for these (mostly common) names that means a same-named stranger. Closest calls (henry/Milton MA, fisher/Redwood City CA, stanton/Nine Mile Falls WA) are distinct towns from the documented homes; reversible via unresolve-state if a YAML residence gap is later found.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-28Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — nutting-bob (state bulk-discard)
+
+Discarded **5** open state review-queue item(s) for `nutting-bob` reason~'name match only%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): name matched with NO city/employer/other signal; a documented-city match would itself be a confirming signal, so these are not from the owner's cities. Unconfirmable; conservative standard leaves them uncounted.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-28Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — rubenstein-david (state bulk-discard)
+
+Discarded **45** open state review-queue item(s) for `rubenstein-david` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): geographic contradiction — the owner's documented residence city would itself confirm; every 'outside' record is from a non-residence city, and for these (mostly common) names that means a same-named stranger. Closest calls (henry/Milton MA, fisher/Redwood City CA, stanton/Nine Mile Falls WA) are distinct towns from the documented homes; reversible via unresolve-state if a YAML residence gap is later found.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-28Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — rubenstein-david (state bulk-discard)
+
+Discarded **14** open state review-queue item(s) for `rubenstein-david` reason~'name match only%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): name matched with NO city/employer/other signal; a documented-city match would itself be a confirming signal, so these are not from the owner's cities. Unconfirmable; conservative standard leaves them uncounted.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-28Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — rubenstein-david (state bulk-discard)
+
+Discarded **2** open state review-queue item(s) for `rubenstein-david` reason~'matches negative employer signal%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): affirmatively flagged by a negative_signal as a DIFFERENT same-named person (e.g. Draper Fisher Jurvetson ≠ John Fisher). Confident stranger.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-28Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — feliciano-jose (state bulk-discard)
+
+Discarded **20** open state review-queue item(s) for `feliciano-jose` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): geographic contradiction — the owner's documented residence city would itself confirm; every 'outside' record is from a non-residence city, and for these (mostly common) names that means a same-named stranger. Closest calls (henry/Milton MA, fisher/Redwood City CA, stanton/Nine Mile Falls WA) are distinct towns from the documented homes; reversible via unresolve-state if a YAML residence gap is later found.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-28Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — feliciano-jose (state bulk-discard)
+
+Discarded **22** open state review-queue item(s) for `feliciano-jose` reason~'name match only%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): name matched with NO city/employer/other signal; a documented-city match would itself be a confirming signal, so these are not from the owner's cities. Unconfirmable; conservative standard leaves them uncounted.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-29Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — feliciano-jose (state bulk-discard)
+
+Discarded **7** open state review-queue item(s) for `feliciano-jose` reason~'suffix mismatch%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): name canonically matches but the suffix (Jr/Sr/III) differs — a different person.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-29Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — castellini-bob (state bulk-discard)
+
+Discarded **39** open state review-queue item(s) for `castellini-bob` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): geographic contradiction — the owner's documented residence city would itself confirm; every 'outside' record is from a non-residence city, and for these (mostly common) names that means a same-named stranger. Closest calls (henry/Milton MA, fisher/Redwood City CA, stanton/Nine Mile Falls WA) are distinct towns from the documented homes; reversible via unresolve-state if a YAML residence gap is later found.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-29Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — dewitt-bill (state bulk-discard)
+
+Discarded **11** open state review-queue item(s) for `dewitt-bill` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): geographic contradiction — the owner's documented residence city would itself confirm; every 'outside' record is from a non-residence city, and for these (mostly common) names that means a same-named stranger. Closest calls (henry/Milton MA, fisher/Redwood City CA, stanton/Nine Mile Falls WA) are distinct towns from the documented homes; reversible via unresolve-state if a YAML residence gap is later found.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-29Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — dewitt-bill (state bulk-discard)
+
+Discarded **3** open state review-queue item(s) for `dewitt-bill` reason~'name match only%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): name matched with NO city/employer/other signal; a documented-city match would itself be a confirming signal, so these are not from the owner's cities. Unconfirmable; conservative standard leaves them uncounted.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-29Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — simpson-bob (state bulk-discard)
+
+Discarded **11** open state review-queue item(s) for `simpson-bob` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): geographic contradiction — the owner's documented residence city would itself confirm; every 'outside' record is from a non-residence city, and for these (mostly common) names that means a same-named stranger. Closest calls (henry/Milton MA, fisher/Redwood City CA, stanton/Nine Mile Falls WA) are distinct towns from the documented homes; reversible via unresolve-state if a YAML residence gap is later found.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-29Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — simpson-bob (state bulk-discard)
+
+Discarded **1** open state review-queue item(s) for `simpson-bob` reason~'name match only%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): name matched with NO city/employer/other signal; a documented-city match would itself be a confirming signal, so these are not from the owner's cities. Unconfirmable; conservative standard leaves them uncounted.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-29Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — reinsdorf-jerry (state bulk-discard)
+
+Discarded **10** open state review-queue item(s) for `reinsdorf-jerry` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): geographic contradiction — the owner's documented residence city would itself confirm; every 'outside' record is from a non-residence city, and for these (mostly common) names that means a same-named stranger. Closest calls (henry/Milton MA, fisher/Redwood City CA, stanton/Nine Mile Falls WA) are distinct towns from the documented homes; reversible via unresolve-state if a YAML residence gap is later found.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-29Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — reinsdorf-jerry (state bulk-discard)
+
+Discarded **1** open state review-queue item(s) for `reinsdorf-jerry` reason~'name match only%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): name matched with NO city/employer/other signal; a documented-city match would itself be a confirming signal, so these are not from the owner's cities. Unconfirmable; conservative standard leaves them uncounted.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-30Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — ricketts-tom (state bulk-discard)
+
+Discarded **4** open state review-queue item(s) for `ricketts-tom` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): geographic contradiction — the owner's documented residence city would itself confirm; every 'outside' record is from a non-residence city, and for these (mostly common) names that means a same-named stranger. Closest calls (henry/Milton MA, fisher/Redwood City CA, stanton/Nine Mile Falls WA) are distinct towns from the documented homes; reversible via unresolve-state if a YAML residence gap is later found.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-30Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — steinbrenner-hal (state bulk-discard)
+
+Discarded **3** open state review-queue item(s) for `steinbrenner-hal` reason~'name match only%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): name matched with NO city/employer/other signal; a documented-city match would itself be a confirming signal, so these are not from the owner's cities. Unconfirmable; conservative standard leaves them uncounted.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-30Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — attanasio-mark (state bulk-discard)
+
+Discarded **1** open state review-queue item(s) for `attanasio-mark` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): geographic contradiction — the owner's documented residence city would itself confirm; every 'outside' record is from a non-residence city, and for these (mostly common) names that means a same-named stranger. Closest calls (henry/Milton MA, fisher/Redwood City CA, stanton/Nine Mile Falls WA) are distinct towns from the documented homes; reversible via unresolve-state if a YAML residence gap is later found.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-30Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — attanasio-mark (state bulk-discard)
+
+Discarded **2** open state review-queue item(s) for `attanasio-mark` reason~'name match only%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): name matched with NO city/employer/other signal; a documented-city match would itself be a confirming signal, so these are not from the owner's cities. Unconfirmable; conservative standard leaves them uncounted.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-30Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — angelos-john-p (state bulk-discard)
+
+Discarded **3** open state review-queue item(s) for `angelos-john-p` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): geographic contradiction — the owner's documented residence city would itself confirm; every 'outside' record is from a non-residence city, and for these (mostly common) names that means a same-named stranger. Closest calls (henry/Milton MA, fisher/Redwood City CA, stanton/Nine Mile Falls WA) are distinct towns from the documented homes; reversible via unresolve-state if a YAML residence gap is later found.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-30Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — pohlad-tom (state bulk-discard)
+
+Discarded **2** open state review-queue item(s) for `pohlad-tom` reason~'name match only%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): name matched with NO city/employer/other signal; a documented-city match would itself be a confirming signal, so these are not from the owner's cities. Unconfirmable; conservative standard leaves them uncounted.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-31Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — mcguirk-terry (state bulk-discard)
+
+Discarded **2** open state review-queue item(s) for `mcguirk-terry` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): geographic contradiction — the owner's documented residence city would itself confirm; every 'outside' record is from a non-residence city, and for these (mostly common) names that means a same-named stranger. Closest calls (henry/Milton MA, fisher/Redwood City CA, stanton/Nine Mile Falls WA) are distinct towns from the documented homes; reversible via unresolve-state if a YAML residence gap is later found.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-31Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — kendrick-ken (state bulk-discard)
+
+Discarded **1** open state review-queue item(s) for `kendrick-ken` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): geographic contradiction — the owner's documented residence city would itself confirm; every 'outside' record is from a non-residence city, and for these (mostly common) names that means a same-named stranger. Closest calls (henry/Milton MA, fisher/Redwood City CA, stanton/Nine Mile Falls WA) are distinct towns from the documented homes; reversible via unresolve-state if a YAML residence gap is later found.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-31Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — kendrick-ken (state bulk-discard)
+
+Discarded **1** open state review-queue item(s) for `kendrick-ken` reason~'name match only%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): name matched with NO city/employer/other signal; a documented-city match would itself be a confirming signal, so these are not from the owner's cities. Unconfirmable; conservative standard leaves them uncounted.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-31Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — zalupski-patrick (state bulk-discard)
+
+Discarded **1** open state review-queue item(s) for `zalupski-patrick` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): geographic contradiction — the owner's documented residence city would itself confirm; every 'outside' record is from a non-residence city, and for these (mostly common) names that means a same-named stranger. Closest calls (henry/Milton MA, fisher/Redwood City CA, stanton/Nine Mile Falls WA) are distinct towns from the documented homes; reversible via unresolve-state if a YAML residence gap is later found.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-31Z__bulk_discard_state.db`.
+
+### 2026-07-20 — REVIEW_RESOLUTION — ilitch-chris (state bulk-discard)
+
+Discarded **1** open state review-queue item(s) for `ilitch-chris` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): geographic contradiction — the owner's documented residence city would itself confirm; every 'outside' record is from a non-residence city, and for these (mostly common) names that means a same-named stranger. Closest calls (henry/Milton MA, fisher/Redwood City CA, stanton/Nine Mile Falls WA) are distinct towns from the documented homes; reversible via unresolve-state if a YAML residence gap is later found.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-31Z__bulk_discard_state.db`.
