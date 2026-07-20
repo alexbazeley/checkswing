@@ -68,9 +68,17 @@ verifying_signals:
     # least one RAM Investment-linked donation matching other CONFIRMED
     # donations (verified by alex during proposal review). The "Incapitol"
     # / "EnCapital Holdings" / "Capitol Building" are clerical typo /
-    # spelling variants of Tom's Incapital LLC firm. "RAM Investment(s)"
-    # is Tom's personal investment vehicle (not in Tier 2 sources but
-    # confirmed via shared residence-address with CONFIRMED records).
+    # spelling variants of Tom's Incapital LLC firm.
+    #
+    # "RAM Investment(s)" — CORRECTED 2026-07-20. Originally characterized here
+    # as "Tom's personal investment vehicle"; the ricketts-todd calibration that
+    # day showed it is actually a SHARED family vehicle — Todd files it on ~24
+    # records (PROBABLE) to Tom's ~8 (CONFIRMED). It stays a VERIFYING signal on
+    # Tom (his RAM records are confirmed via shared residence-address with other
+    # CONFIRMED records, and the strict first-name name gate keeps Todd's out),
+    # but it MUST NEVER be promoted to strong_signals on either brother — a lone
+    # RAM match cannot tell Tom from Todd. Contrast Todd's genuinely-unique
+    # "Active Chaos" / "JBE Riding Group", which were promoted to strong.
   - "Incapitol"
   - "EnCapital Holdings"
   - "RAM Investment"

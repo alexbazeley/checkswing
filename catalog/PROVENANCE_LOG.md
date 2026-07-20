@@ -26751,3 +26751,12 @@ not production").
 - **open_queue_remaining**: `671`
 - **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T15-19-26Z__pre-bulk-discard.db`
 - **note**: Standing DISCARDED verdicts recorded in review_resolutions (survive reclassify). Attribution unaffected (GOVERNANCE.md §2.5). Reversible via `unresolve`.
+
+### 2026-07-20 — RECLASSIFY-IN-PLACE — ricketts-todd
+
+- **entity_slug**: `ricketts-todd`
+- **reason**: Promote Todd-only personal LLCs Active Chaos + JBE Riding Group to strong_signals.employers after clean audit (both filed by no other entity); RAM Investment deliberately excluded (shared with Tom).
+- **rows_scored**: `382`
+- **updated**: `51` · **demoted→queue**: `0` · **suppressed (DISCARDED)**: `0` · **forced**: `0` · **excluded**: `0` · **unchanged**: `331`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T15-38-16Z__pre-reclassify-inplace-ricketts-todd.db`
+- **note**: in-place re-score from stored donations columns (no raw read, no delete-rebuild); rows recoverable from the snapshot above.
