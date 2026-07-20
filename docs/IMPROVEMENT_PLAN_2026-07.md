@@ -313,4 +313,89 @@ Do not start these without explicit approval; recorded so the shape is agreed be
 
 ---
 
+## 10. 2026-07-20 — the false-discard class (classifier ordering)
+
+**Found while grounding the Wave 3 co-owner work, not by looking for it.** A scan of
+what the archive already knew about the Ilitch surname turned up nine
+`ILITCH, CHRISTOPHER` records at Birmingham MI reporting employer **Ilitch
+Holdings** — one filed as `ILITCH HOLDINGS/PRESIDENT` — sitting in the review
+queue as DISCARDED "same-name stranger".
+
+**Root cause.** `_classify_against_entity_signals` evaluated the
+address-contradiction rule *before* the strong-signal check, while still writing
+the matched strong signal into `signals_matched`. Rows were therefore stamped
+`strong_employer:…` and filed UNCERTAIN anyway. The 2026-05-30 bulk triage then
+discarded **9,303 review-queue items across 19 owners in a single second**
+(`resolved_by: None`), 8,294 of them under the blanket reason "same-name stranger
+in undocumented city/state" — a reason that cannot distinguish a stranger from an
+owner filing under an unrecognized city label.
+
+**The triage was overwhelmingly correct** — `fisher-john` (3,164) and
+`cohen-steven` (2,785) are exactly the common-name stranger sets the conservative
+rule exists to reject. Re-scoring all 8,294 against each owner's own
+`strong_signals` at **97.6% raw coverage** bounded the false positives to
+**29 records / $93,900 across 6 owners**.
+
+**Fix (this PR).** VERIFICATION.md gains an explicit exception: *a matched strong
+signal survives an address contradiction*. The demotion is now scoped to
+*verifying* signals, which is what its own rationale always described ("the
+employer might still match but the donor is a relative elsewhere"). The anomaly is
+appended to `status_reason` so every promoted row stays auditable and greppable.
+The negative-employer rule is untouched and still absolute.
+
+**Blast radius, measured before landing:** re-scoring all 6,689 stored rows under
+the new logic changes **zero** existing attributions. The change is surgical — it
+can only affect rows that were never attributed.
+
+**Applied:** `ingest --from-raw` on the 5 affected owners (lerner-mark held —
+see below). Archive **$68,439,304.64 → $68,529,024.94 (+$89,720.30, +27 counted
+rows)**, 39 entities unchanged, no owner lost a row. Reconciles exactly:
++29 rows written, −2 Cohen conduit legs flipped to `counted=0` by the §1.1 earmark
+rule (a countable sibling now exists), $93,900 + $620.30 − $4,800 = $89,720.30.
+All new SUPERSEDED rows are `FEC restatement: image_number` re-images with valid
+`superseded_by` pointers, not the fabricated cross-owner class of §1.3.
+
+**Correction to §5.3.** `ilitch-chris` was recorded there as "verified genuinely
+thin — 12 Detroit CONFIRMED, empty queue". The queue was empty **by disposal, not
+by absence**; he was 13 records and $50,800 short (44,900 → 95,700, +113%).
+**A queue emptied by bulk discard is indistinguishable from a queue with nothing in
+it** — the same failure shape as §1.3's inert guard, one level up: there, a guard
+that could not fire looked like a guard finding nothing.
+
+### 10.1 Open follow-ups this pass surfaced but did NOT act on
+
+- **14 pre-existing orphan records, ~$122,300 — records present in `data/raw/` but
+  in neither `donations` nor `review_queue`.** Any `ingest --from-raw` picks these
+  up, independent of this PR's change, which is why the ingest here was scoped to
+  the affected owners only. **Do not sweep them in blindly**: 8 are `middleton-john`
+  rows from BRYN MAWR PA ($26,300), one with employer `STUDENT` in 2008 — almost
+  certainly the **son** John P. Middleton, whose separation from his father was
+  deliberate prior work (PR #12/#14). Also `malone-john` $100,000 (2012, Liberty
+  Media, Englewood CO), `kendrick-ken` $2,700, `pohlad-tom` $2,700,
+  `johnson-charles` $2,900. Each needs its own adjudication.
+- **`lerner-mark` DEFERRED, not rejected.** 2 records / $1,500 (2012-06-30 $1,000;
+  2019-05-21 $500) filed from BALTIMORE MD 21208 with employer LERNER ENTERPRISES.
+  ZIP 21208 is Pikesville, Baltimore County — a different metro from his documented
+  Montgomery County residences, and Lerner is a common surname there. Held out of
+  the ingest pending its own sourcing pass; this is the one case in the class where
+  a same-named other person is genuinely plausible.
+- **`ingest --from-raw` prints inflated record counts.** `_dedupe_records_by_txn`
+  runs only when `--include-related` is passed (`ingest.py:492`), so the from-raw
+  path reports raw-entry counts across overlapping page files and calls them
+  "unique" (e.g. "30 unique records" for 21 distinct ids). Writes are idempotent so
+  no data is affected, but **the run summary is not a safe check**. Not fixed here
+  because `_dedupe_records_by_txn` is first-occurrence-wins and hoisting it could
+  prefer a stale duplicate over an amended one — that needs its own reviewed PR.
+- **Second bulk reason unaudited.** The same 2026-05-30 operation discarded 1,008
+  items under "matches a deliberately-configured negative_signal employer". That
+  class was NOT re-scored here. It is likely sound (negative signals are
+  hand-curated per GOVERNANCE §1.7), but it has never been verified.
+- **`mlb.com` is not actually unreachable.** It returns HTTP 406 to this project's
+  fetchers but **HTTP 200 to `curl` with a browser User-Agent** (verified 2026-07-20:
+  852,563 bytes from the Tigers front-office page). Several owner files record its
+  contents as an unverifiable gap on the strength of the 406. The team ownership
+  blocks are re-readable and should be re-verified.
+
+---
+
 *Review conducted 2026-07-10. Findings verified against main `4c7925c`, master.db (schema v7), state.db, legislation.db, and the live GitHub PR/workflow state. Line numbers drift — re-verify before editing.*

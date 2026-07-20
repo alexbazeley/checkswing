@@ -266,7 +266,46 @@ change_log:
     silently folded into Steve's total (VERIFICATION.md anti-pattern).
   by: "automated pipeline (Workstream D §5.1 household resolution)"
 
+- date: 2026-07-20
+  change: |
+    RECOVERED 5 falsely-discarded records, +$24,200. No signal-block change.
+    Restored by the classifier fix (VERIFICATION.md — "a matched strong signal
+    survives an address contradiction"), not by widening documented cities.
+
+    Four of the five are one 2023-03-22 batch filed from NEW YORK, NY 10001
+    with employer POINT72 and occupation "CHAIRMAN, CEO & PRESIDENT"
+    (BUILD AMERICA PAC $5,000; MEEKS VICTORY FUND 2024 $11,600; FRIENDS FOR
+    GREGORY MEEKS $3,300 ×2). The fifth is a 2000-08-24 $1,000 record filed
+    from New York with employer "STEVEN COHEN REAL ESTATE".
+
+    The self-refuting part: ZIP 10001 is ALREADY in this file's
+    strong_signals.zip_codes. The archive trusted the ZIP enough to confirm on
+    it alone, but the city label "NEW YORK" is not in verifying_signals.cities
+    (which lists greenwich/stamford), so the address-contradiction rule fired
+    first and sent the rows to UNCERTAIN — where the 2026-05-30 bulk triage
+    discarded them as "same-name stranger". A stranger does not file from the
+    owner's own trusted ZIP reporting the owner's own firm and his exact
+    corporate title.
+
+    ALSO OBSERVED, NOT CAUSED BY THIS CHANGE: the re-ingest re-scored stale
+    rows against the current YAML and promoted 5 PROBABLE → CONFIRMED on
+    strong_zip:06831 / strong_zip:06902 (Greenwich / Stamford). Their
+    status_reasons carry NO address-anomaly marker, so they are ordinary
+    strong-ZIP confirmations that predate this PR — the rows were simply last
+    classified before those ZIPs were promoted to strong signals. Row count
+    unchanged; dollars moved between tiers only.
+
+    AND: 2 conduit legs to COBURN FOR SENATE 2010 (2009-09-25, $2,400 each,
+    is_individual=0) flipped to counted=0. That is the §1.1 earmark rule
+    working correctly — a countable sibling leg now exists, so the conduit leg
+    is no longer summed. Net effect on the archive total is −$4,800, and it is
+    a de-duplication, not a loss.
+  by: "automated pipeline (ingest --from-raw, behind the strong-signal carve-out)"
+  references:
+  - "VERIFICATION.md — strong signal survives an address contradiction"
+  - "data/snapshots/2026-07-20T05-31-17Z__pre-strong-signal-carveout.db (pre-ingest)"
+
 audit:
   created: 2026-05-22
-  last_ingestion: '2026-07-11'
+  last_ingestion: '2026-07-20'
   last_signal_review: 2026-06-04

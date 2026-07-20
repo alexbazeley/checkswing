@@ -148,8 +148,54 @@ change_log:
     his Ilitch Holdings / Ilitch Sports + Entertainment strong-signal
     employers. Signal review date advanced.
   by: "automated pipeline (PR 4 Tier C light pass)"
+- date: 2026-07-20
+  change: |
+    RECOVERED 13 falsely-discarded records, +$50,800 (44,900 → 95,700).
+    No signal-block change; this owner's YAML is unmodified. The records were
+    restored by a CLASSIFIER fix (VERIFICATION.md — "a matched strong signal
+    survives an address contradiction"), not by widening his documented cities.
+
+    What had happened: 18 records filed from BIRMINGHAM, MI 48009 hit the
+    address-contradiction rule, which fired BEFORE the strong-signal check and
+    returned UNCERTAIN even though the rows carried
+    `strong_employer:Ilitch Holdings` in signals_matched. The 2026-05-30 bulk
+    review-queue triage then discarded all 18 under a blanket reason —
+    "same-name stranger in undocumented city/state" — which is factually wrong
+    for these: every one reports ILITCH HOLDINGS / ILITCH HOLDINGS INC. as
+    employer, one of them literally as "ILITCH HOLDINGS/PRESIDENT".
+
+    Why these are Christopher Ilitch and not a stranger:
+      - Ilitch Holdings is the family's private holding company; he has been
+        its President & CEO since 2004 (Crain's Detroit, 2004-07-26, already
+        cited in this file).
+      - The filed OCCUPATION tracks his documented career: "EXECUTIVE" on the
+        2002–2003 records, "PRESIDENT" from 2005 — i.e. it changes at exactly
+        the point the public record says he took the title. A same-named
+        stranger's occupation would not follow his résumé.
+      - Recipients are consistent Michigan-Republican giving (RNC, Bush-Cheney
+        '04, Knollenberg, Candice Miller, Don Young), matching the pattern of
+        his 12 pre-existing CONFIRMED records.
+      - Birmingham MI is an Oakland County suburb adjacent to Bloomfield Hills,
+        already documented in verifying_signals.cities for this family.
+
+    NOT DONE deliberately: "birmingham" was NOT added to verifying_signals.
+    cities. The archive has not documented it as his residence, and the
+    honest representation is that these rows are confirmed on the strength of
+    the employer signal — which is what the stored status_reason now says
+    ("strong signal: strong_employer:Ilitch Holdings (address outside
+    documented residences: city='BIRMINGHAM', state='MI')"). Widening the city
+    list would assert a residence the sources do not establish.
+
+    NOTE FOR §5.3: this owner was recorded as "genuinely thin — 12 Detroit
+    CONFIRMED, empty queue". The queue was empty BY DISPOSAL, not by absence.
+    A queue emptied by bulk discard is indistinguishable from a queue with
+    nothing in it.
+  by: "automated pipeline (ingest --from-raw, behind the strong-signal carve-out)"
+  references:
+  - "VERIFICATION.md — strong signal survives an address contradiction"
+  - "data/snapshots/2026-07-20T05-31-17Z__pre-strong-signal-carveout.db (pre-ingest)"
 
 audit:
   created: 2026-05-23
-  last_ingestion: '2026-07-05'
+  last_ingestion: '2026-07-20'
   last_signal_review: 2026-05-25

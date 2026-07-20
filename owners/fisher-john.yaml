@@ -308,7 +308,40 @@ change_log:
   references:
   - "data/master.db pre-fix: 569 CONFIRMED / 99 PROBABLE (≈all city_state:san francisco/CA)"
 
+- date: 2026-07-20
+  change: |
+    RECOVERED 5 falsely-discarded records, +$12,100. No signal-block change.
+    Restored by the classifier fix (VERIFICATION.md — "a matched strong signal
+    survives an address contradiction").
+
+    Three of the five are FEC clerk MISSPELLINGS of this owner's own
+    documented city — the city string was mangled, so it failed exact
+    membership in verifying_signals.cities and tripped the contradiction rule:
+      - "SAN FRANSISCO" (transposed) 94111, 2006-10-23, $1,000, PISCES INC.
+      - "SAN FRANCISCO CA" (state doubled into the city field) 2009-12-18,
+        $5,000, "PISES, INC" (employer also misspelled)
+      - "SANFRANCISCO" (no space) 2017-04-30, $1,100, "PISCES, INC."
+    This is the same class the Monfort file already resolved by adding
+    "greenley" as a documented clerk-typo city label.
+
+    The other two are 2012-04-13 $2,500 records from MENLO PARK, CA 94025,
+    employer PISCES INC, occupation CHAIRMAN, to CANTOR FOR CONGRESS. Menlo
+    Park is NOT documented as a Fisher residence and was deliberately NOT
+    added to verifying_signals.cities. They are confirmed on the Pisces Inc
+    strong-employer signal alone, and their status_reason records the address
+    anomaly so the pair stays greppable for re-audit.
+
+    CAUTION PRESERVED: this owner carries `city_state_alone_insufficient` for
+    good reason — "John Fisher" is a high-frequency name and a lone
+    San-Francisco city match sweeps in strangers. That protection is untouched
+    by this change, which keys on the Pisces Inc / 94111 strong signals, not
+    on city. 3,279 of this owner's records remain UNCERTAIN, as they should.
+  by: "automated pipeline (ingest --from-raw, behind the strong-signal carve-out)"
+  references:
+  - "VERIFICATION.md — strong signal survives an address contradiction"
+  - "data/snapshots/2026-07-20T05-31-17Z__pre-strong-signal-carveout.db (pre-ingest)"
+
 audit:
   created: 2026-05-22
-  last_ingestion: '2026-07-05'
+  last_ingestion: '2026-07-20'
   last_signal_review: 2026-06-06

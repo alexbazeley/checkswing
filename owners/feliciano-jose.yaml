@@ -214,7 +214,33 @@ change_log:
   - "https://en.wikipedia.org/wiki/Jos%C3%A9_E._Feliciano"
   - "https://www.bloomberg.com/profile/person/7083529"
 
+- date: 2026-07-20
+  change: |
+    RECOVERED 2 falsely-discarded records, +$5,800. No signal-block change.
+    Restored by the classifier fix (VERIFICATION.md — "a matched strong signal
+    survives an address contradiction").
+
+    Both are 2021-09-27 $2,900 contributions to ALEX PADILLA FOR SENATE, filed
+    from WEST HOLLYWOOD, CA 90069 with employer CLEARLAKE CAPITAL GROUP and
+    occupation FOUNDER. Clearlake Capital Group is the firm he co-founded and
+    is already in this file's strong_signals.employers; "FOUNDER" is the
+    matching self-reported title. West Hollywood is not in
+    verifying_signals.cities (which lists Santa Monica, Pacific Palisades,
+    Marina del Rey, Los Angeles) — all LA-basin cities adjacent to it.
+
+    The 2026-05-30 bulk triage discarded them as "same-name stranger in
+    undocumented city/state". A stranger does not report the owner's own firm
+    with the owner's own founding title.
+
+    NOT DONE: "west hollywood" was NOT added to verifying_signals.cities — no
+    source documents it as his residence, and the strong-employer signal is
+    what carries these rows. The status_reason records the address anomaly.
+  by: "automated pipeline (ingest --from-raw, behind the strong-signal carve-out)"
+  references:
+  - "VERIFICATION.md — strong signal survives an address contradiction"
+  - "data/snapshots/2026-07-20T05-31-17Z__pre-strong-signal-carveout.db (pre-ingest)"
+
 audit:
   created: 2026-05-23
-  last_ingestion: '2026-07-05'
+  last_ingestion: '2026-07-20'
   last_signal_review: 2026-06-04

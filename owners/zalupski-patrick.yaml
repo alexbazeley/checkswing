@@ -143,7 +143,47 @@ change_log:
     Signal review date advanced.
   by: "automated pipeline (PR 4 Tier C light pass)"
 
+- date: 2026-07-20
+  change: |
+    RECOVERED 4 falsely-discarded records, +$1,620.30. No signal-block change.
+    Two classes, and they are different — recorded separately for honesty.
+
+    (a) 2 records restored by the classifier fix (VERIFICATION.md — "a matched
+        strong signal survives an address contradiction"): 2012-09-29, $500
+        each, to ROMNEY VICTORY INC and ROMNEY FOR PRESIDENT INC., employer
+        DREAM FINDERS HOMES (his own company, already a strong signal), filed
+        from city "JAX BEACH", FL 32250.
+
+        "JAX BEACH" is simply the local abbreviation of Jacksonville Beach —
+        and "jacksonville beach" is ALREADY in this file's
+        verifying_signals.cities. ZIP 32250 IS Jacksonville Beach. So the
+        records were discarded as being in an "undocumented city/state" when
+        the city is in fact documented and merely abbreviated by the filer.
+        This is the identical pattern to the Monfort file's "greenley" typo
+        and its Greeley/Eaton ZIP-label split.
+        (The filed occupation reads "BUSINESS WOMAN" against donor name
+        "ZALUPSKI, PATRICK MR." — an FEC clerk error, noted so a future audit
+        does not mistake it for a different person.)
+
+    (b) 2 records that are NOT attributable to this PR's classifier change:
+        2017-11-26, $354.00 and $266.00, city JACKSONVILLE BEACH, employer
+        "ENTREPRENEUR". These match on city+state alone (one confirming
+        signal) → PROBABLE, and they carry no address anomaly. They had been
+        swept into the same 2026-05-30 bulk discard even though their city was
+        documented, and they were simply never re-attributed afterwards. The
+        re-ingest picked them up as ordinary PROBABLE rows.
+
+    NOT DONE: "jax beach" was NOT added to verifying_signals.cities. The two
+    (a) records are carried by the Dream Finders Homes strong signal and their
+    status_reason records the anomaly; adding a slang abbreviation to the
+    documented-residence list would loosen the address rule for every future
+    record. Reconsider only if more "JAX BEACH" filings appear.
+  by: "automated pipeline (ingest --from-raw, behind the strong-signal carve-out)"
+  references:
+  - "VERIFICATION.md — strong signal survives an address contradiction"
+  - "data/snapshots/2026-07-20T05-31-17Z__pre-strong-signal-carveout.db (pre-ingest)"
+
 audit:
   created: 2026-05-23
-  last_ingestion: '2026-07-05'
+  last_ingestion: '2026-07-20'
   last_signal_review: 2026-05-25
