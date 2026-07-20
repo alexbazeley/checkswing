@@ -615,12 +615,28 @@ def insert_donation(conn: sqlite3.Connection, row: dict) -> tuple[str, str | Non
                                inserted under the canonical id. The old row is
                                never deleted (§1.10), and citations to
                                transaction_id resolve to the current version.
-      - ("collision", <reason>) — a live row shares this transaction_id but has a
-                               DIFFERENT globally-unique sub_id (a cross-committee
-                               filer-id collision, not a restatement). Nothing is
-                               written; the caller logs it (§1.3). Zero occurrences
-                               in the live DB — this converts a would-be silent
-                               wrong-supersession into a loud, auditable skip.
+      - ("collision", <reason>) — a live row shares this transaction_id but is a
+                               DIFFERENT contribution (filer-assigned ids are not
+                               unique across committees). Nothing is written; the
+                               caller logs it (§1.3). Detected three ways:
+                                 1. differing globally-unique sub_ids;
+                                 2. a differing entity_slug (one FEC transaction
+                                    has exactly one contributor, so two owners
+                                    claiming it is id reuse by construction);
+                                 3. same owner, but recipient committee AND date
+                                    AND amount all differ — a restatement fixes a
+                                    field or two of one contribution, it does not
+                                    change all three at once.
+                               Test 1 alone was the original guard, but it can
+                               only fire when BOTH rows carry a sub_id, and sub_id
+                               is sparsely populated — so it was inert for most of
+                               the archive and real collisions fell through to the
+                               supersede path, where they were recorded as
+                               fabricated "FEC restatements" of one owner's
+                               donation into another's. Two were found live on
+                               2026-07-19 (kendrick-ken $2,800 and dewitt-bill
+                               $5,000, both "restated" into reinsdorf-jerry rows).
+                               Tests 2 and 3 need no sub_id and close that hole.
 
     Supersession compares only DONATION_SUBSTANCE_COLS (FEC-sourced fields), so
     a future reclassification — which changes our derived status/signals but not
@@ -652,6 +668,42 @@ def insert_donation(conn: sqlite3.Connection, row: dict) -> tuple[str, str | Non
     old_sub = existing_d.get("sub_id")
     if inc_sub and old_sub and str(inc_sub) != str(old_sub):
         return ("collision", f"transaction_id {txn}: sub_id {old_sub} vs {inc_sub} (distinct contributions)")
+
+    # The sub_id test above can only fire when BOTH rows carry one, and sub_id is
+    # sparsely populated (a few percent of the archive) — so for most rows it is
+    # inert and a real collision fell through to the supersede path below, where
+    # it was recorded as a fabricated "FEC restatement" of one owner's donation
+    # into another's. Two such rows were found live in the archive (2026-07-19).
+    # These two tests need no sub_id.
+    #
+    # (a) Different entity_slug. A single FEC transaction has exactly one
+    #     contributor, so two entities claiming the same transaction_id is
+    #     filer-id reuse by construction — never a restatement.
+    if str(existing_d.get("entity_slug")) != str(full_row.get("entity_slug")):
+        return (
+            "collision",
+            f"transaction_id {txn}: entity {existing_d.get('entity_slug')} vs "
+            f"{full_row.get('entity_slug')} (filer-assigned id reused across owners)",
+        )
+
+    # (b) Same entity, but the contribution's whole identity differs. A genuine
+    #     FEC restatement corrects a field or two of ONE contribution; it does not
+    #     simultaneously change who received it, when, and how much. Requiring all
+    #     three to diverge keeps ordinary restatements (amount fix, re-image,
+    #     amended filing) on the supersede path.
+    triple = [
+        f
+        for f in ("recipient_committee_id", "date", "amount")
+        if not _donation_values_equal(existing_d.get(f), full_row.get(f))
+    ]
+    if len(triple) == 3:
+        return (
+            "collision",
+            f"transaction_id {txn}: committee/date/amount all differ "
+            f"({existing_d.get('recipient_committee_id')}/{existing_d.get('date')}/"
+            f"{existing_d.get('amount')} vs {full_row.get('recipient_committee_id')}/"
+            f"{full_row.get('date')}/{full_row.get('amount')}) — distinct contributions",
+        )
 
     changed = [
         f

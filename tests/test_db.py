@@ -464,6 +464,67 @@ class TestSubIdCollision:
             assert action == "unchanged"
 
 
+class TestCollisionWithoutSubId:
+    """§1.3 — the sub_id test can only fire when BOTH rows carry one, and sub_id
+    is sparsely populated, so it was inert for most of the archive. Real
+    collisions fell through to the supersede path and were recorded as
+    fabricated "FEC restatements" of one owner's donation into another's — two
+    were found live on 2026-07-19. These cases carry NO sub_id on either side.
+    """
+
+    def test_different_entity_is_a_collision_not_a_restatement(self, db_path):
+        # Exactly the live bug: kendrick-ken $2,800 was "restated" into a
+        # reinsdorf-jerry row because both filings reused one transaction_id.
+        with db.connect(db_path) as conn:
+            db.insert_donation(conn, _row(
+                sub_id=None, entity_slug="kendrick-ken",
+                contributor_name_raw="KENDRICK, EARL", amount=2800.0))
+        with db.connect(db_path) as conn:
+            action, reason = db.insert_donation(conn, _row(
+                sub_id=None, entity_slug="reinsdorf-jerry",
+                contributor_name_raw="REINSDORF, JERRY M.", amount=8400.0))
+        assert action == "collision"
+        assert "kendrick-ken" in reason and "reinsdorf-jerry" in reason
+        # The first owner's donation is untouched — not superseded, not reattributed.
+        assert _count(db_path) == 1
+        with db.connect(db_path) as conn:
+            r = conn.execute("SELECT entity_slug, amount, status FROM donations").fetchone()
+            assert (r["entity_slug"], r["amount"], r["status"]) == ("kendrick-ken", 2800.0, "CONFIRMED")
+
+    def test_same_owner_wholly_different_contribution_is_a_collision(self, db_path):
+        # One owner, one reused transaction_id, but committee AND date AND
+        # amount all differ — that is two contributions, not one restated.
+        with db.connect(db_path) as conn:
+            db.insert_donation(conn, _row(
+                sub_id=None, recipient_committee_id="C001",
+                date="2016-12-11", amount=2500.0))
+        with db.connect(db_path) as conn:
+            action, reason = db.insert_donation(conn, _row(
+                sub_id=None, recipient_committee_id="C999",
+                date="2019-09-20", amount=20000.0))
+        assert action == "collision"
+        assert "distinct contributions" in reason
+        assert _count(db_path) == 1
+
+    def test_ordinary_restatement_still_supersedes(self, db_path):
+        # The guard must not swallow genuine restatements: same committee, same
+        # date, corrected amount — one field, so it stays on the supersede path.
+        with db.connect(db_path) as conn:
+            db.insert_donation(conn, _row(sub_id=None, amount=1000.0))
+        with db.connect(db_path) as conn:
+            action, _ = db.insert_donation(conn, _row(sub_id=None, amount=1500.0))
+        assert action == "superseded"
+
+    def test_reimage_of_same_contribution_still_supersedes(self, db_path):
+        # Two of three identity fields differ (date + amount) but the recipient
+        # is unchanged — still a restatement, not a collision.
+        with db.connect(db_path) as conn:
+            db.insert_donation(conn, _row(sub_id=None, date="2024-01-15", amount=1000.0))
+        with db.connect(db_path) as conn:
+            action, _ = db.insert_donation(conn, _row(sub_id=None, date="2024-01-16", amount=1200.0))
+        assert action == "superseded"
+
+
 class TestReviewQueueCompositePK:
     """v9 (§1.3): review_queue PK is (transaction_id, entity_slug) — two owners
     can flag the same FEC transaction without one silently dropping the other."""
@@ -628,3 +689,73 @@ class TestRefreshEntitiesHouseholds:
         rows = self._rows(db_path)
         assert rows["owner-p"]["kind"] == "owner"
         assert "spouse" not in {rows[s]["kind"] for s in rows if rows[s]["parent_slug"] == "owner-p"}
+
+
+class TestRepairTxnCollisions:
+    """The one-off repair for the two wrong supersessions the §1.3 gap caused."""
+
+    def _seed_wrong_supersession(self, db_path):
+        """Reproduce the exact live state: kendrick-ken's real $2,800 donation
+        archived as SUPERSEDED under a fabricated 'FEC restatement' reason,
+        while a reinsdorf-jerry row holds the canonical transaction_id."""
+        with db.connect(db_path) as conn:
+            db.insert_donation(conn, _row(
+                txn="SA11AI.4319~superseded~2026-05-30T22-53-46Z",
+                entity_slug="kendrick-ken",
+                contributor_name_raw="KENDRICK, EARL",
+                recipient_committee_id="C1",
+                recipient_committee_name="GOP WINNING WOMEN",
+                amount=2800.0, date="2020-05-30",
+                status="SUPERSEDED",
+                status_reason="two confirming signals: employer:Diamondbacks",
+            ))
+            conn.execute(
+                "UPDATE donations SET superseded_by='SA11AI.4319',"
+                " superseded_reason='FEC restatement: amount, date'"
+                " WHERE entity_slug='kendrick-ken'"
+            )
+            # The colliding row that legitimately holds the canonical id.
+            db.insert_donation(conn, _row(
+                txn="SA11AI.4319",
+                entity_slug="reinsdorf-jerry",
+                contributor_name_raw="REINSDORF, JERRY M.",
+                recipient_committee_id="C2",
+                recipient_committee_name="OTHER",
+                amount=8400.0, date="2019-01-01",
+            ))
+
+    def test_restores_status_and_rekeys_without_touching_the_collider(self, db_path):
+        from scripts import repair_txn_collisions as rtc
+
+        self._seed_wrong_supersession(db_path)
+        out = rtc.repair(db_path=db_path)
+        assert len(out) == 1 and out[0]["restored_status"] == "CONFIRMED"
+
+        with db.connect(db_path) as conn:
+            rows = {r["transaction_id"]: dict(r) for r in conn.execute(
+                "SELECT transaction_id, entity_slug, status, superseded_by, amount FROM donations")}
+        # Displaced row is live again under an honest key...
+        fixed = rows["SA11AI.4319~collision~kendrick-ken"]
+        assert fixed["status"] == "CONFIRMED"
+        assert fixed["superseded_by"] is None
+        assert fixed["amount"] == 2800.0
+        # ...and the row that legitimately holds the canonical id is untouched.
+        assert rows["SA11AI.4319"]["entity_slug"] == "reinsdorf-jerry"
+        assert rows["SA11AI.4319"]["amount"] == 8400.0
+
+    def test_is_idempotent(self, db_path):
+        from scripts import repair_txn_collisions as rtc
+
+        self._seed_wrong_supersession(db_path)
+        assert len(rtc.repair(db_path=db_path)) == 1
+        assert rtc.repair(db_path=db_path) == []   # nothing left to repair
+
+    def test_dry_run_writes_nothing(self, db_path):
+        from scripts import repair_txn_collisions as rtc
+
+        self._seed_wrong_supersession(db_path)
+        assert len(rtc.repair(db_path=db_path, dry_run=True)) == 1
+        with db.connect(db_path) as conn:
+            still = conn.execute(
+                "SELECT status FROM donations WHERE superseded_by = 'SA11AI.4319'").fetchone()
+        assert still["status"] == "SUPERSEDED"
