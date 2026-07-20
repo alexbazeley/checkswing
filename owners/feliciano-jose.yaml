@@ -232,9 +232,20 @@ change_log:
     undocumented city/state". A stranger does not report the owner's own firm
     with the owner's own founding title.
 
-    NOT DONE: "west hollywood" was NOT added to verifying_signals.cities — no
-    source documents it as his residence, and the strong-employer signal is
-    what carries these rows. The status_reason records the address anomaly.
+    CORROBORATED BY STREET ADDRESS (checked after the ingest, same session):
+    both records carry street "233 WILSHIRE BLVD # 800" — Clearlake Capital
+    Group's Los Angeles-area office. That address is in SANTA MONICA (90401),
+    which IS already in this file's verifying_signals.cities; the filer paired
+    the correct office street with the wrong city/ZIP (West Hollywood 90069).
+    So this is an FEC filer error on the city field, not evidence of an
+    undocumented residence — the same artifact class as Fisher's
+    "SAN FRANSISCO" and Zalupski's "JAX BEACH" in this pass.
+
+    NOT DONE: "west hollywood" was NOT added to verifying_signals.cities — the
+    street address indicates the record belongs to a city already documented,
+    so adding the erroneous label would encode the filer's mistake. The
+    strong-employer signal carries these rows and the status_reason records
+    the anomaly.
   by: "automated pipeline (ingest --from-raw, behind the strong-signal carve-out)"
   references:
   - "VERIFICATION.md — strong signal survives an address contradiction"

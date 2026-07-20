@@ -347,13 +347,58 @@ The negative-employer rule is untouched and still absolute.
 the new logic changes **zero** existing attributions. The change is surgical — it
 can only affect rows that were never attributed.
 
-**Applied:** `ingest --from-raw` on the 5 affected owners (lerner-mark held —
-see below). Archive **$68,439,304.64 → $68,529,024.94 (+$89,720.30, +27 counted
-rows)**, 39 entities unchanged, no owner lost a row. Reconciles exactly:
-+29 rows written, −2 Cohen conduit legs flipped to `counted=0` by the §1.1 earmark
-rule (a countable sibling now exists), $93,900 + $620.30 − $4,800 = $89,720.30.
-All new SUPERSEDED rows are `FEC restatement: image_number` re-images with valid
-`superseded_by` pointers, not the fabricated cross-owner class of §1.3.
+**Applied:** `ingest --from-raw` on the 5 affected owners, then a per-record
+Tier-2 sourcing pass which **rejected 2 of the promoted records**. Archive
+**$68,439,304.64 → $68,524,024.94 (+$84,720.30, +25 counted rows)**, 39 entities
+unchanged. All new SUPERSEDED rows are `FEC restatement: image_number` re-images
+with valid `superseded_by` pointers, not the fabricated cross-owner class of §1.3.
+
+### 10.2 The per-record pass — and the limit of a strong signal
+
+Sourcing each promoted city individually is what made this safe, and it changed
+two outcomes. **The discriminator in every case was `contributor_street_1`, a
+field the classifier does not read.**
+
+- **`ilitch-chris` — CONFIRMED, strengthened.** The Birmingham records carry
+  street **235 Townsend St**, and wife **Kelle Ilitch files from the identical
+  address** as HOMEMAKER. Corporate filings all use 2211 Woodward Ave, Detroit,
+  so 48009 can only be residential. Sibling Denise files from a *different*
+  Birmingham street. The entire FEC Ilitch corpus is 993 records and all are this
+  one family — there is no second Christopher Ilitch.
+- **`feliciano-jose` — CONFIRMED, reclassified as a filer error.** Street is
+  **233 Wilshire Blvd #800**, Clearlake's LA office — which is in **Santa Monica
+  90401, already a documented city**. The filer paired the right street with the
+  wrong city/ZIP.
+- **`fisher-john` — 2 records REJECTED, −$5,000.** The 2012 Cantor pair's street
+  is **2180 Sand Hill Rd Ste 100**, the office of **Fisher & Co LLC**, whose
+  principal files 6+ records there as "FISHER, JOHN | FISHER & CO LLC | INV.
+  BANKER". John J. Fisher files from One Maritime Plaza / 101A Clay St, SF 94111,
+  and his Pisces title is **President** (SEC 13D/A 2011) — these say **Chairman**.
+  A *third* John Fisher (Draper Fisher Jurvetson) sits at 2882 Sand Hill Rd.
+  Excluded via `manual_attributions`.
+- **`lerner-mark` — 2 records REJECTED before ingest.** There are **two Mark D.
+  Lerners in Maryland**, 40 miles apart, matching to the middle initial, both
+  married to donors, both with family foundations. The records give street **3606
+  Anton Farms Rd, Pikesville** — the Baltimore hedge-fund founder's residence,
+  from which he and wife Traci both file, and where 84+ of his records carry
+  employer "Chesapeake Partners". Exactly 2 carry "Lerner Enterprises", both to
+  Virginia Senate campaigns. Excluded pre-emptively so no future ingest grabs
+  them. *Countervailing fact recorded in the owner file: Judy Lerner gave the
+  same $500 to Warner the same day from Rockville.*
+
+**The generalizable finding: a strong employer signal is diagnostic but not
+infallible — a committee can type the wrong employer.** Two of the six owners in
+this class had a same-named stranger filing the owner's own employer string. That
+is not an argument against the carve-out (these rows were previously *discarded*,
+i.e. equally unreviewed); it is an argument that **promotions over an address
+anomaly should be sourced per record**, which is why the reason string now marks
+them. Recommend adding `contributor_street_1` to the review-queue display as the
+cheapest possible upgrade to this process.
+
+**Operational note:** applying the Fisher exclusion required `reclassify-inplace`;
+`exclude`'s default from-raw reclassify was correctly aborted by the divergence
+guard because 1 attributed row (`SA11AI.10561`) has no recoverable raw. `--force`
+was not used.
 
 **Correction to §5.3.** `ilitch-chris` was recorded there as "verified genuinely
 thin — 12 Detroit CONFIRMED, empty queue". The queue was empty **by disposal, not
@@ -373,12 +418,8 @@ that could not fire looked like a guard finding nothing.
   deliberate prior work (PR #12/#14). Also `malone-john` $100,000 (2012, Liberty
   Media, Englewood CO), `kendrick-ken` $2,700, `pohlad-tom` $2,700,
   `johnson-charles` $2,900. Each needs its own adjudication.
-- **`lerner-mark` DEFERRED, not rejected.** 2 records / $1,500 (2012-06-30 $1,000;
-  2019-05-21 $500) filed from BALTIMORE MD 21208 with employer LERNER ENTERPRISES.
-  ZIP 21208 is Pikesville, Baltimore County — a different metro from his documented
-  Montgomery County residences, and Lerner is a common surname there. Held out of
-  the ingest pending its own sourcing pass; this is the one case in the class where
-  a same-named other person is genuinely plausible.
+- **`lerner-mark` — RESOLVED this session, not deferred. See §10.2:** the 2
+  Baltimore records are a documented different Mark D. Lerner and are now excluded.
 - **`ingest --from-raw` prints inflated record counts.** `_dedupe_records_by_txn`
   runs only when `--include-related` is passed (`ingest.py:492`), so the from-raw
   path reports raw-entry counts across overlapping page files and calls them

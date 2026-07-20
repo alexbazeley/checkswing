@@ -324,12 +324,35 @@ change_log:
     This is the same class the Monfort file already resolved by adding
     "greenley" as a documented clerk-typo city label.
 
-    The other two are 2012-04-13 $2,500 records from MENLO PARK, CA 94025,
-    employer PISCES INC, occupation CHAIRMAN, to CANTOR FOR CONGRESS. Menlo
-    Park is NOT documented as a Fisher residence and was deliberately NOT
-    added to verifying_signals.cities. They are confirmed on the Pisces Inc
-    strong-employer signal alone, and their status_reason records the address
-    anomaly so the pair stays greppable for re-audit.
+    TWO FURTHER RECORDS WERE PROMOTED BY THE SAME FIX AND THEN EXCLUDED — a
+    same-named stranger the strong-employer signal alone would have swept in.
+    The 2012-04-13 $2,500 ×2 records to CANTOR FOR CONGRESS from MENLO PARK,
+    CA 94025 (employer PISCES INC, occupation CHAIRMAN, txns A-TI470/A-TI471)
+    are NOT John J. Fisher:
+      - Their street address is 2180 SAND HILL ROAD SUITE 100 — the office of
+        FISHER & CO LLC, whose principal files 6+ FEC records as
+        "FISHER, JOHN | FISHER & CO LLC | INV. BANKER" from that exact suite,
+        with a hard-right federal giving profile consistent with Cantor.
+      - John J. Fisher's own filings carry ONE MARITIME PLAZA STE 1400 and
+        101A CLAY ST STE 147, both San Francisco 94111.
+      - His Pisces title is PRESIDENT (SEC Schedule 13D/A, The Gap Inc., 2011,
+        the year before these records); these say CHAIRMAN.
+      - A third John Fisher (JOHN H N, Draper Fisher Jurvetson) occupies
+        2882 SAND HILL RD — so Sand Hill Road holds two same-named non-owners.
+    The "PISCES INC" employer on those two rows is a committee data-entry
+    error, not an identification. Excluded via manual_attributions (§1.9
+    conservative tie-break); undo with `unexclude` if better evidence appears.
+
+    THE LESSON, worth keeping: a strong employer signal is diagnostic but not
+    infallible — a committee can type the wrong employer. The STREET ADDRESS
+    (contributor_street_1) is the tiebreaker the classifier does not use and
+    the review process should. It resolved this case and the parallel
+    lerner-mark case in the same pass.
+
+    Applying the exclusion required `reclassify-inplace`, not `exclude`'s
+    default from-raw reclassify: the divergence guard correctly aborted the
+    latter because 1 attributed row (SA11AI.10561) has no recoverable raw on
+    disk and would have been silently dropped. --force was NOT used.
 
     CAUTION PRESERVED: this owner carries `city_state_alone_insufficient` for
     good reason — "John Fisher" is a high-frequency name and a lone

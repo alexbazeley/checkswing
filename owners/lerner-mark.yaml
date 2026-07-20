@@ -212,7 +212,60 @@ change_log:
   references:
   - "data/master.db pre-calibration: 62 CONFIRMED / 13 PROBABLE / 163 UNCERTAIN-open"
 
+- date: 2026-07-20
+  change: |
+    DOPPELGÄNGER IDENTIFIED AND EXCLUDED — no change to this owner's totals.
+
+    A classifier fix landed this session (VERIFICATION.md — "a matched strong
+    signal survives an address contradiction") would have attributed 2 records
+    to this owner on the strength of employer "LERNER ENTERPRISES", which is a
+    strong signal here. They were investigated BEFORE ingestion and are a
+    different man. Both are now excluded via manual_attributions so no future
+    ingest can pick them up:
+      - 2012-06-30  $1,000  KAINE FOR VIRGINIA        (2022620131184540993)
+      - 2019-05-21    $500  FRIENDS OF MARK WARNER    (C7470281)
+
+    THERE ARE TWO MARK D. LERNERS IN MARYLAND, 40 miles apart, matching down
+    to the middle initial. Both are married, both major Democratic donors,
+    both with family foundations:
+
+      Nationals owner          | Baltimore hedge-fund founder
+      -------------------------|-----------------------------------------
+      11501 Huff Ct, N.Bethesda| 3606 Anton Farms Rd, Pikesville 21208
+      Lerner Enterprises,      | Chesapeake Partners / CP Management,
+        2000 Tower Oaks Blvd,  |   2800 Quarry Lake Dr, Baltimore 21209
+        Rockville              |
+      spouse Judy L. Lerner    | spouse Traci J. Lerner
+      47 FEC recs "Lerner Ent" | 84+ FEC recs "Chesapeake Partners" 1994–
+
+    Both excluded records give street 3606 ANTON FARMS RD — the Baltimore
+    man's residence, from which he and Traci both file. Of his 84+ records at
+    that address, exactly 2 carry "LERNER ENTERPRISES / OWNER", and both went
+    to VIRGINIA Democratic Senate campaigns: a recurring committee
+    donor-lookup error auto-filling the famous same-named donor's employer.
+    Lerner Enterprises has no Baltimore-area presence — all six of its
+    Maryland properties are Montgomery County. The Nationals owner's own 47
+    Lerner-Enterprises records are all Montgomery County or Stevensville.
+
+    THE COUNTERVAILING FACT, recorded so a reviewer can weigh it: on
+    2019-05-21 the Warner committee also received $500 from LERNER, JUDY L at
+    2000 TOWER OAKS BLVD, Rockville — the Nationals owner's wife, same amount,
+    adjacent image number. Judged non-dispositive because sub-IDs within a
+    filing sort roughly alphabetically (so adjacency proves nothing), and
+    because the 2012 Kaine record has the identical address+employer signature
+    with NO Judy record. But it is the strongest argument for the opposite
+    verdict and should not be buried.
+
+    NOT DONE: no negative_signals entry was added. A negative employer signal
+    would not catch these — they file the owner's OWN employer string. The
+    per-transaction exclusion is the correct tool; the discriminator is the
+    street address, which the classifier does not read.
+  by: "automated research (maintainer-directed) + cli exclude"
+  references:
+  - "SEC SC 13G, Chesapeake Partners Management Co. Inc./MD, CIK 0000919165, filed 2012-03-30 — names Mark D. Lerner and Traci Lerner at 2800 Quarry Lake Drive, Suite 300, Baltimore MD 21209"
+  - "https://lerner.com/office/maryland/ — Lerner Enterprises' six MD properties, all Rockville / North Bethesda"
+
 audit:
   created: 2026-05-23
   last_ingestion: '2026-07-01'
-  last_signal_review: 2026-05-25
+  last_signal_review: 2026-07-20

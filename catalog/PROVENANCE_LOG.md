@@ -25434,3 +25434,104 @@ not production").
 - **uncertain_count**: `1`
 - **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T05-31-29Z__5a64bc70.db`
 - **notes**: skipped(no-name-match)=0 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-07-20 — MANUAL_EXCLUSION — fisher-john
+
+- **transaction_id**: `A-TI471`
+- **entity_slug**: `fisher-john`
+- **forced_status**: `EXCLUDED`
+- **reason**: NOT John J. Fisher. Street address on both records is 2180 SAND HILL ROAD SUITE 100, Menlo Park — the office of FISHER & CO LLC, whose principal files 6+ FEC records as 'FISHER, JOHN | FISHER & CO LLC | INV. BANKER' at that exact suite. John J. Fisher's own filings are ONE MARITIME PLAZA STE 1400 and 101A CLAY ST STE 147, both SF 94111, and his Pisces title is PRESIDENT (SEC 13D/A 2011) whereas these say CHAIRMAN. The 'PISCES INC' employer string is a committee data error, not an identification. Excluded under the conservative attribution standard (GOVERNANCE.md 1.9) - would rather miss a real donation than wrongly attribute one.
+- **source**: SEC Schedule 13D/A, The Gap Inc., 2011: 'John J. Fisher is principally employed as President of Pisces, Inc. ... The business address of Pisces, Inc. is One Maritime Plaza, Suite 1400, San Francisco, CA 94111' (https://www.sec.gov/Archives/edgar/data/39911/000110465911052367/a11-26623_1sc13da.htm); plus FEC contributor_street_1 comparison at 2180 vs 2882 vs One Maritime Plaza
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T05-44-17Z__pre-manual-exclude.db`
+- **note**: Documented human decision that this txn is NOT this owner (GOVERNANCE.md §1.1/§1.9). Dropped from classification (not queued). Survives reclassify. Reversible via `unexclude`. Reclassification follows below.
+
+### 2026-07-20 — MANUAL_EXCLUSION — fisher-john
+
+- **transaction_id**: `A-TI470`
+- **entity_slug**: `fisher-john`
+- **forced_status**: `EXCLUDED`
+- **reason**: NOT John J. Fisher. Street address on both records is 2180 SAND HILL ROAD SUITE 100, Menlo Park — the office of FISHER & CO LLC, whose principal files 6+ FEC records as 'FISHER, JOHN | FISHER & CO LLC | INV. BANKER' at that exact suite. John J. Fisher's own filings are ONE MARITIME PLAZA STE 1400 and 101A CLAY ST STE 147, both SF 94111, and his Pisces title is PRESIDENT (SEC 13D/A 2011) whereas these say CHAIRMAN. The 'PISCES INC' employer string is a committee data error, not an identification. Excluded under the conservative attribution standard (GOVERNANCE.md 1.9) - would rather miss a real donation than wrongly attribute one.
+- **source**: SEC Schedule 13D/A, The Gap Inc., 2011: 'John J. Fisher is principally employed as President of Pisces, Inc. ... The business address of Pisces, Inc. is One Maritime Plaza, Suite 1400, San Francisco, CA 94111' (https://www.sec.gov/Archives/edgar/data/39911/000110465911052367/a11-26623_1sc13da.htm); plus FEC contributor_street_1 comparison at 2180 vs 2882 vs One Maritime Plaza
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T05-44-19Z__pre-manual-exclude.db`
+- **note**: Documented human decision that this txn is NOT this owner (GOVERNANCE.md §1.1/§1.9). Dropped from classification (not queued). Survives reclassify. Reversible via `unexclude`. Reclassification follows below.
+
+### 2026-07-20 — RECLASSIFY-IN-PLACE — fisher-john
+
+- **entity_slug**: `fisher-john`
+- **reason**: Apply manual_attributions EXCLUDED for the two 2012-04-13 Menlo Park records (A-TI470/A-TI471). Used in-place rather than from-raw reclassify because the divergence guard correctly blocked the latter: 1 attributed row (SA11AI.10561) has no recoverable raw payload and would have been silently dropped.
+- **rows_scored**: `575`
+- **updated**: `0` · **demoted→queue**: `0` · **suppressed (DISCARDED)**: `0` · **forced**: `0` · **excluded**: `2` · **unchanged**: `573`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T05-44-50Z__pre-reclassify-inplace-fisher-john.db`
+- **note**: in-place re-score from stored donations columns (no raw read, no delete-rebuild); rows recoverable from the snapshot above.
+
+### 2026-07-20 — MANUAL_EXCLUSION — lerner-mark
+
+- **transaction_id**: `2022620131184540993`
+- **entity_slug**: `lerner-mark`
+- **forced_status**: `EXCLUDED`
+- **reason**: NOT Mark D. Lerner of the Washington Nationals. Both records give street 3606 ANTON FARMS RD, Baltimore/Pikesville MD 21208 — the residence of a DIFFERENT Mark D. Lerner, co-founder of Chesapeake Partners Management / CP Management LLC, who has 84+ FEC records at that address under employer 'CHESAPEAKE PARTNERS' from 1994 to present, and whose wife Traci Lerner files from the same address. The 'LERNER ENTERPRISES / OWNER' employer string appears on exactly 2 of those 84+ records, both to VIRGINIA Democratic Senate campaigns (Kaine 2012, Warner 2019) — a recurring committee donor-lookup error auto-filling the famous same-named donor's employer. Lerner Enterprises has no Baltimore-area office; every one of its six MD properties is Montgomery County. The Nationals owner's own 47 Lerner-Enterprises-employer records are all Montgomery County or Stevensville. Excluded under GOVERNANCE.md 1.9.
+- **source**: SEC SC 13G, Chesapeake Partners Management Co. Inc./MD (CIK 0000919165), filed 2012-03-30: 'This Statement is filed on behalf of each of the following persons ... iii) Mark D. Lerner ... The address of the principal business office ... is 2800 Quarry Lake Drive, Suite 300, Baltimore, MD 21209' (https://www.sec.gov/Archives/edgar/data/919165/000090514812000885/efc12-323_sc13g.htm). Lerner Enterprises official MD portfolio, all Rockville/North Bethesda (https://lerner.com/office/maryland/).
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T05-45-08Z__pre-manual-exclude.db`
+- **note**: Documented human decision that this txn is NOT this owner (GOVERNANCE.md §1.1/§1.9). Dropped from classification (not queued). Survives reclassify. Reversible via `unexclude`. Reclassification follows below.
+
+### 2026-07-20 — DELETION — reclassify lerner-mark
+
+- **entity_slug**: `lerner-mark`
+- **reason**: apply manual exclusion of 2022620131184540993
+- **rows_deleted_donations**: `78`
+- **rows_deleted_review_queue**: `160` (of which 160 had resolutions)
+- **include_related**: `False`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T05-45-09Z__pre-reclassify-lerner-mark.db`
+- **note**: Rows are recoverable from the snapshot above and from data/raw/lerner-mark/ payloads. Re-classification follows in the next INGESTION entry.
+
+### 2026-07-20 — INGESTION
+
+- **run_id**: `6420ee33`
+- **entity_slug**: `lerner-mark`
+- **dry_run**: `0`
+- **period_start**: `2024-12-28`
+- **period_end**: `2026-03-17`
+- **name_variants_queried**: `["Mark D Lerner", "Mark D. Lerner", "Mark Lerner", "Lerner, Mark", "Lerner, Mark D", "Lerner, Mark D."]`
+- **api_calls_made**: `0`
+- **records_fetched**: `240`
+- **confirmed_count**: `69`
+- **probable_count**: `10`
+- **uncertain_count**: `158`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T05-45-09Z__6420ee33.db`
+- **notes**: skipped(no-name-match)=2 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-07-20 — MANUAL_EXCLUSION — lerner-mark
+
+- **transaction_id**: `C7470281`
+- **entity_slug**: `lerner-mark`
+- **forced_status**: `EXCLUDED`
+- **reason**: NOT Mark D. Lerner of the Washington Nationals. Both records give street 3606 ANTON FARMS RD, Baltimore/Pikesville MD 21208 — the residence of a DIFFERENT Mark D. Lerner, co-founder of Chesapeake Partners Management / CP Management LLC, who has 84+ FEC records at that address under employer 'CHESAPEAKE PARTNERS' from 1994 to present, and whose wife Traci Lerner files from the same address. The 'LERNER ENTERPRISES / OWNER' employer string appears on exactly 2 of those 84+ records, both to VIRGINIA Democratic Senate campaigns (Kaine 2012, Warner 2019) — a recurring committee donor-lookup error auto-filling the famous same-named donor's employer. Lerner Enterprises has no Baltimore-area office; every one of its six MD properties is Montgomery County. The Nationals owner's own 47 Lerner-Enterprises-employer records are all Montgomery County or Stevensville. Excluded under GOVERNANCE.md 1.9.
+- **source**: SEC SC 13G, Chesapeake Partners Management Co. Inc./MD (CIK 0000919165), filed 2012-03-30: 'This Statement is filed on behalf of each of the following persons ... iii) Mark D. Lerner ... The address of the principal business office ... is 2800 Quarry Lake Drive, Suite 300, Baltimore, MD 21209' (https://www.sec.gov/Archives/edgar/data/919165/000090514812000885/efc12-323_sc13g.htm). Lerner Enterprises official MD portfolio, all Rockville/North Bethesda (https://lerner.com/office/maryland/).
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T05-45-10Z__pre-manual-exclude.db`
+- **note**: Documented human decision that this txn is NOT this owner (GOVERNANCE.md §1.1/§1.9). Dropped from classification (not queued). Survives reclassify. Reversible via `unexclude`. Reclassification follows below.
+
+### 2026-07-20 — DELETION — reclassify lerner-mark
+
+- **entity_slug**: `lerner-mark`
+- **reason**: apply manual exclusion of C7470281
+- **rows_deleted_donations**: `79`
+- **rows_deleted_review_queue**: `0` (of which 0 had resolutions)
+- **include_related**: `False`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T05-45-10Z__pre-reclassify-lerner-mark.db`
+- **note**: Rows are recoverable from the snapshot above and from data/raw/lerner-mark/ payloads. Re-classification follows in the next INGESTION entry.
+
+### 2026-07-20 — INGESTION
+
+- **run_id**: `e04629b4`
+- **entity_slug**: `lerner-mark`
+- **dry_run**: `0`
+- **period_start**: `2024-12-28`
+- **period_end**: `2026-03-17`
+- **name_variants_queried**: `["Mark D Lerner", "Mark D. Lerner", "Mark Lerner", "Lerner, Mark", "Lerner, Mark D", "Lerner, Mark D."]`
+- **api_calls_made**: `0`
+- **records_fetched**: `240`
+- **confirmed_count**: `68`
+- **probable_count**: `10`
+- **uncertain_count**: `158`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T05-45-10Z__e04629b4.db`
+- **notes**: skipped(no-name-match)=2 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
