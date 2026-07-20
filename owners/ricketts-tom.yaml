@@ -101,18 +101,30 @@ strong_signals:
   # Wilmette ZIP 60091 is shared with Laura — DO NOT promote ZIP alone.
 
 related_entities: []
-# Each Ricketts is its OWN slug if/when tracked — not a related_entity here.
-# Documented family (per Tier 2 — Wikipedia, Crain's, Cubs press):
-#   - Joe Ricketts (father, b. 1941, TD Ameritrade founder) — separate slug
-#     if tracked; major Republican donor
-#   - Marlene Ricketts (mother) — separate slug if tracked; Republican donor
+# Each Ricketts is its OWN slug — not a related_entity here.
+# Status as of 2026-07-19, under the ownership-group rule (CHARTER.md):
+#   - Laura Ricketts (sister, Cubs co-owner + director) — NOW TRACKED:
+#     owners/ricketts-laura.yaml. Democratic donor.
+#   - Todd Ricketts (brother, Cubs co-owner + director) — NOW TRACKED:
+#     owners/ricketts-todd.yaml. Republican donor, former RNC Finance Chair
+#     (2018-01-31 – 2022-01-31).
+#   - Joe Ricketts (father, b. 1941, TD Ameritrade founder) — ASSESSED AND
+#     DELIBERATELY EXCLUDED 2026-07-19. He fails the ownership-group rule on
+#     both prongs: MLB.com's ownership block omits him, Tom stated publicly
+#     "My father is not involved with the operation of the Chicago Cubs in any
+#     way" (ESPN 2019-02-04), and Forbes attributes majority ownership to "his
+#     four children." Funding the purchase is not a stake of record. Major
+#     Republican donor — his employer strings are seeded as NEGATIVE signals on
+#     the Laura and Todd files.
 #   - Pete Ricketts (brother, b. 1964, U.S. Senator R-NE since 2023, former
-#     NE Governor 2015-2023) — out of scope entirely; sitting federal
-#     officeholder with own campaign committees
-#   - Laura Ricketts (sister, b. 1966, Cubs co-owner) — separate slug if
-#     project expands to all co-owners; Democratic donor
-#   - Todd Ricketts (brother, b. 1969, Cubs co-owner) — separate slug if
-#     tracked; Republican donor, former RNC Finance Chair (2017–Nov 2021)
+#     NE Governor 2015-2023) — DEFERRED, not rejected. Held a Cubs board seat
+#     2009–2019, which satisfies the governance prong as a FORMER co-owner
+#     under the castellini-bob / pohlad-joe precedent. Deferred to its own PR:
+#     departure date not yet date-precise, equity unverified, and he is the
+#     worst name collision in the family (legal name John Peter Ricketts vs
+#     father John Joseph Ricketts, both Omaha NE + TD Ameritrade).
+#   - Marlene Ricketts (mother) — not tracked; Republican donor. No documented
+#     Cubs ownership or governance role.
 #   - Spouse Cecelia "Cece" Ricketts — no Tier 2 federal-donor activity
 #     documented; flag for future research
 

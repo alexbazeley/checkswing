@@ -25021,3 +25021,44 @@ not production").
 - **not a re-fetch**: no FEC data was retrieved; the rows were never deleted (§1.10), so this restores status and provenance only.
 - **guard**: `insert_donation` now detects a collision without `sub_id` (differing `entity_slug`, or committee+date+amount all differing), so this class of corruption cannot recur.
 - **follow-up**: the durable fix is a composite primary key `(transaction_id, entity_slug)` — which `review_queue` already uses — so both real contributions can hold the same filer-assigned id. The `~collision~` re-key here is a workaround until that migration lands.
+
+### 2026-07-20 — INGESTION
+
+- **run_id**: `4c14c474`
+- **entity_slug**: `ricketts-laura`
+- **dry_run**: `0`
+- **period_start**: `2025-01-15`
+- **period_end**: `2026-05-11`
+- **name_variants_queried**: `["Laura Ricketts", "Laura M Ricketts", "Laura M. Ricketts", "Laura Marie Ricketts", "Ricketts, Laura", "Ricketts, Laura M", "Ricketts, Laura M."]`
+- **api_calls_made**: `0`
+- **records_fetched**: `917`
+- **confirmed_count**: `315`
+- **probable_count**: `600`
+- **uncertain_count**: `1`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T01-31-45Z__4c14c474.db`
+- **notes**: skipped(no-name-match)=1 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-07-20 — SUPERSESSION — run 4c14c474
+
+- `SA11AI.8618` (ricketts-laura): COLLISION (not written): transaction_id SA11AI.8618: entity kendrick-ken vs ricketts-laura (filer-assigned id reused across owners)
+
+### 2026-07-20 — INGESTION
+
+- **run_id**: `94f1ac55`
+- **entity_slug**: `ricketts-todd`
+- **dry_run**: `0`
+- **period_start**: `2025-01-15`
+- **period_end**: `2026-03-02`
+- **name_variants_queried**: `["Todd Ricketts", "Todd M Ricketts", "Todd M. Ricketts", "Todd Matthew Ricketts", "Ricketts, Todd", "Ricketts, Todd M", "Ricketts, Todd M."]`
+- **api_calls_made**: `0`
+- **records_fetched**: `398`
+- **confirmed_count**: `26`
+- **probable_count**: `355`
+- **uncertain_count**: `15`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T01-31-52Z__94f1ac55.db`
+- **notes**: skipped(no-name-match)=2 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-07-20 — SUPERSESSION — run 94f1ac55
+
+- `SA11AI.6624` (ricketts-todd): COLLISION (not written): transaction_id SA11AI.6624: entity lerner-mark vs ricketts-todd (filer-assigned id reused across owners)
+- `SA11AI.4133` (ricketts-todd): COLLISION (not written): transaction_id SA11AI.4133: entity castellini-bob vs ricketts-todd (filer-assigned id reused across owners)
