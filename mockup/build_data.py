@@ -185,6 +185,23 @@ def main() -> None:
     )
     entities = {row["slug"]: dict(row) for row in cur.fetchall()}
 
+    # `role` is NOT in the entities table — it lives only in the owner YAML — so
+    # the dashboard hardcoded "Principal owner" for everyone. That was true while
+    # every tracked person WAS a principal owner; the ownership-group rule
+    # (CHARTER.md) broke it, and the site began labelling co-owners with a role
+    # they explicitly do not hold. Read it from the registry so the page states
+    # what the archive actually recorded.
+    try:
+        import yaml  # noqa: PLC0415 - optional at build time
+
+        reg = yaml.safe_load((REPO_ROOT / "owners" / "_registry.yaml").read_text())
+        for o in (reg or {}).get("owners") or []:
+            slug = o.get("slug")
+            if slug in entities and o.get("role"):
+                entities[slug]["role"] = o["role"]
+    except Exception:  # noqa: BLE001 - role is presentational, never fail the build
+        pass
+
     # Ingestion runs — full history. The dashboard's freshness layer surfaces
     # these as pipeline transparency.
     cur.execute(
@@ -383,6 +400,19 @@ def main() -> None:
         n_total = len(my_donations)
         n_confirmed = sum(1 for d in my_donations if d["status"] == "CONFIRMED")
         n_probable = sum(1 for d in my_donations if d["status"] == "PROBABLE")
+        # Dollar-weighted tier split, NOT just the record counts. These diverge
+        # sharply and the counts are the flattering half: PROBABLE rows average
+        # ~1.6x larger than CONFIRMED ones, because the biggest checks are the
+        # ones filed with employer RETIRED (city becomes the only signal). For
+        # johnson-charles the counts read 188/913 while the DOLLARS read
+        # 12%/88%. Reporting only the counts overstates how well corroborated
+        # the money is.
+        amount_confirmed = sum(
+            d["amount"] for d in my_donations if d["status"] == "CONFIRMED"
+        )
+        amount_probable = sum(
+            d["amount"] for d in my_donations if d["status"] == "PROBABLE"
+        )
 
         # Household decomposition (VERIFICATION.md anti-pattern: never silently
         # fold a spouse's giving into the owner's number). `total_amount` above is
@@ -502,9 +532,12 @@ def main() -> None:
             "family_tenure_start": ent["family_tenure_start_date"],
             "total_amount": total_amount,
             "total_amount_2026": total_amount_2026,
+            "role": ent.get("role"),
             "n_total": n_total,
             "n_confirmed": n_confirmed,
             "n_probable": n_probable,
+            "amount_confirmed": amount_confirmed,
+            "amount_probable": amount_probable,
             # Household split (see VERIFICATION.md anti-pattern). total_amount is
             # the household rollup; owner_only_* is this owner's own giving, and
             # household_members itemizes each related entity (spouse/family).
@@ -551,6 +584,16 @@ def main() -> None:
         "n_donations": len(donations),
         "n_confirmed": sum(1 for d in donations if d["status"] == "CONFIRMED"),
         "n_probable": sum(1 for d in donations if d["status"] == "PROBABLE"),
+        # See the per-owner note above: the record counts and the dollar split
+        # diverge by ~11 points archive-wide, and the counts are the flattering
+        # half. The league hero shows both so "$68M tracked" is never read as
+        # "$68M equally corroborated".
+        "amount_confirmed": sum(
+            d["amount"] for d in donations if d["status"] == "CONFIRMED"
+        ),
+        "amount_probable": sum(
+            d["amount"] for d in donations if d["status"] == "PROBABLE"
+        ),
         "n_owners": len(owners_summary),
         "n_cycles": len(league_cycle_party),
         "earliest_date": min((d["date"] for d in donations if d["date"]), default=None),
