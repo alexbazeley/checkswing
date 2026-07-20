@@ -26645,3 +26645,26 @@ not production").
 - **uncertain_count**: `3224`
 - **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T06-25-08Z__c6b42a3f.db`
 - **notes**: skipped(no-name-match)=432 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW · +related: cohen-alexandra
+
+### 2026-07-20 — RECLASSIFY-IN-PLACE — castellini-bob
+
+- **entity_slug**: `castellini-bob`
+- **reason**: Apply the v-MRS honorific rule: a record filed as 'Mrs. <husband's name>' is his wife, not him (GOVERNANCE.md §3.9).
+- **rows_scored**: `440`
+- **updated**: `0` · **demoted→queue**: `2` · **suppressed (DISCARDED)**: `0` · **forced**: `5` · **excluded**: `0` · **unchanged**: `433`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T06-53-36Z__pre-reclassify-inplace-castellini-bob.db`
+- **note**: in-place re-score from stored donations columns (no raw read, no delete-rebuild); rows recoverable from the snapshot above.
+
+### 2026-07-20 — SNAPSHOT PRUNE (§2.3)
+
+- **pruned**: `623` snapshots / `889.7 MB` (kept all < 30d + newest per operation group)
+- **kept**: `571` of `1194`
+
+### 2026-07-20 — RECLASSIFY-IN-PLACE — reinsdorf-jerry
+
+- **entity_slug**: `reinsdorf-jerry`
+- **reason**: Apply the Mrs-honorific rule: 'REINSDORF, MRS. JERRY' is Jerry Reinsdorf's wife, not him (GOVERNANCE.md 3.9).
+- **rows_scored**: `429`
+- **updated**: `0` · **demoted→queue**: `1` · **suppressed (DISCARDED)**: `0` · **forced**: `2` · **excluded**: `0` · **unchanged**: `426`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T06-55-55Z__pre-reclassify-inplace-reinsdorf-jerry.db`
+- **note**: in-place re-score from stored donations columns (no raw read, no delete-rebuild); rows recoverable from the snapshot above.

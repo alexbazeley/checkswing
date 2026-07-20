@@ -46,6 +46,31 @@ def _strip_diacritics_simple(s: str) -> str:
     return s
 
 
+def carries_mrs_honorific(raw: str) -> bool:
+    """True if the filed name carries a "Mrs" honorific.
+
+    English naming convention makes this ambiguous in a way the classifier
+    cannot resolve on its own:
+
+      "Mrs. Jane Smith"  → Jane herself
+      "Mrs. John Smith"  → John's WIFE, whose own given name never appears
+
+    `normalize_name` strips honorifics from any position, so BOTH collapse to
+    the given name that is written — and "CASTELLINI, ROBERT H MRS" normalizes
+    to exactly "robert castellini", indistinguishable from the man himself.
+    Telling the two apart requires knowing the referent's gender, which is not
+    in the data, so the archive resolves it by declaration instead: see
+    `mrs_honorific_is_self` in OWNER_SCHEMA.md.
+
+    Scoped deliberately to "mrs" and not to ms/miss/dr/mr — only "Mrs" carries
+    the wife-of-<husband's-name> sense. "Mr" has no equivalent ambiguity.
+    """
+    if not raw:
+        return False
+    cleaned = raw.lower().replace(".", " ").replace(",", " ")
+    return "mrs" in cleaned.split()
+
+
 def normalize_name(raw: str) -> tuple[set[str], str | None, frozenset[str]]:
     """Return (canonical_forms, suffix, middle_initials).
 
@@ -370,7 +395,38 @@ def _classify_against_entity_signals(
     negative_signals: dict | None = None,
     *,
     city_state_alone_insufficient: bool = False,
+    mrs_honorific_is_self: bool = False,
 ) -> tuple[str, str, list[str]]:
+    # "Mrs" rule — DEFAULT-SAFE, opt out per entity.
+    #
+    # "Mrs. John Smith" is John's WIFE; her own given name never appears. Since
+    # normalize_name strips honorifics, such a record matches the HUSBAND
+    # exactly and is silently folded into his total — which GOVERNANCE §3.9
+    # forbids ("never silently fold spouse donations into the owner's totals").
+    # Two were live in the archive when this landed: "CASTELLINI, ROBERT H MRS"
+    # ($7,725 → castellini-bob) and "REINSDORF, MRS. JERRY" ($500 →
+    # reinsdorf-jerry).
+    #
+    # It cannot be resolved automatically: "Mrs. Jane Smith" is Jane herself,
+    # and the two forms are structurally identical without knowing gender. So
+    # the default is the conservative reading — route to review rather than
+    # attribute — and a woman entity opts out with `mrs_honorific_is_self:
+    # true` (OWNER_SCHEMA.md). Failing toward the review queue rather than
+    # toward a wrong attribution is the standard the archive already holds.
+    #
+    # UNCERTAIN, never dropped: this is a real donation by a real person, and
+    # the reviewer can attribute it to a spouse entity (the cohen-alexandra
+    # model) or discard it with a reason.
+    if not mrs_honorific_is_self and carries_mrs_honorific(rf.get("name") or ""):
+        return (
+            UNCERTAIN,
+            "name carries a 'Mrs' honorific — under English convention "
+            "'Mrs. <man's name>' denotes his wife, not the owner (GOVERNANCE.md "
+            "§3.9). Attribute to a spouse entity, or set mrs_honorific_is_self "
+            "on this entity if the honorific is on her own name.",
+            ["mrs_honorific"],
+        )
+
     vs_cities = verifying_signals.get("cities") or []
     vs_states = verifying_signals.get("states") or []
     vs_employers = verifying_signals.get("employers") or []
@@ -541,6 +597,7 @@ def classify(
             ent.get("strong_signals") or {},
             ent.get("negative_signals") or {},
             city_state_alone_insufficient=bool(ent.get("city_state_alone_insufficient")),
+            mrs_honorific_is_self=bool(ent.get("mrs_honorific_is_self")),
         )
         return Classification(
             status=status,
@@ -578,6 +635,7 @@ def classify(
         owner.get("strong_signals") or {},
         owner.get("negative_signals") or {},
         city_state_alone_insufficient=bool(owner.get("city_state_alone_insufficient")),
+        mrs_honorific_is_self=bool(owner.get("mrs_honorific_is_self")),
     )
     return Classification(
         status=status,

@@ -4,6 +4,7 @@ from __future__ import annotations
 import pytest
 
 from scripts.resolve_entities import (
+    carries_mrs_honorific,
     CONFIRMED,
     PROBABLE,
     UNCERTAIN,
@@ -858,3 +859,104 @@ class TestCityStateAloneInsufficient:
         r = _record(contributor_employer="Point72 Securities LLC")
         result = classify(r, self._flagged(owner))
         assert result is not None and result.status == PROBABLE
+
+
+class TestMrsHonorificRule:
+    """GOVERNANCE §3.9 — a wife filing under her husband's name must never be
+    silently folded into his total.
+
+    "Mrs. John Smith" is John's WIFE; her own given name never appears. Because
+    normalize_name strips honorifics, such a record matches the HUSBAND exactly.
+    Two were live in the archive when this landed: "CASTELLINI, ROBERT H MRS"
+    ($7,725) and "REINSDORF, MRS. JERRY" ($500).
+
+    Unresolvable automatically — "Mrs. Jane Smith" is Jane herself and the forms
+    are structurally identical without gender — so the default is the
+    conservative reading (route to review) with a per-entity opt-out.
+    """
+
+    def test_detector_finds_mrs_in_any_position(self):
+        for name in ("CASTELLINI, ROBERT H MRS", "REINSDORF, MRS. JERRY",
+                     "Mrs. John Smith", "SMITH, JOHN MRS."):
+            assert carries_mrs_honorific(name), name
+
+    def test_detector_ignores_other_honorifics_and_substrings(self):
+        for name in ("MONFORT, DICK MR.", "Dr. Jane Roe", "SMITH, MS. JANE",
+                     "MRSA Holdings", "Armstrong, John", ""):
+            assert not carries_mrs_honorific(name), name
+
+    def test_mrs_form_is_routed_to_review_by_default(self, owner):
+        r = _record(
+            contributor_name="COHEN, STEVEN A MRS",
+            contributor_employer="Point72 Asset Management",   # strong signal
+            contributor_city="Greenwich",
+            contributor_state="CT",
+        )
+        result = classify(r, owner)
+        assert result is not None
+        assert result.status == UNCERTAIN
+        assert "Mrs" in result.status_reason
+        assert result.signals_matched == ["mrs_honorific"]
+
+    def test_mrs_rule_outranks_even_a_strong_signal(self, owner):
+        """It must be checked before signal scoring — otherwise the husband's
+        own employer, which the wife also reports, would confirm her record."""
+        r = _record(
+            contributor_name="COHEN, STEVEN MRS",
+            contributor_employer="Cohen Private Ventures",
+            contributor_city="Greenwich",
+            contributor_state="CT",
+        )
+        assert classify(r, owner).status == UNCERTAIN
+
+    def test_opt_out_restores_normal_scoring_for_a_woman_owner(self, owner):
+        """A woman filing 'Mrs' on her OWN name must classify normally."""
+        o = dict(owner)
+        o["mrs_honorific_is_self"] = True
+        r = _record(
+            contributor_name="COHEN, STEVEN A MRS",
+            contributor_employer="Cohen Private Ventures",
+            contributor_city="Greenwich",
+            contributor_state="CT",
+        )
+        assert classify(r, o).status == CONFIRMED
+
+    def test_non_mrs_records_are_unaffected(self, owner):
+        r = _record(
+            contributor_name="COHEN, STEVEN A MR.",
+            contributor_employer="Cohen Private Ventures",
+            contributor_city="Greenwich",
+            contributor_state="CT",
+        )
+        assert classify(r, owner).status == CONFIRMED
+
+    def test_related_entity_honors_its_own_opt_out(self, owner):
+        """The flag must thread through the related-entity path too —
+        cohen-alexandra is a related entity, not an owner file."""
+        o = dict(owner)
+        o["related_entities"] = [
+            {**o["related_entities"][0], "mrs_honorific_is_self": True}
+        ]
+        r = _record(
+            contributor_name="COHEN, ALEXANDRA MRS",
+            contributor_employer="Cohen Private Ventures",
+            contributor_city="Greenwich",
+            contributor_state="CT",
+        )
+        result = classify(r, o, process_related_entities=True)
+        assert result.entity_slug == "cohen-alexandra"
+        # Attributed rather than routed to review — the exact tier depends on
+        # her own signal block (here PROBABLE: the employer is strong on the
+        # OWNER, not on her), which is not what this test is about.
+        assert result.status in (CONFIRMED, PROBABLE)
+        assert "Mrs" not in result.status_reason
+
+    def test_related_entity_without_opt_out_is_routed_to_review(self, owner):
+        r = _record(
+            contributor_name="COHEN, ALEXANDRA MRS",
+            contributor_employer="Cohen Private Ventures",
+            contributor_city="Greenwich",
+            contributor_state="CT",
+        )
+        result = classify(r, owner, process_related_entities=True)
+        assert result.status == UNCERTAIN

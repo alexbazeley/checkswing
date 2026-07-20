@@ -26,6 +26,10 @@ name: Laura Marie Ricketts
 team: Chicago Cubs
 role: Co-owner / Director
 status: active
+# Woman owner: a "Mrs" honorific on her filings would be on her OWN name, not
+# the wife-of form. Set pre-emptively — she has no MRS-form records today, but
+# the default routes them to review and that would be a silent recall loss.
+mrs_honorific_is_self: true
 tenure_start_date: 2009-10-27    # Sale closed — same date as ricketts-tom
 tenure_end_date:
 
