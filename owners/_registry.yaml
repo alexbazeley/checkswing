@@ -106,6 +106,59 @@ owners:
       by design. Family-collision risk: name_variants explicitly exclude
       "Steinbrenner" alone and "H. Steinbrenner" to keep sibling/parent records out.
 
+  - slug: steinbrenner-jessica
+    name: Jessica S. Steinbrenner
+    team: New York Yankees
+    role: General partner
+    tenure_start_date: 2007-01-01
+    status: pilot
+    notes: >
+      Wave 3 co-owner, added 2026-07-20 under the ownership-group rule (ESPN:
+      "all four share in the baseball responsibilities as general partners";
+      MLB.com lists her holding entity JJS NYY). The ONLY one of the three with
+      a counted total: 4 CONFIRMED / $11,000 (+1 queued). The EMPLOYER AXIS IS DEAD — she files
+      HOMEMAKER — so attribution rests on name + city/state; hence
+      city_state_alone_insufficient at creation. NEVER promote a Tampa ZIP:
+      33614 is Trans-Marine's, i.e. Hal's. mrs_honorific_is_self: true.
+
+  - slug: steinbrenner-hank
+    name: Henry G. Steinbrenner
+    team: New York Yankees
+    role: General partner / Co-chairperson (FORMER)
+    tenure_start_date: 2007-01-01
+    tenure_end_date: 2020-04-14
+    status: pilot
+    notes: >
+      Wave 3 co-owner, added 2026-07-20. CLOSED RECORD — died 2020-04-14, so no
+      new filings can appear. YIELD IS STRUCTURALLY ZERO: his entire federal
+      history (5 records, 1985-1999, verified by direct FEC probe) sits BELOW the
+      archive's 2000-01-01 fetch floor. Do NOT lower the floor for one owner —
+      it would make his total incomparable with every other owner's.
+      "H. Steinbrenner" is banned as a variant here AND on steinbrenner-hal —
+      the shared-initial firewall is a two-file invariant.
+      mrs_honorific_is_self deliberately NOT set (he is a man; a "Mrs. Henry" row
+      is his wife).
+
+  - slug: steinbrenner-jennifer
+    name: Jennifer Steinbrenner Swindal
+    team: New York Yankees
+    role: General partner
+    tenure_start_date: 2007-01-01
+    status: pilot
+    notes: >
+      Wave 3 co-owner, added 2026-07-20 on the GOVERNANCE prong alone. The
+      research premise of ZERO federal records proved FALSE on creation day —
+      3 name-matching Tampa SWINDAL records surfaced. Counted total is still $0:
+      two are in the review queue (no corroborating employer) and one is a JOINT
+      filing with her untracked ex-husband.
+      Added for completeness (a 4-partner group documented with 3 misrepresents
+      it) and future-proofing (the slug is what makes a future filing land).
+      Widest name gate of the three (two surnames incl. bare "Jennifer Swindal"),
+      so both guards are set BEFORE any record exists: mrs_honorific_is_self and
+      city_state_alone_insufficient; strong_signals must stay empty until real
+      records exist and an audit clears them. Steve Swindal excluded (stake
+      bought out 2007 — fails the stake prong).
+
   # ─── QUEUED (Phase 2) ──────────────────────────────────────────────────────
   # The remaining 25 principal owners. Listed by team for organization.
   # Verifying signals will be populated during Phase 2.
