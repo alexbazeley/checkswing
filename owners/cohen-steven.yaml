@@ -93,6 +93,11 @@ related_entities:
 - kind: spouse
   slug: cohen-alexandra
   name: Alexandra M. Cohen
+  # She is a woman filing under her OWN given name, so "COHEN, ALEXANDRA MRS"
+  # is herself — not the wife-of-<husband's-name> form the default guards
+  # against. Without this opt-out those 2 records (2026-07-20: $4,800) would be
+  # routed to review. See OWNER_SCHEMA.md `mrs_honorific_is_self`.
+  mrs_honorific_is_self: true
   name_variants:
   - "Alexandra Cohen"
   - "Alexandra M Cohen"

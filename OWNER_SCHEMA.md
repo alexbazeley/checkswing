@@ -102,6 +102,51 @@ Add a negative-signal entry only after you've manually traced the doppelgänger 
 
 ## Optional fields
 
+### `mrs_honorific_is_self` (optional boolean, **default false — the guard is ON**)
+
+```yaml
+mrs_honorific_is_self: true
+```
+
+**Unlike every other flag here, the protective behavior is the DEFAULT and this
+flag opts OUT of it.**
+
+English convention makes a "Mrs" honorific ambiguous in a way the classifier
+cannot resolve:
+
+| filed name | who it means |
+|---|---|
+| `Mrs. Jane Smith` | Jane herself |
+| `Mrs. John Smith` | John's **wife** — her own given name never appears |
+
+`normalize_name` strips honorifics from any position, so **both collapse to the
+given name that is written**. `CASTELLINI, ROBERT H MRS` normalizes to exactly
+`robert castellini` — indistinguishable from the man. Two such rows were live in
+the archive when this landed ($7,725 folded into `castellini-bob`, $500 into
+`reinsdorf-jerry`), which GOVERNANCE §3.9 forbids: *never silently fold spouse
+donations into the owner's totals*.
+
+Separating the two forms requires knowing the referent's **gender**, which is not
+in FEC data and which the archive does not infer. So the default is the
+conservative reading: **any record whose name carries "Mrs" is routed to
+UNCERTAIN** with a reason, ahead of all signal scoring — a strong employer or ZIP
+does *not* rescue it, because the wife typically reports her husband's employer
+and address. Failing toward the review queue rather than toward a wrong
+attribution is the standard the archive already holds (§1.9).
+
+Set `mrs_honorific_is_self: true` on an entity whose own name legitimately
+carries the honorific — i.e. **a woman**, filing as "Mrs. \<her own given name\>".
+Currently set on `ricketts-laura` and the `cohen-alexandra` related entity.
+
+Scoped to `mrs` only. `mr` has no equivalent ambiguity, and `ms`/`miss` do not
+carry the wife-of sense. Can be set on a `related_entities` block as well as an
+owner. Applies to federal and state classification alike, since both share the
+classifier.
+
+**Reviewing a routed record:** it is a real donation by a real person and must
+not be discarded reflexively. Attribute it to a spouse entity where one exists
+(the `cohen-alexandra` model), or discard with a documented reason.
+
 ### `city_state_alone_insufficient` (optional boolean, default false)
 
 ```yaml
