@@ -26,7 +26,7 @@ import yaml
 from ruamel.yaml import YAML as _RoundTripYAML
 
 from . import db
-from .fetch_fec import DEFAULT_MIN_DATE, FECClient, load_raw_payloads
+from .fetch_fec import DEFAULT_MIN_DATE, FECClient, _dedupe_key, load_raw_payloads
 from .paths import OWNERS_DIR, PROVENANCE_LOG, REPO_ROOT, REVIEW_QUEUE_MD
 from .provenance import append_provenance
 from .resolve_entities import (
@@ -66,7 +66,7 @@ def _parse_amount(v) -> float | None:
 
 
 def _dedupe_records_by_txn(records: list[dict]) -> list[dict]:
-    """Dedupe a merged record list by FEC transaction_id (sub_id fallback).
+    """Dedupe a merged record list by FEC `sub_id` (transaction_id fallback).
 
     Used after combining an owner's fetch with its related entities' fetches: a
     single FEC transaction can surface in more than one name search (e.g. a joint
@@ -74,15 +74,18 @@ def _dedupe_records_by_txn(records: list[dict]) -> list[dict]:
     in fetch_all_name_variants / load_raw_payloads. The classifier routes each
     surviving record by its filed contributor_name, not by which fetch found it,
     so keeping the owner-first copy is safe. Records without a usable key are kept
-    as-is (they are dropped later at the provenance gate, §1.3)."""
+    as-is (they are dropped later at the provenance gate, §1.3).
+
+    Keys on `sub_id` first — see `fetch_fec._dedupe_key`. The filer-assigned
+    `transaction_id` is not unique, so keying on it collapses genuinely distinct
+    contributions and silently drops one."""
     seen: set[str] = set()
     out: list[dict] = []
     for r in records:
-        key = r.get("transaction_id") or r.get("sub_id")
+        key = _dedupe_key(r)
         if not key:
             out.append(r)
             continue
-        key = str(key)
         if key in seen:
             continue
         seen.add(key)

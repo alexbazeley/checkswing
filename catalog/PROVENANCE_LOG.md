@@ -26192,3 +26192,456 @@ not production").
 - `10474836` (cohen-alexandra): COLLISION (not written): transaction_id 10474836: sub_id 4062420261522616135 vs 4050820261509835241 (distinct contributions)
 - `10474835` (cohen-alexandra): COLLISION (not written): transaction_id 10474835: sub_id 4062420261522616134 vs 4050820261509835240 (distinct contributions)
 - `10309032` (cohen-alexandra): COLLISION (not written): transaction_id 10309032: sub_id 4062420261522616132 vs 4050820261509835238 (distinct contributions)
+
+### 2026-07-20 — INGESTION
+
+- **run_id**: `345f0e6f`
+- **entity_slug**: `johnson-charles`
+- **dry_run**: `0`
+- **period_start**: `2025-01-16`
+- **period_end**: `2026-03-31`
+- **name_variants_queried**: `["Charles B Johnson", "Charles B. Johnson", "Charles Bartlett Johnson", "Johnson, Charles B", "Johnson, Charles B.", "Johnson, Charles Bartlett"]`
+- **api_calls_made**: `0`
+- **records_fetched**: `1243`
+- **confirmed_count**: `191`
+- **probable_count**: `956`
+- **uncertain_count**: `80`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T06-24-41Z__345f0e6f.db`
+- **notes**: skipped(no-name-match)=16 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-07-20 — INGESTION
+
+- **run_id**: `9598acd7`
+- **entity_slug**: `kendrick-ken`
+- **dry_run**: `0`
+- **period_start**: `2024-12-17`
+- **period_end**: `2025-12-31`
+- **name_variants_queried**: `["Ken Kendrick", "Earl G. Kendrick", "Earl G Kendrick", "Earl G. Kendrick Jr.", "Earl G. Kendrick, Jr.", "Earl Kendrick", "E. G. Kendrick", "E.G. Kendrick", "E G Kendrick", "Earl Gentry Kendrick", "Kendrick, Ken", "Kendrick, Earl G", "Kendrick, Earl G.", "Kendrick, Earl G., Jr.", "Ken Kendrick Jr.", "Kendrick, Ken, Jr.", "Kendrick, Ken Jr.", "E.G. Kendrick Jr.", "E. G. Kendrick Jr.", "Kendrick, E.G., Jr.", "Kendrick, E. G., Jr."]`
+- **api_calls_made**: `0`
+- **records_fetched**: `3490`
+- **confirmed_count**: `669`
+- **probable_count**: `68`
+- **uncertain_count**: `5`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T06-24-43Z__9598acd7.db`
+- **notes**: skipped(no-name-match)=2748 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-07-20 — INGESTION
+
+- **run_id**: `f5425e6e`
+- **entity_slug**: `walter-mark`
+- **dry_run**: `0`
+- **period_start**: `2025-01-01`
+- **period_end**: `2026-05-22`
+- **name_variants_queried**: `["Mark Walter", "Mark R. Walter", "Mark R Walter", "Mark Richard Walter", "Walter, Mark", "Walter, Mark R", "Walter, Mark R."]`
+- **api_calls_made**: `0`
+- **records_fetched**: `5672`
+- **confirmed_count**: `21`
+- **probable_count**: `0`
+- **uncertain_count**: `1401`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T06-24-44Z__f5425e6e.db`
+- **notes**: skipped(no-name-match)=4250 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-07-20 — SUPERSESSION — run f5425e6e
+
+- `1020720140015161982` (walter-mark): FEC restatement: image_number
+
+### 2026-07-20 — INGESTION
+
+- **run_id**: `da5b1bb9`
+- **entity_slug**: `fisher-john`
+- **dry_run**: `0`
+- **period_start**: `2025-01-16`
+- **period_end**: `2026-04-30`
+- **name_variants_queried**: `["John Fisher", "John J. Fisher", "John J Fisher", "John Joseph Fisher", "Fisher, John", "Fisher, John J", "Fisher, John J."]`
+- **api_calls_made**: `0`
+- **records_fetched**: `3949`
+- **confirmed_count**: `574`
+- **probable_count**: `0`
+- **uncertain_count**: `3280`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T06-24-45Z__da5b1bb9.db`
+- **notes**: skipped(no-name-match)=93 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-07-20 — INGESTION
+
+- **run_id**: `e82b8f4c`
+- **entity_slug**: `castellini-bob`
+- **dry_run**: `0`
+- **period_start**: `2025-01-01`
+- **period_end**: `2026-03-31`
+- **name_variants_queried**: `["Robert H Castellini", "Robert H. Castellini", "Robert Castellini", "Bob Castellini", "Castellini, Robert", "Castellini, Robert H", "Castellini, Robert H.", "Castellini, Bob"]`
+- **api_calls_made**: `0`
+- **records_fetched**: `463`
+- **confirmed_count**: `405`
+- **probable_count**: `31`
+- **uncertain_count**: `20`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T06-24-47Z__e82b8f4c.db`
+- **notes**: skipped(no-name-match)=7 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-07-20 — SUPERSESSION — run e82b8f4c
+
+- `AD44E367972F54D35999` (castellini-bob): FEC restatement: filing_id, image_number
+
+### 2026-07-20 — INGESTION
+
+- **run_id**: `b61a51bb`
+- **entity_slug**: `malone-john`
+- **dry_run**: `0`
+- **period_start**: `2025-01-16`
+- **period_end**: `2025-12-01`
+- **name_variants_queried**: `["John C Malone", "John C. Malone", "John Malone", "John Carl Malone", "Malone, John", "Malone, John C", "Malone, John C."]`
+- **api_calls_made**: `0`
+- **records_fetched**: `59`
+- **confirmed_count**: `50`
+- **probable_count**: `0`
+- **uncertain_count**: `7`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T06-24-48Z__b61a51bb.db`
+- **notes**: skipped(no-name-match)=2 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-07-20 — INGESTION
+
+- **run_id**: `d8b3d889`
+- **entity_slug**: `middleton-john`
+- **dry_run**: `0`
+- **period_start**: `2024-12-17`
+- **period_end**: `2025-12-29`
+- **name_variants_queried**: `["John Middleton", "John S. Middleton", "John S Middleton", "John Staubus Middleton", "Middleton, John", "Middleton, John S", "Middleton, John S."]`
+- **api_calls_made**: `0`
+- **records_fetched**: `102`
+- **confirmed_count**: `52`
+- **probable_count**: `9`
+- **uncertain_count**: `26`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T06-24-49Z__d8b3d889.db`
+- **notes**: skipped(no-name-match)=0 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-07-20 — INGESTION
+
+- **run_id**: `0ca6671b`
+- **entity_slug**: `pohlad-tom`
+- **dry_run**: `0`
+- **period_start**: `2025-01-16`
+- **period_end**: `2024-09-24`
+- **name_variants_queried**: `["Thomas Pohlad", "Tom Pohlad", "Pohlad, Thomas", "Pohlad, Tom"]`
+- **api_calls_made**: `0`
+- **records_fetched**: `154`
+- **confirmed_count**: `120`
+- **probable_count**: `1`
+- **uncertain_count**: `0`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T06-24-50Z__0ca6671b.db`
+- **notes**: skipped(no-name-match)=33 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-07-20 — INGESTION
+
+- **run_id**: `9a302cb0`
+- **entity_slug**: `reinsdorf-jerry`
+- **dry_run**: `0`
+- **period_start**: `2025-01-01`
+- **period_end**: `2026-02-04`
+- **name_variants_queried**: `["Jerry Reinsdorf", "Jerry M Reinsdorf", "Jerry M. Reinsdorf", "Jerry Michael Reinsdorf", "Reinsdorf, Jerry", "Reinsdorf, Jerry M", "Reinsdorf, Jerry M."]`
+- **api_calls_made**: `0`
+- **records_fetched**: `427`
+- **confirmed_count**: `424`
+- **probable_count**: `2`
+- **uncertain_count**: `0`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T06-24-51Z__9a302cb0.db`
+- **notes**: skipped(no-name-match)=1 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-07-20 — INGESTION
+
+- **run_id**: `c652e11a`
+- **entity_slug**: `ricketts-laura`
+- **dry_run**: `0`
+- **period_start**: `2025-01-15`
+- **period_end**: `2026-05-11`
+- **name_variants_queried**: `["Laura Ricketts", "Laura M Ricketts", "Laura M. Ricketts", "Laura Marie Ricketts", "Ricketts, Laura", "Ricketts, Laura M", "Ricketts, Laura M."]`
+- **api_calls_made**: `0`
+- **records_fetched**: `919`
+- **confirmed_count**: `317`
+- **probable_count**: `600`
+- **uncertain_count**: `1`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T06-24-51Z__c652e11a.db`
+- **notes**: skipped(no-name-match)=1 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-07-20 — INGESTION
+
+- **run_id**: `d803b116`
+- **entity_slug**: `angelos-john-p`
+- **dry_run**: `0`
+- **period_start**: `2025-01-01`
+- **period_end**: `2026-03-10`
+- **name_variants_queried**: `["John P Angelos", "John P. Angelos", "John Angelos", "Angelos, John", "Angelos, John P", "Angelos, John P."]`
+- **api_calls_made**: `0`
+- **records_fetched**: `87`
+- **confirmed_count**: `51`
+- **probable_count**: `1`
+- **uncertain_count**: `8`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T06-24-53Z__d803b116.db`
+- **notes**: skipped(no-name-match)=27 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-07-20 — SUPERSESSION — run d803b116
+
+- `3061920110009368084` (angelos-john-p): FEC restatement: image_number
+- `3061920110009368083` (angelos-john-p): FEC restatement: image_number
+- `1121520090001479533` (angelos-john-p): FEC restatement: image_number
+- `1070820110007833732` (angelos-john-p): FEC restatement: image_number
+
+### 2026-07-20 — INGESTION
+
+- **run_id**: `19bd2e7a`
+- **entity_slug**: `attanasio-mark`
+- **dry_run**: `0`
+- **period_start**: `2025-01-01`
+- **period_end**: `2025-12-31`
+- **name_variants_queried**: `["Mark Attanasio", "Mark L Attanasio", "Mark L. Attanasio", "Attanasio, Mark", "Attanasio, Mark L", "Attanasio, Mark L."]`
+- **api_calls_made**: `0`
+- **records_fetched**: `59`
+- **confirmed_count**: `28`
+- **probable_count**: `2`
+- **uncertain_count**: `29`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T06-24-53Z__19bd2e7a.db`
+- **notes**: skipped(no-name-match)=0 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-07-20 — SUPERSESSION — run 19bd2e7a
+
+- `1052220100004248697` (attanasio-mark): FEC restatement: image_number
+- `1121520090001379908` (attanasio-mark): FEC restatement: image_number
+- `1112420200263833323` (attanasio-mark): FEC restatement: image_number
+- `3061920110009363917` (attanasio-mark): FEC restatement: image_number
+- `3061920110008447782` (attanasio-mark): FEC restatement: image_number
+- `2022520041036102085` (attanasio-mark): FEC restatement: image_number
+- `1070820110006828017` (attanasio-mark): FEC restatement: image_number
+
+### 2026-07-20 — INGESTION
+
+- **run_id**: `cd5e6dc6`
+- **entity_slug**: `castellini-phil`
+- **dry_run**: `0`
+- **period_start**: `2025-01-01`
+- **period_end**: `2020-10-20`
+- **name_variants_queried**: `["Phillip J Castellini", "Phillip J. Castellini", "Phillip Castellini", "Phil Castellini", "Phil J. Castellini", "Phil J Castellini", "Castellini, Phillip", "Castellini, Phillip J", "Castellini, Phillip J.", "Castellini, Phil"]`
+- **api_calls_made**: `0`
+- **records_fetched**: `50`
+- **confirmed_count**: `48`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T06-24-54Z__cd5e6dc6.db`
+- **notes**: skipped(no-name-match)=2 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-07-20 — INGESTION
+
+- **run_id**: `fe0a2676`
+- **entity_slug**: `davis-ray`
+- **dry_run**: `0`
+- **period_start**: `2025-01-01`
+- **period_end**: `2026-01-23`
+- **name_variants_queried**: `["Ray C Davis", "Ray C. Davis", "Ray Davis", "Davis, Ray", "Davis, Ray C", "Davis, Ray C."]`
+- **api_calls_made**: `0`
+- **records_fetched**: `319`
+- **confirmed_count**: `72`
+- **probable_count**: `10`
+- **uncertain_count**: `13`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T06-24-55Z__fe0a2676.db`
+- **notes**: skipped(no-name-match)=224 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-07-20 — SUPERSESSION — run fe0a2676
+
+- `2053020121156485297` (davis-ray): FEC restatement: image_number
+- `2053020121156485296` (davis-ray): FEC restatement: image_number
+- `2042520121155290151` (davis-ray): FEC restatement: image_number
+- `2031620111137504953` (davis-ray): FEC restatement: image_number
+- `2110420091120493345` (davis-ray): FEC restatement: image_number
+- `SA11A.73594` (davis-ray): FEC restatement: image_number
+- `1100120120010593269` (davis-ray): FEC restatement: image_number
+
+### 2026-07-20 — INGESTION
+
+- **run_id**: `2e02b577`
+- **entity_slug**: `dewitt-bill`
+- **dry_run**: `0`
+- **period_start**: `2025-01-01`
+- **period_end**: `2025-12-31`
+- **name_variants_queried**: `["William O DeWitt Jr", "William O. DeWitt Jr.", "William O. DeWitt Jr", "William DeWitt Jr", "William DeWitt Jr.", "Bill DeWitt Jr", "Bill DeWitt Jr.", "William DeWitt", "Bill DeWitt", "DeWitt, William", "DeWitt, William O", "DeWitt, William O Jr", "DeWitt, Bill"]`
+- **api_calls_made**: `0`
+- **records_fetched**: `360`
+- **confirmed_count**: `231`
+- **probable_count**: `6`
+- **uncertain_count**: `120`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T06-24-56Z__2e02b577.db`
+- **notes**: skipped(no-name-match)=3 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-07-20 — INGESTION
+
+- **run_id**: `2ba10f13`
+- **entity_slug**: `dolan-paul`
+- **dry_run**: `0`
+- **period_start**: `2025-01-01`
+- **period_end**: `2025-05-19`
+- **name_variants_queried**: `["Paul J Dolan", "Paul J. Dolan", "Paul Dolan", "Paul Joseph Dolan", "Dolan, Paul", "Dolan, Paul J", "Dolan, Paul J."]`
+- **api_calls_made**: `0`
+- **records_fetched**: `69`
+- **confirmed_count**: `68`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T06-24-58Z__2ba10f13.db`
+- **notes**: skipped(no-name-match)=1 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-07-20 — SUPERSESSION — run 2ba10f13
+
+- `SA11A.240` (dolan-paul): FEC restatement: image_number
+- `2070320181575291534` (dolan-paul): FEC restatement: image_number
+- `1020120170033331762` (dolan-paul): FEC restatement: image_number
+- `1020120170033330729` (dolan-paul): FEC restatement: image_number
+- `1020120170033330728` (dolan-paul): FEC restatement: image_number
+- `1020120170033330524` (dolan-paul): FEC restatement: image_number
+- `1020120170033330523` (dolan-paul): FEC restatement: image_number
+- `1020120170033330098` (dolan-paul): FEC restatement: image_number
+- `1022520160018427791` (dolan-paul): FEC restatement: image_number
+- `1022520160018427790` (dolan-paul): FEC restatement: image_number
+- `1022520160018426131` (dolan-paul): FEC restatement: image_number
+- `2050620141212322515` (dolan-paul): FEC restatement: image_number
+- `2030520141206684540` (dolan-paul): FEC restatement: image_number
+- `1020620140015155017` (dolan-paul): FEC restatement: image_number
+- `2042120101125320487` (dolan-paul): FEC restatement: image_number
+- `2042120101125320486` (dolan-paul): FEC restatement: image_number
+- `2042120101125320328` (dolan-paul): FEC restatement: image_number
+- `1043020100004140852` (dolan-paul): FEC restatement: image_number
+- `1043020100004140851` (dolan-paul): FEC restatement: image_number
+- `1102120100004734933` (dolan-paul): FEC restatement: image_number
+- `2073020081092801772` (dolan-paul): FEC restatement: image_number
+- `1121520090001376066` (dolan-paul): FEC restatement: image_number
+- `1121520090001198258` (dolan-paul): FEC restatement: image_number
+- `1011420140015093588` (dolan-paul): FEC restatement: image_number
+- `2022320061064514744` (dolan-paul): FEC restatement: image_number
+- `2022320041035988327` (dolan-paul): FEC restatement: image_number
+
+### 2026-07-20 — INGESTION
+
+- **run_id**: `39107573`
+- **entity_slug**: `lerner-mark`
+- **dry_run**: `0`
+- **period_start**: `2024-12-28`
+- **period_end**: `2026-03-17`
+- **name_variants_queried**: `["Mark D Lerner", "Mark D. Lerner", "Mark Lerner", "Lerner, Mark", "Lerner, Mark D", "Lerner, Mark D."]`
+- **api_calls_made**: `0`
+- **records_fetched**: `241`
+- **confirmed_count**: `68`
+- **probable_count**: `10`
+- **uncertain_count**: `159`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T06-24-59Z__39107573.db`
+- **notes**: skipped(no-name-match)=2 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-07-20 — INGESTION
+
+- **run_id**: `41175069`
+- **entity_slug**: `pohlad-joe`
+- **dry_run**: `0`
+- **period_start**: `2025-01-01`
+- **period_end**: `2026-02-21`
+- **name_variants_queried**: `["Joseph C Pohlad", "Joseph C. Pohlad", "Joseph Pohlad", "Joe Pohlad", "Pohlad, Joseph", "Pohlad, Joseph C", "Pohlad, Joseph C.", "Pohlad, Joe"]`
+- **api_calls_made**: `0`
+- **records_fetched**: `172`
+- **confirmed_count**: `107`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T06-25-00Z__41175069.db`
+- **notes**: skipped(no-name-match)=65 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-07-20 — SUPERSESSION — run 41175069
+
+- `1011920170033161260` (pohlad-joe): FEC restatement: image_number
+- `2110720121170231955` (pohlad-joe): FEC restatement: image_number
+
+### 2026-07-20 — INGESTION
+
+- **run_id**: `5c2d7ece`
+- **entity_slug**: `ricketts-todd`
+- **dry_run**: `0`
+- **period_start**: `2025-01-15`
+- **period_end**: `2026-03-02`
+- **name_variants_queried**: `["Todd Ricketts", "Todd M Ricketts", "Todd M. Ricketts", "Todd Matthew Ricketts", "Ricketts, Todd", "Ricketts, Todd M", "Ricketts, Todd M."]`
+- **api_calls_made**: `0`
+- **records_fetched**: `399`
+- **confirmed_count**: `26`
+- **probable_count**: `356`
+- **uncertain_count**: `15`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T06-25-01Z__5c2d7ece.db`
+- **notes**: skipped(no-name-match)=2 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-07-20 — INGESTION
+
+- **run_id**: `ec43515d`
+- **entity_slug**: `ricketts-tom`
+- **dry_run**: `0`
+- **period_start**: `2024-12-28`
+- **period_end**: `2026-03-25`
+- **name_variants_queried**: `["Tom Ricketts", "Thomas Ricketts", "Thomas S Ricketts", "Thomas S. Ricketts", "Thomas Stuart Ricketts", "Ricketts, Tom", "Ricketts, Thomas", "Ricketts, Thomas S", "Ricketts, Thomas S."]`
+- **api_calls_made**: `0`
+- **records_fetched**: `64`
+- **confirmed_count**: `62`
+- **probable_count**: `1`
+- **uncertain_count**: `0`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T06-25-03Z__ec43515d.db`
+- **notes**: skipped(no-name-match)=1 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-07-20 — SUPERSESSION — run ec43515d
+
+- `AA3E40ABBA9884121B4C` (ricketts-tom): FEC restatement: filing_id, image_number
+- `A566D3FD63BCA48A9B55` (ricketts-tom): FEC restatement: filing_id, image_number
+- `1090820100004583607` (ricketts-tom): FEC restatement: image_number
+- `1121520090002768452` (ricketts-tom): FEC restatement: image_number
+- `SA18.1321180` (ricketts-tom): FEC restatement: image_number
+- `2032620091113180542` (ricketts-tom): FEC restatement: image_number
+- `2032620091113180541` (ricketts-tom): FEC restatement: image_number
+- `2080220061067985909` (ricketts-tom): FEC restatement: image_number
+- `1070820110008005566` (ricketts-tom): FEC restatement: image_number
+- `1070820110008004856` (ricketts-tom): FEC restatement: image_number
+- `1070820110007023269` (ricketts-tom): FEC restatement: image_number
+- `1070820110007023268` (ricketts-tom): FEC restatement: image_number
+- `2091820061069393583` (ricketts-tom): FEC restatement: image_number
+
+### 2026-07-20 — INGESTION
+
+- **run_id**: `5cb7c7be`
+- **entity_slug**: `sherman-john`
+- **dry_run**: `0`
+- **period_start**: `2025-01-01`
+- **period_end**: `2026-01-15`
+- **name_variants_queried**: `["John J Sherman", "John J. Sherman", "John Sherman", "Sherman, John", "Sherman, John J", "Sherman, John J."]`
+- **api_calls_made**: `0`
+- **records_fetched**: `527`
+- **confirmed_count**: `34`
+- **probable_count**: `7`
+- **uncertain_count**: `305`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T06-25-04Z__5cb7c7be.db`
+- **notes**: skipped(no-name-match)=181 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-07-20 — INGESTION
+
+- **run_id**: `326068ce`
+- **entity_slug**: `steinbrenner-hal`
+- **dry_run**: `0`
+- **period_start**: `2025-01-01`
+- **period_end**: `2025-12-22`
+- **name_variants_queried**: `["Harold Z Steinbrenner", "Harold Z. Steinbrenner", "Harold Steinbrenner", "Hal Steinbrenner", "Steinbrenner, Harold", "Steinbrenner, Harold Z", "Steinbrenner, Harold Z.", "Steinbrenner, Hal"]`
+- **api_calls_made**: `0`
+- **records_fetched**: `16`
+- **confirmed_count**: `15`
+- **probable_count**: `1`
+- **uncertain_count**: `0`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T06-25-07Z__326068ce.db`
+- **notes**: skipped(no-name-match)=0 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-07-20 — INGESTION
+
+- **run_id**: `c6b42a3f`
+- **entity_slug**: `cohen-steven`
+- **dry_run**: `0`
+- **period_start**: `2025-01-16`
+- **period_end**: `2026-05-28`
+- **name_variants_queried**: `["Steven A Cohen", "Steven A. Cohen", "Steven Cohen", "Steve Cohen", "Cohen, Steven", "Cohen, Steven A", "Cohen, Steven A."]`
+- **api_calls_made**: `0`
+- **records_fetched**: `3933`
+- **confirmed_count**: `173`
+- **probable_count**: `104`
+- **uncertain_count**: `3224`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T06-25-08Z__c6b42a3f.db`
+- **notes**: skipped(no-name-match)=432 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW · +related: cohen-alexandra

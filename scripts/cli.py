@@ -47,7 +47,21 @@ def validate():
     click.echo("\n--- legislation ---")
     click.echo(format_leg_report(leg_results))
 
-    ok = all(r.ok for r in owner_results) and all(r.ok for r in leg_results)
+    # v12: master.db row-identity integrity. The record_uid column is nullable in
+    # SCHEMA_SQL for fixture convenience, so the real guarantee is asserted here.
+    uid_errors = db.check_record_uid_integrity()
+    click.echo("\n--- master.db identity (v12) ---")
+    if uid_errors:
+        for e in uid_errors:
+            click.echo(f"[FAIL] donations (id=record-uid-integrity)\n    error: {e}")
+    else:
+        click.echo("[OK] donations (id=record-uid-integrity)")
+
+    ok = (
+        all(r.ok for r in owner_results)
+        and all(r.ok for r in leg_results)
+        and not uid_errors
+    )
     sys.exit(0 if ok else 1)
 
 

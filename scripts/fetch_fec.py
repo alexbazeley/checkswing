@@ -497,16 +497,16 @@ class FECClient:
             checkpoint["completed_variants"] = sorted(completed_variants)
             _write_checkpoint(slug, checkpoint)
 
-        # Dedup by transaction_id.
+        # Dedup by FEC's globally-unique sub_id (see _dedupe_key — NOT by the
+        # filer-assigned transaction_id, which committees reuse).
         seen: dict[str, dict] = {}
         for r in all_records:
-            key = r.get("transaction_id") or r.get("sub_id")
+            key = _dedupe_key(r)
             if not key:
                 # Skip records FEC didn't give us a stable key for — they'd
                 # break idempotency (GOVERNANCE.md §1.5). They're still in the raw
                 # payload for forensic recovery if needed.
                 continue
-            key = str(key)
             if key not in seen:
                 seen[key] = r
 
@@ -516,6 +516,45 @@ class FECClient:
         return list(seen.values()), all_raws
 
 
+def _dedupe_key(record: dict) -> str | None:
+    """The identity key for de-duplicating FEC Schedule A records.
+
+    **`sub_id` FIRST, `transaction_id` only as a fallback.** This order is
+    load-bearing and was inverted until 2026-07-20.
+
+    `sub_id` is FEC's own globally-unique row identifier. `transaction_id` is
+    **filer-assigned and unique only within a single filing** — the same id is
+    routinely reused by different committees, and even by one committee across
+    filings, so two genuinely distinct contributions can share one. Keying on
+    `transaction_id` therefore collapses real, separate donations into one and
+    **silently discards the loser before the classifier or the database ever
+    sees it** — where no downstream guard can catch it.
+
+    This is the same defect §1.3 identified in the `donations` primary key, one
+    layer earlier in the pipeline. It could not be fixed until the PK could
+    represent the result: schema **v12** keys donations on
+    `(record_uid, entity_slug)` with `record_uid = COALESCE(sub_id,
+    transaction_id)`. Keep this function in lockstep with `db.record_uid_for`.
+
+    Measured impact when found: **132 distinct contributions discarded across 24
+    owners** — e.g. Ken Kendrick's 2018 $2,700 to Antony Ghee for Congress,
+    discarded because his wife Randy Kendrick's 2020 $56,000 to a Cruz victory
+    fund carried the same filer id `SA11AI.4306`.
+
+    Records carrying neither id return None and are dropped at the provenance
+    gate (§1.3) rather than silently merged.
+    """
+    sub = record.get("sub_id")
+    # Strip before testing: a whitespace-only sub_id is absent, not present.
+    # `db.record_uid_for` does the same, and the two MUST agree — a divergence
+    # here silently drops or duplicates rows (covered by a lockstep test).
+    sub = str(sub).strip() if sub is not None else ""
+    if sub:
+        return sub
+    txn = record.get("transaction_id")
+    return str(txn) if txn else None
+
+
 def load_raw_payloads(slug: str, raw_dir: Path | None = None) -> tuple[list[dict], list[Path]]:
     """Read records straight from on-disk raw payloads — no network calls.
 
@@ -523,8 +562,9 @@ def load_raw_payloads(slug: str, raw_dir: Path | None = None) -> tuple[list[dict
     classification. Honors GOVERNANCE.md §1.4: the DB is reconstructible from raw
     alone, and this is the function that does the reconstruction.
 
-    Returns (records, raw_paths). Records are deduped by transaction_id
-    just like the fetch path, and each carries `_raw_payload_path`.
+    Returns (records, raw_paths). Records are deduped by `sub_id` (FEC's
+    globally-unique row id), falling back to `transaction_id` only when a record
+    carries none — see `_dedupe_key`. Each carries `_raw_payload_path`.
     """
     base = raw_dir or raw_dir_for(slug)
     # Skip sidecar files (e.g., _fetch_state.json) — they are not FEC payloads.
@@ -547,10 +587,9 @@ def load_raw_payloads(slug: str, raw_dir: Path | None = None) -> tuple[list[dict
 
     seen: dict[str, dict] = {}
     for r in all_records:
-        key = r.get("transaction_id") or r.get("sub_id")
+        key = _dedupe_key(r)
         if not key:
             continue
-        key = str(key)
         if key not in seen:
             seen[key] = r
     return list(seen.values()), raw_paths
