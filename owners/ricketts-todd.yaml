@@ -74,13 +74,30 @@ verifying_signals:
   - "entrepreneur"
 
 strong_signals:
-  # Intentionally EMPTY at creation, per the ricketts-tom precedent.
-  # "Higher Gear" / "Higher Gear Group" is the promotion candidate — it is
-  # uniquely Todd's — but no FEC filing carrying it has been observed yet.
-  # Promote only after a clean calibration audit shows zero false positives.
-  employers: []
+  # Promoted 2026-07-20 after the clean calibration audit the creation note
+  # (below, "TWO FINDINGS FOR FUTURE CALIBRATION") called for. Both strings are
+  # Todd-only personal vehicles — a full-archive scan finds them filed by NO
+  # other entity, and by no non-Ricketts at all:
+  #   Active Chaos LLC     — ricketts-todd only, 43 records (0 elsewhere)
+  #   JBE Riding Group LLC — ricketts-todd only,  8 records (0 elsewhere)
+  # Listed as substrings (employer match is case-insensitive substring), so
+  # "Active Chaos" catches the LLC / ", LLC" / bare variants, and "JBE Riding
+  # Group" catches both observed forms. These promote ~51 of his PROBABLE
+  # records (~$673K) to CONFIRMED — records that were only PROBABLE because his
+  # own LLCs sat in neither verifying_ nor strong_ signals and the bulk of his
+  # giving matches on the family-shared Wilmette city alone.
+  employers:
+  - "Active Chaos"
+  - "JBE Riding Group"
+  # DELIBERATELY EXCLUDED, and this is load-bearing:
+  #   - "RAM Investment" — SHARED with Tom (his CONFIRMED employer; see notes).
+  #     A strong signal here would be wrong on the family. Stays unpromoted.
+  #   - "Higher Gear" — uniquely Todd's, but still no observed FEC filing
+  #     carries it. Promote only once one appears and audits clean.
   zip_codes: []
-  # Wilmette ZIP 60091 is shared with Tom AND Laura — DO NOT promote ZIP alone.
+  # Wilmette ZIP 60091 / 600912812 is shared with Tom AND Laura — DO NOT promote
+  # ZIP alone. This is the Monfort trap, and it is why Todd's ~$1.09M of generic
+  # "SELF"/"SELF-EMPLOYED" giving stays correctly at PROBABLE.
 
 negative_signals:
   employers:
