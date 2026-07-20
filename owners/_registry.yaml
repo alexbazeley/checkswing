@@ -513,6 +513,33 @@ owners:
       names protect Greg's name_variants. Charles is a separate future slug
       (`johnson-charles`). Strong_signals empty at creation — calibrate
       after first ingestion. Hillsborough CA residence (needs-confirmation).
+      2026-07-20: `johnson-charles` NOW EXISTS. Also note this entry's
+      "different first names protect Greg" reasoning is INCOMPLETE — a
+      SECOND son, Charles E. Johnson (Tano Capital, San Mateo), shares
+      Charles B.'s first name. Greg's own variants (Greg/Gregory) are
+      unaffected, but the note should not be read as covering the family.
+
+  - slug: johnson-charles
+    name: Charles B. Johnson
+    team: San Francisco Giants
+    role: Co-owner
+    tenure_start_date: 1993-01-12
+    status: active
+    notes: >
+      Added 2026-07-20 under the ownership-group rule (CHARTER.md), on the
+      EQUITY prong: largest individual shareholder of San Francisco Baseball
+      Associates LLC since the Magowan group's 1993 purchase (Forbes 2011,
+      SF Examiner 2022). NOT the control person — that is johnson-greg, his
+      son; press "principal owner" is shorthand this file does not adopt,
+      and no retrieved source places him on a Giants board.
+      HARDEST NAME CASE IN THE ARCHIVE, exceeding fisher-john: "JOHNSON,
+      CHARLES" returns ~15,800 FEC records in 2020+2022 alone, and his own
+      son Charles E. Johnson filed from Franklin's San Mateo address.
+      strong_signals INTENTIONALLY EMPTY — Franklin is shared with four
+      relatives incl. a same-first-name son, and ZIP 33480 contains an
+      observed same-initial filer. Palm Beach FL resident since 2013, so FL
+      state coverage is a live target. Expect a HIGH P/C ratio: his modern
+      filings report employer RETIRED, leaving city as the only signal.
 
   - slug: stanton-john
     name: John W. Stanton
