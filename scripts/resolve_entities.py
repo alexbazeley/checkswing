@@ -320,12 +320,44 @@ def city_state_match(
 
 
 def zip_match(record_zip: str | None, signal_zips: Sequence[str]) -> str | None:
+    """Match a record's ZIP against a signal list, honouring ZIP+4 precision.
+
+    A signal's own precision decides how narrowly it matches:
+
+      - 5-digit signal ("33480")     → matches any record in that ZIP5,
+                                       ZIP+4 records included. Unchanged.
+      - 9-digit signal ("334805016") → matches ONLY that exact ZIP+4. A record
+                                       carrying just the ZIP5 does NOT satisfy
+                                       it, because ZIP5 cannot prove the record
+                                       came from that delivery segment.
+
+    A ZIP+4 signal is therefore strictly NARROWER than its ZIP5 parent — it can
+    never match something the old truncating comparison would have missed, so
+    adding one can only remove matches, never create them.
+
+    Why this distinction is load-bearing: a ZIP5 can be an entire town. For
+    johnson-charles, Palm Beach 33480 holds both him and a documented
+    same-initial "JOHNSON, CHARLES B." / Western National Group filer, so 33480
+    is not promotable — while 334805016 is his household and carries 46
+    employer-corroborated CONFIRMED records of his own. Before this, the two
+    were indistinguishable: both sides were truncated to 5 digits, so a
+    house-level signal silently widened into a town-level one and the only safe
+    option was to promote no ZIP at all.
+
+    Returns the matched signal (at the precision that matched) or None.
+    """
     if not record_zip:
         return None
-    rec = str(record_zip).strip()[:5]  # ZIP+4 → ZIP5 for comparison
+    rec = str(record_zip).strip()
+    rec5 = rec[:5]
     for z in signal_zips or []:
-        if rec == str(z).strip()[:5]:
-            return rec
+        sig = str(z).strip()
+        if len(sig) > 5:
+            # ZIP+4 signal: demand an exact, full-length match.
+            if rec == sig:
+                return sig
+        elif rec5 == sig[:5]:
+            return rec5
     return None
 
 

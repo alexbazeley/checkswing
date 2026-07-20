@@ -26732,3 +26732,12 @@ not production").
 - **uncertain_count**: `2`
 - **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T13-55-53Z__87e54762.db`
 - **notes**: skipped(no-name-match)=1 · min_date=default (no prior ingestion) · states=['FL']
+
+### 2026-07-20 — RECLASSIFY-IN-PLACE — johnson-charles
+
+- **entity_slug**: `johnson-charles`
+- **reason**: Promote household ZIP+4s 334805016/334804742 to strong_signals now that zip_match honours ZIP+4 precision; bare 33480 deliberately excluded (shared with the Western National Group doppelganger).
+- **rows_scored**: `1147`
+- **updated**: `626` · **demoted→queue**: `0` · **suppressed (DISCARDED)**: `0` · **forced**: `0` · **excluded**: `0` · **unchanged**: `521`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T14-20-40Z__pre-reclassify-inplace-johnson-charles.db`
+- **note**: in-place re-score from stored donations columns (no raw read, no delete-rebuild); rows recoverable from the snapshot above.
