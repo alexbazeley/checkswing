@@ -27035,3 +27035,38 @@ No verdict was changed and no value was invented — each field was copied from 
 - `fisher-john` / `A-TI471` → **DISCARDED** (adjudicated 2026-05-30T17:00:03Z) — audit triage: same-name stranger in undocumented city/state (GOVERNANCE.md §1.9 conservative tie-break)
 
 Recurrence is now caught by `db.check_adjudication_integrity()`, wired into `cli validate`.
+### 2026-07-31 — DELETION — reclassify ricketts-todd
+
+- **entity_slug**: `ricketts-todd`
+- **reason**: Queue burndown: 6 ACTIVE CHAOS LLC records at 'WIMETTE' (filer misspelling of Wilmette 60091) were queued under city/state-outside-residences BEFORE PR #142 made Active Chaos a strong signal; they classify CONFIRMED under the current YAML.
+- **rows_deleted_donations**: `382`
+- **rows_deleted_review_queue**: `15` (of which 0 had resolutions)
+- **include_related**: `False`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-31T16-07-51Z__pre-reclassify-ricketts-todd.db`
+- **note**: Rows are recoverable from the snapshot above and from data/raw/ricketts-todd/ payloads. Re-classification follows in the next INGESTION entry.
+
+### 2026-07-31 — INGESTION
+
+- **run_id**: `2a32a893`
+- **entity_slug**: `ricketts-todd`
+- **dry_run**: `0`
+- **period_start**: `2025-01-15`
+- **period_end**: `2026-03-02`
+- **name_variants_queried**: `["Todd Ricketts", "Todd M Ricketts", "Todd M. Ricketts", "Todd Matthew Ricketts", "Ricketts, Todd", "Ricketts, Todd M", "Ricketts, Todd M."]`
+- **api_calls_made**: `0`
+- **records_fetched**: `399`
+- **confirmed_count**: `83`
+- **probable_count**: `305`
+- **uncertain_count**: `9`
+- **snapshot_path**: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-31T16-07-52Z__2a32a893.db`
+- **notes**: skipped(no-name-match)=2 · min_date=audit.last_ingestion (−trailing window) · FROM-RAW
+
+### 2026-07-31 — REVIEW_RESOLUTION — federal queue burndown (verified)
+
+Discarded **592** open federal review-queue item(s) after re-scoring each against the current owner YAML from `data/raw/`. Only items that still classify **UNCERTAIN** were discarded.
+
+Preserved: **73** item(s) whose raw payload is missing on disk and therefore could not be re-verified (the §2.1 archival gap), plus **0** that now classify attributable and **0** with mixed legs under one transaction_id.
+
+Queue-only: the review queue holds UNCERTAIN records exclusively, so no counted total changed. Reversible per item via `cli unresolve`.
+
+Per owner: `cohen-alexandra`=367, `fisher-john`=118, `johnson-charles`=74, `cohen-steven`=25, `ricketts-todd`=4, `ricketts-laura`=1, `monfort-charlie`=1, `steinbrenner-jessica`=1, `steinbrenner-jennifer`=1
