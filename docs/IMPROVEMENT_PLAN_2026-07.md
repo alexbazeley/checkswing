@@ -643,3 +643,65 @@ invisible until the one below it was fixed, and the attempted top-down fix
 ---
 
 *Review conducted 2026-07-10. Findings verified against main `4c7925c`, master.db (schema v7), state.db, legislation.db, and the live GitHub PR/workflow state. Line numbers drift — re-verify before editing.*
+
+---
+
+## 13. 2026-07-31 — layers 4 and 5 of the collision class
+
+§12 closed the `transaction_id`-as-identity defect at three layers and called the
+class resolved. It was not. A review found two more.
+
+### 13.1 Layer 4 — the reclassify guards (✅ FIXED)
+
+`_reclassify_lost_txns` and `_reclassify_divergent_txns` keyed both the raw map
+and the live-row set on `transaction_id`. For `johnson-charles` that mapped
+**1,243 raw records onto 1,197 keys — 46 structurally invisible**; `SA12.4099.0`
+alone is ten distinct $3,300 gifts to ten different campaigns and the guard kept
+one. Archive-wide: **79 attributed rows, 19 owners, $658,081.25** in groups the
+guards could not resolve into siblings.
+
+These are the *silent-loss* guards, so the shape of the failure is the worst
+available: a guard seeing 1 of 10 siblings reports "0 would drop" while 9 are at
+risk. **v12 widened this rather than closing it** — it made siblings
+representable without updating the consumers that had assumed they were not.
+
+Fixed by keying both on `record_uid`. Both regression tests were confirmed to
+FAIL on the prior code with the exact collapse symptom.
+
+### 13.2 Layer 5 — the adjudication tables (⏸ MONITORED, deliberately NOT migrated)
+
+`review_queue`, `review_resolutions` and `manual_attributions` are all keyed
+`(transaction_id, entity_slug)`, so one row can stand for several genuinely
+distinct contributions and any verdict on it governs every leg.
+
+**The exposure was measured before deciding, and it is essentially nil:**
+
+| table | rows | keys resolving to >1 live donation row |
+|---|---:|---:|
+| `review_queue` | 11,185 | **0** |
+| `review_resolutions` | 11,441 | **0** |
+| `manual_attributions` | 38 | **1** |
+
+None of the 73 open queue items has a `transaction_id` covering more than one
+`sub_id`. The single `manual_attributions` case — `middleton-john`/`SA18.1294499`
+→ 2 rows — was inspected and is **benign**: both rows are the father (John S.
+Sr., Bradford Holdings, Bryn Mawr, same day, McCain 2008 + McCain-Palin
+Compliance Fund, the known campaign/compliance split).
+
+**Decision: monitor, do not migrate.** A v13 rebuilding three tables to fix a
+defect with zero live occurrences is a worse trade than watching for the first
+one — especially given a binary-DB migration's own risk profile (§12 records
+three separate migration gotchas). `db.check_adjudication_integrity()` now
+reports all three tables, so the first real instance is loud instead of silent.
+
+**The constraint any future queue tooling must respect:** a queue row is not a
+record. Resolve it by evaluating **every** raw record sharing its
+`transaction_id`, keyed on `record_uid`, and treat a mixed result as HOLD —
+never auto-resolve. `scripts/burndown_federal_queue.py` implements exactly this
+and is the reference. The trap is easy to fall into: an earlier draft of that
+very analysis indexed raw as `{txn: record}` and flipped a `johnson-charles`
+verdict between runs.
+
+Revisit the migration if the monitor ever fires on `review_queue` /
+`review_resolutions`, or if a same-name adjudication ever needs to split legs
+under one filer id.
