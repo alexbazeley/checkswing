@@ -790,57 +790,93 @@ confirm in one command — see the PR.
 
 ---
 
-## 15. 2026-07-31 — what the 379 unrecoverable rows actually are
+## 15. 2026-07-31 — what the 379 raw-missing rows actually are
+
+> **⚠️ This section was rewritten the same day. Its first version asserted the
+> 379 rows were "truly lost" and that three owners were "permanently
+> reclassify-blocked." Both claims were wrong** — inherited from the B2b episode,
+> never tested, and then amplified by me into GOVERNANCE.md and a PR. The
+> retraction and evidence are below. Kept rather than deleted because how the
+> error propagated is the more useful lesson.
 
 First live run of `raw-coverage --bucket` against R2 (10,941 objects listed):
 
 ```
 rows_missing_raw            : 379
 rows_recoverable_from_bucket:   0
-rows_truly_lost             : 379
-distinct_lost_files         :  48
+rows_absent_from_archive    : 379
+distinct_files_absent       :  48
 ```
 
-Zero recoverable is the *expected* answer, not a disappointment: everything in R2
-arrived from this disk via the backfill, so anything already missing locally was
-never uploaded. A non-zero would have meant the model of the system was wrong.
+Zero recoverable-from-R2 is the *expected* answer: everything in R2 arrived from
+this disk via the backfill, so anything already missing locally was never
+uploaded.
 
-But the breakdown is more informative than the total, because the 379 are **two
-different problems that happen to look alike**:
+### The retraction — FEC serves these records right now
 
-### Class A — historical, FEC-unrecoverable (363 rows, 3 owners)
+The original text said these were unrecoverable because "FEC cannot re-serve
+them." A read-only OpenFEC probe returned **5 of 5 sampled records, exact
+`transaction_id` matches**, spanning 2006–2022 across all three owners —
+including `malone-john`, the case the docs cite *as the proof*:
 
-| owner | lost | of | % | $ |
+| owner | date | amount | txn | result |
+|---|---|---:|---|---|
+| `malone-john` | 2006-06-08 | $1,000 | `60625.C53962` | FOUND |
+| `malone-john` | 2008-06-04 | $9,250 | `80626.C76784` | FOUND |
+| `angelos-john-p` | 2022-09-11 | $1,000 | `13615927` | FOUND |
+| `fisher-john` | 2017-05-12 | $2,700 | `IDTA707` | FOUND |
+| `fisher-john` | 2006-10-24 | $1,000 | `A-C8479` | FOUND |
+
+**No donation was ever lost.** All 379 rows are live in `master.db`, CONFIRMED,
+counted in the $69,226,059.34. Only the *raw payload* — the saved API response —
+is absent, and it is re-fetchable with `cli ingest <slug> --full-refetch`.
+
+The kernel of truth: the **original artifact** is not reproducible byte-for-byte
+(pagination boundaries shift, records get amended). A re-fetch yields an
+equivalent payload, not an identical one. Collapsing that into "the data is gone"
+is what produced the false claim.
+
+### Which means the operational picture is the opposite of what was written
+
+The three owners below are **not** permanently blocked. They need a
+`--full-refetch`, which is a normal maintenance operation:
+
+| owner | raw absent | of | % | $ |
 |---|---:|---:|---:|---:|
 | `fisher-john` | 261 | 575 | 45% | $2,549,699 |
 | `malone-john` | 54 | 104 | 52% | $798,200 |
-| `angelos-john-p` | 48 | 52 | **92%** | $207,100 |
+| `angelos-john-p` | 48 | 52 | 92% | $207,100 |
 
-The known B2b cases — FEC cannot re-serve these Schedule A pages. Ingested
-2026-05-26 → 06-20, spanning donations from 2003 to 2026.
-
-**Operational consequence, worth knowing before you hit it:** these three owners
-are **permanently reclassify-blocked**. `reclassify angelos-john-p` will abort
-with 48 of 52 attributed rows at risk and `--force` is the only way through, at
-the cost of really dropping them. That is not a bug and no amount of re-fetching
-fixes it. `fisher-john` is the largest exposure in absolute terms ($2.55M);
-`angelos-john-p` the most complete (92% of the owner).
+**Not yet done** — a `--full-refetch` rewrites raw *and* re-ingests, so it needs a
+snapshot, a maintainer green light, and verification that no row moves tier. That
+is a deliberate follow-up, not a defect.
 
 ### Class B — cron-era, destroyed with the runner (16 rows, 11 owners, $107,000)
 
-Scattered single rows across `castellini-bob` (4), `reinsdorf-jerry` (3), and
-nine owners with one apiece. Their `ingested_at` values are **exactly three
-dates — 2026-06-20, 2026-07-01, 2026-07-05** — the June committees refresh, the
-July cron, and the July 5 manual dispatch. Each points at a `data/raw/…` file
-that a GitHub runner wrote and then took to the grave.
+This part of the original section stands. Scattered singletons across
+`castellini-bob` (4), `reinsdorf-jerry` (3), and nine owners with one apiece,
+whose `ingested_at` values are **exactly three dates — 2026-06-20, 2026-07-01,
+2026-07-05** — the June committees refresh, the July cron, and the July 5 manual
+dispatch. Each points at a raw file a GitHub runner wrote and then took to the
+grave.
 
-**This is §2.1's failure mode, measured.** Not a hypothetical: roughly **16 rows
-/ $107,000 lost across about six weeks** of normal cron operation, and it would
-have kept accruing at that rate forever. All 16 predate the `RAW_ARCHIVE_*`
-secrets (provisioned 2026-07-11), and no fetch workflow has run since — which is
-why the count stops there.
+**This is §2.1's failure mode with a number on it:** ~16 rows / $107,000 across
+about six weeks of ordinary cron operation. All 16 predate the `RAW_ARCHIVE_*`
+secrets (2026-07-11), which is why the count stops there. From the Aug 2026 cron
+onward, runner-fetched raw reaches R2 before the runner dies.
 
-**Class B is the class that is now closed.** From the Aug 2026 cron onward,
-runner-fetched raw goes to R2 before the runner dies, so equivalent rows will
-report `recoverable` rather than `lost`, and `cli rehydrate-raw` restores them.
-Class A stays lost; nothing can change that.
+(These are equally re-fetchable from FEC — the value of the R2 upload is that it
+makes recovery *free and exact* rather than a re-query.)
+
+### The lesson
+
+**An inherited claim is not a measured one.** "FEC cannot re-serve these" sat in
+GOVERNANCE.md as settled fact; I read it, believed it, wrote three new documents
+on top of it, and shipped a field literally named `rows_truly_lost`. One API call
+falsified it. The maintainer asked the obvious question — *why can't we just
+re-query?* — that I had not.
+
+The tell was available in advance: the claim was **load-bearing and unattributed**.
+Nothing recorded who established it, when, or how. Before building on a claim
+like that, test it — it costs one request.
+

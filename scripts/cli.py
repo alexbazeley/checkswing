@@ -1648,7 +1648,7 @@ def household(slug, as_json):
 @click.option(
     "--bucket",
     is_flag=True,
-    help="Also check the R2 archive, splitting missing rows into recoverable vs truly lost.",
+    help="Also check the R2 archive, splitting missing rows into recoverable vs absent-from-archive.",
 )
 def raw_coverage_cmd(slug, bucket):
     """Report live donation rows whose raw payload is missing on disk.
@@ -1660,7 +1660,9 @@ def raw_coverage_cmd(slug, bucket):
     With --bucket, "missing" is split into the two situations that actually
     differ: **recoverable** (absent locally but in the R2 archive — the normal
     state for anything a cron run fetched, since the runner uploaded it and was
-    then destroyed) and **lost** (absent from both; FEC will not re-serve it).
+    then destroyed) and **absent_from_archive** (in neither place — which is not
+    a claim the data is gone; FEC still serves these records, so
+    `ingest <slug> --full-refetch` restores the raw).
     Needs the RAW_ARCHIVE_* / AWS_* env vars; without them it degrades to
     local-only reporting rather than failing.
     """
@@ -1702,9 +1704,10 @@ def rehydrate_raw_cmd(slug, dry_run):
         )
     elif result.get("lost"):
         click.echo(
-            f"\n{result['lost']} payload(s) are absent from BOTH disk and R2 — genuinely "
-            f"unrecoverable, not merely un-fetched. master.db remains authoritative for "
-            f"those rows (GOVERNANCE.md §1.4).",
+            f"\n{result['lost']} payload(s) are absent from BOTH disk and R2. That is not "
+            f"a claim the data is gone — FEC still serves these records; re-fetch with "
+            f"`cli ingest <slug> --full-refetch` to rewrite raw. master.db remains "
+            f"authoritative for those rows regardless (GOVERNANCE.md §1.4).",
             err=True,
         )
 
