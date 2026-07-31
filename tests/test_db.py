@@ -172,6 +172,36 @@ class TestReclassifyGuard:
         assert live == {"T1"}  # only the live row, not the archived one
         assert lost == set()
 
+    def test_siblings_sharing_a_txn_id_are_each_tracked(self, db_path, monkeypatch):
+        """The guard keys on record_uid, so two live rows sharing one filer id
+        are two rows — not one.
+
+        Regression for the fourth layer of the collision class: keyed on
+        `transaction_id`, `live` collapsed to a single entry and a sibling whose
+        raw had gone missing was invisible, so the guard reported 0 at-risk rows
+        while one was about to be silently dropped. Live analogue:
+        `johnson-charles`' SA12.4099.0 is ten distinct $3,300 contributions.
+        """
+        from scripts import ingest
+
+        with db.connect(db_path) as conn:
+            db.insert_donation(conn, _row(txn="SHARED", sub_id="S1", recipient_committee_id="C1"))
+        with db.connect(db_path) as conn:
+            db.insert_donation(
+                conn, _row(txn="SHARED", sub_id="S2", recipient_committee_id="C2", amount=999.0)
+            )
+        assert _count(db_path) == 2, "precondition: v12 stores both siblings"
+
+        # Only S1 survives in raw → S2 would be silently dropped by a reclassify.
+        monkeypatch.setattr(
+            ingest,
+            "load_raw_payloads",
+            lambda slug: ([{"transaction_id": "SHARED", "sub_id": "S1"}], []),
+        )
+        live, lost = ingest._reclassify_lost_txns("owner-x", db_path=db_path)
+        assert live == {"S1", "S2"}, "both siblings must be seen as live rows"
+        assert lost == {"S2"}, "the sibling with no raw must be reported at risk"
+
 
 # ─── C1b: reclassify classifier-divergence guard ────────────────────────────
 
@@ -288,6 +318,42 @@ class TestReclassifyDivergenceGuard:
         monkeypatch.setattr(ingest, "load_raw_payloads", lambda slug: ([], []))
         # Can't assess divergence without a YAML → empty (raw guard still applies).
         assert ingest._reclassify_divergent_txns("owner-x", db_path=db_path) == set()
+
+    def test_each_sibling_sharing_a_txn_id_is_classified(self, db_path, monkeypatch):
+        """Every sibling is re-classified on its own record, not just one.
+
+        Regression for the fourth layer of the collision class: the raw map was
+        keyed on `transaction_id`, so of N siblings only the last-read survived
+        the dict and the other N-1 were never scored. A demoted sibling was
+        therefore invisible and would vanish on reclassify without the guard
+        firing.
+        """
+        from scripts import ingest
+
+        with db.connect(db_path) as conn:
+            db.insert_donation(conn, _row(txn="SHARED", sub_id="S1", recipient_committee_id="C1"))
+        with db.connect(db_path) as conn:
+            db.insert_donation(
+                conn, _row(txn="SHARED", sub_id="S2", recipient_committee_id="C2", amount=999.0)
+            )
+        assert _count(db_path) == 2, "precondition: v12 stores both siblings"
+
+        raw = [
+            {"transaction_id": "SHARED", "sub_id": "S1"},
+            {"transaction_id": "SHARED", "sub_id": "S2"},
+        ]
+        verdicts = {
+            "S1": _stub_classification("CONFIRMED"),
+            "S2": _stub_classification("UNCERTAIN"),  # demoted → must be caught
+        }
+        monkeypatch.setattr(ingest, "_load_owner", lambda slug: {"name_variants": []})
+        monkeypatch.setattr(ingest, "load_raw_payloads", lambda slug: (raw, []))
+        monkeypatch.setattr(
+            ingest, "classify", lambda rec, owner, **kw: verdicts[rec["sub_id"]]
+        )
+
+        div = ingest._reclassify_divergent_txns("owner-x", db_path=db_path)
+        assert div == {"S2"}, "the demoted sibling must be flagged, not masked by S1"
 
 
 class TestRawCoverageReport:
