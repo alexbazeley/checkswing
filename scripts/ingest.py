@@ -25,7 +25,7 @@ from typing import Iterable
 import yaml
 from ruamel.yaml import YAML as _RoundTripYAML
 
-from . import db
+from . import db, raw_archive
 from .fetch_fec import DEFAULT_MIN_DATE, FECClient, _dedupe_key, load_raw_payloads
 from .paths import OWNERS_DIR, PROVENANCE_LOG, REPO_ROOT, REVIEW_QUEUE_MD
 from .provenance import append_provenance
@@ -869,12 +869,28 @@ def _reclassify_divergent_txns(
     return divergent
 
 
-def raw_coverage_report(slug: str | None = None, *, db_path=None) -> dict:
+def raw_coverage_report(
+    slug: str | None = None, *, db_path=None, check_bucket: bool = False
+) -> dict:
     """Report live donation rows whose raw_payload_path is missing on disk.
 
     master.db is the durable source of truth (GOVERNANCE.md §1.4); raw is best-effort
     ground truth. This makes the coverage gap monitorable rather than silent —
     the same gap that gates `reclassify`.
+
+    With `check_bucket=True`, splits "missing" into the two situations that
+    actually differ (§2.1 / design doc §4.4):
+
+      * **recoverable** — absent locally but present in the R2 archive. The
+        normal state for anything a cron run fetched: the runner uploaded the
+        payload and was then destroyed. `cli rehydrate-raw` restores it.
+      * **lost** — absent from both. Genuinely unrecoverable; FEC will not
+        re-serve an old Schedule A page (the `malone-john` rows).
+
+    Collapsing those two is what made the reclassify guard a dead end instead of
+    a recoverable state. A bucket that is unconfigured or unreachable degrades to
+    local-only reporting with a `bucket` note — never an error, so a developer
+    without R2 credentials can still run this.
     """
     with db.connect(db_path or db.MASTER_DB) as conn:
         q = "SELECT entity_slug, raw_payload_path FROM donations WHERE superseded_by IS NULL"
@@ -883,21 +899,126 @@ def raw_coverage_report(slug: str | None = None, *, db_path=None) -> dict:
             q += " AND entity_slug = ?"
             params = (slug,)
         rows = conn.execute(q, params).fetchall()
+
     by_slug: dict[str, dict] = {}
     missing_files: set[str] = set()
+    missing_rows: list[tuple[str, str]] = []  # (entity_slug, raw_payload_path)
     for r in rows:
         rp = r["raw_payload_path"] or ""
         s = by_slug.setdefault(r["entity_slug"], {"total": 0, "missing_raw": 0})
         s["total"] += 1
         if not _raw_payload_exists(rp):
             s["missing_raw"] += 1
+            missing_rows.append((r["entity_slug"], rp))
             if rp:
                 missing_files.add(rp)
-    return {
+
+    # Summary FIRST, `by_slug` last. The per-owner block runs to dozens of lines,
+    # so any totals placed after it are invisible to the `| head` that reading
+    # this output invites — which is exactly what happened the first time it was
+    # run for real. The headline numbers must survive being truncated.
+    slug_detail = {k: v for k, v in sorted(by_slug.items()) if v["missing_raw"]}
+    out = {
         "rows_checked": sum(s["total"] for s in by_slug.values()),
         "rows_missing_raw": sum(s["missing_raw"] for s in by_slug.values()),
         "distinct_missing_files": len(missing_files),
-        "by_slug": {k: v for k, v in sorted(by_slug.items()) if v["missing_raw"]},
+    }
+    if not check_bucket:
+        out["by_slug"] = slug_detail
+        return out
+
+    status = raw_archive.bucket_status()
+    if not status.usable:
+        out["bucket"] = {"state": status.state, "detail": status.detail}
+        out["by_slug"] = slug_detail
+        return out
+
+    recoverable_files = {p for p in missing_files if raw_archive.bucket_key_for(p) in status.keys}
+    n_recoverable = sum(
+        1 for _slug, rp in missing_rows if rp and raw_archive.bucket_key_for(rp) in status.keys
+    )
+    out["rows_recoverable_from_bucket"] = n_recoverable
+    out["rows_truly_lost"] = out["rows_missing_raw"] - n_recoverable
+    out["distinct_recoverable_files"] = len(recoverable_files)
+    out["distinct_lost_files"] = len(missing_files) - len(recoverable_files)
+    out["bucket"] = {"state": status.state, "detail": status.detail, "objects": len(status.keys)}
+    for s_slug, rp in missing_rows:
+        blk = slug_detail.get(s_slug)
+        if blk is None:
+            continue
+        key = "recoverable" if (rp and raw_archive.bucket_key_for(rp) in status.keys) else "lost"
+        blk[key] = blk.get(key, 0) + 1
+    out["by_slug"] = slug_detail
+    return out
+
+
+def rehydrate_raw(slug: str | None = None, *, db_path=None, dry_run: bool = False) -> dict:
+    """Restore missing raw payloads from the R2 archive to their local paths.
+
+    The counterpart to the reclassify guard: rather than forcing an operator to
+    choose between an aborted reclassify and `--force` (which is the silent-loss
+    escape hatch the guard exists to prevent), pull the payloads back and let the
+    reclassify run normally.
+
+    Restores to the exact repo-relative path master.db already records, so no
+    bookkeeping follows — that is why the bucket key layout mirrors the on-disk
+    one. Truly-lost payloads are reported, never fabricated.
+    """
+    report = raw_coverage_report(slug, db_path=db_path, check_bucket=True)
+    status_state = report.get("bucket", {}).get("state")
+    if status_state != raw_archive.OK:
+        # Deliberately NOT reported as `lost`. Without a readable archive we have
+        # not established that anything is unrecoverable — only that it is not on
+        # this disk. Calling that "lost" would re-create the exact conflation this
+        # whole change exists to remove.
+        return {
+            "bucket": report.get("bucket", {}),
+            "restored": 0,
+            "missing_locally": report.get("rows_missing_raw", 0),
+            "lost": None,
+            "recoverability": "unknown — the R2 archive was not readable",
+            "failed": [],
+            "dry_run": dry_run,
+        }
+
+    status = raw_archive.bucket_status()
+    with db.connect(db_path or db.MASTER_DB) as conn:
+        q = (
+            "SELECT DISTINCT raw_payload_path FROM donations "
+            "WHERE superseded_by IS NULL AND raw_payload_path != ''"
+        )
+        params: tuple = ()
+        if slug:
+            q += " AND entity_slug = ?"
+            params = (slug,)
+        paths = [r[0] for r in conn.execute(q, params).fetchall()]
+
+    todo = [
+        p
+        for p in paths
+        if not _raw_payload_exists(p) and raw_archive.bucket_key_for(p) in status.keys
+    ]
+    lost = [
+        p
+        for p in paths
+        if not _raw_payload_exists(p) and raw_archive.bucket_key_for(p) not in status.keys
+    ]
+    restored, failed = 0, []
+    if not dry_run:
+        for p in todo:
+            try:
+                raw_archive.download(p)
+                restored += 1
+            except Exception as exc:  # noqa: BLE001 - one bad object must not stop the rest
+                failed.append({"path": p, "error": f"{type(exc).__name__}: {exc}"})
+    return {
+        "bucket": report.get("bucket", {}),
+        "candidates": len(todo),
+        "restored": len(todo) if dry_run else restored,
+        "lost": len(lost),
+        "lost_examples": lost[:5],
+        "failed": failed,
+        "dry_run": dry_run,
     }
 
 
@@ -944,12 +1065,37 @@ def reclassify_entity(
     divergent = _reclassify_divergent_txns(slug, include_related=include_related)
     would_drop = lost_raw | divergent
     if would_drop and not force:
+        # §2.1/§4.4: if the missing raw is sitting in the R2 archive — the normal
+        # case for anything a cron run fetched, since the runner uploaded it and
+        # was then destroyed — say so and name the fix. Without this the operator's
+        # only options were "re-fetch from FEC" (wrong: the payload is not lost)
+        # or `--force` (the silent-loss escape hatch this guard exists to prevent).
+        # Best-effort and never fatal: a missing bucket just omits the hint.
+        recovery_hint = ""
+        if lost_raw:
+            try:
+                cov = raw_coverage_report(slug, check_bucket=True)
+                n_rec = cov.get("rows_recoverable_from_bucket", 0)
+                if n_rec:
+                    recovery_hint = (
+                        f" RECOVERABLE: {n_rec} of this owner's raw-missing row(s) are present "
+                        f"in the R2 archive — run `python -m scripts.cli rehydrate-raw {slug}` "
+                        f"to restore them, then retry (no FEC re-fetch needed)."
+                    )
+                elif cov.get("bucket", {}).get("state") == raw_archive.OK:
+                    recovery_hint = (
+                        " Checked the R2 archive: none of these are recoverable there — "
+                        "this raw is genuinely lost, not merely un-fetched."
+                    )
+            except Exception:  # noqa: BLE001 - a hint must never mask the real error
+                pass
         raise RuntimeError(
             f"reclassify aborted for {slug!r}: {len(would_drop)} of {len(live_txns)} attributed "
             f"row(s) would be silently dropped — {len(lost_raw)} with no recoverable raw payload "
             f"on disk, {len(divergent)} present in raw but no longer classifying as "
             f"CONFIRMED/PROBABLE under the current YAML. master.db is the source of truth "
-            f"(GOVERNANCE.md §1.4). For raw-missing rows: re-fetch from FEC. For divergent rows: "
+            f"(GOVERNANCE.md §1.4).{recovery_hint} For raw-missing rows: rehydrate from R2 (above) "
+            f"or re-fetch from FEC. For divergent rows: "
             f"add the needed name_variant/signal (§2.5a) or a manual_attributions override, then "
             f"retry. Or pass force=True / --force to proceed knowingly. "
             f"raw-missing examples: {sorted(lost_raw)[:3]}; divergent examples: {sorted(divergent)[:3]}"

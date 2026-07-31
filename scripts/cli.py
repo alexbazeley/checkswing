@@ -1645,32 +1645,83 @@ def household(slug, as_json):
 
 @cli.command(name="raw-coverage")
 @click.argument("slug", required=False)
-def raw_coverage_cmd(slug):
+@click.option(
+    "--bucket",
+    is_flag=True,
+    help="Also check the R2 archive, splitting missing rows into recoverable vs truly lost.",
+)
+def raw_coverage_cmd(slug, bucket):
     """Report live donation rows whose raw payload is missing on disk.
 
     master.db is the durable source of truth (GOVERNANCE.md §1.4); raw is best-effort
     ground truth. This surfaces the coverage gap (and is the same gap that gates
     `reclassify`). Pass a SLUG to scope to one entity.
+
+    With --bucket, "missing" is split into the two situations that actually
+    differ: **recoverable** (absent locally but in the R2 archive — the normal
+    state for anything a cron run fetched, since the runner uploaded it and was
+    then destroyed) and **lost** (absent from both; FEC will not re-serve it).
+    Needs the RAW_ARCHIVE_* / AWS_* env vars; without them it degrades to
+    local-only reporting rather than failing.
     """
     from .ingest import raw_coverage_report
 
     db.init()
-    click.echo(json.dumps(raw_coverage_report(slug), indent=2, default=str))
+    click.echo(json.dumps(raw_coverage_report(slug, check_bucket=bucket), indent=2, default=str))
+
+
+@cli.command(name="rehydrate-raw")
+@click.argument("slug", required=False)
+@click.option("--dry-run", is_flag=True, help="Report what would be restored; download nothing.")
+def rehydrate_raw_cmd(slug, dry_run):
+    """Restore missing raw payloads from the R2 archive to their local paths.
+
+    The counterpart to the reclassify guard. When a reclassify aborts on
+    raw-missing rows, this is usually the fix: the payloads are not lost, they
+    are simply on R2 rather than this disk (every cron-fetched payload is, by
+    construction). Restores each to the exact path master.db records, so a
+    following `reclassify` just works.
+
+    Read-only against FEC — nothing is re-fetched and no row is mutated; this
+    only writes files under data/raw/. Truly-lost payloads are reported, never
+    fabricated. Pass a SLUG to scope to one entity.
+    """
+    from .ingest import rehydrate_raw
+
+    db.init()
+    result = rehydrate_raw(slug, dry_run=dry_run)
+    click.echo(json.dumps(result, indent=2, default=str))
+    state = (result.get("bucket") or {}).get("state")
+    if state != "ok":
+        click.echo(
+            f"\nR2 archive not readable ({state}) — nothing restored, and the "
+            f"{result.get('missing_locally', 0)} locally-missing payload(s) are of UNKNOWN "
+            f"recoverability (not established as lost). "
+            f"{(result.get('bucket') or {}).get('detail', '')}",
+            err=True,
+        )
+    elif result.get("lost"):
+        click.echo(
+            f"\n{result['lost']} payload(s) are absent from BOTH disk and R2 — genuinely "
+            f"unrecoverable, not merely un-fetched. master.db remains authoritative for "
+            f"those rows (GOVERNANCE.md §1.4).",
+            err=True,
+        )
 
 
 @cli.command(name="fetch-raw")
 @click.argument("transaction_id")
-@click.option("--download", is_flag=True, help="Fetch the object from R2 to a temp file (needs aws CLI + RAW_ARCHIVE_* env).")
+@click.option("--download", is_flag=True, help="Fetch the object from R2 to a temp file (needs boto3 + RAW_ARCHIVE_* env).")
 def fetch_raw_cmd(transaction_id, download):
     """Resolve a donation's raw payload — locally, else in the off-runner archive (§2.1).
 
     Maps the stored `raw_payload_path` to its Cloudflare R2 key (a prefix swap:
     data/raw/… → s3://<bucket>/raw/…). Prints where the raw lives (on disk and/or in
-    the bucket); with --download and RAW_ARCHIVE_* set, pulls it from R2 via the aws
-    CLI. Read-only. See docs/DESIGN_raw_archival_2026-07.md.
+    the bucket); with --download and RAW_ARCHIVE_* set, pulls it from R2 via boto3.
+    Read-only. For the bulk equivalent see `rehydrate-raw`, which restores to the
+    canonical path rather than a temp file. See docs/DESIGN_raw_archival_2026-07.md.
     """
     import os
-    import subprocess
     import tempfile
 
     db.init()
@@ -1703,16 +1754,22 @@ def fetch_raw_cmd(transaction_id, download):
         if local_exists:
             click.echo(f"Already on disk: {rel}")
             return
-        if not bucket:
-            raise click.ClickException("RAW_ARCHIVE_S3_BUCKET not set — cannot fetch from R2.")
-        endpoint = os.environ.get("RAW_ARCHIVE_S3_ENDPOINT")
-        dest = os.path.join(tempfile.gettempdir(), os.path.basename(rel))
-        cmd = ["aws", "s3", "cp", s3_uri, dest, "--endpoint-url", endpoint or ""]
-        env = {**os.environ, "AWS_DEFAULT_REGION": os.environ.get("AWS_DEFAULT_REGION", "auto")}
+        # boto3, not `subprocess(["aws", ...])`. Shelling out to a bare `aws`
+        # assumed the CLI is on PATH under that name — it is not when awscli is
+        # pip-installed into a venv whose path contains a space, where the shim's
+        # shebang dies with "bad interpreter" (this repo's own checkout path does
+        # exactly that). Sharing raw_archive.download() also keeps the key
+        # mapping in one place instead of two.
+        from .raw_archive import download as _r2_download
+
         try:
-            subprocess.run(cmd, check=True, env=env)
-        except (subprocess.CalledProcessError, FileNotFoundError) as e:
-            raise click.ClickException(f"aws s3 cp failed ({e}). Is the aws CLI installed and are RAW_ARCHIVE_* set?")
+            dest = _r2_download(rel, Path(tempfile.gettempdir()) / os.path.basename(rel))
+        except Exception as e:  # noqa: BLE001 - surface the cause verbatim
+            raise click.ClickException(
+                f"R2 download failed ({type(e).__name__}: {e}). "
+                "Check RAW_ARCHIVE_S3_BUCKET / RAW_ARCHIVE_S3_ENDPOINT / AWS_* and that boto3 "
+                "is installed (`pip install boto3` — it is deliberately not in requirements.txt)."
+            )
         click.echo(f"Downloaded to {dest}")
 
 
