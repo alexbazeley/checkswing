@@ -913,34 +913,42 @@ def raw_coverage_report(
             if rp:
                 missing_files.add(rp)
 
+    # Summary FIRST, `by_slug` last. The per-owner block runs to dozens of lines,
+    # so any totals placed after it are invisible to the `| head` that reading
+    # this output invites — which is exactly what happened the first time it was
+    # run for real. The headline numbers must survive being truncated.
+    slug_detail = {k: v for k, v in sorted(by_slug.items()) if v["missing_raw"]}
     out = {
         "rows_checked": sum(s["total"] for s in by_slug.values()),
         "rows_missing_raw": sum(s["missing_raw"] for s in by_slug.values()),
         "distinct_missing_files": len(missing_files),
-        "by_slug": {k: v for k, v in sorted(by_slug.items()) if v["missing_raw"]},
     }
     if not check_bucket:
+        out["by_slug"] = slug_detail
         return out
 
     status = raw_archive.bucket_status()
-    out["bucket"] = {"state": status.state, "detail": status.detail}
     if not status.usable:
+        out["bucket"] = {"state": status.state, "detail": status.detail}
+        out["by_slug"] = slug_detail
         return out
 
-    out["bucket"]["objects"] = len(status.keys)
     recoverable_files = {p for p in missing_files if raw_archive.bucket_key_for(p) in status.keys}
-    out["rows_recoverable_from_bucket"] = sum(
+    n_recoverable = sum(
         1 for _slug, rp in missing_rows if rp and raw_archive.bucket_key_for(rp) in status.keys
     )
-    out["rows_truly_lost"] = out["rows_missing_raw"] - out["rows_recoverable_from_bucket"]
+    out["rows_recoverable_from_bucket"] = n_recoverable
+    out["rows_truly_lost"] = out["rows_missing_raw"] - n_recoverable
     out["distinct_recoverable_files"] = len(recoverable_files)
     out["distinct_lost_files"] = len(missing_files) - len(recoverable_files)
+    out["bucket"] = {"state": status.state, "detail": status.detail, "objects": len(status.keys)}
     for s_slug, rp in missing_rows:
-        blk = out["by_slug"].get(s_slug)
+        blk = slug_detail.get(s_slug)
         if blk is None:
             continue
         key = "recoverable" if (rp and raw_archive.bucket_key_for(rp) in status.keys) else "lost"
         blk[key] = blk.get(key, 0) + 1
+    out["by_slug"] = slug_detail
     return out
 
 

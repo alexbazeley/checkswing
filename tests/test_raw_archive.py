@@ -195,3 +195,32 @@ class TestRehydrate:
         assert res["lost"] is None
         assert res["missing_locally"] == 2
         assert "unknown" in res["recoverability"]
+
+
+class TestOutputOrdering:
+    """The headline numbers must precede `by_slug`.
+
+    `by_slug` runs to dozens of lines, so totals placed after it are invisible to
+    the `| head` that reading this output invites — which is exactly what happened
+    the first time the command was run against the live bucket.
+    """
+
+    def test_summary_keys_come_before_by_slug(self, dbp, tmp_path, monkeypatch):
+        with db.connect(dbp) as conn:
+            db.insert_donation(conn, _row("T2", "owner-x", "data/raw/owner-x/in-r2.json"))
+            db.insert_donation(conn, _row("T3", "owner-x", "data/raw/owner-x/gone.json"))
+        monkeypatch.setattr(
+            raw_archive, "bucket_status",
+            lambda *a, **k: raw_archive.BucketStatus(
+                raw_archive.OK, keys={"raw/owner-x/in-r2.json"}
+            ),
+        )
+        keys = list(ingest.raw_coverage_report(db_path=dbp, check_bucket=True))
+        assert keys[-1] == "by_slug", "by_slug must be last so totals survive truncation"
+        for headline in ("rows_recoverable_from_bucket", "rows_truly_lost", "bucket"):
+            assert keys.index(headline) < keys.index("by_slug")
+
+    def test_local_only_also_puts_by_slug_last(self, dbp, tmp_path):
+        with db.connect(dbp) as conn:
+            db.insert_donation(conn, _row("T3", "owner-x", "data/raw/owner-x/gone.json"))
+        assert list(ingest.raw_coverage_report(db_path=dbp))[-1] == "by_slug"
