@@ -1,6 +1,6 @@
 # Design / scoping — off-runner raw-payload archival
 
-**Status:** ✅ **plumbing implemented (PR #107)** — the secret-guarded R2 upload runs on all three fetch jobs, `cli fetch-raw` rehydrates, GOVERNANCE §1.4 updated. **Two maintainer actions remain to activate it:** add the four `RAW_ARCHIVE_*` GitHub secrets, and run the one-time backfill of the local 4.9 GB (§9 below). Backend chosen: **Cloudflare R2** (activated).
+**Status:** ✅ **FULLY ACTIVE as of 2026-07-31.** Plumbing shipped in PR #107 (secret-guarded R2 upload on all three fetch jobs; `cli fetch-raw` rehydrates). Secrets provisioned 2026-07-11. **The one-time backfill ran and was verified on 2026-07-31: 10,941 objects / 5,258,518,839 bytes (4.90 GB) in `s3://checkswing-raw/raw/`, byte-for-byte identical to local.** The archive's raw substrate no longer lives on a single machine. Backend: **Cloudflare R2**.
 **Author:** 2026-07-11 session. Grounded in live repo + `master.db` + `refresh.yml`.
 **Companion rules:** [GOVERNANCE.md §1.4](../GOVERNANCE.md) (raw is persisted before parsing; master.db is the source of truth).
 
@@ -143,12 +143,16 @@ Actions). The workflow steps already reference these exact names:
 Once set, every `refresh` / `committees_refresh` / `refresh-state` run archives
 its raw automatically. Nothing else to wire.
 
-**C. One-time backfill of the existing 4.9 GB** — ⚠️ **STILL THE OPEN ITEM.**
-The four `RAW_ARCHIVE_*` secrets were provisioned 2026-07-11 (verified via
-`gh secret list`), so **A and B are done** and every cron run since has been
-archiving its own delta. What has never run is this backfill: the historical
-4.9 GB / 10,941 files exist on **exactly one laptop**, and `PROVENANCE_LOG.md`
-contains zero R2 entries.
+**C. One-time backfill of the existing 4.9 GB** — ✅ **DONE 2026-07-31.**
+
+Verified complete: **10,941 objects / 5,258,518,839 bytes (4.90 GB)** in
+`s3://checkswing-raw/raw/`, byte-for-byte identical to the local `data/raw/`
+(same object count, same total size). Took ~10 minutes at ~6 MB/s. The bucket
+was empty under `raw/` beforehand — only the `deploy/` prefix existed — which
+confirmed the backfill had genuinely never run, consistent with no fetch
+workflow having executed since the secrets were provisioned on 2026-07-11.
+
+Retained below as the runbook for a rebuild or a second location.
 
 Run from the machine holding `data/raw/`:
 
