@@ -143,19 +143,46 @@ Actions). The workflow steps already reference these exact names:
 Once set, every `refresh` / `committees_refresh` / `refresh-state` run archives
 its raw automatically. Nothing else to wire.
 
-**C. One-time backfill of the existing 4.9 GB** (from the laptop that holds
-`data/raw/`, with the aws CLI installed):
+**C. One-time backfill of the existing 4.9 GB** — ⚠️ **STILL THE OPEN ITEM.**
+The four `RAW_ARCHIVE_*` secrets were provisioned 2026-07-11 (verified via
+`gh secret list`), so **A and B are done** and every cron run since has been
+archiving its own delta. What has never run is this backfill: the historical
+4.9 GB / 10,941 files exist on **exactly one laptop**, and `PROVENANCE_LOG.md`
+contains zero R2 entries.
+
+Run from the machine holding `data/raw/`:
 
 ```bash
-export RAW_ARCHIVE_S3_BUCKET=checkswing-raw
+export RAW_ARCHIVE_S3_BUCKET=<bucket>
 export RAW_ARCHIVE_S3_ENDPOINT=https://<ACCOUNT_ID>.r2.cloudflarestorage.com
 export AWS_ACCESS_KEY_ID=<r2 access key id>
 export AWS_SECRET_ACCESS_KEY=<r2 secret>
-bash scripts/archive_raw.sh            # uploads data/raw/ → s3://checkswing-raw/raw/
+bash scripts/archive_raw.sh
 ```
 
-(`~4.9 GB`; R2 free tier is 10 GB storage + $0 egress, so this and the monthly
-deltas sit inside the free tier.) Log it as a one-line PROVENANCE_LOG entry.
+Two things were changed (2026-07-31) to make this actually survivable:
+
+- **`aws s3 sync`, not `cp --recursive`.** 4.9 GB over a laptop connection will
+  not complete in one uninterrupted run; `cp --recursive` re-sends everything on
+  each retry, `sync` skips what is already uploaded. Just re-run it until it
+  exits clean. CI behaviour is unchanged (a runner's `data/raw/` starts empty,
+  so nothing is skipped).
+- **`AWS_CLI` override.** If the CLI is only inside the venv
+  (`pip install awscli`), the `aws` shim's shebang is **broken by the space in
+  this project's path** (`.../Tipping Pitches/...` → `bad interpreter: /Users/.../Tipping`).
+  Use the module entry point instead:
+
+  ```bash
+  AWS_CLI="python -m awscli" bash scripts/archive_raw.sh
+  ```
+
+  `brew install awscli` avoids the issue entirely. Verified 2026-07-31: with
+  `AWS_CLI="python -m awscli"` the script assembles the correct S3 request and
+  reaches the endpoint (fails only on credentials, as expected).
+
+(~4.9 GB; R2's free tier is 10 GB storage + $0 egress, so this and the monthly
+deltas sit inside it.) Log it as a one-line PROVENANCE_LOG entry when it
+completes.
 
 **D. Verify:** `cli fetch-raw <transaction_id> --download` (with the same env)
 should pull an object from R2. Optionally update the GOVERNANCE §1.4 note from

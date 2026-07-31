@@ -172,6 +172,36 @@ class TestReclassifyGuard:
         assert live == {"T1"}  # only the live row, not the archived one
         assert lost == set()
 
+    def test_siblings_sharing_a_txn_id_are_each_tracked(self, db_path, monkeypatch):
+        """The guard keys on record_uid, so two live rows sharing one filer id
+        are two rows — not one.
+
+        Regression for the fourth layer of the collision class: keyed on
+        `transaction_id`, `live` collapsed to a single entry and a sibling whose
+        raw had gone missing was invisible, so the guard reported 0 at-risk rows
+        while one was about to be silently dropped. Live analogue:
+        `johnson-charles`' SA12.4099.0 is ten distinct $3,300 contributions.
+        """
+        from scripts import ingest
+
+        with db.connect(db_path) as conn:
+            db.insert_donation(conn, _row(txn="SHARED", sub_id="S1", recipient_committee_id="C1"))
+        with db.connect(db_path) as conn:
+            db.insert_donation(
+                conn, _row(txn="SHARED", sub_id="S2", recipient_committee_id="C2", amount=999.0)
+            )
+        assert _count(db_path) == 2, "precondition: v12 stores both siblings"
+
+        # Only S1 survives in raw → S2 would be silently dropped by a reclassify.
+        monkeypatch.setattr(
+            ingest,
+            "load_raw_payloads",
+            lambda slug: ([{"transaction_id": "SHARED", "sub_id": "S1"}], []),
+        )
+        live, lost = ingest._reclassify_lost_txns("owner-x", db_path=db_path)
+        assert live == {"S1", "S2"}, "both siblings must be seen as live rows"
+        assert lost == {"S2"}, "the sibling with no raw must be reported at risk"
+
 
 # ─── C1b: reclassify classifier-divergence guard ────────────────────────────
 
@@ -288,6 +318,42 @@ class TestReclassifyDivergenceGuard:
         monkeypatch.setattr(ingest, "load_raw_payloads", lambda slug: ([], []))
         # Can't assess divergence without a YAML → empty (raw guard still applies).
         assert ingest._reclassify_divergent_txns("owner-x", db_path=db_path) == set()
+
+    def test_each_sibling_sharing_a_txn_id_is_classified(self, db_path, monkeypatch):
+        """Every sibling is re-classified on its own record, not just one.
+
+        Regression for the fourth layer of the collision class: the raw map was
+        keyed on `transaction_id`, so of N siblings only the last-read survived
+        the dict and the other N-1 were never scored. A demoted sibling was
+        therefore invisible and would vanish on reclassify without the guard
+        firing.
+        """
+        from scripts import ingest
+
+        with db.connect(db_path) as conn:
+            db.insert_donation(conn, _row(txn="SHARED", sub_id="S1", recipient_committee_id="C1"))
+        with db.connect(db_path) as conn:
+            db.insert_donation(
+                conn, _row(txn="SHARED", sub_id="S2", recipient_committee_id="C2", amount=999.0)
+            )
+        assert _count(db_path) == 2, "precondition: v12 stores both siblings"
+
+        raw = [
+            {"transaction_id": "SHARED", "sub_id": "S1"},
+            {"transaction_id": "SHARED", "sub_id": "S2"},
+        ]
+        verdicts = {
+            "S1": _stub_classification("CONFIRMED"),
+            "S2": _stub_classification("UNCERTAIN"),  # demoted → must be caught
+        }
+        monkeypatch.setattr(ingest, "_load_owner", lambda slug: {"name_variants": []})
+        monkeypatch.setattr(ingest, "load_raw_payloads", lambda slug: (raw, []))
+        monkeypatch.setattr(
+            ingest, "classify", lambda rec, owner, **kw: verdicts[rec["sub_id"]]
+        )
+
+        div = ingest._reclassify_divergent_txns("owner-x", db_path=db_path)
+        assert div == {"S2"}, "the demoted sibling must be flagged, not masked by S1"
 
 
 class TestRawCoverageReport:
@@ -962,3 +1028,114 @@ class TestRecordUidIntegrityCheck:
 
     def test_absent_db_is_not_an_integrity_failure(self, tmp_path):
         assert db.check_record_uid_integrity(tmp_path / "nope.db") == []
+
+
+class TestAdjudicationIntegrity:
+    """Human adjudication must be durable, and must not act beyond its record."""
+
+    def test_clean_db_has_no_warnings(self, db_path):
+        with db.connect(db_path) as conn:
+            db.insert_donation(conn, _row(txn="T1"))
+        assert db.check_adjudication_integrity(db_path) == []
+
+    def test_orphaned_queue_verdict_is_flagged(self, db_path):
+        """A verdict on the queue row with no review_resolutions row is not a
+        weaker record of the decision — reclassify rebuilds review_queue and
+        suppresses only from review_resolutions, so it reverts to open."""
+        with db.connect(db_path) as conn:
+            db.insert_review_queue(
+                conn,
+                {
+                    "transaction_id": "Q1",
+                    "entity_slug": "owner-x",
+                    "reason": "city/state outside documented residences",
+                    "raw_payload_path": "",
+                    "queued_at": "2026-01-01T00:00:00Z",
+                },
+            )
+            conn.execute("UPDATE review_queue SET resolution = 'DISCARDED'")
+        warns = db.check_adjudication_integrity(db_path)
+        assert any("NOT durable" in w for w in warns)
+
+    def test_durable_verdict_is_not_flagged(self, db_path):
+        with db.connect(db_path) as conn:
+            db.insert_review_queue(
+                conn,
+                {
+                    "transaction_id": "Q1",
+                    "entity_slug": "owner-x",
+                    "reason": "city/state outside documented residences",
+                    "raw_payload_path": "",
+                    "queued_at": "2026-01-01T00:00:00Z",
+                },
+            )
+            conn.execute("UPDATE review_queue SET resolution = 'DISCARDED'")
+            db.upsert_review_resolution(
+                conn,
+                transaction_id="Q1",
+                entity_slug="owner-x",
+                resolution="DISCARDED",
+                resolution_reason="same-name stranger",
+                resolved_at="2026-01-01T00:00:00Z",
+            )
+        assert db.check_adjudication_integrity(db_path) == []
+
+    def test_override_hitting_two_siblings_is_flagged(self, db_path):
+        """Since v12 one owner can hold several live rows sharing a
+        transaction_id, so a manual_attributions override applies to every
+        sibling at once. Live analogue: middleton-john/SA18.1294499 → 2 rows."""
+        with db.connect(db_path) as conn:
+            db.insert_donation(conn, _row(txn="SHARED", sub_id="S1", recipient_committee_id="C1"))
+        with db.connect(db_path) as conn:
+            db.insert_donation(
+                conn, _row(txn="SHARED", sub_id="S2", recipient_committee_id="C2", amount=999.0)
+            )
+            db.upsert_manual_attribution(
+                conn,
+                transaction_id="SHARED",
+                entity_slug="owner-x",
+                status="EXCLUDED",
+                reason="same-named relative",
+                source=None,
+                attributed_at="2026-01-01T00:00:00Z",
+            )
+        warns = db.check_adjudication_integrity(db_path)
+        assert any("more than one" in w for w in warns)
+
+    def test_override_hitting_one_row_is_not_flagged(self, db_path):
+        with db.connect(db_path) as conn:
+            db.insert_donation(conn, _row(txn="T1", sub_id="S1"))
+            db.upsert_manual_attribution(
+                conn,
+                transaction_id="T1",
+                entity_slug="owner-x",
+                status="CONFIRMED",
+                reason="documented human decision",
+                source=None,
+                attributed_at="2026-01-01T00:00:00Z",
+            )
+        assert db.check_adjudication_integrity(db_path) == []
+
+    def test_superseded_sibling_does_not_widen_blast_radius(self, db_path):
+        """Only LIVE rows count — an archived row is not something an override
+        can still act on."""
+        with db.connect(db_path) as conn:
+            db.insert_donation(conn, _row(txn="T1", sub_id="S1", amount=1000.0))
+        with db.connect(db_path) as conn:
+            db.insert_donation(conn, _row(txn="T1", sub_id="S1", amount=2000.0))  # supersedes
+            db.upsert_manual_attribution(
+                conn,
+                transaction_id="T1",
+                entity_slug="owner-x",
+                status="CONFIRMED",
+                reason="documented human decision",
+                source=None,
+                attributed_at="2026-01-01T00:00:00Z",
+            )
+        assert db.check_adjudication_integrity(db_path) == []
+
+    def test_lfs_pointer_and_absent_db_are_not_failures(self, tmp_path):
+        pointer = tmp_path / "master.db"
+        pointer.write_text("version https://git-lfs.github.com/spec/v1\noid sha256:0\nsize 1\n")
+        assert db.check_adjudication_integrity(pointer) == []
+        assert db.check_adjudication_integrity(tmp_path / "nope.db") == []

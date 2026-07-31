@@ -27,8 +27,26 @@ export AWS_DEFAULT_REGION="${AWS_DEFAULT_REGION:-auto}"
 export AWS_REQUEST_CHECKSUM_CALCULATION="${AWS_REQUEST_CHECKSUM_CALCULATION:-when_required}"
 export AWS_RESPONSE_CHECKSUM_VALIDATION="${AWS_RESPONSE_CHECKSUM_VALIDATION:-when_required}"
 
+# Which aws CLI to invoke. GitHub runners ship one on PATH, so the default is
+# right in CI. Override for the one-time local backfill when the CLI is only
+# available inside a virtualenv: a pip-installed `aws` has an absolute-path
+# shebang, which is BROKEN when the checkout path contains a space (as this
+# project's does — ".../Tipping Pitches/..." → "bad interpreter"). The module
+# entry point has no such problem:
+#     AWS_CLI="python -m awscli" bash scripts/archive_raw.sh
+# Deliberately unquoted below so a multi-word value word-splits into argv.
+AWS_CLI="${AWS_CLI:-aws}"
+
 echo "Archiving data/raw/ → s3://${RAW_ARCHIVE_S3_BUCKET}/raw/ (Cloudflare R2)…"
-aws s3 cp data/raw/ "s3://${RAW_ARCHIVE_S3_BUCKET}/raw/" \
-  --recursive --no-progress --only-show-errors \
+# `sync`, not `cp --recursive`: sync skips objects already present at the same
+# size, so an interrupted transfer resumes instead of restarting. Identical
+# behaviour in CI (each runner starts with an empty data/raw, so there is
+# nothing to skip and everything uploads), but it is what makes the one-time
+# ~4.9 GB / ~11k-file backfill from the maintainer's laptop survivable — that
+# upload will not complete in one uninterrupted run, and re-running `cp
+# --recursive` would re-send the whole 4.9 GB every attempt.
+# shellcheck disable=SC2086  # AWS_CLI must word-split; see the note above.
+$AWS_CLI s3 sync data/raw/ "s3://${RAW_ARCHIVE_S3_BUCKET}/raw/" \
+  --no-progress --only-show-errors \
   --endpoint-url "${RAW_ARCHIVE_S3_ENDPOINT}"
 echo "Raw archival complete."

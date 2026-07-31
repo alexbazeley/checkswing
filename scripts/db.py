@@ -676,6 +676,79 @@ def check_record_uid_integrity(db_path: Path = MASTER_DB) -> list[str]:
     return errors
 
 
+def check_adjudication_integrity(db_path: Path = MASTER_DB) -> list[str]:
+    """Human adjudication must be durable and must not act beyond its record.
+
+    Two distinct failure modes, both invisible until a reclassify runs:
+
+    1. **Orphaned queue verdicts.** `review_resolutions` is the durable verdict
+       store; `review_queue.resolution` is a column on a table that reclassify
+       DELETEs and rebuilds. Suppression on rebuild reads *only*
+       `review_resolutions` (`discarded_txns_for_slug`), so a verdict recorded
+       on the queue row alone is silently reverted to "open" the next time its
+       owner is reclassified — the adjudication work is lost with no error.
+
+    2. **Override blast radius.** `manual_attributions` is keyed on
+       `(transaction_id, entity_slug)`, but since v12 one owner can hold several
+       live rows sharing a transaction_id. An override therefore applies to every
+       sibling at once. That is right when the siblings are one contributor's
+       split gift, and wrong when they are not — an EXCLUDE meant for a
+       same-named relative would take a genuine row with it. Reported so the
+       widening is a decision rather than a surprise.
+
+    Returns a list of warning strings; empty means clean. A missing or
+    LFS-pointer DB is not an error (see `check_record_uid_integrity`).
+    """
+    warnings: list[str] = []
+    if not Path(db_path).exists():
+        return warnings
+    conn = sqlite3.connect(db_path)
+    conn.row_factory = sqlite3.Row
+    try:
+        try:
+            tables = {
+                r["name"] for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
+            }
+        except sqlite3.DatabaseError:
+            return warnings
+        if {"review_queue", "review_resolutions"} <= tables:
+            orphans = conn.execute(
+                "SELECT q.entity_slug, q.transaction_id, q.resolution FROM review_queue q "
+                "LEFT JOIN review_resolutions r "
+                "  ON r.transaction_id = q.transaction_id AND r.entity_slug = q.entity_slug "
+                "WHERE q.resolution IS NOT NULL AND r.transaction_id IS NULL"
+            ).fetchall()
+            if orphans:
+                sample = ", ".join(f"{o['entity_slug']}/{o['transaction_id']}" for o in orphans[:3])
+                warnings.append(
+                    f"{len(orphans)} review_queue item(s) carry a resolution with no "
+                    f"review_resolutions row — these verdicts are NOT durable and will "
+                    f"revert to open on the next reclassify of their owner (e.g. {sample})"
+                )
+        if {"manual_attributions", "donations"} <= tables:
+            wide = conn.execute(
+                "SELECT m.entity_slug, m.transaction_id, m.status, COUNT(*) AS n "
+                "FROM manual_attributions m "
+                "JOIN donations d "
+                "  ON d.transaction_id = m.transaction_id AND d.entity_slug = m.entity_slug "
+                "WHERE d.superseded_by IS NULL "
+                "GROUP BY m.entity_slug, m.transaction_id, m.status HAVING COUNT(*) > 1"
+            ).fetchall()
+            if wide:
+                sample = ", ".join(
+                    f"{w['entity_slug']}/{w['transaction_id']}→{w['n']} rows ({w['status']})"
+                    for w in wide[:3]
+                )
+                warnings.append(
+                    f"{len(wide)} manual_attributions override(s) resolve to more than one "
+                    f"live donations row, so the verdict applies to every sibling sharing "
+                    f"that filer id — confirm each is intended (e.g. {sample})"
+                )
+    finally:
+        conn.close()
+    return warnings
+
+
 def init(db_path: Path = MASTER_DB) -> None:
     """Create schema idempotently. Records a new schema_version row whenever
     SCHEMA_VERSION is bumped beyond the DB's current MAX(version), so the

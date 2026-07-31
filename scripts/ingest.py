@@ -768,24 +768,44 @@ def _raw_payload_exists(rel_or_abs_path: str) -> bool:
     return p.exists()
 
 
-def _reclassify_lost_txns(slug: str, *, db_path=None) -> tuple[set[str], set[str]]:
-    """Return (live_attributed_txns, lost_txns) for a reclassify of `slug`.
+# The donations identity, expressed in SQL. Mirrors `db.record_uid_for` (and the
+# v12 migration): FEC's globally-unique `sub_id` when present, else the
+# filer-assigned `transaction_id`. Derived rather than read from the `record_uid`
+# column so raw-SQL fixtures that predate/omit the column still resolve.
+_RECORD_UID_SQL = "COALESCE(NULLIF(TRIM(sub_id), ''), transaction_id)"
 
-    `lost` = live attributed transaction_ids with no recoverable raw payload on
-    disk — exactly the rows a reclassify (DELETE + reload-from-raw) would
-    silently drop, since load_raw_payloads only reads files that still exist (C1).
+
+def _record_uid_of(record: dict) -> str:
+    """The identity of a *raw* record, in lockstep with `db.record_uid_for`."""
+    return db.record_uid_for(record.get("sub_id"), record.get("transaction_id"))
+
+
+def _reclassify_lost_txns(slug: str, *, db_path=None) -> tuple[set[str], set[str]]:
+    """Return (live_attributed_uids, lost_uids) for a reclassify of `slug`.
+
+    `lost` = live attributed rows with no recoverable raw payload on disk —
+    exactly the rows a reclassify (DELETE + reload-from-raw) would silently drop,
+    since load_raw_payloads only reads files that still exist (C1).
+
+    **Keyed on `record_uid`, not `transaction_id`.** `transaction_id` is
+    filer-assigned and unique only within one filing, so one owner can hold
+    several live rows sharing it (52 such groups / 79 rows as of schema v12,
+    which is what made them representable). Keying this guard on `transaction_id`
+    collapsed those siblings into one, so the guard silently under-reported the
+    rows at risk — the fourth layer of the collision class fixed at the dedup key
+    (`fetch_fec._dedupe_key`), the PK (v12), and `insert_donation`'s guard.
     """
     recoverable_records, _ = load_raw_payloads(slug)
     recoverable = {
-        str(r.get("transaction_id") or r.get("sub_id"))
+        _record_uid_of(r)
         for r in recoverable_records
-        if (r.get("transaction_id") or r.get("sub_id"))
+        if (r.get("sub_id") or r.get("transaction_id"))
     }
     with db.connect(db_path or db.MASTER_DB) as conn:
         live = {
             row[0]
             for row in conn.execute(
-                "SELECT transaction_id FROM donations "
+                f"SELECT {_RECORD_UID_SQL} FROM donations "
                 "WHERE (entity_slug = ? OR parent_owner_slug = ?) AND superseded_by IS NULL",
                 (slug, slug),
             ).fetchall()
@@ -809,6 +829,13 @@ def _reclassify_divergent_txns(
     This is the classifier-divergence counterpart to the raw-coverage (C1)
     guard. It is the failure mode that silently dropped 15 kendrick-ken rows on
     2026-05-30 (the file-existence guard passed because the raw was present).
+
+    **Keyed on `record_uid`** for the same reason as `_reclassify_lost_txns` —
+    a `transaction_id`-keyed map of raw records collapses genuine siblings (e.g.
+    `johnson-charles`' `SA12.4099.0` is ten distinct $3,300 contributions to ten
+    different campaigns), so only one of them was ever re-classified and the
+    other nine were invisible to the guard. `manual_attributions` remains keyed
+    on `transaction_id` (its documented key), so each live row carries both.
     """
     try:
         owner = _load_owner(slug)
@@ -817,28 +844,28 @@ def _reclassify_divergent_txns(
         # cannot be assessed; the raw-coverage guard still applies.
         return set()
     records, _ = load_raw_payloads(slug)
-    by_txn = {
-        str(r.get("transaction_id") or r.get("sub_id")): r
+    by_uid = {
+        _record_uid_of(r): r
         for r in records
-        if (r.get("transaction_id") or r.get("sub_id"))
+        if (r.get("sub_id") or r.get("transaction_id"))
     }
     with db.connect(db_path or db.MASTER_DB) as conn:
         manual = db.manual_attributions_for_slug(conn, slug)
         live_rows = conn.execute(
-            "SELECT transaction_id FROM donations "
+            f"SELECT {_RECORD_UID_SQL}, transaction_id FROM donations "
             "WHERE (entity_slug = ? OR parent_owner_slug = ?) AND superseded_by IS NULL",
             (slug, slug),
         ).fetchall()
     divergent: set[str] = set()
-    for (txn,) in live_rows:
+    for uid, txn in live_rows:
         if txn in manual:
             continue  # override re-forces this txn on reclassify
-        rec = by_txn.get(txn)
+        rec = by_uid.get(uid)
         if rec is None:
             continue  # raw missing — handled by _reclassify_lost_txns
         c = classify(rec, owner, process_related_entities=include_related)
         if c is None or c.status not in (CONFIRMED, PROBABLE):
-            divergent.add(txn)
+            divergent.add(uid)
     return divergent
 
 

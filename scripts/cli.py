@@ -57,6 +57,18 @@ def validate():
     else:
         click.echo("[OK] donations (id=record-uid-integrity)")
 
+    # Adjudication durability + override blast radius. WARNINGS, not failures:
+    # both describe human decisions that need a human to confirm, and neither
+    # means the stored data is wrong (mirrors the legislation validators, which
+    # warn rather than fail the gate).
+    adj_warnings = db.check_adjudication_integrity()
+    click.echo("\n--- master.db adjudication ---")
+    if adj_warnings:
+        for w in adj_warnings:
+            click.echo(f"[OK] adjudication (id=adjudication-integrity)\n    warn:  {w}")
+    else:
+        click.echo("[OK] adjudication (id=adjudication-integrity)")
+
     ok = (
         all(r.ok for r in owner_results)
         and all(r.ok for r in leg_results)
