@@ -331,12 +331,30 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Ingest committees (identity + per-cycle totals)
+        # STEP-level timeout + continue-on-error, so a slow convergence run
+        # cannot cost the whole job.
+        #
+        # --max-fetch bounds this step by COUNT, but not by TIME, and those come
+        # apart precisely when it matters. On 2026-07-01 this step ran 298
+        # minutes, the job hit its 350-minute cap, and because a JOB timeout
+        # skips every remaining step, the commit+push never ran — 777 billed
+        # minutes produced nothing. `continue-on-error` does not save you there:
+        # it covers a step that FAILS, not a job that is killed.
+        #
+        # `ingest_committee()` writes per committee, so partial progress is
+        # already durable in master.db. The only thing that was ever missing is
+        # reaching the commit. A step timeout converts "ran long → lose
+        # everything" into "ran long → commit what we got, finish next month",
+        # which is exactly the §4.3 de-synchronisation strategy working as
+        # designed instead of being defeated by the clock.
+        #
+        # Budget against the 350-minute job cap: setup ~5 + committees 180 +
+        # filings ~10 + beneficiaries 120 + archive ~5 + build/commit ~5 = ~325.
+        timeout-minutes: 180
+        continue-on-error: true
+        id: committees
         env:
           FEC_API_KEY: ${{ secrets.FEC_API_KEY }}
-        # --max-fetch bounds a convergence run and de-syncs the cohort (§4.3):
-        # oldest-refreshed committees are fetched first, the rest deferred to the
-        # next run. ~500 keeps this step well under the 6h ceiling; the cohort
-        # converges over a few monthly runs, then stays de-synchronized.
         run: python -m scripts.cli ingest-committees --max-fetch 500
 
       - name: Apply curated external links
@@ -358,7 +376,16 @@ jobs:
         # workflow_dispatch with beneficiaries=true. continue-on-error so per-
         # committee FEC timeouts don't kill the rest of the job — same
         # GOVERNANCE.md §1.9 reasoning as the bucket refresh step.
+        #
+        # The step timeout is the other half of that promise. continue-on-error
+        # only rescues a step that FAILS — this step's own env comment below
+        # correctly notes that a JOB timeout kills the commit instead, and then
+        # relies solely on --max-fetch to stay inside the budget. Bounding it
+        # here makes that guarantee structural: 120 minutes is the most this
+        # step can cost, whatever the FEC API is doing that day.
+        timeout-minutes: 120
         continue-on-error: true
+        id: beneficiaries
         env:
           FEC_API_KEY: ${{ secrets.FEC_API_KEY }}
           # §4.3, beneficiaries edition. The Phase-2 backfill stamped all ~6,270
@@ -394,9 +421,21 @@ jobs:
         run: bash scripts/archive_raw.sh
 
       - name: Rebuild mockup/data.json with enrichment
+        # Not committed (gitignored, rebuilt on deploy) — this is a build smoke
+        # test. It must never be the reason the enrichment below goes unsaved.
+        if: always()
+        continue-on-error: true
         run: python mockup/build_data.py
 
       - name: Commit + push committee enrichment
+        # `always()` so partial enrichment is still persisted when a step above
+        # timed out or failed. The whole point of the step-level bounds is to
+        # reach this step; skipping it on an upstream failure would throw away
+        # the work those bounds exist to protect. Committing a partial
+        # convergence is correct by design (§4.3) — the deferred committees are
+        # simply picked up next month, and their refreshed_at stamps keep the
+        # cohort de-synchronised.
+        if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -413,6 +452,31 @@ jobs:
             git pull --rebase origin main
             git push
           fi
+
+      # §4.1 preserved. The two bounded steps above are `continue-on-error`, so a
+      # timeout there would otherwise leave this job reporting `success` — and
+      # the `notify` job only fires when a job's result != 'success'. That would
+      # swap July's loud failure for a silent partial, which is strictly worse:
+      # nothing rotted unnoticed until 2026-06-20 because it failed, it rotted
+      # because nothing said so.
+      #
+      # So: commit first (above), THEN fail. The enrichment is saved either way,
+      # and an incomplete convergence still opens the tracking issue.
+      - name: Fail the job if a bounded step did not complete
+        if: always()
+        run: |
+          set -uo pipefail
+          rc=0
+          if [ "${{ steps.committees.outcome }}" != "success" ]; then
+            echo "::error::ingest-committees did not complete (${{ steps.committees.outcome }}). Partial enrichment WAS committed; the deferred committees retry next run."
+            rc=1
+          fi
+          if [ "${{ steps.beneficiaries.outcome }}" != "success" ]; then
+            echo "::error::ingest-committee-beneficiaries did not complete (${{ steps.beneficiaries.outcome }}). Partial enrichment WAS committed; the deferred pairs retry next run."
+            rc=1
+          fi
+          [ "$rc" -eq 0 ] && echo "Both bounded enrichment steps completed."
+          exit "$rc"
 
   # §4.1: surface silent failures. The matrix `refresh` job (fail-fast:false),
   # `consolidate`, and `committees_refresh` can each fail — and the committees
