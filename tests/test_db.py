@@ -1139,3 +1139,76 @@ class TestAdjudicationIntegrity:
         pointer.write_text("version https://git-lfs.github.com/spec/v1\noid sha256:0\nsize 1\n")
         assert db.check_adjudication_integrity(pointer) == []
         assert db.check_adjudication_integrity(tmp_path / "nope.db") == []
+
+
+class TestQueueKeyBlastRadius:
+    """Layer 5 of the collision class: review_queue and review_resolutions are
+    keyed (transaction_id, entity_slug) too, so one row can stand for several
+    genuinely distinct contributions. Measured zero instances live on
+    2026-07-31, so this is monitored rather than migrated — these tests exist so
+    the first real occurrence is loud instead of silent."""
+
+    def _two_siblings(self, conn):
+        db.insert_donation(conn, _row(txn="SHARED", sub_id="S1", recipient_committee_id="C1"))
+
+    def test_queue_item_covering_two_live_rows_is_flagged(self, db_path):
+        with db.connect(db_path) as conn:
+            db.insert_donation(conn, _row(txn="SHARED", sub_id="S1", recipient_committee_id="C1"))
+        with db.connect(db_path) as conn:
+            db.insert_donation(
+                conn, _row(txn="SHARED", sub_id="S2", recipient_committee_id="C2", amount=999.0)
+            )
+            db.insert_review_queue(
+                conn,
+                {
+                    "transaction_id": "SHARED",
+                    "entity_slug": "owner-x",
+                    "reason": "city/state outside documented residences",
+                    "raw_payload_path": "",
+                    "queued_at": "2026-01-01T00:00:00Z",
+                },
+            )
+        warns = db.check_adjudication_integrity(db_path)
+        assert any("review-queue item" in w and "more than one live" in w for w in warns)
+
+    def test_resolution_covering_two_live_rows_is_flagged(self, db_path):
+        with db.connect(db_path) as conn:
+            db.insert_donation(conn, _row(txn="SHARED", sub_id="S1", recipient_committee_id="C1"))
+        with db.connect(db_path) as conn:
+            db.insert_donation(
+                conn, _row(txn="SHARED", sub_id="S2", recipient_committee_id="C2", amount=999.0)
+            )
+            db.upsert_review_resolution(
+                conn,
+                transaction_id="SHARED",
+                entity_slug="owner-x",
+                resolution="DISCARDED",
+                resolution_reason="same-name stranger",
+                resolved_at="2026-01-01T00:00:00Z",
+            )
+        warns = db.check_adjudication_integrity(db_path)
+        assert any("review resolution" in w and "more than one live" in w for w in warns)
+
+    def test_one_row_per_queue_item_is_silent(self, db_path):
+        """The normal case must stay quiet, or the monitor is noise."""
+        with db.connect(db_path) as conn:
+            db.insert_donation(conn, _row(txn="T1", sub_id="S1"))
+            db.insert_review_queue(
+                conn,
+                {
+                    "transaction_id": "T1",
+                    "entity_slug": "owner-x",
+                    "reason": "city/state outside documented residences",
+                    "raw_payload_path": "",
+                    "queued_at": "2026-01-01T00:00:00Z",
+                },
+            )
+            db.upsert_review_resolution(
+                conn,
+                transaction_id="T1",
+                entity_slug="owner-x",
+                resolution="DISCARDED",
+                resolution_reason="r",
+                resolved_at="2026-01-01T00:00:00Z",
+            )
+        assert db.check_adjudication_integrity(db_path) == []

@@ -744,6 +744,39 @@ def check_adjudication_integrity(db_path: Path = MASTER_DB) -> list[str]:
                     f"live donations row, so the verdict applies to every sibling sharing "
                     f"that filer id — confirm each is intended (e.g. {sample})"
                 )
+        # Same key, same hazard, other two tables. `review_queue` and
+        # `review_resolutions` are keyed on (transaction_id, entity_slug) too, so
+        # one row can stand for several genuinely distinct contributions —
+        # a verdict recorded against it silently governs all of them.
+        #
+        # Measured 2026-07-31: ZERO instances in either table (and none of the
+        # 73 open queue items has a transaction_id covering more than one
+        # sub_id), which is why this is a monitor rather than a v13 migration.
+        # Rebuilding three tables to fix a defect with no occurrences would be
+        # a worse trade than watching for the first one.
+        for table, label in (
+            ("review_queue", "review-queue item"),
+            ("review_resolutions", "review resolution"),
+        ):
+            if {table, "donations"} <= tables:
+                multi = conn.execute(
+                    f"SELECT x.entity_slug, x.transaction_id, COUNT(*) AS n "
+                    f"FROM {table} x "
+                    "JOIN donations d "
+                    "  ON d.transaction_id = x.transaction_id AND d.entity_slug = x.entity_slug "
+                    "WHERE d.superseded_by IS NULL "
+                    "GROUP BY x.entity_slug, x.transaction_id HAVING COUNT(*) > 1"
+                ).fetchall()
+                if multi:
+                    sample = ", ".join(
+                        f"{m['entity_slug']}/{m['transaction_id']}→{m['n']} rows" for m in multi[:3]
+                    )
+                    warnings.append(
+                        f"{len(multi)} {label}(s) stand for more than one live donations row "
+                        f"— the (transaction_id, entity_slug) key cannot separate contributions "
+                        f"sharing a filer id, so any verdict here governs every leg. Evaluate "
+                        f"each leg on its own record_uid before resolving (e.g. {sample})"
+                    )
     finally:
         conn.close()
     return warnings
