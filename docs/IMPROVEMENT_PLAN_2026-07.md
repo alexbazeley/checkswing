@@ -729,3 +729,61 @@ verdict between runs.
 Revisit the migration if the monitor ever fires on `review_queue` /
 `review_resolutions`, or if a same-name adjudication ever needs to split legs
 under one filer id.
+
+---
+
+## 14. 2026-07-31 — the read side of §2.1 (design doc §4.4)
+
+The backfill made the archive exist; this makes it *useful*. Until now every
+consumer answered "is this row's raw available?" by checking one disk, so two
+very different situations collapsed into one verdict:
+
+- **missing locally, present in R2** — recoverable, and the *normal* state for
+  anything a cron run fetched (the runner uploads the payload, then is
+  destroyed). Nothing is wrong with such a row.
+- **missing locally AND absent from R2** — genuinely lost. FEC will not re-serve
+  an old Schedule A page; the `malone-john` rows are the standing example.
+
+Conflating them is what made the reclassify guard a **dead end** rather than a
+recoverable state — the operator's only options were "re-fetch from FEC" (wrong
+when the payload is safe in R2) or `--force`, which is precisely the silent-loss
+escape hatch the guard exists to prevent. This was the §2.1 design's stated goal
+and was deferred until a backfill existed to read.
+
+**What landed**
+
+- `scripts/raw_archive.py` — the read side. `bucket_key_for()` (the
+  `data/raw/…` → `raw/…` swap, matching `archive_raw.sh`), `bucket_status()`,
+  `download()`.
+- `raw_coverage_report(..., check_bucket=True)` — adds
+  `rows_recoverable_from_bucket` / `rows_truly_lost` and a per-owner split.
+- `cli raw-coverage --bucket` and new `cli rehydrate-raw [SLUG] [--dry-run]`,
+  which restores payloads to the exact path master.db records (which is why the
+  key layout mirrors the on-disk one — no bookkeeping follows a rehydrate).
+- The reclassify guard's abort message now names the recoverable count and the
+  exact `rehydrate-raw` command, or states that the raw is genuinely lost.
+
+**Three deliberate choices**
+
+1. **One paginated LIST, not N HEADs.** Answering "are these 379 paths present?"
+   with a HEAD each is 379 round trips; listing the `raw/` prefix once is ~11
+   requests for the whole ~11k archive.
+2. **boto3 stays out of `requirements.txt`** — those pins install on every CI job
+   and the Cloudflare build, and only the R2 paths need an S3 client. Imported
+   lazily with a fixable message, matching `fetch_deploy_db.py`.
+3. **An unreadable archive is never an error, and never reported as loss.**
+   Without a readable bucket we have established only that a payload is not on
+   *this* disk — calling that "lost" would recreate the exact conflation being
+   removed. `rehydrate-raw` returns `lost: null` +
+   `recoverability: "unknown"` in that case, and everything degrades to
+   local-only so a developer with no R2 credentials can still work.
+
+**Also fixed:** `fetch-raw --download` shelled out to a bare `aws`, which cannot
+work when awscli is pip-installed into a venv whose path contains a space — the
+shim's shebang dies with `bad interpreter` (this repo's own checkout path does
+exactly that). It now shares `raw_archive.download()`, which also keeps the key
+mapping in one place instead of two.
+
+**Not verified by me:** the live R2 round-trip. I have no credentials, so the
+bucket paths are exercised against a fake client in tests. The maintainer can
+confirm in one command — see the PR.
