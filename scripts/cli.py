@@ -15,7 +15,12 @@ from .audit import audit_slug
 from .backfill_donation_image_fields import backfill as backfill_donation_image_fields
 from .backfill_memo_fields import backfill as backfill_memo_fields
 from .backfill_subid import backfill as backfill_subid
-from .export import export_aggregate, export_entity, export_household
+from .export import (
+    check_export_freshness,
+    export_aggregate,
+    export_entity,
+    export_household,
+)
 from .ingest import ingest_entity, reclassify_entity, reclassify_in_place
 from .ingest_committee_disbursements import (
     ingest_all_committee_disbursements,
@@ -69,10 +74,23 @@ def validate():
     else:
         click.echo("[OK] adjudication (id=adjudication-integrity)")
 
+    # Citable-export freshness. A hard FAILURE, unlike the adjudication warnings
+    # above: `data/donations/` is tracked precisely so it can be cited, the
+    # invariant is exact (a GROUP BY over the same counted=1 filter), and the
+    # remedy is one command. It went $786,754.70 stale before this existed.
+    export_errors = check_export_freshness()
+    click.echo("\n--- citable exports ---")
+    if export_errors:
+        for e in export_errors:
+            click.echo(f"[FAIL] data/donations/_aggregate (id=export-freshness)\n    error: {e}")
+    else:
+        click.echo("[OK] data/donations/_aggregate (id=export-freshness)")
+
     ok = (
         all(r.ok for r in owner_results)
         and all(r.ok for r in leg_results)
         and not uid_errors
+        and not export_errors
     )
     sys.exit(0 if ok else 1)
 

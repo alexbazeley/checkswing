@@ -157,3 +157,71 @@ class TestHouseholdCli:
     def test_rejects_non_owner_slug(self, patched, tmp_path):
         res = self._run(["household", "cohen-alexandra", "--json"])
         assert res.exit_code == 1
+
+
+class TestExportFreshness:
+    """`data/donations/` is tracked so it can be CITED (GOVERNANCE §2.4), but
+    `cli export` only runs on the monthly cron — so a DB-mutating PR that forgets
+    to re-export silently publishes stale figures. That happened: on 2026-07-31
+    the rollup was $786,754.70 and 38 owner-rows behind master.db, drift
+    accumulated across PRs #135, #139 and #142 with nothing detecting it."""
+
+    def test_freshly_exported_is_in_sync(self, patched, tmp_path):
+        export.export_aggregate()
+        assert export.check_export_freshness(db_path=patched) == []
+
+    def test_detects_a_row_added_after_export(self, patched, tmp_path):
+        export.export_aggregate()
+        # A later PR attributes another donation and does not re-export.
+        with db.connect(patched) as conn:
+            db.insert_donation(
+                conn, _row("NEW1", "crane-jim", "owner", None, "CONFIRMED", 12345.67)
+            )
+        errors = export.check_export_freshness(db_path=patched)
+        assert errors, "a row added after export must be detected"
+        assert "STALE" in errors[0]
+        assert "12,345.67" in errors[0] or "12345.67" in errors[0]
+        assert "cli export" in errors[0], "the error must name the remedy"
+
+    def test_detects_a_status_change_after_export(self, patched, tmp_path):
+        """The subtler case: no row count change, only a tier move — exactly
+        what PR #139 (ZIP+4, CONFIRMED 191→760) did to the archive."""
+        export.export_aggregate()
+        with db.connect(patched) as conn:
+            conn.execute("UPDATE donations SET status='CONFIRMED' WHERE transaction_id='O2'")
+        errors = export.check_export_freshness(db_path=patched)
+        assert any("by_owner.csv" in e for e in errors), \
+            "a PROBABLE→CONFIRMED move changes by_owner.csv even though totals-with-probable hold"
+
+    def test_re_exporting_clears_it(self, patched, tmp_path):
+        export.export_aggregate()
+        with db.connect(patched) as conn:
+            db.insert_donation(conn, _row("NEW2", "crane-jim", "owner", None, "CONFIRMED", 50))
+        assert export.check_export_freshness(db_path=patched)
+        export.export_aggregate()
+        assert export.check_export_freshness(db_path=patched) == []
+
+    def test_absent_db_is_not_stale(self, tmp_path):
+        assert export.check_export_freshness(db_path=tmp_path / "nope.db") == []
+
+    def test_lfs_pointer_is_not_stale(self, patched, tmp_path, monkeypatch):
+        """In CI master.db is a Git LFS pointer, not a database. Absent is not
+        stale — failing there would fire the gate in every environment that
+        legitimately has no DB."""
+        export.export_aggregate()
+        pointer = tmp_path / "pointer.db"
+        pointer.write_text("version https://git-lfs.github.com/spec/v1\noid sha256:0\nsize 1\n")
+        import sqlite3
+        from contextlib import contextmanager
+
+        @contextmanager
+        def _boom(*a, **k):
+            raise sqlite3.DatabaseError("file is not a database")
+            yield  # pragma: no cover
+
+        monkeypatch.setattr(db, "connect", _boom)
+        assert export.check_export_freshness(db_path=pointer) == []
+
+    def test_missing_csv_is_not_stale(self, patched, tmp_path):
+        """Nothing exported yet (fresh clone) is not a staleness failure."""
+        assert export.check_export_freshness(db_path=patched) == []

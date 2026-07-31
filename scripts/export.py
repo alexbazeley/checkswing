@@ -234,3 +234,80 @@ def export_household() -> dict:
             writer.writerow([_csv_safe(r[c]) for c in cols])
 
     return {"path": str(out_path), "rows": len(rows)}
+
+
+# ── Freshness gate ──────────────────────────────────────────────────────────
+#
+# `data/donations/` is git-tracked *so that people can cite it* (GOVERNANCE
+# §2.4), but `cli export` only runs on the monthly cron. Any PR that mutates
+# master.db and forgets to re-export leaves the citable surface stale, and until
+# this check existed nothing noticed: on 2026-07-31 the rollup was found
+# **$786,754.70 and 38 owner-rows behind** master.db, drift accumulated across
+# three PRs (#135 schema v12, #139 ZIP+4, #142 Todd Ricketts).
+#
+# The invariant is exact, not approximate — the CSVs are a plain GROUP BY over
+# the same `counted = 1` filter, so a correct export reconciles to the cent:
+#   by_owner.csv                → status = 'CONFIRMED'
+#   by_owner_with_probable.csv  → status IN ('CONFIRMED','PROBABLE')
+
+# Which aggregate file mirrors which slice of master.db.
+_AGGREGATE_CONTRACT = (
+    ("by_owner.csv", "status = 'CONFIRMED'"),
+    ("by_owner_with_probable.csv", "status IN ('CONFIRMED','PROBABLE')"),
+)
+
+# Tolerance for the float sum only. SUM(REAL) in SQLite and Python's float sum
+# over the same values can differ in the last bit; a cent is far below any real
+# drift (the observed failure was $786,754.70) and far above float noise.
+_CENT = 0.01
+
+
+def check_export_freshness(db_path=None) -> list[str]:
+    """Do the tracked aggregate CSVs still reconcile to master.db?
+
+    Returns a list of error strings; empty means in sync. A missing DB, an
+    unreadable DB (in CI master.db is checked out as a Git LFS pointer — see
+    db.check_record_uid_integrity), or a missing CSV is **not** an error here:
+    absent is not stale, and failing on it would make the gate fire in every
+    environment that legitimately has no database.
+    """
+    import sqlite3
+
+    errors: list[str] = []
+    agg_dir = DONATIONS_DIR / "_aggregate"
+    path = db_path or db.MASTER_DB
+    if not Path(path).exists():
+        return errors
+
+    for filename, where in _AGGREGATE_CONTRACT:
+        csv_path = agg_dir / filename
+        if not csv_path.exists():
+            continue
+        try:
+            with db.connect(path) as conn:
+                row = conn.execute(
+                    f"SELECT COUNT(*) AS n, COALESCE(SUM(amount), 0) AS amt FROM donations "
+                    f"WHERE superseded_by IS NULL AND counted = 1 AND {where}"
+                ).fetchone()
+        except sqlite3.DatabaseError:
+            return errors  # LFS pointer, not a database — nothing to compare
+        db_n, db_amt = row["n"], row["amt"]
+
+        with csv_path.open(newline="", encoding="utf-8") as f:
+            rows = list(csv.DictReader(f))
+        try:
+            csv_n = sum(int(r["donations"]) for r in rows)
+            csv_amt = sum(float(r["total_amount"]) for r in rows)
+        except (KeyError, ValueError) as exc:
+            errors.append(f"{filename} is not readable as an aggregate export ({exc})")
+            continue
+
+        if csv_n != db_n or abs(csv_amt - db_amt) > _CENT:
+            errors.append(
+                f"{filename} is STALE — it reports {csv_n:,} donations / ${csv_amt:,.2f} "
+                f"but master.db holds {db_n:,} / ${db_amt:,.2f} "
+                f"(off by {csv_n - db_n:+,} rows / ${csv_amt - db_amt:+,.2f}). "
+                f"This is a citable surface (GOVERNANCE §2.4). "
+                f"Fix: python -m scripts.cli export"
+            )
+    return errors
