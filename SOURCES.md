@@ -87,9 +87,22 @@ Every API/portal response is persisted verbatim to `data/raw/` before parsing
 runs on ephemeral runners, each run's `data/raw/` delta is also uploaded to a
 durable **Cloudflare R2** bucket (S3-compatible) via `scripts/archive_raw.sh`,
 keyed to mirror the on-disk path (`data/raw/…` → `s3://<bucket>/raw/…`). A stored
-`raw_payload_path` therefore resolves off-runner via `cli fetch-raw <txn>`. The
-bucket + credentials are held as the `RAW_ARCHIVE_*` GitHub Actions secrets (not
-in the repo); provisioning + one-time backfill steps are in
+`raw_payload_path` therefore resolves off-runner via `cli fetch-raw <txn>`.
+
+| | |
+|---|---|
+| Bucket | `checkswing-raw` (Cloudflare R2) |
+| S3 endpoint | `https://b77af9764905e334519c19d89b35b754.r2.cloudflarestorage.com` |
+| Key layout | `data/raw/<slug>/<file>` → `s3://checkswing-raw/raw/<slug>/<file>` |
+| Backfilled | **2026-07-31** — 10,941 objects / 5,258,518,839 bytes (4.90 GB), verified identical to local |
+
+The bucket name and endpoint are **configuration, not credentials**, and are
+recorded here deliberately: §2.1's acceptance criteria asked for the bucket to be
+recorded, but only "the credentials are secret" was written down, so the runbook
+could not be followed without a dashboard trip. Only the access-key pair is
+secret — held as the `RAW_ARCHIVE_*` GitHub Actions secrets, never in the repo.
+The same bucket also holds `deploy/master.db`, which `scripts/fetch_deploy_db.py`
+pulls at Cloudflare Pages build time. Provisioning + backfill steps:
 [docs/DESIGN_raw_archival_2026-07.md](docs/DESIGN_raw_archival_2026-07.md).
 
 ## Phase 3 addendum — legislation, votes, legislators

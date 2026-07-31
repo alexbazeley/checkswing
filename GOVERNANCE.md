@@ -66,11 +66,22 @@ disk).
 > via `scripts/archive_raw.sh`, keyed to mirror the on-disk path — so a stored
 > `raw_payload_path` resolves to an object by a prefix swap (`cli fetch-raw
 > <txn>`). The upload is **secret-guarded**: it is a no-op until the `RAW_ARCHIVE_*`
-> secrets are set (provisioning + one-time backfill of the historical local raw:
-> [docs/DESIGN_raw_archival_2026-07.md](docs/DESIGN_raw_archival_2026-07.md)). Until
-> that backfill runs, some historical rows' raw is still present-only-locally;
-> `master.db` remains authoritative regardless, and the `reclassify` guard (below)
-> still refuses to silently drop a row whose raw is missing.
+> secrets are set (see
+> [docs/DESIGN_raw_archival_2026-07.md](docs/DESIGN_raw_archival_2026-07.md)).
+>
+> **✅ ACTIVE as of 2026-07-31.** The secrets are provisioned and the one-time
+> backfill of the historical local raw has been run and verified:
+> **10,941 objects / 5,258,518,839 bytes (4.90 GB)** in `s3://checkswing-raw/raw/`,
+> byte-for-byte identical to the local `data/raw/`. The archive's raw substrate
+> therefore no longer exists on a single machine. `master.db` remains
+> authoritative regardless, and the `reclassify` guard (below) still refuses to
+> silently drop a row whose raw is missing.
+>
+> Two honest limits remain. **379 live rows (5.5%)** reference raw that was
+> already gone before the backfill — those are unrecoverable, not un-uploaded,
+> and the FEC cannot re-serve them (the `malone-john` case). And a row fetched by
+> a cron run is only preserved from that run onward; the Aug 2026 refresh is the
+> first to exercise the upload step in CI.
 
 Consequences that are load-bearing:
 

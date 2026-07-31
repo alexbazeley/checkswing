@@ -70,7 +70,31 @@ CA folds re-filed amendments (`fetch_calaccess.py:215-254`, content-key dedup, m
 
 ## 2. Provenance & governance enforcement
 
-### 2.1 Archive CI-fetched raw payloads off-runner (L) ★
+### 2.1 Archive CI-fetched raw payloads off-runner (L) — ✅ **CLOSED 2026-07-31**
+
+> **2026-07-31 — §2.1 IS DONE.** Both remaining maintainer actions completed. The
+> `RAW_ARCHIVE_*` secrets were provisioned 2026-07-11, and the one-time backfill
+> ran and was verified today: **10,941 objects / 5,258,518,839 bytes (4.90 GB)**
+> in `s3://checkswing-raw/raw/`, byte-for-byte identical to the local
+> `data/raw/`. The `raw/` prefix was empty beforehand (only `deploy/` existed),
+> confirming it had never run — consistent with no fetch workflow having executed
+> since the secrets were set. Logged to `catalog/PROVENANCE_LOG.md`; GOVERNANCE
+> §1.4 flipped from "until that backfill runs…" to ACTIVE; bucket + endpoint
+> recorded in SOURCES.md (they are configuration, not credentials — the original
+> §2.1 criteria asked for the bucket to be recorded and only "credentials are
+> secret" got written down, so the runbook could not be followed without a
+> dashboard trip).
+>
+> `scripts/archive_raw.sh` was made survivable first: `aws s3 sync` instead of
+> `cp --recursive` (4.9 GB does not reliably complete in one run, and `cp`
+> re-sends everything on retry), plus an `AWS_CLI` override because a
+> pip-installed `aws` shim's shebang cannot survive the space in this checkout's
+> path.
+>
+> **The gap this closes is not theoretical.** In the same session, 114 of 1,039
+> audited discards and 73 of 673 queue items could not be re-verified because
+> their raw was missing. **Still true and not fixed by this:** 379 live rows
+> (5.5%) reference raw that was already gone — unrecoverable, not un-uploaded.
 > **2026-07-11 note (§2.1 — ✅ R2 PLUMBING IMPLEMENTED PR #107; user picked Cloudflare R2):** User activated R2, so the archival is now wired. New `scripts/archive_raw.sh` (secret-guarded — a no-op until the `RAW_ARCHIVE_*` secrets are set) uploads each run's `data/raw/` delta to R2, keyed to mirror the on-disk path (`data/raw/…` → `s3://<bucket>/raw/…`), with R2-specific robustness (region `auto`, checksum `when_required`). Wired as an `if: always()` step into **all three fetch jobs** — the federal `refresh` buckets (owner raw), `committees_refresh` (committee/filings/Schedule-B raw), and `refresh-state` (state portal extracts). New read-only `cli fetch-raw <txn> [--download]` resolves a donation's `raw_payload_path` → its R2 key and (with creds) pulls it, making the reclassify guard *recoverable*. GOVERNANCE §1.4 + SOURCES.md updated to describe the R2 archive; the design doc gained an activation checklist (exact secret names + the one-time backfill command). **REMAINING MAINTAINER ACTIONS (agent can't do — credentials):** (1) add the 4 `RAW_ARCHIVE_*` GitHub secrets, (2) run the one-time `bash scripts/archive_raw.sh` backfill of the local 4.9 GB from the laptop. Both workflows parse; 651 tests, validate 0.
 > **2026-07-11 note (§2.1 — 📐 SCOPING DRAFTED, ★ USER DECISION pending):** [docs/DESIGN_raw_archival_2026-07.md](DESIGN_raw_archival_2026-07.md) (PR #104). Measured the gap (557/4,292 federal rows already reference raw missing on disk; refresh uploads only master.db, so cron raw dies with the runner; data/raw = 4.9 GB). The design is backend-agnostic S3 — the **one blocker is a maintainer decision + credential provisioning**: which store (**recommend Cloudflare R2** — same vendor as the Pages deploy, 10 GB free tier likely covers it, **$0 egress**; vs Backblaze B2 cheapest / AWS S3), and adding the scoped access-key GitHub secrets (the agent must not provision credentials). Once chosen, the upload step is ~20 lines of secret-guarded YAML on both fetch workflows (no-op until secrets exist) + a one-time backfill + a `cli fetch-raw` rehydrator. **Two companion pieces are UNBLOCKED and can land now without any infra:** (a) the beneficiary per-page raw-path fix (`ingest_committee_disbursements.py:225`), (b) an explicit GOVERNANCE §1.4 cron-gap caveat. **✅ BOTH LANDED PR #105:** (a) `fetch_by_recipient` now tags each row with its pagination page's raw file and the ingest points each beneficiary row at its OWN page (was: all rows → the cycle's last page), with a 2-page regression test (`_p1`/`_p2` attribution) — forward-looking (future ingests; existing 395K rows keep the old path until re-ingested, no binary mutation this PR); (b) GOVERNANCE §1.4 now carries an explicit "Known gap (automation-era rows)" callout naming the cron raw-destruction + linking the design. The bucket-dependent work still awaits the ★ storage decision.
 `data/raw/` is gitignored (4.8GB exists only on one laptop); the monthly refresh fetches on ephemeral runners and commits only the DB — **every cron-ingested row's `raw_payload_path` points at a file that exists nowhere** (bucket artifacts exclude raw; `refresh.yml:130-137`). The project was already bitten once (B2b: FEC couldn't restore raw for 4 owners; malone's 54 guarded rows). This is the single largest gap between GOVERNANCE.md's promises and reality.

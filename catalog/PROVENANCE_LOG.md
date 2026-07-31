@@ -27070,3 +27070,36 @@ Preserved: **73** item(s) whose raw payload is missing on disk and therefore cou
 Queue-only: the review queue holds UNCERTAIN records exclusively, so no counted total changed. Reversible per item via `cli unresolve`.
 
 Per owner: `cohen-alexandra`=367, `fisher-john`=118, `johnson-charles`=74, `cohen-steven`=25, `ricketts-todd`=4, `ricketts-laura`=1, `monfort-charlie`=1, `steinbrenner-jessica`=1, `steinbrenner-jennifer`=1
+
+### 2026-07-31 — ARCHIVAL — one-time R2 backfill of `data/raw/` (§2.1)
+
+Uploaded the complete historical raw-payload archive to durable off-runner
+storage, closing the single largest gap between GOVERNANCE's promises and
+reality. GOVERNANCE §1.4 guarantees every API response is persisted verbatim as
+the ground truth for re-verification; until today that guarantee rested on one
+laptop's disk.
+
+| | |
+|---|---|
+| Destination | `s3://checkswing-raw/raw/` (Cloudflare R2) |
+| Objects | **10,941** |
+| Bytes | **5,258,518,839** (4.90 GB) |
+| Verification | object count and total size byte-for-byte identical to local `data/raw/` |
+| Method | `scripts/archive_raw.sh` (`aws s3 sync`, resumable) |
+
+The `raw/` prefix was **empty** beforehand — only `deploy/` existed — confirming
+the backfill had genuinely never run. That is consistent with the timeline: the
+`RAW_ARCHIVE_*` secrets were provisioned 2026-07-11 and no fetch workflow has
+executed since (federal last ran 07-05, state 07-02), so the workflows' own
+archival step had never had an opportunity to fire.
+
+**No database mutation.** This is an upload of existing files; `master.db` is
+untouched and no published figure changes.
+
+**Two honest limits.** (1) **379 live rows (5.5%)** reference raw that was
+already missing locally before this ran — those are unrecoverable rather than
+un-uploaded, and FEC cannot re-serve them (the `malone-john` case). This backfill
+preserves what exists; it does not resurrect what was lost. (2) Cron-fetched raw
+is preserved only from the run that fetched it onward — the Aug 2026 refresh is
+the first to exercise `archive_raw.sh` in CI, and it is `continue-on-error` +
+`if: always()` so it cannot break the refresh either way.
