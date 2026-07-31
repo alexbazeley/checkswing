@@ -27024,3 +27024,14 @@ Discarded **1** open state review-queue item(s) for `zalupski-patrick` reason~'c
 ### 2026-07-20 — REVIEW_RESOLUTION — ilitch-chris (state bulk-discard)
 
 Discarded **1** open state review-queue item(s) for `ilitch-chris` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: State queue burndown (§5.4): geographic contradiction — the owner's documented residence city would itself confirm; every 'outside' record is from a non-residence city, and for these (mostly common) names that means a same-named stranger. Closest calls (henry/Milton MA, fisher/Redwood City CA, stanton/Nine Mile Falls WA) are distinct towns from the documented homes; reversible via unresolve-state if a YAML residence gap is later found.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-07-20T16-20-31Z__bulk_discard_state.db`.
+
+### 2026-05-30 — REVIEW_RESOLUTION — orphaned queue verdicts made durable
+
+Copied **2** verdict(s) from `review_queue.resolution` into `review_resolutions`, the durable store that `reclassify` reads when rebuilding the queue. Without a durable row these verdicts would have reverted to open on the next reclassify of their owner, silently discarding the adjudication.
+
+No verdict was changed and no value was invented — each field was copied from the queue row that already carried it, including the original `resolution_at` timestamp. None of these transactions has a `donations` row, so no published total is affected.
+
+- `fisher-john` / `A-TI470` → **DISCARDED** (adjudicated 2026-05-30T17:00:03Z) — audit triage: same-name stranger in undocumented city/state (GOVERNANCE.md §1.9 conservative tie-break)
+- `fisher-john` / `A-TI471` → **DISCARDED** (adjudicated 2026-05-30T17:00:03Z) — audit triage: same-name stranger in undocumented city/state (GOVERNANCE.md §1.9 conservative tie-break)
+
+Recurrence is now caught by `db.check_adjudication_integrity()`, wired into `cli validate`.

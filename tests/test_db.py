@@ -1028,3 +1028,114 @@ class TestRecordUidIntegrityCheck:
 
     def test_absent_db_is_not_an_integrity_failure(self, tmp_path):
         assert db.check_record_uid_integrity(tmp_path / "nope.db") == []
+
+
+class TestAdjudicationIntegrity:
+    """Human adjudication must be durable, and must not act beyond its record."""
+
+    def test_clean_db_has_no_warnings(self, db_path):
+        with db.connect(db_path) as conn:
+            db.insert_donation(conn, _row(txn="T1"))
+        assert db.check_adjudication_integrity(db_path) == []
+
+    def test_orphaned_queue_verdict_is_flagged(self, db_path):
+        """A verdict on the queue row with no review_resolutions row is not a
+        weaker record of the decision — reclassify rebuilds review_queue and
+        suppresses only from review_resolutions, so it reverts to open."""
+        with db.connect(db_path) as conn:
+            db.insert_review_queue(
+                conn,
+                {
+                    "transaction_id": "Q1",
+                    "entity_slug": "owner-x",
+                    "reason": "city/state outside documented residences",
+                    "raw_payload_path": "",
+                    "queued_at": "2026-01-01T00:00:00Z",
+                },
+            )
+            conn.execute("UPDATE review_queue SET resolution = 'DISCARDED'")
+        warns = db.check_adjudication_integrity(db_path)
+        assert any("NOT durable" in w for w in warns)
+
+    def test_durable_verdict_is_not_flagged(self, db_path):
+        with db.connect(db_path) as conn:
+            db.insert_review_queue(
+                conn,
+                {
+                    "transaction_id": "Q1",
+                    "entity_slug": "owner-x",
+                    "reason": "city/state outside documented residences",
+                    "raw_payload_path": "",
+                    "queued_at": "2026-01-01T00:00:00Z",
+                },
+            )
+            conn.execute("UPDATE review_queue SET resolution = 'DISCARDED'")
+            db.upsert_review_resolution(
+                conn,
+                transaction_id="Q1",
+                entity_slug="owner-x",
+                resolution="DISCARDED",
+                resolution_reason="same-name stranger",
+                resolved_at="2026-01-01T00:00:00Z",
+            )
+        assert db.check_adjudication_integrity(db_path) == []
+
+    def test_override_hitting_two_siblings_is_flagged(self, db_path):
+        """Since v12 one owner can hold several live rows sharing a
+        transaction_id, so a manual_attributions override applies to every
+        sibling at once. Live analogue: middleton-john/SA18.1294499 → 2 rows."""
+        with db.connect(db_path) as conn:
+            db.insert_donation(conn, _row(txn="SHARED", sub_id="S1", recipient_committee_id="C1"))
+        with db.connect(db_path) as conn:
+            db.insert_donation(
+                conn, _row(txn="SHARED", sub_id="S2", recipient_committee_id="C2", amount=999.0)
+            )
+            db.upsert_manual_attribution(
+                conn,
+                transaction_id="SHARED",
+                entity_slug="owner-x",
+                status="EXCLUDED",
+                reason="same-named relative",
+                source=None,
+                attributed_at="2026-01-01T00:00:00Z",
+            )
+        warns = db.check_adjudication_integrity(db_path)
+        assert any("more than one" in w for w in warns)
+
+    def test_override_hitting_one_row_is_not_flagged(self, db_path):
+        with db.connect(db_path) as conn:
+            db.insert_donation(conn, _row(txn="T1", sub_id="S1"))
+            db.upsert_manual_attribution(
+                conn,
+                transaction_id="T1",
+                entity_slug="owner-x",
+                status="CONFIRMED",
+                reason="documented human decision",
+                source=None,
+                attributed_at="2026-01-01T00:00:00Z",
+            )
+        assert db.check_adjudication_integrity(db_path) == []
+
+    def test_superseded_sibling_does_not_widen_blast_radius(self, db_path):
+        """Only LIVE rows count — an archived row is not something an override
+        can still act on."""
+        with db.connect(db_path) as conn:
+            db.insert_donation(conn, _row(txn="T1", sub_id="S1", amount=1000.0))
+        with db.connect(db_path) as conn:
+            db.insert_donation(conn, _row(txn="T1", sub_id="S1", amount=2000.0))  # supersedes
+            db.upsert_manual_attribution(
+                conn,
+                transaction_id="T1",
+                entity_slug="owner-x",
+                status="CONFIRMED",
+                reason="documented human decision",
+                source=None,
+                attributed_at="2026-01-01T00:00:00Z",
+            )
+        assert db.check_adjudication_integrity(db_path) == []
+
+    def test_lfs_pointer_and_absent_db_are_not_failures(self, tmp_path):
+        pointer = tmp_path / "master.db"
+        pointer.write_text("version https://git-lfs.github.com/spec/v1\noid sha256:0\nsize 1\n")
+        assert db.check_adjudication_integrity(pointer) == []
+        assert db.check_adjudication_integrity(tmp_path / "nope.db") == []
