@@ -427,10 +427,43 @@ that could not fire looked like a guard finding nothing.
   no data is affected, but **the run summary is not a safe check**. Not fixed here
   because `_dedupe_records_by_txn` is first-occurrence-wins and hoisting it could
   prefer a stale duplicate over an amended one — that needs its own reviewed PR.
-- **Second bulk reason unaudited.** The same 2026-05-30 operation discarded 1,008
-  items under "matches a deliberately-configured negative_signal employer". That
-  class was NOT re-scored here. It is likely sound (negative signals are
-  hand-curated per GOVERNANCE §1.7), but it has never been verified.
+- **Second bulk reason unaudited — ✅ AUDITED 2026-07-31, CLEAN, no change made.**
+  The same 2026-05-30 operation discarded **1,039** items (the "1,008" here was
+  approximate) under "matches a deliberately-configured negative_signal
+  employer", across 8 owners: fisher-john 725, lerner-mark 137, cohen-steven 101,
+  sherman-bruce 43, middleton-john 17, castellini-bob 14, henry-john 1,
+  rubenstein-david 1. Unlike its sibling class (§11 / PR #133, +$84,720 of false
+  discards), this one holds up.
+
+  **Method note — the obvious test is tautological and was discarded.** Simply
+  re-running `classify` over these records returns UNCERTAIN for all of them,
+  but that proves nothing: the negative-signal rule fires *before* signal
+  scoring, so a record caught by a negative signal will always re-score
+  UNCERTAIN. It is circular. Two non-circular tests were run instead:
+
+  1. **Are the negative signals well-targeted?** Every one is a *specific named
+     employer* belonging to a documented different individual — never a generic
+     token. `cohen-steven` excludes **Elliott Management** (Paul Singer's fund);
+     `fisher-john` excludes **DFJ / Draper Fisher Jurvetson** and SKS Partners;
+     `middleton-john` excludes **Vertigo Entertainment** (the son, John Powers);
+     `lerner-mark` excludes Chesapeake Partners / CP Management (the documented
+     different Mark D. Lerner, §10.2); `castellini-bob` excludes Wells Fargo
+     Advisors / UBS Paine Webber. No "self-employed", "retired", or "requested".
+  2. **Does any discarded row also carry a STRONG signal?** That is the only
+     configuration in which a discard could hide a real owner donation.
+     **Zero rows, $0.00.** 925 of the 1,039 were re-scorable; the other 114
+     could not be re-read because their raw payload is missing on disk — the
+     §2.1 gap, not a finding of this audit.
+
+  561 discarded rows do sit in the owner's *own* documented city or ZIP (531 of
+  them `fisher-john` in San Francisco, at $50–$70 a gift). That is **not**
+  over-catch: it is the negative signal doing exactly the job it exists for —
+  separating same-name, same-city people when employer is the only available
+  discriminator. The one genuinely ambiguous group, `middleton-john`'s
+  "JOHN S." + Vertigo + King of Prussia 19406 (~$14k), was already surfaced by
+  PR #17 and deliberately left; this audit does not disturb it.
+
+  **No records promoted, no data mutated.** The standing doubt is retired.
 - **`mlb.com` is not actually unreachable.** It returns HTTP 406 to this project's
   fetchers but **HTTP 200 to `curl` with a browser User-Agent** (verified 2026-07-20:
   852,563 bytes from the Tigers front-office page). Several owner files record its
