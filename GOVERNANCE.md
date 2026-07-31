@@ -77,11 +77,37 @@ disk).
 > authoritative regardless, and the `reclassify` guard (below) still refuses to
 > silently drop a row whose raw is missing.
 >
-> Two honest limits remain. **379 live rows (5.5%)** reference raw that was
-> already gone before the backfill — those are unrecoverable, not un-uploaded,
-> and the FEC cannot re-serve them (the `malone-john` case). And a row fetched by
-> a cron run is only preserved from that run onward; the Aug 2026 refresh is the
-> first to exercise the upload step in CI.
+> One limit remains, and one earlier claim is **retracted**.
+>
+> **Limit:** a row fetched by a cron run is only preserved from that run onward;
+> the Aug 2026 refresh is the first to exercise the upload step in CI.
+>
+> **Retraction (2026-07-31):** an earlier version of this note — and the B2b
+> episode it inherited from — said the **379 live rows (5.5%)** whose raw is
+> absent from both disk and R2 were "unrecoverable" because "the FEC cannot
+> re-serve them (the `malone-john` case)." **That is false and was never
+> tested.** A read-only probe against the OpenFEC API returned **5 of 5 sampled
+> records with exact `transaction_id` matches**, spanning 2006–2022 and covering
+> all three affected owners — including `malone-john`, the case cited as proof:
+>
+> ```
+> malone-john     2006-06-08  $1,000.00  txn=60625.C53962   FOUND
+> malone-john     2008-06-04  $9,250.00  txn=80626.C76784   FOUND
+> angelos-john-p  2022-09-11  $1,000.00  txn=13615927       FOUND
+> fisher-john     2017-05-12  $2,700.00  txn=IDTA707        FOUND
+> fisher-john     2006-10-24  $1,000.00  txn=A-C8479        FOUND
+> ```
+>
+> The correct statement: those rows' raw payloads are absent **from our storage**,
+> which is not the same as the data being gone. **No donation was ever lost** —
+> all 379 are live in `master.db`, CONFIRMED, and counted. The repair is
+> `cli ingest <slug> --full-refetch`, which re-queries FEC and writes fresh raw.
+>
+> What is genuinely unrecoverable is the *original artifact* — the exact bytes of
+> the response as first received. Pagination boundaries shift and records get
+> amended, so a re-fetch yields an equivalent payload, not an identical one. That
+> distinction is worth keeping; collapsing it into "the data is gone" is what
+> produced the false claim.
 
 Consequences that are load-bearing:
 

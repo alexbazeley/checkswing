@@ -884,8 +884,10 @@ def raw_coverage_report(
       * **recoverable** — absent locally but present in the R2 archive. The
         normal state for anything a cron run fetched: the runner uploaded the
         payload and was then destroyed. `cli rehydrate-raw` restores it.
-      * **lost** — absent from both. Genuinely unrecoverable; FEC will not
-        re-serve an old Schedule A page (the `malone-john` rows).
+      * **absent_from_archive** — in neither place. NOT a claim that the data
+        is gone: FEC still serves these records (verified 2026-07-31, 5/5
+        sampled). Repair with `ingest <slug> --full-refetch`, which re-queries
+        FEC and writes fresh raw.
 
     Collapsing those two is what made the reclassify guard a dead end instead of
     a recoverable state. A bucket that is unconfigured or unreachable degrades to
@@ -938,9 +940,9 @@ def raw_coverage_report(
         1 for _slug, rp in missing_rows if rp and raw_archive.bucket_key_for(rp) in status.keys
     )
     out["rows_recoverable_from_bucket"] = n_recoverable
-    out["rows_truly_lost"] = out["rows_missing_raw"] - n_recoverable
+    out["rows_absent_from_archive"] = out["rows_missing_raw"] - n_recoverable
     out["distinct_recoverable_files"] = len(recoverable_files)
-    out["distinct_lost_files"] = len(missing_files) - len(recoverable_files)
+    out["distinct_files_absent_from_archive"] = len(missing_files) - len(recoverable_files)
     out["bucket"] = {"state": status.state, "detail": status.detail, "objects": len(status.keys)}
     for s_slug, rp in missing_rows:
         blk = slug_detail.get(s_slug)
@@ -1084,8 +1086,11 @@ def reclassify_entity(
                     )
                 elif cov.get("bucket", {}).get("state") == raw_archive.OK:
                     recovery_hint = (
-                        " Checked the R2 archive: none of these are recoverable there — "
-                        "this raw is genuinely lost, not merely un-fetched."
+                        " Checked the R2 archive: none of these are in it either. That does "
+                        "NOT mean the data is gone — FEC still serves these records "
+                        f"(verified 2026-07-31). Re-fetch with "
+                        f"`python -m scripts.cli ingest {slug} --full-refetch`, which rewrites "
+                        f"raw from FEC, then retry."
                     )
             except Exception:  # noqa: BLE001 - a hint must never mask the real error
                 pass

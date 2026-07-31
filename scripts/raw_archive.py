@@ -7,9 +7,13 @@ apart:
   * **missing locally, present in the bucket** — recoverable. Common and
     growing: every cron-fetched payload lives only in R2, because the runner
     uploads it and is then destroyed. Nothing about such a row is wrong.
-  * **missing locally AND absent from the bucket** — truly lost. The raw is
-    gone for good (FEC will not re-serve an old Schedule A page; the
-    `malone-john` rows are the standing example).
+  * **missing locally AND absent from the bucket** — the payload is nowhere in
+    our own storage. That is NOT the same as the data being gone: **FEC still
+    serves these records** (verified 2026-07-31 across malone-john,
+    angelos-john-p and fisher-john, 5/5 exact transaction_id matches spanning
+    2006-2022). The repair is `ingest <slug> --full-refetch`, which re-queries
+    FEC and writes fresh raw. Earlier docs asserted FEC "cannot re-serve" these;
+    that claim was inherited from the B2b episode, never tested, and is false.
 
 Until now every consumer checked local disk alone, so those two collapsed into
 one "missing raw" verdict — which made the reclassify guard a dead end rather

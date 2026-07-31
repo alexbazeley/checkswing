@@ -97,7 +97,7 @@ class TestCoverageSplit:
         self._seed(dbp, tmp_path)
         rep = ingest.raw_coverage_report(db_path=dbp)
         assert rep["rows_missing_raw"] == 2
-        assert "rows_truly_lost" not in rep, "local-only must not claim to know recoverability"
+        assert "rows_absent_from_archive" not in rep, "local-only must not claim to know recoverability"
 
     def test_bucket_split_separates_recoverable_from_lost(self, dbp, tmp_path, monkeypatch):
         self._seed(dbp, tmp_path)
@@ -110,7 +110,7 @@ class TestCoverageSplit:
         rep = ingest.raw_coverage_report(db_path=dbp, check_bucket=True)
         assert rep["rows_missing_raw"] == 2
         assert rep["rows_recoverable_from_bucket"] == 1
-        assert rep["rows_truly_lost"] == 1
+        assert rep["rows_absent_from_archive"] == 1
         assert rep["by_slug"]["owner-x"]["recoverable"] == 1
         assert rep["by_slug"]["owner-x"]["lost"] == 1
 
@@ -122,7 +122,7 @@ class TestCoverageSplit:
         )
         rep = ingest.raw_coverage_report(db_path=dbp, check_bucket=True)
         assert rep["bucket"]["state"] == raw_archive.UNCONFIGURED
-        assert "rows_truly_lost" not in rep
+        assert "rows_absent_from_archive" not in rep
         assert "rows_recoverable_from_bucket" not in rep
 
 
@@ -217,7 +217,7 @@ class TestOutputOrdering:
         )
         keys = list(ingest.raw_coverage_report(db_path=dbp, check_bucket=True))
         assert keys[-1] == "by_slug", "by_slug must be last so totals survive truncation"
-        for headline in ("rows_recoverable_from_bucket", "rows_truly_lost", "bucket"):
+        for headline in ("rows_recoverable_from_bucket", "rows_absent_from_archive", "bucket"):
             assert keys.index(headline) < keys.index("by_slug")
 
     def test_local_only_also_puts_by_slug_last(self, dbp, tmp_path):
