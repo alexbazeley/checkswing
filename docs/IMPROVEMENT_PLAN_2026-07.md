@@ -787,3 +787,60 @@ mapping in one place instead of two.
 **Not verified by me:** the live R2 round-trip. I have no credentials, so the
 bucket paths are exercised against a fake client in tests. The maintainer can
 confirm in one command — see the PR.
+
+---
+
+## 15. 2026-07-31 — what the 379 unrecoverable rows actually are
+
+First live run of `raw-coverage --bucket` against R2 (10,941 objects listed):
+
+```
+rows_missing_raw            : 379
+rows_recoverable_from_bucket:   0
+rows_truly_lost             : 379
+distinct_lost_files         :  48
+```
+
+Zero recoverable is the *expected* answer, not a disappointment: everything in R2
+arrived from this disk via the backfill, so anything already missing locally was
+never uploaded. A non-zero would have meant the model of the system was wrong.
+
+But the breakdown is more informative than the total, because the 379 are **two
+different problems that happen to look alike**:
+
+### Class A — historical, FEC-unrecoverable (363 rows, 3 owners)
+
+| owner | lost | of | % | $ |
+|---|---:|---:|---:|---:|
+| `fisher-john` | 261 | 575 | 45% | $2,549,699 |
+| `malone-john` | 54 | 104 | 52% | $798,200 |
+| `angelos-john-p` | 48 | 52 | **92%** | $207,100 |
+
+The known B2b cases — FEC cannot re-serve these Schedule A pages. Ingested
+2026-05-26 → 06-20, spanning donations from 2003 to 2026.
+
+**Operational consequence, worth knowing before you hit it:** these three owners
+are **permanently reclassify-blocked**. `reclassify angelos-john-p` will abort
+with 48 of 52 attributed rows at risk and `--force` is the only way through, at
+the cost of really dropping them. That is not a bug and no amount of re-fetching
+fixes it. `fisher-john` is the largest exposure in absolute terms ($2.55M);
+`angelos-john-p` the most complete (92% of the owner).
+
+### Class B — cron-era, destroyed with the runner (16 rows, 11 owners, $107,000)
+
+Scattered single rows across `castellini-bob` (4), `reinsdorf-jerry` (3), and
+nine owners with one apiece. Their `ingested_at` values are **exactly three
+dates — 2026-06-20, 2026-07-01, 2026-07-05** — the June committees refresh, the
+July cron, and the July 5 manual dispatch. Each points at a `data/raw/…` file
+that a GitHub runner wrote and then took to the grave.
+
+**This is §2.1's failure mode, measured.** Not a hypothetical: roughly **16 rows
+/ $107,000 lost across about six weeks** of normal cron operation, and it would
+have kept accruing at that rate forever. All 16 predate the `RAW_ARCHIVE_*`
+secrets (provisioned 2026-07-11), and no fetch workflow has run since — which is
+why the count stops there.
+
+**Class B is the class that is now closed.** From the Aug 2026 cron onward,
+runner-fetched raw goes to R2 before the runner dies, so equivalent rows will
+report `recoverable` rather than `lost`, and `cli rehydrate-raw` restores them.
+Class A stays lost; nothing can change that.
