@@ -59,8 +59,8 @@ castellini-bob,,owner,2022,REP,,25,219000.0
 castellini-bob,,owner,2024,,,29,214300.0
 castellini-bob,,owner,2024,IND,,1,2000.0
 castellini-bob,,owner,2024,REP,,42,264700.0
-castellini-bob,,owner,2026,,,7,79500.0
-castellini-bob,,owner,2026,REP,,16,148600.0
+castellini-bob,,owner,2026,,,9,83000.0
+castellini-bob,,owner,2026,REP,,17,152100.0
 castellini-phil,,owner,2000,,,2,1500.0
 castellini-phil,,owner,2000,REP,,1,20000.0
 castellini-phil,,owner,2004,REP,,18,40690.0
@@ -144,6 +144,7 @@ davis-ray,,owner,2022,REP,,2,5000.0
 davis-ray,,owner,2024,,,7,430900.0
 davis-ray,,owner,2024,REP,,8,408900.0
 davis-ray,,owner,2026,,,3,11000.0
+davis-ray,,owner,2026,REP,,1,7500.0
 dewitt-bill,,owner,2000,,,10,190300.0
 dewitt-bill,,owner,2000,REP,,5,22000.0
 dewitt-bill,,owner,2002,,,8,40500.0
@@ -174,7 +175,7 @@ dewitt-bill,,owner,2022,REP,,5,13500.0
 dewitt-bill,,owner,2024,,,7,29000.0
 dewitt-bill,,owner,2024,IND,,3,5000.0
 dewitt-bill,,owner,2024,REP,,4,7000.0
-dewitt-bill,,owner,2026,,,4,16000.0
+dewitt-bill,,owner,2026,,,5,18500.0
 dewitt-bill,,owner,2026,REP,,4,4000.0
 dolan-paul,,owner,2004,,,2,3500.0
 dolan-paul,,owner,2004,DEM,,1,1000.0
@@ -208,7 +209,7 @@ feliciano-jose,,owner,2020,DEM,,1,2800.0
 feliciano-jose,,owner,2022,DEM,,2,5800.0
 feliciano-jose,,owner,2024,,,2,413300.0
 feliciano-jose,,owner,2024,DEM,,12,663300.0
-feliciano-jose,,owner,2026,,,1,12000.0
+feliciano-jose,,owner,2026,,,2,17000.0
 feliciano-jose,,owner,2026,DEM,,3,7000.0
 fisher-john,,owner,2000,,,1,1000.0
 fisher-john,,owner,2000,REP,,3,4000.0
@@ -355,7 +356,7 @@ kendrick-ken,,owner,2022,REP,,74,226800.0
 kendrick-ken,,owner,2024,,,14,247100.0
 kendrick-ken,,owner,2024,REP,,63,194699.99
 kendrick-ken,,owner,2026,,,4,19500.0
-kendrick-ken,,owner,2026,REP,,18,59300.0
+kendrick-ken,,owner,2026,REP,,22,73300.0
 lerner-mark,,owner,2000,REP,,1,500.0
 lerner-mark,,owner,2002,,,1,250.0
 lerner-mark,,owner,2002,DEM,,2,2000.0
@@ -442,7 +443,7 @@ middleton-john,,owner,2020,,,1,5000.0
 middleton-john,,owner,2020,DEM,,1,2800.0
 middleton-john,,owner,2022,,,2,10000.0
 middleton-john,,owner,2024,,,1,5000.0
-middleton-john,,owner,2026,,,5,78682.32
+middleton-john,,owner,2026,,,6,82869.97
 middleton-john,,owner,2026,REP,,6,64500.0
 monfort-charlie,,owner,2000,REP,,2,16000.0
 monfort-charlie,,owner,2002,,,1,250.0
@@ -618,7 +619,7 @@ ricketts-laura,,owner,2022,,,9,292092.67
 ricketts-laura,,owner,2022,DEM,,24,307190.3
 ricketts-laura,,owner,2024,,,7,217322.37
 ricketts-laura,,owner,2024,DEM,,16,318927.48
-ricketts-laura,,owner,2026,,,2,255000.0
+ricketts-laura,,owner,2026,,,4,275000.0
 ricketts-laura,,owner,2026,DEM,,5,12000.0
 ricketts-todd,,owner,2010,REP,,8,7200.0
 ricketts-todd,,owner,2012,,,1,50000.0
@@ -652,7 +653,7 @@ ricketts-tom,,owner,2022,REP,,2,5800.0
 ricketts-tom,,owner,2024,,,4,310700.0
 ricketts-tom,,owner,2024,REP,,5,295700.0
 ricketts-tom,,owner,2026,,,3,332100.0
-ricketts-tom,,owner,2026,REP,,5,317100.0
+ricketts-tom,,owner,2026,REP,,7,324100.0
 rubenstein-david,,owner,2008,DEM,,1,6000.0
 rubenstein-david,,owner,2026,,,1,5000.0
 seidler-john,,owner,2026,,,1,5000.0
@@ -726,7 +727,7 @@ stanton-john,,owner,2022,REP,,5,12600.0
 stanton-john,,owner,2024,,,2,6001.0
 stanton-john,,owner,2024,DEM,,3,6600.0
 stanton-john,,owner,2024,REP,,4,9301.0
-stanton-john,,owner,2026,,,1,5000.0
+stanton-john,,owner,2026,,,2,10000.0
 stanton-john,,owner,2026,REP,,2,50000.0
 steinbrenner-hal,,owner,2008,,,1,12300.0
 steinbrenner-hal,,owner,2008,REP,,3,12300.0
@@ -757,4 +758,4 @@ zalupski-patrick,,owner,2016,REP,,2,2000.0
 zalupski-patrick,,owner,2020,REP,,1,500.0
 zalupski-patrick,,owner,2024,,,2,11600.0
 zalupski-patrick,,owner,2024,REP,,7,18200.0
-zalupski-patrick,,owner,2026,REP,,2,3264.0
+zalupski-patrick,,owner,2026,REP,,3,5264.0
