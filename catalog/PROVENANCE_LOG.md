@@ -27819,3 +27819,4035 @@ the first to exercise `archive_raw.sh` in CI, and it is `continue-on-error` +
 - **owners_failed**: `0`
 - **total_records_fetched**: `608`
 - **data_json_regenerated**: `False`
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `9e85bb95`
+- **entity_slug**: `angelos-john-p`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `154`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `3`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-31-14Z__9e85bb95.db`
+- **notes**: scanned=154
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `a14a2085`
+- **entity_slug**: `attanasio-mark`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `71`
+- **confirmed_count**: `7`
+- **probable_count**: `0`
+- **uncertain_count**: `1`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-31-14Z__a14a2085.db`
+- **notes**: scanned=71
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `24af81be`
+- **entity_slug**: `castellini-bob`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `50`
+- **confirmed_count**: `1`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-31-14Z__24af81be.db`
+- **notes**: scanned=50
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `ad13167a`
+- **entity_slug**: `castellini-phil`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `50`
+- **confirmed_count**: `1`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-31-14Z__ad13167a.db`
+- **notes**: scanned=50
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `5dfcd10d`
+- **entity_slug**: `cohen-steven`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `9395`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `127`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-31-14Z__5dfcd10d.db`
+- **notes**: scanned=9395
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `75841173`
+- **entity_slug**: `crane-jim`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `3650`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `24`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-31-15Z__75841173.db`
+- **notes**: scanned=3650
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `85591d1c`
+- **entity_slug**: `davis-ray`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `31236`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-31-16Z__85591d1c.db`
+- **notes**: scanned=31236
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `2e4b4119`
+- **entity_slug**: `dewitt-bill`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `77222`
+- **confirmed_count**: `2`
+- **probable_count**: `0`
+- **uncertain_count**: `2`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-31-17Z__2e4b4119.db`
+- **notes**: scanned=77222
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `7fbbb4a0`
+- **entity_slug**: `dolan-paul`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `2354`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `20`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-31-24Z__7fbbb4a0.db`
+- **notes**: scanned=2354
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `77df8fd3`
+- **entity_slug**: `feliciano-jose`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `467`
+- **confirmed_count**: `5`
+- **probable_count**: `0`
+- **uncertain_count**: `5`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-31-24Z__77df8fd3.db`
+- **notes**: scanned=467
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `7546279d`
+- **entity_slug**: `fisher-john`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `10790`
+- **confirmed_count**: `279`
+- **probable_count**: `0`
+- **uncertain_count**: `141`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-31-24Z__7546279d.db`
+- **notes**: scanned=10790
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `5b9ccaef`
+- **entity_slug**: `henry-john`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `39580`
+- **confirmed_count**: `2`
+- **probable_count**: `0`
+- **uncertain_count**: `131`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-31-25Z__5b9ccaef.db`
+- **notes**: scanned=39580
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `a5a579bc`
+- **entity_slug**: `ilitch-chris`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `16`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-31-27Z__a5a579bc.db`
+- **notes**: scanned=16
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `6514e3bc`
+- **entity_slug**: `johnson-charles`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `58370`
+- **confirmed_count**: `35`
+- **probable_count**: `3`
+- **uncertain_count**: `157`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-31-27Z__6514e3bc.db`
+- **notes**: scanned=58370
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `0c42259c`
+- **entity_slug**: `johnson-greg`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `58370`
+- **confirmed_count**: `8`
+- **probable_count**: `0`
+- **uncertain_count**: `468`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-31-31Z__0c42259c.db`
+- **notes**: scanned=58370
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `bf26ef28`
+- **entity_slug**: `kendrick-ken`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `30272`
+- **confirmed_count**: `1`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-31-35Z__bf26ef28.db`
+- **notes**: scanned=30272
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `a43c6c2d`
+- **entity_slug**: `lerner-mark`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `1031`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `28`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-31-39Z__a43c6c2d.db`
+- **notes**: scanned=1031
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `5661f76a`
+- **entity_slug**: `malone-john`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `3239`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `9`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-31-39Z__5661f76a.db`
+- **notes**: scanned=3239
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `48b84c27`
+- **entity_slug**: `mcguirk-terry`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `23`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-31-40Z__48b84c27.db`
+- **notes**: scanned=23
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `ce9353ff`
+- **entity_slug**: `middleton-john`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `1941`
+- **confirmed_count**: `1`
+- **probable_count**: `1`
+- **uncertain_count**: `14`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-31-40Z__ce9353ff.db`
+- **notes**: scanned=1941
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `abe20981`
+- **entity_slug**: `monfort-charlie`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `190`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-31-40Z__abe20981.db`
+- **notes**: scanned=190
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `c5e64be3`
+- **entity_slug**: `monfort-dick`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `190`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-31-40Z__c5e64be3.db`
+- **notes**: scanned=190
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `8ae87213`
+- **entity_slug**: `moreno-arte`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `9273`
+- **confirmed_count**: `2`
+- **probable_count**: `0`
+- **uncertain_count**: `48`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-31-40Z__8ae87213.db`
+- **notes**: scanned=9273
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `2261aae4`
+- **entity_slug**: `nutting-bob`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `123`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `31`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-31-40Z__2261aae4.db`
+- **notes**: scanned=123
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `65bd0aae`
+- **entity_slug**: `pohlad-joe`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `2`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-31-40Z__65bd0aae.db`
+- **notes**: scanned=2
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `6d8c0677`
+- **entity_slug**: `pohlad-tom`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `2`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-31-40Z__6d8c0677.db`
+- **notes**: scanned=2
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `11209dcc`
+- **entity_slug**: `reinsdorf-jerry`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `3`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-31-40Z__11209dcc.db`
+- **notes**: scanned=3
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `3681ebd3`
+- **entity_slug**: `ricketts-laura`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `165`
+- **confirmed_count**: `3`
+- **probable_count**: `2`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-31-40Z__3681ebd3.db`
+- **notes**: scanned=165
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `aabf9c69`
+- **entity_slug**: `ricketts-todd`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `165`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-31-40Z__aabf9c69.db`
+- **notes**: scanned=165
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `78704adb`
+- **entity_slug**: `ricketts-tom`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `165`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `3`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-31-40Z__78704adb.db`
+- **notes**: scanned=165
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `e1d9404c`
+- **entity_slug**: `rubenstein-david`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `558`
+- **confirmed_count**: `1`
+- **probable_count**: `0`
+- **uncertain_count**: `4`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-31-40Z__e1d9404c.db`
+- **notes**: scanned=558
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `1c277cc0`
+- **entity_slug**: `seidler-john`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `102`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-31-41Z__1c277cc0.db`
+- **notes**: scanned=102
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `92774c20`
+- **entity_slug**: `sherman-bruce`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `4341`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `2`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-31-41Z__92774c20.db`
+- **notes**: scanned=4341
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `180d186c`
+- **entity_slug**: `sherman-john`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `4341`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `76`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-31-41Z__180d186c.db`
+- **notes**: scanned=4341
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `df9d90c8`
+- **entity_slug**: `simpson-bob`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `6051`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-31-41Z__df9d90c8.db`
+- **notes**: scanned=6051
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `88a41f8d`
+- **entity_slug**: `stanton-john`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `1665`
+- **confirmed_count**: `2`
+- **probable_count**: `0`
+- **uncertain_count**: `62`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-31-41Z__88a41f8d.db`
+- **notes**: scanned=1665
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `1dc3b976`
+- **entity_slug**: `steinbrenner-hal`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `19`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-31-41Z__1dc3b976.db`
+- **notes**: scanned=19
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `65fba916`
+- **entity_slug**: `steinbrenner-hank`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `19`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-31-41Z__65fba916.db`
+- **notes**: scanned=19
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `d8a31ef4`
+- **entity_slug**: `steinbrenner-jennifer`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `26`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-31-41Z__d8a31ef4.db`
+- **notes**: scanned=26
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `65dc4ac3`
+- **entity_slug**: `steinbrenner-jessica`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `19`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-31-41Z__65dc4ac3.db`
+- **notes**: scanned=19
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `17eefe2f`
+- **entity_slug**: `walter-mark`
+- **jurisdiction**: `CA`
+- **source**: `CAL-ACCESS`
+- **extract_label**: `dbwebexport.zip`
+- **records_scanned**: `7453`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `1`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-31-41Z__17eefe2f.db`
+- **notes**: scanned=7453
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `bc243e6f`
+- **entity_slug**: `angelos-john-p`
+- **jurisdiction**: `PA`
+- **source**: `PA-DOS`
+- **extract_label**: `pa`
+- **records_scanned**: `101`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-35-04Z__bc243e6f.db`
+- **notes**: scanned=101
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `456fb309`
+- **entity_slug**: `attanasio-mark`
+- **jurisdiction**: `PA`
+- **source**: `PA-DOS`
+- **extract_label**: `pa`
+- **records_scanned**: `72`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-35-04Z__456fb309.db`
+- **notes**: scanned=72
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `89530b6d`
+- **entity_slug**: `castellini-bob`
+- **jurisdiction**: `PA`
+- **source**: `PA-DOS`
+- **extract_label**: `pa`
+- **records_scanned**: `25`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-35-04Z__89530b6d.db`
+- **notes**: scanned=25
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `e1dab8ab`
+- **entity_slug**: `castellini-phil`
+- **jurisdiction**: `PA`
+- **source**: `PA-DOS`
+- **extract_label**: `pa`
+- **records_scanned**: `25`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-35-05Z__e1dab8ab.db`
+- **notes**: scanned=25
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `d7130365`
+- **entity_slug**: `cohen-steven`
+- **jurisdiction**: `PA`
+- **source**: `PA-DOS`
+- **extract_label**: `pa`
+- **records_scanned**: `4639`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `136`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-35-05Z__d7130365.db`
+- **notes**: scanned=4639, skipped_no_date=50
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `68a8224f`
+- **entity_slug**: `crane-jim`
+- **jurisdiction**: `PA`
+- **source**: `PA-DOS`
+- **extract_label**: `pa`
+- **records_scanned**: `635`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-35-05Z__68a8224f.db`
+- **notes**: scanned=635
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `3ba57ff6`
+- **entity_slug**: `davis-ray`
+- **jurisdiction**: `PA`
+- **source**: `PA-DOS`
+- **extract_label**: `pa`
+- **records_scanned**: `16944`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-35-05Z__3ba57ff6.db`
+- **notes**: scanned=16944
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `b148109c`
+- **entity_slug**: `dewitt-bill`
+- **jurisdiction**: `PA`
+- **source**: `PA-DOS`
+- **extract_label**: `pa`
+- **records_scanned**: `60351`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-35-05Z__b148109c.db`
+- **notes**: scanned=60351
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `2b5a8d1b`
+- **entity_slug**: `dolan-paul`
+- **jurisdiction**: `PA`
+- **source**: `PA-DOS`
+- **extract_label**: `pa`
+- **records_scanned**: `800`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-35-08Z__2b5a8d1b.db`
+- **notes**: scanned=800
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `ea288a06`
+- **entity_slug**: `feliciano-jose`
+- **jurisdiction**: `PA`
+- **source**: `PA-DOS`
+- **extract_label**: `pa`
+- **records_scanned**: `97`
+- **confirmed_count**: `1`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-35-08Z__ea288a06.db`
+- **notes**: scanned=97, skipped_no_date=2
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `ca3f8162`
+- **entity_slug**: `fisher-john`
+- **jurisdiction**: `PA`
+- **source**: `PA-DOS`
+- **extract_label**: `pa`
+- **records_scanned**: `5811`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `21`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-35-08Z__ca3f8162.db`
+- **notes**: scanned=5811, skipped_no_date=38
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `1b06550e`
+- **entity_slug**: `henry-john`
+- **jurisdiction**: `PA`
+- **source**: `PA-DOS`
+- **extract_label**: `pa`
+- **records_scanned**: `34659`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `117`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-35-08Z__1b06550e.db`
+- **notes**: scanned=34659, skipped_no_date=43
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `3ef9c8dc`
+- **entity_slug**: `ilitch-chris`
+- **jurisdiction**: `PA`
+- **source**: `PA-DOS`
+- **extract_label**: `pa`
+- **records_scanned**: `48`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-35-09Z__3ef9c8dc.db`
+- **notes**: scanned=48
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `2e72fb92`
+- **entity_slug**: `johnson-charles`
+- **jurisdiction**: `PA`
+- **source**: `PA-DOS`
+- **extract_label**: `pa`
+- **records_scanned**: `27276`
+- **confirmed_count**: `1`
+- **probable_count**: `0`
+- **uncertain_count**: `40`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-35-09Z__2e72fb92.db`
+- **notes**: scanned=27276, skipped_no_date=36
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `c8749ad3`
+- **entity_slug**: `johnson-greg`
+- **jurisdiction**: `PA`
+- **source**: `PA-DOS`
+- **extract_label**: `pa`
+- **records_scanned**: `27276`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `96`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-35-10Z__c8749ad3.db`
+- **notes**: scanned=27276, skipped_no_date=36
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `c227ea18`
+- **entity_slug**: `kendrick-ken`
+- **jurisdiction**: `PA`
+- **source**: `PA-DOS`
+- **extract_label**: `pa`
+- **records_scanned**: `29302`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-35-11Z__c227ea18.db`
+- **notes**: scanned=29302
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `0fc8de85`
+- **entity_slug**: `lerner-mark`
+- **jurisdiction**: `PA`
+- **source**: `PA-DOS`
+- **extract_label**: `pa`
+- **records_scanned**: `215`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `6`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-35-13Z__0fc8de85.db`
+- **notes**: scanned=215, skipped_no_date=12
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `454ab1eb`
+- **entity_slug**: `malone-john`
+- **jurisdiction**: `PA`
+- **source**: `PA-DOS`
+- **extract_label**: `pa`
+- **records_scanned**: `2541`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `25`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-35-14Z__454ab1eb.db`
+- **notes**: scanned=2541, skipped_no_date=4
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `9e9edec0`
+- **entity_slug**: `mcguirk-terry`
+- **jurisdiction**: `PA`
+- **source**: `PA-DOS`
+- **extract_label**: `pa`
+- **records_scanned**: `146`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-35-14Z__9e9edec0.db`
+- **notes**: scanned=146
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `dc92c6e0`
+- **entity_slug**: `middleton-john`
+- **jurisdiction**: `PA`
+- **source**: `PA-DOS`
+- **extract_label**: `pa`
+- **records_scanned**: `430`
+- **confirmed_count**: `7`
+- **probable_count**: `0`
+- **uncertain_count**: `5`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-35-14Z__dc92c6e0.db`
+- **notes**: scanned=430, skipped_no_date=16
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `9d6d9cc2`
+- **entity_slug**: `monfort-charlie`
+- **jurisdiction**: `PA`
+- **source**: `PA-DOS`
+- **extract_label**: `pa`
+- **records_scanned**: `94`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-35-14Z__9d6d9cc2.db`
+- **notes**: scanned=94
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `230602cd`
+- **entity_slug**: `monfort-dick`
+- **jurisdiction**: `PA`
+- **source**: `PA-DOS`
+- **extract_label**: `pa`
+- **records_scanned**: `94`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-35-14Z__230602cd.db`
+- **notes**: scanned=94
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `ad839b42`
+- **entity_slug**: `moreno-arte`
+- **jurisdiction**: `PA`
+- **source**: `PA-DOS`
+- **extract_label**: `pa`
+- **records_scanned**: `633`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-35-14Z__ad839b42.db`
+- **notes**: scanned=633
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `06ad06ba`
+- **entity_slug**: `nutting-bob`
+- **jurisdiction**: `PA`
+- **source**: `PA-DOS`
+- **extract_label**: `pa`
+- **records_scanned**: `21`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-35-14Z__06ad06ba.db`
+- **notes**: scanned=21
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `99346b28`
+- **entity_slug**: `pohlad-joe`
+- **jurisdiction**: `PA`
+- **source**: `PA-DOS`
+- **extract_label**: `pa`
+- **records_scanned**: `3`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-35-14Z__99346b28.db`
+- **notes**: scanned=3
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `e0292f20`
+- **entity_slug**: `pohlad-tom`
+- **jurisdiction**: `PA`
+- **source**: `PA-DOS`
+- **extract_label**: `pa`
+- **records_scanned**: `3`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-35-14Z__e0292f20.db`
+- **notes**: scanned=3
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `16eb10c0`
+- **entity_slug**: `reinsdorf-jerry`
+- **jurisdiction**: `PA`
+- **source**: `PA-DOS`
+- **extract_label**: `pa`
+- **records_scanned**: `3`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-35-14Z__16eb10c0.db`
+- **notes**: scanned=3
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `f740396b`
+- **entity_slug**: `ricketts-laura`
+- **jurisdiction**: `PA`
+- **source**: `PA-DOS`
+- **extract_label**: `pa`
+- **records_scanned**: `130`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-35-14Z__f740396b.db`
+- **notes**: scanned=130
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `d20be805`
+- **entity_slug**: `ricketts-todd`
+- **jurisdiction**: `PA`
+- **source**: `PA-DOS`
+- **extract_label**: `pa`
+- **records_scanned**: `130`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-35-14Z__d20be805.db`
+- **notes**: scanned=130
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `ee12ff0a`
+- **entity_slug**: `ricketts-tom`
+- **jurisdiction**: `PA`
+- **source**: `PA-DOS`
+- **extract_label**: `pa`
+- **records_scanned**: `130`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-35-14Z__ee12ff0a.db`
+- **notes**: scanned=130
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `782ba1e1`
+- **entity_slug**: `rubenstein-david`
+- **jurisdiction**: `PA`
+- **source**: `PA-DOS`
+- **extract_label**: `pa`
+- **records_scanned**: `216`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `1`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-35-14Z__782ba1e1.db`
+- **notes**: scanned=216, skipped_no_date=2
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `0164b13d`
+- **entity_slug**: `seidler-john`
+- **jurisdiction**: `PA`
+- **source**: `PA-DOS`
+- **extract_label**: `pa`
+- **records_scanned**: `119`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-35-14Z__0164b13d.db`
+- **notes**: scanned=119
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `80bb4140`
+- **entity_slug**: `sherman-bruce`
+- **jurisdiction**: `PA`
+- **source**: `PA-DOS`
+- **extract_label**: `pa`
+- **records_scanned**: `2117`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `1`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-35-14Z__80bb4140.db`
+- **notes**: scanned=2117, skipped_no_date=2
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `d389bc70`
+- **entity_slug**: `sherman-john`
+- **jurisdiction**: `PA`
+- **source**: `PA-DOS`
+- **extract_label**: `pa`
+- **records_scanned**: `2117`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-35-14Z__d389bc70.db`
+- **notes**: scanned=2117
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `82c1ed53`
+- **entity_slug**: `simpson-bob`
+- **jurisdiction**: `PA`
+- **source**: `PA-DOS`
+- **extract_label**: `pa`
+- **records_scanned**: `2603`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-35-14Z__82c1ed53.db`
+- **notes**: scanned=2603
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `a8726b34`
+- **entity_slug**: `stanton-john`
+- **jurisdiction**: `PA`
+- **source**: `PA-DOS`
+- **extract_label**: `pa`
+- **records_scanned**: `445`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-35-14Z__a8726b34.db`
+- **notes**: scanned=445
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `f1857003`
+- **entity_slug**: `walter-mark`
+- **jurisdiction**: `PA`
+- **source**: `PA-DOS`
+- **extract_label**: `pa`
+- **records_scanned**: `4041`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `73`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-35-14Z__f1857003.db`
+- **notes**: scanned=4041, skipped_no_date=38
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `67cccc81`
+- **entity_slug**: `angelos-john-p`
+- **jurisdiction**: `TX`
+- **source**: `TEC`
+- **extract_label**: `TEC_CF_CSV.zip`
+- **records_scanned**: `335`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-46-20Z__67cccc81.db`
+- **notes**: scanned=335
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `83acc802`
+- **entity_slug**: `attanasio-mark`
+- **jurisdiction**: `TX`
+- **source**: `TEC`
+- **extract_label**: `TEC_CF_CSV.zip`
+- **records_scanned**: `28`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-46-20Z__83acc802.db`
+- **notes**: scanned=28
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `eec2af77`
+- **entity_slug**: `castellini-bob`
+- **jurisdiction**: `TX`
+- **source**: `TEC`
+- **extract_label**: `TEC_CF_CSV.zip`
+- **records_scanned**: `3`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-46-20Z__eec2af77.db`
+- **notes**: scanned=3
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `a76d25f4`
+- **entity_slug**: `castellini-phil`
+- **jurisdiction**: `TX`
+- **source**: `TEC`
+- **extract_label**: `TEC_CF_CSV.zip`
+- **records_scanned**: `3`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-46-20Z__a76d25f4.db`
+- **notes**: scanned=3
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `bb82473d`
+- **entity_slug**: `cohen-steven`
+- **jurisdiction**: `TX`
+- **source**: `TEC`
+- **extract_label**: `TEC_CF_CSV.zip`
+- **records_scanned**: `13093`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `257`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-46-20Z__bb82473d.db`
+- **notes**: scanned=13093
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `687e07bc`
+- **entity_slug**: `crane-jim`
+- **jurisdiction**: `TX`
+- **source**: `TEC`
+- **extract_label**: `TEC_CF_CSV.zip`
+- **records_scanned**: `6143`
+- **confirmed_count**: `11`
+- **probable_count**: `3`
+- **uncertain_count**: `29`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-46-21Z__687e07bc.db`
+- **notes**: scanned=6143
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `49567280`
+- **entity_slug**: `davis-ray`
+- **jurisdiction**: `TX`
+- **source**: `TEC`
+- **extract_label**: `TEC_CF_CSV.zip`
+- **records_scanned**: `128327`
+- **confirmed_count**: `58`
+- **probable_count**: `8`
+- **uncertain_count**: `182`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-46-22Z__49567280.db`
+- **notes**: scanned=128327
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `a0687097`
+- **entity_slug**: `dewitt-bill`
+- **jurisdiction**: `TX`
+- **source**: `TEC`
+- **extract_label**: `TEC_CF_CSV.zip`
+- **records_scanned**: `117444`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `3`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-46-29Z__a0687097.db`
+- **notes**: scanned=117444
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `6231db1b`
+- **entity_slug**: `dolan-paul`
+- **jurisdiction**: `TX`
+- **source**: `TEC`
+- **extract_label**: `TEC_CF_CSV.zip`
+- **records_scanned**: `2372`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `13`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-46-39Z__6231db1b.db`
+- **notes**: scanned=2372
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `0713f928`
+- **entity_slug**: `feliciano-jose`
+- **jurisdiction**: `TX`
+- **source**: `TEC`
+- **extract_label**: `TEC_CF_CSV.zip`
+- **records_scanned**: `374`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `13`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-46-39Z__0713f928.db`
+- **notes**: scanned=374
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `d935d8d5`
+- **entity_slug**: `fisher-john`
+- **jurisdiction**: `TX`
+- **source**: `TEC`
+- **extract_label**: `TEC_CF_CSV.zip`
+- **records_scanned**: `26622`
+- **confirmed_count**: `1`
+- **probable_count**: `1`
+- **uncertain_count**: `467`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-46-39Z__d935d8d5.db`
+- **notes**: scanned=26622
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `86a0b87a`
+- **entity_slug**: `henry-john`
+- **jurisdiction**: `TX`
+- **source**: `TEC`
+- **extract_label**: `TEC_CF_CSV.zip`
+- **records_scanned**: `70534`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `688`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-46-41Z__86a0b87a.db`
+- **notes**: scanned=70534
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `9d1103ff`
+- **entity_slug**: `ilitch-chris`
+- **jurisdiction**: `TX`
+- **source**: `TEC`
+- **extract_label**: `TEC_CF_CSV.zip`
+- **records_scanned**: `4`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-46-45Z__9d1103ff.db`
+- **notes**: scanned=4
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `aeae6ec9`
+- **entity_slug**: `johnson-charles`
+- **jurisdiction**: `TX`
+- **source**: `TEC`
+- **extract_label**: `TEC_CF_CSV.zip`
+- **records_scanned**: `182432`
+- **confirmed_count**: `4`
+- **probable_count**: `3`
+- **uncertain_count**: `1724`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-46-46Z__aeae6ec9.db`
+- **notes**: scanned=182432
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `2f6c8c2c`
+- **entity_slug**: `johnson-greg`
+- **jurisdiction**: `TX`
+- **source**: `TEC`
+- **extract_label**: `TEC_CF_CSV.zip`
+- **records_scanned**: `182432`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `774`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-46-57Z__2f6c8c2c.db`
+- **notes**: scanned=182432
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `f4039cf3`
+- **entity_slug**: `kendrick-ken`
+- **jurisdiction**: `TX`
+- **source**: `TEC`
+- **extract_label**: `TEC_CF_CSV.zip`
+- **records_scanned**: `36951`
+- **confirmed_count**: `1`
+- **probable_count**: `1`
+- **uncertain_count**: `1`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-47-10Z__f4039cf3.db`
+- **notes**: scanned=36951
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `4b5cbff9`
+- **entity_slug**: `lerner-mark`
+- **jurisdiction**: `TX`
+- **source**: `TEC`
+- **extract_label**: `TEC_CF_CSV.zip`
+- **records_scanned**: `1158`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `9`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-47-16Z__4b5cbff9.db`
+- **notes**: scanned=1158
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `d0a384ba`
+- **entity_slug**: `malone-john`
+- **jurisdiction**: `TX`
+- **source**: `TEC`
+- **extract_label**: `TEC_CF_CSV.zip`
+- **records_scanned**: `15097`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `43`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-47-16Z__d0a384ba.db`
+- **notes**: scanned=15097
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `1a3fb28d`
+- **entity_slug**: `mcguirk-terry`
+- **jurisdiction**: `TX`
+- **source**: `TEC`
+- **extract_label**: `TEC_CF_CSV.zip`
+- **records_scanned**: `80`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-47-17Z__1a3fb28d.db`
+- **notes**: scanned=80
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `ad5308a6`
+- **entity_slug**: `middleton-john`
+- **jurisdiction**: `TX`
+- **source**: `TEC`
+- **extract_label**: `TEC_CF_CSV.zip`
+- **records_scanned**: `6427`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `163`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-47-17Z__ad5308a6.db`
+- **notes**: scanned=6427
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `02485e4d`
+- **entity_slug**: `monfort-charlie`
+- **jurisdiction**: `TX`
+- **source**: `TEC`
+- **extract_label**: `TEC_CF_CSV.zip`
+- **records_scanned**: `140`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-47-17Z__02485e4d.db`
+- **notes**: scanned=140
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `1c206541`
+- **entity_slug**: `monfort-dick`
+- **jurisdiction**: `TX`
+- **source**: `TEC`
+- **extract_label**: `TEC_CF_CSV.zip`
+- **records_scanned**: `140`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-47-17Z__1c206541.db`
+- **notes**: scanned=140
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `48675aff`
+- **entity_slug**: `moreno-arte`
+- **jurisdiction**: `TX`
+- **source**: `TEC`
+- **extract_label**: `TEC_CF_CSV.zip`
+- **records_scanned**: `22999`
+- **confirmed_count**: `0`
+- **probable_count**: `1`
+- **uncertain_count**: `172`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-47-17Z__48675aff.db`
+- **notes**: scanned=22999
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `b909d668`
+- **entity_slug**: `nutting-bob`
+- **jurisdiction**: `TX`
+- **source**: `TEC`
+- **extract_label**: `TEC_CF_CSV.zip`
+- **records_scanned**: `205`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `17`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-47-18Z__b909d668.db`
+- **notes**: scanned=205
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `da987f9d`
+- **entity_slug**: `pohlad-joe`
+- **jurisdiction**: `TX`
+- **source**: `TEC`
+- **extract_label**: `TEC_CF_CSV.zip`
+- **records_scanned**: `12`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-47-18Z__da987f9d.db`
+- **notes**: scanned=12
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `7ea1ffc9`
+- **entity_slug**: `pohlad-tom`
+- **jurisdiction**: `TX`
+- **source**: `TEC`
+- **extract_label**: `TEC_CF_CSV.zip`
+- **records_scanned**: `12`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-47-18Z__7ea1ffc9.db`
+- **notes**: scanned=12
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `3f4ca111`
+- **entity_slug**: `reinsdorf-jerry`
+- **jurisdiction**: `TX`
+- **source**: `TEC`
+- **extract_label**: `TEC_CF_CSV.zip`
+- **records_scanned**: `4`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-47-18Z__3f4ca111.db`
+- **notes**: scanned=4
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `03f3c499`
+- **entity_slug**: `ricketts-laura`
+- **jurisdiction**: `TX`
+- **source**: `TEC`
+- **extract_label**: `TEC_CF_CSV.zip`
+- **records_scanned**: `1672`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `6`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-47-18Z__03f3c499.db`
+- **notes**: scanned=1672
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `079a7fbb`
+- **entity_slug**: `ricketts-todd`
+- **jurisdiction**: `TX`
+- **source**: `TEC`
+- **extract_label**: `TEC_CF_CSV.zip`
+- **records_scanned**: `1672`
+- **confirmed_count**: `1`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-47-19Z__079a7fbb.db`
+- **notes**: scanned=1672
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `72aec667`
+- **entity_slug**: `ricketts-tom`
+- **jurisdiction**: `TX`
+- **source**: `TEC`
+- **extract_label**: `TEC_CF_CSV.zip`
+- **records_scanned**: `1672`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-47-19Z__72aec667.db`
+- **notes**: scanned=1672
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `fda4da45`
+- **entity_slug**: `rubenstein-david`
+- **jurisdiction**: `TX`
+- **source**: `TEC`
+- **extract_label**: `TEC_CF_CSV.zip`
+- **records_scanned**: `757`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `19`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-47-19Z__fda4da45.db`
+- **notes**: scanned=757
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `74cd5887`
+- **entity_slug**: `seidler-john`
+- **jurisdiction**: `TX`
+- **source**: `TEC`
+- **extract_label**: `TEC_CF_CSV.zip`
+- **records_scanned**: `413`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-47-19Z__74cd5887.db`
+- **notes**: scanned=413
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `deb5de67`
+- **entity_slug**: `sherman-bruce`
+- **jurisdiction**: `TX`
+- **source**: `TEC`
+- **extract_label**: `TEC_CF_CSV.zip`
+- **records_scanned**: `9750`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `9`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-47-19Z__deb5de67.db`
+- **notes**: scanned=9750
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `9a223d70`
+- **entity_slug**: `sherman-john`
+- **jurisdiction**: `TX`
+- **source**: `TEC`
+- **extract_label**: `TEC_CF_CSV.zip`
+- **records_scanned**: `9750`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `76`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-47-19Z__9a223d70.db`
+- **notes**: scanned=9750
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `be8ae971`
+- **entity_slug**: `simpson-bob`
+- **jurisdiction**: `TX`
+- **source**: `TEC`
+- **extract_label**: `TEC_CF_CSV.zip`
+- **records_scanned**: `20037`
+- **confirmed_count**: `1`
+- **probable_count**: `1`
+- **uncertain_count**: `5`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-47-20Z__be8ae971.db`
+- **notes**: scanned=20037
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `76f0b01b`
+- **entity_slug**: `stanton-john`
+- **jurisdiction**: `TX`
+- **source**: `TEC`
+- **extract_label**: `TEC_CF_CSV.zip`
+- **records_scanned**: `2416`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `6`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-47-21Z__76f0b01b.db`
+- **notes**: scanned=2416
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `448b0e2e`
+- **entity_slug**: `steinbrenner-hal`
+- **jurisdiction**: `TX`
+- **source**: `TEC`
+- **extract_label**: `TEC_CF_CSV.zip`
+- **records_scanned**: `5`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-47-21Z__448b0e2e.db`
+- **notes**: scanned=5
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `eab21f65`
+- **entity_slug**: `steinbrenner-hank`
+- **jurisdiction**: `TX`
+- **source**: `TEC`
+- **extract_label**: `TEC_CF_CSV.zip`
+- **records_scanned**: `5`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-47-21Z__eab21f65.db`
+- **notes**: scanned=5
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `ae05519f`
+- **entity_slug**: `steinbrenner-jennifer`
+- **jurisdiction**: `TX`
+- **source**: `TEC`
+- **extract_label**: `TEC_CF_CSV.zip`
+- **records_scanned**: `65`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-47-21Z__ae05519f.db`
+- **notes**: scanned=65
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `8a8a1376`
+- **entity_slug**: `steinbrenner-jessica`
+- **jurisdiction**: `TX`
+- **source**: `TEC`
+- **extract_label**: `TEC_CF_CSV.zip`
+- **records_scanned**: `5`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-47-21Z__8a8a1376.db`
+- **notes**: scanned=5
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `c4d1f090`
+- **entity_slug**: `walter-mark`
+- **jurisdiction**: `TX`
+- **source**: `TEC`
+- **extract_label**: `TEC_CF_CSV.zip`
+- **records_scanned**: `17575`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `5`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-47-21Z__c4d1f090.db`
+- **notes**: scanned=17575
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `548c38a0`
+- **entity_slug**: `cohen-steven`
+- **jurisdiction**: `WA`
+- **source**: `WA-PDC`
+- **extract_label**: `https://data.wa.gov/resource/kv7h-kjye.json`
+- **records_scanned**: `6`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `6`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-52-47Z__548c38a0.db`
+- **notes**: scanned=6
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `2adb7046`
+- **entity_slug**: `crane-jim`
+- **jurisdiction**: `WA`
+- **source**: `WA-PDC`
+- **extract_label**: `https://data.wa.gov/resource/kv7h-kjye.json`
+- **records_scanned**: `3`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `3`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-52-47Z__2adb7046.db`
+- **notes**: scanned=3
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `ba47e545`
+- **entity_slug**: `davis-ray`
+- **jurisdiction**: `WA`
+- **source**: `WA-PDC`
+- **extract_label**: `https://data.wa.gov/resource/kv7h-kjye.json`
+- **records_scanned**: `3`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `1`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-52-47Z__ba47e545.db`
+- **notes**: scanned=3
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `df6fd96e`
+- **entity_slug**: `dewitt-bill`
+- **jurisdiction**: `WA`
+- **source**: `WA-PDC`
+- **extract_label**: `https://data.wa.gov/resource/kv7h-kjye.json`
+- **records_scanned**: `7`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-52-47Z__df6fd96e.db`
+- **notes**: scanned=7
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `b6833e94`
+- **entity_slug**: `dolan-paul`
+- **jurisdiction**: `WA`
+- **source**: `WA-PDC`
+- **extract_label**: `https://data.wa.gov/resource/kv7h-kjye.json`
+- **records_scanned**: `5`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `5`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-52-47Z__b6833e94.db`
+- **notes**: scanned=5
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `b997e36c`
+- **entity_slug**: `fisher-john`
+- **jurisdiction**: `WA`
+- **source**: `WA-PDC`
+- **extract_label**: `https://data.wa.gov/resource/kv7h-kjye.json`
+- **records_scanned**: `18`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `18`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-52-47Z__b997e36c.db`
+- **notes**: scanned=18
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `13a461fd`
+- **entity_slug**: `henry-john`
+- **jurisdiction**: `WA`
+- **source**: `WA-PDC`
+- **extract_label**: `https://data.wa.gov/resource/kv7h-kjye.json`
+- **records_scanned**: `40`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `40`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-52-47Z__13a461fd.db`
+- **notes**: scanned=40
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `ee6aeaba`
+- **entity_slug**: `johnson-charles`
+- **jurisdiction**: `WA`
+- **source**: `WA-PDC`
+- **extract_label**: `https://data.wa.gov/resource/kv7h-kjye.json`
+- **records_scanned**: `87`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `62`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-52-47Z__ee6aeaba.db`
+- **notes**: scanned=87
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `ac369112`
+- **entity_slug**: `johnson-greg`
+- **jurisdiction**: `WA`
+- **source**: `WA-PDC`
+- **extract_label**: `https://data.wa.gov/resource/kv7h-kjye.json`
+- **records_scanned**: `358`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `357`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-52-48Z__ac369112.db`
+- **notes**: scanned=358
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `ca510a4d`
+- **entity_slug**: `kendrick-ken`
+- **jurisdiction**: `WA`
+- **source**: `WA-PDC`
+- **extract_label**: `https://data.wa.gov/resource/kv7h-kjye.json`
+- **records_scanned**: `5`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-52-48Z__ca510a4d.db`
+- **notes**: scanned=5
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `412dabf1`
+- **entity_slug**: `lerner-mark`
+- **jurisdiction**: `WA`
+- **source**: `WA-PDC`
+- **extract_label**: `https://data.wa.gov/resource/kv7h-kjye.json`
+- **records_scanned**: `3`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `3`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-52-48Z__412dabf1.db`
+- **notes**: scanned=3
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `8b2a5382`
+- **entity_slug**: `malone-john`
+- **jurisdiction**: `WA`
+- **source**: `WA-PDC`
+- **extract_label**: `https://data.wa.gov/resource/kv7h-kjye.json`
+- **records_scanned**: `5`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `4`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-52-48Z__8b2a5382.db`
+- **notes**: scanned=5
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `d190d002`
+- **entity_slug**: `middleton-john`
+- **jurisdiction**: `WA`
+- **source**: `WA-PDC`
+- **extract_label**: `https://data.wa.gov/resource/kv7h-kjye.json`
+- **records_scanned**: `6`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `6`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-52-48Z__d190d002.db`
+- **notes**: scanned=6
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `2a889f02`
+- **entity_slug**: `ricketts-laura`
+- **jurisdiction**: `WA`
+- **source**: `WA-PDC`
+- **extract_label**: `https://data.wa.gov/resource/kv7h-kjye.json`
+- **records_scanned**: `5`
+- **confirmed_count**: `2`
+- **probable_count**: `3`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-52-48Z__2a889f02.db`
+- **notes**: scanned=5
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `30b202f9`
+- **entity_slug**: `rubenstein-david`
+- **jurisdiction**: `WA`
+- **source**: `WA-PDC`
+- **extract_label**: `https://data.wa.gov/resource/kv7h-kjye.json`
+- **records_scanned**: `8`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `8`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-52-48Z__30b202f9.db`
+- **notes**: scanned=8
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `9c46e824`
+- **entity_slug**: `sherman-bruce`
+- **jurisdiction**: `WA`
+- **source**: `WA-PDC`
+- **extract_label**: `https://data.wa.gov/resource/kv7h-kjye.json`
+- **records_scanned**: `52`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `52`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-52-48Z__9c46e824.db`
+- **notes**: scanned=52
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `919decc9`
+- **entity_slug**: `sherman-john`
+- **jurisdiction**: `WA`
+- **source**: `WA-PDC`
+- **extract_label**: `https://data.wa.gov/resource/kv7h-kjye.json`
+- **records_scanned**: `93`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `93`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-52-48Z__919decc9.db`
+- **notes**: scanned=93
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `682f1a21`
+- **entity_slug**: `simpson-bob`
+- **jurisdiction**: `WA`
+- **source**: `WA-PDC`
+- **extract_label**: `https://data.wa.gov/resource/kv7h-kjye.json`
+- **records_scanned**: `3`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-52-48Z__682f1a21.db`
+- **notes**: scanned=3
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `fe5d9147`
+- **entity_slug**: `stanton-john`
+- **jurisdiction**: `WA`
+- **source**: `WA-PDC`
+- **extract_label**: `https://data.wa.gov/resource/kv7h-kjye.json`
+- **records_scanned**: `398`
+- **confirmed_count**: `195`
+- **probable_count**: `9`
+- **uncertain_count**: `192`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-52-48Z__fe5d9147.db`
+- **notes**: scanned=398
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `72fb305b`
+- **entity_slug**: `walter-mark`
+- **jurisdiction**: `WA`
+- **source**: `WA-PDC`
+- **extract_label**: `https://data.wa.gov/resource/kv7h-kjye.json`
+- **records_scanned**: `10`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `10`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-52-48Z__72fb305b.db`
+- **notes**: scanned=10
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `b1989e48`
+- **entity_slug**: `angelos-john-p`
+- **jurisdiction**: `CO`
+- **source**: `CO-TRACER`
+- **extract_label**: `co`
+- **records_scanned**: `17`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-53-10Z__b1989e48.db`
+- **notes**: scanned=17
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `24a80a86`
+- **entity_slug**: `attanasio-mark`
+- **jurisdiction**: `CO`
+- **source**: `CO-TRACER`
+- **extract_label**: `co`
+- **records_scanned**: `1`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-53-10Z__24a80a86.db`
+- **notes**: scanned=1
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `fc68ebb6`
+- **entity_slug**: `cohen-steven`
+- **jurisdiction**: `CO`
+- **source**: `CO-TRACER`
+- **extract_label**: `co`
+- **records_scanned**: `527`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `18`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-53-10Z__fc68ebb6.db`
+- **notes**: scanned=527
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `8e2447c6`
+- **entity_slug**: `crane-jim`
+- **jurisdiction**: `CO`
+- **source**: `CO-TRACER`
+- **extract_label**: `co`
+- **records_scanned**: `149`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `3`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-53-10Z__8e2447c6.db`
+- **notes**: scanned=149
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `6d9bcdb9`
+- **entity_slug**: `davis-ray`
+- **jurisdiction**: `CO`
+- **source**: `CO-TRACER`
+- **extract_label**: `co`
+- **records_scanned**: `2258`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-53-10Z__6d9bcdb9.db`
+- **notes**: scanned=2258
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `6f729d19`
+- **entity_slug**: `dewitt-bill`
+- **jurisdiction**: `CO`
+- **source**: `CO-TRACER`
+- **extract_label**: `co`
+- **records_scanned**: `709`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-53-10Z__6f729d19.db`
+- **notes**: scanned=709
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `d51408c8`
+- **entity_slug**: `dolan-paul`
+- **jurisdiction**: `CO`
+- **source**: `CO-TRACER`
+- **extract_label**: `co`
+- **records_scanned**: `137`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-53-10Z__d51408c8.db`
+- **notes**: scanned=137
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `bb1f43fa`
+- **entity_slug**: `feliciano-jose`
+- **jurisdiction**: `CO`
+- **source**: `CO-TRACER`
+- **extract_label**: `co`
+- **records_scanned**: `44`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-53-10Z__bb1f43fa.db`
+- **notes**: scanned=44
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `75226383`
+- **entity_slug**: `fisher-john`
+- **jurisdiction**: `CO`
+- **source**: `CO-TRACER`
+- **extract_label**: `co`
+- **records_scanned**: `520`
+- **confirmed_count**: `2`
+- **probable_count**: `0`
+- **uncertain_count**: `2`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-53-10Z__75226383.db`
+- **notes**: scanned=520
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `bc44fd01`
+- **entity_slug**: `henry-john`
+- **jurisdiction**: `CO`
+- **source**: `CO-TRACER`
+- **extract_label**: `co`
+- **records_scanned**: `1110`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `8`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-53-10Z__bc44fd01.db`
+- **notes**: scanned=1110
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `0b8c155f`
+- **entity_slug**: `johnson-charles`
+- **jurisdiction**: `CO`
+- **source**: `CO-TRACER`
+- **extract_label**: `co`
+- **records_scanned**: `3403`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `48`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-53-10Z__0b8c155f.db`
+- **notes**: scanned=3403
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `88f714c2`
+- **entity_slug**: `johnson-greg`
+- **jurisdiction**: `CO`
+- **source**: `CO-TRACER`
+- **extract_label**: `co`
+- **records_scanned**: `3403`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `16`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-53-10Z__88f714c2.db`
+- **notes**: scanned=3403
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `6a8fd424`
+- **entity_slug**: `kendrick-ken`
+- **jurisdiction**: `CO`
+- **source**: `CO-TRACER`
+- **extract_label**: `co`
+- **records_scanned**: `278`
+- **confirmed_count**: `1`
+- **probable_count**: `1`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-53-11Z__6a8fd424.db`
+- **notes**: scanned=278
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `4f7e70d8`
+- **entity_slug**: `lerner-mark`
+- **jurisdiction**: `CO`
+- **source**: `CO-TRACER`
+- **extract_label**: `co`
+- **records_scanned**: `22`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-53-11Z__4f7e70d8.db`
+- **notes**: scanned=22
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `2b044e6a`
+- **entity_slug**: `malone-john`
+- **jurisdiction**: `CO`
+- **source**: `CO-TRACER`
+- **extract_label**: `co`
+- **records_scanned**: `378`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-53-11Z__2b044e6a.db`
+- **notes**: scanned=378
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `fe0c5770`
+- **entity_slug**: `mcguirk-terry`
+- **jurisdiction**: `CO`
+- **source**: `CO-TRACER`
+- **extract_label**: `co`
+- **records_scanned**: `11`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-53-11Z__fe0c5770.db`
+- **notes**: scanned=11
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `14288ee5`
+- **entity_slug**: `middleton-john`
+- **jurisdiction**: `CO`
+- **source**: `CO-TRACER`
+- **extract_label**: `co`
+- **records_scanned**: `255`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-53-11Z__14288ee5.db`
+- **notes**: scanned=255
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `2d84bbdc`
+- **entity_slug**: `monfort-charlie`
+- **jurisdiction**: `CO`
+- **source**: `CO-TRACER`
+- **extract_label**: `co`
+- **records_scanned**: `10`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-53-11Z__2d84bbdc.db`
+- **notes**: scanned=10
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `90fe84ef`
+- **entity_slug**: `monfort-dick`
+- **jurisdiction**: `CO`
+- **source**: `CO-TRACER`
+- **extract_label**: `co`
+- **records_scanned**: `10`
+- **confirmed_count**: `0`
+- **probable_count**: `1`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-53-11Z__90fe84ef.db`
+- **notes**: scanned=10
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `c0aa6b14`
+- **entity_slug**: `moreno-arte`
+- **jurisdiction**: `CO`
+- **source**: `CO-TRACER`
+- **extract_label**: `co`
+- **records_scanned**: `186`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-53-11Z__c0aa6b14.db`
+- **notes**: scanned=186
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `4f8f9c33`
+- **entity_slug**: `nutting-bob`
+- **jurisdiction**: `CO`
+- **source**: `CO-TRACER`
+- **extract_label**: `co`
+- **records_scanned**: `15`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-53-11Z__4f8f9c33.db`
+- **notes**: scanned=15
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `1af0274e`
+- **entity_slug**: `pohlad-joe`
+- **jurisdiction**: `CO`
+- **source**: `CO-TRACER`
+- **extract_label**: `co`
+- **records_scanned**: `1`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-53-11Z__1af0274e.db`
+- **notes**: scanned=1
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `55f64c1d`
+- **entity_slug**: `pohlad-tom`
+- **jurisdiction**: `CO`
+- **source**: `CO-TRACER`
+- **extract_label**: `co`
+- **records_scanned**: `1`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-53-11Z__55f64c1d.db`
+- **notes**: scanned=1
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `1cf2d426`
+- **entity_slug**: `ricketts-laura`
+- **jurisdiction**: `CO`
+- **source**: `CO-TRACER`
+- **extract_label**: `co`
+- **records_scanned**: `16`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-53-11Z__1cf2d426.db`
+- **notes**: scanned=16
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `0de8c2b0`
+- **entity_slug**: `ricketts-todd`
+- **jurisdiction**: `CO`
+- **source**: `CO-TRACER`
+- **extract_label**: `co`
+- **records_scanned**: `16`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-53-11Z__0de8c2b0.db`
+- **notes**: scanned=16
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `81368843`
+- **entity_slug**: `ricketts-tom`
+- **jurisdiction**: `CO`
+- **source**: `CO-TRACER`
+- **extract_label**: `co`
+- **records_scanned**: `16`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-53-11Z__81368843.db`
+- **notes**: scanned=16
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `c8aefc64`
+- **entity_slug**: `rubenstein-david`
+- **jurisdiction**: `CO`
+- **source**: `CO-TRACER`
+- **extract_label**: `co`
+- **records_scanned**: `38`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `1`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-53-11Z__c8aefc64.db`
+- **notes**: scanned=38
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `35387533`
+- **entity_slug**: `seidler-john`
+- **jurisdiction**: `CO`
+- **source**: `CO-TRACER`
+- **extract_label**: `co`
+- **records_scanned**: `27`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-53-11Z__35387533.db`
+- **notes**: scanned=27
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `85326f50`
+- **entity_slug**: `sherman-bruce`
+- **jurisdiction**: `CO`
+- **source**: `CO-TRACER`
+- **extract_label**: `co`
+- **records_scanned**: `227`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-53-11Z__85326f50.db`
+- **notes**: scanned=227
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `9d2a23ac`
+- **entity_slug**: `sherman-john`
+- **jurisdiction**: `CO`
+- **source**: `CO-TRACER`
+- **extract_label**: `co`
+- **records_scanned**: `227`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-53-11Z__9d2a23ac.db`
+- **notes**: scanned=227
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `1c91accf`
+- **entity_slug**: `simpson-bob`
+- **jurisdiction**: `CO`
+- **source**: `CO-TRACER`
+- **extract_label**: `co`
+- **records_scanned**: `367`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-53-11Z__1c91accf.db`
+- **notes**: scanned=367
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `28885272`
+- **entity_slug**: `stanton-john`
+- **jurisdiction**: `CO`
+- **source**: `CO-TRACER`
+- **extract_label**: `co`
+- **records_scanned**: `44`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `1`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-53-11Z__28885272.db`
+- **notes**: scanned=44
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `49d6e7f0`
+- **entity_slug**: `steinbrenner-hal`
+- **jurisdiction**: `CO`
+- **source**: `CO-TRACER`
+- **extract_label**: `co`
+- **records_scanned**: `1`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-53-11Z__49d6e7f0.db`
+- **notes**: scanned=1
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `8ee07a5b`
+- **entity_slug**: `steinbrenner-hank`
+- **jurisdiction**: `CO`
+- **source**: `CO-TRACER`
+- **extract_label**: `co`
+- **records_scanned**: `1`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-53-11Z__8ee07a5b.db`
+- **notes**: scanned=1
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `9261f384`
+- **entity_slug**: `steinbrenner-jennifer`
+- **jurisdiction**: `CO`
+- **source**: `CO-TRACER`
+- **extract_label**: `co`
+- **records_scanned**: `1`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-53-11Z__9261f384.db`
+- **notes**: scanned=1
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `7d34919f`
+- **entity_slug**: `steinbrenner-jessica`
+- **jurisdiction**: `CO`
+- **source**: `CO-TRACER`
+- **extract_label**: `co`
+- **records_scanned**: `1`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-53-11Z__7d34919f.db`
+- **notes**: scanned=1
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `2ee287ef`
+- **entity_slug**: `walter-mark`
+- **jurisdiction**: `CO`
+- **source**: `CO-TRACER`
+- **extract_label**: `co`
+- **records_scanned**: `293`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-53-11Z__2ee287ef.db`
+- **notes**: scanned=293
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `2fc6d1eb`
+- **entity_slug**: `zalupski-patrick`
+- **jurisdiction**: `CO`
+- **source**: `CO-TRACER`
+- **extract_label**: `co`
+- **records_scanned**: `1`
+- **confirmed_count**: `1`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T13-53-11Z__2fc6d1eb.db`
+- **notes**: scanned=1
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `e3330ee6`
+- **entity_slug**: `castellini-bob`
+- **jurisdiction**: `AZ`
+- **source**: `AZ-SOS`
+- **extract_label**: `https://seethemoney.az.gov/Reporting/GetNEWDetailedTableData (Page=80, Individuals)`
+- **records_scanned**: `19`
+- **confirmed_count**: `6`
+- **probable_count**: `0`
+- **uncertain_count**: `13`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-03-25Z__e3330ee6.db`
+- **notes**: scanned=19
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `b4ba3fba`
+- **entity_slug**: `cohen-steven`
+- **jurisdiction**: `AZ`
+- **source**: `AZ-SOS`
+- **extract_label**: `https://seethemoney.az.gov/Reporting/GetNEWDetailedTableData (Page=80, Individuals)`
+- **records_scanned**: `1`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-03-25Z__b4ba3fba.db`
+- **notes**: scanned=1
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `ff93f738`
+- **entity_slug**: `crane-jim`
+- **jurisdiction**: `AZ`
+- **source**: `AZ-SOS`
+- **extract_label**: `https://seethemoney.az.gov/Reporting/GetNEWDetailedTableData (Page=80, Individuals)`
+- **records_scanned**: `36`
+- **confirmed_count**: `1`
+- **probable_count**: `0`
+- **uncertain_count**: `9`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-03-25Z__ff93f738.db`
+- **notes**: scanned=36
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `992e03dc`
+- **entity_slug**: `davis-ray`
+- **jurisdiction**: `AZ`
+- **source**: `AZ-SOS`
+- **extract_label**: `https://seethemoney.az.gov/Reporting/GetNEWDetailedTableData (Page=80, Individuals)`
+- **records_scanned**: `72`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-03-25Z__992e03dc.db`
+- **notes**: scanned=72
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `9cdf752e`
+- **entity_slug**: `dewitt-bill`
+- **jurisdiction**: `AZ`
+- **source**: `AZ-SOS`
+- **extract_label**: `https://seethemoney.az.gov/Reporting/GetNEWDetailedTableData (Page=80, Individuals)`
+- **records_scanned**: `4`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `2`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-03-25Z__9cdf752e.db`
+- **notes**: scanned=4
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `e7828489`
+- **entity_slug**: `dolan-paul`
+- **jurisdiction**: `AZ`
+- **source**: `AZ-SOS`
+- **extract_label**: `https://seethemoney.az.gov/Reporting/GetNEWDetailedTableData (Page=80, Individuals)`
+- **records_scanned**: `2`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `1`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-03-25Z__e7828489.db`
+- **notes**: scanned=2
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `26823838`
+- **entity_slug**: `johnson-greg`
+- **jurisdiction**: `AZ`
+- **source**: `AZ-SOS`
+- **extract_label**: `https://seethemoney.az.gov/Reporting/GetNEWDetailedTableData (Page=80, Individuals)`
+- **records_scanned**: `2`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `2`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-03-26Z__26823838.db`
+- **notes**: scanned=2
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `2eae1f57`
+- **entity_slug**: `kendrick-ken`
+- **jurisdiction**: `AZ`
+- **source**: `AZ-SOS`
+- **extract_label**: `https://seethemoney.az.gov/Reporting/GetNEWDetailedTableData (Page=80, Individuals)`
+- **records_scanned**: `80`
+- **confirmed_count**: `74`
+- **probable_count**: `6`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-03-26Z__2eae1f57.db`
+- **notes**: scanned=80
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `c9b0c177`
+- **entity_slug**: `lerner-mark`
+- **jurisdiction**: `AZ`
+- **source**: `AZ-SOS`
+- **extract_label**: `https://seethemoney.az.gov/Reporting/GetNEWDetailedTableData (Page=80, Individuals)`
+- **records_scanned**: `2`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `2`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-03-26Z__c9b0c177.db`
+- **notes**: scanned=2
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `3bb6f6a0`
+- **entity_slug**: `malone-john`
+- **jurisdiction**: `AZ`
+- **source**: `AZ-SOS`
+- **extract_label**: `https://seethemoney.az.gov/Reporting/GetNEWDetailedTableData (Page=80, Individuals)`
+- **records_scanned**: `37`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `37`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-03-26Z__3bb6f6a0.db`
+- **notes**: scanned=37
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `653372ce`
+- **entity_slug**: `middleton-john`
+- **jurisdiction**: `AZ`
+- **source**: `AZ-SOS`
+- **extract_label**: `https://seethemoney.az.gov/Reporting/GetNEWDetailedTableData (Page=80, Individuals)`
+- **records_scanned**: `36`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `35`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-03-26Z__653372ce.db`
+- **notes**: scanned=36
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `15fe0fcf`
+- **entity_slug**: `monfort-charlie`
+- **jurisdiction**: `AZ`
+- **source**: `AZ-SOS`
+- **extract_label**: `https://seethemoney.az.gov/Reporting/GetNEWDetailedTableData (Page=80, Individuals)`
+- **records_scanned**: `1`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `1`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-03-26Z__15fe0fcf.db`
+- **notes**: scanned=1
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `8dd73879`
+- **entity_slug**: `moreno-arte`
+- **jurisdiction**: `AZ`
+- **source**: `AZ-SOS`
+- **extract_label**: `https://seethemoney.az.gov/Reporting/GetNEWDetailedTableData (Page=80, Individuals)`
+- **records_scanned**: `31`
+- **confirmed_count**: `9`
+- **probable_count**: `0`
+- **uncertain_count**: `1`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-03-26Z__8dd73879.db`
+- **notes**: scanned=31
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `f7d96809`
+- **entity_slug**: `reinsdorf-jerry`
+- **jurisdiction**: `AZ`
+- **source**: `AZ-SOS`
+- **extract_label**: `https://seethemoney.az.gov/Reporting/GetNEWDetailedTableData (Page=80, Individuals)`
+- **records_scanned**: `11`
+- **confirmed_count**: `11`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-03-26Z__f7d96809.db`
+- **notes**: scanned=11
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `1fefe50b`
+- **entity_slug**: `ricketts-laura`
+- **jurisdiction**: `AZ`
+- **source**: `AZ-SOS`
+- **extract_label**: `https://seethemoney.az.gov/Reporting/GetNEWDetailedTableData (Page=80, Individuals)`
+- **records_scanned**: `2`
+- **confirmed_count**: `0`
+- **probable_count**: `2`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-03-26Z__1fefe50b.db`
+- **notes**: scanned=2
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `969c5a0a`
+- **entity_slug**: `ricketts-todd`
+- **jurisdiction**: `AZ`
+- **source**: `AZ-SOS`
+- **extract_label**: `https://seethemoney.az.gov/Reporting/GetNEWDetailedTableData (Page=80, Individuals)`
+- **records_scanned**: `2`
+- **confirmed_count**: `2`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-03-26Z__969c5a0a.db`
+- **notes**: scanned=2
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `d1cb972d`
+- **entity_slug**: `rubenstein-david`
+- **jurisdiction**: `AZ`
+- **source**: `AZ-SOS`
+- **extract_label**: `https://seethemoney.az.gov/Reporting/GetNEWDetailedTableData (Page=80, Individuals)`
+- **records_scanned**: `2`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `2`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-03-26Z__d1cb972d.db`
+- **notes**: scanned=2
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `a695a570`
+- **entity_slug**: `sherman-bruce`
+- **jurisdiction**: `AZ`
+- **source**: `AZ-SOS`
+- **extract_label**: `https://seethemoney.az.gov/Reporting/GetNEWDetailedTableData (Page=80, Individuals)`
+- **records_scanned**: `12`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `12`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-03-26Z__a695a570.db`
+- **notes**: scanned=12
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `d1edb007`
+- **entity_slug**: `sherman-john`
+- **jurisdiction**: `AZ`
+- **source**: `AZ-SOS`
+- **extract_label**: `https://seethemoney.az.gov/Reporting/GetNEWDetailedTableData (Page=80, Individuals)`
+- **records_scanned**: `413`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `384`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-03-26Z__d1edb007.db`
+- **notes**: scanned=413
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `1e0811f3`
+- **entity_slug**: `simpson-bob`
+- **jurisdiction**: `AZ`
+- **source**: `AZ-SOS`
+- **extract_label**: `https://seethemoney.az.gov/Reporting/GetNEWDetailedTableData (Page=80, Individuals)`
+- **records_scanned**: `2`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `1`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-03-26Z__1e0811f3.db`
+- **notes**: scanned=2
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `5c5a8569`
+- **entity_slug**: `stanton-john`
+- **jurisdiction**: `AZ`
+- **source**: `AZ-SOS`
+- **extract_label**: `https://seethemoney.az.gov/Reporting/GetNEWDetailedTableData (Page=80, Individuals)`
+- **records_scanned**: `71`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `13`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-03-26Z__5c5a8569.db`
+- **notes**: scanned=71
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `3efb08ee`
+- **entity_slug**: `angelos-john-p`
+- **jurisdiction**: `MN`
+- **source**: `MN-CFB`
+- **extract_label**: `mn`
+- **records_scanned**: `11`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-04-01Z__3efb08ee.db`
+- **notes**: scanned=11
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `aa9d17ee`
+- **entity_slug**: `cohen-steven`
+- **jurisdiction**: `MN`
+- **source**: `MN-CFB`
+- **extract_label**: `mn`
+- **records_scanned**: `233`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `3`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-04-01Z__aa9d17ee.db`
+- **notes**: scanned=233
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `80461f03`
+- **entity_slug**: `crane-jim`
+- **jurisdiction**: `MN`
+- **source**: `MN-CFB`
+- **extract_label**: `mn`
+- **records_scanned**: `55`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-04-01Z__80461f03.db`
+- **notes**: scanned=55
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `7eda5a9e`
+- **entity_slug**: `davis-ray`
+- **jurisdiction**: `MN`
+- **source**: `MN-CFB`
+- **extract_label**: `mn`
+- **records_scanned**: `1296`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-04-01Z__7eda5a9e.db`
+- **notes**: scanned=1296
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `a47337c3`
+- **entity_slug**: `dewitt-bill`
+- **jurisdiction**: `MN`
+- **source**: `MN-CFB`
+- **extract_label**: `mn`
+- **records_scanned**: `279`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-04-01Z__a47337c3.db`
+- **notes**: scanned=279
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `aeeeecf6`
+- **entity_slug**: `dolan-paul`
+- **jurisdiction**: `MN`
+- **source**: `MN-CFB`
+- **extract_label**: `mn`
+- **records_scanned**: `219`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-04-01Z__aeeeecf6.db`
+- **notes**: scanned=219
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `858536ae`
+- **entity_slug**: `feliciano-jose`
+- **jurisdiction**: `MN`
+- **source**: `MN-CFB`
+- **extract_label**: `mn`
+- **records_scanned**: `1`
+- **confirmed_count**: `1`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-04-01Z__858536ae.db`
+- **notes**: scanned=1
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `33247499`
+- **entity_slug**: `fisher-john`
+- **jurisdiction**: `MN`
+- **source**: `MN-CFB`
+- **extract_label**: `mn`
+- **records_scanned**: `280`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-04-01Z__33247499.db`
+- **notes**: scanned=280
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `de4d656c`
+- **entity_slug**: `henry-john`
+- **jurisdiction**: `MN`
+- **source**: `MN-CFB`
+- **extract_label**: `mn`
+- **records_scanned**: `882`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `1`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-04-01Z__de4d656c.db`
+- **notes**: scanned=882
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `c94ca653`
+- **entity_slug**: `ilitch-chris`
+- **jurisdiction**: `MN`
+- **source**: `MN-CFB`
+- **extract_label**: `mn`
+- **records_scanned**: `1`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-04-01Z__c94ca653.db`
+- **notes**: scanned=1
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `e6ff1403`
+- **entity_slug**: `johnson-charles`
+- **jurisdiction**: `MN`
+- **source**: `MN-CFB`
+- **extract_label**: `mn`
+- **records_scanned**: `6087`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `6`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-04-01Z__e6ff1403.db`
+- **notes**: scanned=6087
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `a6932ffe`
+- **entity_slug**: `johnson-greg`
+- **jurisdiction**: `MN`
+- **source**: `MN-CFB`
+- **extract_label**: `mn`
+- **records_scanned**: `6087`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `28`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-04-01Z__a6932ffe.db`
+- **notes**: scanned=6087
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `2b40bd5b`
+- **entity_slug**: `kendrick-ken`
+- **jurisdiction**: `MN`
+- **source**: `MN-CFB`
+- **extract_label**: `mn`
+- **records_scanned**: `8`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-04-01Z__2b40bd5b.db`
+- **notes**: scanned=8
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `61a2ee59`
+- **entity_slug**: `lerner-mark`
+- **jurisdiction**: `MN`
+- **source**: `MN-CFB`
+- **extract_label**: `mn`
+- **records_scanned**: `31`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-04-01Z__61a2ee59.db`
+- **notes**: scanned=31
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `9adaa477`
+- **entity_slug**: `malone-john`
+- **jurisdiction**: `MN`
+- **source**: `MN-CFB`
+- **extract_label**: `mn`
+- **records_scanned**: `184`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `1`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-04-01Z__9adaa477.db`
+- **notes**: scanned=184
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `555c3731`
+- **entity_slug**: `middleton-john`
+- **jurisdiction**: `MN`
+- **source**: `MN-CFB`
+- **extract_label**: `mn`
+- **records_scanned**: `50`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `1`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-04-01Z__555c3731.db`
+- **notes**: scanned=50
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `11ef0bab`
+- **entity_slug**: `moreno-arte`
+- **jurisdiction**: `MN`
+- **source**: `MN-CFB`
+- **extract_label**: `mn`
+- **records_scanned**: `10`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-04-02Z__11ef0bab.db`
+- **notes**: scanned=10
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `2b91a18d`
+- **entity_slug**: `nutting-bob`
+- **jurisdiction**: `MN`
+- **source**: `MN-CFB`
+- **extract_label**: `mn`
+- **records_scanned**: `3`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `1`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-04-02Z__2b91a18d.db`
+- **notes**: scanned=3
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `c69235d4`
+- **entity_slug**: `pohlad-joe`
+- **jurisdiction**: `MN`
+- **source**: `MN-CFB`
+- **extract_label**: `mn`
+- **records_scanned**: `173`
+- **confirmed_count**: `13`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-04-02Z__c69235d4.db`
+- **notes**: scanned=173
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `894623cd`
+- **entity_slug**: `pohlad-tom`
+- **jurisdiction**: `MN`
+- **source**: `MN-CFB`
+- **extract_label**: `mn`
+- **records_scanned**: `173`
+- **confirmed_count**: `4`
+- **probable_count**: `1`
+- **uncertain_count**: `2`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-04-02Z__894623cd.db`
+- **notes**: scanned=173
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `e42f8d0f`
+- **entity_slug**: `rubenstein-david`
+- **jurisdiction**: `MN`
+- **source**: `MN-CFB`
+- **extract_label**: `mn`
+- **records_scanned**: `5`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-04-02Z__e42f8d0f.db`
+- **notes**: scanned=5
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `023a622e`
+- **entity_slug**: `sherman-bruce`
+- **jurisdiction**: `MN`
+- **source**: `MN-CFB`
+- **extract_label**: `mn`
+- **records_scanned**: `188`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-04-02Z__023a622e.db`
+- **notes**: scanned=188
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `d363411e`
+- **entity_slug**: `sherman-john`
+- **jurisdiction**: `MN`
+- **source**: `MN-CFB`
+- **extract_label**: `mn`
+- **records_scanned**: `188`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-04-02Z__d363411e.db`
+- **notes**: scanned=188
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `e242e702`
+- **entity_slug**: `simpson-bob`
+- **jurisdiction**: `MN`
+- **source**: `MN-CFB`
+- **extract_label**: `mn`
+- **records_scanned**: `103`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-04-02Z__e242e702.db`
+- **notes**: scanned=103
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `92667eca`
+- **entity_slug**: `stanton-john`
+- **jurisdiction**: `MN`
+- **source**: `MN-CFB`
+- **extract_label**: `mn`
+- **records_scanned**: `68`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-04-02Z__92667eca.db`
+- **notes**: scanned=68
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `5a2fb8fc`
+- **entity_slug**: `steinbrenner-hal`
+- **jurisdiction**: `MN`
+- **source**: `MN-CFB`
+- **extract_label**: `mn`
+- **records_scanned**: `30`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-04-02Z__5a2fb8fc.db`
+- **notes**: scanned=30
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `ad45436b`
+- **entity_slug**: `steinbrenner-hank`
+- **jurisdiction**: `MN`
+- **source**: `MN-CFB`
+- **extract_label**: `mn`
+- **records_scanned**: `30`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-04-02Z__ad45436b.db`
+- **notes**: scanned=30
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `dfa140c1`
+- **entity_slug**: `steinbrenner-jennifer`
+- **jurisdiction**: `MN`
+- **source**: `MN-CFB`
+- **extract_label**: `mn`
+- **records_scanned**: `30`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-04-02Z__dfa140c1.db`
+- **notes**: scanned=30
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `20430cf3`
+- **entity_slug**: `steinbrenner-jessica`
+- **jurisdiction**: `MN`
+- **source**: `MN-CFB`
+- **extract_label**: `mn`
+- **records_scanned**: `30`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-04-02Z__20430cf3.db`
+- **notes**: scanned=30
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `5e1e86b9`
+- **entity_slug**: `walter-mark`
+- **jurisdiction**: `MN`
+- **source**: `MN-CFB`
+- **extract_label**: `mn`
+- **records_scanned**: `426`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-04-02Z__5e1e86b9.db`
+- **notes**: scanned=426
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `325c0e6a`
+- **entity_slug**: `angelos-john-p`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `33`
+- **confirmed_count**: `1`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-27Z__325c0e6a.db`
+- **notes**: scanned=33
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `e6c97a0b`
+- **entity_slug**: `attanasio-mark`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `20`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-27Z__e6c97a0b.db`
+- **notes**: scanned=20
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `cfb6c13b`
+- **entity_slug**: `castellini-bob`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `2`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-27Z__cfb6c13b.db`
+- **notes**: scanned=2
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `5a1d06d1`
+- **entity_slug**: `castellini-phil`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `2`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-27Z__5a1d06d1.db`
+- **notes**: scanned=2
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `11c20aff`
+- **entity_slug**: `cohen-steven`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `4785`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `92`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-27Z__11c20aff.db`
+- **notes**: scanned=4785
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `ead524f8`
+- **entity_slug**: `crane-jim`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `1001`
+- **confirmed_count**: `0`
+- **probable_count**: `1`
+- **uncertain_count**: `44`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-27Z__ead524f8.db`
+- **notes**: scanned=1001
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `9b67cd9f`
+- **entity_slug**: `davis-ray`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `4566`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-27Z__9b67cd9f.db`
+- **notes**: scanned=4566
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `04acf9b1`
+- **entity_slug**: `dewitt-bill`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `457`
+- **confirmed_count**: `1`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-28Z__04acf9b1.db`
+- **notes**: scanned=457
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `5b7081f8`
+- **entity_slug**: `dolan-paul`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `655`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `3`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-28Z__5b7081f8.db`
+- **notes**: scanned=655
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `14d2d411`
+- **entity_slug**: `feliciano-jose`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `116`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-28Z__14d2d411.db`
+- **notes**: scanned=116
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `98e4da3f`
+- **entity_slug**: `ilitch-chris`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `1`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `1`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-28Z__98e4da3f.db`
+- **notes**: scanned=1
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `b5c6cd70`
+- **entity_slug**: `johnson-charles`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `4510`
+- **confirmed_count**: `0`
+- **probable_count**: `4`
+- **uncertain_count**: `64`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-28Z__b5c6cd70.db`
+- **notes**: scanned=4510
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `274f85af`
+- **entity_slug**: `johnson-greg`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `4510`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-28Z__274f85af.db`
+- **notes**: scanned=4510
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `765e8ef1`
+- **entity_slug**: `kendrick-ken`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `403`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-28Z__765e8ef1.db`
+- **notes**: scanned=403
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `c0bfc28e`
+- **entity_slug**: `lerner-mark`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `760`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `4`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-28Z__c0bfc28e.db`
+- **notes**: scanned=760
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `4478aea3`
+- **entity_slug**: `malone-john`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `1380`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `13`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-28Z__4478aea3.db`
+- **notes**: scanned=1380
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `082c9de3`
+- **entity_slug**: `mcguirk-terry`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `204`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `2`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-28Z__082c9de3.db`
+- **notes**: scanned=204
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `fc561dba`
+- **entity_slug**: `middleton-john`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `459`
+- **confirmed_count**: `0`
+- **probable_count**: `1`
+- **uncertain_count**: `26`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-28Z__fc561dba.db`
+- **notes**: scanned=459
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `09c2a6a9`
+- **entity_slug**: `monfort-charlie`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `40`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-28Z__09c2a6a9.db`
+- **notes**: scanned=40
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `7a3a745c`
+- **entity_slug**: `monfort-dick`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `40`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-28Z__7a3a745c.db`
+- **notes**: scanned=40
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `d4c371a3`
+- **entity_slug**: `moreno-arte`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `501`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `1`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-28Z__d4c371a3.db`
+- **notes**: scanned=501
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `129559d7`
+- **entity_slug**: `nutting-bob`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `28`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `6`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-28Z__129559d7.db`
+- **notes**: scanned=28
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `e805fcf7`
+- **entity_slug**: `ricketts-laura`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `113`
+- **confirmed_count**: `0`
+- **probable_count**: `2`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-28Z__e805fcf7.db`
+- **notes**: scanned=113
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `c652f5dd`
+- **entity_slug**: `ricketts-todd`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `113`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-28Z__c652f5dd.db`
+- **notes**: scanned=113
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `7f4a036a`
+- **entity_slug**: `ricketts-tom`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `113`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `1`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-28Z__7f4a036a.db`
+- **notes**: scanned=113
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `e325f83d`
+- **entity_slug**: `rubenstein-david`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `836`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-28Z__e325f83d.db`
+- **notes**: scanned=836
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `87f73db0`
+- **entity_slug**: `seidler-john`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `49`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-28Z__87f73db0.db`
+- **notes**: scanned=49
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `2cb2302f`
+- **entity_slug**: `sherman-bruce`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `1579`
+- **confirmed_count**: `2`
+- **probable_count**: `1`
+- **uncertain_count**: `6`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-28Z__2cb2302f.db`
+- **notes**: scanned=1579
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `2e4309d3`
+- **entity_slug**: `sherman-john`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `1579`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `11`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-28Z__2e4309d3.db`
+- **notes**: scanned=1579
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `dd558494`
+- **entity_slug**: `simpson-bob`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `1792`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `2`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-28Z__dd558494.db`
+- **notes**: scanned=1792
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `75531887`
+- **entity_slug**: `stanton-john`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `665`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `49`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-28Z__75531887.db`
+- **notes**: scanned=665
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `d8cf7be8`
+- **entity_slug**: `steinbrenner-hal`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `46`
+- **confirmed_count**: `2`
+- **probable_count**: `2`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-29Z__d8cf7be8.db`
+- **notes**: scanned=46
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `6d38e456`
+- **entity_slug**: `steinbrenner-hank`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `46`
+- **confirmed_count**: `0`
+- **probable_count**: `1`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-29Z__6d38e456.db`
+- **notes**: scanned=46
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `fb563576`
+- **entity_slug**: `steinbrenner-jennifer`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `132`
+- **confirmed_count**: `1`
+- **probable_count**: `0`
+- **uncertain_count**: `20`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-29Z__fb563576.db`
+- **notes**: scanned=132
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `ee6e2673`
+- **entity_slug**: `steinbrenner-jessica`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `46`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `2`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-29Z__ee6e2673.db`
+- **notes**: scanned=46
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `934907c4`
+- **entity_slug**: `walter-mark`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `2646`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `1`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-29Z__934907c4.db`
+- **notes**: scanned=2646
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `2e228cb9`
+- **entity_slug**: `zalupski-patrick`
+- **jurisdiction**: `FL`
+- **source**: `FL-DOE`
+- **extract_label**: `https://dos.elections.myflorida.com/campaign-finance/contributions/`
+- **records_scanned**: `7`
+- **confirmed_count**: `4`
+- **probable_count**: `1`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-29Z__2e228cb9.db`
+- **notes**: scanned=7
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `308b83b6`
+- **entity_slug**: `attanasio-mark`
+- **jurisdiction**: `NY`
+- **source**: `NYSBOE`
+- **extract_label**: `https://data.ny.gov/resource/4j2b-6a2j.json`
+- **records_scanned**: `2`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `2`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-46Z__308b83b6.db`
+- **notes**: scanned=2
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `80c5e513`
+- **entity_slug**: `cohen-steven`
+- **jurisdiction**: `NY`
+- **source**: `NYSBOE`
+- **extract_label**: `https://data.ny.gov/resource/4j2b-6a2j.json`
+- **records_scanned**: `592`
+- **confirmed_count**: `43`
+- **probable_count**: `0`
+- **uncertain_count**: `549`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-46Z__80c5e513.db`
+- **notes**: scanned=592
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `8b51dc50`
+- **entity_slug**: `crane-jim`
+- **jurisdiction**: `NY`
+- **source**: `NYSBOE`
+- **extract_label**: `https://data.ny.gov/resource/4j2b-6a2j.json`
+- **records_scanned**: `35`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `35`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-46Z__8b51dc50.db`
+- **notes**: scanned=35
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `0b4b36d9`
+- **entity_slug**: `davis-ray`
+- **jurisdiction**: `NY`
+- **source**: `NYSBOE`
+- **extract_label**: `https://data.ny.gov/resource/4j2b-6a2j.json`
+- **records_scanned**: `8`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `8`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-46Z__0b4b36d9.db`
+- **notes**: scanned=8
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `d189429c`
+- **entity_slug**: `dewitt-bill`
+- **jurisdiction**: `NY`
+- **source**: `NYSBOE`
+- **extract_label**: `https://data.ny.gov/resource/4j2b-6a2j.json`
+- **records_scanned**: `117`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `3`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-46Z__d189429c.db`
+- **notes**: scanned=117
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `d91a37a7`
+- **entity_slug**: `dolan-paul`
+- **jurisdiction**: `NY`
+- **source**: `NYSBOE`
+- **extract_label**: `https://data.ny.gov/resource/4j2b-6a2j.json`
+- **records_scanned**: `103`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `103`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-46Z__d91a37a7.db`
+- **notes**: scanned=103
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `58c3e349`
+- **entity_slug**: `feliciano-jose`
+- **jurisdiction**: `NY`
+- **source**: `NYSBOE`
+- **extract_label**: `https://data.ny.gov/resource/4j2b-6a2j.json`
+- **records_scanned**: `23`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `22`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-46Z__58c3e349.db`
+- **notes**: scanned=23
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `3ac42419`
+- **entity_slug**: `henry-john`
+- **jurisdiction**: `NY`
+- **source**: `NYSBOE`
+- **extract_label**: `https://data.ny.gov/resource/4j2b-6a2j.json`
+- **records_scanned**: `61`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `60`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-46Z__3ac42419.db`
+- **notes**: scanned=61
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `c4a650ae`
+- **entity_slug**: `johnson-charles`
+- **jurisdiction**: `NY`
+- **source**: `NYSBOE`
+- **extract_label**: `https://data.ny.gov/resource/4j2b-6a2j.json`
+- **records_scanned**: `122`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `93`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-46Z__c4a650ae.db`
+- **notes**: scanned=122
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `e966294f`
+- **entity_slug**: `johnson-greg`
+- **jurisdiction**: `NY`
+- **source**: `NYSBOE`
+- **extract_label**: `https://data.ny.gov/resource/4j2b-6a2j.json`
+- **records_scanned**: `431`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `431`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-46Z__e966294f.db`
+- **notes**: scanned=431
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `9707a4d5`
+- **entity_slug**: `kendrick-ken`
+- **jurisdiction**: `NY`
+- **source**: `NYSBOE`
+- **extract_label**: `https://data.ny.gov/resource/4j2b-6a2j.json`
+- **records_scanned**: `2`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-46Z__9707a4d5.db`
+- **notes**: scanned=2
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `d7cc0064`
+- **entity_slug**: `lerner-mark`
+- **jurisdiction**: `NY`
+- **source**: `NYSBOE`
+- **extract_label**: `https://data.ny.gov/resource/4j2b-6a2j.json`
+- **records_scanned**: `14`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `14`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-46Z__d7cc0064.db`
+- **notes**: scanned=14
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `e4306414`
+- **entity_slug**: `malone-john`
+- **jurisdiction**: `NY`
+- **source**: `NYSBOE`
+- **extract_label**: `https://data.ny.gov/resource/4j2b-6a2j.json`
+- **records_scanned**: `20`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `20`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-46Z__e4306414.db`
+- **notes**: scanned=20
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `ea6108e2`
+- **entity_slug**: `middleton-john`
+- **jurisdiction**: `NY`
+- **source**: `NYSBOE`
+- **extract_label**: `https://data.ny.gov/resource/4j2b-6a2j.json`
+- **records_scanned**: `104`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `104`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-46Z__ea6108e2.db`
+- **notes**: scanned=104
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `d2215757`
+- **entity_slug**: `nutting-bob`
+- **jurisdiction**: `NY`
+- **source**: `NYSBOE`
+- **extract_label**: `https://data.ny.gov/resource/4j2b-6a2j.json`
+- **records_scanned**: `4`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `4`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-46Z__d2215757.db`
+- **notes**: scanned=4
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `c990bef4`
+- **entity_slug**: `ricketts-laura`
+- **jurisdiction**: `NY`
+- **source**: `NYSBOE`
+- **extract_label**: `https://data.ny.gov/resource/4j2b-6a2j.json`
+- **records_scanned**: `18`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `18`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-46Z__c990bef4.db`
+- **notes**: scanned=18
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `af4409b4`
+- **entity_slug**: `rubenstein-david`
+- **jurisdiction**: `NY`
+- **source**: `NYSBOE`
+- **extract_label**: `https://data.ny.gov/resource/4j2b-6a2j.json`
+- **records_scanned**: `15`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `15`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-46Z__af4409b4.db`
+- **notes**: scanned=15
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `4e2c2abb`
+- **entity_slug**: `sherman-bruce`
+- **jurisdiction**: `NY`
+- **source**: `NYSBOE`
+- **extract_label**: `https://data.ny.gov/resource/4j2b-6a2j.json`
+- **records_scanned**: `77`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `77`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-46Z__4e2c2abb.db`
+- **notes**: scanned=77
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `e0e04ba6`
+- **entity_slug**: `sherman-john`
+- **jurisdiction**: `NY`
+- **source**: `NYSBOE`
+- **extract_label**: `https://data.ny.gov/resource/4j2b-6a2j.json`
+- **records_scanned**: `71`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `71`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-46Z__e0e04ba6.db`
+- **notes**: scanned=71
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `5fa4201a`
+- **entity_slug**: `simpson-bob`
+- **jurisdiction**: `NY`
+- **source**: `NYSBOE`
+- **extract_label**: `https://data.ny.gov/resource/4j2b-6a2j.json`
+- **records_scanned**: `1`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `1`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-46Z__5fa4201a.db`
+- **notes**: scanned=1
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `5b0b9870`
+- **entity_slug**: `stanton-john`
+- **jurisdiction**: `NY`
+- **source**: `NYSBOE`
+- **extract_label**: `https://data.ny.gov/resource/4j2b-6a2j.json`
+- **records_scanned**: `22`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `22`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-46Z__5b0b9870.db`
+- **notes**: scanned=22
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `949d03b6`
+- **entity_slug**: `steinbrenner-hal`
+- **jurisdiction**: `NY`
+- **source**: `NYSBOE`
+- **extract_label**: `https://data.ny.gov/resource/4j2b-6a2j.json`
+- **records_scanned**: `3`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `3`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-46Z__949d03b6.db`
+- **notes**: scanned=3
+
+### 2026-08-02 — STATE_INGESTION
+
+- **run_id**: `5ead36e7`
+- **entity_slug**: `walter-mark`
+- **jurisdiction**: `NY`
+- **source**: `NYSBOE`
+- **extract_label**: `https://data.ny.gov/resource/4j2b-6a2j.json`
+- **records_scanned**: `13`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `13`
+- **snapshot_path**: `data/snapshots/2026-08-02T14-05-46Z__5ead36e7.db`
+- **notes**: scanned=13
