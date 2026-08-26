@@ -260,6 +260,50 @@ jobs:
         # current with the DB (they filter counted=1, matching the dashboard).
         run: python -m scripts.cli export
 
+      - name: Raw-payload coverage report (§2.1)
+        # §1.4/§2.1 visibility. `archive_raw.sh` uploads each runner's raw to R2
+        # and the runner is then destroyed, so a cron-fetched payload being absent
+        # from THIS checkout's disk is the designed steady state — not a loss.
+        # Local-only `raw-coverage` cannot tell that apart from a genuine gap, and
+        # reading it as one is an easy mistake to make twice. --bucket splits the
+        # two: `rows_recoverable_from_bucket` (in R2 — healthy) vs
+        # `rows_absent_from_archive` (in neither place — the only number that
+        # warrants action, repaired with `ingest <slug> --full-refetch`).
+        # Read-only + continue-on-error: this reports, it must never block a commit.
+        if: always()
+        continue-on-error: true
+        env:
+          RAW_ARCHIVE_S3_BUCKET: ${{ secrets.RAW_ARCHIVE_S3_BUCKET }}
+          RAW_ARCHIVE_S3_ENDPOINT: ${{ secrets.RAW_ARCHIVE_S3_ENDPOINT }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.RAW_ARCHIVE_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.RAW_ARCHIVE_SECRET_ACCESS_KEY }}
+        run: |
+          set -uo pipefail
+          if ! python -m scripts.cli raw-coverage --bucket > /tmp/rawcov.json 2>/tmp/rawcov.err; then
+            echo "::warning::raw-coverage --bucket did not complete; reporting skipped."
+            cat /tmp/rawcov.err || true
+            exit 0
+          fi
+          CHECKED=$(jq -r '.rows_checked // "?"' /tmp/rawcov.json)
+          MISSING=$(jq -r '.rows_missing_raw // "?"' /tmp/rawcov.json)
+          RECOV=$(jq -r '.rows_recoverable_from_bucket // "n/a"' /tmp/rawcov.json)
+          ABSENT=$(jq -r '.rows_absent_from_archive // "n/a"' /tmp/rawcov.json)
+          {
+            echo '### Raw-payload coverage (§2.1)'
+            echo ''
+            echo "- rows checked: **${CHECKED}**"
+            echo "- missing from this disk: **${MISSING}** — expected; cron raw lives in R2, not in the checkout"
+            echo "- recoverable from R2: **${RECOV}** — healthy"
+            echo "- absent from the archive: **${ABSENT}** — the only number that needs action"
+          } >> "$GITHUB_STEP_SUMMARY"
+          echo "rows_absent_from_archive=${ABSENT}"
+          # 363 is the known, documented Class-A backlog (fisher-john 261 /
+          # malone-john 54 / angelos-john-p 48) awaiting a --full-refetch. Warn only
+          # if the archive gap GROWS past it, which would mean an upload regressed.
+          if [ "$ABSENT" != "n/a" ] && [ "$ABSENT" -gt 363 ] 2>/dev/null; then
+            echo "::warning::rows_absent_from_archive=${ABSENT} exceeds the known 363-row Class-A backlog — a raw upload may have regressed. See GOVERNANCE.md §1.4."
+          fi
+
       - name: Commit + push refreshed data
         run: |
           git config user.name "github-actions[bot]"

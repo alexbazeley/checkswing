@@ -319,7 +319,43 @@ jobs:
           if git diff --staged --quiet; then
             echo "No changes from state refresh — nothing to commit."
           else
-            git commit -m "State refresh: CA + PA + TX + IL + WA + CO + AZ + MN + FL + NY ($(date -u +%Y-%m-%d))"
+            # §4.2 honesty: every ingest above is continue-on-error, so the set of
+            # jurisdictions that actually landed is a RUNTIME fact, not the static
+            # list in this workflow's name. Hardcoding it made the 2026-08-02 commit
+            # read "CA + PA + TX + IL + ..." on a run where IL's export timed out and
+            # was skipped — the message asserted a refresh that never happened, in a
+            # provenance-tracked archive. Derive it from the runs the ingests recorded.
+            SUMMARY=$(python - <<'PY'
+          import datetime, sqlite3
+
+          conn = sqlite3.connect("data/state.db")
+          cutoff = (
+              datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(days=2)
+          ).strftime("%Y-%m-%dT%H:%M:%SZ")
+          adopted = {
+              r[0] for r in conn.execute(
+                  "select distinct jurisdiction from state_ingestion_runs"
+              )
+          }
+          refreshed = {
+              r[0] for r in conn.execute(
+                  "select distinct jurisdiction from state_ingestion_runs "
+                  "where started_at >= ?",
+                  (cutoff,),
+              )
+          }
+          skipped = sorted(adopted - refreshed)
+          msg = " + ".join(sorted(refreshed)) if refreshed else "no jurisdiction"
+          if skipped:
+              msg += f" [skipped: {' + '.join(skipped)}]"
+          print(msg)
+          PY
+          ) || SUMMARY=""
+            # Never let the summary derivation cost the commit: on any failure fall
+            # back to a message that claims nothing rather than aborting the step.
+            [ -n "$SUMMARY" ] || SUMMARY="jurisdictions not determined — see run log"
+            echo "Jurisdictions this cycle: $SUMMARY"
+            git commit -m "State refresh: $SUMMARY ($(date -u +%Y-%m-%d))"
             # Rebase onto anything that landed on main since checkout (e.g. the
             # federal refresh) so the push fast-forwards. State touches only its
             # own data files, so this replays cleanly over unrelated commits.
