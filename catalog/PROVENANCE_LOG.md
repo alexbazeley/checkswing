@@ -31886,3 +31886,135 @@ the first to exercise `archive_raw.sh` in CI, and it is `continue-on-error` +
 - **errors**: `[]`
 - **snapshot_path**: `/home/runner/work/checkswing/checkswing/data/snapshots/2026-08-03T14-12-21Z__pre-ingest-votes.db`
 - **note**: Vote positions are FEC-neutral facts (who voted Yea/Nay). Senate LIS ids mapped to Bioguide via legislators.lis_id. Raw XML under data/raw/legislation/.
+
+### 2026-08-27 — REVIEW_RESOLUTION — fisher-john (state bulk-discard)
+
+Discarded **8** open state review-queue item(s) for `fisher-john` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-49Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — johnson-charles (state bulk-discard)
+
+Discarded **2018** open state review-queue item(s) for `johnson-charles` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-50Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — johnson-charles (state bulk-discard)
+
+Discarded **125** open state review-queue item(s) for `johnson-charles` reason~'name match only%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-50Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — johnson-greg (state bulk-discard)
+
+Discarded **12** open state review-queue item(s) for `johnson-greg` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-50Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — johnson-greg (state bulk-discard)
+
+Discarded **2** open state review-queue item(s) for `johnson-greg` reason~'name match only%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-50Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — cohen-steven (state bulk-discard)
+
+Discarded **8** open state review-queue item(s) for `cohen-steven` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-50Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — cohen-steven (state bulk-discard)
+
+Discarded **3** open state review-queue item(s) for `cohen-steven` reason~'name match only%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-50Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — davis-ray (state bulk-discard)
+
+Discarded **1** open state review-queue item(s) for `davis-ray` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-50Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — dolan-paul (state bulk-discard)
+
+Discarded **4** open state review-queue item(s) for `dolan-paul` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-51Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — henry-john (state bulk-discard)
+
+Discarded **6** open state review-queue item(s) for `henry-john` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-51Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — henry-john (state bulk-discard)
+
+Discarded **1** open state review-queue item(s) for `henry-john` reason~'name match only%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-51Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — middleton-john (state bulk-discard)
+
+Discarded **57** open state review-queue item(s) for `middleton-john` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-51Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — middleton-john (state bulk-discard)
+
+Discarded **2** open state review-queue item(s) for `middleton-john` reason~'name match only%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-51Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — ricketts-laura (state bulk-discard)
+
+Discarded **6** open state review-queue item(s) for `ricketts-laura` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-52Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — ricketts-laura (state bulk-discard)
+
+Discarded **18** open state review-queue item(s) for `ricketts-laura` reason~'name match only%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-52Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — stanton-john (state bulk-discard)
+
+Discarded **12** open state review-queue item(s) for `stanton-john` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-52Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — stanton-john (state bulk-discard)
+
+Discarded **2** open state review-queue item(s) for `stanton-john` reason~'name match only%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-52Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — castellini-bob (state bulk-discard)
+
+Discarded **13** open state review-queue item(s) for `castellini-bob` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-52Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — crane-jim (state bulk-discard)
+
+Discarded **8** open state review-queue item(s) for `crane-jim` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-52Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — crane-jim (state bulk-discard)
+
+Discarded **1** open state review-queue item(s) for `crane-jim` reason~'name match only%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-53Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — dewitt-bill (state bulk-discard)
+
+Discarded **2** open state review-queue item(s) for `dewitt-bill` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-53Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — lerner-mark (state bulk-discard)
+
+Discarded **2** open state review-queue item(s) for `lerner-mark` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-53Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — malone-john (state bulk-discard)
+
+Discarded **35** open state review-queue item(s) for `malone-john` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-53Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — malone-john (state bulk-discard)
+
+Discarded **1** open state review-queue item(s) for `malone-john` reason~'name match only%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-53Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — monfort-charlie (state bulk-discard)
+
+Discarded **1** open state review-queue item(s) for `monfort-charlie` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-54Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — moreno-arte (state bulk-discard)
+
+Discarded **1** open state review-queue item(s) for `moreno-arte` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-54Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — rubenstein-david (state bulk-discard)
+
+Discarded **2** open state review-queue item(s) for `rubenstein-david` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-54Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — rubenstein-david (state bulk-discard)
+
+Discarded **1** open state review-queue item(s) for `rubenstein-david` reason~'name match only%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-54Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — sherman-bruce (state bulk-discard)
+
+Discarded **13** open state review-queue item(s) for `sherman-bruce` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-54Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — sherman-bruce (state bulk-discard)
+
+Discarded **1** open state review-queue item(s) for `sherman-bruce` reason~'name match only%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-54Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — sherman-john (state bulk-discard)
+
+Discarded **378** open state review-queue item(s) for `sherman-john` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-55Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — sherman-john (state bulk-discard)
+
+Discarded **4** open state review-queue item(s) for `sherman-john` reason~'name match only%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-55Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — simpson-bob (state bulk-discard)
+
+Discarded **1** open state review-queue item(s) for `simpson-bob` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-55Z__bulk_discard_state.db`.
