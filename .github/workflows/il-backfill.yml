@@ -36,6 +36,14 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           lfs: false
+          # fetch-depth: 0 — the commit step rebases before pushing, and the default
+          # depth-1 checkout has NO common ancestor with the upstream branch. On the
+          # 2026-08-27 dispatch that turned an ordinary rebase into an add/add
+          # conflict on EVERY tracked file (workflows, GOVERNANCE.md,
+          # PROVENANCE_LOG.md, and binary data/state.db) and threw away a completed
+          # 3-hour download. The monthly jobs never hit this only because they run on
+          # main, where the rebase is a no-op.
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v6
@@ -47,11 +55,15 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Restore a partially-downloaded IL export
-        # Cross-run resume (see the download step): a unique key always misses, so
-        # the post-job cache save always runs; restore-keys pulls the newest partial
-        # from a previous attempt. That is what lets a 1 GB fetch at ISBE's rate
-        # converge across runs instead of restarting from zero every time.
-        uses: actions/cache@v4
+        # Cross-run resume (see the download step). restore-keys pulls the newest
+        # partial from a previous attempt, so a 1 GB fetch at ISBE's rate converges
+        # across runs instead of restarting from zero every time.
+        #
+        # Deliberately restore/save as SEPARATE actions rather than actions/cache:
+        # the combined action saves in a post step that is SKIPPED when the job
+        # fails, which is exactly when the partial is most worth keeping. The save
+        # below is `if: always()`.
+        uses: actions/cache/restore@v4
         with:
           path: data/raw/state/il
           key: il-export-${{ github.run_id }}
@@ -120,8 +132,24 @@ jobs:
             echo "No changes from IL backfill — nothing to commit."
           else
             git commit -m "IL backfill (ISBE) ($(date -u +%Y-%m-%d))"
-            # Rebase onto anything that landed on main since checkout so the push
-            # fast-forwards (same hardening as the monthly refresh).
-            git pull --rebase origin main
-            git push
+            # Rebase onto whatever landed on THIS ref since checkout so the push
+            # fast-forwards. Must be the current branch, not a hardcoded `main`:
+            # this workflow is dispatchable on any ref, and rebasing a feature
+            # branch onto main replays its commits onto a base they already contain
+            # — which is what failed on 2026-08-27.
+            # github.ref_name is authoritative for the dispatched ref; rev-parse
+            # would return the literal "HEAD" on a detached checkout.
+            BRANCH="${{ github.ref_name }}"
+            echo "Rebasing onto origin/$BRANCH before push."
+            git pull --rebase origin "$BRANCH"
+            git push origin "HEAD:$BRANCH"
           fi
+
+      - name: Save the IL export partial for the next run
+        # always(): the whole point is to preserve progress when the run did NOT
+        # finish — a deadline hit, or a failure in a later step.
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: data/raw/state/il
+          key: il-export-${{ github.run_id }}
