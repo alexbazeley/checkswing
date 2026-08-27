@@ -31886,3 +31886,667 @@ the first to exercise `archive_raw.sh` in CI, and it is `continue-on-error` +
 - **errors**: `[]`
 - **snapshot_path**: `/home/runner/work/checkswing/checkswing/data/snapshots/2026-08-03T14-12-21Z__pre-ingest-votes.db`
 - **note**: Vote positions are FEC-neutral facts (who voted Yea/Nay). Senate LIS ids mapped to Bioguide via legislators.lis_id. Raw XML under data/raw/legislation/.
+
+### 2026-08-27 — REVIEW_RESOLUTION — fisher-john (state bulk-discard)
+
+Discarded **8** open state review-queue item(s) for `fisher-john` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-49Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — johnson-charles (state bulk-discard)
+
+Discarded **2018** open state review-queue item(s) for `johnson-charles` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-50Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — johnson-charles (state bulk-discard)
+
+Discarded **125** open state review-queue item(s) for `johnson-charles` reason~'name match only%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-50Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — johnson-greg (state bulk-discard)
+
+Discarded **12** open state review-queue item(s) for `johnson-greg` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-50Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — johnson-greg (state bulk-discard)
+
+Discarded **2** open state review-queue item(s) for `johnson-greg` reason~'name match only%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-50Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — cohen-steven (state bulk-discard)
+
+Discarded **8** open state review-queue item(s) for `cohen-steven` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-50Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — cohen-steven (state bulk-discard)
+
+Discarded **3** open state review-queue item(s) for `cohen-steven` reason~'name match only%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-50Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — davis-ray (state bulk-discard)
+
+Discarded **1** open state review-queue item(s) for `davis-ray` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-50Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — dolan-paul (state bulk-discard)
+
+Discarded **4** open state review-queue item(s) for `dolan-paul` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-51Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — henry-john (state bulk-discard)
+
+Discarded **6** open state review-queue item(s) for `henry-john` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-51Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — henry-john (state bulk-discard)
+
+Discarded **1** open state review-queue item(s) for `henry-john` reason~'name match only%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-51Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — middleton-john (state bulk-discard)
+
+Discarded **57** open state review-queue item(s) for `middleton-john` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-51Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — middleton-john (state bulk-discard)
+
+Discarded **2** open state review-queue item(s) for `middleton-john` reason~'name match only%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-51Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — ricketts-laura (state bulk-discard)
+
+Discarded **6** open state review-queue item(s) for `ricketts-laura` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-52Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — ricketts-laura (state bulk-discard)
+
+Discarded **18** open state review-queue item(s) for `ricketts-laura` reason~'name match only%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-52Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — stanton-john (state bulk-discard)
+
+Discarded **12** open state review-queue item(s) for `stanton-john` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-52Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — stanton-john (state bulk-discard)
+
+Discarded **2** open state review-queue item(s) for `stanton-john` reason~'name match only%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-52Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — castellini-bob (state bulk-discard)
+
+Discarded **13** open state review-queue item(s) for `castellini-bob` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-52Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — crane-jim (state bulk-discard)
+
+Discarded **8** open state review-queue item(s) for `crane-jim` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-52Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — crane-jim (state bulk-discard)
+
+Discarded **1** open state review-queue item(s) for `crane-jim` reason~'name match only%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-53Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — dewitt-bill (state bulk-discard)
+
+Discarded **2** open state review-queue item(s) for `dewitt-bill` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-53Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — lerner-mark (state bulk-discard)
+
+Discarded **2** open state review-queue item(s) for `lerner-mark` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-53Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — malone-john (state bulk-discard)
+
+Discarded **35** open state review-queue item(s) for `malone-john` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-53Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — malone-john (state bulk-discard)
+
+Discarded **1** open state review-queue item(s) for `malone-john` reason~'name match only%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-53Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — monfort-charlie (state bulk-discard)
+
+Discarded **1** open state review-queue item(s) for `monfort-charlie` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-54Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — moreno-arte (state bulk-discard)
+
+Discarded **1** open state review-queue item(s) for `moreno-arte` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-54Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — rubenstein-david (state bulk-discard)
+
+Discarded **2** open state review-queue item(s) for `rubenstein-david` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-54Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — rubenstein-david (state bulk-discard)
+
+Discarded **1** open state review-queue item(s) for `rubenstein-david` reason~'name match only%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-54Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — sherman-bruce (state bulk-discard)
+
+Discarded **13** open state review-queue item(s) for `sherman-bruce` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-54Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — sherman-bruce (state bulk-discard)
+
+Discarded **1** open state review-queue item(s) for `sherman-bruce` reason~'name match only%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-54Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — sherman-john (state bulk-discard)
+
+Discarded **378** open state review-queue item(s) for `sherman-john` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-55Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — sherman-john (state bulk-discard)
+
+Discarded **4** open state review-queue item(s) for `sherman-john` reason~'name match only%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-55Z__bulk_discard_state.db`.
+
+### 2026-08-27 — REVIEW_RESOLUTION — simpson-bob (state bulk-discard)
+
+Discarded **1** open state review-queue item(s) for `simpson-bob` reason~'city/state outside documented residences%' as DISCARDED (§5.4 burndown). Queue-only; state_donations untouched. Reason: Common-name stranger: same-name filer in a city/state outside the owner's documented residences, with no corroborating employer/occupation/ZIP signal. Maintainer-approved bulk burndown of the 2026-08-02 state ingest intake (§5.4). Queue-only; state_donations untouched; no counted total affected.. Snapshot: `/Users/abaze/Documents/Claude/Projects/Tipping Pitches/fec-donations-archive/data/snapshots/2026-08-27T01-16-55Z__bulk_discard_state.db`.
+
+### 2026-08-27 — STATE_INGESTION
+
+- **run_id**: `c7dfec97`
+- **entity_slug**: `angelos-john-p`
+- **jurisdiction**: `IL`
+- **source**: `ISBE`
+- **extract_label**: `il`
+- **records_scanned**: `51`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-27T15-49-30Z__c7dfec97.db`
+- **notes**: scanned=51
+
+### 2026-08-27 — STATE_INGESTION
+
+- **run_id**: `752f4c20`
+- **entity_slug**: `attanasio-mark`
+- **jurisdiction**: `IL`
+- **source**: `ISBE`
+- **extract_label**: `il`
+- **records_scanned**: `7`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-27T15-49-30Z__752f4c20.db`
+- **notes**: scanned=7
+
+### 2026-08-27 — STATE_INGESTION
+
+- **run_id**: `25e4c718`
+- **entity_slug**: `castellini-bob`
+- **jurisdiction**: `IL`
+- **source**: `ISBE`
+- **extract_label**: `il`
+- **records_scanned**: `2`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-27T15-49-30Z__25e4c718.db`
+- **notes**: scanned=2
+
+### 2026-08-27 — STATE_INGESTION
+
+- **run_id**: `e9555ef5`
+- **entity_slug**: `castellini-phil`
+- **jurisdiction**: `IL`
+- **source**: `ISBE`
+- **extract_label**: `il`
+- **records_scanned**: `2`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-27T15-49-30Z__e9555ef5.db`
+- **notes**: scanned=2
+
+### 2026-08-27 — STATE_INGESTION
+
+- **run_id**: `b09e25ef`
+- **entity_slug**: `cohen-steven`
+- **jurisdiction**: `IL`
+- **source**: `ISBE`
+- **extract_label**: `il`
+- **records_scanned**: `1692`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `53`
+- **snapshot_path**: `data/snapshots/2026-08-27T15-49-30Z__b09e25ef.db`
+- **notes**: scanned=1692
+
+### 2026-08-27 — STATE_INGESTION
+
+- **run_id**: `b068644a`
+- **entity_slug**: `crane-jim`
+- **jurisdiction**: `IL`
+- **source**: `ISBE`
+- **extract_label**: `il`
+- **records_scanned**: `2843`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `9`
+- **snapshot_path**: `data/snapshots/2026-08-27T15-49-30Z__b068644a.db`
+- **notes**: scanned=2843
+
+### 2026-08-27 — STATE_INGESTION
+
+- **run_id**: `76ca75db`
+- **entity_slug**: `davis-ray`
+- **jurisdiction**: `IL`
+- **source**: `ISBE`
+- **extract_label**: `il`
+- **records_scanned**: `6883`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-27T15-49-30Z__76ca75db.db`
+- **notes**: scanned=6883
+
+### 2026-08-27 — STATE_INGESTION
+
+- **run_id**: `678b5375`
+- **entity_slug**: `dewitt-bill`
+- **jurisdiction**: `IL`
+- **source**: `ISBE`
+- **extract_label**: `il`
+- **records_scanned**: `24573`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-27T15-49-31Z__678b5375.db`
+- **notes**: scanned=24573
+
+### 2026-08-27 — STATE_INGESTION
+
+- **run_id**: `58c0652f`
+- **entity_slug**: `dolan-paul`
+- **jurisdiction**: `IL`
+- **source**: `ISBE`
+- **extract_label**: `il`
+- **records_scanned**: `747`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-27T15-49-33Z__58c0652f.db`
+- **notes**: scanned=747
+
+### 2026-08-27 — STATE_INGESTION
+
+- **run_id**: `73a933a6`
+- **entity_slug**: `feliciano-jose`
+- **jurisdiction**: `IL`
+- **source**: `ISBE`
+- **extract_label**: `il`
+- **records_scanned**: `23`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `4`
+- **snapshot_path**: `data/snapshots/2026-08-27T15-49-33Z__73a933a6.db`
+- **notes**: scanned=23
+
+### 2026-08-27 — STATE_INGESTION
+
+- **run_id**: `279ec276`
+- **entity_slug**: `fisher-john`
+- **jurisdiction**: `IL`
+- **source**: `ISBE`
+- **extract_label**: `il`
+- **records_scanned**: `1479`
+- **confirmed_count**: `5`
+- **probable_count**: `0`
+- **uncertain_count**: `59`
+- **snapshot_path**: `data/snapshots/2026-08-27T15-49-33Z__279ec276.db`
+- **notes**: scanned=1479
+
+### 2026-08-27 — STATE_INGESTION
+
+- **run_id**: `e8d808f2`
+- **entity_slug**: `henry-john`
+- **jurisdiction**: `IL`
+- **source**: `ISBE`
+- **extract_label**: `il`
+- **records_scanned**: `15853`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `14`
+- **snapshot_path**: `data/snapshots/2026-08-27T15-49-33Z__e8d808f2.db`
+- **notes**: scanned=15853
+
+### 2026-08-27 — STATE_INGESTION
+
+- **run_id**: `357a2062`
+- **entity_slug**: `johnson-charles`
+- **jurisdiction**: `IL`
+- **source**: `ISBE`
+- **extract_label**: `il`
+- **records_scanned**: `12696`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `44`
+- **snapshot_path**: `data/snapshots/2026-08-27T15-49-35Z__357a2062.db`
+- **notes**: scanned=12696
+
+### 2026-08-27 — STATE_INGESTION
+
+- **run_id**: `8162ef61`
+- **entity_slug**: `johnson-greg`
+- **jurisdiction**: `IL`
+- **source**: `ISBE`
+- **extract_label**: `il`
+- **records_scanned**: `12696`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `11`
+- **snapshot_path**: `data/snapshots/2026-08-27T15-49-35Z__8162ef61.db`
+- **notes**: scanned=12696
+
+### 2026-08-27 — STATE_INGESTION
+
+- **run_id**: `c272bbc3`
+- **entity_slug**: `kendrick-ken`
+- **jurisdiction**: `IL`
+- **source**: `ISBE`
+- **extract_label**: `il`
+- **records_scanned**: `17773`
+- **confirmed_count**: `1`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-27T15-49-37Z__c272bbc3.db`
+- **notes**: scanned=17773
+
+### 2026-08-27 — STATE_INGESTION
+
+- **run_id**: `560c009d`
+- **entity_slug**: `lerner-mark`
+- **jurisdiction**: `IL`
+- **source**: `ISBE`
+- **extract_label**: `il`
+- **records_scanned**: `615`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-27T15-49-40Z__560c009d.db`
+- **notes**: scanned=615
+
+### 2026-08-27 — STATE_INGESTION
+
+- **run_id**: `0c5e8f42`
+- **entity_slug**: `malone-john`
+- **jurisdiction**: `IL`
+- **source**: `ISBE`
+- **extract_label**: `il`
+- **records_scanned**: `1614`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `9`
+- **snapshot_path**: `data/snapshots/2026-08-27T15-49-40Z__0c5e8f42.db`
+- **notes**: scanned=1614
+
+### 2026-08-27 — STATE_INGESTION
+
+- **run_id**: `8c11f5ce`
+- **entity_slug**: `mcguirk-terry`
+- **jurisdiction**: `IL`
+- **source**: `ISBE`
+- **extract_label**: `il`
+- **records_scanned**: `12`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-27T15-49-40Z__8c11f5ce.db`
+- **notes**: scanned=12
+
+### 2026-08-27 — STATE_INGESTION
+
+- **run_id**: `6372a96e`
+- **entity_slug**: `middleton-john`
+- **jurisdiction**: `IL`
+- **source**: `ISBE`
+- **extract_label**: `il`
+- **records_scanned**: `166`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-27T15-49-40Z__6372a96e.db`
+- **notes**: scanned=166
+
+### 2026-08-27 — STATE_INGESTION
+
+- **run_id**: `358465c9`
+- **entity_slug**: `monfort-charlie`
+- **jurisdiction**: `IL`
+- **source**: `ISBE`
+- **extract_label**: `il`
+- **records_scanned**: `6`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-27T15-49-40Z__358465c9.db`
+- **notes**: scanned=6
+
+### 2026-08-27 — STATE_INGESTION
+
+- **run_id**: `42864cb7`
+- **entity_slug**: `monfort-dick`
+- **jurisdiction**: `IL`
+- **source**: `ISBE`
+- **extract_label**: `il`
+- **records_scanned**: `6`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-27T15-49-40Z__42864cb7.db`
+- **notes**: scanned=6
+
+### 2026-08-27 — STATE_INGESTION
+
+- **run_id**: `23e81ff0`
+- **entity_slug**: `moreno-arte`
+- **jurisdiction**: `IL`
+- **source**: `ISBE`
+- **extract_label**: `il`
+- **records_scanned**: `597`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-27T15-49-40Z__23e81ff0.db`
+- **notes**: scanned=597
+
+### 2026-08-27 — STATE_INGESTION
+
+- **run_id**: `d1b0953a`
+- **entity_slug**: `nutting-bob`
+- **jurisdiction**: `IL`
+- **source**: `ISBE`
+- **extract_label**: `il`
+- **records_scanned**: `2`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-27T15-49-40Z__d1b0953a.db`
+- **notes**: scanned=2
+
+### 2026-08-27 — STATE_INGESTION
+
+- **run_id**: `9925d751`
+- **entity_slug**: `reinsdorf-jerry`
+- **jurisdiction**: `IL`
+- **source**: `ISBE`
+- **extract_label**: `il`
+- **records_scanned**: `69`
+- **confirmed_count**: `39`
+- **probable_count**: `6`
+- **uncertain_count**: `4`
+- **snapshot_path**: `data/snapshots/2026-08-27T15-49-40Z__9925d751.db`
+- **notes**: scanned=69
+
+### 2026-08-27 — STATE_INGESTION
+
+- **run_id**: `1bdda708`
+- **entity_slug**: `ricketts-laura`
+- **jurisdiction**: `IL`
+- **source**: `ISBE`
+- **extract_label**: `il`
+- **records_scanned**: `298`
+- **confirmed_count**: `87`
+- **probable_count**: `126`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-27T15-49-40Z__1bdda708.db`
+- **notes**: scanned=298
+
+### 2026-08-27 — STATE_INGESTION
+
+- **run_id**: `0a59d51f`
+- **entity_slug**: `ricketts-todd`
+- **jurisdiction**: `IL`
+- **source**: `ISBE`
+- **extract_label**: `il`
+- **records_scanned**: `298`
+- **confirmed_count**: `10`
+- **probable_count**: `12`
+- **uncertain_count**: `7`
+- **snapshot_path**: `data/snapshots/2026-08-27T15-49-40Z__0a59d51f.db`
+- **notes**: scanned=298
+
+### 2026-08-27 — STATE_INGESTION
+
+- **run_id**: `cbabd32b`
+- **entity_slug**: `ricketts-tom`
+- **jurisdiction**: `IL`
+- **source**: `ISBE`
+- **extract_label**: `il`
+- **records_scanned**: `298`
+- **confirmed_count**: `9`
+- **probable_count**: `4`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-27T15-49-40Z__cbabd32b.db`
+- **notes**: scanned=298
+
+### 2026-08-27 — STATE_INGESTION
+
+- **run_id**: `e66e959a`
+- **entity_slug**: `rubenstein-david`
+- **jurisdiction**: `IL`
+- **source**: `ISBE`
+- **extract_label**: `il`
+- **records_scanned**: `131`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `1`
+- **snapshot_path**: `data/snapshots/2026-08-27T15-49-40Z__e66e959a.db`
+- **notes**: scanned=131
+
+### 2026-08-27 — STATE_INGESTION
+
+- **run_id**: `6fe1293e`
+- **entity_slug**: `seidler-john`
+- **jurisdiction**: `IL`
+- **source**: `ISBE`
+- **extract_label**: `il`
+- **records_scanned**: `21`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-27T15-49-40Z__6fe1293e.db`
+- **notes**: scanned=21
+
+### 2026-08-27 — STATE_INGESTION
+
+- **run_id**: `28bea030`
+- **entity_slug**: `sherman-bruce`
+- **jurisdiction**: `IL`
+- **source**: `ISBE`
+- **extract_label**: `il`
+- **records_scanned**: `494`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `2`
+- **snapshot_path**: `data/snapshots/2026-08-27T15-49-40Z__28bea030.db`
+- **notes**: scanned=494
+
+### 2026-08-27 — STATE_INGESTION
+
+- **run_id**: `5291de28`
+- **entity_slug**: `sherman-john`
+- **jurisdiction**: `IL`
+- **source**: `ISBE`
+- **extract_label**: `il`
+- **records_scanned**: `494`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-27T15-49-40Z__5291de28.db`
+- **notes**: scanned=494
+
+### 2026-08-27 — STATE_INGESTION
+
+- **run_id**: `0aad88bf`
+- **entity_slug**: `simpson-bob`
+- **jurisdiction**: `IL`
+- **source**: `ISBE`
+- **extract_label**: `il`
+- **records_scanned**: `1470`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-27T15-49-40Z__0aad88bf.db`
+- **notes**: scanned=1470
+
+### 2026-08-27 — STATE_INGESTION
+
+- **run_id**: `c15e64e2`
+- **entity_slug**: `stanton-john`
+- **jurisdiction**: `IL`
+- **source**: `ISBE`
+- **extract_label**: `il`
+- **records_scanned**: `395`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `2`
+- **snapshot_path**: `data/snapshots/2026-08-27T15-49-40Z__c15e64e2.db`
+- **notes**: scanned=395
+
+### 2026-08-27 — STATE_INGESTION
+
+- **run_id**: `dd0a3da6`
+- **entity_slug**: `steinbrenner-hal`
+- **jurisdiction**: `IL`
+- **source**: `ISBE`
+- **extract_label**: `il`
+- **records_scanned**: `2`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-27T15-49-40Z__dd0a3da6.db`
+- **notes**: scanned=2
+
+### 2026-08-27 — STATE_INGESTION
+
+- **run_id**: `5b4df473`
+- **entity_slug**: `steinbrenner-hank`
+- **jurisdiction**: `IL`
+- **source**: `ISBE`
+- **extract_label**: `il`
+- **records_scanned**: `2`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-27T15-49-40Z__5b4df473.db`
+- **notes**: scanned=2
+
+### 2026-08-27 — STATE_INGESTION
+
+- **run_id**: `8c7df4b8`
+- **entity_slug**: `steinbrenner-jennifer`
+- **jurisdiction**: `IL`
+- **source**: `ISBE`
+- **extract_label**: `il`
+- **records_scanned**: `3`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-27T15-49-40Z__8c7df4b8.db`
+- **notes**: scanned=3
+
+### 2026-08-27 — STATE_INGESTION
+
+- **run_id**: `c111ffeb`
+- **entity_slug**: `steinbrenner-jessica`
+- **jurisdiction**: `IL`
+- **source**: `ISBE`
+- **extract_label**: `il`
+- **records_scanned**: `2`
+- **confirmed_count**: `0`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-27T15-49-40Z__c111ffeb.db`
+- **notes**: scanned=2
+
+### 2026-08-27 — STATE_INGESTION
+
+- **run_id**: `ff56dd0c`
+- **entity_slug**: `walter-mark`
+- **jurisdiction**: `IL`
+- **source**: `ISBE`
+- **extract_label**: `il`
+- **records_scanned**: `1354`
+- **confirmed_count**: `1`
+- **probable_count**: `0`
+- **uncertain_count**: `0`
+- **snapshot_path**: `data/snapshots/2026-08-27T15-49-41Z__ff56dd0c.db`
+- **notes**: scanned=1354

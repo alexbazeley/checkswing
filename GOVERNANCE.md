@@ -79,8 +79,25 @@ disk).
 >
 > One limit remains, and one earlier claim is **retracted**.
 >
-> **Limit:** a row fetched by a cron run is only preserved from that run onward;
-> the Aug 2026 refresh is the first to exercise the upload step in CI.
+> **Limit:** a row fetched by a cron run is only preserved from that run onward.
+>
+> **✅ Exercised in CI (2026-08-01).** The Aug refresh was the first run to reach
+> the upload step, and every job that runs it — all four `refresh` matrix buckets
+> and `committees_refresh` — reported `Raw archival complete.` with no errors.
+> That confirms the *step* succeeded; per-row confirmation that the 19 rows that
+> run ingested resolve in the bucket comes from the `--bucket` coverage report
+> below, which now runs monthly.
+>
+> **Read the coverage number with `--bucket`, always.** Plain
+> `cli raw-coverage` checks *one disk*. A cron-fetched payload is absent from any
+> given checkout **by design** — the runner uploaded it to R2 and was then
+> destroyed — so local-only output shows a number that climbs every month and
+> looks exactly like a leak. It is not one. `cli raw-coverage --bucket` splits it
+> into `rows_recoverable_from_bucket` (in R2 — healthy, and the expected home for
+> all cron raw) and `rows_absent_from_archive` (in neither place — the only figure
+> that warrants action). This misreading has now been made twice, so the monthly
+> `consolidate` job prints the split to the run summary and warns only when
+> `rows_absent_from_archive` exceeds the known 363-row Class-A backlog.
 >
 > **Retraction (2026-07-31):** an earlier version of this note — and the B2b
 > episode it inherited from — said the **379 live rows (5.5%)** whose raw is

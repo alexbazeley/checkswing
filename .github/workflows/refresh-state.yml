@@ -119,10 +119,18 @@ jobs:
       - name: Download Illinois State Board of Elections bulk export (~1 GB)
         # Public, no login/API key. Tab-delimited bulk files refreshed daily by ISBE.
         # ISBE serves Receipts.txt (~1 GB) at a HIGHLY variable rate (sometimes ~1 MB/s
-        # → ~15 min, sometimes far slower) and does NOT honour Range (416 */0), so each
-        # attempt must re-download the whole file from scratch. IL is BEST-EFFORT on the
-        # cron: grab it if it's fast today, else skip — never block the other 8 states.
-        # Backfill a slow IL via a dedicated manual `workflow_dispatch`.
+        # → ~15 min, sometimes far slower, and it drops connections mid-transfer).
+        # IL is BEST-EFFORT on the cron: grab it if it's fast today, else skip — never
+        # block the other 8 states. Backfill a slow IL via the dedicated manual
+        # `il-backfill.yml` dispatch, which resumes across runs until it converges.
+        #
+        # NOTE (corrected 2026-08-26): this comment used to claim ISBE "does NOT honour
+        # Range (416 */0)". That is false — `HEAD` returns `Accept-Ranges: bytes` and a
+        # ranged GET returns 206 (the origin is fronted by Cloudflare). il-backfill.yml
+        # relies on that to resume. It is NOT exploited here on purpose: this step is a
+        # hard 20-min budget guard, and the partial dies with the runner either way, so
+        # resuming would need cross-run caching that belongs in the backfill, not on the
+        # monthly critical path.
         #
         # CRITICAL: bound the ENTIRE IL fetch (both files + all curl retries) with a
         # single `timeout` so it can never eat into the 90-min JOB budget. A per-curl
@@ -319,7 +327,43 @@ jobs:
           if git diff --staged --quiet; then
             echo "No changes from state refresh — nothing to commit."
           else
-            git commit -m "State refresh: CA + PA + TX + IL + WA + CO + AZ + MN + FL + NY ($(date -u +%Y-%m-%d))"
+            # §4.2 honesty: every ingest above is continue-on-error, so the set of
+            # jurisdictions that actually landed is a RUNTIME fact, not the static
+            # list in this workflow's name. Hardcoding it made the 2026-08-02 commit
+            # read "CA + PA + TX + IL + ..." on a run where IL's export timed out and
+            # was skipped — the message asserted a refresh that never happened, in a
+            # provenance-tracked archive. Derive it from the runs the ingests recorded.
+            SUMMARY=$(python - <<'PY'
+          import datetime, sqlite3
+
+          conn = sqlite3.connect("data/state.db")
+          cutoff = (
+              datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(days=2)
+          ).strftime("%Y-%m-%dT%H:%M:%SZ")
+          adopted = {
+              r[0] for r in conn.execute(
+                  "select distinct jurisdiction from state_ingestion_runs"
+              )
+          }
+          refreshed = {
+              r[0] for r in conn.execute(
+                  "select distinct jurisdiction from state_ingestion_runs "
+                  "where started_at >= ?",
+                  (cutoff,),
+              )
+          }
+          skipped = sorted(adopted - refreshed)
+          msg = " + ".join(sorted(refreshed)) if refreshed else "no jurisdiction"
+          if skipped:
+              msg += f" [skipped: {' + '.join(skipped)}]"
+          print(msg)
+          PY
+          ) || SUMMARY=""
+            # Never let the summary derivation cost the commit: on any failure fall
+            # back to a message that claims nothing rather than aborting the step.
+            [ -n "$SUMMARY" ] || SUMMARY="jurisdictions not determined — see run log"
+            echo "Jurisdictions this cycle: $SUMMARY"
+            git commit -m "State refresh: $SUMMARY ($(date -u +%Y-%m-%d))"
             # Rebase onto anything that landed on main since checkout (e.g. the
             # federal refresh) so the push fast-forwards. State touches only its
             # own data files, so this replays cleanly over unrelated commits.
