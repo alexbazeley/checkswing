@@ -119,10 +119,18 @@ jobs:
       - name: Download Illinois State Board of Elections bulk export (~1 GB)
         # Public, no login/API key. Tab-delimited bulk files refreshed daily by ISBE.
         # ISBE serves Receipts.txt (~1 GB) at a HIGHLY variable rate (sometimes ~1 MB/s
-        # → ~15 min, sometimes far slower) and does NOT honour Range (416 */0), so each
-        # attempt must re-download the whole file from scratch. IL is BEST-EFFORT on the
-        # cron: grab it if it's fast today, else skip — never block the other 8 states.
-        # Backfill a slow IL via a dedicated manual `workflow_dispatch`.
+        # → ~15 min, sometimes far slower, and it drops connections mid-transfer).
+        # IL is BEST-EFFORT on the cron: grab it if it's fast today, else skip — never
+        # block the other 8 states. Backfill a slow IL via the dedicated manual
+        # `il-backfill.yml` dispatch, which resumes across runs until it converges.
+        #
+        # NOTE (corrected 2026-08-26): this comment used to claim ISBE "does NOT honour
+        # Range (416 */0)". That is false — `HEAD` returns `Accept-Ranges: bytes` and a
+        # ranged GET returns 206 (the origin is fronted by Cloudflare). il-backfill.yml
+        # relies on that to resume. It is NOT exploited here on purpose: this step is a
+        # hard 20-min budget guard, and the partial dies with the runner either way, so
+        # resuming would need cross-run caching that belongs in the backfill, not on the
+        # monthly critical path.
         #
         # CRITICAL: bound the ENTIRE IL fetch (both files + all curl retries) with a
         # single `timeout` so it can never eat into the 90-min JOB budget. A per-curl

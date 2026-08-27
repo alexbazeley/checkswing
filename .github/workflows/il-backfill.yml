@@ -46,18 +46,62 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Download Illinois State Board of Elections bulk export (~1 GB, patient)
-        # No 20-min cap here (that's the monthly job's protection). Give ISBE room to
-        # finish even at its slow rate: retry the whole transfer, and only abort a
-        # transfer that stalls below ~10 KB/s for 2 min. --http1.1 avoids the HTTP/2
-        # stream reset; ISBE honours no Range so each attempt is a full pass.
+      - name: Restore a partially-downloaded IL export
+        # Cross-run resume (see the download step): a unique key always misses, so
+        # the post-job cache save always runs; restore-keys pulls the newest partial
+        # from a previous attempt. That is what lets a 1 GB fetch at ISBE's rate
+        # converge across runs instead of restarting from zero every time.
+        uses: actions/cache@v4
+        with:
+          path: data/raw/state/il
+          key: il-export-${{ github.run_id }}
+          restore-keys: il-export-
+
+      - name: Download Illinois State Board of Elections bulk export (~1 GB, resumable)
+        # ISBE **does** honour Range. An earlier version of this workflow asserted the
+        # opposite ("honours no Range (416 */0)") and therefore made every attempt a
+        # full pass from byte 0 — which cannot finish when ISBE drops the connection
+        # partway, as it did on the 2026-08-26 run (curl 18, 3.7 MB of 1005 MB at
+        # ~30 KB/s). Verified 2026-08-26: `HEAD` returns `Accept-Ranges: bytes` and an
+        # explicit `-r 1000000-1000999` returns `206` with exactly 1000 bytes. The
+        # origin is fronted by Cloudflare now, whatever was true when that note was
+        # written. So: resume with `-C -` instead of restarting.
+        #
+        # Two nested budgets. Each curl attempt aborts if throughput stalls below
+        # 5 KB/s for 2 min (a wedged socket shouldn't hold the slot); the loop retries
+        # until the local file reaches the origin's Content-Length, or DEADLINE.
+        # Whatever bytes we have at DEADLINE are cached above, so the next dispatch
+        # picks up where this one stopped rather than starting over.
         run: |
+          set -uo pipefail
           mkdir -p data/raw/state/il
+          DEADLINE=$(( SECONDS + 200*60 ))   # leave room under timeout-minutes: 240
           for f in Committees.txt Receipts.txt; do
-            curl -fSL --http1.1 --retry 5 --retry-all-errors --retry-delay 15 \
-              --connect-timeout 30 --speed-limit 10000 --speed-time 120 \
-              -o "data/raw/state/il/$f" \
-              "https://downloads.elections.il.gov/$f"
+            url="https://downloads.elections.il.gov/$f"
+            dest="data/raw/state/il/$f"
+            expected=$(curl -sSI --http1.1 --max-time 60 "$url" \
+              | awk 'tolower($1)=="content-length:"{print $2}' | tr -d '\r')
+            if [ -z "$expected" ]; then
+              echo "::error::Could not read Content-Length for $f — ISBE unreachable."
+              exit 1
+            fi
+            echo "$f: need $expected bytes"
+            while :; do
+              have=$(stat -c%s "$dest" 2>/dev/null || echo 0)
+              if [ "$have" -ge "$expected" ]; then
+                echo "$f: complete ($have bytes)"
+                break
+              fi
+              if [ "$SECONDS" -ge "$DEADLINE" ]; then
+                echo "::warning::Deadline reached with $f at $have/$expected bytes. The partial is cached — re-run this workflow to resume from here."
+                exit 1
+              fi
+              echo "$f: $have/$expected — resuming"
+              curl -fsS --http1.1 -C - --connect-timeout 30 \
+                --speed-limit 5000 --speed-time 120 \
+                -o "$dest" "$url" || true
+              sleep 5
+            done
           done
           ls -lh data/raw/state/il/
 
