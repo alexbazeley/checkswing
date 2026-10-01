@@ -143,7 +143,7 @@ davis-ray,,owner,2022,,,1,1000.0
 davis-ray,,owner,2022,REP,,2,5000.0
 davis-ray,,owner,2024,,,7,430900.0
 davis-ray,,owner,2024,REP,,8,408900.0
-davis-ray,,owner,2026,,,3,11000.0
+davis-ray,,owner,2026,,,5,12500.0
 davis-ray,,owner,2026,REP,,1,7500.0
 dewitt-bill,,owner,2000,,,10,190300.0
 dewitt-bill,,owner,2000,REP,,5,22000.0
@@ -176,7 +176,7 @@ dewitt-bill,,owner,2024,,,7,29000.0
 dewitt-bill,,owner,2024,IND,,3,5000.0
 dewitt-bill,,owner,2024,REP,,4,7000.0
 dewitt-bill,,owner,2026,,,5,18500.0
-dewitt-bill,,owner,2026,REP,,4,4000.0
+dewitt-bill,,owner,2026,REP,,6,7500.0
 dolan-paul,,owner,2004,,,2,3500.0
 dolan-paul,,owner,2004,DEM,,1,1000.0
 dolan-paul,,owner,2006,,,1,1100.0
@@ -205,7 +205,7 @@ dolan-paul,,owner,2022,REP,,3,8700.0
 dolan-paul,,owner,2024,,,2,10000.0
 dolan-paul,,owner,2024,REP,,2,6600.0
 dolan-paul,,owner,2026,,,2,10000.0
-dolan-paul,,owner,2026,REP,,1,3500.0
+dolan-paul,,owner,2026,REP,,2,7000.0
 feliciano-jose,,owner,2020,DEM,,1,2800.0
 feliciano-jose,,owner,2022,DEM,,2,5800.0
 feliciano-jose,,owner,2024,,,2,413300.0
@@ -251,7 +251,7 @@ fisher-john,,owner,2024,IND,,1,3300.0
 fisher-john,,owner,2024,REP,,27,68900.0
 fisher-john,,owner,2026,,,11,41200.0
 fisher-john,,owner,2026,DEM,,7,17000.0
-fisher-john,,owner,2026,REP,,24,46900.0
+fisher-john,,owner,2026,REP,,25,49400.0
 henry-john,,owner,2000,,,1,100000.0
 henry-john,,owner,2002,,,2,100000.0
 henry-john,,owner,2002,DEM,,2,6000.0
@@ -329,7 +329,7 @@ johnson-greg,,owner,2020,REP,,5,14000.0
 johnson-greg,,owner,2022,,,5,22500.0
 johnson-greg,,owner,2024,,,7,25300.0
 johnson-greg,,owner,2024,REP,,3,5650.0
-johnson-greg,,owner,2026,,,3,13000.0
+johnson-greg,,owner,2026,,,5,23000.0
 kendrick-ken,,owner,2000,,,3,80000.0
 kendrick-ken,,owner,2000,REP,,3,21000.0
 kendrick-ken,,owner,2002,,,6,82900.0
@@ -409,6 +409,7 @@ malone-john,,owner,2022,,,1,5000.0
 malone-john,,owner,2022,REP,,4,87100.0
 malone-john,,owner,2024,REP,,1,3300.0
 malone-john,,owner,2026,,,2,10000.0
+malone-john,,owner,2026,REP,,3,5000.0
 mcguirk-terry,,owner,2000,,,2,1500.0
 mcguirk-terry,,owner,2002,,,4,7000.0
 mcguirk-terry,,owner,2002,REP,,1,1000.0
@@ -444,7 +445,7 @@ middleton-john,,owner,2020,,,1,5000.0
 middleton-john,,owner,2020,DEM,,1,2800.0
 middleton-john,,owner,2022,,,2,10000.0
 middleton-john,,owner,2024,,,1,5000.0
-middleton-john,,owner,2026,,,6,82869.97
+middleton-john,,owner,2026,,,7,87057.62
 middleton-john,,owner,2026,REP,,6,64500.0
 monfort-charlie,,owner,2000,REP,,2,16000.0
 monfort-charlie,,owner,2002,,,1,250.0
@@ -532,7 +533,8 @@ pohlad-joe,,owner,2022,DEM,,3,6800.0
 pohlad-joe,,owner,2022,DFL,,2,5800.0
 pohlad-joe,,owner,2024,,,5,41600.0
 pohlad-joe,,owner,2024,DEM,,4,10900.0
-pohlad-joe,,owner,2026,DEM,,6,9850.0
+pohlad-joe,,owner,2026,,,2,7025.0
+pohlad-joe,,owner,2026,DEM,,7,10100.0
 pohlad-tom,,owner,2008,,,1,28500.0
 pohlad-tom,,owner,2008,DEM,,6,32400.0
 pohlad-tom,,owner,2010,DEM,,1,1000.0
@@ -621,7 +623,7 @@ ricketts-laura,,owner,2022,DEM,,24,307190.3
 ricketts-laura,,owner,2024,,,7,217322.37
 ricketts-laura,,owner,2024,DEM,,16,318927.48
 ricketts-laura,,owner,2026,,,4,275000.0
-ricketts-laura,,owner,2026,DEM,,5,12000.0
+ricketts-laura,,owner,2026,DEM,,6,22000.0
 ricketts-todd,,owner,2010,REP,,8,7200.0
 ricketts-todd,,owner,2012,,,1,50000.0
 ricketts-todd,,owner,2012,REP,,6,13500.0
@@ -728,7 +730,8 @@ stanton-john,,owner,2022,REP,,5,12600.0
 stanton-john,,owner,2024,,,2,6001.0
 stanton-john,,owner,2024,DEM,,3,6600.0
 stanton-john,,owner,2024,REP,,4,9301.0
-stanton-john,,owner,2026,,,2,10000.0
+stanton-john,,owner,2026,,,1,5000.0
+stanton-john,,owner,2026,DEM,,3,5000.0
 stanton-john,,owner,2026,REP,,2,50000.0
 steinbrenner-hal,,owner,2008,,,1,12300.0
 steinbrenner-hal,,owner,2008,REP,,3,12300.0
