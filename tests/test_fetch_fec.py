@@ -260,6 +260,30 @@ def test_auto_chunk_triggers_when_pages_over_threshold(fec_client):
 
 
 @responses.activate
+def test_state_filter_always_walks_cycles(fec_client):
+    """A state-filtered fetch never sends the unpartitioned query: FEC 504s it
+    ("Query timed out"). Every call carries two_year_transaction_period."""
+    client, slug = fec_client
+    responses.add(
+        responses.GET,
+        BASE_URL + SCHEDULE_A,
+        json=_payload([], pages=0),
+        status=200,
+    )
+    client.fetch_schedule_a_for_name(
+        slug,
+        "Robert H Castellini",
+        min_date="2025-01-28",
+        states=["OH"],
+        chunk_by_cycle=False,
+    )
+    assert len(responses.calls) == len(_cycles_from("2025-01-28"))
+    for call in responses.calls:
+        assert "two_year_transaction_period=" in call.request.url
+        assert "contributor_state=OH" in call.request.url
+
+
+@responses.activate
 def test_normal_pagination_when_under_threshold(fec_client):
     """When sniff pages < threshold, unified pagination continues from page 2."""
     client, slug = fec_client
@@ -373,6 +397,22 @@ class TestPermanent4xxFailFast:
             out = client._request(SCHEDULE_A, {"contributor_name": "x"})
             assert out == {"results": []}
             assert len(rsps.calls) == 2            # retried past the 500
+
+
+    def test_5xx_exhaustion_reports_the_status(self, monkeypatch):
+        """Exhausting retries on 5xx names the status — it used to end ': None'."""
+        monkeypatch.setenv("FEC_API_KEY", "test-key")
+        monkeypatch.setattr(fetch_fec, "MIN_REQUEST_INTERVAL_S", 0.0)
+        with responses.RequestsMock() as rsps:
+            rsps.add(
+                responses.GET, BASE_URL + SCHEDULE_A, status=504,
+                json={"message": "Query timed out", "status": 504},
+            )
+            client = FECClient()
+            monkeypatch.setattr(fetch_fec.time, "sleep", lambda *_a, **_k: None)
+            with pytest.raises(RuntimeError, match="FEC 504.*Query timed out"):
+                client._request(SCHEDULE_A, {"contributor_name": "x"})
+            assert len(rsps.calls) == 5
 
 
 class TestDedupeKeyPrefersSubId:

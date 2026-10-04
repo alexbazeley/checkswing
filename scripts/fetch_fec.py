@@ -200,6 +200,11 @@ class FECClient:
                     time.sleep(min(retry_after, 120))
                     continue
                 if resp.status_code >= 500:
+                    # Record it: without this a run that exhausts on 5xx reports
+                    # "...: None" and the cause (e.g. 504 "Query timed out") is lost.
+                    last_exc = requests.HTTPError(
+                        f"FEC {resp.status_code}: {resp.text[:200]}", response=resp
+                    )
                     # Jitter the exponential backoff so concurrent retries don't
                     # sync-hammer FEC.
                     time.sleep(2 ** attempt * 2 * random.uniform(0.7, 1.3))
@@ -349,8 +354,9 @@ class FECClient:
         Returns (records, raw_payload_paths). Each record carries
         `_raw_payload_path` pointing back to the JSON file it came from.
 
-        If `chunk_by_cycle=True`, fetch is split per FEC 2-year cycle so a
-        timeout in one cycle doesn't abort the others. Otherwise unified
+        If `chunk_by_cycle=True` or `states` is set, fetch is split per FEC
+        2-year cycle so a timeout in one cycle doesn't abort the others (and
+        state-filtered queries stay inside FEC's query timeout). Otherwise unified
         pagination is attempted; if the first page reports more than
         `auto_chunk_threshold` total pages, fetch auto-switches to cycle
         mode for the remainder.
@@ -372,7 +378,14 @@ class FECClient:
             # contributor_state=CT&contributor_state=NY (FEC ORs them).
             base_params["contributor_state"] = list(states)
 
-        if chunk_by_cycle:
+        # A state-filtered query without two_year_transaction_period makes FEC
+        # scan every cycle partition: since Sep 2026 it sits at FEC's ~37s server
+        # limit and intermittently 504s ("Query timed out") — 12 owners failed
+        # the 2026-10-01 refresh this way. The same query scoped to one cycle
+        # returns the same records in ~4s, so state-filtered fetches always walk
+        # cycles. Incremental windows span 1–2 cycles: at most one extra call
+        # per variant.
+        if chunk_by_cycle or states:
             return self._fetch_by_cycle(
                 slug, name_variant, base_params, min_date, max_pages,
                 completed_cycles, on_cycle_complete,
