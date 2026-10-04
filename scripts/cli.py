@@ -1094,7 +1094,16 @@ def ingest(slug, dry_run, min_date, full_refetch, max_pages, include_related, no
 @click.option("--skip-data-json", is_flag=True, help="Do not regenerate mockup/data.json even if records changed.")
 @click.option("--full-refetch", is_flag=True, help="Ignore audit.last_ingestion for every owner; refetch from 2000-01-01.")
 @click.option("--chunk-by-cycle", is_flag=True, help="Pass --chunk-by-cycle to every owner's ingest.")
-def refresh(only, bucket, dry_run, skip_data_json, full_refetch, chunk_by_cycle):
+@click.option(
+    "--summary-json",
+    type=click.Path(dir_okay=False),
+    default=None,
+    help=(
+        "Also write the run summary to this file. The GHA matrix ships it in each "
+        "bucket's artifact so consolidate can surface per-owner failures."
+    ),
+)
+def refresh(only, bucket, dry_run, skip_data_json, full_refetch, chunk_by_cycle, summary_json):
     """Refresh every pilot/active owner from FEC since their last_ingestion.
 
     Loops the resolved owner set, runs the existing ingest pipeline per owner
@@ -1132,6 +1141,8 @@ def refresh(only, bucket, dry_run, skip_data_json, full_refetch, chunk_by_cycle)
     )
     click.echo("")
     click.echo(json.dumps(summary, indent=2, default=str))
+    if summary_json:
+        Path(summary_json).write_text(json.dumps(summary, indent=2, default=str))
     if summary["owners_failed"] > 0:
         sys.exit(1)
 
