@@ -120,7 +120,10 @@ jobs:
           if [ "${{ github.event.inputs.full_refetch }}" = "true" ]; then
             extra_args="--full-refetch --chunk-by-cycle"
           fi
-          python -m scripts.cli refresh --bucket ${{ matrix.bucket }}/4 $extra_args
+          # --summary-json rides in the bucket artifact so consolidate can surface
+          # per-owner failures this step's continue-on-error would otherwise hide.
+          python -m scripts.cli refresh --bucket ${{ matrix.bucket }}/4 $extra_args \
+            --summary-json refresh-summary.json
 
       - name: Backfill v3 image fields from raw payloads
         # After a full-refetch, fresh raw payloads sit on this runner with the
@@ -159,6 +162,7 @@ jobs:
             data/master.db
             owners/*.yaml
             catalog/PROVENANCE_LOG.md
+            refresh-summary.json
           retention-days: 7
           if-no-files-found: warn
 
@@ -168,6 +172,10 @@ jobs:
     timeout-minutes: 30
     permissions:
       contents: write
+    outputs:
+      owners_failed: ${{ steps.owner_failures.outputs.owners_failed }}
+      failed_owners: ${{ steps.owner_failures.outputs.failed_owners }}
+      buckets_without_summary: ${{ steps.owner_failures.outputs.buckets_without_summary }}
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -218,6 +226,17 @@ jobs:
 
       - name: Adopt per-bucket YAML and log changes
         run: python -m scripts.finalize_matrix --base . --artifacts artifacts/
+
+      - name: Report per-owner failures
+        # The bucket refresh step is continue-on-error, so a failed owner never
+        # turns the matrix job red — 7–12 owners failed every FEC fetch on the
+        # 2026-09-01 and 2026-10-01 runs while both showed green. This annotates
+        # each failed owner, tables them in the run summary, and hands the list
+        # to `notify`. Report-only: it never blocks the commit below.
+        id: owner_failures
+        if: always()
+        continue-on-error: true
+        run: python -m scripts.summarize_refresh --artifacts artifacts/
 
       - name: Rebuild mockup/data.json
         run: python mockup/build_data.py
@@ -529,7 +548,13 @@ jobs:
   # upstream job did not succeed, so a failed/timed-out run is visible.
   notify:
     needs: [refresh, consolidate, committees_refresh]
-    if: always() && (needs.refresh.result != 'success' || needs.consolidate.result != 'success' || needs.committees_refresh.result != 'success')
+    # Also fires on per-owner failures / crashed buckets, which leave every job
+    # green (see consolidate's "Report per-owner failures").
+    if: >-
+      always() && (needs.refresh.result != 'success' || needs.consolidate.result != 'success'
+      || needs.committees_refresh.result != 'success'
+      || (needs.consolidate.outputs.owners_failed != '' && needs.consolidate.outputs.owners_failed != '0')
+      || needs.consolidate.outputs.buckets_without_summary != '')
     runs-on: ubuntu-latest
     permissions:
       issues: write
@@ -540,6 +565,9 @@ jobs:
           R_REFRESH: ${{ needs.refresh.result }}
           R_CONSOLIDATE: ${{ needs.consolidate.result }}
           R_COMMITTEES: ${{ needs.committees_refresh.result }}
+          OWNERS_FAILED: ${{ needs.consolidate.outputs.owners_failed }}
+          FAILED_OWNERS: ${{ needs.consolidate.outputs.failed_owners }}
+          NO_SUMMARY: ${{ needs.consolidate.outputs.buckets_without_summary }}
         run: |
           set -euo pipefail
           RUN_URL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
@@ -547,13 +575,33 @@ jobs:
           [ "$R_REFRESH" != "success" ] && failed="$failed refresh($R_REFRESH)"
           [ "$R_CONSOLIDATE" != "success" ] && failed="$failed consolidate($R_CONSOLIDATE)"
           [ "$R_COMMITTEES" != "success" ] && failed="$failed committees_refresh($R_COMMITTEES)"
+          if [ -n "$failed" ]; then
+            headline="Monthly FEC refresh had failing job(s):$failed"
+          else
+            headline="Monthly FEC refresh: every job finished, but not every owner refreshed."
+          fi
+          owner_line=""
+          if [ -n "$OWNERS_FAILED" ] && [ "$OWNERS_FAILED" != "0" ]; then
+            owner_line=$(printf '\n\n**%s owner(s) failed to refresh** (they keep their previous data; the next run retries them): `%s`. Errors are in the run summary.' \
+              "$OWNERS_FAILED" "$(echo "$FAILED_OWNERS" | sed 's/,/`, `/g')")
+          fi
+          if [ -n "$NO_SUMMARY" ]; then
+            owner_line="$owner_line$(printf '\n\nBucket(s) **%s** wrote no summary — the refresh step crashed, so their owners may not have refreshed.' "$NO_SUMMARY")"
+          fi
           TITLE="FEC refresh failure (automated)"
-          BODY=$(printf '%s\n\n- Run: %s\n- When: %s\n\n`continue-on-error` and matrix `fail-fast:false` keep parts of the run green through sub-failures; check the run logs. Close this issue once resolved — a later clean run does not auto-close it.' \
-            "Monthly FEC refresh had failing job(s):$failed" "$RUN_URL" "$(date -u +%Y-%m-%dT%H:%MZ)")
+          BODY=$(printf '%s%s\n\n- Run: %s\n- When: %s\n\n`continue-on-error` and matrix `fail-fast:false` keep parts of the run green through sub-failures; check the run logs. Close this issue once resolved — a later clean run does not auto-close it.' \
+            "$headline" "$owner_line" "$RUN_URL" "$(date -u +%Y-%m-%dT%H:%MZ)")
           existing=$(gh issue list --state open --search "$TITLE in:title" --json number,title \
             --jq '[.[] | select(.title == "'"$TITLE"'")][0].number // empty')
           if [ -n "$existing" ]; then
             gh issue comment "$existing" --body "$BODY"
           else
             gh issue create --title "$TITLE" --body "$BODY"
+          fi
+          # Owner failures leave every other job green; end red so the run itself
+          # shows it. This is the last job — nothing downstream is skipped, and
+          # consolidate already committed the owners that did refresh.
+          if { [ -n "$OWNERS_FAILED" ] && [ "$OWNERS_FAILED" != "0" ]; } || [ -n "$NO_SUMMARY" ]; then
+            echo "::error::${OWNERS_FAILED:-0} owner(s) failed to refresh: ${FAILED_OWNERS:-?}${NO_SUMMARY:+; buckets without summary: $NO_SUMMARY}"
+            exit 1
           fi
