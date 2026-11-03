@@ -47010,3 +47010,38 @@ Discarded **1** open state review-queue item(s) for `simpson-bob` reason~'city/s
 - **uncertain_count**: `13`
 - **snapshot_path**: `data/snapshots/2026-11-02T22-21-17Z__4ffc8200.db`
 - **notes**: scanned=13
+
+### 2026-11-03 — INGESTION (legislators crosswalk)
+
+- **source**: `unitedstates/congress-legislators` (https://unitedstates.github.io/congress-legislators/legislators-current.yaml + https://unitedstates.github.io/congress-legislators/legislators-historical.yaml)
+- **fetched_at**: `2026-11-03T18:44:35Z`
+- **legislators**: `1532`
+- **fec_id_links**: `1738`
+- **terms**: `9051`
+- **only_with_fec**: `True`
+- **include_historical**: `True`
+- **snapshot_path**: `/home/runner/work/checkswing/checkswing/data/snapshots/2026-11-03T18-44-35Z__pre-ingest-legislators.db`
+- **note**: Tier-2 entity identification (SOURCES.md Phase-3 addendum). Crosswalk tables are a pure projection of the upstream source — idempotent wipe-and-rebuild. Raw payloads persisted under data/raw/legislation/.
+
+### 2026-11-03 — INGESTION (bills)
+
+- **source**: `congress.gov` (api.congress.gov v3)
+- **fetched_at**: `2026-11-03T18:45:04Z`
+- **curated_bills_in_set**: `22`
+- **bills_enriched**: `22`
+- **sponsor_rows**: `201`
+- **errors**: `[]`
+- **snapshot_path**: `/home/runner/work/checkswing/checkswing/data/snapshots/2026-11-03T18-45-04Z__pre-ingest-bills.db`
+- **note**: Curated fields (mlb_issue_area, relevance_basis, carried_by_bill_id) sourced from legislation/bills/*.yaml; identity/sponsors/action from Congress.gov (Tier-1). Raw payloads under data/raw/legislation/.
+
+### 2026-11-03 — INGESTION (votes)
+
+- **source**: `clerk.house.gov` (EVS XML) + `senate.gov` (LIS XML) — Tier-1 source of record
+- **fetched_at**: `2026-11-03T18:46:45Z`
+- **roll_calls_in_set**: `3`
+- **votes_ingested**: `1`
+- **vote_positions**: `430`
+- **senate_unmapped (no FEC-crosswalk lis_id)**: `0`
+- **errors**: `[{'spec': {'bill_id': '102-s-474', 'chamber': 'senate', 'congress': 102, 'session': 2, 'roll': 111, 'question': 'On Passage of the Bill'}, 'error': '403 Client Error: Forbidden for url: https://www.senate.gov/legislative/LIS/roll_call_votes/vote1022/vote_102_2_00111.xml'}, {'spec': {'bill_id': '115-hr-1625', 'chamber': 'senate', 'congress': 115, 'session': 2, 'roll': 63, 'question': 'On Passage of the Bill'}, 'error': '403 Client Error: Forbidden for url: https://www.senate.gov/legislative/LIS/roll_call_votes/vote1152/vote_115_2_00063.xml'}]`
+- **snapshot_path**: `/home/runner/work/checkswing/checkswing/data/snapshots/2026-11-03T18-46-45Z__pre-ingest-votes.db`
+- **note**: Vote positions are FEC-neutral facts (who voted Yea/Nay). Senate LIS ids mapped to Bioguide via legislators.lis_id. Raw XML under data/raw/legislation/.
