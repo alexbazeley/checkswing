@@ -321,6 +321,9 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # Concurrent runs append to PROVENANCE_LOG.md; merge pure appends instead of
+          # failing the rebase below (scripts/merge_append_log.py, .gitattributes).
+          git config merge.append-log.driver 'python3 scripts/merge_append_log.py %O %A %B %P'
           # The state layer is only allowed to touch state.db + the provenance log.
           # The raw zips are gitignored; state_data.json is rebuilt at deploy time.
           git add data/state.db catalog/PROVENANCE_LOG.md 2>/dev/null || true

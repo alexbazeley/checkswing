@@ -327,6 +327,9 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # Concurrent runs append to PROVENANCE_LOG.md; merge pure appends instead of
+          # failing the rebase below (scripts/merge_append_log.py, .gitattributes).
+          git config merge.append-log.driver 'python3 scripts/merge_append_log.py %O %A %B %P'
           # Stage only what the refresh layer is allowed to touch: master DB,
           # the citable CSV exports, owner YAMLs (audit.last_ingestion only),
           # and the provenance log. REVIEW_QUEUE.md is no longer tracked — its
@@ -502,6 +505,9 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # Concurrent runs append to PROVENANCE_LOG.md; merge pure appends instead of
+          # failing the rebase below (scripts/merge_append_log.py, .gitattributes).
+          git config merge.append-log.driver 'python3 scripts/merge_append_log.py %O %A %B %P'
           # mockup/data.json is gitignored + build-generated on deploy, so it is
           # intentionally not staged (see the consolidate job's note above).
           git add data/master.db catalog/PROVENANCE_LOG.md 2>/dev/null || true
