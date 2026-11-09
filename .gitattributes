@@ -1,1 +1,5 @@
 data/master.db filter=lfs diff=lfs merge=lfs -text
+# Append-only audit log: concurrent workflow appends are merged by
+# scripts/merge_append_log.py (pure appends only; anything else still conflicts).
+# The driver is opt-in per clone — the workflows configure it before rebasing.
+catalog/PROVENANCE_LOG.md merge=append-log

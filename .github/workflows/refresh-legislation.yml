@@ -75,6 +75,9 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # Concurrent runs append to PROVENANCE_LOG.md; merge pure appends instead of
+          # failing the rebase below (scripts/merge_append_log.py, .gitattributes).
+          git config merge.append-log.driver 'python3 scripts/merge_append_log.py %O %A %B %P'
           # The legislation refresh is only allowed to touch its own DB + the log.
           git add data/legislation.db catalog/PROVENANCE_LOG.md 2>/dev/null || true
           if git diff --staged --quiet; then

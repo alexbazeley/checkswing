@@ -81,39 +81,28 @@ jobs:
         #
         # Two nested budgets. Each curl attempt aborts if throughput stalls below
         # 5 KB/s for 2 min (a wedged socket shouldn't hold the slot); the loop retries
-        # until the local file reaches the origin's Content-Length, or DEADLINE.
-        # Whatever bytes we have at DEADLINE are cached above, so the next dispatch
-        # picks up where this one stopped rather than starting over.
+        # until the file is complete, or DEADLINE. Whatever bytes we have at DEADLINE
+        # are cached above, so the next dispatch picks up where this one stopped.
+        #
+        # The loop lives in scripts/resumable_download.sh (tested in
+        # tests/test_resumable_download.py). 2026-11-09 changes, see its header:
+        #  - the partial is pinned to the export version it came from (size +
+        #    Last-Modified, in <file>.version); ISBE republishes daily, and a
+        #    partial from another version is discarded rather than spliced;
+        #  - the size comes from a 1-byte ranged GET, not HEAD — through
+        #    Cloudflare, HEAD often omits Content-Length, which failed this step
+        #    with "ISBE unreachable".
+        # Cross-run resume therefore only helps within one export day. A Receipts
+        # download that cannot finish inside a single run will restart each day;
+        # that is the correct trade (fresh, unspliced data) — the 2026-11-08 run
+        # finished in 3h20m.
         run: |
           set -uo pipefail
-          mkdir -p data/raw/state/il
-          DEADLINE=$(( SECONDS + 200*60 ))   # leave room under timeout-minutes: 240
+          DEADLINE=$(( $(date +%s) + 200*60 ))   # leave room under timeout-minutes: 240
           for f in Committees.txt Receipts.txt; do
-            url="https://downloads.elections.il.gov/$f"
-            dest="data/raw/state/il/$f"
-            expected=$(curl -sSI --http1.1 --max-time 60 "$url" \
-              | awk 'tolower($1)=="content-length:"{print $2}' | tr -d '\r')
-            if [ -z "$expected" ]; then
-              echo "::error::Could not read Content-Length for $f — ISBE unreachable."
-              exit 1
-            fi
-            echo "$f: need $expected bytes"
-            while :; do
-              have=$(stat -c%s "$dest" 2>/dev/null || echo 0)
-              if [ "$have" -ge "$expected" ]; then
-                echo "$f: complete ($have bytes)"
-                break
-              fi
-              if [ "$SECONDS" -ge "$DEADLINE" ]; then
-                echo "::warning::Deadline reached with $f at $have/$expected bytes. The partial is cached — re-run this workflow to resume from here."
-                exit 1
-              fi
-              echo "$f: $have/$expected — resuming"
-              curl -fsS --http1.1 -C - --connect-timeout 30 \
-                --speed-limit 5000 --speed-time 120 \
-                -o "$dest" "$url" || true
-              sleep 5
-            done
+            bash scripts/resumable_download.sh \
+              "https://downloads.elections.il.gov/$f" "data/raw/state/il/$f" "$DEADLINE" \
+              || exit 1
           done
           ls -lh data/raw/state/il/
 
@@ -127,6 +116,9 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # Concurrent runs append to PROVENANCE_LOG.md; merge pure appends instead of
+          # failing the rebase below (scripts/merge_append_log.py, .gitattributes).
+          git config merge.append-log.driver 'python3 scripts/merge_append_log.py %O %A %B %P'
           git add data/state.db catalog/PROVENANCE_LOG.md 2>/dev/null || true
           if git diff --staged --quiet; then
             echo "No changes from IL backfill — nothing to commit."
